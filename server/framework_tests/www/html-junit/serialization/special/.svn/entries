@@ -1,0 +1,54 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/framework_tests/www/html-junit/serialization/special
+http://svn.aptana.local/svn/jaxer
+
+
+
+2007-09-14T03:42:55.624226Z
+68
+jcohen
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+serializeNull.html
+file
+
+
+
+
+2009-08-11T21:25:15.000000Z
+7327acb8066e676d1bb433833925a0b5
+2007-09-14T03:42:55.624226Z
+68
+jcohen
+has-props
+
+serializeUndefined.html
+file
+
+
+
+
+2009-08-11T21:25:15.000000Z
+7783614c8ff2246159241ab9905f04f0
+2007-09-14T03:42:55.624226Z
+68
+jcohen
+has-props
+

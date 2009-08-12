@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpfe/components/history/src
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/history/src/Makefile.in
+END
+nsGlobalHistory.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpfe/components/history/src/nsGlobalHistory.cpp
+END
+nsGlobalHistory.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpfe/components/history/src/nsGlobalHistory.h
+END
+nsHistoryLoadListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/history/src/nsHistoryLoadListener.h
+END

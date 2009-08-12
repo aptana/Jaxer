@@ -1,0 +1,7 @@
+#!/bin/sh
+
+DEST=/home/cltbld/jzhang/AptanaJaxer/jaxer/connectors/mod_jaxer.so
+rm $DEST
+cp mod_jaxer.so $DEST
+
+

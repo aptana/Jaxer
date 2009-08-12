@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/client
+END
+minidump_file_writer_unittest.cc
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/client/minidump_file_writer_unittest.cc
+END
+minidump_file_writer.cc
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/client/minidump_file_writer.cc
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/client/Makefile.in
+END
+minidump_file_writer-inl.h
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/client/minidump_file_writer-inl.h
+END
+minidump_file_writer.h
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/client/minidump_file_writer.h
+END

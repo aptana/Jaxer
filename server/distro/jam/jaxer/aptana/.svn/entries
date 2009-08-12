@@ -1,0 +1,194 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/distro/jam/jaxer/aptana
+http://svn.aptana.local/svn/jaxer
+
+
+
+2009-01-26T00:33:59.024282Z
+4547
+dwaterson
+has-props
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+jaxer_home.html
+file
+
+
+
+
+2009-08-11T21:42:35.000000Z
+8052fc537c7d5871b9b3b78f04b8437a
+2007-12-15T00:09:06.457082Z
+1208
+dwaterson
+has-props
+
+images_global
+dir
+
+modal_window.html
+file
+
+
+
+
+2009-08-11T21:42:35.000000Z
+7a1355bb41130550c8191eec0cb77473
+2008-07-23T00:37:33.076342Z
+3655
+iselby
+has-props
+
+css
+dir
+
+releaseNotes.html
+file
+
+
+
+
+2009-08-11T21:42:35.000000Z
+19c8af8a37eeaf06c1574c30831b54ea
+2009-01-26T00:33:59.024282Z
+4547
+dwaterson
+has-props
+
+favicon.ico
+file
+
+
+
+
+2009-08-11T21:42:35.000000Z
+669406ccb605a564ef0295f240d7be3d
+2007-10-04T17:51:37.759141Z
+348
+dwaterson
+has-props
+
+tools
+dir
+
+utils.html
+file
+
+
+
+
+2009-08-11T21:42:35.000000Z
+3ddbcd9082988c6119a0b8bd99ed7072
+2007-12-10T07:49:38.678765Z
+1056
+usarid
+has-props
+
+tools.html
+file
+
+
+
+
+2009-08-11T21:42:35.000000Z
+51c83f1e8802b94fa9ee334e5e2941bd
+2007-10-04T17:51:37.759141Z
+348
+dwaterson
+has-props
+
+samples
+dir
+
+doc
+dir
+
+images
+dir
+
+jaxer_about.html
+file
+
+
+
+
+2009-08-11T21:42:35.000000Z
+c498b69c465ae314a87b68373569e298
+2008-07-18T23:49:37.472364Z
+3631
+iselby
+has-props
+
+lib
+dir
+
+diagnostics
+dir
+
+index_old.html
+file
+
+
+
+
+2009-08-11T21:42:35.000000Z
+8cb9bf03780fbeb7f01e276ed06f4442
+2008-07-18T23:49:37.472364Z
+3631
+iselby
+has-props
+
+apps_and_tools.html
+file
+
+
+
+
+2009-08-11T21:42:35.000000Z
+0c3ae2e8c5dc05e4a49ef03fcfc2a70a
+2008-07-18T23:49:37.472364Z
+3631
+iselby
+has-props
+
+styles.css
+file
+
+
+
+
+2009-08-11T21:42:35.000000Z
+e0a74aeabc483334396eed9690f165a6
+2008-07-18T23:49:37.472364Z
+3631
+iselby
+
+index.html
+file
+
+
+
+
+2009-08-11T21:42:35.000000Z
+99d98e1cc2a812b4928a0a6ba535fef3
+2008-07-18T23:49:37.472364Z
+3631
+iselby
+has-props
+

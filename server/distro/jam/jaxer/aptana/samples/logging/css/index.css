@@ -1,0 +1,46 @@
+BODY {
+    background-color: #ddddff;
+    font-family: verdana;
+    font-size: 8pt;
+}
+
+#applicationContent {
+    border: 3px solid #B5B5DF;
+    padding: 0px;
+    background-color: #d0ddff;
+}
+
+#sampleHeader {
+    border: 1px #aaa solid;
+    background-color: #FFFFF1;
+    margin: 0 0 5px 0;
+    padding: 5px;
+    height: 1.4em;
+}
+
+.sampleTitle {
+    font-weight: 900;
+    float: left;
+}
+
+#rightFloat {
+    float: right;
+}
+
+#codeblock {
+	border-top: 3px solid #B5B5DF;
+	border-bottom: 3px solid #B5B5DF;
+	background-color: #F0F0FF;
+	padding:5px;
+    font-size: 7pt;
+}
+
+#firebugDetect {
+	    font-weight: 900;
+		padding:5px;
+		color:green;
+}
+
+#explainer {
+	padding:5px;
+}

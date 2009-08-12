@@ -1,0 +1,329 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/nss/lib/util
+END
+templates.c
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/templates.c
+END
+nssilckt.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/nssilckt.h
+END
+secoidt.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/util/secoidt.h
+END
+derenc.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/derenc.c
+END
+secasn1.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/secasn1.h
+END
+secplcy.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/util/secplcy.c
+END
+nssrwlk.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/util/nssrwlk.c
+END
+dersubr.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/util/dersubr.c
+END
+secplcy.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/secplcy.h
+END
+nssrwlk.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/nssrwlk.h
+END
+nssb64t.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/nssb64t.h
+END
+ciferfam.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/ciferfam.h
+END
+portreg.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/util/portreg.c
+END
+nssb64.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/nssb64.h
+END
+derdec.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/util/derdec.c
+END
+portreg.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/portreg.h
+END
+secerr.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/util/secerr.h
+END
+secitem.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/util/secitem.c
+END
+config.mk
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/config.mk
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/util/Makefile
+END
+secitem.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/secitem.h
+END
+secinit.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/util/secinit.c
+END
+secdig.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/secdig.c
+END
+secdert.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/secdert.h
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/util/manifest.mn
+END
+secasn1d.c
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/secasn1d.c
+END
+oidstring.c
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/util/oidstring.c
+END
+secasn1e.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/util/secasn1e.c
+END
+secdig.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/secdig.h
+END
+nsslocks.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/util/nsslocks.h
+END
+secoid.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/nss/lib/util/secoid.c
+END
+quickder.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/util/quickder.c
+END
+secder.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/secder.h
+END
+utilrename.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/util/utilrename.h
+END
+secalgid.c
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/secalgid.c
+END
+seccomon.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/seccomon.h
+END
+secoid.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/util/secoid.h
+END
+nssutil.def
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/util/nssutil.def
+END
+secport.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/util/secport.c
+END
+secasn1u.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/util/secasn1u.c
+END
+nssutil.rc
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/nssutil.rc
+END
+nssb64d.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/util/nssb64d.c
+END
+nssb64e.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/util/nssb64e.c
+END
+secport.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/util/secport.h
+END
+nssilock.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/util/nssilock.c
+END
+secasn1t.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/secasn1t.h
+END
+utf8.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/util/utf8.c
+END
+secdigt.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/secdigt.h
+END
+base64.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/base64.h
+END
+dertime.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/util/dertime.c
+END
+sectime.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/sectime.c
+END
+nssilock.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/nssilock.h
+END
+nssrwlkt.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/util/nssrwlkt.h
+END
+watcomfx.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/util/watcomfx.h
+END

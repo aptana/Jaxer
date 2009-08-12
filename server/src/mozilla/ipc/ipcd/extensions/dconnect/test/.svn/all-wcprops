@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/extensions/dconnect/test
+END
+TestServer.js
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/extensions/dconnect/test/TestServer.js
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/extensions/dconnect/test/Makefile.in
+END
+TestClient.js
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/extensions/dconnect/test/TestClient.js
+END
+TestDConnect.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/extensions/dconnect/test/TestDConnect.cpp
+END

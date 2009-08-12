@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/tests
+END
+schema_imported.xsd
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/schema-validation/tests/schema_imported.xsd
+END
+schema-complex-test.xml
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/schema-validation/tests/schema-complex-test.xml
+END
+schema_imported2.xsd
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/schema-validation/tests/schema_imported2.xsd
+END
+schema.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/tests/schema.html
+END
+schema-complex-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/tests/schema-complex-test.html
+END
+schema_no_ns.xsd
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/schema-validation/tests/schema_no_ns.xsd
+END
+schema_no_ns2.xsd
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/schema-validation/tests/schema_no_ns2.xsd
+END
+schema.xsd
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/schema-validation/tests/schema.xsd
+END
+schema_ns.xsd
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/schema-validation/tests/schema_ns.xsd
+END

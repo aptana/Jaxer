@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/sun-java/stubs/jri
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/sun-java/stubs/jri/Makefile.in
+END
+jdk_java_lang_String.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/sun-java/stubs/jri/jdk_java_lang_String.h
+END
+java_lang_String.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/sun-java/stubs/jri/java_lang_String.h
+END

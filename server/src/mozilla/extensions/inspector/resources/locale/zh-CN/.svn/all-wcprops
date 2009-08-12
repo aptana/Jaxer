@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/zh-CN
+END
+inspector.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/zh-CN/inspector.dtd
+END
+inspector.properties
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/zh-CN/inspector.properties
+END
+tasksOverlay.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/zh-CN/tasksOverlay.dtd
+END
+prefs.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/zh-CN/prefs.dtd
+END
+editing.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/zh-CN/editing.dtd
+END

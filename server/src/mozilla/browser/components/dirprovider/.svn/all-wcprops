@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/browser/components/dirprovider
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/browser/components/dirprovider/Makefile.in
+END
+nsBrowserDirectoryServiceDefs.h
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/components/dirprovider/nsBrowserDirectoryServiceDefs.h
+END
+nsBrowserDirectoryProvider.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/components/dirprovider/nsBrowserDirectoryProvider.cpp
+END

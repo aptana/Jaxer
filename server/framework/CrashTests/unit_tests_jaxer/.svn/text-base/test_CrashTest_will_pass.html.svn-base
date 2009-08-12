@@ -1,0 +1,12 @@
+<html>
+    <head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			document.write(Jaxer.Web.get(Jaxer.request.parsedUrl.queryParts.testHarnessHeader));
+		</script>	
+       <script type="text/javascript" runat="server">
+ 
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

@@ -1,0 +1,383 @@
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r
+END
+memory_trig_08.result
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory_trig_08.result
+END
+myisam_storedproc_03.result
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam_storedproc_03.result
+END
+innodb__datadict.result
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb__datadict.result
+END
+memory__load.result
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory__load.result
+END
+myisam_trig_1011ext.result
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam_trig_1011ext.result
+END
+myisam_storedproc_07.result
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam_storedproc_07.result
+END
+innodb_storedproc_02.result
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_storedproc_02.result
+END
+innodb_func_view.result
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_func_view.result
+END
+innodb_storedproc_06.result
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_storedproc_06.result
+END
+innodb_views.result
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_views.result
+END
+myisam_trig_03.result
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam_trig_03.result
+END
+myisam_bitdata.result
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam_bitdata.result
+END
+myisam__datadict.result
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam__datadict.result
+END
+memory_trig_03.result
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory_trig_03.result
+END
+memory_bitdata.result
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory_bitdata.result
+END
+innodb_trig_0102.result
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_trig_0102.result
+END
+myisam_storedproc_02.result
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam_storedproc_02.result
+END
+myisam_func_view.result
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam_func_view.result
+END
+myisam_triggers.result
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam_triggers.result
+END
+innodb__load.result
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb__load.result
+END
+myisam_storedproc_06.result
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam_storedproc_06.result
+END
+myisam_views.result
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam_views.result
+END
+memory_storedproc_10.result
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory_storedproc_10.result
+END
+memory_storedproc.result
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory_storedproc.result
+END
+memory_trig_1011ext.result
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory_trig_1011ext.result
+END
+innodb_trig_1011ext.result
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_trig_1011ext.result
+END
+memory_storedproc_08.result
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory_storedproc_08.result
+END
+myisam_trig_0102.result
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam_trig_0102.result
+END
+myisam__load.result
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam__load.result
+END
+myisam_storedproc.result
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam_storedproc.result
+END
+innodb_trig_09.result
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_trig_09.result
+END
+memory_trig_0407.result
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory_trig_0407.result
+END
+innodb_storedproc_10.result
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_storedproc_10.result
+END
+memory_triggers.result
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory_triggers.result
+END
+memory_storedproc_03.result
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory_storedproc_03.result
+END
+innodb_triggers.result
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_triggers.result
+END
+memory_storedproc_07.result
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory_storedproc_07.result
+END
+innodb_storedproc_08.result
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_storedproc_08.result
+END
+innodb_cursors.result
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_cursors.result
+END
+myisam_trig_09.result
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam_trig_09.result
+END
+innodb_trig_frkey.result
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_trig_frkey.result
+END
+datadict_help_tables_build.result
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/datadict_help_tables_build.result
+END
+myisam_storedproc_10.result
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam_storedproc_10.result
+END
+memory__datadict.result
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory__datadict.result
+END
+memory_trig_09.result
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory_trig_09.result
+END
+innodb_trig_08.result
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_trig_08.result
+END
+innodb_trig_0407.result
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_trig_0407.result
+END
+myisam_storedproc_08.result
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam_storedproc_08.result
+END
+innodb_storedproc.result
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_storedproc.result
+END
+datadict_help_tables_dev.result
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/datadict_help_tables_dev.result
+END
+memory_func_view.result
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory_func_view.result
+END
+memory_storedproc_02.result
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory_storedproc_02.result
+END
+myisam_cursors.result
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam_cursors.result
+END
+innodb_storedproc_03.result
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_storedproc_03.result
+END
+memory_storedproc_06.result
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory_storedproc_06.result
+END
+innodb_storedproc_07.result
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_storedproc_07.result
+END
+memory_views.result
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory_views.result
+END
+memory_cursors.result
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory_cursors.result
+END
+myisam_trig_08.result
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam_trig_08.result
+END
+myisam_trig_0407.result
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/myisam_trig_0407.result
+END
+memory_trig_0102.result
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/memory_trig_0102.result
+END
+innodb_trig_03.result
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_trig_03.result
+END
+innodb_bitdata.result
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_1/r/innodb_bitdata.result
+END

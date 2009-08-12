@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/innobase/ut
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/innobase/ut/Makefile.in
+END
+ut0ut.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/innobase/ut/ut0ut.c
+END
+ut0dbg.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/innobase/ut/ut0dbg.c
+END
+ut0mem.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/innobase/ut/ut0mem.c
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/innobase/ut/Makefile.am
+END
+ut0byte.c
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/innobase/ut/ut0byte.c
+END
+ut0rnd.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/innobase/ut/ut0rnd.c
+END

@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/IEPatcher/res
+END
+containsmozilla.ico
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/IEPatcher/res/containsmozilla.ico
+END
+doesntcontainie.ico
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/IEPatcher/res/doesntcontainie.ico
+END
+containsie.ico
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/IEPatcher/res/containsie.ico
+END
+IEPatcher.rc2
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/IEPatcher/res/IEPatcher.rc2
+END
+unknownstatus.ico
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/IEPatcher/res/unknownstatus.ico
+END
+IEPatcher.ico
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/IEPatcher/res/IEPatcher.ico
+END

@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/testing/mochitest/tests/SimpleTest
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/testing/mochitest/tests/SimpleTest/Makefile.in
+END
+MozillaFileLogger.js
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/testing/mochitest/tests/SimpleTest/MozillaFileLogger.js
+END
+SimpleTest.js
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/testing/mochitest/tests/SimpleTest/SimpleTest.js
+END
+TestRunner.js
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/testing/mochitest/tests/SimpleTest/TestRunner.js
+END
+test.css
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/testing/mochitest/tests/SimpleTest/test.css
+END
+setup.js
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/testing/mochitest/tests/SimpleTest/setup.js
+END
+EventUtils.js
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/testing/mochitest/tests/SimpleTest/EventUtils.js
+END
+quit.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/testing/mochitest/tests/SimpleTest/quit.js
+END

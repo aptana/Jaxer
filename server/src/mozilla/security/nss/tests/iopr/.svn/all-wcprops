@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/tests/iopr
+END
+cert_iopr.sh
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/tests/iopr/cert_iopr.sh
+END
+ssl_iopr.sh
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/tests/iopr/ssl_iopr.sh
+END
+ocsp_iopr.sh
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/tests/iopr/ocsp_iopr.sh
+END

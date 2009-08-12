@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/system/unixproxy
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/system/unixproxy/Makefile.in
+END
+nsUnixSystemProxySettings.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/system/unixproxy/nsUnixSystemProxySettings.cpp
+END

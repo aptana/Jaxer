@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/intl/ctl/src
+END
+nsUnicodeToThaiTTF.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/ctl/src/nsUnicodeToThaiTTF.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/intl/ctl/src/Makefile.in
+END
+ctl.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/ctl/src/ctl.pkg
+END
+nsUnicodeToTIS620.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/intl/ctl/src/nsUnicodeToTIS620.cpp
+END
+nsUnicodeToThaiTTF.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/ctl/src/nsUnicodeToThaiTTF.h
+END
+nsULE.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/intl/ctl/src/nsULE.cpp
+END
+nsUnicodeToSunIndic.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/intl/ctl/src/nsUnicodeToSunIndic.cpp
+END
+nsUnicodeToTIS620.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/intl/ctl/src/nsUnicodeToTIS620.h
+END
+nsCtlLEModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/intl/ctl/src/nsCtlLEModule.cpp
+END
+nsULE.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/intl/ctl/src/nsULE.h
+END
+nsUnicodeToSunIndic.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/intl/ctl/src/nsUnicodeToSunIndic.h
+END

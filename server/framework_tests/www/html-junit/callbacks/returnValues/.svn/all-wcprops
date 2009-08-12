@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/callbacks/returnValues
+END
+returnBoolean.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/callbacks/returnValues/returnBoolean.html
+END
+returnSyntaxError.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/callbacks/returnValues/returnSyntaxError.html
+END
+returnUndefined.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/callbacks/returnValues/returnUndefined.html
+END
+returnCustomError.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/callbacks/returnValues/returnCustomError.html
+END
+returnDateError.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/callbacks/returnValues/returnDateError.html
+END
+returnIntegerError.html
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/callbacks/returnValues/returnIntegerError.html
+END
+returnReferenceError.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/callbacks/returnValues/returnReferenceError.html
+END
+returnBooleanError.html
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/callbacks/returnValues/returnBooleanError.html
+END
+returnError.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/callbacks/returnValues/returnError.html
+END

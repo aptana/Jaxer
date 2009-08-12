@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/SSL
+END
+run-client
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/SSL/run-client
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/SSL/Makefile.in
+END
+NOTES
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/SSL/NOTES
+END
+run-server
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/SSL/run-server
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/SSL/Makefile.am
+END

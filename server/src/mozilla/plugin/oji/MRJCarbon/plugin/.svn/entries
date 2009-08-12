@@ -1,0 +1,125 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/plugin/oji/MRJCarbon/plugin
+http://svn.aptana.local/svn/jaxer
+
+
+
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+Source
+dir
+
+MRJPlugin.pbproj
+dir
+
+MRJPlugin.jar
+file
+
+
+
+
+2009-08-11T21:36:34.000000Z
+2f38bf6fa762b98689bf49722a8ba3c8
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+MRJPlugin.properties
+file
+
+
+
+
+2009-08-11T21:36:34.000000Z
+1985dbb4ce0481b23f03e9ba29041ed5
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+INSTALL.txt
+file
+
+
+
+
+2009-08-11T21:36:34.000000Z
+86523cf48854afaeac46033e9dab253a
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+MRJPlugin.policy
+file
+
+
+
+
+2009-08-11T21:36:34.000000Z
+6c3279fd8b50199dddf16d4eed9f575d
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+MRJPluginCarbon.plist
+file
+
+
+
+
+2009-08-11T21:36:34.000000Z
+ef98b4db1baf7d643d9b12e024042fcb
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+CHANGES
+file
+
+
+
+
+2009-08-11T21:36:34.000000Z
+f4c052bcea7cd81456ce0e1fd63304a5
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+Resources
+dir
+
+MRJPluginCarbon.xml
+file
+
+
+
+
+2009-08-11T21:36:34.000000Z
+5368fe757125b4bbfda66b5d20003131
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+English.lproj
+dir
+

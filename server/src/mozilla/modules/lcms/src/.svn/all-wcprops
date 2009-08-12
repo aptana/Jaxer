@@ -1,0 +1,143 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/lcms/src
+END
+cmsxform.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmsxform.c
+END
+cmscnvrt.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmscnvrt.c
+END
+cmsintrp.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmsintrp.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/Makefile.in
+END
+cmssamp.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmssamp.c
+END
+cmscgats.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmscgats.c
+END
+cmscam02.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmscam02.c
+END
+cmsps2.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmsps2.c
+END
+cmslut.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmslut.c
+END
+lcms.def
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/lcms.def
+END
+cmswtpnt.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmswtpnt.c
+END
+cmsmatsh.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmsmatsh.c
+END
+cmspack.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmspack.c
+END
+cmscam97.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmscam97.c
+END
+cmsgamma.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmsgamma.c
+END
+cmsnamed.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmsnamed.c
+END
+cmsvirt.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmsvirt.c
+END
+cmspcs.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmspcs.c
+END
+cmsio0.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmsio0.c
+END
+cmsgmt.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmsgmt.c
+END
+cmsio1.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/lcms/src/cmsio1.c
+END
+cmserr.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmserr.c
+END
+cmsmtrx.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/lcms/src/cmsmtrx.c
+END

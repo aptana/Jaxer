@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JM
+END
+JVMManagerTests.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JM/JVMManagerTests.h
+END
+GetProxyJNI.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JM/GetProxyJNI.cpp
+END
+ShowJavaConsole.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JM/ShowJavaConsole.cpp
+END
+get_jm.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JM/get_jm.cpp
+END
+CreateProxyJNI.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JM/CreateProxyJNI.cpp
+END
+IsJavaEnabled.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JM/IsJavaEnabled.cpp
+END
+Makefile.win
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JM/Makefile.win
+END
+CreateProxyJNI.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JM/CreateProxyJNI.h
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JM/Makefile
+END

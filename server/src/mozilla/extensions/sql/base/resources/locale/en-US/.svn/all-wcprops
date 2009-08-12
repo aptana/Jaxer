@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/sql/base/resources/locale/en-US
+END
+aliasDialog.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/resources/locale/en-US/aliasDialog.dtd
+END
+pref-sql.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/sql/base/resources/locale/en-US/pref-sql.dtd
+END
+contents.rdf
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/resources/locale/en-US/contents.rdf
+END
+sqlPrefsOverlay.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/resources/locale/en-US/sqlPrefsOverlay.dtd
+END
+aliasManager.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/resources/locale/en-US/aliasManager.dtd
+END

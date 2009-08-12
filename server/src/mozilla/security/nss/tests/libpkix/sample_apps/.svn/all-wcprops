@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/tests/libpkix/sample_apps
+END
+key3.db
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/sample_apps/key3.db
+END
+cert8.db
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/sample_apps/cert8.db
+END
+runPerf.sh
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/tests/libpkix/sample_apps/runPerf.sh
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/tests/libpkix/sample_apps/README
+END
+secmod.db
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/sample_apps/secmod.db
+END

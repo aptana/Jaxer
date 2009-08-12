@@ -1,0 +1,137 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/jaxer/!svn/ver/4624/trunk/products/server/src/mozilla
+END
+.mozconfig-win32_crs
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/4486/trunk/products/server/src/mozilla/.mozconfig-win32_crs
+END
+.mozconfig-linux64
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/4513/trunk/products/server/src/mozilla/.mozconfig-linux64
+END
+configure
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/jaxer/!svn/ver/4500/trunk/products/server/src/mozilla/configure
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/3676/trunk/products/server/src/mozilla/Makefile.in
+END
+LICENSE
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/LICENSE
+END
+.mozconfig-solaris
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/2924/trunk/products/server/src/mozilla/.mozconfig-solaris
+END
+LEGAL
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/LEGAL
+END
+client.mk
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/client.mk
+END
+.mozconfig-mac-universal_crs
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/4514/trunk/products/server/src/mozilla/.mozconfig-mac-universal_crs
+END
+configure.in
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/4500/trunk/products/server/src/mozilla/configure.in
+END
+.mozconfig-linux64_crs
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/4513/trunk/products/server/src/mozilla/.mozconfig-linux64_crs
+END
+.mozconfig-solaris_crs
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/3587/trunk/products/server/src/mozilla/.mozconfig-solaris_crs
+END
+allmakefiles.sh
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/allmakefiles.sh
+END
+postBuildJaxer.mk
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/4244/trunk/products/server/src/mozilla/postBuildJaxer.mk
+END
+.mozconfig-linux
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/4501/trunk/products/server/src/mozilla/.mozconfig-linux
+END
+makeUniversalJaxer.mk
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/4228/trunk/products/server/src/mozilla/makeUniversalJaxer.mk
+END
+.mozconfig-win32
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/4407/trunk/products/server/src/mozilla/.mozconfig-win32
+END
+README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/README.txt
+END
+camino.mk
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/camino.mk
+END
+.mozconfig-mac-universal
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/4514/trunk/products/server/src/mozilla/.mozconfig-mac-universal
+END
+.mozconfig-linux_crs
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/4501/trunk/products/server/src/mozilla/.mozconfig-linux_crs
+END
+aclocal.m4
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/aclocal.m4
+END

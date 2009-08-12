@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/components/shell/public
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/components/shell/public/Makefile.in
+END
+nsIWindowsShellService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/components/shell/public/nsIWindowsShellService.idl
+END
+nsIShellService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/components/shell/public/nsIShellService.idl
+END
+nsIMacShellService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/components/shell/public/nsIMacShellService.idl
+END

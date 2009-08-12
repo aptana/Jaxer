@@ -1,0 +1,744 @@
+<html>
+	<head>
+		<title id='docTitle'>Jaxer Server Unit Test</title>
+		
+		<link rel='stylesheet' type='text/css' href='css/index.css'>
+
+		<style type="text/css">
+
+			.SKIPPED {
+				color: gray;
+			}
+			.SUCCESS {
+				color: green;
+			}
+			.FAILURE {
+				color: red;
+			}
+			#testframe {
+				display: inline;
+				width: 60px;
+				height: 10px;
+			}
+			#runtimeNote {
+				font-weight: normal;
+				font-style: italic;
+			}
+		</style>
+
+		<script type="text/javascript" runat="server">
+
+//			Jaxer.response.setClientFramework('/jaxer/framework/clientFramework.js?cachebuster='+Math.random());
+						
+						
+			function findTestcasesInFolder(path, url, includeOptional )
+			{
+				var log = Jaxer.Log.forModule("TestRunner");
+				var testFolderUrlExpr = /\bunit_tests_jaxer\b/;
+				var dir = new Jaxer.Dir(path);
+				var dirContents = dir.readDir();
+				var urls = [];
+				dirContents.forEach(function pushFilepath(obj)
+				{
+					var objPath = obj.path;
+					var name = objPath.replace(/^.*[\\\/\:]/, "");
+					if (obj.isDir && (name.substr(0, 1) != "."))
+					{
+						var newUrl = (url == '') ? name : url + "/" + name;
+						urls = urls.concat(findTestcasesInFolder(objPath, newUrl,includeOptional));
+					}
+					else if (
+						 url.match(testFolderUrlExpr) 
+						 &&	!name.match(/^testRunner.htm[l]?$/) 
+						 &&  (name.match(/^test.*\.htm[l]?$/) ||  (name.match(/^optional.*\.htm[l]?$/) && includeOptional))
+						 && (!objPath.match(/CrashTest/) ) // comment out this line to include CrashTests
+						 //&& obj.path.match(/unit_tests_jaxer/) // comment out this line to include CrashTests
+						 )
+					{
+						urls.push(url + "/" + name);
+					}
+				});
+				log.trace("path: " + path + "; url: " + url + "; result: " + urls);
+				return urls;
+			}
+			
+			function findLibraryInFolder(path, url)
+			{
+				var log = Jaxer.Log.forModule("TestRunner");
+				
+				var libFolderUrlExpr = /\blibraries/;
+				var dir = new Jaxer.Dir(path);
+				var dirContents = dir.readDir();
+				var urls = [];
+				dirContents.forEach(function pushFilepath(obj)
+				{
+					var objPath = obj.path;
+					var name = objPath.replace(/^.*[\\\/\:]/, "");
+					if (obj.isDir && (name.substr(0, 1) != "."))
+					{
+						var newUrl = (url == '') ? name : url + "/" + name;
+						urls = urls.concat(findLibraryInFolder(objPath, newUrl));
+					}
+					else if (
+						 url.match(libFolderUrlExpr) 
+						 &&  name.match(/^.*\.js$/)
+						 )
+					{
+						urls.push(url + "/" + name);
+					}
+				});
+				log.trace("path: " + path + "; url: " + url + "; result: " + urls);
+				return urls;
+			}
+			
+			function getPathInfo()
+			{
+				var pathInfo = {};
+				pathInfo.currentFolder = Jaxer.request.pageFile.replace(/\/[^\/]*?$/, "");
+				pathInfo.currentPath = Jaxer.Dir.resolve(pathInfo.currentFolder);
+				pathInfo.subPath = Jaxer.request.parsedUrl.queryParts['path'];
+				pathInfo.includeOptional = (Jaxer.request.parsedUrl.queryParts['optional'] == 'yes');
+				pathInfo.path = pathInfo.subPath ? (Jaxer.Dir.combine(pathInfo.currentPath, pathInfo.subPath)) : pathInfo.currentPath;
+				pathInfo.url = pathInfo.subPath ? pathInfo.subPath.replace(/[\\\:]/, "/") : '';
+				return pathInfo;
+			}
+			
+			function getTestcases()
+			{
+				var pathInfo = getPathInfo();
+				return findTestcasesInFolder(pathInfo.path, pathInfo.url, pathInfo.includeOptional);
+			}
+			getTestcases.proxy = true;
+			
+			function getLibraries()
+			{
+				var pathInfo = getPathInfo();
+				return findLibraryInFolder(pathInfo.path, pathInfo.url, true);
+			}
+			getLibraries.proxy = true;
+			
+			function writeToFile(fileName, contents, append)
+			{
+				var pathInfo = getPathInfo();
+				var filePath = Jaxer.Dir.resolve(fileName, pathInfo.currentPath);
+				Jaxer.Log.info("writing to file "+filePath);
+
+				if (append) 
+				{
+					Jaxer.File.append(filePath, contents);
+				}
+				else
+				{
+					Jaxer.File.write(filePath, contents);
+				}
+			}
+			writeToFile.proxy = true;
+			
+			function setLogLevel(isVerbose)
+			{
+				Jaxer.Log.forModule("ServerUnitTesting").setLevel(isVerbose ? Jaxer.Log.TRACE : Jaxer.Log.INFO);
+			}
+			setLogLevel.proxy = true;
+			
+			function prepareDom()
+			{
+				$("chkVerboseLogging").checked = Jaxer.Log.forModule("ServerUnitTesting").getLevel().isBelow(Jaxer.Log.INFO);
+			}
+			
+			Jaxer.clientData.testcases = getTestcases();
+			Jaxer.clientData.serverOnlyUrl = Jaxer.Web.resolve("unitTestingServerOnly.js");
+			Jaxer.clientData.bothServerUrl = Jaxer.Web.resolve("unitTestingBoth.js");
+			Jaxer.clientData.testHarnessHeader = Jaxer.Web.resolve("unitTestingHeader.js");
+
+			Jaxer.clientData.libraries = getLibraries();
+			
+		</script>
+		
+		<script runat="both">
+			function $(id) { return document.getElementById(id); }
+		</script>
+		
+		<script type="text/javascript">
+			
+					
+			var TESTCASE_LOADED_POLLING_INTERVAL = 50; // in ms
+			var TESTCASE_LOADED_TIMEOUT = 180000; // in ms
+			var TEST_ASYNC_TIMEOUT = 90000; // in ms
+			
+			if (!Array.indexOf) // Fix IE, sheesh
+			{
+				Array.prototype.indexOf = function(obj)
+				{
+					for (var i = 0; i < this.length; i++) 
+					{
+						if (this[i] == obj) 
+						{
+							return i;
+						}
+					}
+					return -1;
+				}
+			}
+
+			function nameify(url)
+			{
+				var name = url.replace(/\//g, "_SLA_");
+				name = name.replace(/\s+/g, "_SPC_");
+				name = name.replace(/\./g, "_DOT_");
+				name = name.replace(/\:/g, "_COL_");
+				return name;
+			}
+			
+//			function loadTestcase(url)
+//			{
+//				var serverOnlyUrl = Jaxer.clientData.serverOnlyUrl;
+//				var bothUrl = Jaxer.clientData.bothUrl;
+//				url += (url.match(/\?/) ? "&" : "?") + "serverOnlyUrl=" + serverOnlyUrl + "&bothUrl=" + bothUrl;
+//				if ($multiJaxer) url += "&multiJaxer=true";
+//				return Jaxer.XHR.send(null,
+//				{
+//					url: url,
+//					method: "GET",
+//					cacheBuster: true,
+//					async: false
+//				})
+//			}
+			
+			var $runAll, $multiJaxer, $testcases, $failedTestcases, $skippedTestcases, $lastCaseRun;
+			
+			function runTestcase(url)
+			{
+				$lastCaseRun = url;
+				clearResults(url);
+//				var html = loadTestcase(url);
+//				// Something is wrong when IE7 does the following -- external framework.js does not load
+//				var iFrame = window.frames['testFrame'];
+//				iFrame.document.open();
+//				iFrame.document.write(html);
+//				iFrame.document.close();
+
+				var autoLoadLib = (rdChecked.length > 0) ? ("../../" + rdChecked)  : "";
+				var testcaseParams = 
+				{
+					rnd: Math.random(),
+					serverOnlyUrl: Jaxer.clientData.serverOnlyUrl,
+					bothServerUrl: Jaxer.clientData.bothServerUrl,
+					bothClientUrl: window.location.toString().replace(/[^\/]+$/, "unitTestingBoth.js"),
+					testHarnessHeader : Jaxer.clientData.testHarnessHeader,
+					libraryUrl: autoLoadLib
+				};
+				if ($multiJaxer) testcaseParams.multiJaxer = true;
+				$('testFrame').src = url + '?' + Jaxer.Callback.hashToQuery(testcaseParams);
+				pollFor(
+					function() { return (window.frames["testFrame"].__loaded && window.frames["testFrame"].__loaded.indexOf($('testFrame').src) > -1); }, 
+					TESTCASE_LOADED_POLLING_INTERVAL, 
+					_runTestcase, 
+					TESTCASE_LOADED_TIMEOUT, 
+					function() { _runTestcase({ fail: "Timed out" }); });
+			}
+			
+			var $timeRemaining, $intervalRef;
+			
+			function pollFor(functionToTest, interval, onSuccess, maxTime, onTimeout)
+			{
+				$timeRemaining = maxTime;
+				var onPollFor = getOnPollFor(functionToTest, interval, onSuccess, onTimeout);
+				if ($intervalRef)
+				{
+					clearInterval($intervalRef);
+				}
+				$intervalRef = setInterval(onPollFor, interval);
+			}
+			
+			function getOnPollFor(functionToTest, interval, onSuccess, onTimeout)
+			{
+				return function()
+				{
+					var success = functionToTest();
+					if (success)
+					{
+						clearInterval($intervalRef);
+						onSuccess();
+					}
+					else if ($timeRemaining <= interval)
+					{
+						clearInterval($intervalRef);
+						if (onTimeout) 
+						{
+							onTimeout();
+						}
+					}
+					else
+					{
+						$timeRemaining -= interval;
+					}
+				}
+			}
+
+			var $testWin, $tests, $testIndexToRun, $results, $functionReturningResult;
+			
+			function _runTestcase(specialHandling)
+			{
+				if (specialHandling)
+				{
+					onRunTestcase(specialHandling);
+				}
+				else
+				{
+					try 
+					{
+						$testWin = window.frames["testFrame"];
+						$testWin.Jaxer.ALERT_CALLBACK_ERRORS = false; // override whatever the server's setting is
+						var testsInCase = findTestsInCase($testWin);
+						if (testsInCase.skip) 
+						{
+							onRunTestcase( { skip: testsInCase.skip });
+						}
+						else 
+							if (testsInCase.tests.length > 0) 
+							{
+								$tests = testsInCase.tests;
+								$testIndexToRun = 0;
+								$results = [];
+								runTest();
+							}
+							else 
+							{
+								onRunTestcase( { fail: "No tests found" });
+							}
+					} 
+					catch (e) 
+					{
+						onRunTestcase( { fail: "Error initializing testcase: " + e });
+					}
+				}
+			}
+			
+			var $testIntervalRef, $_runTestRef;
+			
+			function runTest()
+			{
+				var functionToCall = $tests[$testIndexToRun];
+				if (functionToCall.name.match(/Async$/))
+				{
+					$functionReturningResult = $testWin["_" + functionToCall.name]; // might be undefined
+					try
+					{
+						$_runTestRef = functionToCall([_runTest, _runTestErrorWrapper]);
+						$testIntervalRef = setTimeout("onTestTimeout()", TEST_ASYNC_TIMEOUT);
+					}
+					catch (e)
+					{
+						_runTest({testRunnerAsyncException: e});
+					}
+				}
+				else
+				{
+					$functionReturningResult = functionToCall;
+					setTimeout("_runTest()", 0);
+				}
+			}
+			
+			function onTestTimeout()
+			{
+				if ($_runTestRef)
+				{
+					$_runTestRef = null;
+				}
+				if ($testIntervalRef)
+				{
+					clearInterval($testIntervalRef);
+					$testIntervalRef = null;
+				}
+				_runTest({testRunnerAsyncException: "Timed out"});
+			}
+			
+			function _runTestErrorWrapper(e)
+			{
+				_runTest({testRunnerAsyncException: e});
+			}
+			
+			function _runTest()
+			{
+				if ($testIntervalRef)
+				{
+					clearInterval($testIntervalRef);
+					$testIntervalRef = null;
+				}
+				if ($_runTestRef)
+				{
+					$testWin.Jaxer.XHR.cancel($_runTestRef);
+					$_runTestRef = null;
+				}
+				var test = $tests[$testIndexToRun];
+				var testName = test.name;
+				var successful = true;
+				var skipped = false;
+				var message = "";
+				if (arguments.length == 1 && (typeof arguments[0] == "object") && (typeof arguments[0].testRunnerAsyncException != "undefined"))
+				{
+					var asyncErr = arguments[0].testRunnerAsyncException;
+					successful = false;
+					var msg = (typeof asyncErr.message == "string") ? asyncErr.message : asyncErr.toString();
+					skipped = (asyncErr.message.match(/^\s*SKIPPED\b/));
+					message = skipped ? msg : asyncErr;
+				}
+				else if (typeof $functionReturningResult == "function") // might be undefined if there is no callback to an async function
+				{
+					try
+					{
+						$testWin.__runTestArguments = arguments;
+						$testWin.evaluate($functionReturningResult.name + ".apply(null, __runTestArguments)");
+					}
+					catch (e)
+					{
+						successful = false;
+						var msg = (typeof e.message == "string") ? e.message : e.toString();
+						skipped = (msg.match(/^\s*SKIPPED\b/));
+						message = skipped ? msg : e;
+					}
+					finally
+					{
+						$testWin.__runTestArguments = undefined;
+					}
+				}
+				$results[$testIndexToRun] = {name: testName, successful: successful, skipped: skipped, message: message};
+				$testIndexToRun++;
+				if ($testIndexToRun < $tests.length)
+				{
+					runTest();
+				}
+				else
+				{
+					onRunTestcase();
+				}
+			}
+			
+			function findTestsInCase(testWin)
+			{
+				var tests = [];
+				var skip = false;
+				
+				// One approach: will find 'em all, but not necessarily in the order they were defined
+				// But this fails because IE is not seeing functions in the global scope as enumerable
+//				for (var p in testWin) 
+//				{
+//					if (typeof testWin[p] == "function") 
+//					{
+//						if (p.match(/^test/)) 
+//						{
+//							if (!testWin[p].name) 
+//								testWin[p].name = p;
+//							tests.push(testWin[p]);
+//						}
+//						else if (p == "SKIP_TESTS")
+//						{
+//							skip = testWin.SKIP_TESTS();
+//							if (skip) break;
+//						}
+//					}
+//				}
+
+				// Another approach: parse script tags looking for function names
+				var scripts = testWin.document.getElementsByTagName("script");
+				var testFunctionPattern = /function\s+(_?test\w+|SKIP_TESTS)\b/g;
+				for (var i=0; i<scripts.length; i++)
+				{
+					var code = scripts[i].text;
+					while ((matches = testFunctionPattern.exec(code)) != null)
+					{
+						var functionName = matches[1];
+						if (typeof testWin[functionName] == "function")
+						{
+							if (!testWin[functionName].name) testWin[functionName].name = functionName; // More IE weirdness - need to do this for _test* as well as for test*
+							if (functionName.match(/^test/))
+							{
+								tests.push(testWin[functionName]);
+							}
+							else if (functionName == "SKIP_TESTS")
+							{
+								skip = testWin.SKIP_TESTS();
+								if (skip) break;
+							}
+						}
+					}
+					if (skip) break;
+				}
+				return { tests: tests, skip: skip };
+			}
+			
+			function onRunTestcase(specialHandling)
+			{
+				showResults($lastCaseRun, specialHandling || $results);
+				$results = null;
+				
+				if ($runAll)
+				{
+					var nextCaseIndex = $testcases.indexOf($lastCaseRun) + 1;
+					if ((nextCaseIndex > 0) && (nextCaseIndex < $testcases.length))
+					{
+						runTestcase($testcases[nextCaseIndex]);
+					}
+					else
+					{
+						var messages = [];
+						messages.push('<span class="SUCCESS">All ' + $testcases.length + ' testcases completed');
+						if ($skippedTestcases.length > 0)
+						{
+							messages.push(' (with ' + $skippedTestcases.length + ' testcases skipped)');
+						}
+						if ($failedTestcases.length == 0)
+						{
+							messages.push(' successfully</span>')
+						}
+						else
+						{
+							messages.push('</span> but with ' + $failedTestcases.length + ' testcases failing: <ul>');
+							for (var i=0; i<$failedTestcases.length; i++)
+							{
+								var url = $failedTestcases[i];
+								var displayURL = url.replace(/\bunit_tests_jaxer\b/,"");
+								displayURL = displayURL.replace(/\//,"");
+								displayURL = displayURL.replace(/\//g,"&nbsp;-&nbsp;");
+								messages.push('<li><a href="#frag_' + nameify(url) + '" title="Go to this testcase"><span class="FAILURE">' + displayURL + '</span></a></li>');
+							}
+							messages.push('</ul>');
+						}
+						$("completionMessage").innerHTML = messages.join("\n");
+						if ($writeToFile)
+						{
+							writeToFile($writeToFile, getContentsToWrite());
+						}
+						$runAll = false;
+					}
+				}
+			}
+			
+			var $writeToFile;
+			
+			function showResults(url, results)
+			{
+				var html = [];
+				var failure = false;
+				var skipped = false;
+				if (results.constructor == Array)
+				{
+					for (var i=0; i<results.length; i++)
+					{
+						var result = results[i];
+						failure |= !result.successful && !result.skipped;
+						html.push("<li class='" + (result.successful ? "SUCCESS" : (result.skipped ? "SKIPPED" : "FAILURE")) + "'>" +
+							result.name + ": " + (result.successful ? "successful" : (result.skipped ? "skipped - " : "failed - ")) + 
+							deHTML(result.message) + 
+							"</li>");
+					}				
+				}
+				else if (results.fail)
+				{
+					failure = true;
+					html.push("<li class='FAILURE'>Testcase failed: " + results.fail + "</li>");
+				}
+				else if (results.skip)
+				{
+					skipped = true;
+					html.push("<li class='SKIPPED'>Testcase skipped: " + results.skip + "</li>");
+				}
+				
+				if (failure && $runAll && $failedTestcases) 
+				{
+					$failedTestcases.push(url);
+				}
+
+				if (skipped && $runAll && $skippedTestcases) 
+				{
+					$skippedTestcases.push(url);
+				}
+				
+				$displayContainer = $("testcase_" + nameify(url));
+				$displayContainer.innerHTML = html.join("\n");
+			}
+			
+			function clearResults(url)
+			{
+				$displayContainer = $("testcase_" + nameify(url));
+				$displayContainer.innerHTML = "";
+			}
+			
+			function runAll()
+			{
+				$runAll = true;
+				$("completionMessage").innerHTML = '<span class="FAILURE">' + $testcases.length + ' test cases, not all completed yet...</span>';
+				$failedTestcases = [];
+				$skippedTestcases = [];
+				if ($testcases.length > 0)
+				{
+					runTestcase($testcases[0]);
+				}
+			}
+			
+			function loadTestcases()
+			{
+				var testcases = (Jaxer.clientData && Jaxer.clientData.testcases) ? Jaxer.clientData.testcases : getTestcases();
+				Jaxer.clientData.testcases = null; // From now on we'll go get them afresh on every call
+				var html = [];
+				$testcases = [];
+				for (var i=0; i<testcases.length; i++)
+				{
+					var url = testcases[i];
+					var displayURL = url.replace(/\bunit_tests_jaxer\b/,"");
+					displayURL = displayURL.replace(/\//,"");
+					displayURL = displayURL.replace(/\//g,"&nbsp;-&nbsp;");
+					$testcases.push(url);
+					html.push("<li>");
+					html.push("<a href='javascript:runTestcase(\"" + url + "\")' name='frag_" + nameify(url) + "' title='Run or re-run only this testcase'>" + displayURL + "</a>");
+					html.push("<ol id='testcase_" + nameify(url) + "'></ol>");
+					html.push("</li>");
+				}
+				$("testcases").innerHTML = html.join("");
+			}
+			
+			function init()
+			{
+				var query = document.location.search.substr(1); // without the leading ?, if any
+				$runAll = query.match(/runall\=true/i);
+				$multiJaxer = query.match(/multiJaxer\=true/i);
+				var writeToFileName = query.match(/writeto\=([^\&]+)/i);
+				if (writeToFileName)
+				{
+					writeToFileName = writeToFileName[1];
+				}
+				$lastCaseRun = null;
+				loadTestcases();
+				if ($runAll)
+				{
+					runAll();
+					if (writeToFileName)
+					{
+						$writeToFile = writeToFileName;
+					}
+					else
+					{
+						$writeToFile = '';
+					}
+				}
+			}
+			window.onload = init;
+			
+			function manualWriteToFile()
+			{
+				var filename = $('fileToWrite').value.replace(/^\s+|\s+$/, '');
+				if (filename == '')
+				{
+					alert("Please specify a filename (or path relative to the current file)");
+				}
+				else
+				{
+					try
+					{
+					 writeToFile(filename, getContentsToWrite());
+					}
+					catch (e)
+					{
+						alert("Error writing results to file: " + e);
+					}
+				}
+			}
+			
+			function getContentsToWrite()
+			{
+				var html = [];
+				var styles = document.getElementsByTagName("style");
+				for (var i=0; i<styles.length; i++)
+				{
+					var style = styles[i];
+					html.push("<style type='text/css'>")
+					html.push(style.innerHTML);
+					html.push("</style>");
+				}
+				html.push($('contents').innerHTML);
+				return html.join("\n");
+			}
+			
+			function addErrorMessage(message)
+			{
+				var container = document.createElement("div");
+				container.className = "FAILURE";
+				container.innerHTML = message;
+				$('messages').appendChild(container);
+			}
+			
+			function deHTML(str)
+			{
+				return String(str).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br />');
+			}
+			
+		</script>
+	</head>
+	<body onserverload="prepareDom()">
+		<div id='sampleDescription'>
+			A set of detailed unit tests to help identify any subsytem issues.
+		</div>
+		
+		<script type="text/javascript" src="lib/wz_tooltip.js"></script>
+		<div id='sampleHeader'>
+			<div class='sampleTitle'>
+				Jaxer Server Unit Tests
+			</div>
+			<div id='rightFloat'>
+				<img src ='images/information.png' class='sampleDescription' onmouseover="TagToTip('sampleDescription', CLICKCLOSE, true, STICKY, true, WIDTH, 300, TITLE, $('docTitle').innerHTML)"/>
+			</div>
+		</div>
+		
+		<div id='applicationContent'>
+		<div id="messages"></div>
+		<div class='titleBar'>
+			Click on any testcase below to run it, or click <input type="button" value="run all" onclick="runAll()"> to run them all.
+			<br><br>
+			<input type="checkbox" id="chkVerboseLogging" onclick="setLogLevel(this.checked)">
+			If desired, check this box to turn on verbose logging for server-only tests (excludes callback tests).
+			<br><br>
+			<span id='runtimeNote'>Please note that some testcases take a few seconds to run, during which time your browser may not show any activity.</span>
+			<br><br>
+			<div id="completionMessage"></div>
+		</div>
+		<div id="lib-select" class='hidden'>
+			Select External Javascript Library to include on test pages.<BR>
+			<TABLE>
+				<TR><TD id='col1'></TD><TD id='col2'></TD><TD id='col3'></TD></TR>
+			</TABLE>
+		</div>
+		<div class="test-frame">
+			Testcases load and run in this iframe:
+			<iframe id="testFrame" name="testFrame"></iframe>
+		</div>
+		<div id='contents'>
+			<ol id="testcases"></ol>			
+		</div>
+		<div id='filename'>
+			Filename: <input type="text" id="fileToWrite">
+			<input type="button" value="write results to file" onclick="manualWriteToFile()">
+		</div>
+
+		</div>
+		
+		<div id='sampleFooter'>
+		</div>
+<script>
+	var availableLibraries = Jaxer.clientData.libraries;
+
+	var rdChecked = '';
+	
+	var el;
+	
+	if (availableLibraries.length > 0)
+	{
+		$('lib-select').className = "";
+	}
+	for (var lib = 0; lib<availableLibraries.length; lib++)
+	{
+		el = $('col'+((lib % 3)+1));
+		el.innerHTML += "<div class='libChoice'><input name='libraryChoice' type='radio' value='"+ availableLibraries[lib] +"' onclick='rdChecked=this.value;'>"+availableLibraries[lib].replace(/.*\//,"")+"</input></div>";
+	}
+</script>
+	</body>
+</html>

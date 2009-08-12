@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/rdf/tests/rdfcat
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/tests/rdfcat/Makefile.in
+END
+rdfcat.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/tests/rdfcat/rdfcat.cpp
+END

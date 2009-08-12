@@ -1,0 +1,44 @@
+# Configuration file for jaxer_isapi
+# This file must be in the same folder as the ISAPI DLL with the same name as
+# the ISAPI DLL, but ends with .conf.  Eg if the isapi is jaxer_isapi.dll,
+# then this file must be named jaxer_isapi.conf.  Otherwise, this file will
+# not be loaded.
+#
+# If you modify this configuration file, you will need to restart the
+# webserver service to reload this configuration file.
+# 
+# LogFileName -- specify the fullpath of a valid file for logging.
+#                The folder must exist and the ISAPI must have write 
+#                permission to the folder.
+#                Otherwise, no logging will take place
+LogFileName=c:\JaxerLog\jaxer_isapi.log
+#
+# LogLevel -- Specify the level for logging.  Valid levels are
+#             TRACE, DEBUG, INFO, WARN, ERROR, FATAL
+#
+LogLevel=INFO
+#
+# VirtualDirName -- This is the "Application name" of the Virtual Directory
+#                   that you want Jaxer to process.
+#                   We support only one Virtual Directory now.
+VirtualDirName=Jaxer
+#
+# VirtualDirPath -- This is the " Local Path" of the Virtual Directory
+#                   that you want Jaxer to process.
+VirtualDirPath=C:\Aptana Jaxer\jaxer
+#
+# FilterExts -- Specify the extensions that Jaxer should handle.
+FilterExts=.html,.htm
+#
+# FilterContentTypes -- Specify the content types that Jaxer should
+#                       handle WHEN the request does not have an extension.
+#                       NOT SURE IF WE HAVE A USE-CASE FOR THIS
+FilterContentTypes=text/html
+#
+# JaxerServerIP -- Specify the Jaxer Server IP.  This is the IP where
+#                  JaxerManager.exe is running.
+JaxerServerIP=127.0.0.1
+#
+# JaxerServerPort -- Specify the Jaxer Server port number.  This is
+#                    JaxerManager's webport
+JaxerServerPort=4327

@@ -1,0 +1,32 @@
+<html>
+	<head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+	</head>
+	<script type="text/javascript" runat="server">
+	
+	function SKIP_TESTS()
+	{
+		var isApp = (Jaxer.request.app.APPLICATION_LABEL && Jaxer.request.app.APPLICATION_LABEL == 'diagnostic tests');
+		return isApp ? null : "Diagnostics application not defined in configApps.js";
+	}
+
+	/**
+	 * tests that application name is resolved
+	 */
+	function testDiagnosticsResolvedName()
+	{
+		assertTrue(Jaxer.request.app.NAME == 'diagnostics', "Application name should be resolved to 'diagnostics'");
+	}
+	
+	/**
+	 * tests that application_label constant is  defined
+	 */
+	function testDiagnosticsApplicationLabel()
+	{
+		assertTrue(Jaxer.request.app.APPLICATION_LABEL == 'diagnostic tests', "Application Label should be resolved to 'diagnostic tests'");
+	}
+	
+	</script>
+</html>

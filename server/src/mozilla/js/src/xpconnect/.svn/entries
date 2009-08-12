@@ -1,0 +1,67 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/js/src/xpconnect
+http://svn.aptana.local/svn/jaxer
+
+
+
+2009-02-05T18:25:55.343772Z
+4596
+mstepanov
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+tools
+dir
+
+sample
+dir
+
+tests
+dir
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:32:09.000000Z
+e693eb0004cead672e2884f819a32ee3
+2008-05-20T22:21:21.692422Z
+2899
+mstepanov
+
+crashtests
+dir
+
+loader
+dir
+
+shell
+dir
+
+src
+dir
+
+idl
+dir
+
+public
+dir
+

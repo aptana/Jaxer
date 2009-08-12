@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/places/tests/chrome
+END
+test_341972a.xul
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/places/tests/chrome/test_341972a.xul
+END
+test_381357.xul
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/places/tests/chrome/test_381357.xul
+END
+test_341972b.xul
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/places/tests/chrome/test_341972b.xul
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/places/tests/chrome/Makefile.in
+END
+sample_feed.atom
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/places/tests/chrome/sample_feed.atom
+END
+rss_as_html.rss
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/places/tests/chrome/rss_as_html.rss
+END
+test_423060.xul
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/places/tests/chrome/test_423060.xul
+END
+bad_links.atom
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/components/places/tests/chrome/bad_links.atom
+END
+test_371798.xul
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/components/places/tests/chrome/test_371798.xul
+END
+rss_as_html.rss^headers^
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/places/tests/chrome/rss_as_html.rss%5Eheaders%5E
+END
+test_342484.xul
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/places/tests/chrome/test_342484.xul
+END

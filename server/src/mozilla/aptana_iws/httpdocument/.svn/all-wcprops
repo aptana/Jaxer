@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/4521/trunk/products/server/src/mozilla/aptana_iws/httpdocument
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/httpdocument/Makefile.in
+END
+DocumentFetcher.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/4521/trunk/products/server/src/mozilla/aptana_iws/httpdocument/DocumentFetcher.h
+END
+aptDocumentFetcherService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/4521/trunk/products/server/src/mozilla/aptana_iws/httpdocument/aptDocumentFetcherService.cpp
+END
+aptDocumentFetcherService.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/httpdocument/aptDocumentFetcherService.h
+END

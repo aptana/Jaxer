@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/accessible/src/xforms
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/accessible/src/xforms/Makefile.in
+END
+nsXFormsAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/accessible/src/xforms/nsXFormsAccessible.h
+END
+nsXFormsWidgetsAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/accessible/src/xforms/nsXFormsWidgetsAccessible.cpp
+END
+nsXFormsFormControlsAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/accessible/src/xforms/nsXFormsFormControlsAccessible.cpp
+END
+nsXFormsWidgetsAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/accessible/src/xforms/nsXFormsWidgetsAccessible.h
+END
+nsXFormsFormControlsAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/accessible/src/xforms/nsXFormsFormControlsAccessible.h
+END
+nsXFormsAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/accessible/src/xforms/nsXFormsAccessible.cpp
+END

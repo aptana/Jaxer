@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/jaxer/!svn/ver/4559/trunk/products/server/src/mozilla/aptana_iws
+END
+build_docs.sh
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/build_docs.sh
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/4552/trunk/products/server/src/mozilla/aptana_iws/Makefile.in
+END
+build_framework.sh
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/build_framework.sh
+END
+build.mk
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/4552/trunk/products/server/src/mozilla/aptana_iws/build.mk
+END
+build_proframework.sh
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/4526/trunk/products/server/src/mozilla/aptana_iws/build_proframework.sh
+END
+jaxerProtocolVersion.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/jaxerProtocolVersion.h
+END
+makefiles.sh
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/makefiles.sh
+END
+confvars.sh
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/confvars.sh
+END
+jaxerBuildId.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/4559/trunk/products/server/src/mozilla/aptana_iws/jaxerBuildId.h
+END
+postBuild.sh
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/postBuild.sh
+END

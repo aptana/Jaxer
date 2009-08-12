@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/spatialnavigation
+END
+install.rdf
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/spatialnavigation/install.rdf
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/spatialnavigation/Makefile.in
+END
+makefiles.sh
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/spatialnavigation/makefiles.sh
+END

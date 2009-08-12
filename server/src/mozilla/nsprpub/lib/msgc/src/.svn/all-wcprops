@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/nsprpub/lib/msgc/src
+END
+win16gc.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/msgc/src/win16gc.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/msgc/src/Makefile.in
+END
+prgcapi.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/msgc/src/prgcapi.c
+END
+macgc.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/msgc/src/macgc.c
+END
+prmsgc.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/msgc/src/prmsgc.c
+END
+win32gc.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/msgc/src/win32gc.c
+END
+os2gc.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/msgc/src/os2gc.c
+END
+unixgc.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/msgc/src/unixgc.c
+END

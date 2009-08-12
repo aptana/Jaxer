@@ -1,0 +1,311 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql
+END
+time_zone.MYD
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/time_zone.MYD
+END
+db.MYI
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/db.MYI
+END
+help_category.MYI
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/help_category.MYI
+END
+help_topic.MYI
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/help_topic.MYI
+END
+proc.frm
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/proc.frm
+END
+time_zone.MYI
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/time_zone.MYI
+END
+time_zone_transition.frm
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/time_zone_transition.frm
+END
+proc.MYD
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/proc.MYD
+END
+time_zone_transition.MYD
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/time_zone_transition.MYD
+END
+proc.MYI
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/proc.MYI
+END
+host.frm
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/host.frm
+END
+time_zone_transition.MYI
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/time_zone_transition.MYI
+END
+columns_priv.frm
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/columns_priv.frm
+END
+host.MYD
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/host.MYD
+END
+help_relation.frm
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/help_relation.frm
+END
+columns_priv.MYD
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/columns_priv.MYD
+END
+time_zone_leap_second.frm
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/time_zone_leap_second.frm
+END
+procs_priv.frm
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/procs_priv.frm
+END
+host.MYI
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/host.MYI
+END
+time_zone_name.frm
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/time_zone_name.frm
+END
+time_zone_leap_second.MYD
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/time_zone_leap_second.MYD
+END
+help_relation.MYD
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/help_relation.MYD
+END
+columns_priv.MYI
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/columns_priv.MYI
+END
+func.frm
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/func.frm
+END
+procs_priv.MYD
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/procs_priv.MYD
+END
+help_keyword.frm
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/help_keyword.frm
+END
+time_zone_name.MYD
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/time_zone_name.MYD
+END
+time_zone_leap_second.MYI
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/time_zone_leap_second.MYI
+END
+help_relation.MYI
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/help_relation.MYI
+END
+func.MYD
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/func.MYD
+END
+procs_priv.MYI
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/procs_priv.MYI
+END
+help_keyword.MYD
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/help_keyword.MYD
+END
+time_zone_name.MYI
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/time_zone_name.MYI
+END
+time_zone_transition_type.frm
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/time_zone_transition_type.frm
+END
+func.MYI
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/func.MYI
+END
+help_keyword.MYI
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/help_keyword.MYI
+END
+time_zone_transition_type.MYD
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/time_zone_transition_type.MYD
+END
+tables_priv.frm
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/tables_priv.frm
+END
+time_zone_transition_type.MYI
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/time_zone_transition_type.MYI
+END
+user.frm
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/user.frm
+END
+tables_priv.MYD
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/tables_priv.MYD
+END
+user.MYD
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/user.MYD
+END
+tables_priv.MYI
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/tables_priv.MYI
+END
+db.frm
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/db.frm
+END
+help_category.frm
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/help_category.frm
+END
+help_topic.frm
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/help_topic.frm
+END
+user.MYI
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/user.MYI
+END
+time_zone.frm
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/time_zone.frm
+END
+db.MYD
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/db.MYD
+END
+help_category.MYD
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/help_category.MYD
+END
+help_topic.MYD
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/300/trunk/products/server/distro/jam/mysql/data_blank/mysql/help_topic.MYD
+END

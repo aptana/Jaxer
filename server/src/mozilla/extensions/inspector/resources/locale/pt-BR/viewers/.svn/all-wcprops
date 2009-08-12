@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/pt-BR/viewers
+END
+domNode.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/pt-BR/viewers/domNode.dtd
+END
+boxModel.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/pt-BR/viewers/boxModel.dtd
+END
+styleRules.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/pt-BR/viewers/styleRules.dtd
+END
+stylesheets.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/pt-BR/viewers/stylesheets.dtd
+END
+dom.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/pt-BR/viewers/dom.dtd
+END
+computedStyle.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/pt-BR/viewers/computedStyle.dtd
+END
+jsObject.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/pt-BR/viewers/jsObject.dtd
+END
+xblBindings.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/pt-BR/viewers/xblBindings.dtd
+END

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_1/regress
+END
+shell.js
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_1/regress/shell.js
+END
+browser.js
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_1/regress/browser.js
+END
+function-001.js
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_1/regress/function-001.js
+END

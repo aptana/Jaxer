@@ -1,0 +1,121 @@
+<html>
+	<head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+	</head>
+	<jaxer:include src="jaxer-include/data.html"></jaxer:include>
+	<div id="toReplace" src="jaxer-include/data2.html"/>
+	<script type="text/javascript" runat="server">
+		/**
+		 * testing loading code on this object
+		 */
+		function testIncludeLoadGlobalScope()
+		{
+			Jaxer.Includer.load("jaxer-include/data.js", this);
+			assertEquals(calcSum(2, 2), 4, "2+2 should equal 4, but we have:" + calcSum(2, 2));
+		}
+		
+		/**
+		 * testing loading on other object
+		 */
+		function testIncludeLoadOtherObject()
+		{
+			var v = new Object();
+			Jaxer.Includer.load("jaxer-include/data.js", v);
+			assertEquals(v.calcSum(2, 2), 4, "2+2 should equal 4, but we have:" + v.calcSum(2, 2));
+		}
+		
+		/**
+		 * Pending Issue #JXI-180
+		 * testing loading code that throws error
+		 */
+//		function testLoadBadCode()
+//		{
+//			var v = new Object();
+//			try{
+//			Jaxer.Includer.load("jaxer-include/data2.js", v);									
+//			} catch (e){
+//				//we are expecting it here
+//			}
+//			Jaxer.Includer.load("jaxer-include/data.js", v);
+//			assertEquals(v.calcSum(2, 2), 4, "2+2 should equal 4, but we have:" + v.calcSum(2, 2));
+//		}
+		
+		/**
+		 * testing loading code that throws error
+		 */
+		function testLoadUnexistingCode()
+		{
+			var v = new Object();
+			try{
+			Jaxer.Includer.load("jaxer-include/data3.js", v);									
+			} catch (e){
+				//we are expecting it here
+			}
+			Jaxer.Includer.load("jaxer-include/data.js", v);
+			assertEquals(v.calcSum(2, 2), 4, "2+2 should equal 4, but we have:" + v.calcSum(2, 2));
+		}
+		
+		/**
+		 * simple eval test
+		 */
+		function testEval()
+		{
+			var v = 
+			{
+				x: 5,
+				y: 7
+			};
+			var sum = Jaxer.Includer.evalOn("x+y", v);
+			assertEquals(sum, 12, "5+7 should equal 12, but we have:" + sum);
+		}
+		
+		/**
+		 * testing automatic includes
+		 */
+		function testJaxerInclude()
+		{
+			var div=document.getElementById("myId");
+			assertTrue(div!=null,"Div with id myId should be included but it is not");
+		}
+		
+		/**
+		 * testing manual call to include
+		 */
+		function testJaxerIncludeManual()
+		{
+			var div=document.getElementById("toReplace");
+			Jaxer.Includer.includeElement(document,div);
+			var div1=document.getElementById("myId2");
+			assertTrue(div1!=null,"Div with id myId2 should be included but it is not");
+			div=document.getElementById("toReplace");
+			assertTrue(div==null,"Div with id toReplace should be undefined but it is still available");
+		}
+		
+		/**
+		 * Pending Issue #JXI-180
+		 * testing evaluation wich throws error
+		 */
+//		function testEvalError()
+//		{
+//			var v = 
+//			{
+//				y: 7
+//			};
+//			try 
+//			{
+//				var sum=Jaxer.Includer.evalOn("2+2", v);
+//				assertEquals(sum, 4, "2+2 should equal 4, but we have:" + sum);
+//				sum = Jaxer.Includer.evalOn("x+y", v);
+//			} 
+//			catch (e) 
+//			{
+//				var sum=Jaxer.Includer.evalOn("2+2", v);
+//				assertEquals(sum, 4, "2+2 should equal 4, but we have:" + sum);
+//				return;
+//			}
+//			throw new Error("Error should be thrown, but fragment was magically evaluated");
+//		}
+	</script>
+</html>

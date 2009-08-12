@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/ipc/ipcd/shared/src
+END
+ipcStringList.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/shared/src/ipcStringList.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/shared/src/Makefile.in
+END
+ipcConfig.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/shared/src/ipcConfig.cpp
+END
+ipcMessagePrimitives.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/shared/src/ipcMessagePrimitives.h
+END
+ipcStringList.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/shared/src/ipcStringList.h
+END
+ipcConfig.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/shared/src/ipcConfig.h
+END
+ipcMessageQ.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/shared/src/ipcMessageQ.h
+END
+ipcMessageUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/shared/src/ipcMessageUtils.h
+END
+ipcList.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/shared/src/ipcList.h
+END
+ipcLog.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/shared/src/ipcLog.cpp
+END
+ipcMessage.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/shared/src/ipcMessage.cpp
+END
+ipcLog.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/shared/src/ipcLog.h
+END
+ipcIDList.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/shared/src/ipcIDList.cpp
+END
+ipcMessage.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/shared/src/ipcMessage.h
+END
+ipcm.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/shared/src/ipcm.cpp
+END
+ipcIDList.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/shared/src/ipcIDList.h
+END
+ipcMessagePrimitives.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/shared/src/ipcMessagePrimitives.cpp
+END
+ipcm.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/shared/src/ipcm.h
+END

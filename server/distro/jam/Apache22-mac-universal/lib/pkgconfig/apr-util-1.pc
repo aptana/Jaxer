@@ -1,0 +1,13 @@
+prefix=/Applications/Aptana_Jaxer/Apache22
+exec_prefix=/Applications/Aptana_Jaxer/Apache22
+libdir=${prefix}/lib
+APRUTIL_MAJOR_VERSION=1
+includedir=/Applications/Aptana_Jaxer/Apache22/include
+
+Name: APR Utils
+Description: Companion library for APR
+Version: 1.2.10
+# assume that apr-util requires libapr of same major version
+Requires: apr-1
+Libs: -L${libdir} -laprutil-${APRUTIL_MAJOR_VERSION} -lsqlite3 /Users/paul/dev/jaxer/products/server/src/httpd-2.2.6/srclib/apr-util/xml/expat/lib/libexpat.la -liconv
+Cflags: -I${includedir}

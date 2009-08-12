@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/profile/src
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/profile/src/Makefile.in
+END
+nsToolkitProfileService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/profile/src/nsToolkitProfileService.cpp
+END

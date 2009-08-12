@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/4232/trunk/products/server/src/Utils_old/tellManager
+END
+buildMacUniversal.sh
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/4232/trunk/products/server/src/Utils_old/tellManager/buildMacUniversal.sh
+END
+tellManager.sln
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/4232/trunk/products/server/src/Utils_old/tellManager/tellManager.sln
+END
+tellManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/4232/trunk/products/server/src/Utils_old/tellManager/tellManager.cpp
+END
+tellManager.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/4232/trunk/products/server/src/Utils_old/tellManager/tellManager.vcproj
+END

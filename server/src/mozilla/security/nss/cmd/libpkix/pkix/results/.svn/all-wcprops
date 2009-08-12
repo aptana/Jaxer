@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix/results
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix/results/manifest.mn
+END
+test_valresult.c
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix/results/test_valresult.c
+END
+test_policynode.c
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix/results/test_policynode.c
+END
+test_verifynode.c
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix/results/test_verifynode.c
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix/results/Makefile
+END
+test_buildresult.c
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix/results/test_buildresult.c
+END

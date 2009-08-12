@@ -1,0 +1,112 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/google/google_breakpad/src/common
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-07-03T17:58:11.043779Z
+3435
+jzhang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+linux
+dir
+
+convert_UTF.c
+file
+
+
+
+
+2009-08-11T21:40:24.000000Z
+4d044a3fc0cf0a802ea0a9b7997bbf2c
+2008-07-03T17:58:11.043779Z
+3435
+jzhang
+
+string_conversion.cc
+file
+
+
+
+
+2009-08-11T21:40:24.000000Z
+754a753eddd97bbe790ec4ae7e642c40
+2008-07-03T17:58:11.043779Z
+3435
+jzhang
+
+mac
+dir
+
+string_conversion.h
+file
+
+
+
+
+2009-08-11T21:40:24.000000Z
+449acd98aac40369fd77ee6130a63165
+2008-07-03T17:58:11.043779Z
+3435
+jzhang
+
+convert_UTF.h
+file
+
+
+
+
+2009-08-11T21:40:24.000000Z
+0a972c593f1864b6e8e9dc16ddc7b755
+2008-07-03T17:58:11.043779Z
+3435
+jzhang
+
+md5.c
+file
+
+
+
+
+2009-08-11T21:40:24.000000Z
+f2a509ba145132ab7a1a4156fb0cb1fb
+2008-07-03T17:58:11.043779Z
+3435
+jzhang
+
+windows
+dir
+
+md5.h
+file
+
+
+
+
+2009-08-11T21:40:24.000000Z
+ef67fa592fd1153c8a12490fc0215335
+2008-07-03T17:58:11.043779Z
+3435
+jzhang
+
+solaris
+dir
+

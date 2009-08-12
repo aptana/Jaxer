@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbdih
+END
+DbdihInit.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbdih/DbdihInit.cpp
+END
+Dbdih.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbdih/Dbdih.hpp
+END
+DbdihMain.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbdih/DbdihMain.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbdih/Makefile.in
+END
+Sysfile.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbdih/Sysfile.hpp
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbdih/Makefile.am
+END

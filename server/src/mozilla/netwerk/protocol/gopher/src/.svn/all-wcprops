@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/protocol/gopher/src
+END
+nsGopherChannel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/gopher/src/nsGopherChannel.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/protocol/gopher/src/Makefile.in
+END
+nsGopherChannel.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/gopher/src/nsGopherChannel.h
+END
+nsGopherHandler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/gopher/src/nsGopherHandler.cpp
+END
+nsGopherHandler.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/gopher/src/nsGopherHandler.h
+END

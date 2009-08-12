@@ -1,0 +1,155 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line
+END
+out-of-flow-1a.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/out-of-flow-1a.html
+END
+out-of-flow-1b.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/out-of-flow-1b.html
+END
+basic-1.html
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/basic-1.html
+END
+out-of-flow-1c.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/out-of-flow-1c.html
+END
+out-of-flow-1d.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/out-of-flow-1d.html
+END
+stress-1.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/stress-1.html
+END
+stress-2.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/stress-2.html
+END
+stress-3.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/stress-3.html
+END
+reftest.list
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/reftest.list
+END
+stress-4.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/stress-4.html
+END
+stress-5.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/stress-5.html
+END
+parent-style-1.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/parent-style-1.html
+END
+stress-6.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/stress-6.html
+END
+out-of-flow-1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/out-of-flow-1-ref.html
+END
+stress-7.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/stress-7.html
+END
+stress-8.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/stress-8.html
+END
+stress-9.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/stress-9.html
+END
+stress-11.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/stress-11.xhtml
+END
+basic-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/basic-ref.html
+END
+stress-2-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/stress-2-ref.html
+END
+parent-style-1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/parent-style-1-ref.html
+END
+stress-10.html
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/stress-10.html
+END
+stress-8-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/stress-8-ref.html
+END
+stress-9-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/stress-9-ref.html
+END
+stress-11-ref.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/first-line/stress-11-ref.xhtml
+END

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/cmd/strsclnt
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/strsclnt/manifest.mn
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/strsclnt/Makefile
+END
+strsclnt.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/cmd/strsclnt/strsclnt.c
+END

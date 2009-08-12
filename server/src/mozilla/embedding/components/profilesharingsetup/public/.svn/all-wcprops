@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/embedding/components/profilesharingsetup/public
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/profilesharingsetup/public/Makefile.in
+END
+nsIProfileSharingSetup.idl
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/profilesharingsetup/public/nsIProfileSharingSetup.idl
+END

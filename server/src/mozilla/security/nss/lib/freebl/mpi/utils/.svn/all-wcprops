@@ -1,0 +1,149 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils
+END
+LICENSE
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/LICENSE
+END
+prng.c
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/prng.c
+END
+primegen.c
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/primegen.c
+END
+pi.c
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/pi.c
+END
+isprime.c
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/isprime.c
+END
+makeprime.c
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/makeprime.c
+END
+bbs_rand.c
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/bbs_rand.c
+END
+sieve.c
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/sieve.c
+END
+bbsrand.c
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/bbsrand.c
+END
+lap.c
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/lap.c
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/README
+END
+fact.c
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/fact.c
+END
+PRIMES
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/PRIMES
+END
+ptab.pl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/ptab.pl
+END
+bbs_rand.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/bbs_rand.h
+END
+identest.c
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/identest.c
+END
+exptmod.c
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/exptmod.c
+END
+metime.c
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/metime.c
+END
+hex2dec.c
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/hex2dec.c
+END
+dec2hex.c
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/dec2hex.c
+END
+basecvt.c
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/basecvt.c
+END
+LICENSE-MPL
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/LICENSE-MPL
+END
+invmod.c
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/invmod.c
+END
+gcd.c
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/freebl/mpi/utils/gcd.c
+END

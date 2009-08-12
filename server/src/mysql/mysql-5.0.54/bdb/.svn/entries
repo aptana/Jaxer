@@ -1,0 +1,227 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mysql/mysql-5.0.54/bdb
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+dbinc
+dir
+
+os
+dir
+
+rpc_client
+dir
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:27:21.000000Z
+f1640c305dd827ba47880fbf58727f97
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+hash
+dir
+
+db
+dir
+
+env
+dir
+
+lock
+dir
+
+db_checkpoint
+dir
+
+build_unix
+dir
+
+build_vxworks
+dir
+
+cxx
+dir
+
+dist
+dir
+
+db_printlog
+dir
+
+xa
+dir
+
+txn
+dir
+
+clib
+dir
+
+rpc_server
+dir
+
+db_recover
+dir
+
+db_deadlock
+dir
+
+CMakeLists.txt
+file
+
+
+
+
+2009-08-11T21:27:21.000000Z
+eba647c81bf7718cca89da1bfde60dd7
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+has-props
+
+Makefile
+file
+
+
+
+
+2009-08-11T21:27:21.000000Z
+b8741859ba2c9e1531a786eb03bd090f
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+qam
+dir
+
+test
+dir
+
+db_stat
+dir
+
+log
+dir
+
+build_win32
+dir
+
+tcl
+dir
+
+LICENSE
+file
+
+
+
+
+2009-08-11T21:27:21.000000Z
+e0bf53c3f4524a5a6364251ed5b155a5
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+db185
+dir
+
+dbreg
+dir
+
+os_vxworks
+dir
+
+db_load
+dir
+
+rep
+dir
+
+db_archive
+dir
+
+common
+dir
+
+db_upgrade
+dir
+
+README
+file
+
+
+
+
+2009-08-11T21:27:21.000000Z
+607766665cfc8d088cce035bd3920f88
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+fileops
+dir
+
+btree
+dir
+
+dbm
+dir
+
+mutex
+dir
+
+os_win32
+dir
+
+dbinc_auto
+dir
+
+db_dump185
+dir
+
+hmac
+dir
+
+db_verify
+dir
+
+db_dump
+dir
+
+mp
+dir
+
+hsearch
+dir
+
+libdb_java
+dir
+

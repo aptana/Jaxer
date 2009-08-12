@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2549/trunk/products/server/distro/jam/Apache22-mac-universal/conf
+END
+magic
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/conf/magic
+END
+httpd.conf
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2549/trunk/products/server/distro/jam/Apache22-mac-universal/conf/httpd.conf
+END
+mime.types
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/conf/mime.types
+END

@@ -1,0 +1,143 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/browser/app
+END
+module.ver
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/browser/app/module.ver
+END
+splashos2.rc
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/browser/app/splashos2.rc
+END
+application.ini
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/browser/app/application.ini
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/browser/app/Makefile.in
+END
+default48.png
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/browser/app/default48.png
+END
+blocklist.xml
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/browser/app/blocklist.xml
+END
+mozicon50.xpm
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/app/mozicon50.xpm
+END
+document.ico
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/app/document.ico
+END
+firefox.exe.manifest
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/app/firefox.exe.manifest
+END
+mozicon16.xpm
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/app/mozicon16.xpm
+END
+document-os2.ico
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/app/document-os2.ico
+END
+mozicon128.png
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/app/mozicon128.png
+END
+splash.rc
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/browser/app/splash.rc
+END
+firefox-branding.js
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/app/firefox-branding.js
+END
+document.png
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/app/document.png
+END
+nsBrowserApp.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/browser/app/nsBrowserApp.cpp
+END
+apprunner-beos.rsrc
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/app/apprunner-beos.rsrc
+END
+firefox.ico
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/app/firefox.ico
+END
+README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/app/README.txt
+END
+firefox-os2.ico
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/app/firefox-os2.ico
+END
+default32.png
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/browser/app/default32.png
+END
+mozilla.in
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/browser/app/mozilla.in
+END
+default16.png
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/browser/app/default16.png
+END

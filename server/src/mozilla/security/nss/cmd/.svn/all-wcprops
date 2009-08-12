@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/nss/cmd
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/manifest.mn
+END
+platlibs.mk
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/cmd/platlibs.mk
+END
+platrules.mk
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/platrules.mk
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/Makefile
+END

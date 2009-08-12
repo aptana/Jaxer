@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/pkg/linux
+END
+sun-nss.spec
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/pkg/linux/sun-nss.spec
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/pkg/linux/Makefile
+END

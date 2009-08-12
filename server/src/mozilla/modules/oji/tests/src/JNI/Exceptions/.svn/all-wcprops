@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/Exceptions
+END
+ThrowNew_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/Exceptions/ThrowNew_2.cpp
+END
+ThrowNew_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/Exceptions/ThrowNew_3.cpp
+END
+ThrowNew_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/Exceptions/ThrowNew_4.cpp
+END
+ThrowNew_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/Exceptions/ThrowNew_5.cpp
+END
+ExceptionDescribe_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/Exceptions/ExceptionDescribe_1.cpp
+END
+ExceptionDescribe_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/Exceptions/ExceptionDescribe_2.cpp
+END
+FatalError_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/Exceptions/FatalError_1.cpp
+END
+ExceptionOccured_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/Exceptions/ExceptionOccured_1.cpp
+END
+Throw_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/Exceptions/Throw_1.cpp
+END
+Throw_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/Exceptions/Throw_2.cpp
+END
+ExceptionOccured_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/Exceptions/ExceptionOccured_2.cpp
+END
+ExceptionClear_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/Exceptions/ExceptionClear_1.cpp
+END
+ExceptionClear_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/Exceptions/ExceptionClear_2.cpp
+END
+Exceptions.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/Exceptions/Exceptions.h
+END
+Makefile.win
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/Exceptions/Makefile.win
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/Exceptions/Makefile
+END
+ThrowNew_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/Exceptions/ThrowNew_1.cpp
+END

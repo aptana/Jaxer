@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/nsprpub/lib/libc/src
+END
+plgetopt.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/plgetopt.c
+END
+plc.rc
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/plc.rc
+END
+strcat.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/strcat.c
+END
+strstr.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/strstr.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/Makefile.in
+END
+strcstr.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/strcstr.c
+END
+strchr.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/strchr.c
+END
+strlen.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/strlen.c
+END
+strcmp.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/strcmp.c
+END
+strccmp.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/strccmp.c
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/README
+END
+plvrsion.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/plvrsion.c
+END
+strdup.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/strdup.c
+END
+base64.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/base64.c
+END
+plc_symvec.opt
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/plc_symvec.opt
+END
+strcpy.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/strcpy.c
+END
+plerror.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/plerror.c
+END
+strtok.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/strtok.c
+END
+strpbrk.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/strpbrk.c
+END
+plc.def
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/lib/libc/src/plc.def
+END

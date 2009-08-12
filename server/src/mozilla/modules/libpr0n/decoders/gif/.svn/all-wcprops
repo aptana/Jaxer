@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/libpr0n/decoders/gif
+END
+nsGIFDecoder2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/libpr0n/decoders/gif/nsGIFDecoder2.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/libpr0n/decoders/gif/Makefile.in
+END
+nsGIFDecoder2.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/libpr0n/decoders/gif/nsGIFDecoder2.h
+END
+GIF2.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/libpr0n/decoders/gif/GIF2.h
+END

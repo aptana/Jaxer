@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/system
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/system/Makefile.in
+END
+nsICrashReporter.idl
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/system/nsICrashReporter.idl
+END
+nsIGnomeVFSService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/system/nsIGnomeVFSService.idl
+END
+nsIXULAppInfo.idl
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/system/nsIXULAppInfo.idl
+END
+nsIGConfService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpcom/system/nsIGConfService.idl
+END

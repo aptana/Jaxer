@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/nsprpub/pr/tests/dll
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/nsprpub/pr/tests/dll/Makefile.in
+END
+my.def
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/tests/dll/my.def
+END
+mysetval.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/tests/dll/mysetval.c
+END
+mygetval.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/tests/dll/mygetval.c
+END

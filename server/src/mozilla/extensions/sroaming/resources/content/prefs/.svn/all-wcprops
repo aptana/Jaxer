@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/resources/content/prefs
+END
+all.js
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/resources/content/prefs/all.js
+END
+prefsOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/resources/content/prefs/prefsOverlay.xul
+END
+files.xul
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/resources/content/prefs/files.xul
+END
+firefox.xul
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/resources/content/prefs/firefox.xul
+END
+top.xul
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/resources/content/prefs/top.xul
+END
+files.js
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/resources/content/prefs/files.js
+END
+firefox.js
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/resources/content/prefs/firefox.js
+END
+top.js
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/resources/content/prefs/top.js
+END

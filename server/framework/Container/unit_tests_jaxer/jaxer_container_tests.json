@@ -1,0 +1,10 @@
+{
+	"name": "default",
+	"tests": [
+		    "test_Container_basic.html"
+		  , "test_Container_basic2.html"
+		  , "test_SessionManager_key.html"
+		  , "session.html"
+		  , "readsession.html"
+	]
+}

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/parentalcontrols/src
+END
+nsParentalControlsServiceWin.h
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/parentalcontrols/src/nsParentalControlsServiceWin.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/parentalcontrols/src/Makefile.in
+END
+nsParentalControlsServiceWin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/parentalcontrols/src/nsParentalControlsServiceWin.cpp
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix/crlsel
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix/crlsel/manifest.mn
+END
+test_crlselector.c
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix/crlsel/test_crlselector.c
+END
+test_comcrlselparams.c
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix/crlsel/test_comcrlselparams.c
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix/crlsel/Makefile
+END

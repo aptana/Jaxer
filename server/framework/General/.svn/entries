@@ -1,0 +1,44 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/framework/General
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-03-24T21:28:27.218798Z
+2401
+dwaterson
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+unit_tests_jaxer
+dir
+
+server_general.json
+file
+
+
+
+
+2009-08-11T21:40:39.000000Z
+318e76a31716d7fa74d067f7e4e6292f
+2008-03-24T21:28:27.218798Z
+2401
+dwaterson
+has-props
+

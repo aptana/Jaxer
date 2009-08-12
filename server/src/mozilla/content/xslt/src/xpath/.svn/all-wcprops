@@ -1,0 +1,377 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/xslt/src/xpath
+END
+txExpr.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txExpr.h
+END
+txStandaloneXPathTreeWalker.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txStandaloneXPathTreeWalker.cpp
+END
+nsXPath1Scheme.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/nsXPath1Scheme.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/Makefile.in
+END
+nsXPathNamespace.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/nsXPathNamespace.cpp
+END
+txNodeTypeTest.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txNodeTypeTest.cpp
+END
+txNumberExpr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txNumberExpr.cpp
+END
+txUnionExpr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txUnionExpr.cpp
+END
+txXPathOptimizer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txXPathOptimizer.cpp
+END
+txErrorExpr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txErrorExpr.cpp
+END
+nsXPathExpression.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/content/xslt/src/xpath/nsXPathExpression.cpp
+END
+txCoreFunctionCall.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txCoreFunctionCall.cpp
+END
+txLiteralExpr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txLiteralExpr.cpp
+END
+nsXPathEvaluator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/nsXPathEvaluator.cpp
+END
+nsXPathNSResolver.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/content/xslt/src/xpath/nsXPathNSResolver.cpp
+END
+txPredicateList.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txPredicateList.cpp
+END
+txUnionNodeTest.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txUnionNodeTest.cpp
+END
+txExprParser.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txExprParser.h
+END
+txSingleNodeContext.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txSingleNodeContext.h
+END
+txStringResult.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txStringResult.cpp
+END
+txNodeSet.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txNodeSet.h
+END
+txResultRecycler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txResultRecycler.cpp
+END
+txIXPathContext.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txIXPathContext.h
+END
+txForwardContext.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txForwardContext.cpp
+END
+txPredicatedNodeTest.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txPredicatedNodeTest.cpp
+END
+txNodeSetContext.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txNodeSetContext.h
+END
+txNodeSetAdaptor.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txNodeSetAdaptor.cpp
+END
+nsXPathResult.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/content/xslt/src/xpath/nsXPathResult.h
+END
+txBooleanExpr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txBooleanExpr.cpp
+END
+txExpr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txExpr.cpp
+END
+nsXPath1Scheme.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/nsXPath1Scheme.cpp
+END
+txFunctionCall.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txFunctionCall.cpp
+END
+txVariableRefExpr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txVariableRefExpr.cpp
+END
+txExprResult.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txExprResult.h
+END
+txRootExpr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txRootExpr.cpp
+END
+txExprLexer.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txExprLexer.h
+END
+txFilterExpr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txFilterExpr.cpp
+END
+txNumberResult.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txNumberResult.cpp
+END
+txRelationalExpr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/xslt/src/xpath/txRelationalExpr.cpp
+END
+txXPCOMExtensionFunction.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/xslt/src/xpath/txXPCOMExtensionFunction.cpp
+END
+txExprParser.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txExprParser.cpp
+END
+nsXPathNamespace.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/nsXPathNamespace.h
+END
+txPathExpr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txPathExpr.cpp
+END
+txXPathOptimizer.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txXPathOptimizer.h
+END
+txUnaryExpr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txUnaryExpr.cpp
+END
+nsXPathExpression.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/content/xslt/src/xpath/nsXPathExpression.h
+END
+txXPathNode.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txXPathNode.h
+END
+nsXPathEvaluator.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/nsXPathEvaluator.h
+END
+nsXPathNSResolver.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/content/xslt/src/xpath/nsXPathNSResolver.h
+END
+txNodeSet.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txNodeSet.cpp
+END
+txMozillaXPathTreeWalker.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/content/xslt/src/xpath/txMozillaXPathTreeWalker.cpp
+END
+txLocationStep.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txLocationStep.cpp
+END
+txNamedAttributeStep.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txNamedAttributeStep.cpp
+END
+txNodeSetContext.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txNodeSetContext.cpp
+END
+nsXPathResult.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/content/xslt/src/xpath/nsXPathResult.cpp
+END
+txResultRecycler.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txResultRecycler.h
+END
+txForwardContext.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txForwardContext.h
+END
+txExprLexer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txExprLexer.cpp
+END
+txBooleanResult.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txBooleanResult.cpp
+END
+txXPathTreeWalker.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txXPathTreeWalker.h
+END
+txNameTest.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txNameTest.cpp
+END
+txNodeSetAdaptor.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xpath/txNodeSetAdaptor.h
+END

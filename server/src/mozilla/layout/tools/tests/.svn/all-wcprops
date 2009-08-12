@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/tools/tests
+END
+content_dumping.html
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/tools/tests/content_dumping.html
+END
+regression_tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/tools/tests/regression_tests.html
+END
+debug_utils.html
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/tools/tests/debug_utils.html
+END
+regression_tests.js
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/tools/tests/regression_tests.js
+END

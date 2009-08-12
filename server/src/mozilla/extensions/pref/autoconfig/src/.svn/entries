@@ -1,0 +1,175 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/extensions/pref/autoconfig/src
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-16T23:28:56.072242Z
+2859
+mstepanov
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+nsConfigFactory.cpp
+file
+
+
+
+
+2009-08-11T21:36:50.000000Z
+14d2488f64416b46a69b958c65e439c1
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+nsAutoConfig.cpp
+file
+
+
+
+
+2009-08-11T21:36:50.000000Z
+868294862f288d71cfbe73ba02222c31
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:36:50.000000Z
+ea9af6ca4d4e8c08be3aaf1bca3d9759
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+nsReadConfig.cpp
+file
+
+
+
+
+2009-08-11T21:36:50.000000Z
+58db7ed465f02c80174226c7b865b009
+2007-11-14T23:48:33.806633Z
+550
+jcohen
+
+unix
+dir
+
+nsAutoConfig.h
+file
+
+
+
+
+2009-08-11T21:36:50.000000Z
+fcca92d488b9f158b03c4198beaaab3b
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+nsLDAPSyncQuery.cpp
+file
+
+
+
+
+2009-08-11T21:36:50.000000Z
+2aa828c155c850c35c04617bc2d63fcb
+2007-11-14T23:48:33.806633Z
+550
+jcohen
+
+prefcalls.js
+file
+
+
+
+
+2009-08-11T21:36:50.000000Z
+4a87b8ed95918a8a94ace81998529f18
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+nsReadConfig.h
+file
+
+
+
+
+2009-08-11T21:36:50.000000Z
+05279903e1338851bfb3f23bede28ef9
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+beos
+dir
+
+nsLDAPSyncQuery.h
+file
+
+
+
+
+2009-08-11T21:36:50.000000Z
+2a78a1019368d861b8ecab539a6ebc1a
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+nsJSConfigTriggers.cpp
+file
+
+
+
+
+2009-08-11T21:36:50.000000Z
+7bd9e3cbef176547d3958e09fd0a4ae1
+2008-02-18T19:26:57.266176Z
+2130
+csanders
+
+win
+dir
+
+mac
+dir
+
+os2
+dir
+
+autoconfig.pkg
+file
+
+
+
+
+2009-08-11T21:36:50.000000Z
+0b1fbbef76de6f3964f775356843b6f7
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+

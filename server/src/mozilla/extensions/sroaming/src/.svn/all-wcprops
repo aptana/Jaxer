@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/src
+END
+Copy.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/src/Copy.h
+END
+Stream.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/src/Stream.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/src/Makefile.in
+END
+Module.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/src/Module.cpp
+END
+Protocol.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/src/Protocol.h
+END
+Core.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/src/Core.cpp
+END
+Copy.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/src/Copy.cpp
+END
+Stream.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/src/Stream.cpp
+END
+Core.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/src/Core.h
+END

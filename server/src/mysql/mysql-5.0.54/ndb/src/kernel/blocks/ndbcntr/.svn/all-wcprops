@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/ndbcntr
+END
+NdbcntrInit.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/ndbcntr/NdbcntrInit.cpp
+END
+Ndbcntr.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/ndbcntr/Ndbcntr.hpp
+END
+NdbcntrMain.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/ndbcntr/NdbcntrMain.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/ndbcntr/Makefile.in
+END
+NdbcntrSysTable.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/ndbcntr/NdbcntrSysTable.cpp
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/ndbcntr/Makefile.am
+END

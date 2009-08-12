@@ -1,0 +1,137 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/parser/htmlparser/public
+END
+nsHTMLTokens.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/public/nsHTMLTokens.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/public/Makefile.in
+END
+nsParserDataListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/public/nsParserDataListener.h
+END
+nsHTMLTagList.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/public/nsHTMLTagList.h
+END
+nsIFragmentContentSink.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/parser/htmlparser/public/nsIFragmentContentSink.h
+END
+nsIHTMLContentSink.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/public/nsIHTMLContentSink.h
+END
+nsIExpatSink.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/public/nsIExpatSink.idl
+END
+nsIParser.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/parser/htmlparser/public/nsIParser.h
+END
+nsIContentSink.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/public/nsIContentSink.h
+END
+nsIElementObserver.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/public/nsIElementObserver.h
+END
+nsIParserFilter.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/public/nsIParserFilter.h
+END
+nsIParserNode.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/public/nsIParserNode.h
+END
+nsToken.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/parser/htmlparser/public/nsToken.h
+END
+nsScannerString.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/public/nsScannerString.h
+END
+nsIExtendedExpatSink.idl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/public/nsIExtendedExpatSink.idl
+END
+nsIHTMLFragmentContentSink.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/public/nsIHTMLFragmentContentSink.h
+END
+nsHTMLTags.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/public/nsHTMLTags.h
+END
+nsITokenizer.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/public/nsITokenizer.h
+END
+nsILoggingSink.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/public/nsILoggingSink.h
+END
+nsIDTD.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/public/nsIDTD.h
+END
+nsParserCIID.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/public/nsParserCIID.h
+END
+nsIParserService.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2151/trunk/products/server/src/mozilla/parser/htmlparser/public/nsIParserService.h
+END

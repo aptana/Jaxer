@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/caps/tests/mochitest
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/caps/tests/mochitest/Makefile.in
+END
+test_bug246699.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/caps/tests/mochitest/test_bug246699.html
+END
+test_bug292789.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/caps/tests/mochitest/test_bug292789.html
+END
+test_bug423375.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/caps/tests/mochitest/test_bug423375.html
+END

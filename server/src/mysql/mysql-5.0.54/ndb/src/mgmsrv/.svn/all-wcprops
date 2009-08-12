@@ -1,0 +1,119 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/Makefile.in
+END
+Config.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/Config.cpp
+END
+InitConfigFileParser.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/InitConfigFileParser.cpp
+END
+MgmtSrvrConfig.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/MgmtSrvrConfig.cpp
+END
+Config.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/Config.hpp
+END
+InitConfigFileParser.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/InitConfigFileParser.hpp
+END
+ConfigInfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/ConfigInfo.cpp
+END
+MgmtSrvr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/MgmtSrvr.cpp
+END
+MgmtSrvrGeneralSignalHandling.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/MgmtSrvrGeneralSignalHandling.cpp
+END
+SignalQueue.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/SignalQueue.cpp
+END
+Services.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/Services.cpp
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/main.cpp
+END
+ConfigInfo.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/ConfigInfo.hpp
+END
+MgmtSrvr.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/MgmtSrvr.hpp
+END
+convertStrToInt.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/convertStrToInt.cpp
+END
+SignalQueue.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/SignalQueue.hpp
+END
+Services.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/Services.hpp
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/Makefile.am
+END
+convertStrToInt.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/mgmsrv/convertStrToInt.hpp
+END

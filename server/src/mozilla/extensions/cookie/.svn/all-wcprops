@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/cookie
+END
+nsPermission.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/cookie/nsPermission.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/cookie/Makefile.in
+END
+nsCookiePromptService.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/cookie/nsCookiePromptService.h
+END
+cookie.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/cookie/cookie.pkg
+END
+nsICookieAcceptDialog.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/cookie/nsICookieAcceptDialog.idl
+END
+nsCookieModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/cookie/nsCookieModule.cpp
+END
+nsCookiePermission.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/cookie/nsCookiePermission.cpp
+END
+nsPermissionManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/cookie/nsPermissionManager.cpp
+END
+nsPopupWindowManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/cookie/nsPopupWindowManager.cpp
+END
+makefiles.sh
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/cookie/makefiles.sh
+END
+nsCookiePermission.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/cookie/nsCookiePermission.h
+END
+nsPermission.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/cookie/nsPermission.cpp
+END
+nsPermissionManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/cookie/nsPermissionManager.h
+END
+nsICookiePromptService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/cookie/nsICookiePromptService.idl
+END
+nsPopupWindowManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/cookie/nsPopupWindowManager.h
+END
+nsCookiePromptService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/cookie/nsCookiePromptService.cpp
+END

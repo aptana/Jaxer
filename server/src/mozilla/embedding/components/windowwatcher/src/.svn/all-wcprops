@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/embedding/components/windowwatcher/src
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/embedding/components/windowwatcher/src/Makefile.in
+END
+nsDialogParamBlock.h
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/windowwatcher/src/nsDialogParamBlock.h
+END
+nsWWJSUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/windowwatcher/src/nsWWJSUtils.h
+END
+nsAutoWindowStateHelper.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/embedding/components/windowwatcher/src/nsAutoWindowStateHelper.cpp
+END
+nsPrompt.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/embedding/components/windowwatcher/src/nsPrompt.cpp
+END
+nsPromptService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/embedding/components/windowwatcher/src/nsPromptService.cpp
+END
+nsWindowWatcher.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/embedding/components/windowwatcher/src/nsWindowWatcher.cpp
+END
+nsAutoWindowStateHelper.h
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/embedding/components/windowwatcher/src/nsAutoWindowStateHelper.h
+END
+nsPrompt.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/windowwatcher/src/nsPrompt.h
+END
+nsPromptService.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/embedding/components/windowwatcher/src/nsPromptService.h
+END
+nsWindowWatcher.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/windowwatcher/src/nsWindowWatcher.h
+END
+nsDialogParamBlock.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/windowwatcher/src/nsDialogParamBlock.cpp
+END
+nsWWJSUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/embedding/components/windowwatcher/src/nsWWJSUtils.cpp
+END

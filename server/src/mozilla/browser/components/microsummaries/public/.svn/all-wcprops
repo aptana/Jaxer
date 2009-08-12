@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/components/microsummaries/public
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/components/microsummaries/public/Makefile.in
+END
+nsIMicrosummaryService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/components/microsummaries/public/nsIMicrosummaryService.idl
+END

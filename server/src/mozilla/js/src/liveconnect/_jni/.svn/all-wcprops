@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/liveconnect/_jni
+END
+netscape_javascript_JSObject.h
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/liveconnect/_jni/netscape_javascript_JSObject.h
+END
+netscape_javascript_JSException.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/liveconnect/_jni/netscape_javascript_JSException.h
+END

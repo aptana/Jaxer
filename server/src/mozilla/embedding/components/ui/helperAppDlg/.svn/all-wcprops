@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/embedding/components/ui/helperAppDlg
+END
+nsHelperAppDlg.xul
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/ui/helperAppDlg/nsHelperAppDlg.xul
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/ui/helperAppDlg/Makefile.in
+END
+nsHelperAppDlg.js
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/embedding/components/ui/helperAppDlg/nsHelperAppDlg.js
+END

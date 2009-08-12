@@ -1,0 +1,71 @@
+<html>
+    <head>
+        <script runat='server'>// DO NOT REMOVE: needed for the Jaxer unit testing harness 
+            Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+        </script>
+        <script type="text/javascript" runat="server">
+        	
+			function skipIfSingleJaxer()
+			{
+				if (!multipleJaxersAvailable) throw "SKIPPED - This test requires multiple Jaxers to run; " +
+					"rerun it with '&multiJaxer=true' in the URL";
+			}
+
+            function testAsyncXHRNoTimeout()
+			{
+				skipIfSingleJaxer();
+				
+				var done = false;
+				var sleeperMillis = 1000;
+				var received = '';
+				Jaxer.Web.get("sleeper.html?millis=" + sleeperMillis, 
+				{
+					async: true,
+					onsuccess: function(resp)
+					{
+						received = resp;
+						done = true;
+					}
+				});
+				
+				var timeoutMillis = 4000;
+				var success = Jaxer.Thread.waitFor(function()
+				{
+					return done;
+				}, timeoutMillis);
+				
+				assertTrue(success, "Timeout should not have happened");
+				assertEquals(received, "Slept for " + sleeperMillis + " milliseconds", "Did not get the expected response from sleeper.html");
+			}
+
+            function testAsyncXHRWithTimeout()
+			{
+				skipIfSingleJaxer();
+				
+				var done = false;
+				var sleeperMillis = 4000;
+				var received = '';
+				Jaxer.Web.get("sleeper.html?millis=" + sleeperMillis, 
+				{
+					async: true,
+					onsuccess: function(resp)
+					{
+						received = resp;
+						done = true;
+					}
+				});
+				
+				var timeoutMillis = 1000;
+				var success = Jaxer.Thread.waitFor(function()
+				{
+					return done;
+				}, timeoutMillis);
+				
+				assertTrue(!success, "Timeout should have happened");
+				assertEquals(received, "", "Should have timed out before getting a response from sleeper.html");
+			}
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

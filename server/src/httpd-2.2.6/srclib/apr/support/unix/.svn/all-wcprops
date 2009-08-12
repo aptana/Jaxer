@@ -1,0 +1,11 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/support/unix
+END
+waitio.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/support/unix/waitio.c
+END

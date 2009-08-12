@@ -1,0 +1,24 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Jaxer Tools</title>
+     <link rel="stylesheet" href="css/shared.css" type="text/css">
+      <link rel="stylesheet" href="css/local.css" type="text/css">
+	</head>
+	<body>
+		<h2>Useful tools for Web Development</h2>
+		The list of items below are an unscientific sample of the tools we love to use when building rich web applications. Try them out. 
+		If you have any other favourites that you think we should try out, then let us know at <a href=mail://jaxer@aptana.com>jaxer@aptana.com</a>
+		<ul class="tools">
+			<li><a href='http://www.aptana.com/download_all.php' 				target=_blank>Aptana IDE</a> The best IDE for Ajax development</li>
+			<li><a href='http://www.webyog.com/en/downloads.php' 				target=_blank>SQLyog</a> Great win32 DB tools for MySQL</li>
+			<li><a href='http://www.mozilla.com/en-US/products/' 				target=_blank>Firefox 2</a> Cross-platform, wide-spread browser that's great for developers</li>
+			<li><a href='http://getfirebug.com/' 								target=_blank>Firebug Extension</a> The best Firefox extension for developers</li>
+			<li><a href='https://addons.mozilla.org/en-US/firefox/addon/1419' 	target=_blank>IE extension</a> IE preview extension for Firefox</li>
+			<li><a href='http://www.mimo.ch/plugin.htm' 	target=_blank>Logfile View</a> Logfile Viewer plugin for Aptana IDE or Eclipse  (<a href='logFileColoring.xml'>here's</a> a handy colorizer config file)</li>
+			<li><a href='http://graysky.sourceforge.net/' 	target=_blank>LogWatcher</a> An alternate log watcher plugin for Aptana IDE or Eclipse </li>
+		</ul>
+	</body>
+</html>

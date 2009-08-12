@@ -1,0 +1,329 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support
+END
+log_server_status.in
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/log_server_status.in
+END
+dbmmanage.in
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/dbmmanage.in
+END
+apxs.in
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/apxs.in
+END
+NWGNUhtcacheclean
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/NWGNUhtcacheclean
+END
+checkgid.c
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/checkgid.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/Makefile.in
+END
+htpasswd.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/htpasswd.dsp
+END
+suexec.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/suexec.h
+END
+abs.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/abs.dsp
+END
+NWGNUhtdigest
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/NWGNUhtdigest
+END
+.indent.pro
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/.indent.pro
+END
+phf_abuse_log.cgi
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/phf_abuse_log.cgi
+END
+logresolve.pl.in
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/logresolve.pl.in
+END
+NWGNUab
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/NWGNUab
+END
+phf_abuse_log.cgi.in
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/phf_abuse_log.cgi.in
+END
+NWGNUrotlogs
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/NWGNUrotlogs
+END
+.deps
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/.deps
+END
+split-logfile
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/split-logfile
+END
+apxs
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/apxs
+END
+dbmmanage
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/dbmmanage
+END
+NWGNUhtpasswd
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/NWGNUhtpasswd
+END
+envvars-std
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/envvars-std
+END
+utilitiesnw.def
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/utilitiesnw.def
+END
+NWGNUhtdbm
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/NWGNUhtdbm
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/Makefile
+END
+split-logfile.in
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/split-logfile.in
+END
+htdbm.c
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/htdbm.c
+END
+envvars-std.in
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/envvars-std.in
+END
+htdbm.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/htdbm.dsp
+END
+htcacheclean.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/htcacheclean.c
+END
+apachectl
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/apachectl
+END
+config.m4
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/config.m4
+END
+htcacheclean.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/htcacheclean.dsp
+END
+list_hooks.pl
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/list_hooks.pl
+END
+apachectl.in
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/apachectl.in
+END
+logresolve.pl
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/logresolve.pl
+END
+NWGNUmakefile
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/NWGNUmakefile
+END
+htdigest.c
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/htdigest.c
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/README
+END
+NWGNUhttxt2dbm
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/NWGNUhttxt2dbm
+END
+htdigest.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/htdigest.dsp
+END
+httxt2dbm.c
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/httxt2dbm.c
+END
+logresolve.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/logresolve.c
+END
+ab.c
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/ab.c
+END
+rotatelogs.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/rotatelogs.c
+END
+check_forensic
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/check_forensic
+END
+httxt2dbm.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/httxt2dbm.dsp
+END
+logresolve.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/logresolve.dsp
+END
+ab.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/ab.dsp
+END
+rotatelogs.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/rotatelogs.dsp
+END
+NWGNUlogres
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/NWGNUlogres
+END
+log_server_status
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/log_server_status
+END
+suexec.c
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/suexec.c
+END
+htpasswd.c
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/htpasswd.c
+END

@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/js/src/xpconnect/tests
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/js/src/xpconnect/tests/Makefile.in
+END
+TestXPC.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/js/src/xpconnect/tests/TestXPC.cpp
+END

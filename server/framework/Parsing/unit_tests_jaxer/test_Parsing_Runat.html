@@ -1,0 +1,254 @@
+<html>
+	<head>
+		<title>Test runat combinations</title>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>
+		<script runat='server'>
+			window.runAfterCallbackProcessing = true; // Most unit tests will not need this and should not have this
+		</script>	
+	</head>
+	<!--
+		combinations:
+		in script: empty, client, server-nocache, server, server-proxy, both-nocache, both, both-proxy
+		direct runat: nothing, client, server-nocache, server, server-proxy, both-nocache, both, both-proxy
+		direct proxy: nothing, false, true
+		in proxies: out, in
+		
+		test for:
+		- f defined or not at parseComplete
+		- f defined or not on client
+		- fAsync defined or not on client
+		- f defined or not on callback
+		- f callable or not on callback
+		
+		NOTE:
+		- This does not (yet) test for whether "both"-type runat values will create the proxy in the Jaxer.Server namespace 
+	-->
+	<body>
+		<script runat="server-nocache">
+			
+			// Create the various combinations in the page
+			
+			var scriptRunatValues = ["none", "client", "server-nocache", "server", "server-proxy", "both-nocache", "both", "both-proxy"];
+			var directRunatValues = ["none", "client", "server-nocache", "server", "server-proxy", "both-nocache", "both", "both-proxy"];
+			var directProxyValues = ["none", false, true];
+			var inProxiesValues = [false, true];
+
+			var scriptBlocks = {};
+			var scriptBlockRefs = {};
+			var head = document.getElementsByTagName("head")[0];
+			var functionsToTest = [];
+			var propNames = ["scriptRunatValue", "directRunatValue", "directProxyValue", "inProxiesValue"];
+			
+			var counter = 0;
+			scriptRunatValues.forEach(function doScriptRunatValue(scriptRunatValue)
+			{
+				scriptBlocks[scriptRunatValue] = [];
+				directRunatValues.forEach(function doDirectRunatValue(directRunatValue)
+				{
+					directProxyValues.forEach(function doDirectProxyValue(directProxyValue)
+					{
+						inProxiesValues.forEach(function doInProxiesValue(inProxiesValue)
+						{
+							var functionName = eval("['fn', " + propNames.join(", ") + "].join('__').replace(/\-/g, '_')");
+							var functionDescriptor = {name: functionName};
+							propNames.forEach(function(p)
+							{
+								functionDescriptor[p] = eval(p);
+							});
+							functionsToTest.push(functionDescriptor);
+							var functionBody = "return 'I am " + functionName + " (" + (counter++) + ")';";
+							var definitionLines = ["function " + functionName + "() { " + functionBody + " };"];
+							if (directRunatValue != "none")
+							{
+								definitionLines.push(functionName + ".runat = '" + directRunatValue + "';");
+							}
+							if (directProxyValue != "none")
+							{
+								definitionLines.push(functionName + ".proxy = " + directProxyValue + ";");
+							}
+							if (inProxiesValue)
+							{
+								Jaxer.proxies.push(functionName);
+							}
+							scriptBlocks[scriptRunatValue].push(definitionLines.join("\n"));
+						});
+					});
+				});
+				var scriptBlockRef = Jaxer.Util.DOM.insertScriptAtEnd(
+					scriptBlocks[scriptRunatValue].join("\n"), 
+					head,
+					(scriptRunatValue == "none") ? {} : {runat: scriptRunatValue}
+				);
+//				if (scriptRunatValue == "server-nocache")
+//				{
+//					Jaxer.Log.info(scriptBlocks[scriptRunatValue].join("\n"));
+//				}
+				scriptBlockRefs[scriptRunatValue] = scriptBlockRef;
+			});
+
+			// Create the tests
+			
+			var serverTests = [];
+			var clientTests = [];
+			var proxyTests = [];
+			
+			function isParsedOnServer(runat)
+			{
+				return Boolean(runat.match(/server|both/));
+			}
+			
+			function deepArrayToString(array)
+			{
+				var strings = [];
+				array.forEach(function(elt)
+				{
+					if (elt == null)
+					{
+						strings.push(null);
+					}
+					else if ((typeof elt == "object") && elt instanceof elt.__parent__.Array)
+					{
+						strings.push(deepArrayToString(elt));
+					}
+					else
+					{
+						strings.push(elt);
+					}
+				});
+				return "[" + strings.join(",") + "]";
+			}
+			
+			functionsToTest.forEach(function createTest(fn)
+			{
+				var definedOnServer, definedOnClient;
+				if (!isParsedOnServer(fn.scriptRunatValue) ||
+					fn.directRunatValue.match(/^client$/))
+				{
+					definedOnServer = false;
+					definedOnClient = true;
+				}
+				else
+				{
+					var effectiveRunatValue = (fn.directRunatValue == "none") ? fn.scriptRunatValue : fn.directRunatValue;
+					definedOnServer = !(effectiveRunatValue.match(/^none$|^client$/));
+					definedOnClient = !(effectiveRunatValue.match(/^server/));
+				}
+				
+				var willBeProxied = false;
+				var willBeCached = false;
+				if (!definedOnServer)
+				{
+					willBeCached = false;
+					willBeProxied = false;
+				}
+				else if ((fn.inProxiesValue) || (fn.directProxyValue == true))
+				{
+					willBeCached = true;
+					willBeProxied = true;
+				}
+				else if (((fn.directRunatValue.match(/proxy/)) || 
+					      (fn.scriptRunatValue.match(/proxy/) && (fn.directRunatValue == "none"))
+						 ) && 
+					     (fn.directProxyValue != false))
+				{
+					willBeCached = true;
+					willBeProxied = true;
+				}
+				else if (fn.directProxyValue == false)
+				{
+					if (!fn.directRunatValue.match(/\-nocache/) &&
+						!(fn.scriptRunatValue.match(/\-nocache/) && (fn.directRunatValue == "none")))
+					{
+						willBeCached = true;
+					}
+				}
+				else if (fn.directProxyValue == "none")
+				{
+					if (fn.directRunatValue.match(/^server$|^both$/) ||
+						(fn.scriptRunatValue.match(/^server$|^both$/) && (fn.directRunatValue == "none")))
+					{
+						willBeCached = true;
+					}
+				}
+				if (willBeProxied)
+				{
+					definedOnClient = true; // it will be defined on the client, just not run on the client
+				}
+				
+				serverTests.push(
+					"function testOnServer__" + fn.name + "() { " +
+					(definedOnServer
+						? "assertNotUndefined(window." + fn.name + ", '" + fn.name + " should have been defined on the server'); "
+						: "assertUndefined(window." + fn.name + ", '" + fn.name + " should not have been defined on the server'); "
+					) +
+				 	" }; ");
+				clientTests.push(
+					"function testOnClient__" + fn.name + "() { " +
+					(definedOnClient
+						? "assertNotUndefined(window." + fn.name + ", '" + fn.name + " should have been defined on the client'); "
+						: "assertUndefined(window." + fn.name + ", '" + fn.name + " should not have been defined on the client'); "
+					) +
+				 	" }; ");
+				proxyTests.push( willBeCached ? 
+					"assertNotUndefined(window." + fn.name + ", '" + fn.name + " undefined'); " : 
+					"assertUndefined(window." + fn.name + ", '" + fn.name + " defined'); "
+					);
+				proxyTests.push( willBeProxied ? 
+					"assertTrue(window." + fn.name + ".proxy, '" + fn.name + ".proxy false or undefined'); " : 
+					"if (window." + fn.name + ") assertFalse(window." + fn.name + ".proxy, '" + fn.name + ".proxy true'); "
+					);
+
+			});
+			
+			Jaxer.Util.DOM.insertScriptAtEnd(
+				serverTests.join("\n"), 
+				head,
+				{runat: "server-nocache"}
+			);
+			
+			Jaxer.Util.DOM.insertScriptAtEnd(
+				clientTests.join("\n"), 
+				head,
+				{runat: "client"}
+			);
+			
+			Jaxer.Util.DOM.insertScriptAtEnd(
+				"function testAllProxies_combined_" + proxyTests.length + "() {\n" +
+				"if (Jaxer.request.isCallback) {\n" + 
+				proxyTests.join("\n") + "\n}\n}", 
+				head,
+				{runat: "server-proxy"}
+			);
+			
+		</script>
+		<script runat="both">
+			function returnEquivalent(arg)
+			{
+				return arg ? "abc" : 0;
+			}
+			function dummyBothAndProxy()
+			{
+				return 42;
+			}
+			dummyBothAndProxy.proxy = returnEquivalent(true); var thisShouldNotBeStripped = 13; // Make sure these stay on the same line, for a strong test
+			
+			function dummyBothNoProxy()
+			{
+				return 42;
+			}
+			dummyBothNoProxy.proxy = returnEquivalent(false); var thisShouldAlsoNotBeStripped = 13; // Make sure these stay on the same line, for a strong test
+			
+		</script>
+		<script>
+			function testBothAndProxy()
+			{
+				assertNotUndefined(Jaxer.Server.dummyBothAndProxy, "The function dummyBothAndProxy was supposed to be defined on the client but was not");
+				assertNotUndefined(thisShouldNotBeStripped, "The variable thisShouldNotBeStripped was supposed to be defined on the client but was not");
+				assertUndefined(Jaxer.Server.dummyBothNoProxy, "The function dummyBothNoProxy was not supposed to be defined on the client but was");
+				assertNotUndefined(thisShouldAlsoNotBeStripped, "The variable thisShouldAlsoNotBeStripped was supposed to be defined on the client but was not");
+			}
+		</script>
+	</body>
+</html>

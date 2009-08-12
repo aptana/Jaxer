@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/idispatch/Tests
+END
+jsDriver.pl
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/idispatch/Tests/jsDriver.pl
+END
+exectests.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/idispatch/Tests/exectests.cmd
+END

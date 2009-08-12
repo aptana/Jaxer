@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/browser/installer/windows
+END
+wizHeader.bmp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/installer/windows/wizHeader.bmp
+END
+wizHeaderRTL.bmp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/installer/windows/wizHeaderRTL.bmp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/installer/windows/Makefile.in
+END
+packages-static
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/browser/installer/windows/packages-static
+END
+wizWatermark.bmp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/installer/windows/wizWatermark.bmp
+END
+app.tag
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/installer/windows/app.tag
+END

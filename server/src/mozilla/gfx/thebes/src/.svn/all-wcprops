@@ -1,0 +1,293 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/gfx/thebes/src
+END
+gfxTextRunWordCache.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/thebes/src/gfxTextRunWordCache.cpp
+END
+gfxPlatformGtk.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/thebes/src/gfxPlatformGtk.cpp
+END
+gfxImageSurface.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/thebes/src/gfxImageSurface.cpp
+END
+gfxPath.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/thebes/src/gfxPath.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/thebes/src/Makefile.in
+END
+gfxFontMissingGlyphs.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/gfx/thebes/src/gfxFontMissingGlyphs.h
+END
+gfxXlibNativeRenderer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/thebes/src/gfxXlibNativeRenderer.cpp
+END
+gfxBeOSPlatform.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/thebes/src/gfxBeOSPlatform.cpp
+END
+gfxTextRunCache.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/thebes/src/gfxTextRunCache.cpp
+END
+gfxAtsuiFonts.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/thebes/src/gfxAtsuiFonts.cpp
+END
+gfxQuartzSurface.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/thebes/src/gfxQuartzSurface.cpp
+END
+nsUnicodeRange.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/thebes/src/nsUnicodeRange.cpp
+END
+gfxGlitzSurface.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/thebes/src/gfxGlitzSurface.cpp
+END
+gfxQuartzImageSurface.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/thebes/src/gfxQuartzImageSurface.cpp
+END
+gfxWindowsSurface.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/thebes/src/gfxWindowsSurface.cpp
+END
+gfxPlatformMac.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/thebes/src/gfxPlatformMac.cpp
+END
+gfxFontTest.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/thebes/src/gfxFontTest.cpp
+END
+gfxFont.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/thebes/src/gfxFont.cpp
+END
+gfxQuartzFontCache.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/thebes/src/gfxQuartzFontCache.h
+END
+gfxFontconfigUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/thebes/src/gfxFontconfigUtils.cpp
+END
+gfxOS2Fonts.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/gfx/thebes/src/gfxOS2Fonts.cpp
+END
+gfxPattern.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/thebes/src/gfxPattern.cpp
+END
+gfxPDFSurface.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/gfx/thebes/src/gfxPDFSurface.cpp
+END
+gfxContext.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/thebes/src/gfxContext.cpp
+END
+gfxPlatform.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/thebes/src/gfxPlatform.cpp
+END
+gfxFontUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/thebes/src/gfxFontUtils.cpp
+END
+gfxFontMissingGlyphs.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/thebes/src/gfxFontMissingGlyphs.cpp
+END
+gfxQuartzPDFSurface.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/thebes/src/gfxQuartzPDFSurface.cpp
+END
+gfxASurface.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/thebes/src/gfxASurface.cpp
+END
+gfxPSSurface.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/thebes/src/gfxPSSurface.cpp
+END
+gfxRect.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/thebes/src/gfxRect.cpp
+END
+gfxWindowsPlatform.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/thebes/src/gfxWindowsPlatform.cpp
+END
+gfxBeOSSurface.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/thebes/src/gfxBeOSSurface.cpp
+END
+gfxMatrix.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/thebes/src/gfxMatrix.cpp
+END
+gfxAlphaRecovery.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/gfx/thebes/src/gfxAlphaRecovery.cpp
+END
+gfxWindowsFonts.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/gfx/thebes/src/gfxWindowsFonts.cpp
+END
+nsUnicodeRange.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/thebes/src/nsUnicodeRange.h
+END
+gfxXlibSurface.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/thebes/src/gfxXlibSurface.cpp
+END
+gfxOS2Platform.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/thebes/src/gfxOS2Platform.cpp
+END
+gfxQuartzNativeDrawing.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/thebes/src/gfxQuartzNativeDrawing.cpp
+END
+gfxOS2Surface.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/gfx/thebes/src/gfxOS2Surface.cpp
+END
+gfxWindowsNativeDrawing.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/thebes/src/gfxWindowsNativeDrawing.cpp
+END
+gfxPangoFonts.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/thebes/src/gfxPangoFonts.cpp
+END
+cairo-xlib-utils.c
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/thebes/src/cairo-xlib-utils.c
+END
+gfxFontconfigUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/thebes/src/gfxFontconfigUtils.h
+END
+cairo-xlib-utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/thebes/src/cairo-xlib-utils.h
+END
+gfxSkipChars.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/thebes/src/gfxSkipChars.cpp
+END
+gfxQuartzFontCache.mm
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/thebes/src/gfxQuartzFontCache.mm
+END

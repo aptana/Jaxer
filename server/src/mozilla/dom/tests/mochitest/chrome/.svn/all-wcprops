@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/chrome
+END
+domstorage_global.js
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/chrome/domstorage_global.js
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/chrome/Makefile.in
+END
+test_domstorage.xul
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/chrome/test_domstorage.xul
+END
+domstorage_global.xul
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/chrome/domstorage_global.xul
+END

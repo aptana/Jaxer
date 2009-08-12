@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/support-files/MacOSX
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/support-files/MacOSX/Makefile.in
+END
+MySQLCOM
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/support-files/MacOSX/MySQLCOM
+END
+StartupItem.Info.plist
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/support-files/MacOSX/StartupItem.Info.plist
+END
+Description.plist.sh
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/support-files/MacOSX/Description.plist.sh
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/support-files/MacOSX/Makefile.am
+END
+StartupParameters.plist.sh
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/support-files/MacOSX/StartupParameters.plist.sh
+END
+ReadMe.txt
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/support-files/MacOSX/ReadMe.txt
+END
+StartupItem.postinstall
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/support-files/MacOSX/StartupItem.postinstall
+END
+postflight.sh
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/support-files/MacOSX/postflight.sh
+END
+StartupItem.Description.plist
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/support-files/MacOSX/StartupItem.Description.plist
+END
+preflight.sh
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/support-files/MacOSX/preflight.sh
+END
+Info.plist.sh
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/support-files/MacOSX/Info.plist.sh
+END

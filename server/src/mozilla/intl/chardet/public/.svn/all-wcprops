@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/intl/chardet/public
+END
+nsIMetaCharsetService.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/public/nsIMetaCharsetService.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/public/Makefile.in
+END
+nsICharsetDetector.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/public/nsICharsetDetector.h
+END
+nsIDocumentCharsetInfo.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/public/nsIDocumentCharsetInfo.idl
+END
+nsIXMLEncodingService.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/public/nsIXMLEncodingService.h
+END
+nsICharsetResolver.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/public/nsICharsetResolver.idl
+END
+nsDetectionConfident.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/public/nsDetectionConfident.h
+END
+nsIDocCharset.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/public/nsIDocCharset.idl
+END
+nsICharsetDetectionObserver.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/public/nsICharsetDetectionObserver.h
+END
+nsICharsetDetectionAdaptor.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/public/nsICharsetDetectionAdaptor.h
+END
+nsMetaCharsetCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/public/nsMetaCharsetCID.h
+END
+nsIStringCharsetDetector.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/intl/chardet/public/nsIStringCharsetDetector.h
+END
+nsCharsetDetectionAdaptorCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/public/nsCharsetDetectionAdaptorCID.h
+END
+nsDocumentCharsetInfoCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/public/nsDocumentCharsetInfoCID.h
+END
+nsXMLEncodingCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/public/nsXMLEncodingCID.h
+END

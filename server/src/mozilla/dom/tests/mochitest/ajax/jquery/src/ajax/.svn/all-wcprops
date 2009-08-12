@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/ajax/jquery/src/ajax
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/ajax/jquery/src/ajax/Makefile.in
+END
+ajax.js
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/ajax/jquery/src/ajax/ajax.js
+END
+ajaxTest.js
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/ajax/jquery/src/ajax/ajaxTest.js
+END

@@ -1,0 +1,11 @@
+prefix=/Applications/Aptana_Jaxer/Apache22
+exec_prefix=/Applications/Aptana_Jaxer/Apache22
+libdir=${prefix}/lib
+APR_MAJOR_VERSION=1
+includedir=/Applications/Aptana_Jaxer/Apache22/include
+
+Name: APR
+Description: The Apache Portable Runtime library
+Version: 1.2.11
+Libs: -L${libdir} -lapr-${APR_MAJOR_VERSION} -lpthread
+Cflags: -DDARWIN -DSIGPROCMASK_SETS_THREAD_MASK -no-cpp-precomp  -I${includedir}

@@ -1,0 +1,119 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/accessible/src/xul
+END
+nsXULSliderAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/accessible/src/xul/nsXULSliderAccessible.h
+END
+nsXULTextAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/accessible/src/xul/nsXULTextAccessible.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/accessible/src/xul/Makefile.in
+END
+nsXULTreeAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/accessible/src/xul/nsXULTreeAccessible.cpp
+END
+nsXULTreeAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/accessible/src/xul/nsXULTreeAccessible.h
+END
+nsXULFormControlAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/accessible/src/xul/nsXULFormControlAccessible.cpp
+END
+nsXULMenuAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/accessible/src/xul/nsXULMenuAccessible.cpp
+END
+nsXULTabAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/accessible/src/xul/nsXULTabAccessible.cpp
+END
+nsXULAlertAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/accessible/src/xul/nsXULAlertAccessible.cpp
+END
+nsXULFormControlAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/accessible/src/xul/nsXULFormControlAccessible.h
+END
+nsXULMenuAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/accessible/src/xul/nsXULMenuAccessible.h
+END
+nsXULTabAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/accessible/src/xul/nsXULTabAccessible.h
+END
+nsXULAlertAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/accessible/src/xul/nsXULAlertAccessible.h
+END
+nsXULColorPickerAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/accessible/src/xul/nsXULColorPickerAccessible.cpp
+END
+nsXULSelectAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/accessible/src/xul/nsXULSelectAccessible.cpp
+END
+nsXULColorPickerAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/accessible/src/xul/nsXULColorPickerAccessible.h
+END
+nsXULSliderAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/accessible/src/xul/nsXULSliderAccessible.cpp
+END
+nsXULTextAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/accessible/src/xul/nsXULTextAccessible.cpp
+END
+nsXULSelectAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/accessible/src/xul/nsXULSelectAccessible.h
+END

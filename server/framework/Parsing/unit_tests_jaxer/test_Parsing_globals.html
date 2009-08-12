@@ -1,0 +1,28 @@
+<html>
+    <head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+        <script type="text/javascript" runat="server">
+        	function testDefineGlobal1()
+			{
+				eval("window.global1 = function glo" + "bal1() { return 42; }; window.global2 = function glo" + "bal2() { return 43; }; window.global1.runat = 'server-proxy';");
+				assertDefined(window.global1, "Tried to define global function global1() dynamically but could not find it later");
+				assertTrue(window.global1.proxy, "Global function global1() is defined but does not have proxy=true");
+
+				new Function("window.global1a = function glo" + "bal1a() { return 42; }; window.global1a.runat = 'server-proxy';")();
+				assertDefined(window.global1a, "Tried to define global function global1a() dynamically but could not find it later");
+				assertTrue(window.global1a.proxy, "Global function global1a() is defined but does not have proxy=true");
+			}
+        	
+			function testProxyGlobal1()
+			{
+				assertDefined(window.global1, "Could not find global1() as a proxy on the client side");
+				assertDefined(window.global1a, "Could not find global1a() as a proxy on the client side");
+			}
+			testProxyGlobal1.runat = "client";
+       </script>
+    </head>
+    <body>
+    </body>
+</html>

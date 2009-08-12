@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/mmap/unix
+END
+common.c
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/mmap/unix/common.c
+END
+mmap.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/mmap/unix/mmap.c
+END

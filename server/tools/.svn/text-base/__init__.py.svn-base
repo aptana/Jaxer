@@ -1,0 +1,3 @@
+#!/usr/bin/env python
+__all__     = ["aptan"]
+__version__ = "$Revision$"[11:-2]

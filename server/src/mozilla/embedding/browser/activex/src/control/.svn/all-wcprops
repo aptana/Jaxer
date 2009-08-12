@@ -1,0 +1,221 @@
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/embedding/browser/activex/src/control
+END
+StdAfx.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/StdAfx.h
+END
+DHTMLCmdIds.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/DHTMLCmdIds.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/Makefile.in
+END
+MozillaBrowser.ico
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/MozillaBrowser.ico
+END
+PromptService.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/PromptService.h
+END
+HelperAppDlg.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/HelperAppDlg.cpp
+END
+PropertyDlg.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/PropertyDlg.cpp
+END
+MozillaControl.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/MozillaControl.dsp
+END
+DropTarget.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/DropTarget.h
+END
+MozillaBrowser.h
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/MozillaBrowser.h
+END
+IEHtmlDocument.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/IEHtmlDocument.cpp
+END
+mkctldef.sh
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/mkctldef.sh
+END
+WebBrowserContainer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/WebBrowserContainer.cpp
+END
+MozillaBrowser.rgs
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/MozillaBrowser.rgs
+END
+StdAfx.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/StdAfx.cpp
+END
+ActiveScriptSite.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/ActiveScriptSite.h
+END
+MozillaControl.rc
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/MozillaControl.rc
+END
+resource.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/resource.h
+END
+WindowCreator.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/WindowCreator.h
+END
+MozillaControl.idl
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/MozillaControl.idl
+END
+Master.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/Master.dsp
+END
+PromptService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/PromptService.cpp
+END
+Master.dsw
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/Master.dsw
+END
+MozillaControl.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/MozillaControl.cpp
+END
+MozillaBrowser.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/MozillaBrowser.cpp
+END
+DropTarget.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/DropTarget.cpp
+END
+HelperAppDlg.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/HelperAppDlg.h
+END
+mkctldef.bat
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/mkctldef.bat
+END
+BrowserDiagnostics.h
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/BrowserDiagnostics.h
+END
+PropertyDlg.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/PropertyDlg.h
+END
+ActiveScriptSite.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/ActiveScriptSite.cpp
+END
+IEHtmlDocument.h
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/IEHtmlDocument.h
+END
+WindowCreator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/WindowCreator.cpp
+END
+WebBrowserContainer.h
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/WebBrowserContainer.h
+END
+PageSetupDlg.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/PageSetupDlg.h
+END
+ActiveXTypes.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/control/ActiveXTypes.h
+END

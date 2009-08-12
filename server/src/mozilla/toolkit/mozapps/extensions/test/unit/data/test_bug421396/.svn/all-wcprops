@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/mozapps/extensions/test/unit/data/test_bug421396
+END
+install.rdf
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/mozapps/extensions/test/unit/data/test_bug421396/install.rdf
+END
+chrome.manifest
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/mozapps/extensions/test/unit/data/test_bug421396/chrome.manifest
+END

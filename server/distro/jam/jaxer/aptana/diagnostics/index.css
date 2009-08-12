@@ -1,0 +1,107 @@
+BODY {
+    background-color: #ddddff;
+    font-family: verdana;
+    font-size: 8pt;
+	padding:5px;
+}
+
+#applicationContent {
+    border: 3px solid #B5B5DF;
+    padding: 0px;
+    background-color: #d0ddff;
+}
+
+#sampleHeader {
+    border: 1px #aaa solid;
+    background-color: #FFFFF1;
+    margin: 0 0 5px 0;
+    padding: 5px;
+    height: 1.4em;
+}
+
+.sampleTitle {
+    font-weight: 900;
+    float: left;
+}
+
+#rightFloat {
+    float: right;
+}
+
+.runMessage {
+    margin: 2px;
+}
+
+.resultimage, .activity {
+    float: left;
+    margin: 2px;
+}
+
+.success, .failure, .more, .template {
+    display: none;
+}
+
+
+#textBody {
+    font-family: verdana;
+    font-size: 10pt;
+    line-height: 1.4em;
+    text-decoration: none;
+}
+
+.big {
+    font-size: 14pt;
+    font-weight: bold;
+}
+
+.emphatic {
+    color: green;
+    font-weight: bold;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+.tech-name {
+    font-family: "Courier New", Courier, monospace;
+}
+
+.path-name {
+    font-family: "Courier New", Courier, monospace;
+}
+
+#diagnosticText li {
+    padding: 8pt;
+	} 
+li {
+	list-style:none;
+}
+
+.code {
+    font-family: "Courier New", Courier, monospace;
+    color: blue;
+}
+
+.more {
+   background-color: #FFFFF1; 
+   padding:10px 15px 10px 15px; 
+   border: 1px solid #CCCCCC; 
+   margin:10px; 
+}
+
+#diagnosticText,#otherTests,#testResults {
+	padding:5px;
+	background-color: #F0F0FF; margin:0px;
+	
+}
+#otherTests,#testResults {
+	border-bottom:  3px solid #B5B5DF;
+	
+}
+.titleBar {
+	border-bottom:  3px solid #B5B5DF;
+	font-weight:900;
+	padding: 5px;
+}

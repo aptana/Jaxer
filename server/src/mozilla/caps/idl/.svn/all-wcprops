@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/caps/idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/caps/idl/Makefile.in
+END
+nsIPrincipal.idl
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/caps/idl/nsIPrincipal.idl
+END
+nsISecurityCheckedComponent.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/caps/idl/nsISecurityCheckedComponent.idl
+END
+nsIScriptSecurityManager.idl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/caps/idl/nsIScriptSecurityManager.idl
+END
+nsISignatureVerifier.idl
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/caps/idl/nsISignatureVerifier.idl
+END

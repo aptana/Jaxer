@@ -1,0 +1,209 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include
+END
+apu_version.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apu_version.h
+END
+apu.hnw
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apu.hnw
+END
+apu.h.in
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apu.h.in
+END
+apr_optional_hooks.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_optional_hooks.h
+END
+apr_dbd.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_dbd.h
+END
+apr_rmm.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_rmm.h
+END
+apr_sha1.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_sha1.h
+END
+apr_xml.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_xml.h
+END
+apr_buckets.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_buckets.h
+END
+apr_dbm.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_dbm.h
+END
+apr_ldap_init.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_ldap_init.h
+END
+apr_uuid.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_uuid.h
+END
+apu.hw
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apu.hw
+END
+apu_want.h.in
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apu_want.h.in
+END
+apr_md4.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_md4.h
+END
+apr_optional.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_optional.h
+END
+apr_md5.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_md5.h
+END
+apr_ldap.h.in
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_ldap.h.in
+END
+apr_reslist.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_reslist.h
+END
+apr_sdbm.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_sdbm.h
+END
+apr_strmatch.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_strmatch.h
+END
+apr_uri.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_uri.h
+END
+apr_anylock.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_anylock.h
+END
+apr_ldap_url.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_ldap_url.h
+END
+apu_want.hw
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apu_want.hw
+END
+apr_ldap.hw
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_ldap.hw
+END
+apr_ldap_option.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_ldap_option.h
+END
+apr_date.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_date.h
+END
+apr_xlate.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_xlate.h
+END
+apu_want.hnw
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apu_want.hnw
+END
+apr_hooks.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_hooks.h
+END
+apr_queue.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_queue.h
+END
+apr_base64.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_base64.h
+END
+apr_ldap.hnw
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/include/apr_ldap.hnw
+END

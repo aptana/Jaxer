@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts
+END
+selenium-version.js
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/selenium-version.js
+END
+selenium-remoterunner.js
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/selenium-remoterunner.js
+END
+selenium-logging.js
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/selenium-logging.js
+END
+selenium-browserbot.js
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/selenium-browserbot.js
+END
+injection.html
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/injection.html
+END
+user-extensions.js
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/user-extensions.js
+END
+selenium-executionloop.js
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/selenium-executionloop.js
+END
+se2html.js
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/se2html.js
+END
+selenium-commandhandlers.js
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/selenium-commandhandlers.js
+END
+narcissus-parse.js
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/narcissus-parse.js
+END
+js2html.js
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/js2html.js
+END
+htmlutils.js
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/htmlutils.js
+END
+xmlextras.js
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/xmlextras.js
+END
+selenium-testrunner.js
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/selenium-testrunner.js
+END
+selenium-api.js
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/selenium-api.js
+END
+narcissus-defs.js
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/narcissus-defs.js
+END
+selenium-browserdetect.js
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/selenium-browserdetect.js
+END
+user-extensions.js.sample
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/user-extensions.js.sample
+END
+narcissus-exec.js
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/narcissus-exec.js
+END
+injection_iframe.html
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/injection_iframe.html
+END
+find_matching_child.js
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/core/scripts/find_matching_child.js
+END

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/storage/build
+END
+mozStorageCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/storage/build/mozStorageCID.h
+END
+mozStorageModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/storage/build/mozStorageModule.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/storage/build/Makefile.in
+END

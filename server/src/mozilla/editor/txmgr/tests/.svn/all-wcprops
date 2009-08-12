@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/editor/txmgr/tests
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/txmgr/tests/Makefile.in
+END
+TestTXMgr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/txmgr/tests/TestTXMgr.cpp
+END

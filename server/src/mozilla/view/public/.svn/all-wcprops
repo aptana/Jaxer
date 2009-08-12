@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/view/public
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/view/public/Makefile.in
+END
+nsIViewObserver.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/view/public/nsIViewObserver.h
+END
+nsViewsCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/view/public/nsViewsCID.h
+END
+nsIViewManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/view/public/nsIViewManager.h
+END
+nsIScrollPositionListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/view/public/nsIScrollPositionListener.h
+END
+nsIView.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/view/public/nsIView.h
+END
+nsIScrollableView.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/view/public/nsIScrollableView.h
+END

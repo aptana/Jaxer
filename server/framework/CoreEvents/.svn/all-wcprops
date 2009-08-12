@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/jaxer/!svn/ver/4545/trunk/products/server/framework/CoreEvents
+END
+ServerStart.js
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/3945/trunk/products/server/framework/CoreEvents/ServerStart.js
+END
+InitHead.js
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/4340/trunk/products/server/framework/CoreEvents/InitHead.js
+END
+RequestStart.js
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1275/trunk/products/server/framework/CoreEvents/RequestStart.js
+END
+HandleCallback.js
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/3958/trunk/products/server/framework/CoreEvents/HandleCallback.js
+END
+HandlePage.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/4340/trunk/products/server/framework/CoreEvents/HandlePage.js
+END
+ParseStart.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/3869/trunk/products/server/framework/CoreEvents/ParseStart.js
+END
+Request.js
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/4545/trunk/products/server/framework/CoreEvents/Request.js
+END
+HandleService.js
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/4097/trunk/products/server/framework/CoreEvents/HandleService.js
+END
+CoreEvents.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/3934/trunk/products/server/framework/CoreEvents/CoreEvents.js
+END
+Response.js
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/4286/trunk/products/server/framework/CoreEvents/Response.js
+END
+server_core_events.json
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/3786/trunk/products/server/framework/CoreEvents/server_core_events.json
+END
+RequestComplete.js
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/3085/trunk/products/server/framework/CoreEvents/RequestComplete.js
+END
+NewElement.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/3663/trunk/products/server/framework/CoreEvents/NewElement.js
+END
+ParseComplete.js
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/3781/trunk/products/server/framework/CoreEvents/ParseComplete.js
+END

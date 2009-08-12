@@ -1,0 +1,119 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml
+END
+StdAfx.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/StdAfx.h
+END
+XMLDocument.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/XMLDocument.cpp
+END
+XMLElementCollection.rgs
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/XMLElementCollection.rgs
+END
+activexml.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/activexml.dsp
+END
+XMLDocument.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/XMLDocument.h
+END
+XMLDocument.rgs
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/XMLDocument.rgs
+END
+activexml.def
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/activexml.def
+END
+XMLElement.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/XMLElement.cpp
+END
+activexmlps.def
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/activexmlps.def
+END
+ParseExpat.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/ParseExpat.cpp
+END
+activexml.rc
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/activexml.rc
+END
+XMLElement.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/XMLElement.h
+END
+activexml.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/activexml.idl
+END
+XMLElement.rgs
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/XMLElement.rgs
+END
+XMLElementCollection.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/XMLElementCollection.cpp
+END
+StdAfx.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/StdAfx.cpp
+END
+XMLElementCollection.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/XMLElementCollection.h
+END
+activexml.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/activexml.cpp
+END
+resource.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/xml/resource.h
+END

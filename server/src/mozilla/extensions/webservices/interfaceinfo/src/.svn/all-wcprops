@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/interfaceinfo/src
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/interfaceinfo/src/Makefile.in
+END
+nsInterfaceInfoToIDL.js
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/interfaceinfo/src/nsInterfaceInfoToIDL.js
+END
+nsGenericInterfaceInfoSet.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/interfaceinfo/src/nsGenericInterfaceInfoSet.cpp
+END
+nsScriptableInterfaceInfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/interfaceinfo/src/nsScriptableInterfaceInfo.cpp
+END
+iixprivate.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/interfaceinfo/src/iixprivate.h
+END

@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/testing/mochitest/static
+END
+bug100533_iframe.html
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/testing/mochitest/static/bug100533_iframe.html
+END
+nnc_lockup.gif
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/testing/mochitest/static/nnc_lockup.gif
+END
+xul.template.txt
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/testing/mochitest/static/xul.template.txt
+END
+bug277724_iframe1.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/testing/mochitest/static/bug277724_iframe1.html
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/testing/mochitest/static/Makefile.in
+END
+xhtml.template.txt
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/testing/mochitest/static/xhtml.template.txt
+END
+test.template.txt
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/testing/mochitest/static/test.template.txt
+END
+bug277724_iframe2.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/testing/mochitest/static/bug277724_iframe2.xhtml
+END
+harness.css
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/testing/mochitest/static/harness.css
+END
+bug100533_load.html
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/testing/mochitest/static/bug100533_load.html
+END
+bug340800_iframe.txt
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/testing/mochitest/static/bug340800_iframe.txt
+END
+bug344830_testembed.svg
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/testing/mochitest/static/bug344830_testembed.svg
+END

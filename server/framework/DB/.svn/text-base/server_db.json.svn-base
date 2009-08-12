@@ -1,0 +1,10 @@
+{
+	"name": "default",
+	"files": [
+		  "DB.js"
+		, "ResultSet.js"
+		, "DB_MySQL.js"
+		, "DB_SQLite.js"
+		, "unit_tests_jaxer/jaxer_db_tests.json"
+	]
+}

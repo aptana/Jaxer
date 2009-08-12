@@ -1,0 +1,64 @@
+<html>
+    <head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+        <script type="text/javascript" runat="server">
+			function test_SerializeData_Undefined()
+			{
+				var data = undefined;
+				var expected = "null";
+				var result = Jaxer.Serialization.toJSONString(data, {as: Jaxer.Serialization.JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_SerializeData_Undefine2()
+			{
+				var data = undefined;
+				
+				try
+				{
+					var result = Jaxer.Serialization.toJSONString(
+						data,
+						{
+							as: Jaxer.Serialization.JSON_METHOD,
+							undefinedSerializationAction: Jaxer.Serialization.THROW_ACTION
+						}
+					);
+					
+					fail("toJSONString should throw an exception when trying to serialize 'undefined' when using 'json' serialization");
+				}
+				catch (e)
+				{
+					
+				}
+			}
+			
+			function test_SerializeData_Undefined3()
+			{
+				var data = undefined;
+				var expected = "undefined";
+				var result = Jaxer.Serialization.toJSONString(
+					data,
+					{
+						as: Jaxer.Serialization.JSON_METHOD,
+						undefinedSerializationAction: Jaxer.Serialization.SERIALIZE_ACTION
+					}
+				);
+				
+				assertEquals(result, expected);
+			}
+
+			function test_DeserializeData_Undefined()
+			{
+				var json = "undefined";
+				var result = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.JSON_METHOD});
+				
+				assertUndefined(result);
+			}
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

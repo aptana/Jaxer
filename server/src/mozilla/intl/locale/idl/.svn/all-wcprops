@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/intl/locale/idl
+END
+nsILocale.idl
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/idl/nsILocale.idl
+END
+nsIScriptableDateFormat.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/idl/nsIScriptableDateFormat.idl
+END
+nsILocaleService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/idl/nsILocaleService.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/idl/Makefile.in
+END
+nsICollation.idl
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/idl/nsICollation.idl
+END

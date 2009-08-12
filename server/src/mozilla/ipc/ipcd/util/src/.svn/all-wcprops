@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/ipc/ipcd/util/src
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/util/src/Makefile.in
+END
+ipcMessageReader.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/util/src/ipcMessageReader.cpp
+END
+ipcMessageWriter.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/util/src/ipcMessageWriter.cpp
+END

@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/irc/xul/skin
+END
+channels.css
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/skin/channels.css
+END
+chatzilla.css
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/irc/xul/skin/chatzilla.css
+END
+chatzillaOverlay.css
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/skin/chatzillaOverlay.css
+END
+output-dark.css
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/irc/xul/skin/output-dark.css
+END
+contents.rdf
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/irc/xul/skin/contents.rdf
+END
+output-marble.css
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/skin/output-marble.css
+END
+output-loud.css
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/skin/output-loud.css
+END
+output-default.css
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/skin/output-default.css
+END
+browserOverlay.css
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/skin/browserOverlay.css
+END
+output-light.css
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/skin/output-light.css
+END

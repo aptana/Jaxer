@@ -1,0 +1,5 @@
+<script runat="server">
+	var millis = Jaxer.request.data.millis || 1000;
+	Jaxer.Util.sleep(millis);
+	Jaxer.response.exit(200, "Slept for " + millis + " milliseconds");
+</script>

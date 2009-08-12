@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/browser/locales/en-US/chrome/overrides
+END
+settingsChange.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/browser/locales/en-US/chrome/overrides/settingsChange.dtd
+END
+appstrings.properties
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/browser/locales/en-US/chrome/overrides/appstrings.properties
+END
+netError.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/browser/locales/en-US/chrome/overrides/netError.dtd
+END

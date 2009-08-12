@@ -1,0 +1,11 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/atomic/unix
+END
+apr_atomic.c
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/atomic/unix/apr_atomic.c
+END

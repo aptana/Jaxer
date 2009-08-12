@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/4521/trunk/products/server/src/mozilla/aptana_iws/Jaxer
+END
+module.ver
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/Jaxer/module.ver
+END
+AppDirectoryProvider.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/Jaxer/AppDirectoryProvider.cpp
+END
+Jaxer.ico
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/Jaxer/Jaxer.ico
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/Jaxer/Makefile.in
+END
+aptManagerEvent.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/4521/trunk/products/server/src/mozilla/aptana_iws/Jaxer/aptManagerEvent.cpp
+END
+aptMgrCmdReader.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/4521/trunk/products/server/src/mozilla/aptana_iws/Jaxer/aptMgrCmdReader.cpp
+END
+Jaxer_prefs.js
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/Jaxer/Jaxer_prefs.js
+END
+PrefObserver.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/Jaxer/PrefObserver.cpp
+END
+AppDirectoryProvider.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/Jaxer/AppDirectoryProvider.h
+END
+aptManagerEvent.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/Jaxer/aptManagerEvent.h
+END
+aptMgrCmdReader.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/Jaxer/aptMgrCmdReader.h
+END
+Jaxer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/Jaxer/Jaxer.cpp
+END
+PrefObserver.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/Jaxer/PrefObserver.h
+END
+Jaxer.rc
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/Jaxer/Jaxer.rc
+END

@@ -1,0 +1,59 @@
+<html>
+    <head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+        <script type="text/javascript" runat="server">
+      		function test_SerializeData_TrueBoolean()
+			{
+				var data = true;
+				var expected = "true";
+				var result = Jaxer.Serialization.toJSONString(data, {as: Jaxer.Serialization.JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_SerializeData_FalseBoolean()
+			{
+				var data = false;
+				var expected = "false";
+				var result = Jaxer.Serialization.toJSONString(data, {as: Jaxer.Serialization.JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_DeserializeData_TrueBoolean()
+            {
+                var json = "true";
+                var expected = true;
+                var result = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.JSON_METHOD});
+                
+                assertTrue(result, expected, "JSON 'true' incorrectly deserialized");
+            }
+
+// causes a browser hang in FF2
+//            function test_proxyDeserializeData_TrueBoolean()
+//            {
+//                var json = "true";
+//                var expected = true;
+//                var result = Jaxer.Serialization.fromJSONString(json);
+//                
+//                assertTrue(expected, "JSON 'true' incorrectly deserialized");
+//            }
+//			test_proxyDeserializeData_TrueBoolean.proxy=true;
+
+
+            function test_DeserializeData_FalseBoolean()
+            {
+                var json = "false";
+                var expected = false;
+                var result = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.JSON_METHOD});
+                
+                assertFalse(result, expected, "JSON 'false' incorrectly deserialized");
+                
+            }
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

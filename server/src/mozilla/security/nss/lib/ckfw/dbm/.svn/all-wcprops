@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/dbm
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/dbm/manifest.mn
+END
+find.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/dbm/find.c
+END
+token.c
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/dbm/token.c
+END
+slot.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/dbm/slot.c
+END
+session.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/dbm/session.c
+END
+instance.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/dbm/instance.c
+END
+ckdbm.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/dbm/ckdbm.h
+END
+db.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/dbm/db.c
+END
+object.c
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/dbm/object.c
+END
+anchor.c
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/dbm/anchor.c
+END
+config.mk
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/dbm/config.mk
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/dbm/Makefile
+END

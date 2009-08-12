@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/content/xslt/public
+END
+txIEXSLTRegExFunctions.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/public/txIEXSLTRegExFunctions.idl
+END
+nsIDocumentTransformer.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/public/nsIDocumentTransformer.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/public/Makefile.in
+END
+nsIXSLTProcessorPrivate.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/public/nsIXSLTProcessorPrivate.idl
+END
+nsIXSLTProcessorObsolete.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/public/nsIXSLTProcessorObsolete.idl
+END
+nsIXSLTException.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/public/nsIXSLTException.idl
+END
+nsIXSLTProcessor.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/public/nsIXSLTProcessor.idl
+END
+txDouble.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/content/xslt/public/txDouble.h
+END
+txINodeSet.idl
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/public/txINodeSet.idl
+END
+txIFunctionEvaluationContext.idl
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/public/txIFunctionEvaluationContext.idl
+END

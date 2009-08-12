@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/netwerk
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/2151/trunk/products/server/src/mozilla/netwerk/Makefile.in
+END
+build.mk
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/build.mk
+END
+confvars.sh
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/confvars.sh
+END
+necko-config.h.in
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/necko-config.h.in
+END

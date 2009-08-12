@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/gnomevfs
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/gnomevfs/Makefile.in
+END
+nsGnomeVFSProtocolHandler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/gnomevfs/nsGnomeVFSProtocolHandler.cpp
+END
+makefiles.sh
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/gnomevfs/makefiles.sh
+END

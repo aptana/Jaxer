@@ -1,0 +1,624 @@
+<html>
+	<head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+		<script type="text/javascript" runat="server">
+		
+		/**
+		 * testing exist not exist
+		 */
+		function testDirExists()
+		{
+			var dir = new Jaxer.Dir(Jaxer.System.tempFolder);
+			var dir1 = new Jaxer.Dir(Jaxer.System.tempFolder + '+');
+			if (dir1.exists) 
+			{
+				dir1.remove(true);
+			}
+			assertTrue(dir.exists, "directory should exist but directory.exists returned false");
+			assertTrue(!dir1.exists, "directory should not exist but directory.exists returned true");
+		}
+		
+		/**
+		 * testing creation of Dir with incorrect parameter(null)
+		 */
+		function testDirContructorWithNull()
+		{
+			try 
+			{
+				var dir = new Jaxer.Dir(null);
+				throw new Error("According to specification contructing directory object with null argument is incorrect and exception should be raised");
+			} 
+			catch (e) 
+			{
+			
+			}
+		}
+		
+		/**
+		 * testing creation of Dir with incorrect parameter(number)
+		 */
+		function testDirConstructorWithNumber()
+		{
+			try 
+			{
+				var dir = new Jaxer.Dir(1);
+				throw new Error("According to specification contructing directory object with number argument is incorrect and exception should be raised");
+			} 
+			catch (e) 
+			{
+			
+			}
+		}
+		
+		/**
+		 * testing creation of unique dir
+		 */
+		function testCreateUnique()
+		{
+			var dir = new Jaxer.Dir(Jaxer.System.tempFolder);
+			dir.createUnique();
+			assertTrue(dir.exists, "Unique directory should exist but directory.exists returned false");
+			dir.remove();
+			assertFalse(dir.exists, "directory should not exist but directory.exists returned true");
+		}
+		
+		/**
+		 * testing creation of dir with + symbol at end
+		 */
+		function testPlusSymbolInDirName()
+		{
+			var dir = new Jaxer.Dir(Jaxer.System.tempFolder + '+');
+			if (dir.exists) 
+			{
+				dir.remove(true);
+			}
+			assertTrue(!dir.exists, "directory should not exist but directory.exists returned true");
+			try 
+			{
+				dir.create();
+				assertTrue(dir.exists, "directory should exist but directory.exists returned false");
+				dir.remove();
+			} 
+			catch (e) 
+			{
+				//this is also ok behaviour
+			}
+		}
+		
+		/**
+		 * testing create/remove
+		 */
+		function testCreateRemoveOnUsualDirectories()
+		{
+			var dir = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'qq');
+			if (dir.exists) 
+			{
+				dir.remove(true);
+			}
+			assertTrue(!dir.exists, "directory should not exist but directory.exists returned true");
+			dir.create();
+			assertTrue(dir.exists, "directory should exist but directory.exists returned false");
+			dir.remove(true);
+			assertTrue(!dir.exists, "directory should not exist but directory.exists returned true");
+			
+		}
+		
+		/**
+		 * testing contains
+		 */
+		function testContains_And_Remove_Recursive()
+		{
+			var dir = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'q');
+			if (dir.exists) 
+			{
+				dir.remove(true);
+			}
+			dir.create();
+			assertTrue(dir.exists, "directory should exist but directory.exists returned false");
+			var dir1 = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'q' + Jaxer.System.separator + 'q');
+			dir1.create();
+			assertTrue(dir.contains(dir1), "directory should contain directory created inside it, but contains returned false");
+			try 
+			{
+				dir.remove(false);
+			} 
+			catch (e) 
+			{
+				dir.remove(true);
+				return;
+			}
+			throw new Error("remove should throw error when is callying without recursive flag on not empty directory, but it don't ");
+		}
+		
+		/**
+		 * testing not recursive remove
+		 */
+		function testRemoveNotRecursive()
+		{
+			var dir = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'q');
+			if (dir.exists) 
+			{
+				dir.remove(true);
+			}
+			dir.create();
+			var dir1 = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'q' + Jaxer.System.separator + 'q');
+			dir1.create();
+			try 
+			{
+				dir.remove(false);
+			} 
+			catch (e) 
+			{
+				dir1.remove(false);
+				assertTrue(!dir1.exists, "directory should not exist but directory.exists returned true");
+				dir.remove(false);
+				assertTrue(!dir.exists, "directory should not exist but directory.exists returned true");
+				return;
+			}
+			assertTrue(false, "Should not be here exception should be raised during not recursive remove");
+		}
+		
+		/**
+		 * testing reading dir
+		 */
+		function testReadDir()
+		{
+			var dir = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'qqq');
+			if (dir.exists) 
+			{
+				dir.remove(true);
+			}
+			dir.create();
+			var dir1 = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'qqq' + Jaxer.System.separator + 'q');
+			dir1.create();
+			var result = dir.readDir();
+			var z = 0;
+			for (a in result) 
+			{
+				z++;
+				assertEquals("q", result[a].leaf, "Directory should be named q nut getLeaf() returned other value");
+			}
+			assertEquals(1, z, "directory should contain only one item, but readDir returned array with other length");
+			dir.remove(true);
+		}
+		
+		/**
+		 * Pending Issue #JXI-151
+		 * testing types of object returned during reading dir
+		 */
+//		function testReadDirTypes()
+//		{
+//			var dir = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'qqq');
+//			if (dir.exists) 
+//			{
+//				dir.remove(true);
+//			}
+//			dir.create();
+//			var dir1 = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'qqq' + Jaxer.System.separator + 'q');
+//			var file = new Jaxer.File(Jaxer.System.tempFolder + Jaxer.System.separator + 'qqq' + Jaxer.System.separator + 'file');
+//			dir1.create();
+//			file.create();
+//			var result = dir.readDir();
+//			var z = 0;
+//			for (a in result) 
+//			{
+//				if (result[a].getLeaf() == "q") 
+//				{
+//					assertTrue(result[a].isDirectory,"'q' is directory but it isDirectory is false");
+//					assertTrue(result[a].readDir != null, "directories returned by readDir should have method readDir but this one don't");
+//				}
+//				if (result[a].getLeaf() == "file") 
+//				{
+//					assertTrue(result[a].isFile,"'file' is file  it isFile is false");					
+//					assertTrue(result[a].readline != null, "files returned by readline should have method readline but this one don't");
+//				}
+//				z++;
+//			}
+//			assertEquals(z, 2,"There should be 2 items in directory but there are:"+z);
+//			dir.remove(true);
+//		}
+		
+		/**
+		 * testing helper methods from Dir Utils
+		 */
+		function testDirUtils()
+		{
+			assertTrue(new Jaxer.Dir(new Jaxer.DirUtils().current).exists, "Current Dir should exist but exists() method returned false");
+			assertTrue(new Jaxer.Dir(new Jaxer.DirUtils().temp).exists, "Temp Dir should exist but exists() method returned false");
+		}
+		
+		/**
+		 * testing that permissions are accessible
+		 */
+		function testPermissionsAccess()
+		{
+			var dir = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'qqq');
+			if (dir.exists) 
+			{
+				dir.remove(true);
+			}
+			dir.create("0644");
+			var v = dir.permissions;
+			assertTrue(v != null, "getPermissions should not return null, but it returned ");
+			dir.remove(true);
+		}
+		
+		/**
+		 * testing that permissions are settable
+		 * Pending Issue: #JXI-152
+		 *
+		 */
+//		function testPermissionsSetGet()
+//		{
+//			var dir = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'qqq');
+//			if (dir.exists) 
+//			{
+//				dir.remove(true);
+//			}
+//			dir.create();
+//			dir.setPermissions(644);
+//			v = dir.getPermissions();
+//			assertTrue(v != null, "Permissions are accessible");
+//			
+//			assertEquals(dir.getPermissions(), 644, "Permissions are incorrect (" + v + ")");
+//			dir.remove(true);
+//		}
+		
+		/**
+		 * testing that parent path is working correctly
+		 * Pending Issue #JXI-153
+		 */
+//		function testGetParentPath()
+//		{
+//			var dir = new Jaxer.Dir(Jaxer.System.tempFolder);
+//			try 
+//			{
+//				while (true) 
+//				{
+//					var path = dir.getParentPath();
+//					if (path == null) 
+//					{
+//						break;
+//					}
+//					assertTrue(path.length != null,"Path should not be empty but it is");
+//					dir = new Jaxer.Dir(path);
+//					assertTrue(dir.exists, "Parent path should exists, but method exists() returned false");
+//					assertTrue(dir.isDirectory, "Parent path should represent a directory, but it is not");
+//				}
+//			} 
+//			catch (e) 
+//			{
+//				throw new Error("Exception should not be raised while iterating using getParentPath()");
+//			}
+//		}
+		
+		
+		/**
+		 * testing that setLeaf works correctly (at least as i understand it)
+		 */
+		function testSetLeaf1()
+		{
+			var dir = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'q');
+			if (dir.exists) 
+			{
+				dir.remove(true);
+			}
+			dir.create();
+			dir.leaf="aa";
+			dir2 = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'aa');
+			assertFalse(dir.exists, "directory should not exist but directory.exists returned true");
+			assertFalse(dir2.exists, "directory should not exist but directory.exists returned true");
+			dir.leaf="q";
+			assertTrue(dir.exists, "directory should exist but directory.exists returned false");
+			dir.remove(true);
+		}
+		
+		/**
+		 * testing that setLeaf works correctly (at least as i understand it)2
+		 */
+		function testSetLeaf2()
+		{
+			var dir = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'q');
+			if (dir.exists) 
+			{
+				dir.remove(true);
+			}
+			dir.create();
+			var dir2 = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'a');
+			dir2.leaf="q";
+			assertTrue(dir.exists);
+			assertTrue(dir2.exists, "directory should exist but directory.exists returned false");
+			dir.remove(true);
+		}
+		
+		/**
+		 * testing accessing modification date
+		 */
+		function testGetDateModified()
+		{
+			var dir = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'qqq');
+			if (dir.exists) 
+			{
+				dir.remove(true);
+			}
+			dir.create();
+			var date = dir.dateModified;
+			assertTrue(date != null, "method getDateModified() should not return null, but it returns");
+			assertTrue(date.prototype = Date, "method getDateModified() should returns instance of Date, but it returns " + date);
+			dir.remove(true);
+		}
+		
+		/**
+		 * testing equal method on Dirs
+		 * Pending Issue #JXI-154
+		 */
+		function testEquals()
+		{
+			var file0 = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'qqq');
+			var file1 = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'qqq');
+			assertTrue(file0.check(), "Path is correct so check() method should return true, but it does not");
+			file1.check();
+			assertTrue(file0.equals(file1), "Files with equal path should be equal so equal() method should return true, but it does not");			 			
+		}
+		
+		/**
+		 * testing default access flags on dirs
+		 */
+		function testAccessFlags()
+		{
+			var dir = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'qqq');
+			if (dir.exists) 
+			{
+				dir.remove(true);
+			}
+			dir.create();
+			assertTrue(dir.isReadable, "Directory should be readable but it is not.");
+			assertTrue(dir.isWritable, "Directory should be writable but it is not.");
+
+			// On linux, exec means you can enter the directory, otherwise, you can't
+			//assertFalse(dir.isExec, "Directory should not be executable but it is.");
+
+			assertFalse(dir.isHidden, "Directory should not be hidden but it is.");
+			// The following isn't implemented on Mac:
+			//assertFalse(dir.isWritable, "Directory should not be special but it is.");
+			dir.remove(true);
+		}
+		
+		/**
+		 * testing url access
+		 */
+		function testURLAccess()
+		{
+			var dir = new Jaxer.Dir(Jaxer.System.tempFolder + Jaxer.System.separator + 'qqq');
+			var v = dir.URL;
+			assertTrue(v != null, "method getURL() should not return null, but it is");
+			assertTrue(v.length > 5,"url length should be more then 5 but it is equals to "+v.length);
+			assertEquals(v.substring(0, 5), "file:", "URL returned by calling method getURL() should start from 'file:', but it is not");
+		}
+		
+		
+		/**
+		 * testing move
+		 */
+		function testMove()
+		{
+			var path = Jaxer.System.tempFolder + Jaxer.System.separator + 'qqq';
+			var dir = new Jaxer.Dir(path);
+			if (dir.exists) 
+			{
+				dir.remove(true);
+			}
+			dir.create();
+			var path2 = Jaxer.System.tempFolder + Jaxer.System.separator + 'mmm';
+			var dir2 = new Jaxer.Dir(path2);
+			if (dir2.exists) 
+			{
+				dir2.remove(true);
+			}
+			dir.move(path2);
+			assertTrue(dir.exists, "directory should exist but directory.exists returned false");
+			assertTrue(dir2.exists, "directory should exist but directory.exists returned false");
+			dir.remove();
+			assertFalse(dir.exists, "directory should not exist but directory.exists returned true");
+			assertFalse(dir2.exists, "directory should not exist but directory.exists returned true");
+		}
+		/**
+		 * testing getPath();
+		 */
+		function testDirCombine()
+		{
+			var path = Jaxer.Dir.resolve(Jaxer.Dir.combine(Jaxer.Dir.resolve('resource://'),'aptana','doc','api'));
+			assertTrue(Jaxer.Dir.exists(path),'Dir.combine did not return a valid folder') 
+
+		}
+		
+		/**
+		 * testing getPath();
+		 */
+		function testPath()
+		{
+			var shouldExist = new Jaxer.Dir(Jaxer.System.tempFolder);
+			assertEquals(shouldExist.path, Jaxer.System.tempFolder, "path should be equal to initial path, but it is not");
+		}
+		
+		/**
+		 * test initing folder with file path
+		 */
+		function testInitWithFilePath()
+		{
+			// set up folder structure to grep search
+			var path = Jaxer.System.tempFolder + Jaxer.System.separator + 'testInitWithFilePath';
+
+			var dir = new Jaxer.Dir(path);
+			if (dir.exists) 
+			{
+				dir.remove(true);
+			}
+			dir.create();
+			
+			var file = new Jaxer.File(dir.path + Jaxer.System.separator + 'testInitWithFilePath'+".txt");
+			file.create();
+			
+			try{				
+				var folder = Jaxer.Dir.exists(file.path);
+				throw new Error("According to specification accessing directory object with file path argument is incorrect and exception should be raised");
+			}
+			catch (e)
+			{	
+			}
+			dir.remove(true);
+		}
+		
+		/**
+		 * testing Jaxer.Dir.grep
+		 */
+		function testGrep()
+		{
+			// set up folder structure to grep search
+			var path = Jaxer.System.tempFolder + Jaxer.System.separator + 'testGrep';
+
+			var dir = new Jaxer.Dir(path);
+			if (dir.exists) 
+			{
+				dir.remove(true);
+			}
+			dir.create();
+
+			var file = new Jaxer.File(dir.path + Jaxer.System.separator + 'testGrep_lower'+".txt");
+			file.create();
+			file.createUnique();
+
+			file = new Jaxer.File(dir.path + Jaxer.System.separator + 'testGrep_upper'+".TXT");
+			file.create();
+			file.createUnique();
+			
+			var dir1 = new Jaxer.Dir(path + Jaxer.System.separator + 'folder1');
+			dir1.create();
+			
+			var dir2 = new Jaxer.Dir(path + Jaxer.System.separator + 'folder2');
+			dir2.create();
+			
+			for (var counter=0;counter<10;counter++)
+			{				
+				var file1 = new Jaxer.File(dir1.path + Jaxer.System.separator + 'testGrep_lower'+counter+".txt");
+				file1.create();
+				file1.createUnique();
+				var file2 = new Jaxer.File(dir2.path + Jaxer.System.separator + 'testGrep_upper'+counter+".TXT");	
+				file2.create();				
+				file2.createUnique();				
+			}
+			
+			var options = {};
+			var expectedMatches = 0;
+			
+			// now the actual tests
+			
+			var testParameters = [
+					[{ pattern: "NOMATCHES" , recursive: false }			, 0] // no matches no recursion
+				,	[{ pattern: "NOMATCHES" , recursive: true }				, 0] // no matches no recursion
+				,	[{ } 													, 4] // all files no recursion
+				,	[{ pattern: "^.*\\.TXT$" } 								, 2] // *.TXT only no recursion
+				,	[{ recursive:true }										,44] // all files with recursion
+				,	[{ recursive:false }									, 4] // all files no recursion
+				,	[{ pattern: "^.*\\.TXT$", flags: 'i', recursive: true }	,44] // *.TXT ignore case with recursion
+				,	[{ pattern: "^.*\\.TXT$", flags: 'i', recursive: false }, 4] // *.TXT ignore case no recursion
+				,	[{ pattern: "^.*\\.TXT$", recursive: true }				,22] // *.TXT with recursion
+				,	[{ pattern: "^.*\\.TXT$", recursive: false }			, 2] // *.TXT no recursion
+			]
+			
+			for (var t=0;t<testParameters.length;t++)
+			{				
+				var options 		= testParameters[t][0];
+				var expectedMatches = testParameters[t][1];
+				
+				var matched = Jaxer.Dir.grep(path, options);
+				assertTrue(matched.length==expectedMatches, "Expected grep to match " + expectedMatches + " files, instead found "+matched.length + "  with "+uneval(options));
+			}
+
+			dir.remove(true);
+
+		}
+		
+		/**
+		 * testing Jaxer.Dir.map
+		 */
+		function testMap()
+		{
+			// set up folder structure to grep search
+			var path = Jaxer.System.tempFolder + Jaxer.System.separator + 'testMap';
+
+			var dir = new Jaxer.Dir(path);
+			if (dir.exists) 
+			{
+				dir.remove(true);
+			}
+			dir.create();
+
+			var file = new Jaxer.File(dir.path + Jaxer.System.separator + 'testMap_lower'+".txt");
+			file.create();
+			file.createUnique();
+
+			file = new Jaxer.File(dir.path + Jaxer.System.separator + 'testMap_upper'+".TXT");
+			file.create();
+			file.createUnique();
+			
+			var dir1 = new Jaxer.Dir(path + Jaxer.System.separator + 'folder1');
+			dir1.create();
+			
+			var dir2 = new Jaxer.Dir(path + Jaxer.System.separator + 'folder2');
+			dir2.create();
+			
+			for (var counter=0;counter<10;counter++)
+			{				
+				var file1 = new Jaxer.File(dir1.path + Jaxer.System.separator + 'testMap_lower'+counter+".txt");
+				file1.create();
+				file1.createUnique();
+				var file2 = new Jaxer.File(dir2.path + Jaxer.System.separator + 'testMap_upper'+counter+".TXT");	
+				file2.create();				
+				file2.createUnique();				
+			}
+			
+			var options = {};
+			var expectedMatches = 0;
+			
+			// now the actual tests
+			
+			var testParameters = [
+					[{ pattern: "NOMATCHES" , recursive: false }			, 0] // no matches no recursion
+				,	[{ pattern: "NOMATCHES" , recursive: true }				, 0] // no matches no recursion
+				,	[{ } 													, 4] // all files no recursion
+				,	[{ pattern: "^.*\\.TXT$" } 								, 2] // *.TXT only no recursion
+				,	[{ recursive:true }										,44] // all files with recursion
+				,	[{ recursive:false }									, 4] // all files no recursion
+				,	[{ pattern: "^.*\\.TXT$", flags: 'i', recursive: true }	,44] // *.TXT ignore case with recursion
+				,	[{ pattern: "^.*\\.TXT$", flags: 'i', recursive: false }, 4] // *.TXT ignore case no recursion
+				,	[{ pattern: "^.*\\.TXT$", recursive: true }				,22] // *.TXT with recursion
+				,	[{ pattern: "^.*\\.TXT$", recursive: false }			, 2] // *.TXT no recursion
+			]
+						
+			function simple(file)
+			{
+				filecount++ ;	
+			}
+			
+			for (var t=0;t<testParameters.length;t++)
+			{				
+				var filecount 		= 0;
+				var options 		= testParameters[t][0];
+				var expectedMatches = testParameters[t][1];
+				
+				var matched = Jaxer.Dir.map(path, options, simple);
+				assertTrue(filecount==expectedMatches, "Expected map to return " + expectedMatches + " files, instead found " + filecount + "  with "+uneval(options));
+			}
+
+			dir.remove(true);
+
+		}
+		
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

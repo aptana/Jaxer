@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/tests/cipher
+END
+hash.txt
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/cipher/hash.txt
+END
+cipher.sh
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/tests/cipher/cipher.sh
+END
+rsa.txt
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/cipher/rsa.txt
+END
+dsa.txt
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/cipher/dsa.txt
+END
+cipher.txt
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/cipher/cipher.txt
+END
+performance.sh
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/tests/cipher/performance.sh
+END
+symmkey.txt
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/cipher/symmkey.txt
+END

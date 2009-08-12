@@ -1,0 +1,67 @@
+BODY {
+    background-color: #ddddff;
+    font-family: verdana;
+    font-size: 8pt;
+}
+
+.hidden {
+	display : none;
+}
+
+#applicationContent {
+    border: 3px solid #B5B5DF;
+    padding: 0px;
+    background-color: #d0ddff;
+}
+
+#sampleHeader {
+    border: 1px #aaa solid;
+    background-color: #FFFFF1;
+    margin: 0 0 5px 0;
+    padding: 5px;
+    height: 1.4em;
+}
+
+.sampleTitle {
+    font-weight: 900;
+    float: left;
+}
+
+#rightFloat {
+    float: right;
+}
+
+.titleBar {
+	
+}
+
+#contents {
+	
+}
+
+#contents {
+	padding:5px;
+	background-color: #F0F0FF; margin:0px;
+	
+}
+
+.libChoice {
+	color: green;
+    font-family: verdana;
+    font-size: 8pt;
+}
+
+.titleBar,.test-frame, #lib-select {
+	border-bottom:  3px solid #B5B5DF;
+	font-weight:900;
+	padding: 5px;
+}
+
+#filename {
+	border-top:  3px solid #B5B5DF;
+	font-weight:900;
+	padding: 5px;
+}
+
+
+

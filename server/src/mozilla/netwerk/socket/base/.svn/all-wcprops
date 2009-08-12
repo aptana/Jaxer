@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/socket/base
+END
+nsSOCKS4SocketProvider.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/socket/base/nsSOCKS4SocketProvider.h
+END
+nsITransportSecurityInfo.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/socket/base/nsITransportSecurityInfo.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/socket/base/Makefile.in
+END
+nsISocketProvider.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/socket/base/nsISocketProvider.idl
+END
+nsSOCKSSocketProvider.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/socket/base/nsSOCKSSocketProvider.cpp
+END
+nsISOCKSSocketInfo.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/socket/base/nsISOCKSSocketInfo.idl
+END
+nsSOCKSIOLayer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/netwerk/socket/base/nsSOCKSIOLayer.cpp
+END
+nsISSLSocketControl.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/netwerk/socket/base/nsISSLSocketControl.idl
+END
+nsSOCKSSocketProvider.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/socket/base/nsSOCKSSocketProvider.h
+END
+nsUDPSocketProvider.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/socket/base/nsUDPSocketProvider.cpp
+END
+nsSOCKSIOLayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/socket/base/nsSOCKSIOLayer.h
+END
+nsUDPSocketProvider.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/socket/base/nsUDPSocketProvider.h
+END
+nsISocketProviderService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/socket/base/nsISocketProviderService.idl
+END
+nsSocketProviderService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/socket/base/nsSocketProviderService.cpp
+END
+nsSocketProviderService.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/socket/base/nsSocketProviderService.h
+END

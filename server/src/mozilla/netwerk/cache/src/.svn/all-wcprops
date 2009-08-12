@@ -1,0 +1,209 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/netwerk/cache/src
+END
+nsDiskCacheEntry.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/netwerk/cache/src/nsDiskCacheEntry.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/src/Makefile.in
+END
+nsDiskCacheDevice.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/src/nsDiskCacheDevice.h
+END
+nsCacheMetaData.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/src/nsCacheMetaData.cpp
+END
+nsDeleteDir.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/src/nsDeleteDir.h
+END
+nsCacheSession.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/cache/src/nsCacheSession.cpp
+END
+nsCache.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/src/nsCache.h
+END
+nsDiskCacheBinding.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/src/nsDiskCacheBinding.cpp
+END
+nsDiskCacheStreams.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/src/nsDiskCacheStreams.cpp
+END
+nsDiskCacheMap.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/cache/src/nsDiskCacheMap.h
+END
+nsMemoryCacheDevice.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/src/nsMemoryCacheDevice.h
+END
+nsDiskCacheDeviceSQL.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/cache/src/nsDiskCacheDeviceSQL.h
+END
+nsDiskCache.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/src/nsDiskCache.h
+END
+nsCacheService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/netwerk/cache/src/nsCacheService.cpp
+END
+nsCacheEntry.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/cache/src/nsCacheEntry.cpp
+END
+nsCacheEntryDescriptor.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/src/nsCacheEntryDescriptor.h
+END
+nsDiskCacheBlockFile.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/src/nsDiskCacheBlockFile.h
+END
+nsDiskCacheDevice.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/cache/src/nsDiskCacheDevice.cpp
+END
+nsDeleteDir.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/src/nsDeleteDir.cpp
+END
+nsCache.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/src/nsCache.cpp
+END
+nsDiskCacheEntry.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/netwerk/cache/src/nsDiskCacheEntry.h
+END
+nsCacheMetaData.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/src/nsCacheMetaData.h
+END
+nsMemoryCacheDevice.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/cache/src/nsMemoryCacheDevice.cpp
+END
+nsCacheSession.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/cache/src/nsCacheSession.h
+END
+nsDiskCacheMap.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/netwerk/cache/src/nsDiskCacheMap.cpp
+END
+nsDiskCacheBinding.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/src/nsDiskCacheBinding.h
+END
+nsDiskCacheDeviceSQL.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/cache/src/nsDiskCacheDeviceSQL.cpp
+END
+nsCacheRequest.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/cache/src/nsCacheRequest.h
+END
+nsDiskCacheStreams.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/src/nsDiskCacheStreams.h
+END
+nsCacheEntryDescriptor.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/netwerk/cache/src/nsCacheEntryDescriptor.cpp
+END
+nsCacheDevice.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/src/nsCacheDevice.h
+END
+nsDiskCacheBlockFile.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/src/nsDiskCacheBlockFile.cpp
+END
+nsCacheService.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/cache/src/nsCacheService.h
+END
+nsCacheEntry.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/cache/src/nsCacheEntry.h
+END

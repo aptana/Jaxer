@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/4513/trunk/products/server/src/mozilla/extensions/sql/odbc/src
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/4513/trunk/products/server/src/mozilla/extensions/sql/odbc/src/Makefile.in
+END
+mozSqlResultODBC.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/4500/trunk/products/server/src/mozilla/extensions/sql/odbc/src/mozSqlResultODBC.h
+END
+mozSqlConnectionODBC.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/4500/trunk/products/server/src/mozilla/extensions/sql/odbc/src/mozSqlConnectionODBC.h
+END
+mozSqlResultODBC.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/4407/trunk/products/server/src/mozilla/extensions/sql/odbc/src/mozSqlResultODBC.cpp
+END
+mozSqlConnectionODBC.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/4407/trunk/products/server/src/mozilla/extensions/sql/odbc/src/mozSqlConnectionODBC.cpp
+END

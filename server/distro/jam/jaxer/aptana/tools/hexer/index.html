@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+		<title>Hexer</title>
+		<link rel='stylesheet' type='text/css' href='css/index.css'>
+		
+		<script type="text/javascript" runat="both">
+			function $(id) { return document.getElementById(id); }
+		</script>
+
+       <script type='text/javascript' runat='server'>
+            
+        function getBytes(URL,action){
+			
+			var response = {};
+			
+            var HEXWIDTH = 16;
+            var hex = "        0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F<br>".replace(/ /g, '&nbsp;');
+            var hexLine = "0000 ";
+            var ascLine = " ";
+            var stream = "";
+            var sock = new Jaxer.Socket();
+            
+			var parsedURL 	= Jaxer.Util.Url.parseUrl(URL);		
+			var hostname 	= parsedURL.host;
+			var port	 	= parsedURL.port || 80;
+			var docPart	 	= parsedURL.path || "/";
+			
+			var start = new Date();
+			
+            sock.open(hostname, port);
+            sock.writeString(action+' '+docPart+' HTTP/1.1\nHost: '+hostname+'\nConnection: Keep-Alive\n\n');
+            sock.flush();
+                        			
+            try 
+			{
+				var r = '0';
+				while ( (r = sock.readString(256)) ) {
+						stream += r;
+				}
+            } 
+           catch (e) 
+			{
+				Jaxer.Log.info('caught');
+            	throw(e);
+            }
+            finally 
+			{
+                sock.close();
+            }
+			
+			var end = new Date();
+			
+            for (var c = 0; c < stream.length; c++) 
+			{
+                hexLine += toHex(stream[c].charCodeAt(0), 2) + " ";
+                ascLine += (stream[c].charCodeAt(0) >= 32 && stream[c].charCodeAt(0) < 128) ? stream[c] : ".";
+                
+                if ((c % HEXWIDTH) == HEXWIDTH - 1) 
+				{
+                    hex += formatOutputLine(hexLine,ascLine);
+                    hexLine = zeroPad(toHex(c+1, 4), 4).toUpperCase() + " ";
+                    ascLine = " ";
+                }
+            }
+            hex += formatOutputLine(hexLine,ascLine);
+			
+			response.hex = hex;
+			response.size = stream.length;
+			response.elapsed = end - start; 
+			
+            return response;
+        }
+        getBytes.proxy = true;
+          
+		function formatOutputLine(hexLine,ascLine)
+		{
+			return "0x"+padHexLine(hexLine) + "|<SPAN class='ascii'>" + (ascLine).replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/ /g, "&nbsp;") + "</span><br>";
+		}  
+		
+        function padHexLine(h)
+		{
+            return (h.toUpperCase() + "                                                   ").slice(0, 53).replace(/ /g, "&nbsp;");
+        }
+        
+        function toHex(d,w)
+		{
+            return zeroPad(d.toString(16), w);
+        }
+		
+        function zeroPad(hexNum, width)
+		{
+            z = "000000000000000000000000000000000" + hexNum;
+            return z.slice(-width);
+        }
+		
+        </script>
+    </head>
+
+	<body class="default">
+		<script type="text/javascript" src="lib/wz_tooltip.js"></script>
+		<div id='sampleDescription'>
+			View a Hex Dump of an HTTP GET or HEAD request
+		</div>
+		<div id='sampleHeader'>
+			<div class='sampleTitle'>
+				<img src='images/hexdump.png'/> Hexer
+			</div>
+		<div id='sampleSource'>
+		<li><a href="/aptana/tools/sourceViewer/index.html?filename=../../tools/hexer/index.html" target="_blank">Main page</a></li>
+		</div>
+			<div id='rightFloat'>
+				<img src ='images/information.png' class='sampleDescription' onmouseover="TagToTip('sampleDescription', CLICKCLOSE, true, STICKY, true, WIDTH, 300, TITLE, 'Sample info')"/>
+				<span id='sourceButton'><img src ='images/html.png' 	   id='sampleSourceLink'  onmouseover="TagToTip('sampleSource', STICKY, true, CLOSEBTN, true,  TITLE, 'View Source Code')"/></span>
+			</div>
+		</div>
+		
+		<div id='applicationContent'>
+	        <div id='inputPanel'>
+	        	URL:<input id='entry' type='text' size='40' value='http://www.aptana.com'/><input type='button' value='view' onclick='getHex()'></button>
+				<input id='radioHead' name ='request' type='radio' value='HEAD' CHECKED>HEAD</input>
+				<input id='radioGet'  name ='request' type='radio' value='GET'         >GET</input>
+				<span id='info'></span>
+			</div>
+			<div id='outputContainer'><pre id='shell' class='shell'></pre></div>
+		</div>
+		
+		<div id='sampleFooter'>
+		</div>
+
+        <script type='text/javascript'>
+            
+            function getHex(){
+				var URL = document.getElementById('entry').value;
+				var REQ = (document.getElementById('radioHead').checked) ? "HEAD" : "GET";
+				
+				getBytes.async(displayResults, URL, REQ);
+			}
+			
+			function displayResults(response) {
+               $('shell').innerHTML = response.hex;
+               $('info').innerHTML =" (" + response.size+" bytes read) "+ response.elapsed+"ms";
+			}
+
+        </script>
+
+		<script runat='server'>
+			if (Jaxer.Config.LOCAL_CONF_DIR.match('com.aptana.ide.framework.jaxer')) {
+				$('sampleSource').innerHTML="";
+				$('sourceButton').innerHTML="";
+			}
+		</script>
+
+    </body>
+</html>

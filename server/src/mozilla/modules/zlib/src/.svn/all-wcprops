@@ -1,0 +1,209 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/zlib/src
+END
+inffixed.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/inffixed.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/Makefile.in
+END
+deflate.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/deflate.c
+END
+zutil.c
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/zutil.c
+END
+gzio.c
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/gzio.c
+END
+deflate.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/deflate.h
+END
+mozzconf.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/mozzconf.h
+END
+ChangeLog.moz
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/ChangeLog.moz
+END
+zlib.def
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/zlib.def
+END
+crc32.c
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/crc32.c
+END
+zutil.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/zlib/src/zutil.h
+END
+crc32.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/crc32.h
+END
+trees.c
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/trees.c
+END
+algorithm.txt
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/algorithm.txt
+END
+zconf.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/zconf.h
+END
+INDEX
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/INDEX
+END
+trees.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/trees.h
+END
+inffast.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/inffast.c
+END
+compress.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/compress.c
+END
+inffast.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/inffast.h
+END
+zlib.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/zlib.pkg
+END
+zlib.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/zlib.h
+END
+ChangeLog
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/ChangeLog
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/README
+END
+inftrees.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/inftrees.c
+END
+zlib.3
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/zlib.3
+END
+inflate.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/inflate.c
+END
+objs.mk
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/objs.mk
+END
+uncompr.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/uncompr.c
+END
+inftrees.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/inftrees.h
+END
+FAQ
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/FAQ
+END
+inflate.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/inflate.h
+END
+adler32.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/adler32.c
+END
+infback.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/zlib/src/infback.c
+END

@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/4624/trunk/products/server/src/mozilla/toolkit/components/js-ctypes/src/linux
+END
+ffi64.c
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/4624/trunk/products/server/src/mozilla/toolkit/components/js-ctypes/src/linux/ffi64.c
+END
+fficonfig.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/4624/trunk/products/server/src/mozilla/toolkit/components/js-ctypes/src/linux/fficonfig.h
+END
+ffitarget.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/4624/trunk/products/server/src/mozilla/toolkit/components/js-ctypes/src/linux/ffitarget.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/4624/trunk/products/server/src/mozilla/toolkit/components/js-ctypes/src/linux/Makefile.in
+END
+ffi_common.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/4624/trunk/products/server/src/mozilla/toolkit/components/js-ctypes/src/linux/ffi_common.h
+END
+win32.S
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/4624/trunk/products/server/src/mozilla/toolkit/components/js-ctypes/src/linux/win32.S
+END
+ffi.c
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/4624/trunk/products/server/src/mozilla/toolkit/components/js-ctypes/src/linux/ffi.c
+END
+sysv.s
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/4624/trunk/products/server/src/mozilla/toolkit/components/js-ctypes/src/linux/sysv.s
+END
+types.c
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/4624/trunk/products/server/src/mozilla/toolkit/components/js-ctypes/src/linux/types.c
+END
+prep_cif.c
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/4624/trunk/products/server/src/mozilla/toolkit/components/js-ctypes/src/linux/prep_cif.c
+END
+ffi.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/4624/trunk/products/server/src/mozilla/toolkit/components/js-ctypes/src/linux/ffi.h
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/4624/trunk/products/server/src/mozilla/toolkit/components/js-ctypes/src/linux/README
+END
+unix64.S
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/4624/trunk/products/server/src/mozilla/toolkit/components/js-ctypes/src/linux/unix64.S
+END

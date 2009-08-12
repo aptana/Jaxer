@@ -1,0 +1,161 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed
+END
+BrowserFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/BrowserFrame.cpp
+END
+wxEmbed.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/wxEmbed.dsp
+END
+ChatFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/ChatFrame.h
+END
+GeckoWindowCreator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/GeckoWindowCreator.cpp
+END
+GeckoContainer.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/GeckoContainer.h
+END
+EditorFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/EditorFrame.cpp
+END
+MailFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/MailFrame.h
+END
+makefile.vc
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/makefile.vc
+END
+BrowserFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/BrowserFrame.h
+END
+GeckoFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/GeckoFrame.cpp
+END
+global.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/global.h
+END
+GeckoWindowCreator.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/GeckoWindowCreator.h
+END
+EditorFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/EditorFrame.h
+END
+wxEmbed.def
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/wxEmbed.def
+END
+GeckoFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/GeckoFrame.h
+END
+GeckoProtocolHandler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/GeckoProtocolHandler.cpp
+END
+GeckoProtocolHandler.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/GeckoProtocolHandler.h
+END
+EmbedApp.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/EmbedApp.cpp
+END
+wxEmbed.rc
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/wxEmbed.rc
+END
+GeckoWindow.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/GeckoWindow.cpp
+END
+GeckoWindow.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/GeckoWindow.h
+END
+GeckoContainerUI.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/GeckoContainerUI.cpp
+END
+ChatFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/ChatFrame.cpp
+END
+README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/README.txt
+END
+GeckoContainer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/GeckoContainer.cpp
+END
+MailFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/wxEmbed/MailFrame.cpp
+END

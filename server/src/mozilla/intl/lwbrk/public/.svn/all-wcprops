@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/intl/lwbrk/public
+END
+nsLWBrkCIID.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/lwbrk/public/nsLWBrkCIID.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/lwbrk/public/Makefile.in
+END
+nsILineBreaker.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/intl/lwbrk/public/nsILineBreaker.h
+END
+nsIWordBreaker.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/lwbrk/public/nsIWordBreaker.h
+END

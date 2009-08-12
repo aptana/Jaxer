@@ -1,0 +1,155 @@
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test
+END
+pwmgr_common.js
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/pwmgr_common.js
+END
+test_basic_form_2pw_2.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_basic_form_2pw_2.html
+END
+test_basic_form_3pw_1.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_basic_form_3pw_1.html
+END
+mlogosm.gif
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/mlogosm.gif
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/Makefile.in
+END
+test_prompt.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_prompt.html
+END
+test_0init.html
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_0init.html
+END
+test_bug_360493_1.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_bug_360493_1.html
+END
+test_basic_form_autocomplete.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_basic_form_autocomplete.html
+END
+test_bug_360493_2.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_bug_360493_2.html
+END
+test_basic_form_0pw.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_basic_form_0pw.html
+END
+test_basic_form_1pw.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_basic_form_1pw.html
+END
+test_zzz_finish.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_zzz_finish.html
+END
+test_bug_221634.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_bug_221634.html
+END
+test_xml_load.html
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_xml_load.html
+END
+test_bug_427033.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_bug_427033.html
+END
+test_bug_227640.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_bug_227640.html
+END
+test_xhr.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_xhr.html
+END
+prompt_common.js
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/prompt_common.js
+END
+test_bug_391514.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_bug_391514.html
+END
+test_basic_form.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_basic_form.html
+END
+test_bug_242956.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_bug_242956.html
+END
+authenticate.sjs
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/authenticate.sjs
+END
+test_basic_form_pwonly.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_basic_form_pwonly.html
+END
+test_basic_form_2pw_1.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/components/passwordmgr/test/test_basic_form_2pw_1.html
+END

@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/time/unix
+END
+time.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/time/unix/time.c
+END
+timestr.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/time/unix/timestr.c
+END

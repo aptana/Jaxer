@@ -1,0 +1,192 @@
+# ***** BEGIN LICENSE BLOCK *****
+#  Version: GPL 3
+# 
+#  This program is licensed under the GNU General Public license, version 3 (GPL).
+#  It is derived from Mozilla software and modified by Aptana, Inc.
+#  Aptana, Inc. has elected to use and license the Mozilla software 
+#  under the terms of the GPL, and licenses this file to you under the terms
+#  of the GPL.
+#  
+#  Contributor(s): Aptana, Inc.
+#  The portions modified by Aptana are Copyright (C) 2007-2008 Aptana, Inc.
+#  All Rights Reserved.
+# 
+#  This program is distributed in the hope that it will be useful, but
+#  AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+#  NONINFRINGEMENT. Redistribution, except as permitted by the GPL,
+#  is prohibited.
+# 
+#  You can redistribute and/or modify this program under the terms of the GPL, 
+#  as published by the Free Software Foundation.  You should
+#  have received a copy of the GNU General Public License, Version 3 along
+#  with this program; if not, write to the Free Software Foundation, Inc., 51
+#  Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+#  
+#  Aptana provides a special exception to allow redistribution of this file
+#  with certain other code and certain additional terms
+#  pursuant to Section 7 of the GPL. You may view the exception and these
+#  terms on the web at http://www.aptana.com/legal/gpl/.
+#  
+#  You may view the GPL, and Aptana's exception and additional terms in the file
+#  titled license-jaxer.html in the main distribution folder of this program.
+#  
+#  Any modifications to this file must keep this entire header intact.
+# 
+# ***** END LICENSE BLOCK *****
+#
+# ***** BEGIN ORIGINAL ATTRIBUTION BLOCK *****
+#
+# The Original Code is Mozilla Communicator client code, released
+# March 31, 1998.
+#
+# The Initial Developer of the Original Code is
+# Netscape Communications Corporation.
+# Portions created by the Initial Developer are Copyright (C) 1998
+# the Initial Developer. All Rights Reserved.
+#
+# Contributor(s):
+#   John Bandhauer <jband@netscape.com>
+#
+# ***** END ORIGINAL ATTRIBUTION BLOCK *****
+
+DEPTH		= ../../../..
+topsrcdir	= @top_srcdir@
+srcdir		= @srcdir@
+VPATH		= @srcdir@
+
+include $(DEPTH)/config/autoconf.mk
+
+MODULE		= xpconnect
+LIBRARY_NAME	= xpconnect
+EXPORT_LIBRARY = 1
+SHORT_LIBNAME	= xpconect
+IS_COMPONENT	= 1
+MODULE_NAME	= xpconnect
+GRE_MODULE	= 1
+ifeq ($(OS_ARCH)$(MOZ_ENABLE_LIBXUL),WINNT)
+LIBRARY_NAME	= xpc$(MOZ_BITS)$(VERSION_NUMBER)
+SHORT_LIBNAME	= xpc$(MOZ_BITS)$(VERSION_NUMBER)
+endif
+LIBXUL_LIBRARY = 1
+
+PACKAGE_FILE = xpconnect.pkg
+
+REQUIRES	= xpcom \
+		  string \
+		  js \
+		  caps \
+		  necko \
+		  dom \
+		  $(NULL)
+
+CPPSRCS		= \
+		nsScriptError.cpp \
+		nsXPConnect.cpp \
+		xpccallcontext.cpp \
+		xpccomponents.cpp \
+		xpccontext.cpp \
+		xpcconvert.cpp \
+		xpcdebug.cpp \
+		xpcexception.cpp \
+		xpcjsid.cpp \
+		xpcjsruntime.cpp \
+		xpclog.cpp \
+		xpcmaps.cpp \
+		xpcmodule.cpp \
+		xpcruntimesvc.cpp  \
+		xpcstack.cpp \
+		xpcstring.cpp \
+		xpcthreadcontext.cpp \
+		xpcthrower.cpp \
+		xpcwrappedjs.cpp \
+		xpcvariant.cpp \
+		xpcwrappedjsclass.cpp \
+		xpcwrappednative.cpp \
+		xpcwrappednativeinfo.cpp \
+		xpcwrappednativejsops.cpp \
+		xpcwrappednativeproto.cpp \
+		xpcwrappednativescope.cpp \
+		XPCNativeWrapper.cpp \
+		xpcJSWeakReference.cpp \
+		XPCSafeJSObjectWrapper.cpp \
+		XPCCrossOriginWrapper.cpp \
+		XPCWrapper.cpp \
+		$(NULL)
+ifdef XPC_IDISPATCH_SUPPORT
+CPPSRCS +=	XPCDispObject.cpp	\
+		XPCDispInterface.cpp	\
+		XPCDispConvert.cpp \
+		XPCDispTypeInfo.cpp	\
+		XPCDispTearOff.cpp \
+		XPCIDispatchExtension.cpp \
+		XPCDispParams.cpp \
+		XPCDispParamPropJSClass.cpp \
+		XPCIDispatchClassInfo.cpp \
+		nsDispatchSupport.cpp \
+		$(NULL)
+endif
+
+include $(topsrcdir)/config/config.mk
+
+LOCAL_INCLUDES = \
+		-I$(srcdir)/../loader \
+		$(NULL)
+
+EXTRA_DSO_LDOPTS += \
+		$(MOZ_COMPONENT_LIBS) \
+		$(MOZ_JS_LIBS) \
+		$(NULL)
+
+ifdef MOZ_JSLOADER
+SHARED_LIBRARY_LIBS = \
+		../loader/$(LIB_PREFIX)jsloader_s.$(LIB_SUFFIX) \
+		$(NULL)
+endif
+
+include $(topsrcdir)/config/rules.mk
+
+DEFINES		+= -DJSFILE -DJS_THREADSAFE -DEXPORT_XPC_API
+
+ifdef MOZ_XPCTOOLS
+DEFINES         +=  -DXPC_TOOLS_SUPPORT
+REQUIRES	+= xpctools
+endif
+
+ifdef XPC_IDISPATCH_SUPPORT
+DEFINES		+= -DXPC_IDISPATCH_SUPPORT
+ifdef XPC_COMOBJECT
+DEFINES		+= -DXPC_COMOBJECT
+endif
+
+# JAXER INSERT
+ifdef JAXER
+DEFINES += -DXPC_COMOBJECT=1
+ifdef MOZ_NO_ACTIVEX_SUPPORT
+DEFINES += -DMOZ_NO_ACTIVEX_SUPPORT
+endif
+endif
+# END JAXER INSERT
+
+endif
+
+# the windows ce compiler produces crap when compiling this
+# with any optimizations.  See bug 304714
+ifdef WINCE
+MOZ_OPTIMIZE_FLAGS=-Od
+endif
+
+ifeq ($(OS_ARCH),WINNT)
+ifndef GNU_CXX
+ifeq (,$(filter-out 1200 1300 1310,$(_MSC_VER)))
+# whole program optimization and precompiled headers are incompatible
+ifeq (,$(findstring GL,$(CXXFLAGS)))
+# use pre-compiled headers
+CXXFLAGS	+= -YX -Fp$(LIBRARY_NAME).pch
+# precompiled headers require write access to .pch which breaks -j builds
+.NOTPARALLEL:
+endif
+endif
+endif
+endif
+

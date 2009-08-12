@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/intl/chardet/src
+END
+nsDetectionAdaptor.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/src/nsDetectionAdaptor.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/intl/chardet/src/Makefile.in
+END
+nsCyrillicProb.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/src/nsCyrillicProb.h
+END
+nsCyrillicDetector.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/src/nsCyrillicDetector.cpp
+END
+nsDocumentCharsetInfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/src/nsDocumentCharsetInfo.cpp
+END
+nsCyrillicClass.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/src/nsCyrillicClass.h
+END
+nsCharDetConstructors.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/intl/chardet/src/nsCharDetConstructors.h
+END
+nsMetaCharsetObserver.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/src/nsMetaCharsetObserver.cpp
+END
+nsCyrillicDetector.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/src/nsCyrillicDetector.h
+END
+nsDocumentCharsetInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/src/nsDocumentCharsetInfo.h
+END
+nsCharDetDll.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/src/nsCharDetDll.h
+END
+nsMetaCharsetObserver.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/src/nsMetaCharsetObserver.h
+END
+nsXMLEncodingObserver.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/src/nsXMLEncodingObserver.cpp
+END
+nsChardetModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/intl/chardet/src/nsChardetModule.cpp
+END
+nsDebugDetector.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/src/nsDebugDetector.cpp
+END
+nsObserverBase.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/src/nsObserverBase.cpp
+END
+nsXMLEncodingObserver.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/src/nsXMLEncodingObserver.h
+END
+nsDebugDetector.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/src/nsDebugDetector.h
+END
+nsObserverBase.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/src/nsObserverBase.h
+END
+nsDetectionAdaptor.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/chardet/src/nsDetectionAdaptor.cpp
+END

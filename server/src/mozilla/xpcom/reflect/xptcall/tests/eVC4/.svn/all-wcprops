@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4
+END
+StdAfx.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/StdAfx.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/Makefile.in
+END
+TestXPTCInvokeInIDE.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/TestXPTCInvokeInIDE.cpp
+END
+XPTCInvoke_Testing.vcw
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/XPTCInvoke_Testing.vcw
+END
+newres.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/newres.h
+END
+InvokeTestTargetInterface.idl
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/InvokeTestTargetInterface.idl
+END
+XPTCInvoke_Testing.rc
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/XPTCInvoke_Testing.rc
+END
+InvokeTestTargetInterface.xpt
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/InvokeTestTargetInterface.xpt
+END
+XPTCInvoke_Testing.dep
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/XPTCInvoke_Testing.dep
+END
+XPTCInvoke_Testing.ico
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/XPTCInvoke_Testing.ico
+END
+build.bat
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/build.bat
+END
+guicon.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/guicon.cpp
+END
+XPTCInvoke_Testing.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/XPTCInvoke_Testing.cpp
+END
+InvokeTestTargetInterface.h
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/InvokeTestTargetInterface.h
+END
+guicon.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/guicon.h
+END
+StdAfx.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/StdAfx.cpp
+END
+XPTCInvoke_Testing.vcn
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/XPTCInvoke_Testing.vcn
+END
+XPTCInvoke_Testing.rc2
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/XPTCInvoke_Testing.rc2
+END
+XPTCInvoke_Testing.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/XPTCInvoke_Testing.h
+END
+resource.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/resource.h
+END
+XPTCInvoke_Testing.vcp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/tests/eVC4/XPTCInvoke_Testing.vcp
+END

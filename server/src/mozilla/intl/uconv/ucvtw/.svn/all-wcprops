@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/intl/uconv/ucvtw
+END
+nsUCvTWCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/intl/uconv/ucvtw/nsUCvTWCID.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/intl/uconv/ucvtw/Makefile.in
+END
+nsBIG5ToUnicode.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw/nsBIG5ToUnicode.cpp
+END
+nsUnicodeToBIG5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw/nsUnicodeToBIG5.cpp
+END
+nsBIG5HKSCSToUnicode.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw/nsBIG5HKSCSToUnicode.h
+END
+nsUnicodeToBIG5HKSCS.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw/nsUnicodeToBIG5HKSCS.h
+END
+hkscs.uf
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw/hkscs.uf
+END
+nsBIG5ToUnicode.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw/nsBIG5ToUnicode.h
+END
+nsUnicodeToBIG5.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw/nsUnicodeToBIG5.h
+END
+nsUCvTWDll.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw/nsUCvTWDll.h
+END
+big5.uf
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw/big5.uf
+END
+hkscs.ut
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw/hkscs.ut
+END
+nsUnicodeToHKSCS.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw/nsUnicodeToHKSCS.cpp
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw/readme.txt
+END
+nsUnicodeToHKSCS.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw/nsUnicodeToHKSCS.h
+END
+big5.ut
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw/big5.ut
+END
+nsUnicodeToBIG5HKSCS.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw/nsUnicodeToBIG5HKSCS.cpp
+END
+nsBIG5HKSCSToUnicode.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw/nsBIG5HKSCSToUnicode.cpp
+END

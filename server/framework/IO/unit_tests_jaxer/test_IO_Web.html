@@ -1,0 +1,255 @@
+<html>
+	<head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+	</head>
+	<script type="text/javascript" runat="server">
+	
+	function skipIfSingleJaxer()
+	{
+		if (!multipleJaxersAvailable) throw "SKIPPED - This test requires multiple Jaxers to run; " +
+			"rerun it with '&multiJaxer=true' in the URL";
+	}
+	
+	/**
+	 * tests that default resolve url is defined and correct
+	 */
+	function testWebResolveDefault()
+	{
+		var z = Jaxer.Web.getDefaultReferenceUrl();
+		assertTrue(z != null, "Default reference url should not be null");
+		assertMatches(z, "((https?):((//)|(\\\\))[\d\w:#$%/;()~_?\\-=\\\.&]*)");
+	}
+	
+	/**
+	 * tests resolving absolute url
+	 */
+	function testWebResolveAbsolute()
+	{
+		var z = Jaxer.Web.resolve("http://www.someurl2.org/data.html", "http://someurl.org/");
+		assertTrue(z != null, "result should be null");
+		assertEquals(z, "http://www.someurl2.org/data.html", "resolved url should be 'http://someurl2.org/data.html, but is equals to:" + z);
+	}
+	
+	var prevRewriteValues;
+	function savePrevRewriteValues()
+	{
+		prevRewriteValues = [Jaxer.Config.REWRITE_RELATIVE_URL, Jaxer.Config.REWRITE_RELATIVE_URL_REGEX];
+		delete Jaxer.Config.REWRITE_RELATIVE_URL;
+		delete Jaxer.Config.REWRITE_RELATIVE_URL_REGEX;
+	}
+	function restorePrevRewriteValues()
+	{
+		Jaxer.Config.REWRITE_RELATIVE_URL = prevRewriteValues[0];
+		Jaxer.Config.REWRITE_RELATIVE_URL_REGEX = prevRewriteValues[1];
+	}
+	
+	/**
+	 * tests resolving relative url
+	 */
+	function testWebResolve()
+	{
+		savePrevRewriteValues();
+		try
+		{
+			var z = Jaxer.Web.resolve("data.html", "http://someurl.org/");
+			assertTrue(z != null, "result should be null");
+			assertEquals(z, "http://someurl.org/data.html", "resolved url should be http://someurl.org/data.html, but is equals to:" + z);
+		}
+		finally
+		{
+			restorePrevRewriteValues();
+		}
+	}
+	
+	/**
+	 * tests resolving relative url
+	 */
+	function testWebResolve1()
+	{
+		savePrevRewriteValues();
+		try
+		{
+			var z = Jaxer.Web.resolve("data.html", "http://someurl.org/index.html");
+			assertTrue(z != null, "result should be null");
+			assertEquals(z, "http://someurl.org/data.html", "resolved url should be http://someurl.org/data.html, but is equals to:" + z);
+		}
+		finally
+		{
+			restorePrevRewriteValues();
+		}
+	}
+	
+	/**
+	 * tests resolving relative url
+	 */
+	function testWebResolve2()
+	{
+		savePrevRewriteValues();
+		try
+		{
+			var z = Jaxer.Web.resolve("../data.html", "http://someurl.org/data/index.html");
+			assertTrue(z != null, "result should be null");
+			assertEquals(z, "http://someurl.org/data.html", "resolved url should be http://someurl.org/data.html, but is equals to:" + z);
+		}
+		finally
+		{
+			restorePrevRewriteValues();
+		}
+	}
+	
+	/**
+	 * tests resolving relative url
+	 */
+	function testWebResolve3()
+	{
+		savePrevRewriteValues();
+		try
+		{
+			var z = Jaxer.Web.resolve("", "http://someurl.org/data/index.html");
+			assertTrue(z != null, "result should be null");
+			assertEquals(z, "http://someurl.org/data/index.html", "resolved url should be http://someurl.org/data/index.html, but is equals to:" + z);
+		}
+		finally
+		{
+			restorePrevRewriteValues();
+		}
+	}
+	
+	/**
+	 * tests resolving relative url
+	 */
+	function testWebResolve4()
+	{
+		savePrevRewriteValues();
+		try
+		{
+			var z = Jaxer.Web.resolve("./data.html", "http://someurl.org/data/index.html");
+			assertTrue(z != null, "result should be null");
+			assertEquals(z, "http://someurl.org/data/data.html", "resolved url should be http://someurl.org/data/data.html, but is equals to:" + z);
+		}
+		finally
+		{
+			restorePrevRewriteValues();
+		}
+	}
+	
+	/**
+	 * tests that get works
+	 */
+	function testGet()
+	{
+		var z = Jaxer.Web.get("jaxer-include/data2.js");
+		assertTrue(z.indexOf("callUndefinedFunc();") != -1, "data2.js contains 'callUndefinedFunc();', but returned content does not");
+	}
+	
+	/**
+	 * tests that accessing unexisting resource via get throws error
+	 */
+	function testGetUnexisting()
+	{
+		try 
+		{
+			var z = Jaxer.Web.get("data4.js");
+		} 
+		catch (e) 
+		{
+			return;
+		}
+		throw new Error("Accessing unexisting resource should throw error, but it does not");
+	}
+	
+	/**
+	 * tests that posted string data is converted to argument
+	 */
+	function testPostNotNormal()
+	{
+		skipIfSingleJaxer();
+		var v = Jaxer.Web.post("form.html", "x=10,y=5");
+		assertTrue(v.indexOf("POST") != -1, "Method should be POST but response does not contains information about it");
+		assertTrue(v.indexOf("x=10,y=5") != -1);
+	}
+	
+	/**
+	 * tests that posting string data correctly works and transforms object to request arguments
+	 */
+	function testPostNormal()
+	{
+		skipIfSingleJaxer();
+		var v = Jaxer.Web.post("form.html", "x=10&y=5");
+		assertTrue(v.indexOf("POST") != -1, "Method should be POST but response does not contains information about it");
+		assertTrue(v.indexOf("x=10y=5") != -1, "Response should contain request arguments but it does not");
+	}
+	
+	/**
+	 * tests that accessing unexisting resource via post throws error
+	 */
+	function testPostUnexisting()
+	{
+		try 
+		{
+			var v = Jaxer.Web.post("notExistingHTML.html", "x=10,y=5");
+		} 
+		catch (e) 
+		{
+			return;
+		}
+		throw new Error("Accessing unexisting resource should throw error, but it does not");
+	}
+	
+	/**
+	 * tests that posting object correctly works and transforms object to request arguments
+	 */
+	function testPostObject()
+	{
+		skipIfSingleJaxer();
+		// this is normal arguments
+		var object = 
+		{
+			x: 5,
+			y: 10
+		};
+		var v = Jaxer.Web.post("form.html", object);
+		assertTrue(v.indexOf("POST") != -1, "Method should be POST but response does not contains information about it");
+		assertTrue(v.indexOf("x=5y=10") != -1, "Response should contain request arguments but it does not");
+	}
+	
+	/**
+	 * tests that send method works
+	 */
+	function testSendNormalGet()
+	{
+		skipIfSingleJaxer();
+		var v = Jaxer.Web.send("form.html", "GET", "x=10&y=5");
+		assertTrue(v.indexOf("GET") != -1, "Method should be GET but response does not contains information about it");
+		assertTrue(v.indexOf("x=10y=5") != -1, "Response should contain request arguments but it does not");
+	}
+	
+	/**
+	 * tests that accessing unexisting resource via send throws error
+	 */
+	function testSendGetUnexisting()
+	{
+		try 
+		{
+			var v = Jaxer.Web.send("notExistingHTML.html", "GET", "x=10&y=5");
+		} 
+		catch (e) 
+		{
+			return;
+		}
+		throw new Error("Accessing unexisting resource should throw error, but it does not");
+	}
+	
+	/**
+	 * tests that default method is get
+	 */
+	function testSendGetIsDefault()
+	{
+		skipIfSingleJaxer();
+		var v = Jaxer.Web.send("form.html");
+		assertTrue(v.indexOf("GET") != -1, "Default method should be GET but response does not contains it");
+	}
+	</script>
+</html>

@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/docshell/shistory/public
+END
+nsISHTransaction.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/docshell/shistory/public/nsISHTransaction.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/docshell/shistory/public/Makefile.in
+END
+nsISHistoryInternal.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/docshell/shistory/public/nsISHistoryInternal.idl
+END
+nsIHistoryEntry.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/docshell/shistory/public/nsIHistoryEntry.idl
+END
+nsISHistory.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/docshell/shistory/public/nsISHistory.idl
+END
+nsISHistoryListener.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/docshell/shistory/public/nsISHistoryListener.idl
+END
+nsISHEntry.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/docshell/shistory/public/nsISHEntry.idl
+END
+nsISHContainer.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/docshell/shistory/public/nsISHContainer.idl
+END

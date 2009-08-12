@@ -1,0 +1,161 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks
+END
+htmltable.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/htmltable.html
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/Makefile.in
+END
+htmltable.out
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/htmltable.out
+END
+xifstuff.xif
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/xifstuff.xif
+END
+quotes.html
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/quotes.html
+END
+mischtml.html
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/mischtml.html
+END
+mischtml.out
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/mischtml.out
+END
+TestOutSinks.pl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/TestOutSinks.pl
+END
+entityxif.out
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/entityxif.out
+END
+simplecopy.out
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/simplecopy.out
+END
+simple.html
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/simple.html
+END
+doctype.xif
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/doctype.xif
+END
+simplemail.html
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/simplemail.html
+END
+plainnowrap.out
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/plainnowrap.out
+END
+plainwrap.html
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/plainwrap.html
+END
+Convert.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/Convert.cpp
+END
+simplemail.out
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/simplemail.out
+END
+plainwrap.out
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/plainwrap.out
+END
+mailquote.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/mailquote.html
+END
+xifstuff.out
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/xifstuff.out
+END
+plain.html
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/plain.html
+END
+mailquote.out
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/mailquote.out
+END
+simplefmt.out
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/simplefmt.out
+END
+entityxif.xif
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/entityxif.xif
+END
+xifdtplain.out
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/xifdtplain.out
+END
+xifdthtml.out
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/tests/outsinks/xifdthtml.out
+END

@@ -1,0 +1,275 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/security/nss/lib/softoken
+END
+pkcs11ni.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/softoken/pkcs11ni.h
+END
+softokn.def
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/softoken/softokn.def
+END
+softokn.rc
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/softoken/softokn.rc
+END
+sftkmod.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/softoken/sftkmod.c
+END
+sdb.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/softoken/sdb.c
+END
+tlsprf.c
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/softoken/tlsprf.c
+END
+lowkeyti.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/softoken/lowkeyti.h
+END
+softoknt.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/softoken/softoknt.h
+END
+sdb.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/softoken/sdb.h
+END
+fipsaudt.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/softoken/fipsaudt.c
+END
+lgglue.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/softoken/lgglue.c
+END
+sftkdbti.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/softoken/sftkdbti.h
+END
+sftkpwd.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/softoken/sftkpwd.c
+END
+lgglue.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/softoken/lgglue.h
+END
+config.mk
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/softoken/config.mk
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/softoken/Makefile
+END
+softoken.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/softoken/softoken.h
+END
+sftkpars.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/softoken/sftkpars.c
+END
+fipstokn.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/softoken/fipstokn.c
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/softoken/manifest.mn
+END
+padbuf.c
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/softoken/padbuf.c
+END
+fipstest.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/softoken/fipstest.c
+END
+rsawrapr.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/softoken/rsawrapr.c
+END
+sftkpars.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/softoken/sftkpars.h
+END
+pkcs11.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/nss/lib/softoken/pkcs11.c
+END
+softkver.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/softoken/softkver.c
+END
+pkcs11c.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/softoken/pkcs11c.c
+END
+sftkdbt.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/softoken/sftkdbt.h
+END
+pk11pars.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/softoken/pk11pars.h
+END
+pkcs11.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/softoken/pkcs11.h
+END
+softkver.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/security/nss/lib/softoken/softkver.h
+END
+lowkey.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/softoken/lowkey.c
+END
+sftkdb.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/softoken/sftkdb.c
+END
+pkcs11f.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/softoken/pkcs11f.h
+END
+pkcs11i.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/softoken/pkcs11i.h
+END
+sftkdb.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/softoken/sftkdb.h
+END
+pkcs11n.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/softoken/pkcs11n.h
+END
+pkcs11u.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/softoken/pkcs11u.c
+END
+pkcs11p.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/softoken/pkcs11p.h
+END
+lowkeyi.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/softoken/lowkeyi.h
+END
+lowpbe.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/softoken/lowpbe.c
+END
+pkcs11t.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/softoken/pkcs11t.h
+END
+ecdecode.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/softoken/ecdecode.c
+END
+pkcs11u.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/softoken/pkcs11u.h
+END
+lowpbe.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/softoken/lowpbe.h
+END

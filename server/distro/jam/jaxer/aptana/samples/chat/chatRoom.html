@@ -1,0 +1,293 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Jaxer Chat Room</title>
+		<link type="text/css" rel="stylesheet" href="css/index.css">
+		<link type="text/css" rel="stylesheet" href="css/commonStyles.css">
+	</head>
+	
+	<!-- We set a new attribute on the body tag: 'onserverload'. It works just like 'onload', but
+			on the server-side. When Jaxer is done loading the page, the function(s) specified will
+			be executed. You can have both onserverload and onload, for server and client, 
+			respectively. -->
+	<body onserverload="initAuthentication(); prepareDOM();">
+		<script type="text/javascript" src="lib/wz_tooltip.js"></script>
+		<div id='sampleDescription'>
+			A simple multi-room, multi-user chat application using many Jaxer features
+		</div>
+		<div id='sampleSource'>
+		<li><a href="/aptana/tools/sourceViewer/index.html?filename=../../samples/chat/index.html" target="_blank">Main Page</a></li>
+		<li><a href="/aptana/tools/sourceViewer/index.html?filename=../../samples/chat/jaxer-include/setup.js" target="_blank">Database Initialization code</a</li>
+		<li><a href="/aptana/tools/sourceViewer/index.html?filename=../../samples/chat/jaxer-include/_authentication.js" target="_blank">server authentication code</a></li>
+		<li><a href="/aptana/tools/sourceViewer/index.html?filename=../../samples/chat/jaxer-include/_login.html" target="_blank">HTML template for login forms</a></li>
+		<li><a href="/aptana/tools/sourceViewer/index.html?filename=../../samples/chat/jaxer-include/_login.js" target="_blank">Login managment code</a></li>
+		</div>
+		
+		<!-- This script block will be available on both client and server since the 
+			runat attribute is set to 'both'. -->
+		<script type="text/javascript" runat="both"> 
+			function $(id) { return document.getElementById(id); }
+			function fromTemplate(idTarget, idSource) { $(idTarget).innerHTML = $(idSource).innerHTML.replace(/(\W)\$id\=/g, "$1id="); }
+			function appendTemplate(idTarget, idSource) { $(idTarget).innerHTML = $(idTarget).innerHTML + "\n" + $(idSource).innerHTML.replace(/(\W)\$id\=/g, "$1id="); }
+			
+			function activateUI(isAuthenticated)
+			{
+				$("messages").className = isAuthenticated ? "enabled-messages" : "disabled-messages";
+				$("myMessage").disabled = !isAuthenticated;
+				$("send").disabled = !isAuthenticated;
+			}
+		</script>
+		
+		
+		<!-- These script blocks will execute only on the server because of the
+			runat="server" attributes. -->
+		<script type="text/javascript"  src="jaxer-include/setup.js" runat="server"></script>
+		<script type="text/javascript" src="jaxer-include/_authentication.js" runat="server"></script>
+		<script type="text/javascript" runat="server">
+			
+			function prepareDOM()
+			{
+				// The roomId is the Id of the first message in the room
+				// If we don't have one yet, we'll create it when we save the first message
+				var queryParts = Jaxer.request.parsedUrl.queryParts;
+				var roomId = queryParts.hasOwnProperty("room") ? queryParts["room"] : -1;
+				Jaxer.clientData.roomId = roomId;
+	
+				var user = getAuthenticatedUser();
+				var isAuthenticated = (user != null);
+				
+				activateUI(isAuthenticated);
+				
+				Jaxer.clientData.minMessageId = getLastMessageId(roomId); // Only messages after this will be displayed
+			}
+			
+			function saveMessage(roomId, contents, minMessageId)
+			{
+				var user = getAuthenticatedUser();
+				if (user == null) return "loggedout";
+				if (roomId < 0) roomId = Math.floor(-10000000 * Math.random()); // Set it to a number that will be quite unique
+				Jaxer.DB.execute("INSERT INTO messages (room_id, sent, user_id, contents) VALUES (?, ?, ?, ?)",
+					[roomId, new Date(), user.id, contents]);
+				var rs;
+				if (roomId < 0)
+				{
+					var oldRoomId = roomId;
+					roomId = Jaxer.DB.execute("SELECT id FROM messages WHERE room_id = ?", [oldRoomId]).singleResult;
+					Jaxer.DB.execute("UPDATE messages SET room_id = ? WHERE room_id = ?", [roomId, oldRoomId]);
+				}
+				return getMessagesSince(minMessageId, roomId);
+			}
+			saveMessage.proxy = true;
+			
+			function getMessagesSince(id, roomId)
+			{
+				if (roomId < 0) return [];
+				var user = getAuthenticatedUser();
+				if (user == null) return "loggedout";
+				var rs = Jaxer.DB.execute("SELECT m.id, m.room_id, m.sent, u.username, m.contents FROM messages m, users u " +
+					"WHERE m.room_id = ? AND m.id > ? AND m.user_id = u.id ORDER BY m.sent",
+					[roomId, id]);
+				var result = rs.rows;
+				return result;
+			}
+			getMessagesSince.proxy = true;
+			
+			function getLastMessageId(roomId)
+			{
+				if (roomId < 0) return -1;
+				var user = getAuthenticatedUser();
+				if (user == null) return -1;
+				var rs = Jaxer.DB.execute("SELECT max(id) FROM messages WHERE room_id = ?", [roomId]);
+				return (rs.singleResult == null) ? -1 : rs.singleResult;
+			}
+			
+			function getPollingInterval(poll) 
+			{
+				// read chat.ini and return the polling interval found there
+				
+				var f = new Jaxer.File(Jaxer.Dir.resolve("jaxer-include/chat.ini"));
+				if (f.exists)
+				{
+					f.open("r", 0644);
+					var fileContents = f.read();
+					f.close()
+					var lines = fileContents.split(/\n/);
+					
+					for (line in lines)
+					{
+						tuple = lines[line].split(/\s=\s/);
+						if (tuple[0] == "pollingInterval")
+						{
+							Jaxer.Log.warn("settting polling interval from chat.ini " + tuple[1]);
+							return tuple[1];
+						}
+					}
+				}
+				else
+				{
+					return poll;
+				}
+				
+			}
+			getPollingInterval.proxy = true;
+			
+		</script>
+		
+		<!-- This script block is a standard script block and runs on the browser only -->
+		<script type="text/javascript">
+			var roomId = Jaxer.clientData.roomId;
+			var minMessageId = Jaxer.clientData.minMessageId;
+			var pollingIntervalId = null;
+			var pollingInterval = getPollingInterval(2000); // (default in ms)
+			
+			window.onload = function()
+			{
+				setRoomId(roomId);
+				$("send").onclick = send; // Click 'Send' to send
+				$("myMessage").onkeypress = function(evt) { if ((evt && evt.which == 13) || (window.event && window.event.keyCode == 13)) { send(); return false; } }  // Hit 'enter' to send
+				onAuthenticateChange(Jaxer.clientData.isAuthenticated);
+				appendMessages(getMessagesSince(0,roomId));
+				$("messages").scrollTop = $("messages").scrollHeight;
+			}
+			
+			function setRoomId(newRoomId)
+			{
+				roomId = newRoomId;
+				$('roomTitle').innerHTML = (roomId >= 0) ? "Chat Room #" + roomId : "New Chat Room";
+				$('roomTitle').innerHTML += "&nbsp;&nbsp;(<a href=\"javascript:window.location='index.html?rnd='+Math.random()\">Exit Room</a>)";
+			}
+			
+			function onAuthenticateChange(isAuthenticated)
+			{
+				activateUI(isAuthenticated);
+				Jaxer.clientData.isAuthenticated = isAuthenticated;
+				if (isAuthenticated)
+				{
+					if (minMessageId < 0 && roomId >= 0) // It's never been set before
+					{
+						minMessageId = getLastMessageId(roomId);
+					}
+					pollingIntervalId = setInterval("pollMessages()", pollingInterval);
+					setInputFocus();
+				}
+				else if (pollingIntervalId != null)
+				{
+					clearInterval(pollingIntervalId);
+				}
+			}
+			
+			function send()
+			{
+				var contents = $("myMessage").value;
+				if ((contents.length) == 0) // ignore empty lines send to chat.
+				{
+					return;
+				}
+				var messages = saveMessage(roomId, contents, minMessageId);
+				if (messages == "loggedout")
+				{
+					logout();
+					return;
+				}
+				appendMessages(messages);
+				if (messages.length > 0) // message was accepted
+				{
+					$('myMessage').value = "";
+					setInputFocus();
+				}
+			}
+			
+			function setInputFocus()
+			{
+				setTimeout("$('myMessage').focus()", 0);
+			}
+			
+			function pollMessages()
+			{
+				if (roomId < 0) return;
+				var messages = getMessagesSince(minMessageId, roomId);
+				if (messages == "loggedout")
+				{
+					logout();
+					return;
+				}
+				appendMessages(messages);
+			}
+			
+			function numericPad(num,width)
+			{
+				return num > Math.pow(10,width) ? num.toString() : (Math.pow(10,width) + num).toString().substring(1);
+			}
+			
+			function appendMessages(messages)
+			{
+				if (messages.length == 0) return;
+				var htmlStrings = [];
+				for (var i=0; i<messages.length; i++)
+				{
+					var message = messages[i];
+					message.sent = 
+						numericPad(message.sent.getHours(),2) + ":" + 
+						numericPad(message.sent.getMinutes(),2) + ":" + 
+						numericPad(message.sent.getSeconds(),2); // Only the time portion
+						
+					var html = $("messageTemplate").innerHTML.replace(/\$(\w+)\$/g, 
+						function(match, keyword) { return message[keyword]; }
+						);
+					htmlStrings.push(html);
+					if (roomId < 0)
+					{
+						setRoomId(message.room_id);
+					}
+					minMessageId = message.id; // This will end up being the largest already-fetched message
+				}
+				$("messages").innerHTML = $("messages").innerHTML + "\n" + htmlStrings.join("\n") + "\n";;
+				$("messages").scrollTop = $("messages").scrollHeight;
+			}
+		</script>
+		
+		<div id='sampleHeader'>
+            <div class='sampleTitle'>
+               <img src='images/user_comment.png'/> Simple Chat Demo
+            </div>
+            <div id='rightFloat'>
+                <img src ='images/information.png' class='sampleDescription' onmouseover="TagToTip('sampleDescription', CLICKCLOSE, true, STICKY, true, WIDTH, 300, TITLE, 'Sample info')" />
+				<span id='sourceButton'><img src ='images/html.png' 	   id='sampleSourceLink'  onmouseover="TagToTip('sampleSource', STICKY, true, CLOSEBTN, true,  TITLE, 'View Source Code')"/></span>
+            </div>
+        </div>
+
+
+		<div id="messageTemplate" style="display:none">
+			<div>
+				<span class="message-timestamp">($sent$)</span>
+				<span class="message-sender">$username$</span>&nbsp;
+				<span class="message-contents">$contents$</span>
+			</div>
+		</div>
+        <div id='applicationContent'>
+
+		<script type="text/javascript" src="jaxer-include/_login.js" runat="server"></script>
+
+        <div id="chatTable">
+            <div class='loginPanel'>
+                <jaxer:include src="jaxer-include/_login.html"></jaxer:include>
+            </div>
+
+			<div id="inputPanel">
+            <div id="messages">
+            </div>
+            <div id="roomTitle" class="room-title"></div>
+                <input id="send" type="button" style="height:50px;width:18%;float:right;" value="Send" title="To send, click here or just hit Enter"/>
+                <textarea id="myMessage"       style="height:50px;width:80%;"></textarea>
+            </div>
+
+		</div>
+			<script runat='server'>
+				if (Jaxer.System.executableFolder.match('com.aptana.ide.framework.jaxer')) {
+					document.getElementById('sampleSource').innerHTML="";
+					document.getElementById('sourceButton').innerHTML="";
+				}
+			</script>		
+	</body>
+</html>

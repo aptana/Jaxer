@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/printingui/src/mac/printpde/src
+END
+PDECore.c
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/printingui/src/mac/printpde/src/PDECore.c
+END
+PDECustom.c
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/printingui/src/mac/printpde/src/PDECustom.c
+END
+PDEUtilities.c
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/printingui/src/mac/printpde/src/PDEUtilities.c
+END
+PDECore.h
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/printingui/src/mac/printpde/src/PDECore.h
+END
+PDECustom.h
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/printingui/src/mac/printpde/src/PDECustom.h
+END
+PDEUtilities.h
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/printingui/src/mac/printpde/src/PDEUtilities.h
+END

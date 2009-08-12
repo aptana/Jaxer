@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>test_DB_SQLite_basic</title>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+		<script type='text/javascript' runat='server'>
+
+		function SKIP_TESTS()
+		{
+			var isSQLite = Jaxer.Config.DEFAULT_DB.IMPLEMENTATION == "SQLite";
+			return isSQLite ? null : "Not using SQLite for user database";
+		}
+			
+		var createTestDBtable = 
+		<SQL>
+			CREATE TABLE IF NOT EXISTS test_db ( 
+			 	id 				INTEGER PRIMARY KEY AUTOINCREMENT 
+			 ,  identifier 		TEXT 	NOT NULL
+			 );
+		</SQL>
+			
+		var dropTestDBtable = 
+		<SQL>
+			DROP TABLE IF EXISTS test_db;
+		</SQL>			
+			
+		function testSQLiteCreateAndDropTable()
+		{
+			var detectTable = <SQL>SELECT count(*) as c FROM sqlite_master WHERE name='test_db'</SQL>
+			var startCount = Jaxer.DB.execute(detectTable).singleResult;
+			assertTrue(startCount==0,"Table 'test_db' was found and should not exist.")
+						
+			Jaxer.DB.execute(createTestDBtable);
+			var createCount = Jaxer.DB.execute(detectTable).singleResult;
+			assertTrue(createCount==1,"Table 'test_db' was not created")
+			
+			Jaxer.DB.execute(dropTestDBtable);	
+			var finalCount = Jaxer.DB.execute(detectTable).singleResult;
+			assertTrue(finalCount==0,"Table 'test_db' was not dropped")
+			
+		}
+		
+		function testSQLiteReadAndWriteRow()
+		{
+			Jaxer.DB.execute(dropTestDBtable);	
+			Jaxer.DB.execute(createTestDBtable);
+			
+			var countRows = <SQL>SELECT count(*) as c FROM test_db</SQL>
+			var initialRowCount = Jaxer.DB.execute(countRows).singleResult;
+
+			assertTrue(initialRowCount==0,"Table 'test_db' is not empty")			
+			
+			var insertRow = <SQL>INSERT INTO test_db (identifier) VALUES ("a test string")</SQL>
+			Jaxer.DB.execute(insertRow);	
+			
+			var finalRowCount = Jaxer.DB.execute(countRows).singleResult;
+			assertTrue(finalRowCount==1,"Table 'test_db' should contain a single row, found "+finalRowCount);
+			
+			Jaxer.DB.execute(dropTestDBtable);	
+
+		}
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

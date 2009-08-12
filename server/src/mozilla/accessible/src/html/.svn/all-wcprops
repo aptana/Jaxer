@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/accessible/src/html
+END
+nsHTMLTableAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/accessible/src/html/nsHTMLTableAccessible.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/accessible/src/html/Makefile.in
+END
+nsHTMLLinkAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/accessible/src/html/nsHTMLLinkAccessible.cpp
+END
+nsHTMLLinkAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/accessible/src/html/nsHTMLLinkAccessible.h
+END
+nsHTMLFormControlAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/accessible/src/html/nsHTMLFormControlAccessible.cpp
+END
+nsHyperTextAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/accessible/src/html/nsHyperTextAccessible.cpp
+END
+nsHTMLAreaAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/accessible/src/html/nsHTMLAreaAccessible.cpp
+END
+nsHTMLFormControlAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/accessible/src/html/nsHTMLFormControlAccessible.h
+END
+nsHyperTextAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/accessible/src/html/nsHyperTextAccessible.h
+END
+nsHTMLAreaAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/accessible/src/html/nsHTMLAreaAccessible.h
+END
+nsHTMLSelectAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/accessible/src/html/nsHTMLSelectAccessible.cpp
+END
+nsHTMLImageAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/accessible/src/html/nsHTMLImageAccessible.cpp
+END
+nsHTMLSelectAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/accessible/src/html/nsHTMLSelectAccessible.h
+END
+nsHTMLTextAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/accessible/src/html/nsHTMLTextAccessible.cpp
+END
+nsHTMLImageAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/accessible/src/html/nsHTMLImageAccessible.h
+END
+nsHTMLTableAccessible.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/accessible/src/html/nsHTMLTableAccessible.cpp
+END
+nsHTMLTextAccessible.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/accessible/src/html/nsHTMLTextAccessible.h
+END

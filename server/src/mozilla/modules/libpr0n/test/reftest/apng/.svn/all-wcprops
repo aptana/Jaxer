@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/modules/libpr0n/test/reftest/apng
+END
+delaytest.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/modules/libpr0n/test/reftest/apng/delaytest.html
+END
+bug411852-1.png
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/modules/libpr0n/test/reftest/apng/bug411852-1.png
+END
+reftest.list
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/modules/libpr0n/test/reftest/apng/reftest.list
+END
+bug411852-1-ref.png
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/modules/libpr0n/test/reftest/apng/bug411852-1-ref.png
+END

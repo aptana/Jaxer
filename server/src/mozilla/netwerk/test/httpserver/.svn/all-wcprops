@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/test/httpserver
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/httpserver/Makefile.in
+END
+TODO
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/httpserver/TODO
+END
+nsIHttpServer.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/test/httpserver/nsIHttpServer.idl
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/test/httpserver/README
+END
+httpd.js
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/test/httpserver/httpd.js
+END

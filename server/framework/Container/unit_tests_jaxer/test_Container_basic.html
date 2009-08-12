@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+		<title>Container Tests</title>
+		<script type='text/javascript' runat='server'>
+			
+			Jaxer.clientData.testDataForClientData = 57243588;
+			
+			function testClientData()
+			{
+				assertNotUndefined(Jaxer.clientData.testDataForClientData, "Did not find the clientData set on the server");
+				assertEquals(Jaxer.clientData.testDataForClientData, 57243588, "The clientData set on the server wasn't equal to its value on the client");
+			}
+			testClientData.runat = "client";
+			
+			function getSessionData(key)
+			{
+				return Jaxer.session[key];
+			}
+			getSessionData.proxy = true;
+			
+			function getSessionPageData(key)
+			{
+				return Jaxer.sessionPage[key];
+			}
+			getSessionPageData.proxy = true;
+			
+			var sessionKey1 = "key_" + Math.random();
+			var pageSessionKey1 = "key_" + Math.random();
+			var sessionVal1 = "value_" + Math.random();
+			var pageSessionVal1 = "value_" + Math.random();
+			Jaxer.session[sessionKey1] = sessionVal1;
+			Jaxer.sessionPage[pageSessionKey1] = pageSessionVal1;
+			Jaxer.clientData.sessionSetTestData = [sessionKey1, sessionVal1];
+			Jaxer.clientData.pageSessionSetTestData = [pageSessionKey1, pageSessionVal1];
+			
+			function testSetSessions()
+			{
+				var sessionKey1 = Jaxer.clientData.sessionSetTestData[0];
+				var sessionVal1 = Jaxer.clientData.sessionSetTestData[1];
+				var pageSessionKey1 = Jaxer.clientData.pageSessionSetTestData[0];
+				var pageSessionVal1 = Jaxer.clientData.pageSessionSetTestData[1];
+				var fetchedSessionVal1 = getSessionData(sessionKey1);
+				var fetchedPageSessionVal1 = getSessionPageData(pageSessionKey1);
+				assertEquals(sessionVal1, fetchedSessionVal1, "Fetched session data does not match set session data");
+				assertEquals(pageSessionVal1, fetchedPageSessionVal1, "Fetched page session data does not match set session data");
+			}
+			testSetSessions.runat = "client";
+
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

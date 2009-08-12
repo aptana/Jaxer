@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/sk/viewers
+END
+boxModel.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/sk/viewers/boxModel.dtd
+END
+styleRules.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/sk/viewers/styleRules.dtd
+END
+stylesheets.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/sk/viewers/stylesheets.dtd
+END
+accessibleTree.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/sk/viewers/accessibleTree.dtd
+END
+accessibleRelations.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/sk/viewers/accessibleRelations.dtd
+END
+dom.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/sk/viewers/dom.dtd
+END
+accessibleProps.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/sk/viewers/accessibleProps.dtd
+END
+accessibleEvents.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/sk/viewers/accessibleEvents.dtd
+END
+domNode.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/sk/viewers/domNode.dtd
+END
+accessibleEvent.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/sk/viewers/accessibleEvent.dtd
+END
+computedStyle.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/sk/viewers/computedStyle.dtd
+END
+accessibleTreeEvalJSDialog.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/sk/viewers/accessibleTreeEvalJSDialog.dtd
+END
+accessibleProps.properties
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/sk/viewers/accessibleProps.properties
+END
+xblBindings.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/sk/viewers/xblBindings.dtd
+END
+jsObject.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/sk/viewers/jsObject.dtd
+END

@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/cairo/glitz/src/glx
+END
+glitz_glx_info.c
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/cairo/glitz/src/glx/glitz_glx_info.c
+END
+glitz_glx_extension.c
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/cairo/glitz/src/glx/glitz_glx_extension.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/cairo/glitz/src/glx/Makefile.in
+END
+glitz_glxint.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/cairo/glitz/src/glx/glitz_glxint.h
+END
+glitz_glx_drawable.c
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/cairo/glitz/src/glx/glitz_glx_drawable.c
+END
+glitz-glx.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/cairo/glitz/src/glx/glitz-glx.h
+END
+glitz_glx_context.c
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/cairo/glitz/src/glx/glitz_glx_context.c
+END
+glitz_glxext.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/cairo/glitz/src/glx/glitz_glxext.h
+END
+glitz-glx.man
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/cairo/glitz/src/glx/glitz-glx.man
+END
+glitz_glx_format.c
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/cairo/glitz/src/glx/glitz_glx_format.c
+END
+glitz_glx_pbuffer.c
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/cairo/glitz/src/glx/glitz_glx_pbuffer.c
+END

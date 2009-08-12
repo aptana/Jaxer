@@ -1,0 +1,52 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/tools/linux/dump_syms
+http://svn.aptana.local/svn/jaxer
+
+
+
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:35:17.000000Z
+bfb5a396bd008b1e6bac253d47668e0b
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+dump_syms.cc
+file
+
+
+
+
+2009-08-11T21:35:17.000000Z
+90038f29b1b8742dcc8c8510492da451
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+

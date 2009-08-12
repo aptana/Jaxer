@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/themes/pinstripe/tests
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/themes/pinstripe/tests/Makefile.in
+END
+test_bug371080.xul
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/themes/pinstripe/tests/test_bug371080.xul
+END

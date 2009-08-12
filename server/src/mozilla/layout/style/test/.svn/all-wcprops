@@ -1,0 +1,335 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/style/test
+END
+redirect-2.css^headers^
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/style/test/redirect-2.css%5Eheaders%5E
+END
+ListCSSProperties.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/style/test/ListCSSProperties.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/style/test/Makefile.in
+END
+property_database.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/style/test/property_database.js
+END
+test_compute_data_with_start_struct.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_compute_data_with_start_struct.html
+END
+test_bug377947.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_bug377947.html
+END
+redirect-1.css
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/style/test/redirect-1.css
+END
+test_inherit_computation.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_inherit_computation.html
+END
+unstyled-frame.css
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/unstyled-frame.css
+END
+redirect-2.css
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/style/test/redirect-2.css
+END
+redirect-3.css
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/style/test/redirect-3.css
+END
+test_bug73586.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/style/test/test_bug73586.html
+END
+css_properties_like_longhand.js
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/css_properties_like_longhand.js
+END
+test_bug401046.html
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/style/test/test_bug401046.html
+END
+unstyled-frame.xml
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/unstyled-frame.xml
+END
+unstyled.css
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/unstyled.css
+END
+test_dont_use_document_colors.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/style/test/test_dont_use_document_colors.html
+END
+test_bug391221.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_bug391221.html
+END
+test_value_storage.html
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/style/test/test_value_storage.html
+END
+test_bug221428.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_bug221428.html
+END
+test_selectors.html
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/style/test/test_selectors.html
+END
+unstyled.xml
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/unstyled.xml
+END
+test_bug405818.html
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/style/test/test_bug405818.html
+END
+post-redirect-1.css
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/style/test/post-redirect-1.css
+END
+test_bug372770.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_bug372770.html
+END
+post-redirect-2.css
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/style/test/post-redirect-2.css
+END
+test_bug373293.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_bug373293.html
+END
+test_bug229915.html
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/style/test/test_bug229915.html
+END
+post-redirect-3.css
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/style/test/post-redirect-3.css
+END
+redirect-1.css^headers^
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/style/test/redirect-1.css%5Eheaders%5E
+END
+test_initial_storage.html
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_initial_storage.html
+END
+test_bug397427.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/style/test/test_bug397427.html
+END
+redirect-3.css^headers^
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/style/test/redirect-3.css%5Eheaders%5E
+END
+test_bug389464.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_bug389464.html
+END
+test_inherit_storage.html
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_inherit_storage.html
+END
+test_property_syntax_errors.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_property_syntax_errors.html
+END
+test_style_struct_copy_constructors.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/style/test/test_style_struct_copy_constructors.html
+END
+test_bug74880.html
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_bug74880.html
+END
+test_bug412901.html
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/style/test/test_bug412901.html
+END
+test_value_computation.html
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/style/test/test_value_computation.html
+END
+test_bug391034.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_bug391034.html
+END
+test_bug302186.html
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/style/test/test_bug302186.html
+END
+test_parse_rule.html
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/style/test/test_parse_rule.html
+END
+test_bug382027.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_bug382027.html
+END
+test_bug363146.html
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/style/test/test_bug363146.html
+END
+test_bug319381.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_bug319381.html
+END
+test_bug383075.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_bug383075.html
+END
+test_bug357614.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_bug357614.html
+END
+test_bug98997.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/style/test/test_bug98997.html
+END
+test_bug379440.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_bug379440.html
+END
+test_property_database.html
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_property_database.html
+END
+test_bug365932.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_bug365932.html
+END
+test_bug387615.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_bug387615.html
+END
+test_initial_computation.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_initial_computation.html
+END
+test_bug379741.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/style/test/test_bug379741.html
+END

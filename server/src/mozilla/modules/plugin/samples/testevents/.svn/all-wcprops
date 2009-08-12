@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/testevents
+END
+SimpleEventsTest.html
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/testevents/SimpleEventsTest.html
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/testevents/Makefile.in
+END
+npevents.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/testevents/npevents.cpp
+END
+nsIEventsPluginInstance.idl
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/testevents/nsIEventsPluginInstance.idl
+END
+README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/testevents/README.txt
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/testevents/Makefile
+END

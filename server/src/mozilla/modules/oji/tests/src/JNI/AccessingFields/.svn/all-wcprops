@@ -1,0 +1,761 @@
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields
+END
+GetFloatField_6.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFloatField_6.cpp
+END
+SetShortField_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetShortField_1.cpp
+END
+SetLongField_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetLongField_1.cpp
+END
+SetShortField_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetShortField_2.cpp
+END
+SetLongField_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetLongField_2.cpp
+END
+SetShortField_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetShortField_3.cpp
+END
+SetLongField_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetLongField_3.cpp
+END
+SetShortField_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetShortField_4.cpp
+END
+SetLongField_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetLongField_4.cpp
+END
+SetShortField_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetShortField_5.cpp
+END
+SetLongField_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetLongField_5.cpp
+END
+SetByteField_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetByteField_1.cpp
+END
+SetByteField_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetByteField_2.cpp
+END
+SetFloatField_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetFloatField_1.cpp
+END
+SetByteField_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetByteField_3.cpp
+END
+SetByteField_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetByteField_4.cpp
+END
+SetFloatField_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetFloatField_2.cpp
+END
+SetByteField_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetByteField_5.cpp
+END
+SetFloatField_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetFloatField_3.cpp
+END
+SetByteField_6.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetByteField_6.cpp
+END
+SetFloatField_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetFloatField_4.cpp
+END
+SetFloatField_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetFloatField_5.cpp
+END
+GetObjectField_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetObjectField_1.cpp
+END
+GetObjectField_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetObjectField_2.cpp
+END
+GetObjectField_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetObjectField_3.cpp
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/Makefile
+END
+GetObjectField_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetObjectField_4.cpp
+END
+GetObjectField_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetObjectField_5.cpp
+END
+GetFieldID_10.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_10.cpp
+END
+GetFieldID_11.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_11.cpp
+END
+GetFieldID_12.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_12.cpp
+END
+GetFieldID_13.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_13.cpp
+END
+GetFieldID_14.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_14.cpp
+END
+GetFieldID_15.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_15.cpp
+END
+SetObjectField_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetObjectField_1.cpp
+END
+GetFieldID_16.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_16.cpp
+END
+SetObjectField_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetObjectField_2.cpp
+END
+GetFieldID_17.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_17.cpp
+END
+SetObjectField_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetObjectField_3.cpp
+END
+GetFieldID_18.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_18.cpp
+END
+SetObjectField_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetObjectField_4.cpp
+END
+GetFieldID_19.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_19.cpp
+END
+SetObjectField_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetObjectField_5.cpp
+END
+GetIntField_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetIntField_1.cpp
+END
+GetIntField_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetIntField_2.cpp
+END
+GetIntField_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetIntField_3.cpp
+END
+GetIntField_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetIntField_4.cpp
+END
+GetIntField_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetIntField_5.cpp
+END
+GetIntField_6.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetIntField_6.cpp
+END
+GetIntField_7.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetIntField_7.cpp
+END
+SetIntField_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetIntField_1.cpp
+END
+SetIntField_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetIntField_2.cpp
+END
+AccessingFields.h
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/AccessingFields.h
+END
+SetIntField_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetIntField_3.cpp
+END
+SetIntField_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetIntField_4.cpp
+END
+SetIntField_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetIntField_5.cpp
+END
+GetDoubleField_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetDoubleField_1.cpp
+END
+GetDoubleField_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetDoubleField_2.cpp
+END
+GetDoubleField_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetDoubleField_3.cpp
+END
+GetDoubleField_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetDoubleField_4.cpp
+END
+GetFieldID_20.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_20.cpp
+END
+GetDoubleField_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetDoubleField_5.cpp
+END
+GetDoubleField_6.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetDoubleField_6.cpp
+END
+SetDoubleField_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetDoubleField_1.cpp
+END
+SetDoubleField_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetDoubleField_2.cpp
+END
+SetDoubleField_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetDoubleField_3.cpp
+END
+SetDoubleField_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetDoubleField_4.cpp
+END
+SetDoubleField_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetDoubleField_5.cpp
+END
+SetDoubleField_6.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetDoubleField_6.cpp
+END
+GetFieldID_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_1.cpp
+END
+GetFieldID_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_2.cpp
+END
+GetFieldID_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_3.cpp
+END
+GetFieldID_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_4.cpp
+END
+GetFieldID_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_5.cpp
+END
+GetFieldID_6.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_6.cpp
+END
+GetFieldID_7.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_7.cpp
+END
+GetFieldID_8.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_8.cpp
+END
+GetFieldID_9.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFieldID_9.cpp
+END
+makefile.win
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/makefile.win
+END
+GetCharField_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetCharField_1.cpp
+END
+GetCharField_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetCharField_2.cpp
+END
+GetCharField_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetCharField_3.cpp
+END
+GetBooleanField_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetBooleanField_1.cpp
+END
+GetBooleanField_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetBooleanField_2.cpp
+END
+GetCharField_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetCharField_4.cpp
+END
+GetBooleanField_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetBooleanField_3.cpp
+END
+GetCharField_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetCharField_5.cpp
+END
+GetBooleanField_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetBooleanField_4.cpp
+END
+GetBooleanField_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetBooleanField_5.cpp
+END
+GetBooleanField_6.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetBooleanField_6.cpp
+END
+SetCharField_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetCharField_1.cpp
+END
+SetCharField_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetCharField_2.cpp
+END
+SetBooleanField_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetBooleanField_1.cpp
+END
+SetCharField_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetCharField_3.cpp
+END
+SetBooleanField_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetBooleanField_2.cpp
+END
+SetCharField_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetCharField_4.cpp
+END
+SetBooleanField_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetBooleanField_3.cpp
+END
+SetCharField_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetCharField_5.cpp
+END
+SetBooleanField_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetBooleanField_4.cpp
+END
+SetCharField_6.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetCharField_6.cpp
+END
+GetLongField_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetLongField_1.cpp
+END
+GetShortField_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetShortField_1.cpp
+END
+SetBooleanField_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetBooleanField_5.cpp
+END
+GetLongField_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetLongField_2.cpp
+END
+GetShortField_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetShortField_2.cpp
+END
+SetBooleanField_6.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetBooleanField_6.cpp
+END
+GetLongField_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetLongField_3.cpp
+END
+GetShortField_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetShortField_3.cpp
+END
+SetBooleanField_7.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/SetBooleanField_7.cpp
+END
+GetLongField_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetLongField_4.cpp
+END
+GetShortField_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetShortField_4.cpp
+END
+GetLongField_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetLongField_5.cpp
+END
+GetByteField_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetByteField_1.cpp
+END
+GetShortField_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetShortField_5.cpp
+END
+GetLongField_6.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetLongField_6.cpp
+END
+GetByteField_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetByteField_2.cpp
+END
+GetShortField_6.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetShortField_6.cpp
+END
+GetFloatField_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFloatField_1.cpp
+END
+GetByteField_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetByteField_3.cpp
+END
+GetFloatField_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFloatField_2.cpp
+END
+GetByteField_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetByteField_4.cpp
+END
+GetFloatField_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFloatField_3.cpp
+END
+GetByteField_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetByteField_5.cpp
+END
+GetFloatField_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFloatField_4.cpp
+END
+GetByteField_6.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetByteField_6.cpp
+END
+GetFloatField_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/AccessingFields/GetFloatField_5.cpp
+END

@@ -1,0 +1,67 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/distro/jam/jaxer/aptana/samples/rss-sample/lib
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-01-16T18:21:36.602411Z
+1796
+pcolton
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+tip_centerwindow.js
+file
+
+
+
+
+2009-08-11T21:42:33.000000Z
+c5b4414fa868ecb86bb8ad60a142ee7a
+2008-01-11T00:50:02.319449Z
+1634
+pcolton
+
+wz_tooltip.js
+file
+
+
+
+
+2009-08-11T21:42:34.000000Z
+754361896bfe256fd35deda7d2a0f85e
+2008-01-11T00:50:02.319449Z
+1634
+pcolton
+
+ajaxslt-0.8.1
+dir
+
+tip_followscroll.js
+file
+
+
+
+
+2009-08-11T21:42:34.000000Z
+507366dc3fd76fad3b4d08f6f32cec2f
+2008-01-11T00:50:02.319449Z
+1634
+pcolton
+

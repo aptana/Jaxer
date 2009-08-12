@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/typelib/xpidl/macplugin
+END
+mac_xpt_linker.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/typelib/xpidl/macplugin/mac_xpt_linker.cpp
+END
+mac_xpidl.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/typelib/xpidl/macplugin/mac_xpidl.cpp
+END
+mac_stdlib.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/typelib/xpidl/macplugin/mac_stdlib.cpp
+END
+compiler.rsrc
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/typelib/xpidl/macplugin/compiler.rsrc
+END
+mac_xpidl.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/typelib/xpidl/macplugin/mac_xpidl.h
+END
+mac_strings.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/typelib/xpidl/macplugin/mac_strings.cpp
+END
+linker.rsrc
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/typelib/xpidl/macplugin/linker.rsrc
+END
+version.rsrc
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/typelib/xpidl/macplugin/version.rsrc
+END
+mac_strings.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/typelib/xpidl/macplugin/mac_strings.h
+END
+mac_xpidl_panel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/typelib/xpidl/macplugin/mac_xpidl_panel.cpp
+END
+mac_console.c
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/typelib/xpidl/macplugin/mac_console.c
+END
+mac_xpidl_panel.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/typelib/xpidl/macplugin/mac_xpidl_panel.h
+END
+panel.rsrc
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/typelib/xpidl/macplugin/panel.rsrc
+END
+mac_console.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/typelib/xpidl/macplugin/mac_console.h
+END
+mac_memory.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/typelib/xpidl/macplugin/mac_memory.cpp
+END

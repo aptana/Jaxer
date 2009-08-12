@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/xslt/src/xml
+END
+txXMLParser.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xml/txXMLParser.h
+END
+txDOM.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xml/txDOM.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/content/xslt/src/xml/Makefile.in
+END
+txXMLUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xml/txXMLUtils.h
+END
+txElement.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xml/txElement.cpp
+END
+txAttr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xml/txAttr.cpp
+END
+txXMLParser.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/xslt/src/xml/txXMLParser.cpp
+END
+txDocument.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xml/txDocument.cpp
+END
+txNodeDefinition.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xml/txNodeDefinition.cpp
+END
+txProcessingInstruction.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xml/txProcessingInstruction.cpp
+END
+txXMLUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xslt/src/xml/txXMLUtils.cpp
+END

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix/checker
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix/checker/manifest.mn
+END
+test_certchainchecker.c
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix/checker/test_certchainchecker.c
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix/checker/Makefile
+END

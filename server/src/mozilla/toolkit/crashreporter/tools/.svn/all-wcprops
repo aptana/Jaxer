@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2931/trunk/products/server/src/mozilla/toolkit/crashreporter/tools
+END
+upload_symbols.sh
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/crashreporter/tools/upload_symbols.sh
+END
+symbolstore.py
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2931/trunk/products/server/src/mozilla/toolkit/crashreporter/tools/symbolstore.py
+END

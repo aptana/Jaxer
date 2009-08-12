@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/certs/extKeyUsage
+END
+noEKUCert
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/certs/extKeyUsage/noEKUCert
+END
+codeSigningEKUCert
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/certs/extKeyUsage/codeSigningEKUCert
+END
+multiEKUCert
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/certs/extKeyUsage/multiEKUCert
+END

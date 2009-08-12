@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/nsprpub/pr/src/io
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/io/Makefile.in
+END
+prmapopt.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/io/prmapopt.c
+END
+prio.c
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/io/prio.c
+END
+prfdcach.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/nsprpub/pr/src/io/prfdcach.c
+END
+prpolevt.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/io/prpolevt.c
+END
+prlayer.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/io/prlayer.c
+END
+prdir.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/io/prdir.c
+END
+prfile.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/io/prfile.c
+END
+prlog.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/nsprpub/pr/src/io/prlog.c
+END
+prmwait.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/nsprpub/pr/src/io/prmwait.c
+END
+prstdio.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/io/prstdio.c
+END
+pripv6.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/nsprpub/pr/src/io/pripv6.c
+END
+priometh.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/io/priometh.c
+END
+prprf.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/io/prprf.c
+END
+prsocket.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/nsprpub/pr/src/io/prsocket.c
+END
+prscanf.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/io/prscanf.c
+END
+prmmap.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/io/prmmap.c
+END

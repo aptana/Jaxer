@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components
+END
+xpctest_overloaded.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components/xpctest_overloaded.cpp
+END
+xpctest_module.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components/xpctest_module.cpp
+END
+xpctest_attributes.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components/xpctest_attributes.cpp
+END
+xpctest_const.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components/xpctest_const.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components/Makefile.in
+END
+xpctest_multiple.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components/xpctest_multiple.cpp
+END
+xpctest_inout.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components/xpctest_inout.cpp
+END
+xpctest_noisy.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components/xpctest_noisy.cpp
+END
+xpctest_variant.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components/xpctest_variant.cpp
+END
+xpctest_string.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components/xpctest_string.cpp
+END
+xpctest_domstring.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components/xpctest_domstring.cpp
+END
+xpctest_in.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components/xpctest_in.cpp
+END
+xpctest_out.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components/xpctest_out.cpp
+END
+xpctest_calljs.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components/xpctest_calljs.cpp
+END
+xpctest_array.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components/xpctest_array.cpp
+END
+xpctest_echo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components/xpctest_echo.cpp
+END
+xpctest_private.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components/xpctest_private.h
+END
+xpctest_child.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/components/xpctest_child.cpp
+END

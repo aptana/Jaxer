@@ -1,0 +1,29 @@
+DEPTH		= ../../../../..
+topsrcdir	= @top_srcdir@
+srcdir		= @srcdir@
+VPATH		= @srcdir@
+
+include $(DEPTH)/config/autoconf.mk
+
+MODULE		= nativeloader
+LIBRARY_NAME	= ffi_s
+
+CSRCS		= \
+		  powerpc_ffi_darwin.c \
+		  x86_ffi_darwin.c \
+		  prep_cif.c \
+		  types.c \
+		  $(NULL)
+
+ASFILES        = \
+		 powerpc_darwin.s \
+		 powerpc_darwin_closure.s \
+		 x86_darwin.s \
+		 $(NULL)
+
+LOCAL_INCLUDES += -I$(srcdir)
+ASFLAGS += -I$(srcdir)
+
+FORCE_STATIC_LIB = 1
+
+include $(topsrcdir)/config/rules.mk

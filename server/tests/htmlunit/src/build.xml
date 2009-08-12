@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="alltests" basedir=".">
+
+
+    <!-- Add a line for each test directory added below us -->
+
+    <target name="html.parsing.title.001"><ant dir="./html/parsing/title/001"/></target>
+    <target name="html.parsing.title.002"><ant dir="./html/parsing/title/002"/></target>
+    <target name="html.parsing.title.003"><ant dir="./html/parsing/title/003"/></target>
+    <target name="html.parsing.title.004"><ant dir="./html/parsing/title/004"/></target>
+    <target name="html.parsing.title.005"><ant dir="./html/parsing/title/005"/></target>
+    <target name="html.parsing.title.006"><ant dir="./html/parsing/title/006"/></target>
+
+    <target name="html.parsing.runat.001"><ant dir="./html/parsing/runat/001"/></target>
+    <target name="html.parsing.runat.002"><ant dir="./html/parsing/runat/002"/></target>
+    <target name="html.parsing.runat.003"><ant dir="./html/parsing/runat/003"/></target>
+    <target name="html.parsing.runat.004"><ant dir="./html/parsing/runat/004"/></target>
+    <target name="html.parsing.runat.005"><ant dir="./html/parsing/runat/005"/></target>
+    <target name="html.parsing.runat.006"><ant dir="./html/parsing/runat/006"/></target>
+    <target name="html.parsing.runat.007"><ant dir="./html/parsing/runat/007"/></target>
+    <target name="html.parsing.runat.008"><ant dir="./html/parsing/runat/008"/></target>
+    
+
+    <!-- Do nothing, just run all tests -->
+    <target name="alltests" depends="
+		html.parsing.title.001,
+		html.parsing.title.002,
+		html.parsing.title.003,
+		html.parsing.title.004,
+		html.parsing.title.005,
+		html.parsing.title.006,
+		html.parsing.runat.001,
+		html.parsing.runat.002,
+		html.parsing.runat.003,
+		html.parsing.runat.004,
+		html.parsing.runat.005,
+		html.parsing.runat.006,
+		html.parsing.runat.007,
+		html.parsing.runat.008
+
+
+    ">
+    </target>
+    
+</project>

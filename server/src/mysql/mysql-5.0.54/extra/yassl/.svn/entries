@@ -1,0 +1,176 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mysql/mysql-5.0.54/extra/yassl
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+yassl.dsp
+file
+
+
+
+
+2009-08-11T21:27:01.000000Z
+9018e9bd4ade748ef19b36138c071474
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:27:01.000000Z
+e8584ec576622e1fb6d1580b89d6bd87
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+include
+dir
+
+AUTHORS
+file
+
+
+
+
+2009-08-11T21:27:01.000000Z
+d41d8cd98f00b204e9800998ecf8427e
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+ChangeLog
+file
+
+
+
+
+2009-08-11T21:27:01.000000Z
+d41d8cd98f00b204e9800998ecf8427e
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+yassl.dsw
+file
+
+
+
+
+2009-08-11T21:27:01.000000Z
+8ab0541196dd1101a9165ca6312975d8
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+src
+dir
+
+testsuite
+dir
+
+README
+file
+
+
+
+
+2009-08-11T21:27:01.000000Z
+96835698812b1eb014d9233b0a930e25
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+taocrypt
+dir
+
+INSTALL
+file
+
+
+
+
+2009-08-11T21:27:01.000000Z
+9f3e20fdff9c78aa8e3f9b42be166769
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+COPYING
+file
+
+
+
+
+2009-08-11T21:27:01.000000Z
+94d55d512a9ba36caa9b7df079bae19f
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+Makefile.am
+file
+
+
+
+
+2009-08-11T21:27:01.000000Z
+43a519642d335eeef2e832565e1d1a19
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+NEWS
+file
+
+
+
+
+2009-08-11T21:27:01.000000Z
+d41d8cd98f00b204e9800998ecf8427e
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+CMakeLists.txt
+file
+
+
+
+
+2009-08-11T21:27:01.000000Z
+5693b66337dc36506fd5d8d7f11b65f0
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+has-props
+
+examples
+dir
+

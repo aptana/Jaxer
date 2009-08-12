@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_2/r
+END
+innodb_charset.result
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_2/r/innodb_charset.result
+END
+myisam_charset.result
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_2/r/myisam_charset.result
+END
+ndb_charset.result
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_2/r/ndb_charset.result
+END
+memory_charset.result
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/mysql-test/suite/funcs_2/r/memory_charset.result
+END

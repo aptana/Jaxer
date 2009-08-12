@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/intl/lwbrk/tests
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/lwbrk/tests/Makefile.in
+END
+TestLineBreak.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/lwbrk/tests/TestLineBreak.cpp
+END

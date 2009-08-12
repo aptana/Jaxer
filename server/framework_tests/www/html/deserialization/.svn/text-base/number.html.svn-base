@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Deserialization Unit Tests</title>
+		<link rel="stylesheet" type="text/css" href="/unit-tests/unit_test.css" />
+		<script type="text/javascript" runat="server" src="../../unit_test_lib.js"></script>
+		<script type="text/javascript" runat="server">
+			function test_Deserialization_Integer()
+			{
+				var json = "10";
+				var expected = 10;
+				var result = Aptana.Serialization.fromJSONString(json);
+				
+				$assertEquals(expected, result);
+			}
+			
+			function test_Deserialization_NegativeInteger()
+			{
+				var json = "-10";
+				var expected = -10;
+				var result = Aptana.Serialization.fromJSONString(json);
+				
+				$assertEquals(expected, result);
+			}
+			
+			function test_Deserialization_Float()
+			{
+				var json = "10.5";
+				var expected = 10.5;
+				var result = Aptana.Serialization.fromJSONString(json);
+				
+				$assertEquals(expected, result);
+			}
+			
+			function test_Deserialization_NegativeFloat()
+			{
+				var json = "-10.5";
+				var expected = -10.5;
+				var result = Aptana.Serialization.fromJSONString(json);
+				
+				$assertEquals(expected, result);
+			}
+			
+			function test_Deserialization_ScientificNotation()
+			{
+				var json = "1.5e+50";
+				var expected = 1.5e50;
+				var result = Aptana.Serialization.fromJSONString(json);
+				
+				$assertEquals(expected, result);
+			}
+			
+			function test_Deserialization_NegativeScientificiNotation()
+			{
+				var json = "-1.1e+50";
+				var expected = -1.1e50;
+				var result = Aptana.Serialization.fromJSONString(json);
+				
+				$assertEquals(expected, result);
+			}
+			
+			function test_Deserialization_NegativeScientificNotation2()
+			{
+				var json = "-1.5e-20"
+				var expected = -1.5e-20
+				var result = Aptana.Serialization.fromJSONString(json);
+				
+				$assertEquals(expected, result);
+			}
+		</script>
+	</head>
+	<body>
+		<table id="output" cellpadding="2" cellspacing="0"></table>
+		<script type="text/javascript" runat="server">
+			$run_tests()
+		</script>
+	</body>
+</html>

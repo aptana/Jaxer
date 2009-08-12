@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/profile/public
+END
+nsIProfile.idl
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/profile/public/nsIProfile.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/profile/public/Makefile.in
+END
+nsIProfileUnlocker.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/profile/public/nsIProfileUnlocker.idl
+END
+nsIProfileChangeStatus.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/profile/public/nsIProfileChangeStatus.idl
+END

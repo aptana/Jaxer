@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/htmlunit/src/html/aptanadownload
+END
+runTest.bat
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/htmlunit/src/html/aptanadownload/runTest.bat
+END
+JaxerHtmlTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/htmlunit/src/html/aptanadownload/JaxerHtmlTest.java
+END
+build.xml
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/htmlunit/src/html/aptanadownload/build.xml
+END

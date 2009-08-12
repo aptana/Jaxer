@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/rev_data/crlchecker
+END
+prof2test.crt
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/rev_data/crlchecker/prof2test.crt
+END
+phy2prof.crt
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/rev_data/crlchecker/phy2prof.crt
+END
+phys.crl
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/rev_data/crlchecker/phys.crl
+END
+sci2chem.crt
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/rev_data/crlchecker/sci2chem.crt
+END
+prof.crl
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/rev_data/crlchecker/prof.crl
+END
+sci2sci.crt
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/rev_data/crlchecker/sci2sci.crt
+END
+sci2phy.crt
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/rev_data/crlchecker/sci2phy.crt
+END
+chem.crl
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/rev_data/crlchecker/chem.crl
+END
+chem2prof.crt
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/rev_data/crlchecker/chem2prof.crt
+END
+sci.crl
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/rev_data/crlchecker/sci.crl
+END
+test.crl
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/rev_data/crlchecker/test.crl
+END

@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/system/gnome
+END
+nsGConfService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/system/gnome/nsGConfService.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/system/gnome/Makefile.in
+END
+nsGConfService.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/system/gnome/nsGConfService.h
+END
+nsGnomeVFSService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/system/gnome/nsGnomeVFSService.cpp
+END
+nsGnomeVFSService.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/system/gnome/nsGnomeVFSService.h
+END
+nsGnomeModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/system/gnome/nsGnomeModule.cpp
+END

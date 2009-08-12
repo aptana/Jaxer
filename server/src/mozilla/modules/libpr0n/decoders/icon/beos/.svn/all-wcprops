@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/libpr0n/decoders/icon/beos
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/libpr0n/decoders/icon/beos/Makefile.in
+END
+nsIconChannel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/libpr0n/decoders/icon/beos/nsIconChannel.cpp
+END
+nsIconChannel.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/libpr0n/decoders/icon/beos/nsIconChannel.h
+END

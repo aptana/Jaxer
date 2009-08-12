@@ -1,0 +1,56 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/extensions/venkman/xpi
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-16T23:28:56.072242Z
+2859
+mstepanov
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+makelocalexpi.sh
+file
+
+
+
+
+2009-08-11T21:36:50.000000Z
+1414f669a0193c2a5985bb295d47e0e8
+2008-02-18T19:26:57.266176Z
+2130
+csanders
+has-props
+
+makexpi.sh
+file
+
+
+
+
+2009-08-11T21:36:50.000000Z
+667dfa53d3b2327fbc0f87ee8e627f22
+2008-02-18T19:26:57.266176Z
+2130
+csanders
+
+resources
+dir
+

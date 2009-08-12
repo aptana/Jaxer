@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/tpf
+END
+ebcdic.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/tpf/ebcdic.h
+END
+os.c
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/tpf/os.c
+END
+os.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/tpf/os.h
+END
+ebcdic.c
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/tpf/ebcdic.c
+END
+TPFExport
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/tpf/TPFExport
+END

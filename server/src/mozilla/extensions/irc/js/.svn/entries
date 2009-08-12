@@ -1,0 +1,34 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/extensions/irc/js
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-20T18:44:20.559534Z
+2886
+jzhang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+tests
+dir
+
+lib
+dir
+

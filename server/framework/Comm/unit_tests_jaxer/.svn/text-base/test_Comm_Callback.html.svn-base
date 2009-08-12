@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Test Comm Callback</title>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+		<script runat="server-proxy">
+			function returnTrue()
+			{
+				return true;
+			}
+			
+			function returnUndefined()
+			{
+				return undefined;
+			}
+			
+			function throwCustomException()
+			{
+				throw new Jaxer.ClientError(false, {wrapped: false});
+			}
+
+			function throwDateException()
+			{
+				var date = new Date(Date.UTC(2007, 7, 20, 14, 37, 25));
+				throw new Jaxer.ClientError(date, {wrapped: false});
+			}
+
+			function throwJaxerException()
+			{
+				throw new Jaxer.ClientError(Jaxer.Exception("This is an intentional server-side Jaxer Exception"), {wrapped: false});
+			}
+			
+			function throwIntegerException()
+			{
+				throw new Jaxer.ClientError(-1, {wrapped: false});
+			}
+			
+			function throwReferenceException()
+			{
+				throw new Jaxer.ClientError(new ReferenceError("This is an intentional server-side ReferenceError"), {wrapped: false});
+			}
+			
+			function throwSyntaxException()
+			{
+				throw new Jaxer.ClientError(new SyntaxError("This is an intentional server-side SyntaxError"), {wrapped: false});
+			}
+
+		</script>
+		<script type="text/javascript">
+			
+			function testReturnBoolean()
+			{		
+				assertTrue(returnTrue());
+			}
+			
+			function testReturnUndefined()
+			{
+				undef = returnUndefined()
+				assertTrue(undef === undefined);
+			}
+
+			function testThrowBooleanError()
+			{				
+				try
+				{
+					throwCustomException();
+				}
+				catch (e)
+				{
+					assertEquals(e, false);
+				}
+			}
+
+			function testThrowDateError()
+			{
+				var dt = new Date(Date.UTC(2007, 7, 20, 14, 37, 25));			
+				try
+				{
+					throwDateException();
+				}
+				catch (e)
+				{
+					assertEquals(dt.getTime(), e.getTime(), "Should have gotten back the identical Date value");
+					assertEquals(String(dt), String(e), "Should have gotten back the identical Date string value");
+				}
+			}
+
+			function testThrowIntegerException()
+			{				
+				try
+				{
+					throwIntegerException();
+				}
+				catch (e)
+				{
+					assertTrue(-1, e);
+				}
+			}
+			
+			function testThrowReferenceException()
+			{
+				try
+				{
+					throwReferenceException();
+				}
+				catch (e)
+				{
+					assertEquals("This is an intentional server-side ReferenceError", e.message);
+				}
+			}
+			
+			function testThrowSyntaxError()
+			{
+				try
+				{
+					throwSyntaxException();
+				}
+				catch (e)
+				{
+					assertEquals("This is an intentional server-side SyntaxError", e.message);
+				}
+			}
+
+
+		</script>
+	</head>
+		<pre id="output"></pre>
+	</body>
+</html>

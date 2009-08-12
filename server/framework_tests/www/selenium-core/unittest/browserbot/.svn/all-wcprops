@@ -1,0 +1,155 @@
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot
+END
+stringOverride.js
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/stringOverride.js
+END
+error-checking-command-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/error-checking-command-tests.html
+END
+confirm-handling-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/confirm-handling-tests.html
+END
+pagebot-accessor-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/pagebot-accessor-tests.html
+END
+pagebot-attribute-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/pagebot-attribute-tests.html
+END
+pagebot-locator-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/pagebot-locator-tests.html
+END
+string-override-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/string-override-tests.html
+END
+command-factory-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/command-factory-tests.html
+END
+browserbot-frame-finder-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/browserbot-frame-finder-tests.html
+END
+selenium-api-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/selenium-api-tests.html
+END
+browserbot-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/browserbot-tests.html
+END
+testloop-handle-error-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/testloop-handle-error-tests.html
+END
+suite.html
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/suite.html
+END
+alert-handling-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/alert-handling-tests.html
+END
+command-handler-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/command-handler-tests.html
+END
+pagebot-action-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/pagebot-action-tests.html
+END
+optionlocator-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/optionlocator-tests.html
+END
+text-content-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/text-content-tests.html
+END
+pattern-matcher-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/pattern-matcher-tests.html
+END
+selenium-parameter-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/selenium-parameter-tests.html
+END
+assert-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/assert-tests.html
+END
+htmlutil-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/htmlutil-tests.html
+END
+pagebot-locator-tests-include.html
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/pagebot-locator-tests-include.html
+END
+pagebot-property-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/pagebot-property-tests.html
+END
+event-bubble-tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/unittest/browserbot/event-bubble-tests.html
+END

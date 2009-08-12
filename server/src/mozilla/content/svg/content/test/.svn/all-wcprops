@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/svg/content/test
+END
+text-helper.svg
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/svg/content/test/text-helper.svg
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/svg/content/test/Makefile.in
+END
+test_text.html
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/svg/content/test/test_text.html
+END
+test_getSubStringLength.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/svg/content/test/test_getSubStringLength.xhtml
+END
+getSubStringLength-helper.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/svg/content/test/getSubStringLength-helper.svg
+END

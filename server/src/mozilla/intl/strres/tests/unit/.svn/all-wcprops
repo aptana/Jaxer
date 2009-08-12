@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/intl/strres/tests/unit
+END
+test_bug397093.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/intl/strres/tests/unit/test_bug397093.js
+END
+test_bug378839.js
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/strres/tests/unit/test_bug378839.js
+END

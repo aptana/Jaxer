@@ -1,0 +1,167 @@
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/inspector/resources/content
+END
+inspectorOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/inspectorOverlay.xul
+END
+sidebar.xul
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/sidebar.xul
+END
+object.js
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/object.js
+END
+statusbarOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/statusbarOverlay.xul
+END
+inspector.js
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/inspector.js
+END
+sidebar.js
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/sidebar.js
+END
+util.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/util.dtd
+END
+tasksOverlay-ff.xul
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/tasksOverlay-ff.xul
+END
+commandOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/commandOverlay.xul
+END
+editingOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/editingOverlay.xul
+END
+browserOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/browserOverlay.xul
+END
+inspector.css
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/inspector.css
+END
+tasksOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/tasksOverlay.xul
+END
+hooks.js
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/hooks.js
+END
+toolboxOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/inspector/resources/content/toolboxOverlay.xul
+END
+Flasher.js
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/Flasher.js
+END
+tasksOverlay-sb.xul
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/inspector/resources/content/tasksOverlay-sb.xul
+END
+tasksOverlay-tb.xul
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/tasksOverlay-tb.xul
+END
+ViewerRegistry.js
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/ViewerRegistry.js
+END
+inspector.xml
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/inspector/resources/content/inspector.xml
+END
+venkmanOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/venkmanOverlay.xul
+END
+utils.js
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/utils.js
+END
+popupOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/inspector/resources/content/popupOverlay.xul
+END
+utilWindow.xul
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/utilWindow.xul
+END
+object.xul
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/object.xul
+END
+inspector.xul
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/inspector.xul
+END
+keysetOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/content/keysetOverlay.xul
+END

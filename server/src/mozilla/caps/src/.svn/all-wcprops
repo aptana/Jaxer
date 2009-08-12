@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/caps/src
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/caps/src/Makefile.in
+END
+nsJSPrincipals.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2868/trunk/products/server/src/mozilla/caps/src/nsJSPrincipals.cpp
+END
+nsPrincipal.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/caps/src/nsPrincipal.cpp
+END
+caps.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/caps/src/caps.pkg
+END
+nsSystemPrincipal.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/caps/src/nsSystemPrincipal.cpp
+END
+nsScriptSecurityManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/caps/src/nsScriptSecurityManager.cpp
+END
+nsSecurityManagerFactory.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/caps/src/nsSecurityManagerFactory.cpp
+END
+nsNullPrincipal.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/caps/src/nsNullPrincipal.cpp
+END

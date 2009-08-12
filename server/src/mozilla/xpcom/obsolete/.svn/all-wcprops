@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpcom/obsolete
+END
+nsFileSpecUnix.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/xpcom/obsolete/nsFileSpecUnix.cpp
+END
+nsFileSpec.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/nsFileSpec.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/Makefile.in
+END
+nsFileStream.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/nsFileStream.h
+END
+nsFileSpecBeOS.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/nsFileSpecBeOS.cpp
+END
+nsIFileStream.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/nsIFileStream.cpp
+END
+nsIRegistryUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/nsIRegistryUtils.h
+END
+nsIRegistry.idl
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/nsIRegistry.idl
+END
+dlldeps-obs.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/dlldeps-obs.cpp
+END
+nsFileSpecWin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/nsFileSpecWin.cpp
+END
+nsIFileStream.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/nsIFileStream.h
+END
+nsFileSpecImpl.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/nsFileSpecImpl.cpp
+END
+nsFileSpecOS2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/nsFileSpecOS2.cpp
+END
+xpcomobsolete.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/xpcomobsolete.pkg
+END
+nsFileSpecImpl.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/nsFileSpecImpl.h
+END
+nsXPCOMObsolete.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/nsXPCOMObsolete.cpp
+END
+xpcomobsolete.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/xpcomobsolete.h
+END
+nsIFileSpec.idl
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/nsIFileSpec.idl
+END
+nsFileSpec.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/nsFileSpec.cpp
+END
+nsFileStream.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/obsolete/nsFileStream.cpp
+END

@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/text-transform
+END
+lowercase-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/text-transform/lowercase-ref.html
+END
+capitalize-3-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/text-transform/capitalize-3-ref.html
+END
+capitalize-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/text-transform/capitalize-ref.html
+END
+uppercase-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/text-transform/uppercase-ref.html
+END
+lowercase-1.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/text-transform/lowercase-1.html
+END
+capitalize-1.html
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/text-transform/capitalize-1.html
+END
+reftest.list
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/text-transform/reftest.list
+END
+capitalize-2.html
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/text-transform/capitalize-2.html
+END
+capitalize-3.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/text-transform/capitalize-3.html
+END
+uppercase-1.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/text-transform/uppercase-1.html
+END
+uppercase-szlig-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/text-transform/uppercase-szlig-ref.html
+END
+uppercase-szlig-1.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/text-transform/uppercase-szlig-1.html
+END

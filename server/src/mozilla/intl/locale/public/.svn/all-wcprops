@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/intl/locale/public
+END
+nsIMacLocale.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/public/nsIMacLocale.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/public/Makefile.in
+END
+nsIPosixLocale.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/public/nsIPosixLocale.h
+END
+nsIWin32Locale.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/public/nsIWin32Locale.h
+END
+nsIOS2Locale.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/public/nsIOS2Locale.h
+END
+nsIDateTimeFormat.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/public/nsIDateTimeFormat.h
+END
+nsILanguageAtomService.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/public/nsILanguageAtomService.h
+END
+nsLocaleCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/public/nsLocaleCID.h
+END
+nsCollationCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/public/nsCollationCID.h
+END
+nsDateTimeFormatCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/public/nsDateTimeFormatCID.h
+END

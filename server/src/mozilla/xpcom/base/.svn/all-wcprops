@@ -1,0 +1,419 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/xpcom/base
+END
+nsError.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsError.h
+END
+nsGarbageCollector.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsGarbageCollector.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/base/Makefile.in
+END
+nsrootidl.idl
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsrootidl.idl
+END
+nsAgg.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpcom/base/nsAgg.h
+END
+nsVersionComparatorImpl.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsVersionComparatorImpl.h
+END
+nsIWeakReference.idl
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsIWeakReference.idl
+END
+nsSystemInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsSystemInfo.h
+END
+nsErrorService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsErrorService.cpp
+END
+nsISupportsObsolete.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsISupportsObsolete.h
+END
+nsCycleCollector.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/base/nsCycleCollector.h
+END
+pure.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/pure.h
+END
+nsTraceRefcntImpl.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/base/nsTraceRefcntImpl.cpp
+END
+nsUUIDGenerator.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsUUIDGenerator.h
+END
+nsCom.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsCom.h
+END
+nsExceptionService.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsExceptionService.h
+END
+nsIDebug.idl
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsIDebug.idl
+END
+nsStackWalk.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsStackWalk.h
+END
+nsIMemoryReporter.idl
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/base/nsIMemoryReporter.idl
+END
+nsMemoryReporterManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/base/nsMemoryReporterManager.h
+END
+nsInterfaceRequestorAgg.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsInterfaceRequestorAgg.h
+END
+nsIAllocator.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsIAllocator.h
+END
+nsITraceRefcnt.idl
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsITraceRefcnt.idl
+END
+nsSystemInfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/base/nsSystemInfo.cpp
+END
+nsMacUtilsImpl.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsMacUtilsImpl.cpp
+END
+nsAutoPtr.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpcom/base/nsAutoPtr.h
+END
+nsCycleCollector.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/xpcom/base/nsCycleCollector.cpp
+END
+nsConsoleMessage.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpcom/base/nsConsoleMessage.cpp
+END
+nsIVersionComparator.idl
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsIVersionComparator.idl
+END
+nsDebugImpl.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsDebugImpl.h
+END
+nsStackWalk.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/base/nsStackWalk.cpp
+END
+nsObjCExceptions.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/xpcom/base/nsObjCExceptions.h
+END
+nsIProgrammingLanguage.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsIProgrammingLanguage.idl
+END
+nsMemoryReporterManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/base/nsMemoryReporterManager.cpp
+END
+nsIMutable.idl
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsIMutable.idl
+END
+nscore.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/base/nscore.h
+END
+pure_api.c
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/pure_api.c
+END
+nsILeakDetector.idl
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsILeakDetector.idl
+END
+nsIConsoleMessage.idl
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpcom/base/nsIConsoleMessage.idl
+END
+nsDebugImpl.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2860/trunk/products/server/src/mozilla/xpcom/base/nsDebugImpl.cpp
+END
+nsMacUtilsImpl.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsMacUtilsImpl.h
+END
+nsIID.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsIID.h
+END
+nsLeakDetector.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsLeakDetector.h
+END
+nsConsoleMessage.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsConsoleMessage.h
+END
+nsIExceptionService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsIExceptionService.idl
+END
+nsIMacUtils.idl
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsIMacUtils.idl
+END
+nsWeakPtr.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsWeakPtr.h
+END
+nsConsoleService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2151/trunk/products/server/src/mozilla/xpcom/base/nsConsoleService.cpp
+END
+nsAllocator.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsAllocator.h
+END
+nsIException.idl
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpcom/base/nsIException.idl
+END
+nsISupports.idl
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsISupports.idl
+END
+nsMemoryImpl.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsMemoryImpl.h
+END
+nsVersionComparatorImpl.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsVersionComparatorImpl.cpp
+END
+nsLeakDetector.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsLeakDetector.cpp
+END
+nsIConsoleListener.idl
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsIConsoleListener.idl
+END
+nsIMemory.idl
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsIMemory.idl
+END
+nsISupportsBase.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsISupportsBase.h
+END
+nsIInterfaceRequestor.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsIInterfaceRequestor.idl
+END
+nsIErrorService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsIErrorService.idl
+END
+nsIUUIDGenerator.idl
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsIUUIDGenerator.idl
+END
+nsUUIDGenerator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsUUIDGenerator.cpp
+END
+nsExceptionService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/xpcom/base/nsExceptionService.cpp
+END
+nsErrorService.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsErrorService.h
+END
+nsAllocator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsAllocator.cpp
+END
+nsIConsoleService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsIConsoleService.idl
+END
+nsTraceRefcntImpl.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsTraceRefcntImpl.h
+END
+nsConsoleService.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsConsoleService.h
+END
+nsInterfaceRequestorAgg.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsInterfaceRequestorAgg.cpp
+END
+nsMemoryImpl.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/base/nsMemoryImpl.cpp
+END

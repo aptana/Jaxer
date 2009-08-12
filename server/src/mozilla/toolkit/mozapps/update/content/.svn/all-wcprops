@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/mozapps/update/content
+END
+updates.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/mozapps/update/content/updates.js
+END
+incompatible.js
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/update/content/incompatible.js
+END
+errors.xul
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/update/content/errors.xul
+END
+updates.xml
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/mozapps/update/content/updates.xml
+END
+history.xul
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/update/content/history.xul
+END
+update.css
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/update/content/update.css
+END
+history.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/update/content/history.js
+END
+updates.css
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/update/content/updates.css
+END
+updates.xul
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/mozapps/update/content/updates.xul
+END
+incompatible.xul
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/update/content/incompatible.xul
+END

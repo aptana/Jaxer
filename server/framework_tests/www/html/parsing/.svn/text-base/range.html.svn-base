@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Range Unit Tests</title>
+		<link rel="stylesheet" type="text/css" href="/unit-tests/unit_test.css" />
+		<script type="text/javascript" runat="server" src="../../unit_test_lib.js"></script>
+		<script type="text/javascript" runat="server">
+			function test_Range_Empty()
+			{
+				var range = new Aptana.Range(10, 10);
+				
+				$assertTrue(range.isEmpty());
+			}
+			
+			function test_Range_NotEmpty()
+			{
+				var range = new Aptana.Range(10, 11);
+				
+				$assertFalse(range.isEmpty());
+			}
+			
+			function test_Range_ContainsToLeft()
+			{
+				var range = new Aptana.Range(1, 100);
+				var value = 0;
+				
+				$assertFalse(range.contains(value));
+			}
+			
+			function test_Range_ContainsOnLeft()
+			{
+				var range = new Aptana.Range(1, 100);
+				var value = range.start;
+				
+				$assertTrue(range.contains(value));
+			}
+			
+			function test_Range_ContainsInMiddle()
+			{
+				var range = new Aptana.Range(1, 100);
+				var value = (range.start + range.end) * 0.5;
+				
+				$assertTrue(range.contains(value));
+			}
+			
+			function test_Range_ContainsOnRight()
+			{
+				var range = new Aptana.Range(1, 100);
+				var value = range.end - 1;
+				
+				$assertTrue(range.contains(value));
+			}
+			
+			function test_Range_ContainsToRight()
+			{
+				var range = new Aptana.Range(1, 100);
+				var value = range.end;
+				
+				$assertFalse(range.contains(value));
+			}
+			
+			function test_Range_OverlapToLeft()
+			{
+				var range1 = new Aptana.Range(50, 100);
+				var range2 = new Aptana.Range(0, 10);
+				
+				$assertFalse(range1.isOverlapping(range2));
+			}
+			
+			function test_Range_OverlapEndLeft()
+			{
+				var range1 = new Aptana.Range(50, 100);
+				var range2 = new Aptana.Range(0, 50);
+				
+				$assertFalse(range1.isOverlapping(range2));
+			}
+			
+			function test_Range_OverlapStraddleLeft()
+			{
+				var range1 = new Aptana.Range(50, 100);
+				var range2 = new Aptana.Range(25, 75);
+				
+				$assertTrue(range1.isOverlapping(range2));
+			}
+			
+			function test_Range_OverlapStartLeft()
+			{
+				var range1 = new Aptana.Range(50, 100);
+				var range2 = new Aptana.Range(50, 75);
+				
+				$assertTrue(range1.isOverlapping(range2));
+			}
+			
+			function test_Range_OverlapInside()
+			{
+				var range1 = new Aptana.Range(50, 100);
+				var range2 = new Aptana.Range(70, 80);
+				
+				$assertTrue(range1.isOverlapping(range2));
+			}
+			
+			function test_Range_OverlapEndRight()
+			{
+				var range1 = new Aptana.Range(50, 100);
+				var range2 = new Aptana.Range(70, 100);
+				
+				$assertTrue(range1.isOverlapping(range2));
+			}
+			
+			function test_Range_OverlapStraddleRight()
+			{
+				var range1 = new Aptana.Range(50, 100);
+				var range2 = new Aptana.Range(70, 125);
+				
+				$assertTrue(range1.isOverlapping(range2));
+			}
+			
+			function test_Range_OverlapStartRight()
+			{
+				var range1 = new Aptana.Range(50, 100);
+				var range2 = new Aptana.Range(100, 125);
+				
+				$assertFalse(range1.isOverlapping(range2));
+			}
+			
+			function test_Range_OverlapToRight()
+			{
+				var range1 = new Aptana.Range(50, 100);
+				var range2 = new Aptana.Range(110, 125);
+				
+				$assertFalse(range1.isOverlapping(range2));
+			}
+		</script>
+	</head>
+	<body>
+		<table id="output" cellpadding="2" cellspacing="0"></table>
+		<script type="text/javascript" runat="server">
+			$run_tests()
+		</script>
+	</body>
+</html>

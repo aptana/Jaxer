@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/proxy/tests
+END
+primeproxytest.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/proxy/tests/primeproxytest.html
+END
+wspproxytest.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/proxy/tests/wspproxytest.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/proxy/tests/Makefile.in
+END
+wspproxytestmodule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/proxy/tests/wspproxytestmodule.cpp
+END
+iitest.html
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/proxy/tests/iitest.html
+END
+wspproxytest.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/proxy/tests/wspproxytest.xhtml
+END
+nsIWSPProxyTest.idl
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/proxy/tests/nsIWSPProxyTest.idl
+END
+wspproxytest.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/proxy/tests/wspproxytest.cpp
+END

@@ -1,0 +1,24 @@
+. $topsrcdir/aptana/config/mozconfig
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/ff-release
+mk_add_options MOZ_POSTFLIGHT+=postBuildJaxer.mk
+
+ac_add_options --enable-xpconnect-idispatch
+ac_add_options --disable-vista-sdk-requirements
+ac_add_options --enable-jemalloc
+ac_add_options --enable-static --disable-shared
+ac_add_options --enable-optimize --disable-debug
+ac_add_options --enable-crashreporter
+
+# symbols for breakpad (enable for release builds)
+#export MOZ_DEBUG_SYMBOLS=1
+#ac_add_options --enable-debugger-info-modules=yes
+
+mk_add_options MOZ_ENABLE_ODBC=1
+export MOZ_ENABLE_ODBC=1
+mk_add_options MOZ_ODBC_LIBS="-lodbc32"
+export MOZ_ODBC_LIBS="-lodbc32"
+
+mk_add_options MOZ_MAKE_FLAGS="-j5"
+export CFLAGS="-GL -wd4624 -wd4952"
+export CXXFLAGS="-GL -wd4624 -wd4952"
+export LDFLAGS="-LTCG"

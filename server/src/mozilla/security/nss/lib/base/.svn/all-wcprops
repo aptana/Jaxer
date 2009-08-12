@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/base
+END
+item.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/base/item.c
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/base/manifest.mn
+END
+baset.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/base/baset.h
+END
+nssbase.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/base/nssbase.h
+END
+hashops.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/base/hashops.c
+END
+libc.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/base/libc.c
+END
+list.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/base/list.c
+END
+base.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/base/base.h
+END
+hash.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/base/hash.c
+END
+utf8.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/base/utf8.c
+END
+arena.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/base/arena.c
+END
+nssbaset.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/base/nssbaset.h
+END
+error.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/base/error.c
+END
+config.mk
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/base/config.mk
+END
+tracker.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/base/tracker.c
+END
+errorval.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/base/errorval.c
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/base/Makefile
+END

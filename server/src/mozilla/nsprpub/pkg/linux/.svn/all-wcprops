@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pkg/linux
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pkg/linux/Makefile.in
+END
+sun-nspr.spec
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pkg/linux/sun-nspr.spec
+END

@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/cache/public
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/public/Makefile.in
+END
+nsICache.idl
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/public/nsICache.idl
+END
+nsICacheVisitor.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/public/nsICacheVisitor.idl
+END
+nsICacheEntryDescriptor.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/public/nsICacheEntryDescriptor.idl
+END
+nsICacheService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/public/nsICacheService.idl
+END
+nsICacheSession.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/public/nsICacheSession.idl
+END
+nsICacheListener.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/cache/public/nsICacheListener.idl
+END
+nsIOfflineCacheSession.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/cache/public/nsIOfflineCacheSession.idl
+END

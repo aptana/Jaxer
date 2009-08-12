@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/bltest/tests/des3_ecb
+END
+ciphertext0
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/bltest/tests/des3_ecb/ciphertext0
+END
+numtests
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/bltest/tests/des3_ecb/numtests
+END
+key0
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/bltest/tests/des3_ecb/key0
+END
+plaintext0
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/bltest/tests/des3_ecb/plaintext0
+END

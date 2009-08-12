@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/symkeyutil
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/symkeyutil/manifest.mn
+END
+symkeyutil.c
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/symkeyutil/symkeyutil.c
+END
+symkey.man
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/symkeyutil/symkey.man
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/symkeyutil/Makefile
+END

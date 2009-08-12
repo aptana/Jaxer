@@ -1,0 +1,408 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html">
+        <title>Aptana License - Aptana Jaxer Pro</title>
+        <style>
+            body {
+                line-height: 130%;
+                padding: 10px;
+            } 
+			.p5 {
+                text-indent: 24px;
+            }
+        </style>
+    </head>
+    <body>
+		<p style="font-size:120%;padding:20px 20px 0px 20px;font-style: italic">
+		This program Copyright (c) 2005-2008 Aptana, Inc. This program is
+		distributed under the following terms.
+		</p>
+        <p>
+            <b>APTANA, INC.</b>
+        </p>
+        <p>
+            <b>Aptana Jaxer Pro</b>
+        </p>
+        <p>
+            <b>END USER LICENSE AGREEMENT</b>
+        </p>
+        <p>
+            IMPORTANT: READ THIS AGREEMENT CAREFULLY BEFORE ACCEPTING!
+        </p>
+        <p>
+            This Aptana, Inc. End User License Agreement
+            (the "Agreement") is a legal agreement between you, either an individual
+            or a single legal entity ("you" or "Licensee"), and Aptana, Inc.
+            ("Aptana", "we", or "us"). You must accept the terms of this Agreement
+            before using the Aptana Software (as defined below).
+        </p>
+        <p>
+            By clicking the "ACCEPT" button or checkbox or by
+            using the Software, you are indicating that you have read and
+            understood, and assent to be bound by, the terms of this Agreement. If
+            you are an individual working for a company, you represent and warrant
+            that you have all necessary authority to bind your company to the terms
+            and conditions of this Agreement. This Agreement applies to your use of
+            the Software for a perpetual period ("Full License") (subject to earlier 
+            termination as set forth in Section 8).
+        </p>
+        <p>
+            If you do not agree to the terms of the Agreement, you
+            are not granted any rights whatsoever in the Software. If you are not
+            willing to be bound by these terms and conditions, you should not use
+            the Software, cease all use of the Software, and immediately delete any
+            copies of the Software in your possession.
+        </p>
+        <p>
+            <b>1. Definitions</b>
+        </p>
+        <p class="p5">
+            <b>1.1</b>
+            "Documentation" means end user manuals or documentation provided to Licensee along with the Software.
+        </p>
+        <p class="p5">
+            <b>1.2</b>
+            "Effective Date" means the date Licensee accepts this Agreement.
+        </p>
+        <p class="p5">
+            <b>1.3</b>
+            "Executable Code" means the fully compiled binary version
+            of a software program that can be executed by a computer and used by an
+            end user without further compilation.
+        </p>
+        <p class="p5">
+            <b>1.4</b>
+            "Intellectual Property Rights" means all worldwide
+            copyrights, trade secrets, mask works, patents, patent applications,
+            moral rights, contract rights, and other proprietary rights, but
+            specifically excluding any trademarks or service marks.
+        </p>
+        <p class="p5">
+            <b>1.5</b>
+            "License Fees" means the fees set forth on the software
+            store purchase screen.
+        </p>
+        <p class="p5">
+            <b>1.6</b>
+            "Software" means the Aptana Jaxer Pro software program,
+            and any Software Updates (as defined below) that Aptana may provide to
+            Licensee pursuant to this Agreement.
+        </p>
+        <p class="p5">
+            <b>1.7</b>
+            "Source Code" means the human-readable version of a software program that can be compiled into Executable Code.
+        </p>
+        <p>
+            <b>2. License</b>
+        </p>
+        <p class="p5">
+            <b>2.1 License Grant</b>. Subject to the terms and conditions
+            of this Agreement, Aptana hereby grants to Licensee a restricted,
+            non-transferable (except in accordance with Section 11.4),
+            non-exclusive, royalty-free license, during the term of this Agreement,
+            without the right to sublicense, (a) to install and use the Software in
+            Executable Code form only on one (1) physical computer server (i) owned by
+            Licensee or (ii) dedicated to the Licensee and the use of which is restricted
+            to the Licensee's own business, (b) to copy the Software in Executable
+            Code form only solely as necessary for reasonable backup purposes, and
+            (c) to copy and use the Documentation, in each case solely for
+            Licensee's internal business purposes and solely in accordance with the
+            Documentation.
+        </p>
+        <p class="p5">
+            <b>2.2 Obligations and Restrictions</b>. 
+			Except as otherwise expressly provided in this Agreement:
+        </p>
+        <p class="p5">
+            <b>(a)</b>
+            Licensee will reproduce on each copy, and not alter or
+            obscure, any and all copyright and other proprietary notices and
+            legends that appear on the Software and Documentation or any part
+            thereof.
+        </p>
+        <p class="p5">
+            <b>(b)</b>
+            Licensee acknowledges that the Software and its
+            structure, organization, and Source Code constitute valuable trade
+            secrets of Aptana. Accordingly, Licensee agrees not to (a) modify,
+            adapt, alter, translate, or create derivative works from the Software
+            or Documentation; (b) merge the Software with other software; (c)
+            sublicense, lease, rent, loan, transfer (except in accordance with
+            Section 11.4), provide, or make available the Software or Documentation
+            to any third party, (d) use the Software in any service bureau or
+            time-sharing arrangement, (e) reverse engineer, decompile, disassemble,
+            or otherwise attempt to derive the Source Code for the Software; or (f)
+            otherwise use or copy the Software or Documentation except as expressly
+            allowed under Section 2.1.
+        </p>
+        <p class="p5">
+            <b>2.3 Acceptance</b>. The Software will be deemed irrevocably accepted upon Licensee's download of the Software.
+        </p>
+        <p>
+            <b>3. License Fees.</b>
+            Licensee will pay Aptana the License Fees (if any). All payments (if 
+            any) will be made in U.S. dollars, are due upon submitting the Aptana  
+            order form for this Software, and are nonrefundable. 
+        </p>
+        <p>
+            <b>4. Confidentiality.</b>
+            Licensee agrees that Licensee will hold the Software (including without 
+            limitation the Source Code thereof), any Documentation, and related  
+            information (collectively, <b>"Confidential Information"</b>) in
+            strict confidence and will not disclose Confidential Information to any
+            third party. Licensee will use the same efforts to protect the
+            Confidential Information from unauthorized access, reproduction,
+            disclosure, or use as it uses in connection with its own information of
+            a similar nature. In the event Licensee becomes aware of any
+            unauthorized use or disclosure of Confidential Information, Licensee
+            will notify Aptana immediately in writing and will give full
+            cooperation to minimize the effects of such unauthorized use or
+            disclosure. The Confidential Information will be used and stored only
+            at Licensee's own business location. Licensee will grant access to the
+            Confidential Information only to employees of Licensee who (i) have a
+            need for access to the Confidential Information, and (ii) have executed
+            a written agreement with Licensee that requires the employee to protect
+            third party confidential information on terms at least as protective as
+            the terms of this Agreement. Licensee will ensure that its employees
+            comply with these confidentiality requirements.
+        </p>
+        <p>
+            <b>5. Open Source Software.</b>
+            Certain items of software included with, or to be used with, the
+            Software are subject to the Mozilla Public License or other "open source" 
+			or "free software" licenses (<b>"Open Source Software"</b>).
+            Some of the Open Source Software is owned by third parties. The Open
+            Source Software is not subject to the terms and conditions of Sections
+            2 and 4 other than Section 2.2(a). Instead, each item of Open Source
+            Software is licensed under the terms of the license that accompanies
+            such Open Source Software. Nothing in this document limits Licensee's
+            rights under, or grants Licensee rights that supersede, the terms and
+            conditions of any applicable end user license for the Open Source
+            Software. In addition, the documentation that accompanies the Software
+            may contain additional terms and conditions which govern third party
+            components included with, or to be used with, the Software. In the
+            event the terms and conditions in this Agreement conflict with such
+            additional terms and conditions, such additional terms and conditions
+            will control with respect to such third party components.
+        </p>
+        <p>
+            <b>6. Proprietary Rights.</b>
+            Aptana and its licensors and suppliers shall retain exclusive ownership
+            of all Intellectual Property Rights in and to the Software and
+            Documentation, including any additions or modifications thereto. All
+            rights in and to the Software and Documentation not expressly granted
+            to Licensee in this Agreement are expressly reserved to Aptana and its
+            licensors and suppliers.
+        </p>
+        <p>
+            <b>7. Technical Support.</b>
+        </p>
+        <p class="p5">
+            <b>7.1 Full License.</b>
+            For one (1) year after the Effective Date (the "Support Term"), 
+			Aptana will provide Licensee the support set forth below without any 
+			additional charge. Additional support (including but not limited to renewal of 
+			support after the Support Term) may be provided subject to the terms and conditions 
+			of a separate support agreement as may be agreed to by the parties. 
+			During the Support Term, Aptana will use commercially reasonable efforts to respond, 
+			via the Communication Method, to Licensee's support inquiries regarding the 
+            Software communicated to Aptana via the Communication Method. 
+            The "Communication Method" is Aptana's electronic support system at  
+            http://support.aptana.com
+            or its successor. However, Aptana will have no obligation to resolve
+            such reported problems or provide on-site support. During the Support
+            Term, Aptana will provide Licensee with any updates, bug fixes, builds,
+            or error corrections (collectively, "Software Updates") that Aptana, in
+            its sole discretion, generally provides its commercial customers who
+            purchased the same support level as Licensee. Such Software Updates
+            shall be considered part of the Software, and subject to the terms and
+            conditions of this Agreement.
+        </p>
+        <p>
+            <b>8. Term and Termination.</b>
+        </p>
+        <p class="p5">
+            <b>8.1 Term</b>
+        </p>
+        <p class="p5">
+            <b>For Full License.</b>
+            The term of this Agreement will commence on the Effective Date 
+			and continue until terminated as provided herein.
+        </p>
+        <p class="p5">
+            <b>8.2 Termination.</b>
+            Licensee may terminate this Agreement
+            at any time, with or without cause, upon written notice to Aptana;
+            provided that no fees will be refunded. This Agreement terminates
+            immediately upon Licensee's breach of Section 2 or 4, and may be
+            restored only upon agreement by the parties. Aptana may terminate this
+            Agreement immediately upon providing written notice to the email or
+            physical address provided by Licensee upon download of the Software, if
+            Licensee breaches any other term or condition of this Agreement and
+            does not cure the breach within ten (10) days after Aptana's provision
+            of such notice. Upon the expiration or termination of this Agreement
+            for any reason, Sections 2.2, 3, 4, 5, 6, 9.1 or 9.2(b) (as
+            applicable), 10, and 11 shall survive and remain in effect, and
+            Licensee shall promptly cease use of and return to Aptana or destroy
+            all Confidential Information, including the Software and Documentation,
+            and all copies thereof and certify to Aptana in writing that Licensee
+            has done so.
+        </p>
+        <p>
+            <b>9. Warranty</b>
+        </p>
+        <p class="p5">
+            <b>9.1 For Full License.</b>
+        </p>
+        <p class="p5">
+            <b>(a) LIMITED WARRANTY. </b>For a period of thirty (30) days
+            after the later of (i) the Effective Date or (ii) the date Licensee
+            pays the License Fee (the "Warranty Period"), Aptana warrants that the
+            Software, when used as permitted under this Agreement and in accordance
+            with the Documentation (including use on a computer hardware and
+            operating system platform supported by Aptana), will operate
+            substantially as described in the Documentation. Aptana does not
+            warrant that the Licensee's use of the Software will be error-free or
+            uninterrupted. Aptana will, at its own expense and as its sole
+            obligation and Licensee's exclusive remedy for any breach of this
+            warranty, in its sole discretion either (a) use commercially reasonable
+            efforts to correct any reproducible error in the Software reported to
+            Aptana by Licensee in writing during the Warranty Period or (b) refund
+            to Licensee all License Fees actually paid, in which case this
+            Agreement and Licensee's right to use the Software will be terminated.
+            Any such error correction provided to Licensee will not extend the
+            original Warranty Period. Any modifications of the Software by any
+            person other than Aptana or its authorized agents or subcontractors and
+            any use of the Software not in accordance with the Documentation or
+            this Agreement will void the foregoing warranty.
+        </p>
+        <p class="p5">
+            <b>(b) DISCLAIMER OF WARRANTY.</b>
+            THE EXPRESS WARRANTIES IN
+            SECTION 9.1(a) ARE IN LIEU OF ALL OTHER WARRANTIES, WHETHER EXPRESS,
+            IMPLIED, OR STATUTORY, REGARDING THE SOFTWARE AND DOCUMENTATION,
+            INCLUDING ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+            PURPOSE, TITLE, AND NON-INFRINGEMENT OF THIRD-PARTY RIGHTS. EXCEPT FOR
+            THE EXPRESS WARRANTIES STATED IN SECTION 9.1(a), THE SOFTWARE AND
+            DOCUMENTATION ARE PROVIDED "AS IS" WITH ALL FAULTS. LICENSEE
+            ACKNOWLEDGES AND AGREES THAT IT HAS NOT RELIED ON ANY ORAL OR WRITTEN
+            INFORMATION OR ADVICE, WHETHER GIVEN BY APTANA, ITS LICENSORS,
+            SUPPLIERS, DEALERS, DISTRIBUTORS, AGENTS OR EMPLOYEES.
+        </p>
+        <p>
+            <b>10. Limitation of Liability.</b>
+            TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL APTANA OR ITS
+            LICENSORS OR SUPPLIERS BE LIABLE FOR LOST PROFITS OR REVENUES, BUSINESS
+            INTERRUPTION, LOSS OF OR DAMAGE TO BUSINESS INFORMATION OR DATA OR
+            OTHER PECUNIARY LOSS, OR FOR ANY INDIRECT, EXEMPLARY, SPECIAL,
+            INCIDENTAL, CONSEQUENTIAL OR SIMILAR DAMAGES ARISING FROM OR RELATED TO
+            THIS AGREEMENT OR THE USE OR INABILITY TO USE THE SOFTWARE OR
+            DOCUMENTATION, EVEN IF APTANA OR ITS LICENSORS OR SUPPLIERS HAVE BEEN
+            ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. IN NO EVENT SHALL APTANA'S
+            TOTAL AGGREGATE LIABILITY ARISING FROM OR RELATED TO THIS AGREEMENT,
+            WHETHER IN CONTRACT OR IN TORT OR UNDER ANY OTHER LEGAL THEORY
+            (INCLUDING STRICT LIABILITY AND NEGLIGENCE) EXCEED THE GREATER OF THE
+            LICENSE FEES PAID BY LICENSEE TO APTANA OR FIFTY DOLLARS ($50.00).
+            APTANA'S LICENSORS AND SUPPLIERS WILL HAVE NO LIABILITY FOR DAMAGES
+            WHATSOEVER. THE FOREGOING LIMITATIONS AND EXCLUSIONS OF LIABILITY FORM
+            AN ESSENTIAL BASIS OF THE BARGAIN BETWEEN THE PARTIES, AND APTANA WOULD
+            NOT ENTER INTO THIS AGREEMENT WITHOUT SUCH LIMITATIONS AND EXCLUSIONS.
+        </p>
+        <p>
+            <b>11. Miscellaneous. </b>
+        </p>
+        <p class="p5">
+            <b>11.1</b>
+            This Agreement will be governed and construed in
+            accordance with the laws of the State of California without giving
+            effect to conflict of laws principles that would require the
+            application of the laws of any other state. Both parties agree that any
+            action or proceeding arising from or relating to this Agreement must be
+            brought in a court in Santa Clara County, California, and each party
+            irrevocably submits to the jurisdiction and venue of any such court in 
+            any such action or proceeding. The United Nations Convention of 
+            Contracts for the International Sale of Goods does not apply to this  
+            Agreement. 
+        </p>
+        <p class="p5">
+            <b>11.2</b>
+            If Licensee is a branch or agency of the United States
+            Government, the following provision applies. The Software and
+            Documentation are comprised of "commercial computer software"
+            and "commercial computer software documentation" as such terms are used
+            in 48 C.F.R. 12.212 and are provided to the Government (i) for
+            acquisition by or on behalf of civilian agencies, consistent with the
+            policy set forth in 48 C.F.R. 12.212; or (ii) for acquisition by or on
+            behalf of units of the Department of Defense, consistent with the
+            policies set forth in 48 C.F.R. 227.7202-1 and 227.7202-3.
+        </p>
+        <p class="p5">
+            <b>11.3</b>
+            The parties are independent contractors, and no agency, 
+            partnership, franchise, joint venture, or employment relationship is  
+            intended or created by this Agreement. 
+        </p>
+        <p class="p5">
+            <b>11.4</b>
+            Licensee may not assign or transfer, by operation of law
+            or otherwise, any of its rights or delegate any of its duties under
+            this Agreement to any third party without Aptana's prior written 
+            consent, and any purported attempt to do so is null and void. Aptana 
+            may freely assign or transfer its rights or delegate any of its duties  
+            under this Agreement to any third party. 
+        </p>
+        <p class="p5">
+            <b>11.5</b>
+            The Software and Documentation may be subject to export 
+            controls under U.S. or other export laws and regulations. Licensee 
+            agrees that Licensee shall not export or re-export the Software in any 
+            form in violation of the export or import laws and regulations of the  
+            United States or any other jurisdiction. 
+        </p>
+        <p class="p5">
+            <b>11.6</b>
+            If any provision of this Agreement or the application
+            thereof to any person or circumstance is held invalid or unenforceable,
+            the remainder of this Agreement and the application of such provision
+            to other persons or circumstances shall not be affected thereby and to
+            such end the provisions of this Agreement are agreed to be severable.
+            In such event, the affected provision shall be amended to achieve as
+            nearly as possible the same economic effect as the original provision.
+            Without limiting the generality of the foregoing, Licensee agrees that
+            Section 10 (Limitation of Liability) will remain in effect
+            notwithstanding the unenforceability of any provision in Section 9
+            (Warranty).
+        </p>
+        <p class="p5">
+            <b>11.7</b>
+            Any notices required by this Agreement shall be provided 
+            to Aptana at Aptana, Inc., 1450 Fashion Island Blvd., Suite 500, San 
+            Mateo, CA 94404 and to Licensee at the email or physical address  
+            provided by Licensee upon download of the Software. 
+        </p>
+        <p class="p5">
+            <b>11.8</b>
+            Aptana's rights and remedies for breach of this Agreement
+            are cumulative. Licensee acknowledges that the Software contains
+            valuable trade secrets and proprietary information of Aptana, that any
+            actual or threatened breach of Section 4 will constitute immediate,
+            irreparable harm to Aptana for which monetary damages would be an
+            inadequate remedy, and that injunctive relief is an appropriate remedy
+            for such breach.
+        </p>
+        <p class="p5">
+            <b>11.9</b>
+            This Agreement may be amended only by an instrument in
+            writing signed authorized representatives on behalf of both parties.
+            All waivers under this Agreement must be in writing, and any waiver or
+            failure to enforce any provision of this Agreement on one occasion will
+            not be deemed a waiver of any other provision or on any other occasion.
+            This Agreement constitutes the entire agreement between the parties
+            with respect to the subject matter of this Agreement and supersedes all
+            other prior and contemporaneous agreements and understandings both
+            written and oral between the parties with respect to such subject
+            matter. Without limiting the foregoing, this Agreement supersedes any
+            license terms contained within the source code of the Software.
+        </p>
+    </body>
+</html>

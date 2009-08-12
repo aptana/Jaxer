@@ -1,0 +1,371 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/html/tests/formctls/base
+END
+button_small_avail_width.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/button_small_avail_width.html
+END
+input_button_overconstrained.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/input_button_overconstrained.html
+END
+button_sizing_tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/button_sizing_tests.html
+END
+inputtext_sizes.html
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/inputtext_sizes.html
+END
+radio_init.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/radio_init.html
+END
+select_jsadd.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/select_jsadd.html
+END
+select_small_sizes.html
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/select_small_sizes.html
+END
+radio_disabled.html
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/radio_disabled.html
+END
+input_file_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/input_file_strict.html
+END
+inputtext_tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/inputtext_tests.html
+END
+legend_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/legend_strict.html
+END
+fieldset_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/fieldset_strict.html
+END
+button_overconstrained_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/button_overconstrained_strict.html
+END
+input_image_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/input_image_strict.html
+END
+select_combobox_basics.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/select_combobox_basics.html
+END
+button_no_margin_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/button_no_margin_strict.html
+END
+button_min_max_widths_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/button_min_max_widths_strict.html
+END
+button_button_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/button_button_strict.html
+END
+optgroup_test1.html
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/optgroup_test1.html
+END
+rtest.bat
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/rtest.bat
+END
+textarea_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/textarea_strict.html
+END
+button_reset_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/button_reset_strict.html
+END
+button_min_max_widths.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/button_min_max_widths.html
+END
+input_radio_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/input_radio_strict.html
+END
+select_small_sizes2.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/select_small_sizes2.html
+END
+button_small_avail_width_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/button_small_avail_width_strict.html
+END
+button_css_sizing.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/button_css_sizing.html
+END
+input_file_strict2.html
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/input_file_strict2.html
+END
+input_password_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/input_password_strict.html
+END
+select_onchange.html
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/select_onchange.html
+END
+input_button_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/input_button_strict.html
+END
+file_list.txt
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/file_list.txt
+END
+button_submit_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/button_submit_strict.html
+END
+input_reset_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/input_reset_strict.html
+END
+form_overview.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/form_overview.html
+END
+selectsize3_js.html
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/selectsize3_js.html
+END
+textarea_sizes.html
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/textarea_sizes.html
+END
+button_with_margin_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/button_with_margin_strict.html
+END
+input_text_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/input_text_strict.html
+END
+isindex_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/isindex_strict.html
+END
+select1_js.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/select1_js.html
+END
+input_checkbox_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/input_checkbox_strict.html
+END
+rtest.lst
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/rtest.lst
+END
+textarea_tests.html
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/textarea_tests.html
+END
+button_overconstrained.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/button_overconstrained.html
+END
+radio_onchange.html
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/radio_onchange.html
+END
+testarea_wrap.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/testarea_wrap.html
+END
+input_hidden_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/input_hidden_strict.html
+END
+select_init.html
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/select_init.html
+END
+button_with_margin.html
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/button_with_margin.html
+END
+radio_jsadd.html
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/radio_jsadd.html
+END
+button_no_margin.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/button_no_margin.html
+END
+select_listbox_sizing_quirks.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/select_listbox_sizing_quirks.html
+END
+select_disabled.html
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/select_disabled.html
+END
+select_listbox_sizing.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/select_listbox_sizing.html
+END
+input_button_overconstrained_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/input_button_overconstrained_strict.html
+END
+index.html
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/index.html
+END
+select_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/select_strict.html
+END
+fieldset_strict2.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/fieldset_strict2.html
+END
+input_submit_strict.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/input_submit_strict.html
+END
+select_js.html
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/html/tests/formctls/base/select_js.html
+END

@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/build/unix
+END
+mozilla-config.in
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/mozilla-config.in
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/Makefile.in
+END
+run-mozilla.sh
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/run-mozilla.sh
+END
+nspr_my_overrides.mk.in
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/nspr_my_overrides.mk.in
+END
+run-third.sh
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/run-third.sh
+END
+print-failed-commands.sh
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/print-failed-commands.sh
+END
+uniq.pl
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/uniq.pl
+END
+nspr_my_config.mk.in
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/nspr_my_config.mk.in
+END
+run-gprof.sh
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/run-gprof.sh
+END
+mddepend.pl
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/build/unix/mddepend.pl
+END
+print-non-newline.sh
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/print-non-newline.sh
+END
+print-depth-path.sh
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/print-depth-path.sh
+END
+run-hiprof.sh
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/run-hiprof.sh
+END
+unix.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/unix.pkg
+END
+abs2rel.pl
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/abs2rel.pl
+END
+aix.exp
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/aix.exp
+END

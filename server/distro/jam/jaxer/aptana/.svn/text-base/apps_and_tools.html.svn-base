@@ -1,0 +1,57 @@
+
+<h2>Samples and Tools</h2>
+<h3>Demo Applications</h3>
+<li>
+    <img class="appicon" src="images/email.png"/><a href="javascript: ContentManager.fetchContentModal('samples/smtp-email/index.html');" title="SMTP Email">SMTP Email</a>:
+    How to send an email message via SMTP using the Jaxer SMTP object.
+</li>
+<li>
+    <img class="appicon" src="images/feed.png"/><a href="javascript: ContentManager.fetchContentModal('samples/rss-sample/index.html');" title="RSS Sample">RSS Sample</a>:
+    How to read an RSS feed from a 3rd-party site, all server-side, and emit only the results.
+</li>
+<li>
+    <img class="appicon" src="images/date_edit.png"/><a href="javascript: ContentManager.fetchContentModal('samples/tasks/index.html');" title="Simple Tasks Demo">Tasks</a>:
+    A simple tasks application where you can add, modify, and check-off (delete) to-do"s.
+</li>
+<li>
+    <img class="appicon" src="images/page_edit.png"/><a href="javascript: ContentManager.fetchContentModal('samples/wikilite/index.html');" title="WikiLite Demo">WikiLite</a>:
+    An extremely lightweight single-page Wiki &mdash; just an editable box that persists to a file.
+</li>
+<li>
+    <img class="appicon" src="images/user_comment.png"/><a href="javascript: ContentManager.fetchContentModal('samples/chat/index.html');" title="Chat Demo">Chat</a>:
+    A simple multi-room, multi-user chat application using many Jaxer features. 
+</li>
+ <li>
+    <img class="appicon" src="images/page_white_edit.png"/><a href="javascript: ContentManager.fetchContentModal('samples/logging/index.html');" title="Simple Logging Example">Logging</a>:
+    A simple example wrapping Server-Side logging to make it available to clientside JavaScript.
+</li>
+ <li>
+    <img class="appicon" src="images/script_gear.png"/><a href="javascript: ContentManager.fetchContentModal('samples/csajax/index.html');" title="Simple Cross Site Ajax Example">Cross Site Ajax</a>:
+    A simple example showing cross site ajax.
+</li>
+<P>
+</P>
+<h3>Server Web Tools</h3>
+<li>
+    <img class="appicon" src="images/application_xp_terminal.png"/><a href="tools/shell/index.html" title="Interactive Shell" target="_blank">Interactive shell</a>:
+	Interact directly with server-side JavaScript
+</li>
+<li>
+    <img class="appicon" src="images/hexdump.png"/><a href="javascript: ContentManager.fetchContentModal('tools/hexer/index.html');" title="Hexer">Hex Dump</a>:
+	View a Hex Dump of an HTTP GET or HEAD request.
+</li>
+<P>
+</P>
+<h3>Server Diagnostic Tools</h3>
+<li>
+    <img class="appicon" src="images/server_diag.png"/><a href="diagnostics/index.html" title="Server Diagnostics" target="_blank">Server diagnostics</a>:
+	Run a set of server level diagnostic tests to help identify any configuration issues
+</li>
+<li>
+    <img class="appicon" src="images/award_star_silver_3.png"/><a href="diagnostics/testRunner.html" title="System diagnostics" target="_blank">Component diagnostics</a>:
+	Run a set of deeper tests to help identify any subsytem issues
+</li>
+<li>
+    <img class="appicon" src="images/star.png"/><a href="diagnostics/unit_tests_library/jQueryTestSuite/index.html" target="_blank" title="jQuery Compatibility">jQuery Compatibility</a>:
+	Run a set of jQuery compatibility tests
+</li>

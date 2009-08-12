@@ -1,0 +1,141 @@
+<html>
+    <head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+        <script type="text/javascript" runat="server">
+        	
+			function skipIfSingleJaxer()
+			{
+				if (!multipleJaxersAvailable) throw "SKIPPED - This test requires multiple Jaxers to run; " +
+					"rerun it with '&multiJaxer=true' in the URL";
+			}
+
+        	function testNewSandboxSyncPreload()
+			{
+				skipIfSingleJaxer();
+				var sb = new Jaxer.Sandbox("page1.html");
+				var doc = sb.document;
+				assertC(doc, 1, true);
+				assertC(doc, 2, true);
+				assertC(doc, 3, true);
+			}
+			
+        	function testNewSandboxSyncSetcontents()
+			{
+				skipIfSingleJaxer();
+				var sb = new Jaxer.Sandbox();
+				sb.setContents("<html><head><title>Test Page 1</title></head><body onload='set3()'><div id='c1'>Container1</div><div id='c2'></div><script>document.getElementById('c2').innerHTML = 'Container2';function set3(){ document.getElementById('c3').innerHTML = 'Container3'; }</scr" + "ipt><div id='c3'></div></body></html>");
+				var doc = sb.document;
+				assertC(doc, 1, true);
+				assertC(doc, 2, true);
+				assertC(doc, 3, true);
+			}
+			
+        	function testNewSandboxSyncPreloadNoJS()
+			{
+				skipIfSingleJaxer();
+				var sb = new Jaxer.Sandbox("page1.html", null, {allowJavaScript: false});
+				var doc = sb.document;
+				assertC(doc, 1, true);
+				assertC(doc, 2, false);
+				assertC(doc, 3, false);
+			}
+			
+        	function testNewSandboxSyncPostload()
+			{
+				skipIfSingleJaxer();
+				var sb = new Jaxer.Sandbox();
+				var doc = sb.document;
+				assertNull(sb.window, "Should not have found a window yet");
+				assertNull(doc, "Should not have found a document yet");
+				sb.open("page1.html");
+				doc = sb.document;
+				assertC(doc, 1, true);
+				assertC(doc, 2, true);
+				assertC(doc, 3, true);
+			}
+
+        	function testNewSandboxAsyncPreload()
+			{
+				skipIfSingleJaxer();
+				var done = false;
+				var sb = new Jaxer.Sandbox("page1.html", null, {async: true, onload: function() { done = true; }});
+				var doc = sb.document;
+				assertNull(doc.getElementById('c1'), "Should not have found Container1 yet");
+				Jaxer.Thread.waitFor(function() { return done; }, 1000);
+				assertTrue(done, "Async preloaded call did not return in time");
+				doc = sb.document;
+				assertC(doc, 1, true);
+				assertC(doc, 2, true);
+				assertC(doc, 3, true);
+			}
+			
+        	function testNewSandboxAsyncPreloadClose()
+			{
+				skipIfSingleJaxer();
+				var done = false;
+				var sb = new Jaxer.Sandbox("page1.html", null, {async: true, onload: function() { done = true; }});
+				var doc = sb.document;
+				assertNull(doc.getElementById('c1'), "Should not have found Container1 yet");
+				sb.close();
+				Jaxer.Thread.waitFor(function() { return done; }, 1000);
+				assertFalse(done, "Async preloaded call should not have returned");
+				doc = sb.document;
+				assertNull(doc, "Should not have a document any more");
+			}
+			
+        	function testNewSandboxAsyncPostload1()
+			{
+				skipIfSingleJaxer();
+				var done = false;
+				var sb = new Jaxer.Sandbox();
+				sb.open("page1.html", null, {async: true, onload: function() { done = true; }});
+				var doc = sb.document;
+				assertNull(doc.getElementById('c1'), "Should not have found Container1 yet");
+				Jaxer.Thread.waitFor(function() { return done; }, 1000);
+				assertTrue(done, "Async preloaded call did not return in time");
+				doc = sb.document;
+				assertC(doc, 1, true);
+				assertC(doc, 2, true);
+				assertC(doc, 3, true);
+			}
+			
+        	function testNewSandboxAsyncPostload2()
+			{
+				skipIfSingleJaxer();
+				var done = false;
+				var sb = new Jaxer.Sandbox(null, null, {async: true, onload: function() { done = true; }});
+				var doc = sb.document;
+				assertNull(doc, "Should not have found a document yet");
+				sb.open("page1.html");
+				doc = sb.document;
+				assertNull(doc.getElementById('c1'), "Should not have found Container1 yet");
+				Jaxer.Thread.waitFor(function() { return done; }, 1000);
+				assertTrue(done, "Async preloaded call did not return in time");
+				doc = sb.document;
+				assertC(doc, 1, true);
+				assertC(doc, 2, true);
+				assertC(doc, 3, true);
+			}
+			
+			function assertC(doc, index, isFull)
+			{
+				var elt = doc.getElementById('c' + index);
+				assertNotUndefined(elt, "Container" + index + " should have been found (was undefined)");
+				assertNotNull(elt, "Container" + index + " should have been found (was null)");
+				if (isFull) 
+				{
+					assertEquals(elt.innerHTML, "Container" + index, "Container" + index + " should have had 'Container" + index + "' as its innerHTML");
+				}
+				else
+				{
+					assertEquals(elt.innerHTML, "", "Container" + index + " should have had '' as its innerHTML");
+				}
+			}
+        
+       </script>
+    </head>
+    <body>
+    </body>
+</html>

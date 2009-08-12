@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/3651/trunk/products/server/framework/Comm/unit_tests_jaxer
+END
+test_Comm_Callback.html
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/3651/trunk/products/server/framework/Comm/unit_tests_jaxer/test_Comm_Callback.html
+END
+test_Comm_AsyncCallbacks.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/3651/trunk/products/server/framework/Comm/unit_tests_jaxer/test_Comm_AsyncCallbacks.html
+END
+jaxer_comm_tests.json
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2461/trunk/products/server/framework/Comm/unit_tests_jaxer/jaxer_comm_tests.json
+END

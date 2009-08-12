@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/pkg/solaris
+END
+Makefile-tlsu.com
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/pkg/solaris/Makefile-tlsu.com
+END
+Makefile-devl.targ
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/pkg/solaris/Makefile-devl.targ
+END
+Makefile-devl.com
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/pkg/solaris/Makefile-devl.com
+END
+proto64.mk
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/pkg/solaris/proto64.mk
+END
+bld_awk_pkginfo.ksh
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/pkg/solaris/bld_awk_pkginfo.ksh
+END
+Makefile.targ
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/pkg/solaris/Makefile.targ
+END
+Makefile.com
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/pkg/solaris/Makefile.com
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/pkg/solaris/Makefile
+END
+Makefile-tlsu.targ
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/pkg/solaris/Makefile-tlsu.targ
+END

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/basic/unix
+END
+plugin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/basic/unix/plugin.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/basic/unix/Makefile.in
+END
+plugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/basic/unix/plugin.h
+END

@@ -1,0 +1,66 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/distro/jam/jaxer/aptana/samples/chat
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-27T19:54:49.052892Z
+2972
+dwaterson
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+chatRoom.html
+file
+
+
+
+
+2009-08-11T21:42:33.000000Z
+5c2448c415a93842ee0e8c40bd5fb425
+2008-05-27T19:54:49.052892Z
+2972
+dwaterson
+has-props
+
+images
+dir
+
+lib
+dir
+
+css
+dir
+
+jaxer-include
+dir
+
+index.html
+file
+
+
+
+
+2009-08-11T21:42:33.000000Z
+5dd6b64453fa84c05c35e5a4ed29c39e
+2008-01-18T02:17:33.014187Z
+1832
+dwaterson
+has-props
+

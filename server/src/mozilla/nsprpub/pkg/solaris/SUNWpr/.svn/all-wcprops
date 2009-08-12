@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pkg/solaris/SUNWpr
+END
+depend
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pkg/solaris/SUNWpr/depend
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pkg/solaris/SUNWpr/Makefile.in
+END
+prototype_com
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pkg/solaris/SUNWpr/prototype_com
+END
+pkginfo.tmpl
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pkg/solaris/SUNWpr/pkginfo.tmpl
+END
+prototype_sparc
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pkg/solaris/SUNWpr/prototype_sparc
+END
+prototype_i386
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pkg/solaris/SUNWpr/prototype_i386
+END

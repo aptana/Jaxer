@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/win32
+END
+BaseAddr.ref
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/win32/BaseAddr.ref
+END
+util_win32.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/win32/util_win32.c
+END
+ap_regkey.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/win32/ap_regkey.c
+END
+os.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/win32/os.h
+END
+modules.c
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/win32/modules.c
+END

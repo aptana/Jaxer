@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/samples
+END
+cert2
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/samples/cert2
+END
+x509v3.der
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/samples/x509v3.der
+END
+pkcs7cnet.ber
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/samples/pkcs7cnet.ber
+END
+pkcs7news.ber
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/samples/pkcs7news.ber
+END
+x509v3.txt
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/samples/x509v3.txt
+END
+cert
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/samples/cert
+END
+cert0
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/samples/cert0
+END
+cert1
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/samples/cert1
+END
+pkcs7.ber
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/samples/pkcs7.ber
+END
+pkcs7bday.ber
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/samples/pkcs7bday.ber
+END

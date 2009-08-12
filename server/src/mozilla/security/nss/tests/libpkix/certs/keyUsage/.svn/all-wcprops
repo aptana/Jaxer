@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/certs/keyUsage
+END
+decipherOnlyCert
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/certs/keyUsage/decipherOnlyCert
+END
+multiKeyUsagesCert
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/certs/keyUsage/multiKeyUsagesCert
+END
+noKeyUsagesCert
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/certs/keyUsage/noKeyUsagesCert
+END
+encipherOnlyCert
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/certs/keyUsage/encipherOnlyCert
+END

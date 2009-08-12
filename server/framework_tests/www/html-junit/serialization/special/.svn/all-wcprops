@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/serialization/special
+END
+serializeNull.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/serialization/special/serializeNull.html
+END
+serializeUndefined.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/serialization/special/serializeUndefined.html
+END

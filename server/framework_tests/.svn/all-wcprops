@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/jaxer/!svn/ver/412/trunk/products/server/framework_tests
+END
+.classpath
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/.classpath
+END
+.project
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/.project
+END
+build.xml
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/build.xml
+END

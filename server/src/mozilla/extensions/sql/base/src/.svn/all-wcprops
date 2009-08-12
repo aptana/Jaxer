@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/4500/trunk/products/server/src/mozilla/extensions/sql/base/src
+END
+mozSqlRequest.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/src/mozSqlRequest.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/4500/trunk/products/server/src/mozilla/extensions/sql/base/src/Makefile.in
+END
+mozSqlRequest.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/src/mozSqlRequest.h
+END
+mozSqlResult.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/src/mozSqlResult.cpp
+END
+mozSqlConnection.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/src/mozSqlConnection.cpp
+END
+mozSqlService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/src/mozSqlService.cpp
+END
+mozSqlResult.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/src/mozSqlResult.h
+END
+mozSqlConnection.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/src/mozSqlConnection.h
+END
+mozSqlService.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/src/mozSqlService.h
+END

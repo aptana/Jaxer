@@ -1,0 +1,8 @@
+{
+	"name": "default",
+	"tests": [
+		  "test_Comm_Callback.html"
+		, "test_Comm_AsyncCallbacks.html"
+	]
+}
+

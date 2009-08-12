@@ -1,0 +1,52 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/modules/libreg/tests
+http://svn.aptana.local/svn/jaxer
+
+
+
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+interp.c
+file
+
+
+
+
+2009-08-11T21:31:22.000000Z
+297d876de3aa4083c6c88d893547b3f5
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+regtest.c
+file
+
+
+
+
+2009-08-11T21:31:22.000000Z
+02dc1e5506e4bf84df41bff7c75ef509
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+

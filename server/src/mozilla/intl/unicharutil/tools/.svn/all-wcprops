@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/intl/unicharutil/tools
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/tools/Makefile.in
+END
+gencattable.pl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/tools/gencattable.pl
+END
+gentransliterate.pl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/tools/gentransliterate.pl
+END
+ccmapbin.pl
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/tools/ccmapbin.pl
+END
+format.txt
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/tools/format.txt
+END
+gencasetable.pl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/tools/gencasetable.pl
+END
+MUTTUCData.txt
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/tools/MUTTUCData.txt
+END
+README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/tools/README.txt
+END
+ucgendat.c
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/tools/ucgendat.c
+END
+UCDATAREADME.txt
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/tools/UCDATAREADME.txt
+END

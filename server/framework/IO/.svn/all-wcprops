@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/jaxer/!svn/ver/4597/trunk/products/server/framework/IO
+END
+Includer.js
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/4337/trunk/products/server/framework/IO/Includer.js
+END
+Socket.js
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/jaxer/!svn/ver/4437/trunk/products/server/framework/IO/Socket.js
+END
+jslib_namespace_import.js
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/1471/trunk/products/server/framework/IO/jslib_namespace_import.js
+END
+server_io.json
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/3376/trunk/products/server/framework/IO/server_io.json
+END
+BinarySocket.js
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/3376/trunk/products/server/framework/IO/BinarySocket.js
+END
+Web.js
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/jaxer/!svn/ver/4137/trunk/products/server/framework/IO/Web.js
+END
+Dir.js
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/jaxer/!svn/ver/3939/trunk/products/server/framework/IO/Dir.js
+END
+File.js
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/jaxer/!svn/ver/4597/trunk/products/server/framework/IO/File.js
+END
+SMTP.js
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/jaxer/!svn/ver/4432/trunk/products/server/framework/IO/SMTP.js
+END

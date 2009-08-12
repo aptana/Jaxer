@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/netwerk/mime/public
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/mime/public/Makefile.in
+END
+nsIMIMEHeaderParam.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/netwerk/mime/public/nsIMIMEHeaderParam.idl
+END
+nsMimeTypes.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/mime/public/nsMimeTypes.h
+END
+nsIMIMEInfo.idl
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/netwerk/mime/public/nsIMIMEInfo.idl
+END
+nsIMIMEService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/mime/public/nsIMIMEService.idl
+END

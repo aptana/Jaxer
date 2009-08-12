@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/cairo
+END
+max-font-size.patch
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/cairo/max-font-size.patch
+END
+win32-logical-font-scale.patch
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/cairo/win32-logical-font-scale.patch
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/cairo/Makefile.in
+END
+clip-clone.patch
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/cairo/clip-clone.patch
+END
+glitz-endian.patch
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/gfx/cairo/glitz-endian.patch
+END
+nonfatal-assertions.patch
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/gfx/cairo/nonfatal-assertions.patch
+END
+buggy-repeat.patch
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/cairo/buggy-repeat.patch
+END
+endian.patch
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/gfx/cairo/endian.patch
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/cairo/README
+END

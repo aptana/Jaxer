@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/regress
+END
+regress-352797-01.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/regress/regress-352797-01.js
+END
+shell.js
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/regress/shell.js
+END
+regress-352797-02.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/regress/regress-352797-02.js
+END
+regress-355023.js
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/regress/regress-355023.js
+END
+regress-352008.js
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/regress/regress-352008.js
+END
+regress-355145.js
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/regress/regress-355145.js
+END
+regress-355635.js
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/regress/regress-355635.js
+END
+browser.js
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/regress/browser.js
+END
+regress-351503-01.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/regress/regress-351503-01.js
+END
+regress-351503-02.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/regress/regress-351503-02.js
+END
+regress-352870-01.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/regress/regress-352870-01.js
+END
+regress-355049-01.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/regress/regress-355049-01.js
+END
+regress-352870-02.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/regress/regress-352870-02.js
+END
+regress-355049-02.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/regress/regress-355049-02.js
+END
+regress-352870-03.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/regress/regress-352870-03.js
+END

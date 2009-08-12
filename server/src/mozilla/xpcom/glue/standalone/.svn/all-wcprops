@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpcom/glue/standalone
+END
+nsGlueLinking.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/glue/standalone/nsGlueLinking.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/glue/standalone/Makefile.in
+END
+nsGlueLinkingBeOS.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/glue/standalone/nsGlueLinkingBeOS.cpp
+END
+nsGlueLinkingOSX.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/glue/standalone/nsGlueLinkingOSX.cpp
+END
+nsGlueLinkingNull.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/glue/standalone/nsGlueLinkingNull.cpp
+END
+nsXPCOMGlue.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/glue/standalone/nsXPCOMGlue.cpp
+END
+nsGlueLinkingWin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/glue/standalone/nsGlueLinkingWin.cpp
+END
+nsXPCOMGlue.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/glue/standalone/nsXPCOMGlue.h
+END
+nsGlueLinkingDlopen.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/glue/standalone/nsGlueLinkingDlopen.cpp
+END
+nsGlueLinkingOS2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/glue/standalone/nsGlueLinkingOS2.cpp
+END

@@ -1,0 +1,221 @@
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations
+END
+NewObject_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/NewObject_1.cpp
+END
+NewObject_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/NewObject_2.cpp
+END
+AllocObject_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/AllocObject_1.cpp
+END
+NewObject_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/NewObject_3.cpp
+END
+AllocObject_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/AllocObject_2.cpp
+END
+NewObject_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/NewObject_4.cpp
+END
+AllocObject_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/AllocObject_3.cpp
+END
+NewObject_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/NewObject_5.cpp
+END
+AllocObject_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/AllocObject_4.cpp
+END
+NewObject_6.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/NewObject_6.cpp
+END
+IsInstanceOf_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/IsInstanceOf_1.cpp
+END
+IsInstanceOf_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/IsInstanceOf_2.cpp
+END
+NewObject_7.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/NewObject_7.cpp
+END
+IsInstanceOf_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/IsInstanceOf_3.cpp
+END
+NewObject_8.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/NewObject_8.cpp
+END
+NewObject_9.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/NewObject_9.cpp
+END
+IsInstanceOf_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/IsInstanceOf_4.cpp
+END
+IsInstanceOf_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/IsInstanceOf_5.cpp
+END
+ObjectOperations.h
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/ObjectOperations.h
+END
+IsSameObject_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/IsSameObject_1.cpp
+END
+IsSameObject_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/IsSameObject_2.cpp
+END
+IsSameObject_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/IsSameObject_3.cpp
+END
+IsSameObject_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/IsSameObject_4.cpp
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/Makefile
+END
+NewObjectA_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/NewObjectA_1.cpp
+END
+NewObjectA_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/NewObjectA_2.cpp
+END
+NewObjectA_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/NewObjectA_3.cpp
+END
+NewObjectA_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/NewObjectA_4.cpp
+END
+NewObjectA_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/NewObjectA_5.cpp
+END
+NewObjectA_6.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/NewObjectA_6.cpp
+END
+NewObjectA_7.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/NewObjectA_7.cpp
+END
+NewObjectA_8.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/NewObjectA_8.cpp
+END
+NewObjectA_9.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/NewObjectA_9.cpp
+END
+GetObjectClass_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/GetObjectClass_1.cpp
+END
+GetObjectClass_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/GetObjectClass_2.cpp
+END
+Makefile.win
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ObjectOperations/Makefile.win
+END

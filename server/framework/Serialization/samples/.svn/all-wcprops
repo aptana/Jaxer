@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework/Serialization/samples
+END
+number.json
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework/Serialization/samples/number.json
+END
+null.json
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework/Serialization/samples/null.json
+END
+array.json
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework/Serialization/samples/array.json
+END
+reference.json
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework/Serialization/samples/reference.json
+END
+boolean.json
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework/Serialization/samples/boolean.json
+END
+object.json
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework/Serialization/samples/object.json
+END
+string.json
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework/Serialization/samples/string.json
+END

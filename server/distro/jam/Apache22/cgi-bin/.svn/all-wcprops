@@ -1,0 +1,11 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/cgi-bin
+END
+printenv.pl
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/cgi-bin/printenv.pl
+END

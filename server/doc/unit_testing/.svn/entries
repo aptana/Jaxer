@@ -1,0 +1,80 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/doc/unit_testing
+http://svn.aptana.local/svn/jaxer
+
+
+
+2007-09-14T03:42:55.624226Z
+68
+jcohen
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+run-single-unit-test.png
+file
+
+
+
+
+2009-08-11T21:42:37.000000Z
+f2379ae0696452f3de5f686416b8669f
+2007-08-31T22:03:13.625000Z
+3
+Jeff Cohen
+has-props
+
+HTMLUnit-command-line.txt
+file
+
+
+
+
+2009-08-11T21:42:37.000000Z
+72dbde677d7a9f46c65fc9c00c81f058
+2007-09-14T03:42:55.624226Z
+68
+jcohen
+has-props
+
+HTMLUnit - Eclipse Quick Start.htm
+file
+
+
+
+
+2009-08-11T21:42:37.000000Z
+a1a07dc2ea5d1afc02fa09489132f506
+2007-09-14T03:42:55.624226Z
+68
+jcohen
+has-props
+
+run-config.png
+file
+
+
+
+
+2009-08-11T21:42:37.000000Z
+207824fe2030a9deaa246523199ec879
+2007-08-31T22:03:13.625000Z
+3
+Jeff Cohen
+has-props
+

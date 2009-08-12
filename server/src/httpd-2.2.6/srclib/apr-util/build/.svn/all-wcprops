@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2358/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/build
+END
+mkdir.sh
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/build/mkdir.sh
+END
+install.sh
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/build/install.sh
+END
+apu-iconv.m4
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2358/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/build/apu-iconv.m4
+END
+dbm.m4
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2358/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/build/dbm.m4
+END
+find_apr.m4
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/build/find_apr.m4
+END
+w32locatedb.pl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/build/w32locatedb.pl
+END
+find_apu.m4
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/build/find_apu.m4
+END
+apu-hints.m4
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/build/apu-hints.m4
+END
+apu-conf.m4
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2358/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/build/apu-conf.m4
+END
+dbd.m4
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2358/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/build/dbd.m4
+END
+apr_common.m4
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/build/apr_common.m4
+END
+config.guess
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/build/config.guess
+END
+get-version.sh
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/build/get-version.sh
+END
+config.sub
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr-util/build/config.sub
+END

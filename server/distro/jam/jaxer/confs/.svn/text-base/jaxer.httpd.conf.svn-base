@@ -1,0 +1,133 @@
+LoadModule jaxer_module "${ANCHOR}/jaxer/connectors/mod_jaxer.so"
+
+<IfModule jaxer_module>
+
+		########################################################################################
+		#  Jaxer Manager Connection settings ( see http://www.aptana.com/jaxer/connectionpool)
+		########################################################################################
+		#  WaitConnectionTimeOutSec 5
+		#  MaxConnectionPoolSize 1
+		########################################################################################
+				
+		# Configures the only worker in the form of
+		# JaxerWorker <JaxerServerHost> <JaxerServerPort>
+		JaxerWorker 127.0.0.1 4327
+
+		########################################################################################
+		# Limit the in-memory postdata size.
+		########################################################################################
+		
+		# Post data larger than this will be put into diskfile.  The default is 4096 bytes.  To
+		# turn off this limit, set it to 0.
+		# PostDataMemoryLimit <bytes>
+		PostDataMemoryLimit 4096
+		
+		########################################################################################
+		# Special Jaxer paths
+		########################################################################################
+
+		# Route all requests that start with jaxer-callback in their path to Jaxer as callbacks
+		<LocationMatch "^/jaxer-callback\b">
+				SetHandler JAXER
+				Order Deny,Allow
+				Allow from all
+		</LocationMatch>
+
+		# Route all requests with jaxer-rpc in their path to Jaxer as Remote Procedure Calls
+		<LocationMatch "/jaxer-rpc\b">
+				SetHandler JAXER
+				Order Deny,Allow
+				Allow from all
+		</LocationMatch>
+
+		# Route all requests with jaxer-service in their path to Jaxer as service calls
+		<LocationMatch "/jaxer-service\b">
+				SetHandler JAXER
+				Order Deny,Allow
+				Allow from all
+		</LocationMatch>
+
+		# Jaxer is the handler for index.js
+		<LocationMatch "\bindex.js$">
+				SetHandler JAXER
+				Order Deny,Allow
+				Allow from all
+		</LocationMatch>
+
+		# Place any files that are not to be filtered through Jaxer at all
+		# in a folder structure that has /jaxer-bypass/ somewhere in the hierarchy above them.
+		<LocationMatch "/jaxer-bypass/">
+				# prevents processing by Jaxer before it's served back to Jaxer
+				JaxerPassThrough on     
+				Order Deny,Allow
+				Allow from all
+		</LocationMatch>
+		
+		# Place any files that are to be served only to Jaxer (usually to be included)
+		# in a folder structure that has /jaxer-include/ somewhere in the hierarchy above them.
+		<LocationMatch "/jaxer-include/">
+				# prevents processing by Jaxer before it's served back to Jaxer
+				JaxerPassThrough on     
+				Order Deny,Allow
+				# Jaxer will fetch these files directly from the file system, not via Apache
+				Deny from all           
+		</LocationMatch>
+		
+		########################################################################################
+		# Configure default content serving
+		########################################################################################
+
+		# Configure the client framework file availablitly
+		<Directory "${ANCHOR}/jaxer/framework">
+				Deny from all
+				<Files clientFramework*.js>
+						Allow from all
+				</Files>
+		</Directory>
+		Alias /jaxer/framework/clientFramework_compressed.js "${ANCHOR}/jaxer/framework/clientFramework_compressed.js"
+		Alias /jaxer/framework/clientFramework.js "${ANCHOR}/jaxer/framework/clientFramework.js"
+
+		<Directory "${ANCHOR}/public">
+
+				DirectoryIndex index.php index.php3 index.js index.html index.htm index.html.var index.html.var index.html.redirect
+
+				# JaxerFilter and JaxerFilterContentType are supported in .htaccess
+				# when the corresponding AllowOverride options contains at least 
+				# a Limit directive-type
+
+				#  Filter setting for Jaxer based on url extension
+				#  JaxerFilter <one or more extensions with or without leading dot.>
+				#  eg: "JaxerFilter *" means jaxer will try to filter ALL requests
+				#  Note that only requests with these extensions "might" be sent to Jaxer -- they
+				#  are further limited based on the JaxerFilterContentType settings.
+				JaxerFilter html xhtml htm php
+			
+				# JaxerFilterContentType <one or more content_types separated by space>
+				#  Before the request is sent to Jaxer, its content_type
+				#  (resulting mime type) is checked against this list.
+				#  Only if the content_type is within the list (or == text/html), will the request be
+				#  sent to Jaxer.
+				#  So a request will be sent to Jaxer ONLY if it meets both the JaxerFilter and 
+				#  the JaxerFilterContentType criteria.
+				JaxerFilterContentType text/html application/xhtml+xml
+			
+				Order Deny,Allow
+				Allow from all
+				
+		</Directory>
+		
+		<Directory "${ANCHOR}/jaxer/aptana">
+
+				JaxerFilter .html .xhtml .htm .php
+
+				JaxerFilterContentType text/html application/xhtml+xml
+				
+				Order Deny,Allow
+				Allow from all
+				
+		</Directory>	
+		Alias /aptana "${ANCHOR}/jaxer/aptana"
+		
+</IfModule>
+
+Include "${ANCHOR}/local_jaxer/conf/*.httpd.conf"

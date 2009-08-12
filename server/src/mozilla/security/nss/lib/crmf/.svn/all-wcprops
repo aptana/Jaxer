@@ -1,0 +1,179 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/crmf
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/crmf/manifest.mn
+END
+crmfreq.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/crmf/crmfreq.c
+END
+asn1cmn.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/crmf/asn1cmn.c
+END
+cmmfi.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/cmmfi.h
+END
+respcli.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/respcli.c
+END
+encutil.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/encutil.c
+END
+crmfdec.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/crmfdec.c
+END
+crmfi.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/crmfi.h
+END
+cmmfasn1.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/cmmfasn1.c
+END
+crmfpop.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/crmfpop.c
+END
+respcmn.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/crmf/respcmn.c
+END
+cmmfchal.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/crmf/cmmfchal.c
+END
+crmffut.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/crmffut.h
+END
+challcli.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/challcli.c
+END
+cmmft.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/cmmft.h
+END
+crmfcont.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/crmfcont.c
+END
+cmmfresp.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/cmmfresp.c
+END
+cmmfrec.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/crmf/cmmfrec.c
+END
+crmfenc.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/crmfenc.c
+END
+servget.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/servget.c
+END
+crmft.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/crmft.h
+END
+cmmfit.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/cmmfit.h
+END
+crmftmpl.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/crmftmpl.c
+END
+cmmf.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/cmmf.h
+END
+crmfget.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/crmfget.c
+END
+crmfit.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/crmfit.h
+END
+config.mk
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/config.mk
+END
+crmf.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/crmf.h
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/crmf/Makefile
+END

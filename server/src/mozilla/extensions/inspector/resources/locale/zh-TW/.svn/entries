@@ -1,0 +1,94 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/zh-TW
+http://svn.aptana.local/svn/jaxer
+
+
+
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+inspector.dtd
+file
+
+
+
+
+2009-08-11T21:36:58.000000Z
+c5a68bdc3d8516b0b797bbf00222ee3b
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+inspector.properties
+file
+
+
+
+
+2009-08-11T21:36:58.000000Z
+f068858183876e2aa5e169095e6f6e85
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+tasksOverlay.dtd
+file
+
+
+
+
+2009-08-11T21:36:58.000000Z
+4ca1730c1d544ce481dfc5eaca0d0398
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+viewers
+dir
+
+search
+dir
+
+prefs.dtd
+file
+
+
+
+
+2009-08-11T21:36:58.000000Z
+dc281832104d29b365ca753dc33103a9
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+editing.dtd
+file
+
+
+
+
+2009-08-11T21:36:58.000000Z
+c29a3b4c1d4d2e865d1184780cde9585
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+

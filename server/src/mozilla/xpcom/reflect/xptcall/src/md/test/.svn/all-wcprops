@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/test
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/test/Makefile.in
+END
+clean.bat
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/test/clean.bat
+END
+mk_invoke.bat
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/test/mk_invoke.bat
+END
+mk_stub.bat
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/test/mk_stub.bat
+END
+invoke_test.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/test/invoke_test.cpp
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/test/README
+END
+stub_test.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/test/stub_test.cpp
+END

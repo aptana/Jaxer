@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/lib
+END
+libaprutil-1.exp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/lib/libaprutil-1.exp
+END
+libapriconv-1.exp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/lib/libapriconv-1.exp
+END
+libapr-1.exp
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/lib/libapr-1.exp
+END
+aprutil-1.lib
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/lib/aprutil-1.lib
+END
+apr-1.lib
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/lib/apr-1.lib
+END
+aprutil_src.pdb
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/lib/aprutil_src.pdb
+END
+libapriconv-1.lib
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/lib/libapriconv-1.lib
+END
+libapr-1.lib
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/lib/libapr-1.lib
+END
+apr_src.pdb
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/lib/apr_src.pdb
+END

@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/nb-NO/viewers
+END
+domNode.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/nb-NO/viewers/domNode.dtd
+END
+boxModel.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/nb-NO/viewers/boxModel.dtd
+END
+styleRules.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/nb-NO/viewers/styleRules.dtd
+END
+stylesheets.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/nb-NO/viewers/stylesheets.dtd
+END
+accessibleTree.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/nb-NO/viewers/accessibleTree.dtd
+END
+dom.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/nb-NO/viewers/dom.dtd
+END
+accessibleProps.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/nb-NO/viewers/accessibleProps.dtd
+END
+computedStyle.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/nb-NO/viewers/computedStyle.dtd
+END
+accessibleEvents.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/nb-NO/viewers/accessibleEvents.dtd
+END
+jsObject.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/nb-NO/viewers/jsObject.dtd
+END
+xblBindings.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/inspector/resources/locale/nb-NO/viewers/xblBindings.dtd
+END

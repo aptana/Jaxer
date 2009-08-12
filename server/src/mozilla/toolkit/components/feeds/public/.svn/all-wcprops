@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/public
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/public/Makefile.in
+END
+nsIScriptableUnescapeHTML.idl
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/public/nsIScriptableUnescapeHTML.idl
+END
+nsIFeedResult.idl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/public/nsIFeedResult.idl
+END
+nsIFeed.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/public/nsIFeed.idl
+END
+nsIFeedProcessor.idl
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/public/nsIFeedProcessor.idl
+END
+nsIFeedEntry.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/public/nsIFeedEntry.idl
+END
+nsIFeedContainer.idl
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/public/nsIFeedContainer.idl
+END
+nsIFeedElementBase.idl
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/public/nsIFeedElementBase.idl
+END
+nsIFeedListener.idl
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/public/nsIFeedListener.idl
+END
+nsIFeedGenerator.idl
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/public/nsIFeedGenerator.idl
+END
+nsIFeedPerson.idl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/public/nsIFeedPerson.idl
+END
+nsIFeedTextConstruct.idl
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/public/nsIFeedTextConstruct.idl
+END

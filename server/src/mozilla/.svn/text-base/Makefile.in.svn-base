@@ -1,0 +1,252 @@
+# ***** BEGIN LICENSE BLOCK *****
+#  Version: GPL 3
+# 
+#  This program is licensed under the GNU General Public license, version 3 (GPL).
+#  It is derived from Mozilla software and modified by Aptana, Inc.
+#  Aptana, Inc. has elected to use and license the Mozilla software 
+#  under the terms of the GPL, and licenses this file to you under the terms
+#  of the GPL.
+#  
+#  Contributor(s): Aptana, Inc.
+#  The portions modified by Aptana are Copyright (C) 2007-2008 Aptana, Inc.
+#  All Rights Reserved.
+# 
+#  This program is distributed in the hope that it will be useful, but
+#  AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+#  NONINFRINGEMENT. Redistribution, except as permitted by the GPL,
+#  is prohibited.
+# 
+#  You can redistribute and/or modify this program under the terms of the GPL, 
+#  as published by the Free Software Foundation.  You should
+#  have received a copy of the GNU General Public License, Version 3 along
+#  with this program; if not, write to the Free Software Foundation, Inc., 51
+#  Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+#  
+#  Aptana provides a special exception to allow redistribution of this file
+#  with certain other code and certain additional terms
+#  pursuant to Section 7 of the GPL. You may view the exception and these
+#  terms on the web at http://www.aptana.com/legal/gpl/.
+#  
+#  You may view the GPL, and Aptana's exception and additional terms in the file
+#  titled license-jaxer.html in the main distribution folder of this program.
+#  
+#  Any modifications to this file must keep this entire header intact.
+# 
+# ***** END LICENSE BLOCK *****
+#
+# ***** BEGIN ORIGINAL ATTRIBUTION BLOCK *****
+# The Original Code is mozilla.org code.
+#
+# The Initial Developer of the Original Code is
+# Netscape Communications Corporation.
+# Portions created by the Initial Developer are Copyright (C) 1998
+# the Initial Developer. All Rights Reserved.
+#
+# Contributor(s):
+#
+# ***** END ORIGINAL ATTRIBUTION BLOCK *****
+
+DEPTH		= .
+topsrcdir	= @top_srcdir@
+srcdir		= @srcdir@
+VPATH		= @srcdir@
+
+include $(DEPTH)/config/autoconf.mk
+
+include $(topsrcdir)/config/config.mk
+
+default alldep all::
+	$(RM) -rf $(DIST)/sdk
+	$(RM) -rf $(DIST)/include
+	$(RM) -rf $(DIST)/private
+	$(RM) -rf $(DIST)/public
+	$(RM) -rf _tests
+
+TIERS += base
+
+#
+# tier "base" - basic setup
+#
+tier_base_dirs = \
+	config \
+	build \
+	probes \
+	$(NULL)
+
+ifdef MOZ_MEMORY
+tier_base_dirs += memory/jemalloc
+endif
+
+include $(topsrcdir)/$(MOZ_BUILD_APP)/build.mk
+
+TIERS += testharness
+
+# test harnesses
+ifdef ENABLE_TESTS
+tier_testharness_dirs += tools/test-harness
+endif
+
+GARBAGE_DIRS += dist _javagen _profile _tests staticlib
+DIST_GARBAGE = config.cache config.log config.status config-defs.h \
+   dependencies.beos config/autoconf.mk config/myrules.mk config/myconfig.mk \
+   unallmakefiles mozilla-config.h \
+   netwerk/necko-config.h xpcom/xpcom-config.h xpcom/xpcom-private.h \
+   $(topsrcdir)/.mozconfig.mk $(topsrcdir)/.mozconfig.out
+
+# Build pseudo-external modules first when export is explicitly called
+export::
+	$(RM) -rf $(DIST)/sdk
+	$(MAKE) -C config export
+	$(MAKE) tier_nspr
+
+include $(topsrcdir)/config/rules.mk
+
+# After we build tier toolkit, go back and build the tools from previous dirs
+tier_toolkit::
+	$(MAKE) tools_tier_js
+	$(MAKE) tools_tier_xpcom
+	$(MAKE) tools_tier_necko
+	$(MAKE) tools_tier_gecko
+	$(MAKE) tools_tier_toolkit
+
+ifeq (netwerk,$(MOZ_BUILD_APP))
+tier_necko::
+	$(EXIT_ON_ERROR) \
+	$(foreach tier,$(TIERS),$(MAKE) tools_tier_$(tier); )
+endif
+
+distclean::
+	cat unallmakefiles | $(XARGS) rm -f
+	rm -f unallmakefiles $(DIST_GARBAGE)
+
+ifeq ($(OS_ARCH),WINNT)
+rebase:
+ifdef MOZILLA_OFFICIAL
+	echo rebasing $(DIST)
+	/bin/find $(DIST) -name "*.dll" -a -not -name "msvc*" > rebase.lst
+	rebase -b 60000000 -R . -G rebase.lst
+	rm rebase.lst
+endif
+
+splitsymbols:
+ifdef MOZILLA_OFFICIAL
+ifdef MOZ_DEBUG_SYMBOLS
+	echo finding pdb files
+	mkdir -p $(DIST)/$(BUILDID)
+	-cp `/bin/find . -path "./dist" -prune -o -name "*.dll" | sed "s/\.dll$$/\.pdb/" | xargs` $(DIST)/$(BUILDID)
+	-cp `/bin/find . -path "./dist" -prune -o -name "*.exe" | sed "s/\.exe$$/\.pdb/" | xargs` $(DIST)/$(BUILDID)
+	-cp `/bin/find . -path "./dist" -prune -o -name "*.EXE" | sed "s/\.EXE$$/\.pdb/" | xargs` $(DIST)/$(BUILDID)
+endif # MOZ_DEBUG_SYMBOLS
+ifdef MOZ_PROFILE
+	echo splitting symbols out of binaries
+	/bin/find $(DIST) -name "*.dll" -exec splitsym {} \;
+	/bin/find $(DIST) -name "*.exe" -exec splitsym {} \;
+	/bin/find $(DIST) -name "*.EXE" -exec splitsym {} \;
+	mkdir -p $(DIST)/$(BUILDID)
+	/bin/find $(DIST) -name "*.dbg" -exec mv {} $(DIST)/$(BUILDID) \;
+endif # MOZ_PROFILE
+endif # MOZILLA_OFFICIAL
+endif # WINNT
+
+ifeq ($(OS_ARCH),WINNT)
+# we want to copy PDB files on Windows
+MAKE_SYM_STORE_ARGS := -c
+ifdef PDBSTR_PATH
+MAKE_SYM_STORE_ARGS += -i
+endif
+ifeq (,$(CYGWIN_WRAPPER))
+# this doesn't work with Cygwin Python
+MAKE_SYM_STORE_ARGS += --vcs-info
+endif
+DUMP_SYMS_BIN ?= $(topsrcdir)/toolkit/crashreporter/tools/win32/dump_syms.exe
+# PDB files don't get moved to dist, so we need to scan the whole objdir
+MAKE_SYM_STORE_PATH := .
+endif
+ifeq ($(OS_ARCH),Darwin)
+# need to pass arch flags for universal builds
+ifdef UNIVERSAL_BINARY
+MAKE_SYM_STORE_ARGS := -a "ppc i386" --vcs-info
+#JAXER: The next var points to the final after unify.
+#       So Generate symbols must be called after
+#       Universal build is done.  Or you will get nothing.
+#       The original make logic did not work either.
+#
+MAKE_SYM_STORE_PATH := $(MOZ_OBJDIR)/universal/final
+else
+MAKE_SYM_STORE_ARGS := -a $(OS_TEST) --vcs-info
+MAKE_SYM_STORE_PATH := $(DIST)/bin
+endif
+DUMP_SYMS_BIN ?= $(DIST)/host/bin/dump_syms
+endif
+ifeq (,$(filter-out Linux SunOS,$(OS_ARCH)))
+ifndef JAXER
+MAKE_SYM_STORE_ARGS := --vcs-info
+endif
+DUMP_SYMS_BIN ?= $(DIST)/host/bin/dump_syms
+MAKE_SYM_STORE_PATH := $(DIST)/bin
+endif
+
+ifdef MOZ_SYMBOLS_EXTRA_BUILDID
+EXTRA_BUILDID := -$(MOZ_SYMBOLS_EXTRA_BUILDID)
+endif
+
+SYMBOL_ARCHIVE_BASENAME = \
+  $(MOZ_APP_NAME)-$(MOZ_APP_VERSION)-$(OS_ARCH)-$(BUILDID)$(EXTRA_BUILDID)
+
+buildsymbols:
+ifdef MOZ_CRASHREPORTER
+	echo building symbol store
+	mkdir -p $(DIST)/crashreporter-symbols/$(BUILDID)
+	$(PYTHON) $(topsrcdir)/toolkit/crashreporter/tools/symbolstore.py    \
+	  $(MAKE_SYM_STORE_ARGS) -s $(topsrcdir) $(DUMP_SYMS_BIN)     \
+	  $(DIST)/crashreporter-symbols/$(BUILDID)                    \
+	  $(MAKE_SYM_STORE_PATH) >                                    \
+	  $(DIST)/crashreporter-symbols/$(BUILDID)/$(SYMBOL_ARCHIVE_BASENAME)-symbols.txt
+	echo packing symbols
+	#JAXER: put the symbol zips under a single folder rather than many.
+	mkdir -p $(topsrcdir)/../crashreporter-symbols
+	cd $(DIST)/crashreporter-symbols/$(BUILDID) && \
+	       zip -r9D ../Jaxer_Symbols_$(BUILDID).zip .
+    #      zip -r9D ../crashreporter-symbols-$(SYMBOL_ARCHIVE_BASENAME).zip .
+	#mv $(DIST)/crashreporter-symbols/crashreporter-symbols-$(SYMBOL_ARCHIVE_BASENAME).zip \
+    #      $(topsrcdir)/../crashreporter-symbols
+endif # MOZ_CRASHREPORTER
+
+uploadsymbols:
+ifdef MOZ_CRASHREPORTER
+	$(topsrcdir)/toolkit/crashreporter/tools/upload_symbols.sh $(topsrcdir)/../crashreporter-symbols/crashreporter-symbols-$(SYMBOL_ARCHIVE_BASENAME).zip
+endif
+
+ifeq ($(OS_ARCH),WINNT)
+signnss:
+ifdef MOZILLA_OFFICIAL
+	echo signing NSS libs
+	cd $(DIST)/bin; ./shlibsign.exe -v -i softokn3.dll
+	cd $(DIST)/bin; ./shlibsign.exe -v -i freebl3.dll
+endif # MOZILLA_OFFICIAL
+
+deliver: splitsymbols rebase signnss
+
+endif # WINNT
+
+ifneq (,$(wildcard $(DIST)/bin/application.ini))
+BUILDID = $(shell $(PYTHON) $(srcdir)/config/printconfigsetting.py $(DIST)/bin/application.ini App BuildID)
+else
+BUILDID = $(shell $(PYTHON) $(srcdir)/config/printconfigsetting.py $(DIST)/bin/platform.ini Build BuildID)
+endif
+
+#XXX: this is a hack, since we don't want to clobber for MSVC
+# PGO support, but we can't do this test in client.mk
+ifneq ($(OS_ARCH)_$(GNU_CC), WINNT_)
+# No point in clobbering if PGO has been explicitly disabled.
+ifndef NO_PROFILE_GUIDED_OPTIMIZE
+maybe_clobber_profiledbuild: clobber_all
+else
+maybe_clobber_profiledbuild:
+endif
+else
+maybe_clobber_profiledbuild:
+endif
+
+.PHONY: maybe_clobber_profiledbuild

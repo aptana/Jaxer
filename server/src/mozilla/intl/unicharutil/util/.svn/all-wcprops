@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/intl/unicharutil/util
+END
+nsBidiUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/intl/unicharutil/util/nsBidiUtils.h
+END
+gensymmtable.pl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/intl/unicharutil/util/gensymmtable.pl
+END
+nsUnicharUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/util/nsUnicharUtils.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/intl/unicharutil/util/Makefile.in
+END
+nsCompressedCharMap.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/util/nsCompressedCharMap.cpp
+END
+objs.mk
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/util/objs.mk
+END
+symmtable.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/intl/unicharutil/util/symmtable.h
+END
+nsCompressedCharMap.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/util/nsCompressedCharMap.h
+END
+nsBidiUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/intl/unicharutil/util/nsBidiUtils.cpp
+END
+genbidicattable.pl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/util/genbidicattable.pl
+END
+nsUnicharUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/util/nsUnicharUtils.cpp
+END
+bidicattable.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/util/bidicattable.h
+END

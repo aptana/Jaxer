@@ -1,0 +1,216 @@
+-- source include/have_innodb.inc
+--source include/not_embedded.inc
+--source include/have_log_bin.inc
+
+###
+### bug#22725 : incorrect killed error in binlogged query
+###
+
+connect (con1, localhost, root,,);
+connect (con2, localhost, root,,);
+
+create table t1 (a int auto_increment, b int, PRIMARY KEY (a)) ENGINE=InnoDB;
+create table t2 (a int auto_increment, b int, PRIMARY KEY (a)) ENGINE=MyISAM;
+create table t3 (a int auto_increment, b int, PRIMARY KEY (a)) ENGINE=InnoDB;
+
+#
+# effective test for bug#22725
+#
+
+connection con1;
+select get_lock("a", 20);
+
+connection con2;
+let $ID= `select connection_id()`;
+reset master;
+send insert into t2 values (null, null), (null, get_lock("a", 10));
+
+
+connection con1;
+
+disable_abort_on_error;
+disable_query_log;
+disable_result_log;
+
+eval kill query $ID;
+
+connection con2;
+--error 0,ER_QUERY_INTERRUPTED
+reap;
+let $rows= `select count(*) from t2  /* must be 2 or 0 */`;
+
+--exec $MYSQL_BINLOG --start-position=126 $MYSQLTEST_VARDIR/log/master-bin.000001 > $MYSQLTEST_VARDIR/tmp/kill_query_calling_sp.binlog
+--replace_result $MYSQLTEST_VARDIR MYSQLTEST_VARDIR
+eval select
+(@a:=load_file("$MYSQLTEST_VARDIR/tmp/kill_query_calling_sp.binlog"))
+is not null;
+--replace_result $MYSQL_TEST_DIR MYSQL_TEST_DIR
+let $error_code= `select @a like "%#%error_code=0%" /* must return 1 or 0*/`;
+let $insert_binlogged= `select @a like "%insert into%" /* must return 1 or 0 */`;
+eval set @result= $rows- $error_code - $insert_binlogged;
+
+enable_abort_on_error;
+enable_query_log;
+enable_result_log;
+
+select @result /* must be zero either way */;
+
+
+--remove_file $MYSQLTEST_VARDIR/tmp/kill_query_calling_sp.binlog
+connection con1;
+select RELEASE_LOCK("a");
+
+#
+# bug#27571 asynchronous setting mysql_`query`::error and Query_log_e::error_code
+#
+
+# checking that killing inside of select loops is safe as before
+# killing after the loop can be only simulated - another test
+
+delete from t1;
+delete from t2;
+insert into t1 values (1,1),(2,2);
+
+#
+# simple update
+#
+connection con1;
+begin; update t1 set b=11 where a=2;
+
+connection con2;
+let $ID= `select connection_id()`;
+begin;
+send update t1 set b=b+10;
+
+connection con1;
+--replace_result $ID ID
+eval kill query $ID;
+rollback;
+
+# Bug #32148  	killi query may be ineffective 
+# forced to comment out the test's outcome 
+# and mask out ineffective ER_QUERY_INTERRUPTED
+# todo1: revert back upon fixing bug#32148
+# todo2: the tests need refining in that
+#        killing should wait till the victim requested
+#        its lock (wait_condition available in 5.1 tests)
+
+connection con2;
+--error 0,ER_QUERY_INTERRUPTED
+reap;
+rollback;
+select * from t1  order by a /* must be the same as before (1,1),(2,2) */;
+
+#
+# multi update
+# commented out as Bug #31807 multi-update,delete killing does not report with ER_QUERY_INTERRUPTED
+# in the way
+#
+# connection con1;
+# begin; update t1 set b=b+10;
+
+# connection con2;
+# send update t1 as t_1,t1 as t_2 set t_1.b=11 where t_2.a=2;
+
+# connection con1;
+# --replace_result $ID ID
+# eval kill query $ID;
+# rollback;
+
+# disable_abort_on_error;
+
+# connection con2;
+# --error HY000,ER_QUERY_INTERRUPTED
+# reap;
+# select * from t1 /* must be the same as before (1,1),(2,2) */;
+
+# enable_abort_on_error;
+#
+# simple delete
+#
+connection con1;
+begin; delete from t1 where a=2;
+
+connection con2;
+let $ID= `select connection_id()`;
+begin;
+send delete from t1 where a=2;
+
+connection con1;
+--replace_result $ID ID
+eval kill query $ID;
+rollback;
+
+connection con2;
+--error 0,ER_QUERY_INTERRUPTED
+reap;
+rollback;
+# todo1,2 above
+select * from t1 order by a /* must be the same as before (1,1),(2,2) */;
+
+
+#
+# multi delete
+# the same as for multi-update
+#
+# connection con1;
+# begin; delete from t1 where a=2;
+
+# connection con2;
+# send delete t1 from t1 where t1.a=2;
+
+# connection con1;
+# --replace_result $ID ID
+# eval kill query $ID;
+# rollback;
+
+# connection con2;
+# --error 0,ER_QUERY_INTERRUPTED
+# reap;
+# select * from t1 /* must be the same as before (1,1),(2,2) */;
+#
+# insert select
+#
+connection con1;
+--disable_warnings
+drop table if exists t4;
+--enable_warnings
+create table t4 (a int, b int) engine=innodb;
+insert into t4 values (3, 3);
+begin; insert into t1 values (3, 3);
+
+connection con2;
+let $ID= `select connection_id()`;
+begin;
+send insert into t1 select * from t4 for update;
+
+connection con1;
+--replace_result $ID ID
+eval kill query $ID;
+rollback;
+
+connection con2;
+--error 0,ER_QUERY_INTERRUPTED
+reap;
+# todo 1,2 above
+rollback;
+select * from t1 /* must be the same as before (1,1),(2,2) */;
+
+drop table t4; # cleanup for the sub-case
+
+###
+## non-ta table case: killing must be recorded in binlog
+###
+
+# In order to be deterministic the test needs INFORMATION_SCHEMA.PROCESSLIST
+# which is not available on 5.0 at this time.
+# Therefore, skip this part on 5.0.
+
+
+#
+# common cleanup 
+#
+
+drop table t1,t2,t3;
+
+--echo end of the tests

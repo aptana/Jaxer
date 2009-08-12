@@ -1,0 +1,149 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/python/xpcom/src
+END
+PyIInterfaceInfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/python/xpcom/src/PyIInterfaceInfo.cpp
+END
+Pyxpt_info.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/python/xpcom/src/Pyxpt_info.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/python/xpcom/src/Makefile.in
+END
+PyIClassInfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/extensions/python/xpcom/src/PyIClassInfo.cpp
+END
+PyIEnumerator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/python/xpcom/src/PyIEnumerator.cpp
+END
+PyXPCOM.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/python/xpcom/src/PyXPCOM.h
+END
+PyGModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/python/xpcom/src/PyGModule.cpp
+END
+TypeObject.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/python/xpcom/src/TypeObject.cpp
+END
+ErrorUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/python/xpcom/src/ErrorUtils.cpp
+END
+PyISimpleEnumerator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/python/xpcom/src/PyISimpleEnumerator.cpp
+END
+PyXPCOM_std.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/python/xpcom/src/PyXPCOM_std.h
+END
+PyIID.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/python/xpcom/src/PyIID.cpp
+END
+readme.html
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/python/xpcom/src/readme.html
+END
+PyIComponentManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/python/xpcom/src/PyIComponentManager.cpp
+END
+dllmain.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/python/xpcom/src/dllmain.cpp
+END
+PyISupports.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/python/xpcom/src/PyISupports.cpp
+END
+VariantUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/python/xpcom/src/VariantUtils.cpp
+END
+PyGWeakReference.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/python/xpcom/src/PyGWeakReference.cpp
+END
+PyIVariant.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/python/xpcom/src/PyIVariant.cpp
+END
+PyIInterfaceInfoManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/python/xpcom/src/PyIInterfaceInfoManager.cpp
+END
+PyGBase.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/python/xpcom/src/PyGBase.cpp
+END
+PyGInputStream.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/python/xpcom/src/PyGInputStream.cpp
+END
+PyIInputStream.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/python/xpcom/src/PyIInputStream.cpp
+END
+PyGStub.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/python/xpcom/src/PyGStub.cpp
+END

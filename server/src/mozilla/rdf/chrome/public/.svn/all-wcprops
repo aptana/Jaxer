@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/rdf/chrome/public
+END
+nsIChromeRegistrySea.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/chrome/public/nsIChromeRegistrySea.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/chrome/public/Makefile.in
+END

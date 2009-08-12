@@ -1,0 +1,9 @@
+{
+	"name": "default",
+	"files": [
+  		  "Container.js"
+		, "DBPersistor.js"
+		, "SessionManager.js"
+		, "unit_tests_jaxer/jaxer_container_tests.json"
+	]
+}

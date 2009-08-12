@@ -1,0 +1,485 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom
+END
+appendColGroup1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/appendColGroup1-ref.html
+END
+deleteRowsRebuild1a-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteRowsRebuild1a-ref.html
+END
+insertCellsRebuild2.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCellsRebuild2.html
+END
+insertCellsZeroColspan-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCellsZeroColspan-ref.html
+END
+insertCols3-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCols3-ref.html
+END
+insertColGroups1.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertColGroups1.html
+END
+deleteCellsShrink1.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteCellsShrink1.html
+END
+deleteRowsShrink1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteRowsShrink1-ref.html
+END
+insertCellsRebuild1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCellsRebuild1-ref.html
+END
+appendCellsRebuild1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/appendCellsRebuild1-ref.html
+END
+deleteCol3-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteCol3-ref.html
+END
+deleteTbodyExpand1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteTbodyExpand1-ref.html
+END
+appendTbodyExpand1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/appendTbodyExpand1-ref.html
+END
+deleteRowsRebuild1.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteRowsRebuild1.html
+END
+insertCols1.html
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCols1.html
+END
+insertCellsExpand1.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCellsExpand1.html
+END
+insertTbodyRebuild1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertTbodyRebuild1-ref.html
+END
+insertCols5.html
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCols5.html
+END
+insertCellsExpandZeroRowspan-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCellsExpandZeroRowspan-ref.html
+END
+appendRowsExpand1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/appendRowsExpand1-ref.html
+END
+deleteCellsExpandZeroColspan-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteCellsExpandZeroColspan-ref.html
+END
+deleteCol1.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteCol1.html
+END
+insertRowsRebuild1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertRowsRebuild1-ref.html
+END
+insertCols4-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCols4-ref.html
+END
+insertColGroups2.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertColGroups2.html
+END
+appendCellsZeroColspan-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/appendCellsZeroColspan-ref.html
+END
+appendCells1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/appendCells1-ref.html
+END
+appendCol1.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/appendCol1.html
+END
+deleteCellsShrink2.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteCellsShrink2.html
+END
+insertCellsRebuild2-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCellsRebuild2-ref.html
+END
+insertColGroups1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertColGroups1-ref.html
+END
+deleteColGroup1.html
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteColGroup1.html
+END
+tableDom.js
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/tableDom.js
+END
+deleteCellsShrink1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteCellsShrink1-ref.html
+END
+insertRowsExpand1.html
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertRowsExpand1.html
+END
+insertCols2.html
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCols2.html
+END
+insertCellsExpand2.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCellsExpand2.html
+END
+deleteCellsRebuild1.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteCellsRebuild1.html
+END
+deleteRowsRebuild1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteRowsRebuild1-ref.html
+END
+insertCols1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCols1-ref.html
+END
+deleteCol2.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteCol2.html
+END
+insertCellsExpand1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCellsExpand1-ref.html
+END
+insertCols5-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCols5-ref.html
+END
+insertTbodyExpand1.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertTbodyExpand1.html
+END
+appendCol2.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/appendCol2.html
+END
+deleteCol1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteCol1-ref.html
+END
+deleteTbodyRebuild1.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteTbodyRebuild1.html
+END
+insertColGroups2-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertColGroups2-ref.html
+END
+deleteColGroup2.html
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteColGroup2.html
+END
+deleteCellsShrink2-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteCellsShrink2-ref.html
+END
+appendCol1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/appendCol1-ref.html
+END
+appendColGroup1.html
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/appendColGroup1.html
+END
+deleteRowsRebuild1a.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteRowsRebuild1a.html
+END
+insertCellsZeroColspan.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCellsZeroColspan.html
+END
+insertCols3.html
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCols3.html
+END
+deleteColGroup1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteColGroup1-ref.html
+END
+insertRowsExpand1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertRowsExpand1-ref.html
+END
+deleteRowsShrink1.html
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteRowsShrink1.html
+END
+insertCellsRebuild1.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCellsRebuild1.html
+END
+insertCols2-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCols2-ref.html
+END
+appendCellsRebuild1.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/appendCellsRebuild1.html
+END
+reftest.list
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/reftest.list
+END
+deleteCol3.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteCol3.html
+END
+insertCellsExpand2-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCellsExpand2-ref.html
+END
+deleteTbodyExpand1.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteTbodyExpand1.html
+END
+deleteCellsRebuild1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteCellsRebuild1-ref.html
+END
+appendTbodyExpand1.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/appendTbodyExpand1.html
+END
+deleteCol2-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteCol2-ref.html
+END
+insertTbodyRebuild1.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertTbodyRebuild1.html
+END
+insertCellsExpandZeroRowspan.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCellsExpandZeroRowspan.html
+END
+appendCol2-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/appendCol2-ref.html
+END
+insertTbodyExpand1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertTbodyExpand1-ref.html
+END
+appendRowsExpand1.html
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/appendRowsExpand1.html
+END
+deleteCellsExpandZeroColspan.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteCellsExpandZeroColspan.html
+END
+deleteTbodyRebuild1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteTbodyRebuild1-ref.html
+END
+insertRowsRebuild1.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertRowsRebuild1.html
+END
+deleteColGroup2-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/deleteColGroup2-ref.html
+END
+insertCols4.html
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/insertCols4.html
+END
+appendCellsZeroColspan.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/appendCellsZeroColspan.html
+END
+appendCells1.html
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/table-dom/appendCells1.html
+END

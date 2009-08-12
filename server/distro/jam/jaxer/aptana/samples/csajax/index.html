@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+		<title id='docTitle'>Sample Template</title>
+		<link rel='stylesheet' type='text/css' href='css/index.css'>
+    </head>
+
+	<body>
+		
+		<!-- This script block will execute only on the server BUT funcitons defined in this block will be callable from the client
+		     because of the	runat="server-proxy" attributes.-->
+        <script runat="server-proxy">  
+            function get(url) 
+			{ 
+				Jaxer.Log.info(url)
+				return Jaxer.Web.get(url, {as: "text"}); 
+			}   
+        </script> 
+
+		<!-- This script block is a standard script block and runs on the browser only -->
+		<script type="text/javascript">  
+ 		   function $(id) { return document.getElementById(id); }
+           function display(contents) { $('display').value = contents; }   
+		</script>
+
+		<div id='sampleDescription'>
+ 			Cross site Ajax Example
+		</div>
+		
+		<script type="text/javascript" src="lib/wz_tooltip.js"></script>
+		<div id='sampleSource'>
+		<li><a href="/aptana/tools/sourceViewer/index.html?filename=../../samples/csajax/index.html" target="_blank">Main page</a></li>
+		</div>
+
+		<div id='sampleHeader'>
+			<div class='sampleTitle'><img src='images/script_gear.png'/> Cross Site Ajax</div>
+			<div id='rightFloat'>
+				<img src ='images/information.png' class='sampleDescription' onmouseover="TagToTip('sampleDescription', CLICKCLOSE, true, STICKY, true, WIDTH, 300, TITLE, $('docTitle').innerHTML)"/>
+				<span id='sourceButton'><img id='sampleSourceLink' src ='images/html.png' 	        onmouseover="TagToTip('sampleSource', STICKY, true, CLOSEBTN, true,  TITLE, 'View Source Code')"/></span>
+			</div>
+		</div>
+		
+		<div id='applicationContent'>
+			<div id='longDescription'>
+Jaxer runs javascript with full privileges on the server side, so that it is not restricted from interacting with other domains. And on the browser side, accessing the server side is really, really easy. Put them together and you have a solution to the common cross-domain Ajax problem, that is, the restriction that browser code only make web requests within its own domain. 
+			</div>
+        <div id='inputArea'>URL: http://<input type="text" id="url" value="www.aptana.com">  
+        <button onclick="get.async(display, 'http://' + $('url').value)">Get it!</button>  
+        </div>
+        <textarea id="display" ></textarea>  		</div>
+		
+		<div id='sampleFooter'>
+		</div>
+		
+		<!-- This server side script block suppresses the source code viewing within
+		     Aptana Studio -->
+		<script runat='server'>
+			if (Jaxer.System.executableFolder.match('com.aptana.ide.framework.jaxer')) {
+				document.getElementById('sampleSource').innerHTML="";
+				document.getElementById('sourceButton').innerHTML="";
+			}
+		</script>
+		 
+    </body>
+</html>

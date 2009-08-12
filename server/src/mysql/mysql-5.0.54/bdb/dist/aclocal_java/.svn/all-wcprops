@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/dist/aclocal_java
+END
+ac_check_rqrd_class.ac
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/dist/aclocal_java/ac_check_rqrd_class.ac
+END
+ac_java_options.ac
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/dist/aclocal_java/ac_java_options.ac
+END
+ac_prog_java_works.ac
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/dist/aclocal_java/ac_prog_java_works.ac
+END
+ac_prog_javadoc.ac
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/dist/aclocal_java/ac_prog_javadoc.ac
+END
+ac_prog_javac_works.ac
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/dist/aclocal_java/ac_prog_javac_works.ac
+END
+ac_check_class.ac
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/dist/aclocal_java/ac_check_class.ac
+END
+ac_prog_jar.ac
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/dist/aclocal_java/ac_prog_jar.ac
+END
+ac_jni_include_dirs.ac
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/dist/aclocal_java/ac_jni_include_dirs.ac
+END
+ac_try_run_javac.ac
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/dist/aclocal_java/ac_try_run_javac.ac
+END
+ac_prog_java.ac
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/dist/aclocal_java/ac_prog_java.ac
+END
+ac_prog_javac.ac
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/dist/aclocal_java/ac_prog_javac.ac
+END
+ac_check_classpath.ac
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/dist/aclocal_java/ac_check_classpath.ac
+END
+ac_prog_javah.ac
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/dist/aclocal_java/ac_prog_javah.ac
+END
+ac_check_junit.ac
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/dist/aclocal_java/ac_check_junit.ac
+END
+ac_try_compile_java.ac
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/dist/aclocal_java/ac_try_compile_java.ac
+END

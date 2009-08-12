@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/chrome/public
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/chrome/public/Makefile.in
+END
+nsIToolkitChromeRegistry.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/chrome/public/nsIToolkitChromeRegistry.idl
+END

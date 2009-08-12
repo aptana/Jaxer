@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/rdf/build
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/build/Makefile.in
+END
+nsRDFCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/build/nsRDFCID.h
+END
+nsRDFModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/build/nsRDFModule.cpp
+END
+nsRDFModule.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/build/nsRDFModule.h
+END
+rdf.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/build/rdf.pkg
+END

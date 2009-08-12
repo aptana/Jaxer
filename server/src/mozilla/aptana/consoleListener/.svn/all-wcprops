@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/3334/trunk/products/server/src/mozilla/aptana/consoleListener
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/3303/trunk/products/server/src/mozilla/aptana/consoleListener/Makefile.in
+END
+aptConsoleListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/3303/trunk/products/server/src/mozilla/aptana/consoleListener/aptConsoleListener.h
+END
+aptIConsoleListener.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/3090/trunk/products/server/src/mozilla/aptana/consoleListener/aptIConsoleListener.idl
+END
+aptConsoleListener.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/3334/trunk/products/server/src/mozilla/aptana/consoleListener/aptConsoleListener.cpp
+END

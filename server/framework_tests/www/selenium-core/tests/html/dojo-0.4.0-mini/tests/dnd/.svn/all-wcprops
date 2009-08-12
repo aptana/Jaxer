@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/tests/html/dojo-0.4.0-mini/tests/dnd
+END
+test_dragmoveparent.html
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/tests/html/dojo-0.4.0-mini/tests/dnd/test_dragmoveparent.html
+END
+test_nested_drop_targets.html
+K 25
+svn:wc:ra_dav:version-url
+V 145
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/tests/html/dojo-0.4.0-mini/tests/dnd/test_nested_drop_targets.html
+END
+test_container.html
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/tests/html/dojo-0.4.0-mini/tests/dnd/test_container.html
+END
+test_dragmove.html
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/tests/html/dojo-0.4.0-mini/tests/dnd/test_dragmove.html
+END
+test_dragcopy.html
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/tests/html/dojo-0.4.0-mini/tests/dnd/test_dragcopy.html
+END
+test_draghandle.html
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/tests/html/dojo-0.4.0-mini/tests/dnd/test_draghandle.html
+END
+test_simple.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/tests/html/dojo-0.4.0-mini/tests/dnd/test_simple.html
+END
+test_draghandle_2.html
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/tests/html/dojo-0.4.0-mini/tests/dnd/test_draghandle_2.html
+END
+test_dragdropparent.html
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/tests/html/dojo-0.4.0-mini/tests/dnd/test_dragdropparent.html
+END

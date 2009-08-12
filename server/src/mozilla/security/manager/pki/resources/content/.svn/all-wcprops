@@ -1,0 +1,395 @@
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/manager/pki/resources/content
+END
+exceptionDialog.xul
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/manager/pki/resources/content/exceptionDialog.xul
+END
+protectedAuth.js
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/pki/resources/content/protectedAuth.js
+END
+pref-masterpass.js
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/pref-masterpass.js
+END
+exceptionDialog.js
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/manager/pki/resources/content/exceptionDialog.js
+END
+downloadcert.xul
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/downloadcert.xul
+END
+CAOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/pki/resources/content/CAOverlay.xul
+END
+editsslcert.xul
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/pki/resources/content/editsslcert.xul
+END
+pref-validation.js
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/pref-validation.js
+END
+OrphanOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/pki/resources/content/OrphanOverlay.xul
+END
+crlImportDialog.xul
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/crlImportDialog.xul
+END
+certManager.js
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/pki/resources/content/certManager.js
+END
+certpicker.js
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/certpicker.js
+END
+contents.rdf
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/contents.rdf
+END
+pippki.js
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/manager/pki/resources/content/pippki.js
+END
+clientauthask.js
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/clientauthask.js
+END
+password.js
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/password.js
+END
+changepassword.xul
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/changepassword.xul
+END
+resetpassword.js
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/manager/pki/resources/content/resetpassword.js
+END
+protectedAuth.xul
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/pki/resources/content/protectedAuth.xul
+END
+pref-crlupdate.xul
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/pref-crlupdate.xul
+END
+certViewer.xul
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/certViewer.xul
+END
+certDump.xul
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/manager/pki/resources/content/certDump.xul
+END
+deletecert.js
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/pki/resources/content/deletecert.js
+END
+getp12password.xul
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/getp12password.xul
+END
+WebSitesOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/pki/resources/content/WebSitesOverlay.xul
+END
+device_manager.xul
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/device_manager.xul
+END
+downloadcert.js
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/downloadcert.js
+END
+pref-ssl.xul
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/pref-ssl.xul
+END
+certpicker.xul
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/certpicker.xul
+END
+createCertInfo.xul
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/createCertInfo.xul
+END
+PrefOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/PrefOverlay.xul
+END
+clientauthask.xul
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/clientauthask.xul
+END
+cacertexists.xul
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/cacertexists.xul
+END
+setp12password.xul
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/setp12password.xul
+END
+getpassword.xul
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/getpassword.xul
+END
+serverCrlNextupdate.xul
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/serverCrlNextupdate.xul
+END
+pref-certs.xul
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/pref-certs.xul
+END
+pref-masterpass.xul
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/pref-masterpass.xul
+END
+crlManager.js
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/crlManager.js
+END
+choosetoken.xul
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/choosetoken.xul
+END
+pref-crlupdate.js
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/pref-crlupdate.js
+END
+pref-validation.xul
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/pref-validation.xul
+END
+certManager.xul
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/pki/resources/content/certManager.xul
+END
+PageInfoOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/manager/pki/resources/content/PageInfoOverlay.xul
+END
+editcerts.js
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/pki/resources/content/editcerts.js
+END
+escrowWarn.xul
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/escrowWarn.xul
+END
+device_manager.js
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/device_manager.js
+END
+viewCertDetails.xul
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/viewCertDetails.xul
+END
+escrowWarn.js
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/escrowWarn.js
+END
+load_device.xul
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/load_device.xul
+END
+createCertInfo.js
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/createCertInfo.js
+END
+viewCertDetails.js
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/manager/pki/resources/content/viewCertDetails.js
+END
+pref-security.js
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/pref-security.js
+END
+OthersOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/pki/resources/content/OthersOverlay.xul
+END
+crlManager.xul
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/pki/resources/content/crlManager.xul
+END
+editemailcert.xul
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/pki/resources/content/editemailcert.xul
+END
+serverCrlNextupdate.js
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/serverCrlNextupdate.js
+END
+deletecert.xul
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/pki/resources/content/deletecert.xul
+END
+formsigning.xul
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/formsigning.xul
+END
+choosetoken.js
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/choosetoken.js
+END
+formsigning.js
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/formsigning.js
+END
+MineOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/pki/resources/content/MineOverlay.xul
+END
+crlImportDialog.js
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/crlImportDialog.js
+END
+resetpassword.xul
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/resetpassword.xul
+END
+editcacert.xul
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/resources/content/editcacert.xul
+END

@@ -1,0 +1,73 @@
+.rooms-container
+{
+}
+.rooms-title
+{
+	font-size: 14pt;
+}
+.room-container
+{
+	padding: 5px;
+}
+.room-link
+{
+	text-decoration: underline;
+}
+.room-id
+{
+	font-weight: bold;
+	color: blue;
+}
+.room-started
+{
+	color: teal;
+}
+.room-last
+{
+	color: brown;
+}
+
+.room-title
+{
+	font-weight: 900;
+	padding: 5px;
+}
+.disabled-messages
+{
+	background-color: silver;
+}
+.enabled-messages
+{
+	background-color: #f6f6f6;
+	overflow: auto;
+}
+.message-timestamp
+{
+	color: teal;
+	font-style: italic;
+}
+.message-sender
+{
+	color: blue;
+	font-weight: bold;
+	font-style: italic;
+}
+.message-contents
+{
+	color: black;
+}
+.loginPanel
+{
+	border-bottom:  3px solid #B5B5DF;
+	padding:5px;
+}
+.roomPanel
+{
+	padding:5px;
+	background-color:#F0F0FF;
+}
+#messages {
+	border-bottom: 3px solid #B5B5DF;
+	height: 400px; 
+	width: 100%;
+}

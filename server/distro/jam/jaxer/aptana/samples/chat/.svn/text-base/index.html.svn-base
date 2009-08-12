@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Jaxer Chat - Index</title>
+		<link type="text/css" rel="stylesheet" href="css/index.css">
+		<link type="text/css" rel="stylesheet" href="css/commonStyles.css">
+		
+		<!-- This script block will be available on both client and server since the 
+			runat attribute is set to 'both'. -->
+		<script type="text/javascript" runat="both">
+			
+			function $(id) { return document.getElementById(id); }
+			function fromTemplate(idTarget, idSource) { $(idTarget).innerHTML = $(idSource).innerHTML.replace(/(\W)\$id\=/g, "$1id="); }
+			
+			function showRooms(rooms)
+			{
+				if (rooms == null)
+				{
+					$("rooms").innerHTML = "(Not logged in)";
+				}
+				else
+				{
+					var htmlStrings = [];
+					for (var i = 0; i < rooms.length; i++) {
+						var room = rooms[i];
+						var html = $("roomTemplate").innerHTML.replace(/\$(\w+)\$/g, function(match, keyword){
+							return room[keyword];
+						});
+						htmlStrings.push(html);
+					}
+					$("rooms").innerHTML = "\n" + htmlStrings.join("\n") + "\n";
+				}
+			}
+			
+			
+		</script>
+		
+		<!-- These script blocks will execute only on the server because of the
+			runat="server" attributes. -->
+		<script type="text/javascript" src="jaxer-include/setup.js" runat="server"></script>
+		<script type="text/javascript" src="jaxer-include/_authentication.js" runat="server"></script>
+		<script type="text/javascript" runat="server">
+			
+			function getRooms()
+			{
+				var user = getAuthenticatedUser();
+				if (user == null) return null;
+				var rs = Jaxer.DB.execute("SELECT MIN(sent) AS started, MAX(sent) AS last, room_id FROM messages GROUP BY room_id");
+				// Fix up dates because SQLite does not (reliably?) return the declared column type on aggregates
+				for (var i=0, len = rs.rows.length; i<len; i++)
+				{
+					var row = rs.rows[i];
+					if (typeof row.started == "number") row.started = formatShortDate(new Date(row.started));
+					if (typeof row.last == "number") row.last = formatShortDate(new Date(row.last));
+				}
+				return rs.rows;
+			}
+			getRooms.proxy = true;
+			
+			function numericPad(num,width)
+			{
+				return num > Math.pow(10,width) ? num.toString() : (Math.pow(10,width) + num).toString().substring(1);
+			}
+
+			function formatShortDate(dt)
+			{	
+				var dd = numericPad(dt.getDate(),2);
+				var mm = numericPad(dt.getMonth()+1,2);
+				var yr = numericPad(dt.getFullYear(),2);
+				
+				var hr = numericPad(dt.getHours(),2);
+				var mn = numericPad(dt.getMinutes(),2);
+				var ss = numericPad(dt.getSeconds(),2);
+				
+				return [dd,mm,yr].join("/") + " " + [hr,mn,ss].join(":");
+			}
+			
+			function prepareDOM()
+			{
+				var rooms = getRooms();
+				showRooms(rooms);
+			}
+			
+		</script>
+		
+		<!-- This script block is a standard script block and runs on the browser only -->
+		<script type="text/javascript">
+			
+			function refresh()
+			{
+				var rooms = getRooms();
+				showRooms(rooms);
+			}
+
+			function onAuthenticateChange(isAuthenticated)
+			{
+				refresh();
+			}
+			
+			function openRoom(roomNumber)
+			{
+				var url = "chatRoom.html?rnd=" + Math.random();
+				if (roomNumber != null) url += "&room=" + roomNumber;
+				if ($('openInNewWindow').checked)
+				{
+					window.open(url, true);
+				}
+				else
+				{
+					window.location = url;
+				}
+			}
+			
+		</script>
+	</head>
+	
+	<!-- We set a new attribute on the body tag: 'onserverload'. It works just like 'onload', but
+			on the server-side. When Jaxer is done loading the page, the function(s) specified will
+			be executed. You can have both onserverload and onload, for server and client, 
+			respectively. -->
+    <body onserverload="initAuthentication(); prepareDOM()">
+		<script type="text/javascript" src="lib/wz_tooltip.js"></script>
+		<div id='sampleDescription'>
+			A simple multi-room, multi-user chat application using many Jaxer features.
+			To start using it, create a new account for yourself, or a couple if you want to chat
+			between them. Then create a new room.
+		</div>
+		<div id='sampleSource'>
+		<li><a href="/aptana/tools/sourceViewer/index.html?filename=../../samples/chat/index.html" target="_blank">Main page</a></li>
+		<li><a href="/aptana/tools/sourceViewer/index.html?filename=../../samples/chat/jaxer-include/setup.js" target="_blank">Database initialization code</a</li>
+		<li><a href="/aptana/tools/sourceViewer/index.html?filename=../../samples/chat/jaxer-include/_authentication.js" target="_blank">Server authentication code</a></li>
+		<li><a href="/aptana/tools/sourceViewer/index.html?filename=../../samples/chat/jaxer-include/_login.html" target="_blank">HTML template for login forms</a></li>
+		<li><a href="/aptana/tools/sourceViewer/index.html?filename=../../samples/chat/jaxer-include/_login.js" target="_blank">Login management code</a></li>
+		</div>
+
+        <div id='sampleHeader'>
+            <div class='sampleTitle'>
+               <img src='images/user_comment.png'/> Simple Chat Demo
+            </div>
+            <div id='rightFloat'>
+                <img src ='images/information.png' class='sampleDescription' 
+						onmouseover="TagToTip('sampleDescription', STICKY, true, CLICKCLOSE, true, WIDTH, 300, TITLE, 'Sample info')" />
+				<span id='sourceButton'><img src ='images/html.png' id='sampleSourceLink' 
+						onmouseover="TagToTip('sampleSource', STICKY, true, CLOSEBTN, true,  TITLE, 'View Source Code')"/></span>
+            </div>
+        </div>
+        <div id='applicationContent'>
+            <div id="roomTemplate" style="display:none">
+                <div class="room-container">
+                    <a href="javascript:openRoom($room_id$); void(0)" class="room-link"><span class="room-id">Room $room_id$</span> <span class="room-started">Started: $started$</span> <span class="room-last">Last message: $last$</span></a>
+                </div>
+            </div>
+			<div class='loginPanel'>
+            	<script type="text/javascript" src="jaxer-include/_login.js" runat="server"></script>
+	            <jaxer:include src="jaxer-include/_login.html"></jaxer:include>
+			</div>
+			<div class='roomPanel'>
+            <div>
+                <span class="rooms-title">Recent Chat Rooms:</span>
+                &nbsp;&nbsp;<input type="button" value="refresh" onclick="refresh()">
+            </div>
+            <br>
+            <div id="rooms" class="rooms-container">
+                (No rooms, or not logged in)
+            </div>
+            <br>
+            <div>
+                <input type="button" value="new room..." onclick="openRoom()"><span style="display:none">&nbsp;&nbsp;<input type="checkbox" id="openInNewWindow">Open rooms in new window/tab</span>
+            </div>
+			</div>
+			
+			<script runat='server'>
+				if (Jaxer.System.executableFolder.match('com.aptana.ide.framework.jaxer')) {
+					document.getElementById('sampleSource').innerHTML="";
+					document.getElementById('sourceButton').innerHTML="";
+				}
+			</script>
+	</body>
+</html>

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/src/json/test/unit
+END
+head_json.js
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/src/json/test/unit/head_json.js
+END
+test_encode.js
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/src/json/test/unit/test_encode.js
+END
+test_long_input.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/src/json/test/unit/test_long_input.js
+END
+test_decode.js
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/src/json/test/unit/test_decode.js
+END

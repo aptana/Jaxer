@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/nss/cmd/bltest
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/bltest/manifest.mn
+END
+blapitest.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/nss/cmd/bltest/blapitest.c
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/bltest/Makefile
+END

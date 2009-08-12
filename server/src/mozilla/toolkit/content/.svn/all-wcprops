@@ -1,0 +1,215 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/content
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/content/Makefile.in
+END
+inlineSpellCheckUI.js
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/content/inlineSpellCheckUI.js
+END
+macWindowMenu.js
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/content/macWindowMenu.js
+END
+commonDialog.css
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/content/commonDialog.css
+END
+contentAreaUtils.js
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/content/contentAreaUtils.js
+END
+xul.css
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/content/xul.css
+END
+nsDragAndDrop.js
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/content/nsDragAndDrop.js
+END
+customizeCharset.xul
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/content/customizeCharset.xul
+END
+charsetOverlay.js
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/content/charsetOverlay.js
+END
+customizeCharset.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/content/customizeCharset.js
+END
+selectDialog.js
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/content/selectDialog.js
+END
+findUtils.js
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/content/findUtils.js
+END
+globalOverlay.js
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/content/globalOverlay.js
+END
+commonDialog.xul
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/content/commonDialog.xul
+END
+customizeToolbar.js
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/content/customizeToolbar.js
+END
+commonDialog.js
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/content/commonDialog.js
+END
+editMenuOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/content/editMenuOverlay.xul
+END
+plugins.html
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/content/plugins.html
+END
+jar.mn
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/content/jar.mn
+END
+license.html
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/content/license.html
+END
+macWindowMenu.inc
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/content/macWindowMenu.inc
+END
+editMenuOverlay.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/content/editMenuOverlay.js
+END
+viewZoomOverlay.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/content/viewZoomOverlay.js
+END
+customizeToolbar.css
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/content/customizeToolbar.css
+END
+buildconfig.html.in
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/content/buildconfig.html.in
+END
+debug.js
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/content/debug.js
+END
+charsetOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/content/charsetOverlay.xul
+END
+mozilla.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/content/mozilla.xhtml
+END
+about.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/content/about.xhtml
+END
+selectDialog.xul
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/content/selectDialog.xul
+END
+finddialog.xul
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/content/finddialog.xul
+END
+plugins.css
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/content/plugins.css
+END
+finddialog.js
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/content/finddialog.js
+END
+customizeToolbar.xul
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/content/customizeToolbar.xul
+END
+XPCNativeWrapper.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/content/XPCNativeWrapper.js
+END

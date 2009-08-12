@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/protocol/http/public
+END
+nsIHttpProtocolHandler.idl
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/public/nsIHttpProtocolHandler.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/public/Makefile.in
+END
+nsIHttpActivityObserver.idl
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/public/nsIHttpActivityObserver.idl
+END
+nsIHttpChannelInternal.idl
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/public/nsIHttpChannelInternal.idl
+END
+nsIHttpEventSink.idl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/public/nsIHttpEventSink.idl
+END
+nsIHttpChannel.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/public/nsIHttpChannel.idl
+END
+nsIHttpHeaderVisitor.idl
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/public/nsIHttpHeaderVisitor.idl
+END
+nsIHttpAuthenticator.idl
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/public/nsIHttpAuthenticator.idl
+END
+nsIHttpAuthManager.idl
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/public/nsIHttpAuthManager.idl
+END

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/intl/ctl/public
+END
+nsILE.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/intl/ctl/public/nsILE.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/intl/ctl/public/Makefile.in
+END
+nsCtlCIID.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/intl/ctl/public/nsCtlCIID.h
+END

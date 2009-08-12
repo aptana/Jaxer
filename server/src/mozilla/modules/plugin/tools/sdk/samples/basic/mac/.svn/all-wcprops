@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/basic/mac
+END
+Basic Plugin.xml
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/basic/mac/Basic%20Plugin.xml
+END
+plugin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/basic/mac/plugin.cpp
+END
+pluginPrefix.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/basic/mac/pluginPrefix.h
+END
+plugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/basic/mac/plugin.h
+END
+pluginCarbonPrefix.h
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/basic/mac/pluginCarbonPrefix.h
+END
+Basic.rsrc
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/basic/mac/Basic.rsrc
+END
+Basic Plugin.mcp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/basic/mac/Basic%20Plugin.mcp
+END

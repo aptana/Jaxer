@@ -1,0 +1,347 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/security/nss/tests
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-20T18:44:20.559534Z
+2886
+jzhang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+set_environment
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+3b60667b33886a254e8c5588216149cb
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+all.sh
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+91434e115a99fc0d5ec6cf7940af6d0e
+2008-05-20T18:44:20.559534Z
+2886
+jzhang
+has-props
+
+sdr
+dir
+
+pkits
+dir
+
+qa_stat
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+04bb371a7f6008ba91b850a504a6e0c9
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+cert
+dir
+
+jssdir
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+e07acd85d8673017d5bb4f751bbca861
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+merge
+dir
+
+tools
+dir
+
+nssdir
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+f382962394ffa28b4182689e4c1e1944
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+pkcs11
+dir
+
+qaclean
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+7cef1c4d64b1e2779bd0382c45e407e3
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+doc
+dir
+
+dbtests
+dir
+
+iopr
+dir
+
+smime
+dir
+
+memleak
+dir
+
+platformlist.tbx
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+a61b00529d7f8cb2a5f1f413e12a9a1f
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+core_watch
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+fc6098813f5a35bd6aeb34ccdb46b12c
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+nsspath
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+ba207d7e6e07b24ce180d7b84456c758
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+platformlist
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+00c66bb86e7b65fad4288b36ece2720c
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+jssqa
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+023ee050a91ae82c0ed18ae6568343e5
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+qa_stage
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+baf5afedb4982be1d09841e97f1cd1e9
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+nssqa
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+d09597a11d27882462d8398c4d76c830
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+cmdtests
+dir
+
+crmf
+dir
+
+common
+dir
+
+path_uniq
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+a33cf1d50c8de3f8f70d16d3beb64aeb
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+header
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+0a59b459aca46876b856da480c20b5a5
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+dll_version.sh
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+de7a5289dfa645731ea96ef7bb361850
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+perf
+dir
+
+run_niscc.sh
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+0849893de45cd5934324fbd200b33185
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+dbupgrade
+dir
+
+clean_tbx
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+4ca5a8578fe6d22a6b339b97e3e75ac0
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+ssl
+dir
+
+fips
+dir
+
+mksymlinks
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+26a6154a7317e590022c6614cd3dc8b6
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+libpkix
+dir
+
+ocsp
+dir
+
+jss_dll_version.sh
+file
+
+
+
+
+2009-08-11T21:33:40.000000Z
+2932c6182815be66c8ea0a6a7f8c4bad
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+cipher
+dir
+

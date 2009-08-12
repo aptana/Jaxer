@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/satchel/public
+END
+nsIFormFillController.idl
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/satchel/public/nsIFormFillController.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/satchel/public/Makefile.in
+END
+nsIFormHistory.idl
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/satchel/public/nsIFormHistory.idl
+END

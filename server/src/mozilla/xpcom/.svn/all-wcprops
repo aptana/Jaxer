@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/jaxer/!svn/ver/3910/trunk/products/server/src/mozilla/xpcom
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/Makefile.in
+END
+xpcom-config.h.in
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/xpcom-config.h.in
+END
+build.mk
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/build.mk
+END
+xpcom-private.h.in
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/xpcom-private.h.in
+END

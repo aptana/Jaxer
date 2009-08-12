@@ -1,0 +1,26 @@
+. $topsrcdir/aptana/config/mozconfig
+. $topsrcdir/build/macosx/universal/mozconfig
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/ff-release
+#mk_add_options MOZ_POSTFLIGHT+=postBuildJaxer.mk
+
+ac_add_options --disable-jemalloc
+ac_add_options --enable-static --disable-shared
+ac_add_options --enable-optimize --disable-debug
+ac_add_options --disable-strip
+ac_add_options --enable-crashreporter
+
+# symbols for breakpad
+export CFLAGS="-g -gfull"
+export CXXFLAGS="-g -gfull"
+
+ac_add_options --enable-macos-target=10.4
+ac_add_app_options ppc --enable-prebinding
+
+mk_add_options MOZ_ENABLE_ODBC=1
+export MOZ_ENABLE_ODBC=1
+mk_add_options MOZ_ODBC_LIBS="`/usr/bin/iodbc-config --libs`"
+export MOZ_ODBC_LIBS=`/usr/bin/iodbc-config --libs`
+
+mk_add_options MOZ_MAKE_FLAGS=-j4
+mk_add_options MOZ_POSTFLIGHT_ALL=makeUniversalJaxer.mk
+

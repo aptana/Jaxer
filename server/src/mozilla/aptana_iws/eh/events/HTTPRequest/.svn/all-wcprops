@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/4521/trunk/products/server/src/mozilla/aptana_iws/eh/events/HTTPRequest
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/eh/events/HTTPRequest/Makefile.in
+END
+aptHTTPRequest.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/4521/trunk/products/server/src/mozilla/aptana_iws/eh/events/HTTPRequest/aptHTTPRequest.h
+END
+aptIHTTPRequest.idl
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/4521/trunk/products/server/src/mozilla/aptana_iws/eh/events/HTTPRequest/aptIHTTPRequest.idl
+END
+aptHTTPRequest.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/4521/trunk/products/server/src/mozilla/aptana_iws/eh/events/HTTPRequest/aptHTTPRequest.cpp
+END

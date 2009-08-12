@@ -1,0 +1,37 @@
+<html>
+    <head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+        <script type="text/javascript" runat="server">
+      		function test_SerializeData_MultiReferences()
+			{
+				var date = new Date(Date.UTC(2007, 7, 17, 11, 57, 30));
+				var data = [ date, date ];
+				var expected = '[["~1~","~1~"],"~Date:2007-08-17T11:57:30~"]';
+				var result = Jaxer.Serialization.toJSONString(data, {as: Jaxer.Serialization.JAXER_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_DeserializeDate_MultiReferences()
+			{
+				var json = '[["~1~","~1~"], "~Date:2007-07-17T13:04:35~"]';
+				var refs = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.JAXER_METHOD});
+				var result1 = refs[0];
+				var result2 = refs[1];
+				
+				assertSame(result1, result2);
+				
+				assertEquals(result1.getUTCSeconds(), 35);
+				assertEquals(result1.getUTCMinutes(), 4);
+				assertEquals(result1.getUTCHours(), 13);
+				assertEquals(result1.getUTCDate(), 17);
+				assertEquals(result1.getUTCMonth(), 6);
+				assertEquals(result1.getUTCFullYear(), 2007);
+			}
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/svg/document/src
+END
+nsSVGDocument.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/content/svg/document/src/nsSVGDocument.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/svg/document/src/Makefile.in
+END
+nsSVGDocument.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/svg/document/src/nsSVGDocument.h
+END

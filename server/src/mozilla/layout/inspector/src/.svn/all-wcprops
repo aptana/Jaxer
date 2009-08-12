@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/inspector/src
+END
+inDeepTreeWalker.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/inspector/src/inDeepTreeWalker.h
+END
+inDOMView.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/inspector/src/inDOMView.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/inspector/src/Makefile.in
+END
+inCSSValueSearch.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/inspector/src/inCSSValueSearch.cpp
+END
+inDOMView.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/inspector/src/inDOMView.h
+END
+inCSSValueSearch.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/inspector/src/inCSSValueSearch.h
+END
+inFlasher.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/inspector/src/inFlasher.cpp
+END
+inFlasher.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/inspector/src/inFlasher.h
+END
+inLayoutUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/inspector/src/inLayoutUtils.cpp
+END
+inSearchLoop.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/inspector/src/inSearchLoop.cpp
+END
+inDOMUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/inspector/src/inDOMUtils.cpp
+END
+inLayoutUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/inspector/src/inLayoutUtils.h
+END
+inDeepTreeWalker.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/inspector/src/inDeepTreeWalker.cpp
+END
+inSearchLoop.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/inspector/src/inSearchLoop.h
+END
+inDOMUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/inspector/src/inDOMUtils.h
+END

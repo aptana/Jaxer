@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/profile/dirserviceprovider/src
+END
+nsProfileLock.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/profile/dirserviceprovider/src/nsProfileLock.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/profile/dirserviceprovider/src/Makefile.in
+END
+nsProfileStringTypes.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/profile/dirserviceprovider/src/nsProfileStringTypes.h
+END
+objs.mk
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/profile/dirserviceprovider/src/objs.mk
+END
+nsProfileLock.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/profile/dirserviceprovider/src/nsProfileLock.cpp
+END
+nsProfileDirServiceProvider.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/profile/dirserviceprovider/src/nsProfileDirServiceProvider.cpp
+END

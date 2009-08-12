@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/ldap
+END
+util_ldap_cache.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/ldap/util_ldap_cache.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/ldap/Makefile.in
+END
+config.m4
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/ldap/config.m4
+END
+mod_ldap.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/ldap/mod_ldap.dsp
+END
+util_ldap_cache.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/ldap/util_ldap_cache.h
+END
+util_ldap_cache_mgr.c
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/ldap/util_ldap_cache_mgr.c
+END
+.deps
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/ldap/.deps
+END
+NWGNUmakefile
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/ldap/NWGNUmakefile
+END
+README.ldap
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/ldap/README.ldap
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/ldap/Makefile
+END
+modules.mk
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/ldap/modules.mk
+END
+util_ldap.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/ldap/util_ldap.c
+END

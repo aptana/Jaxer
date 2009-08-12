@@ -1,0 +1,280 @@
+/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* ***** BEGIN LICENSE BLOCK *****
+ *  Version: GPL 3
+ * 
+ *  This program is licensed under the GNU General Public license, version 3 (GPL).
+ *  It is derived from Mozilla software and modified by Aptana, Inc.
+ *  Aptana, Inc. has elected to use and license the Mozilla software 
+ *  under the terms of the GPL, and licenses this file to you under the terms
+ *  of the GPL.
+ *  
+ *  Contributor(s): Aptana, Inc.
+ *  The portions modified by Aptana are Copyright (C) 2007-2008 Aptana, Inc.
+ *  All Rights Reserved.
+ * 
+ *  This program is distributed in the hope that it will be useful, but
+ *  AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+ *  NONINFRINGEMENT. Redistribution, except as permitted by the GPL,
+ *  is prohibited.
+ * 
+ *  You can redistribute and/or modify this program under the terms of the GPL, 
+ *  as published by the Free Software Foundation.  You should
+ *  have received a copy of the GNU General Public License, Version 3 along
+ *  with this program; if not, write to the Free Software Foundation, Inc., 51
+ *  Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  
+ *  Aptana provides a special exception to allow redistribution of this file
+ *  with certain other code and certain additional terms
+ *  pursuant to Section 7 of the GPL. You may view the exception and these
+ *  terms on the web at http://www.aptana.com/legal/gpl/.
+ *  
+ *  You may view the GPL, and Aptana's exception and additional terms in the file
+ *  titled license-jaxer.html in the main distribution folder of this program.
+ *  
+ *  Any modifications to this file must keep this entire header intact.
+ * 
+ * ***** END LICENSE BLOCK ***** */
+/* ***** BEGIN ORIGINAL ATTRIBUTION BLOCK *****
+ *
+ * The Original Code is Oracle Corporation code.
+ *
+ * The Initial Developer of the Original Code is
+ *  Oracle Corporation
+ * Portions created by the Initial Developer are Copyright (C) 2004
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *   Vladimir Vukicevic <vladimir.vukicevic@oracle.com>
+ *   Brett Wilson <brettw@gmail.com>
+ *   Shawn Wilsher <me@shawnwilsher.com>
+ *   Lev Serebryakov <lev@serebryakov.spb.ru>
+ *
+ * ***** END ORIGINAL ATTRIBUTION BLOCK ***** */
+
+#include "nsISupports.idl"
+
+interface mozIStorageAggregateFunction;
+interface mozIStorageFunction;
+interface mozIStorageProgressHandler;
+interface mozIStorageStatement;
+interface nsIFile;
+
+/**
+ * mozIStorageConnection represents a database connection attached to
+ * a specific file or to the in-memory data storage.  It is the
+ * primary interface for interacting with a database, including
+ * creating prepared statements, executing SQL, and examining database
+ * errors.
+ */
+[scriptable, uuid(623f9ddb-434b-4d39-bc2d-1c617da241d0)]
+interface mozIStorageConnection : nsISupports {
+  /*
+   * Initialization and status
+   */
+  
+  /**
+   * Closes a database connection.  C++ callers should simply set the database
+   * variable to NULL.
+   */
+   void close();
+
+  /**
+   * Indicates if the connection is open and ready to use.  This will be false
+   * if the connection failed to open, or it has been closed.
+   */
+  readonly attribute boolean connectionReady;
+
+  /**
+   * The current database nsIFile.  Null if the database
+   * connection refers to an in-memory database.
+   */
+  readonly attribute nsIFile databaseFile;
+
+  /**
+   * lastInsertRowID returns the row ID from the last INSERT
+   * operation.
+   */
+  readonly attribute long long lastInsertRowID;
+
+  /**
+   * The last error SQLite error code.
+   */
+  readonly attribute long lastError;
+
+  /**
+   * The last SQLite error as a string (in english, straight from the
+   * sqlite library).
+   */
+  readonly attribute AUTF8String lastErrorString;
+
+  /**
+   * The number of database rows that were changed or inserted or 
+   * deleted by the most recently completed SQL statement on the connection.
+   */
+  readonly attribute long changedRowCount;
+
+  
+  /**
+   * The schema version of the database.  This should not be used until the 
+   * database is ready.  The schema will be reported as zero if it is not set.
+   */
+  attribute long schemaVersion;
+
+  /*
+   * Statement creation
+   */
+
+  /**
+   * Create a mozIStorageStatement for the given SQL expression.  The
+   * expression may use ? to indicate sequential numbered arguments,
+   * ?1, ?2 etc. to indicate specific numbered arguments or :name and 
+   * $var to indicate named arguments.
+   *
+   * @param aSQLStatement  The SQL statement to execute
+   *
+   * @returns a new mozIStorageStatement
+   */
+  mozIStorageStatement createStatement(in AUTF8String aSQLStatement);
+
+  /**
+   * Execute a SQL expression, expecting no arguments.
+   *
+   * @param aSQLStatement  The SQL statement to execute
+   */
+  void executeSimpleSQL(in AUTF8String aSQLStatement);
+
+  /**
+   * Check if the given table exists.
+   *
+   * @param aTableName   The table to check
+   * @returns TRUE if table exists, FALSE otherwise.
+   */
+  boolean tableExists(in AUTF8String aTableName);
+
+  /**
+   * Check if the given index exists.
+   *
+   * @param aIndexName   The index to check
+   * @returns TRUE if the index exists, FALSE otherwise.
+   */
+  boolean indexExists(in AUTF8String aIndexName);
+
+
+  /*
+   * Transactions
+   */
+
+  /**
+   * Returns true if a transaction is active on this connection.
+   */
+  readonly attribute boolean transactionInProgress;
+
+  /**
+   * Begin a new transaction.  sqlite default transactions are deferred.
+   * If a transaction is active, throws an error.
+   */
+  void beginTransaction();
+
+  /**
+   * Begins a new transaction with the given type.
+   */
+  const PRInt32 TRANSACTION_DEFERRED = 0;
+  const PRInt32 TRANSACTION_IMMEDIATE = 1;
+  const PRInt32 TRANSACTION_EXCLUSIVE = 2;
+  void beginTransactionAs(in PRInt32 transactionType);
+
+  /**
+   * Commits the current transaction.  If no transaction is active,
+   * @throws NS_ERROR_STORAGE_NO_TRANSACTION.
+   */
+  void commitTransaction();
+
+  /**
+   * Rolls back the current transaction.  If no transaction is active,
+   * @throws NS_ERROR_STORAGE_NO_TRANSACTION.
+   */
+  void rollbackTransaction();
+
+  /*
+   * Tables
+   */
+
+  /**
+   * Create the table with the given name and schema.
+   *
+   * If the table already exists, NS_ERROR_FAILURE is thrown.
+   * (XXX at some point in the future it will check if the schema is
+   * the same as what is specified, but that doesn't happen currently.)
+   *
+   * @param aTableName the table name to be created, consisting of
+   * [A-Za-z0-9_], and beginning with a letter.
+   *
+   * @param aTableSchema the schema of the table; what would normally
+   * go between the parens in a CREATE TABLE statement: e.g., "foo
+   * INTEGER, bar STRING".
+   *
+   * @throws NS_ERROR_FAILURE if the table already exists or could not
+   * be created for any other reason.
+   *
+   */
+  void createTable(in string aTableName,
+                   in string aTableSchema);
+
+  /*
+   * Functions
+   */
+
+  /**
+   * Create a new SQLite function
+   *
+   * @param aFunctionName  The name of function to create, as seen in SQL.
+   * @param aNumArguments  The number of arguments the function takes. Pass
+   *                       -1 for variable-argument functions.
+   * @param aFunction      The instance of mozIStorageFunction, which implements
+   *                       the function in question.
+   */
+  void createFunction(in AUTF8String aFunctionName,
+                      in long aNumArguments,
+                      in mozIStorageFunction aFunction);
+
+  /**
+   * Create a new SQLite aggregate function
+   *
+   * @param aFunctionName  The name of aggregate function to create, as seen
+   *                       in SQL.
+   * @param aNumArguments  The number of arguments the function takes. Pass
+   *                       -1 for variable-argument functions.
+   * @param aFunction      The instance of mozIStorageAggreagteFunction,
+   *                       which implements the function in question.
+   */
+  void createAggregateFunction(in AUTF8String aFunctionName,
+                               in long aNumArguments,
+                               in mozIStorageAggregateFunction aFunction);
+  /**
+   * Delete custom SQLite function (simple or aggregate one)
+   *
+   * @param aFunctionName  The name of function to remove.
+   */
+  void removeFunction(in AUTF8String aFunctionName);
+
+  /**
+   * Sets a progress handler. Only one handler can be registered at a time.
+   * If you need more than one, you need to chain them yourself.
+   *
+   * @param aGranularity   The number of SQL virtual machine steps between
+   *                       progress handler callbacks.
+   * @param aHandler       The instance of mozIStorageProgressHandler.
+   *
+   * @return previous registered handler.
+   */
+  mozIStorageProgressHandler setProgressHandler(in PRInt32 aGranularity,
+                                                in mozIStorageProgressHandler aHandler);
+
+  /**
+   * Remove a progress handler.
+   *
+   * @return previous registered handler.
+   */
+  mozIStorageProgressHandler removeProgressHandler();
+};

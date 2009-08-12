@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/url-classifier/src
+END
+nsUrlClassifierStreamUpdater.h
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/url-classifier/src/nsUrlClassifierStreamUpdater.h
+END
+nsUrlClassifierUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/url-classifier/src/nsUrlClassifierUtils.h
+END
+nsUrlClassifierDBService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/url-classifier/src/nsUrlClassifierDBService.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/url-classifier/src/Makefile.in
+END
+nsUrlClassifierDBService.h
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/url-classifier/src/nsUrlClassifierDBService.h
+END
+nsUrlClassifierHashCompleter.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/url-classifier/src/nsUrlClassifierHashCompleter.cpp
+END
+nsUrlClassifierLib.js
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/url-classifier/src/nsUrlClassifierLib.js
+END
+nsUrlClassifierListManager.js
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/url-classifier/src/nsUrlClassifierListManager.js
+END
+nsUrlClassifierStreamUpdater.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/url-classifier/src/nsUrlClassifierStreamUpdater.cpp
+END
+nsUrlClassifierUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/url-classifier/src/nsUrlClassifierUtils.cpp
+END
+nsUrlClassifierHashCompleter.h
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/url-classifier/src/nsUrlClassifierHashCompleter.h
+END

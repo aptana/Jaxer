@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/win32
+END
+xptcinvoke_alpha.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/win32/xptcinvoke_alpha.cpp
+END
+xptcinvoke_asm_alpha.s
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/win32/xptcinvoke_asm_alpha.s
+END
+xptcstubs.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/win32/xptcstubs.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/win32/Makefile.in
+END
+xptcinvokece.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/win32/xptcinvokece.cpp
+END
+xptcstubs_alpha.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/win32/xptcstubs_alpha.cpp
+END
+xptcstubs_asm_alpha.s
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/win32/xptcstubs_asm_alpha.s
+END
+xptc_arm_ceppc.asm
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/win32/xptc_arm_ceppc.asm
+END
+xptcinvoke_asm_x86_64.asm
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/win32/xptcinvoke_asm_x86_64.asm
+END
+xptcstubsce.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/win32/xptcstubsce.cpp
+END
+xptcinvoke_x86_64.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/win32/xptcinvoke_x86_64.cpp
+END
+xptcinvoke.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/win32/xptcinvoke.cpp
+END
+xptcstubs_asm_x86_64.asm
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/win32/xptcstubs_asm_x86_64.asm
+END
+xptcstubs_x86_64.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptcall/src/md/win32/xptcstubs_x86_64.cpp
+END

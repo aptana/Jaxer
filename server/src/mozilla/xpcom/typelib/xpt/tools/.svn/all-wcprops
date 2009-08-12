@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xpcom/typelib/xpt/tools
+END
+xpt_dump.c
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/typelib/xpt/tools/xpt_dump.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xpcom/typelib/xpt/tools/Makefile.in
+END
+xpt_link.c
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/typelib/xpt/tools/xpt_link.c
+END

@@ -1,0 +1,239 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/netwerk/protocol/http/src
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/Makefile.in
+END
+nsHttpNTLMAuth.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpNTLMAuth.h
+END
+nsHttpDigestAuth.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpDigestAuth.cpp
+END
+nsHttpAuthManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpAuthManager.h
+END
+nsHttpConnection.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpConnection.h
+END
+nsHttpConnectionMgr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpConnectionMgr.cpp
+END
+nsHttpBasicAuth.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpBasicAuth.h
+END
+nsHttpPipeline.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpPipeline.h
+END
+nsHttpConnectionInfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpConnectionInfo.cpp
+END
+nsHttpChunkedDecoder.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpChunkedDecoder.h
+END
+nsHttpHandler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpHandler.cpp
+END
+nsHttpChannel.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpChannel.h
+END
+nsHttpRequestHead.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpRequestHead.h
+END
+nsHttp.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttp.h
+END
+nsHttpResponseHead.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpResponseHead.h
+END
+nsHttpTransaction.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpTransaction.cpp
+END
+nsHttpHeaderArray.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpHeaderArray.cpp
+END
+nsHttpAuthCache.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpAuthCache.h
+END
+nsHttpAuthManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpAuthManager.cpp
+END
+nsHttpNTLMAuth.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpNTLMAuth.cpp
+END
+nsHttpConnection.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpConnection.cpp
+END
+nsHttpAtomList.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpAtomList.h
+END
+nsHttpBasicAuth.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpBasicAuth.cpp
+END
+nsAHttpConnection.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsAHttpConnection.h
+END
+nsHttpPipeline.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpPipeline.cpp
+END
+nsHttpDigestAuth.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpDigestAuth.h
+END
+nsHttpChunkedDecoder.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpChunkedDecoder.cpp
+END
+nsHttpChannel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpChannel.cpp
+END
+nsHttpRequestHead.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpRequestHead.cpp
+END
+nsHttpConnectionMgr.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpConnectionMgr.h
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/README
+END
+nsHttp.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttp.cpp
+END
+nsHttpConnectionInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpConnectionInfo.h
+END
+nsHttpResponseHead.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpResponseHead.cpp
+END
+nsHttpHandler.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpHandler.h
+END
+nsHttpAuthCache.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpAuthCache.cpp
+END
+nsHttpTransaction.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpTransaction.h
+END
+nsAHttpTransaction.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsAHttpTransaction.h
+END
+nsHttpHeaderArray.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/protocol/http/src/nsHttpHeaderArray.h
+END

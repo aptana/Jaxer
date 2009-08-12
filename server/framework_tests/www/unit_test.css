@@ -1,0 +1,12 @@
+table#output {
+	border: solid black 1px;
+}
+
+table#output tr td {
+	border: solid rgb(45, 51, 60) 1px;
+	white-space: nowrap;
+	background-color: rgb(230,230,230);
+	color: black;
+	padding: 5px;
+	font-size: 9pt;
+}

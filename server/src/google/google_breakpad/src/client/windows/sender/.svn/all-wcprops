@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/src/client/windows/sender
+END
+crash_report_sender.cc
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/src/client/windows/sender/crash_report_sender.cc
+END
+crash_report_sender.h
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/src/client/windows/sender/crash_report_sender.h
+END
+crash_report_sender.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/src/client/windows/sender/crash_report_sender.vcproj
+END

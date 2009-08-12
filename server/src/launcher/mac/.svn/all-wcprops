@@ -1,0 +1,179 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/jaxer/!svn/ver/3856/trunk/products/server/src/launcher/mac
+END
+main.m
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/main.m
+END
+version.plist
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/version.plist
+END
+MAMP_Prefix.pch
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/MAMP_Prefix.pch
+END
+Mamp.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/2337/trunk/products/server/src/launcher/mac/Mamp.h
+END
+Picture 3.png
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/Picture%203.png
+END
+light_red.png
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/light_red.png
+END
+apache.gif
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/apache.gif
+END
+Info.plist
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/1332/trunk/products/server/src/launcher/mac/Info.plist
+END
+Mamp.m
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/3837/trunk/products/server/src/launcher/mac/Mamp.m
+END
+MampTasks.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/MampTasks.h
+END
+aptana_sm.png
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/1332/trunk/products/server/src/launcher/mac/aptana_sm.png
+END
+MampStrings.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/1321/trunk/products/server/src/launcher/mac/MampStrings.h
+END
+MampTasks.m
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/3856/trunk/products/server/src/launcher/mac/MampTasks.m
+END
+php.gif
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/php.gif
+END
+Licence.rtf
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/Licence.rtf
+END
+aptana.icns
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/1192/trunk/products/server/src/launcher/mac/aptana.icns
+END
+MampApplicationDelegate.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/MampApplicationDelegate.h
+END
+NSStringEreg.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/NSStringEreg.h
+END
+MAMP Cocoa App.zip
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/MAMP%20Cocoa%20App.zip
+END
+jaxer_app_header.png
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/3673/trunk/products/server/src/launcher/mac/jaxer_app_header.png
+END
+MampApplicationDelegate.m
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/MampApplicationDelegate.m
+END
+NSStringEreg.m
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/NSStringEreg.m
+END
+MampPortFormatter.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/MampPortFormatter.h
+END
+jaxerlogo.jpg
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/jaxerlogo.jpg
+END
+mysql.gif
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/mysql.gif
+END
+light_green.png
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/light_green.png
+END
+light_gray.png
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/light_gray.png
+END
+MampPortFormatter.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/MampPortFormatter.m
+END
+living-e.gif
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/1108/trunk/products/server/src/launcher/mac/living-e.gif
+END

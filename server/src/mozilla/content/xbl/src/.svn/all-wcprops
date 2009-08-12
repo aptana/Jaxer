@@ -1,0 +1,209 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/xbl/src
+END
+nsXBLInsertionPoint.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/content/xbl/src/nsXBLInsertionPoint.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/xbl/src/Makefile.in
+END
+nsXBLDocumentInfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/content/xbl/src/nsXBLDocumentInfo.cpp
+END
+nsXBLProtoImplMethod.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/xbl/src/nsXBLProtoImplMethod.h
+END
+nsXBLProtoImplField.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/content/xbl/src/nsXBLProtoImplField.h
+END
+nsXBLProtoImplProperty.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/xbl/src/nsXBLProtoImplProperty.h
+END
+nsXBLService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/xbl/src/nsXBLService.cpp
+END
+nsXBLPrototypeResources.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xbl/src/nsXBLPrototypeResources.cpp
+END
+nsXBLPrototypeBinding.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/xbl/src/nsXBLPrototypeBinding.cpp
+END
+nsBindingManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/content/xbl/src/nsBindingManager.h
+END
+nsXBLContentSink.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/content/xbl/src/nsXBLContentSink.h
+END
+nsXBLPrototypeHandler.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/xbl/src/nsXBLPrototypeHandler.h
+END
+nsXBLBinding.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/xbl/src/nsXBLBinding.cpp
+END
+nsXBLResourceLoader.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/content/xbl/src/nsXBLResourceLoader.cpp
+END
+nsXBLEventHandler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/xbl/src/nsXBLEventHandler.cpp
+END
+nsXBLProtoImplMember.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/xbl/src/nsXBLProtoImplMember.h
+END
+nsXBLWindowKeyHandler.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/xbl/src/nsXBLWindowKeyHandler.h
+END
+nsXBLInsertionPoint.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/xbl/src/nsXBLInsertionPoint.cpp
+END
+nsXBLProtoImplMethod.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/xbl/src/nsXBLProtoImplMethod.cpp
+END
+nsXBLProtoImplField.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/xbl/src/nsXBLProtoImplField.cpp
+END
+nsXBLProtoImpl.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/xbl/src/nsXBLProtoImpl.h
+END
+nsXBLProtoImplProperty.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/xbl/src/nsXBLProtoImplProperty.cpp
+END
+nsXBLDocumentInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/content/xbl/src/nsXBLDocumentInfo.h
+END
+nsXBLContentSink.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/content/xbl/src/nsXBLContentSink.cpp
+END
+nsBindingManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/xbl/src/nsBindingManager.cpp
+END
+nsXBLPrototypeHandler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/xbl/src/nsXBLPrototypeHandler.cpp
+END
+nsXBLPrototypeBinding.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/content/xbl/src/nsXBLPrototypeBinding.h
+END
+nsXBLPrototypeResources.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/content/xbl/src/nsXBLPrototypeResources.h
+END
+nsXBLService.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/xbl/src/nsXBLService.h
+END
+nsXBLWindowKeyHandler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/xbl/src/nsXBLWindowKeyHandler.cpp
+END
+nsXBLBinding.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/xbl/src/nsXBLBinding.h
+END
+nsXBLResourceLoader.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xbl/src/nsXBLResourceLoader.h
+END
+nsXBLEventHandler.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/xbl/src/nsXBLEventHandler.h
+END
+nsXBLProtoImpl.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/xbl/src/nsXBLProtoImpl.cpp
+END

@@ -1,0 +1,7 @@
+{
+	"name": "default",
+	"tests": [
+		"test_Sandbox_basic.html"
+		,"page1.html"
+	]
+}

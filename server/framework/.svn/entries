@@ -1,0 +1,349 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/framework
+http://svn.aptana.local/svn/jaxer
+
+
+
+2009-02-05T19:05:11.379065Z
+4597
+dwaterson
+has-props
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+clientConfig.js
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+5165d334e17813c59483f28c9ecc17f9
+2008-11-25T02:58:20.697630Z
+4337
+usarid
+has-props
+
+config.js
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+f904d0c93ba00cd0d735a7889276d4f5
+2008-11-25T20:48:39.626764Z
+4340
+usarid
+has-props
+
+configLog.js
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+6ba76fa5b91891b4a23b54201b7cb7f7
+2008-01-09T22:31:36.829256Z
+1608
+usarid
+has-props
+
+Container
+dir
+
+.project
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+f1b0ac46fb47713bc71a8d75471a4943
+2008-05-27T19:54:14.283753Z
+2971
+dwaterson
+has-props
+
+packaging
+dir
+
+DB
+dir
+
+Logging
+dir
+
+pro_framework_compressed_header.txt
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+acbaa2dd88c568bd208bc56596dc1b5a
+2008-10-28T17:43:57.161340Z
+4190
+jzhang
+
+Extend
+dir
+
+scripts
+dir
+
+local_config-move_to_jaxer.js
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+42161c35520654fe4e21dbcc93531c97
+2008-04-27T09:01:57.736597Z
+2687
+usarid
+has-props
+
+Comm
+dir
+
+Sandbox
+dir
+
+frameworkEnd.js
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+7eca29c223b14ef45cc8e623736d142b
+2007-12-29T18:47:10.036795Z
+1417
+usarid
+
+extensions
+dir
+
+buildConfig_sample.js
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+0b173e3731c3873a70b5960eb3d2dbd8
+2009-01-12T19:03:32.306566Z
+4503
+dwaterson
+has-props
+
+Parsing
+dir
+
+Utilities
+dir
+
+CoreEvents
+dir
+
+General
+dir
+
+App
+dir
+
+unitTestingServerOnly.js
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+53c4d6d1462f4d5bf6acd369844398fa
+2008-10-26T17:28:08.549420Z
+4181
+usarid
+
+CrashTests
+dir
+
+framework_header.txt
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+4709ae620694e65f2510615de989342d
+2007-12-19T15:16:43.226235Z
+1275
+usarid
+has-props
+
+System
+dir
+
+frameworkStart.js
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+e0dd60e8bae4915b43a4e92d731aa44b
+2008-04-23T00:42:59.456527Z
+2641
+usarid
+
+jslib_header.txt
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+0b4bbdfe33d47b28cc08afe3494b2825
+2007-12-19T15:16:43.226235Z
+1275
+usarid
+has-props
+
+Exception
+dir
+
+unitTestingHeader.js
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+e557d29c7381004fbdaca38ab38c0324
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+has-props
+
+JSLIB
+dir
+
+Cache
+dir
+
+pro_framework_header.txt
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+857c26d424d5ab6ab82b8e2e6bc5ecaf
+2008-10-28T20:57:24.974147Z
+4196
+usarid
+
+configApps.js
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+b686618fb14319bc5175d653f2fa2fc5
+2009-02-04T23:52:49.136521Z
+4586
+dwaterson
+
+snippets
+dir
+
+Threading
+dir
+
+unitTestingBoth.js
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+72ffca19f81f9accbba950a66e11b112
+2008-09-29T18:59:54.640443Z
+3950
+gmurray
+
+IO
+dir
+
+framework_compressed_header.txt
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+acbaa2dd88c568bd208bc56596dc1b5a
+2007-12-10T03:45:22.240062Z
+1055
+usarid
+has-props
+
+build.json
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+0e1a3204ef165484c50a2f18492d765e
+2009-01-21T02:08:21.819074Z
+4532
+dwaterson
+has-props
+
+studio_config.js
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+d16f9a9b03dd355509c683c36a3c7561
+2008-07-21T18:50:08.674884Z
+3636
+usarid
+
+testRunner.html
+file
+
+
+
+
+2009-08-11T21:40:40.000000Z
+0590b7fbb8d6ad6ea7e750265c01c7b1
+2008-08-07T15:27:33.112397Z
+3727
+usarid
+has-props
+
+Serialization
+dir
+

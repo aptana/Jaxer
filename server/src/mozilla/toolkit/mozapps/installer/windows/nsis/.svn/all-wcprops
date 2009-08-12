@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/mozapps/installer/windows/nsis
+END
+ShellLink.dll
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/installer/windows/nsis/ShellLink.dll
+END
+common.nsh
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/mozapps/installer/windows/nsis/common.nsh
+END
+Processes.dll
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/installer/windows/nsis/Processes.dll
+END
+makensis.mk
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/mozapps/installer/windows/nsis/makensis.mk
+END
+AppAssocReg.dll
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/mozapps/installer/windows/nsis/AppAssocReg.dll
+END
+UAC.dll
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/mozapps/installer/windows/nsis/UAC.dll
+END
+check-locales.pl
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/mozapps/installer/windows/nsis/check-locales.pl
+END
+nsProcess.dll
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/installer/windows/nsis/nsProcess.dll
+END
+overrides.nsh
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/installer/windows/nsis/overrides.nsh
+END
+setup.ico
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/installer/windows/nsis/setup.ico
+END
+locales.nsi
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/installer/windows/nsis/locales.nsi
+END
+make-installremoves.pl
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/installer/windows/nsis/make-installremoves.pl
+END
+preprocess-locale.pl
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/mozapps/installer/windows/nsis/preprocess-locale.pl
+END
+version.nsh
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/installer/windows/nsis/version.nsh
+END

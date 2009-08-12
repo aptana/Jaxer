@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/tridentprofile/public
+END
+nsITridentProfileMigrator.idl
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/tridentprofile/public/nsITridentProfileMigrator.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/tridentprofile/public/Makefile.in
+END
+nsTridentProfileMigratorCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/tridentprofile/public/nsTridentProfileMigratorCID.h
+END

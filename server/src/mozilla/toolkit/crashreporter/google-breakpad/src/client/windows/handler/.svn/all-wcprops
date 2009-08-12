@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/client/windows/handler
+END
+exception_handler.cc
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/client/windows/handler/exception_handler.cc
+END
+exception_handler.h
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/client/windows/handler/exception_handler.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/client/windows/handler/Makefile.in
+END
+exception_handler.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 147
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/client/windows/handler/exception_handler.vcproj
+END

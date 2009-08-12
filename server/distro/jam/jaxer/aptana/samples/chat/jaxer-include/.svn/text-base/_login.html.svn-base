@@ -1,0 +1,55 @@
+
+<!-- BEGINNING OF TEMPLATES -->
+<div id="templates" style="display:none">
+	<div id="loginAuthenticated">
+		Welcome, <span $id="authenticatedUsername"></span>!
+		<a href="javascript:logout(); void(0)">logout...</a>
+	</div>
+	<div id="loginRequest">
+		<table>
+			<tr>
+				<td>Username:</td>
+				<td><input type="text" size="40" $id="username" onblur="validate(validateUsername, this.value)"></td>
+			</tr>
+			<tr>
+				<td>Password:</td>
+				<td><input type="password" size="40" $id="password" onblur="validate(validatePassword, this.value)"
+				           onkeypress="handleReturn(event, login)"></td>
+			</tr>
+			<tr>
+				<td colspan=2>
+					<a href="javascript:showCreateAccount(); void(0)">Create new account...</a>
+					<input type="button" value="Login" onclick="login()">
+					<span $id="loginMessage"></span>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div id="loginCreate">
+		<table>
+			<tr>
+				<td>New username:</td>
+				<td><input type="text" size="40" $id="newUsername" onblur="validate(validateUsername, this.value)"></td>
+			</tr>
+			<tr>
+				<td>New password:</td>
+				<td><input type="password" size="40" $id="newPassword" onblur="validate(validatePassword, this.value)"></td>
+			</tr>
+			<tr>
+				<td>Confirm password:</td>
+				<td><input type="password" size="40" $id="confirmPassword"
+				           onkeypress="handleReturn(event, createAccount)"></td>
+			</tr>
+			<tr>
+				<td colspan=2>
+					<a href="javascript:cancelCreateAccount(); void(0)">Cancel</a>
+					<input type="button" value="Create" onclick="createAccount()">
+					<span $id="createAccountMessage"></span>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<!-- END OF TEMPLATES -->
+
+<div id="loginComponent"></div>

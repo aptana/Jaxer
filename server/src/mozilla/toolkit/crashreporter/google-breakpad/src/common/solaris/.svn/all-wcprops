@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/solaris
+END
+file_id.cc
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/solaris/file_id.cc
+END
+dump_symbols.cc
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/solaris/dump_symbols.cc
+END
+file_id.h
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/solaris/file_id.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/solaris/Makefile.in
+END
+dump_symbols.h
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/solaris/dump_symbols.h
+END
+message_output.h
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/solaris/message_output.h
+END
+guid_creator.cc
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/solaris/guid_creator.cc
+END
+guid_creator.h
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/solaris/guid_creator.h
+END

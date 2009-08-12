@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/eh/events/base
+END
+aptEventBaseData.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/eh/events/base/aptEventBaseData.h
+END
+aptIEventBase.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/eh/events/base/aptIEventBase.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/eh/events/base/Makefile.in
+END
+aptEventBaseData.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/eh/events/base/aptEventBaseData.cpp
+END

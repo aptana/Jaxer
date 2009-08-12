@@ -1,0 +1,149 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/public/idl/css
+END
+nsIDOMCSSUnknownRule.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMCSSUnknownRule.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/Makefile.in
+END
+nsIDOMCSSStyleRule.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMCSSStyleRule.idl
+END
+nsIDOMCSSStyleSheet.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMCSSStyleSheet.idl
+END
+nsIDOMCSSMozDocumentRule.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMCSSMozDocumentRule.idl
+END
+nsIDOMRGBColor.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMRGBColor.idl
+END
+nsIDOMNSRGBAColor.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMNSRGBAColor.idl
+END
+nsIDOMCSSImportRule.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMCSSImportRule.idl
+END
+nsIDOMCSSRuleList.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMCSSRuleList.idl
+END
+nsIDOMCSSPageRule.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMCSSPageRule.idl
+END
+nsIDOMCSSPrimitiveValue.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMCSSPrimitiveValue.idl
+END
+nsIDOMCounter.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMCounter.idl
+END
+nsIDOMCSSStyleDeclaration.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMCSSStyleDeclaration.idl
+END
+nsIDOMCSSMediaRule.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMCSSMediaRule.idl
+END
+nsIDOMCSSRule.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMCSSRule.idl
+END
+nsIDOMCSSValueList.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMCSSValueList.idl
+END
+nsIDOMElementCSSInlineStyle.idl
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMElementCSSInlineStyle.idl
+END
+nsIDOMViewCSS.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMViewCSS.idl
+END
+nsIDOMCSSValue.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMCSSValue.idl
+END
+nsIDOMCSSFontFaceRule.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMCSSFontFaceRule.idl
+END
+nsIDOMCSS2Properties.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMCSS2Properties.idl
+END
+nsIDOMDocumentCSS.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMDocumentCSS.idl
+END
+nsIDOMCSSCharsetRule.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMCSSCharsetRule.idl
+END
+nsIDOMRect.idl
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/css/nsIDOMRect.idl
+END

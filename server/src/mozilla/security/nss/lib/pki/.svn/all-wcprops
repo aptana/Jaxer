@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/pki
+END
+symmkey.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pki/symmkey.c
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/pki/manifest.mn
+END
+asymmkey.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pki/asymmkey.c
+END
+nsspkit.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pki/nsspkit.h
+END
+pkistore.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/pki/pkistore.c
+END
+certdecode.c
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/pki/certdecode.c
+END
+pki3hack.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pki/pki3hack.h
+END
+pkistore.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/pki/pkistore.h
+END
+pkim.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/pki/pkim.h
+END
+trustdomain.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/pki/trustdomain.c
+END
+pkit.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/pki/pkit.h
+END
+nsspki.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/pki/nsspki.h
+END
+pkibase.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/pki/pkibase.c
+END
+certificate.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/pki/certificate.c
+END
+cryptocontext.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/pki/cryptocontext.c
+END
+pki.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pki/pki.h
+END
+pkitm.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/pki/pkitm.h
+END
+config.mk
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pki/config.mk
+END
+tdcache.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/pki/tdcache.c
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pki/Makefile
+END
+pki3hack.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/pki/pki3hack.c
+END

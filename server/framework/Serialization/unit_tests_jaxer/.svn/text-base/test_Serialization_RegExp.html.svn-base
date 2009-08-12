@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+            Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+        </script>
+        <script type="text/javascript" runat="server">
+        	function test_Serialization_RegExp()
+			{
+				var data = /^abc$/img;
+				var expected = "\"~RegExp:/^abc$/gim~\"";
+				var result = Jaxer.Serialization.toJSONString(data, {as: Jaxer.Serialization.JAXER_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_SerializeData_RegExp2()
+			{
+				var data = /^abc$/;
+				var json = Jaxer.Serialization.toJSONString(data, {as: Jaxer.Serialization.NATIVE_JSON_METHOD});
+				
+				assertEquals(json, "{}");
+			}
+			
+			function test_Deserialization_RegExp()
+			{
+				var json = "\"~RegExp:/^abc$/img~\"";
+                var expected = "/^abc$/gim";
+                var result = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.JAXER_METHOD});
+                
+				assertSame(result.constructor, RegExp);
+                assertTrue(result.toString, expected);
+			}
+		</script>
+    </head>
+    <body>
+    </body>
+</html>

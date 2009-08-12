@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/browser/components/feeds/public
+END
+nsIFeedWriter.idl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/components/feeds/public/nsIFeedWriter.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/components/feeds/public/Makefile.in
+END
+nsIFeedResultService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/browser/components/feeds/public/nsIFeedResultService.idl
+END
+nsIWebContentConverterRegistrar.idl
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/browser/components/feeds/public/nsIWebContentConverterRegistrar.idl
+END

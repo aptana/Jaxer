@@ -1,0 +1,119 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js
+END
+xpctest_primitives.js
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/xpctest_primitives.js
+END
+testin.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/testin.js
+END
+evaluate.js
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/evaluate.js
+END
+javascript.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/javascript.js
+END
+notscriptable.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/notscriptable.js
+END
+exceptions-2.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/exceptions-2.js
+END
+exceptions-3.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/exceptions-3.js
+END
+exceptions.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/exceptions.js
+END
+exceptions-4.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/exceptions-4.js
+END
+exceptions-5.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/exceptions-5.js
+END
+readonlyattributes.js
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/readonlyattributes.js
+END
+scriptable.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/scriptable.js
+END
+checkid.js
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/checkid.js
+END
+multiple-2.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/multiple-2.js
+END
+multiple-3.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/multiple-3.js
+END
+multiple.js
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/multiple.js
+END
+multiple-4.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/multiple-4.js
+END
+readwriteattributes.js
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/readwriteattributes.js
+END
+xpcfun.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tests/js/xpcfun.js
+END

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/js/src/xpconnect/tools/src
+END
+nsXPCToolsProfiler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tools/src/nsXPCToolsProfiler.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tools/src/Makefile.in
+END
+nsXPCToolsModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tools/src/nsXPCToolsModule.cpp
+END
+nsXPCToolsCompiler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/js/src/xpconnect/tools/src/nsXPCToolsCompiler.cpp
+END
+xpctools_private.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/tools/src/xpctools_private.h
+END

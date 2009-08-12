@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/browser/components/shell/test
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/browser/components/shell/test/Makefile.in
+END
+browser_420786.js
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/browser/components/shell/test/browser_420786.js
+END

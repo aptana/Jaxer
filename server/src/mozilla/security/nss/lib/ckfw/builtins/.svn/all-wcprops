@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/manifest.mn
+END
+builtins.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/builtins.h
+END
+nssckbi.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/nssckbi.h
+END
+certdata.perl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/certdata.perl
+END
+nssckbi.def
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/nssckbi.def
+END
+bobject.c
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/bobject.c
+END
+anchor.c
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/anchor.c
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/README
+END
+constants.c
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/constants.c
+END
+nssckbi.rc
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/nssckbi.rc
+END
+binst.c
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/binst.c
+END
+bfind.c
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/bfind.c
+END
+btoken.c
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/btoken.c
+END
+bslot.c
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/bslot.c
+END
+certdata.txt
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/certdata.txt
+END
+ckbiver.c
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/ckbiver.c
+END
+bsession.c
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/bsession.c
+END
+certdata.c
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/certdata.c
+END
+config.mk
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/config.mk
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/ckfw/builtins/Makefile
+END

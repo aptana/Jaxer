@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/debug
+END
+mod_dumpio.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/debug/mod_dumpio.dsp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/debug/Makefile.in
+END
+config.m4
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/debug/config.m4
+END
+NWGNUmodbucketeer
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/debug/NWGNUmodbucketeer
+END
+.deps
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/debug/.deps
+END
+mod_bucketeer.c
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/debug/mod_bucketeer.c
+END
+NWGNUmakefile
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/debug/NWGNUmakefile
+END
+NWGNUmoddumpio
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/debug/NWGNUmoddumpio
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/debug/Makefile
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/debug/README
+END
+mod_bucketeer.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/debug/mod_bucketeer.dsp
+END
+mod_dumpio.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/debug/mod_dumpio.c
+END
+modules.mk
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/debug/modules.mk
+END

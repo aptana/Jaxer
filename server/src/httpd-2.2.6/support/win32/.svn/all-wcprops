@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/win32
+END
+ApacheMonitor.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/win32/ApacheMonitor.h
+END
+apstop.ico
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/win32/apstop.ico
+END
+wintty.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/win32/wintty.c
+END
+ApacheMonitor.ico
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/win32/ApacheMonitor.ico
+END
+wintty.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/win32/wintty.dsp
+END
+srun.bmp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/win32/srun.bmp
+END
+sstop.bmp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/win32/sstop.bmp
+END
+apache_header.bmp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/win32/apache_header.bmp
+END
+ApacheMonitor.c
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/win32/ApacheMonitor.c
+END
+ApacheMonitor.rc
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/win32/ApacheMonitor.rc
+END
+ApacheMonitor.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/win32/ApacheMonitor.dsp
+END
+aprun.ico
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/support/win32/aprun.ico
+END

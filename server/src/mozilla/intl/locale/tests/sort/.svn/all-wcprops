@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/tests/sort
+END
+us-ascii_sort.txt
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/tests/sort/us-ascii_sort.txt
+END
+us-ascii_sort_nocase_res.txt
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/tests/sort/us-ascii_sort_nocase_res.txt
+END
+us-ascii_base.txt
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/tests/sort/us-ascii_base.txt
+END
+us-ascii_base_nocase_res.txt
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/tests/sort/us-ascii_base_nocase_res.txt
+END
+us-ascii_sort_case_res.txt
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/tests/sort/us-ascii_sort_case_res.txt
+END
+us-ascii_base_case_res.txt
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/locale/tests/sort/us-ascii_base_case_res.txt
+END

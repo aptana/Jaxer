@@ -1,0 +1,347 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/3947/trunk/products/server/src/mozilla/content/base/public
+END
+nsContentCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsContentCID.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/Makefile.in
+END
+nsIXFormsUtilityService.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIXFormsUtilityService.h
+END
+nsIScriptLoaderObserver.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIScriptLoaderObserver.idl
+END
+nsIScriptEventHandler.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIScriptEventHandler.idl
+END
+nsIDocumentObserver.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIDocumentObserver.h
+END
+nsCaseTreatment.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsCaseTreatment.h
+END
+nsIDOMGCParticipant.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIDOMGCParticipant.h
+END
+nsIDOMSerializer.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIDOMSerializer.idl
+END
+nsIXMLHttpRequest.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/3947/trunk/products/server/src/mozilla/content/base/public/nsIXMLHttpRequest.idl
+END
+nsIRange.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIRange.h
+END
+nsISelectionDisplay.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsISelectionDisplay.idl
+END
+nsCopySupport.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsCopySupport.h
+END
+nsIDocumentEncoder.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIDocumentEncoder.idl
+END
+mozFlushType.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/mozFlushType.h
+END
+nsISelectionPrivate.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsISelectionPrivate.idl
+END
+nsINodeInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsINodeInfo.h
+END
+nsIHTMLToTextSink.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/content/base/public/nsIHTMLToTextSink.h
+END
+nsXMLNameSpaceMap.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsXMLNameSpaceMap.h
+END
+nsPresShellIterator.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/content/base/public/nsPresShellIterator.h
+END
+nsIFrameLoader.idl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIFrameLoader.idl
+END
+nsIAttribute.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIAttribute.h
+END
+nsIXPathEvaluatorInternal.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIXPathEvaluatorInternal.h
+END
+nsDOMFile.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsDOMFile.h
+END
+nsIMutationObserver.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIMutationObserver.h
+END
+nsLineBreaker.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/content/base/public/nsLineBreaker.h
+END
+nsISelectionController.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/base/public/nsISelectionController.idl
+END
+nsIContent.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/base/public/nsIContent.h
+END
+nsISelectionListener.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsISelectionListener.idl
+END
+nsIScriptLoader.idl
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIScriptLoader.idl
+END
+nsISyncLoadDOMService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/base/public/nsISyncLoadDOMService.idl
+END
+nsIDocument.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/base/public/nsIDocument.h
+END
+nsIDOMFileException.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIDOMFileException.idl
+END
+nsIStyleSheetLinkingElement.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIStyleSheetLinkingElement.h
+END
+nsIObjectLoadingContent.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/base/public/nsIObjectLoadingContent.idl
+END
+nsIPrivateDOMImplementation.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIPrivateDOMImplementation.h
+END
+nsIDragDropHandler.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIDragDropHandler.idl
+END
+nsContentUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/base/public/nsContentUtils.h
+END
+nsIScriptEventManager.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIScriptEventManager.idl
+END
+nsIContentIterator.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIContentIterator.h
+END
+nsINode.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/base/public/nsINode.h
+END
+nsINameSpaceManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/content/base/public/nsINameSpaceManager.h
+END
+nsIChromeRegistry.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/base/public/nsIChromeRegistry.idl
+END
+nsISelection2.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsISelection2.idl
+END
+nsIImageLoadingContent.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIImageLoadingContent.idl
+END
+nsIDOMFileList.idl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIDOMFileList.idl
+END
+mozISanitizingSerializer.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/mozISanitizingSerializer.h
+END
+nsContentErrors.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsContentErrors.h
+END
+nsIDOMFile.idl
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIDOMFile.idl
+END
+nsContentPolicyUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/base/public/nsContentPolicyUtils.h
+END
+nsIContentSerializer.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIContentSerializer.h
+END
+nsISelection.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsISelection.idl
+END
+nsContentCreatorFunctions.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/base/public/nsContentCreatorFunctions.h
+END
+nsIContentPolicy.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/base/public/nsIContentPolicy.idl
+END
+nsIDOMParser.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/content/base/public/nsIDOMParser.idl
+END
+nsIRangeUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/base/public/nsIRangeUtils.h
+END
+nsIScriptElement.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2876/trunk/products/server/src/mozilla/content/base/public/nsIScriptElement.h
+END

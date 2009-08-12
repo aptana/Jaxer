@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/bin
+END
+httxt2dbm
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/bin/httxt2dbm
+END
+logresolve
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/bin/logresolve
+END
+ab
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/bin/ab
+END
+rotatelogs
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/bin/rotatelogs
+END
+apr-1-config
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/bin/apr-1-config
+END
+httpd
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/bin/httpd
+END
+apachectl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/bin/apachectl
+END
+envvars
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/bin/envvars
+END
+apu-1-config
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/bin/apu-1-config
+END
+htpasswd
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/bin/htpasswd
+END
+htdbm
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/bin/htdbm
+END
+checkgid
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/bin/checkgid
+END
+htcacheclean
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/bin/htcacheclean
+END
+apxs
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/bin/apxs
+END
+dbmmanage
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/bin/dbmmanage
+END
+htdigest
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/bin/htdigest
+END
+envvars-std
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/bin/envvars-std
+END

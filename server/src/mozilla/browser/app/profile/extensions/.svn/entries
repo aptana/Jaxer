@@ -1,0 +1,67 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/browser/app/profile/extensions
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-20T18:44:20.559534Z
+2886
+jzhang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+{972ce4c6-7e08-4474-a285-3208198ce6fd}
+dir
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:34:30.000000Z
+c74b71f637fa66ee8ded0d71d5243266
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+Extensions.rdf
+file
+
+
+
+
+2009-08-11T21:34:30.000000Z
+e3576358bdae5868ad6a7ef3a5833e7b
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+installed-extensions.txt
+file
+
+
+
+
+2009-08-11T21:34:30.000000Z
+349e02a308522dae308437c011dd87c4
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+

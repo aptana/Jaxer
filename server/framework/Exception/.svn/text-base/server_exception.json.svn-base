@@ -1,0 +1,7 @@
+{
+	"name": "default",
+	"files": [
+		  "Exception.js"
+		, "ClientError.js"
+	]
+}

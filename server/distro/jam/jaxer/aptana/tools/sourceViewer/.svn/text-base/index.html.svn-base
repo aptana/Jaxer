@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+    <title>Source Viewer</title>
+    <link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css">
+    </link>
+    <script language="javascript" src="lib/shCore.js"></script>
+    <script language="javascript" src="lib/shBrushJScript.js"></script>
+</head>
+<body>
+		
+<pre id="code" name="code" class="javascript">
+</pre>
+
+<script runat='server'>	
+
+	/*
+	 * A number of enhancements could easily be made to this script
+	 * 
+	 * 1. add startline=nn&endline=nnn as query params to allow showing only sections of code
+	 * 2. change the display to a popup window or a lightbox effect
+	 * 3. allow specific code language on the query string i.e. &lang=xml
+	 */
+	
+	var sourcefile = Jaxer.Dir.resolve(Jaxer.request.parsedUrl.queryParts.filename, 'file://'+Jaxer.request.currentFolder);
+	var src = Jaxer.File.readLines(sourcefile, "\n");
+	document.getElementById('code').innerHTML = src.replace(/</g, "&lt;");
+	
+</script>
+
+		
+<script language="javascript">s
+    dp.SyntaxHighlighter.ClipboardSwf = 'lib/clipboard.swf';
+    dp.SyntaxHighlighter.HighlightAll('code');
+</script>
+
+</body>
+</html>

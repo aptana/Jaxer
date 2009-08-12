@@ -1,0 +1,58 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/ipc/ipcd/extensions/transmngr
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-16T23:28:56.072242Z
+2859
+mstepanov
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+build
+dir
+
+test
+dir
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:40:11.000000Z
+911d20551263425924b28defa1aa84c3
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+module
+dir
+
+src
+dir
+
+common
+dir
+
+public
+dir
+

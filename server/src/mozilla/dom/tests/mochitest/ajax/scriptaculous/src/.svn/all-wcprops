@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/ajax/scriptaculous/src
+END
+builder.js
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/ajax/scriptaculous/src/builder.js
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/ajax/scriptaculous/src/Makefile.in
+END
+sound.js
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/ajax/scriptaculous/src/sound.js
+END
+effects.js
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/ajax/scriptaculous/src/effects.js
+END
+unittest.js
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/ajax/scriptaculous/src/unittest.js
+END
+scriptaculous.js
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/ajax/scriptaculous/src/scriptaculous.js
+END
+dragdrop.js
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/ajax/scriptaculous/src/dragdrop.js
+END
+slider.js
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/ajax/scriptaculous/src/slider.js
+END
+controls.js
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/ajax/scriptaculous/src/controls.js
+END

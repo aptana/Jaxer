@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/resources/content
+END
+aliasManager.js
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/resources/content/aliasManager.js
+END
+aliasDialog.xul
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/resources/content/aliasDialog.xul
+END
+pref-sql.xul
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/resources/content/pref-sql.xul
+END
+aliasDialog.js
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/resources/content/aliasDialog.js
+END
+pref-sql.js
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/resources/content/pref-sql.js
+END
+contents.rdf
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/resources/content/contents.rdf
+END
+sqlPrefsOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/resources/content/sqlPrefsOverlay.xul
+END
+aliasManager.xul
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/base/resources/content/aliasManager.xul
+END

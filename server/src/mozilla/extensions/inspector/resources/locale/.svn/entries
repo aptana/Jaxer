@@ -1,0 +1,115 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/extensions/inspector/resources/locale
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-16T23:28:56.072242Z
+2859
+mstepanov
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+zh-CN
+dir
+
+ga-IE
+dir
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:36:58.000000Z
+5da8f92e2113ede7cfa1108d6fc0922f
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+ca
+dir
+
+da
+dir
+
+pt-BR
+dir
+
+jar.mn
+file
+
+
+
+
+2009-08-11T21:36:58.000000Z
+1da34b1db01b4092b006598bdf86d201
+2008-05-16T23:28:56.072242Z
+2859
+mstepanov
+
+ru
+dir
+
+en-US
+dir
+
+de
+dir
+
+sv-SE
+dir
+
+el
+dir
+
+cs
+dir
+
+fr
+dir
+
+contents.rdf
+file
+
+
+
+
+2009-08-11T21:36:58.000000Z
+8c8498ca085acece40e2fd9fc044fdfa
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+zh-TW
+dir
+
+nb-NO
+dir
+
+pl
+dir
+
+hu
+dir
+
+sk
+dir
+

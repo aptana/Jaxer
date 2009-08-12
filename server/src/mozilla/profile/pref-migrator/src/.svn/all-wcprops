@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/profile/pref-migrator/src
+END
+nsPrefMigrationFactory.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/profile/pref-migrator/src/nsPrefMigrationFactory.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/profile/pref-migrator/src/Makefile.in
+END
+nsPrefMigrationFactory.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/profile/pref-migrator/src/nsPrefMigrationFactory.h
+END
+nsPrefMigration.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/profile/pref-migrator/src/nsPrefMigration.cpp
+END
+prefmigr.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/profile/pref-migrator/src/prefmigr.pkg
+END
+nsPrefMigration.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/profile/pref-migrator/src/nsPrefMigration.h
+END

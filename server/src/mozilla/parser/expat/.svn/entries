@@ -1,0 +1,67 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/parser/expat
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-16T23:28:56.072242Z
+2859
+mstepanov
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:33:23.000000Z
+96e01bc6f6dfbbf12cc3765e1bb5b5a0
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+lib
+dir
+
+COPYING
+file
+
+
+
+
+2009-08-11T21:33:23.000000Z
+1b71f681713d1256e1c23b0890920874
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+expat_config.h
+file
+
+
+
+
+2009-08-11T21:33:23.000000Z
+f63817c04989d74d74272cd7cd08c995
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+

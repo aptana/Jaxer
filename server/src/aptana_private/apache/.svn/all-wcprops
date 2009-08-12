@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/4460/trunk/products/server/src/aptana_private/apache
+END
+apachectl
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/4460/trunk/products/server/src/aptana_private/apache/apachectl
+END
+httpd.conf
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/4447/trunk/products/server/src/aptana_private/apache/httpd.conf
+END

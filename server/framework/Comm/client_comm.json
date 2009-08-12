@@ -1,0 +1,7 @@
+{
+	"name": "default",
+	"files": [
+		  "XHR.js"
+		, "Callback.js"
+	]
+}

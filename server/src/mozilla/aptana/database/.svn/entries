@@ -1,0 +1,43 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/aptana/database
+http://svn.aptana.local/svn/jaxer
+
+
+
+2009-01-23T22:06:15.860529Z
+4544
+jzhang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:30:50.000000Z
+8f72d79fc6cad21a1aa2aeb04eb719a2
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+jxMySQL50
+dir
+

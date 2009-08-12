@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/dns/public
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/dns/public/Makefile.in
+END
+nsIDNSRecord.idl
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/dns/public/nsIDNSRecord.idl
+END
+nsIDNSService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/dns/public/nsIDNSService.idl
+END
+nsIEffectiveTLDService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/dns/public/nsIEffectiveTLDService.idl
+END
+nsPIDNSService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/dns/public/nsPIDNSService.idl
+END
+nsIDNSListener.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/dns/public/nsIDNSListener.idl
+END
+nsIIDNService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/netwerk/dns/public/nsIIDNService.idl
+END
+nsIDNSRequest.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/dns/public/nsIDNSRequest.idl
+END

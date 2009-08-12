@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/webservices/security/src
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/security/src/Makefile.in
+END
+nsWSAUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/security/src/nsWSAUtils.h
+END
+nsWebScriptsAccess.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/webservices/security/src/nsWebScriptsAccess.cpp
+END
+nsWSAUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/security/src/nsWSAUtils.cpp
+END
+nsWebScriptsAccess.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/security/src/nsWebScriptsAccess.h
+END

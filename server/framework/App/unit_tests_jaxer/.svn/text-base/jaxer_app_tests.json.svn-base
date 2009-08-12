@@ -1,0 +1,6 @@
+{
+	"name": "default",
+	"tests": [
+		    "test_App_diagnostics.html"
+	]
+}

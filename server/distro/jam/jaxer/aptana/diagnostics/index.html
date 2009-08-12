@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+        <link rel="stylesheet" href="css/shared.css" type="text/css"/>
+        <link rel="stylesheet" href="css/local.css" type="text/css"/>
+        <link rel="stylesheet" href="index.css" type="text/css"/>
+        <title id='docTitle'>Server Diagnostics</title>
+
+        <script src='jaxer-include/setup.js' type='text/javascript' runat='server'></script>
+        <script src='diagnosticTests.js' type='text/javascript'></script>
+        <script src='jquery-1.2.1.js' type='text/javascript'></script>
+		
+        <jaxer:include src='jaxer-include/jversions.html'></jaxer:include>
+		
+    </head>
+    <body>
+    	
+    <div id='sampleDescription'>
+        A set of server level diagnostic tests to help identify any configuration issues
+    </div>
+    <script type="text/javascript" src="lib/wz_tooltip.js"></script>
+            <div id='diagnosticsTemplate' class='template'>
+                <div>
+                    <div class='runMessage'>
+                        <img class='resultimage' src="images/aptana_activity.gif"/><span></span>
+                        <a href=# class='moreLink'>more...</a>
+                    </div>
+                    <div class='more'>
+                    </div>
+                </div>
+            </div>
+    <div id='sampleHeader'>
+        <div class='sampleTitle'>
+            <img src='images/wrench.png'/>Jaxer Diagnostics
+        </div>
+        <div id='rightFloat'>
+            <img src ='images/information.png' class='sampleDescription' onmouseover="TagToTip('sampleDescription', CLICKCLOSE, true, STICKY, true, WIDTH, 300, TITLE, $('#docTitle').html())"/>
+        </div>
+    </div>
+    <div id='applicationContent'>
+        <div id='textBody'>
+            <div class='titleBar'>
+                Automatic Server Diagnostic Checks <img id='activity' src="images/aptana_activity.gif"/>
+            </div>
+            <div id='testResults'>
+            </div>
+        </div>
+        <div class='titleBar'>
+            Other Diagnostic Checks
+        </div>
+        <div id='otherTests'>
+            <li>
+                <img class='appicon' src="images/award_star_silver_3.png"/><a href='testRunner.html' title="System diagnostics">Component diagnostics</a>:
+                Run a set of detailed tests to help identify any subsytem issues
+            </li>
+            <li>
+                <img class='appicon' src="images/star.png"/><a href='unit_tests_library/jQueryTestSuite/index.html' title="jQuery Compatibility">jQuery Compatibility</a>:
+                Run a set of jQuery compatibility tests
+            </li>
+        </div>
+        <div class='titleBar'>
+            Suggested Manual Diagnostic Checks
+        </div>
+        <div id='diagnosticText'>
+            <li>
+                In your Process List, look for a process called <span class="tech-name">jaxermanager</span>
+                <i>(JaxerManager.exe in task manager on Windows)</i>. 
+                It should get launched automatically whenever you start Jaxer.  
+                The manager process will create multiple instances of the <span class="tech-name">jaxer</span>
+                process as required.
+            </li>
+            <li>
+                Jaxer comes configured ready to run with SQLite, the SQLite database files are contained in the 
+                data folder create when you run Jaxer for the first time. you can check  
+                Check your SQLite instance to verify that a <span class="tech-name">frameworkdata.sqlite</span>
+                database has been created with a couple of tables: <span class="tech-name">callback_page</span>
+                and <span class="tech-name">containers</span>. 
+                You can do that from a GUI tool such as <a href="http://www.sqlmaestro.com/products/sqlite/maestro/" target="_blank">SQLite Maestro</a>.
+            </li>
+            <li>
+                Any Jaxer log messages would appear in your Jaxer log file (<span class="path-name">jaxer.log</span>).
+                Inside Aptana Studio, you can right click on the Jaxer and internal preview servers in the servers view to view their log files.
+                For external installations, logs reside in your Jaxer installation folder's 'logs' directory.
+                Apache log files (<span class="path-name">apache_error.log, access.log</span>) are also stored in the same folder.
+            </li>
+        </div>
+    </div>
+    <div id='sampleFooter'>
+    </div>
+    <script>
+        $(document).ready(function(){
+			
+            //noformat
+			
+			/*
+			diagnostics('simplePass','this is to test true', simplePass);
+			diagnostics('simplePassAndMore','this is to test true', simplePassAndMore);
+            diagnostics('simpleInfo','this is to test info', simpleInfo);
+            diagnostics('simpleWarning','this is to test warn', simpleWarning);
+        	diagnostics('simpleError','this is to test error', simpleError);
+        	diagnostics('unhandledError','this is to test unhandled errors', unhandledError);
+			*/
+			
+			diagnostics('diagnosticsServerDetect',			'Detecting server...', 							diagnosticsServerDetect);
+			diagnostics('diagnosticsJavascriptVersions',	'checking JavaScript versions...', 				diagnosticsJavascriptVersions);
+			diagnostics('diagnosticsConfigFileRead',		'detecting Jaxer configuration file...',		diagnosticsConfigFileRead );
+			diagnostics('diagnosticsLocalConfigFileRead',	'detecting local Jaxer configuration file...',	diagnosticsLocalConfigFileRead );
+			diagnostics('diagnosticsSSX',					'testing server side execution...',				diagnosticsSSX );
+			diagnostics('diagnosticsSSXDeferred',			'testing deferred server side execution...',	diagnosticsSSXDeferred );
+			diagnostics('diagnosticsCallback',				'testing server side execution...',				diagnosticsCallback );
+			diagnostics('diagnosticsCallbackDB',			'testing server side execution...',				diagnosticsCallbackDB );
+			//format
+			
+			setTimeout( "$('#activity').hide();",1000);
+        });
+    </script>
+
+    </body>
+</html>

@@ -1,0 +1,54 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/distro/jam/jaxer/aptana/tools/shell-studio
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-10-15T01:30:03.021847Z
+4098
+usarid
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+testPOSTShell.html
+file
+
+
+
+
+2009-08-11T21:42:33.000000Z
+4fc0eae726978901ecd07d9f6771a035
+2008-01-21T23:26:41.520035Z
+1890
+usarid
+has-props
+
+index.html
+file
+
+
+
+
+2009-08-11T21:42:33.000000Z
+e697094a9112885fa06d5b4cb51c2f00
+2008-10-15T01:30:03.021847Z
+4098
+usarid
+has-props
+

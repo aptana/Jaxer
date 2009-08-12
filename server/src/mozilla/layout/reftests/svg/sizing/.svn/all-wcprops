@@ -1,0 +1,1343 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/reftests/svg/sizing
+END
+standalone--pct-auto--pct-px--viewBox.svg
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-auto--pct-px--viewBox.svg
+END
+standalone--pct-auto--px-pct--viewBox.svg
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-auto--px-pct--viewBox.svg
+END
+standalone--pct-auto--pct-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-auto--pct-pct.svg
+END
+standalone--pct-pct--0-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-pct--0-0.svg
+END
+standalone--0-px--pct-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-px--pct-0.svg
+END
+standalone--pct-auto--pct-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-auto--pct-px.svg
+END
+standalone--pct-auto--px-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-auto--px-pct.svg
+END
+standalone--px-auto--pct-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-auto--pct-px.svg
+END
+standalone--px-auto--px-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-auto--px-pct.svg
+END
+standalone--auto-pct--pct-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-pct--pct-0.svg
+END
+standalone--0-auto--pct-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-auto--pct-pct.svg
+END
+standalone--pct-auto--0-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-auto--0-pct.svg
+END
+standalone--0-0--px-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-0--px-0.svg
+END
+standalone--auto-px--0-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-px--0-pct.svg
+END
+standalone--auto-0--px-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-0--px-px.svg
+END
+standalone--px-auto--px-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-auto--px-0.svg
+END
+pass-pct-width-square.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/pass-pct-width-square.xhtml
+END
+standalone--pct-pct--px-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-pct--px-px.svg
+END
+standalone--0-0--0-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-0--0-0.svg
+END
+pass.svg
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/pass.svg
+END
+standalone--auto-auto--pct-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-auto--pct-pct.svg
+END
+standalone--auto-px--0-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-px--0-0.svg
+END
+standalone--pct-0--pct-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-0--pct-pct.svg
+END
+inline--position-absolute--01-ref.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/inline--position-absolute--01-ref.xhtml
+END
+standalone--px-px--pct-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-px--pct-0.svg
+END
+dynamic--inline-css-width.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/dynamic--inline-css-width.xhtml
+END
+standalone--auto-auto--pct-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-auto--pct-0.svg
+END
+standalone--px-auto--pct-pct--viewBox.svg
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-auto--pct-pct--viewBox.svg
+END
+standalone--px-auto--px-pct--viewBox.svg
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-auto--px-pct--viewBox.svg
+END
+standalone--px-auto--pct-px--viewBox.svg
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-auto--pct-px--viewBox.svg
+END
+standalone--px-auto--pct-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-auto--pct-pct.svg
+END
+standalone--auto-px--pct-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-px--pct-px.svg
+END
+standalone--auto-px--px-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-px--px-pct.svg
+END
+standalone--px-0--px-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-0--px-0.svg
+END
+inline--float-left--01-ref.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/inline--float-left--01-ref.xhtml
+END
+inline--display-block--01-ref.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/inline--display-block--01-ref.xhtml
+END
+dynamic--object--auto-auto--pct-px.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/dynamic--object--auto-auto--pct-px.html
+END
+object--auto-auto--pct-0--ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--pct-0--ref.html
+END
+standalone--px-0--0-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-0--0-0.svg
+END
+standalone--auto-px--px-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-px--px-0.svg
+END
+standalone--auto-0--0-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-0--0-pct.svg
+END
+standalone--pct-pct--0-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-pct--0-pct.svg
+END
+standalone--pct-0--pct-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-0--pct-px.svg
+END
+standalone--pct-0--px-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-0--px-pct.svg
+END
+standalone--pct-0--px-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-0--px-px.svg
+END
+inline--float-left--01.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/inline--float-left--01.xhtml
+END
+inline--display-block--01.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/inline--display-block--01.xhtml
+END
+standalone--auto-0--0-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-0--0-0.svg
+END
+standalone--auto-auto--0-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-auto--0-px.svg
+END
+object--auto-auto--px-px--ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--px-px--ref.html
+END
+standalone-sanity-width-300px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone-sanity-width-300px.svg
+END
+standalone--auto-px--pct-pct--viewBox.svg
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-px--pct-pct--viewBox.svg
+END
+standalone--auto-px--pct-px--viewBox.svg
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-px--pct-px--viewBox.svg
+END
+standalone--auto-px--px-pct--viewBox.svg
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-px--px-pct--viewBox.svg
+END
+standalone--0-pct--px-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-pct--px-0.svg
+END
+standalone--auto-px--pct-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-px--pct-pct.svg
+END
+object--auto-auto--px-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--px-px.svg
+END
+dynamic--object-svg-unloaded.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/dynamic--object-svg-unloaded.xhtml
+END
+object--auto-auto--pct-pct.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--pct-pct.html
+END
+object--auto-auto--0-px--ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--0-px--ref.html
+END
+pass-pct-height-square.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/pass-pct-height-square.xhtml
+END
+standalone--0-0--pct-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-0--pct-0.svg
+END
+object--auto-auto--0-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--0-px.svg
+END
+standalone--pct-auto--px-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-auto--px-0.svg
+END
+standalone--auto-0--pct-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-0--pct-px.svg
+END
+standalone--auto-0--px-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-0--px-pct.svg
+END
+standalone--pct-auto--0-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-auto--0-0.svg
+END
+standalone--0-auto--pct-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-auto--pct-0.svg
+END
+standalone--auto-0--px-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-0--px-0.svg
+END
+standalone--pct-pct--0-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-pct--0-px.svg
+END
+standalone--px-pct--px-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-pct--px-0.svg
+END
+standalone--pct-px--px-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-px--px-0.svg
+END
+standalone--0-px--px-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-px--px-px.svg
+END
+standalone--auto-pct--pct-pct--viewBox.svg
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-pct--pct-pct--viewBox.svg
+END
+standalone--pct-0--0-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-0--0-pct.svg
+END
+object--auto-auto--pct-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--pct-pct.svg
+END
+standalone--0-pct--pct-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-pct--pct-0.svg
+END
+standalone--px-0--pct-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-0--pct-0.svg
+END
+standalone--pct-0--0-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-0--0-px.svg
+END
+object--auto-auto--px-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--px-pct.svg
+END
+object--auto-auto--pct-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--pct-px.svg
+END
+standalone--0-px--0-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-px--0-px.svg
+END
+standalone--auto-pct--px-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-pct--px-px.svg
+END
+standalone--auto-auto--0-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-auto--0-0.svg
+END
+object--auto-auto--px-pct.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--px-pct.html
+END
+object--auto-auto--pct-px.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--pct-px.html
+END
+object--auto-auto--px-px.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--px-px.html
+END
+object--auto-auto--0-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--0-pct.svg
+END
+standalone--0-pct--0-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-pct--0-0.svg
+END
+standalone--auto-0--pct-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-0--pct-pct.svg
+END
+standalone--px-auto--pct-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-auto--pct-0.svg
+END
+standalone--auto-pct--0-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-pct--0-px.svg
+END
+inline--position-absolute--02.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/inline--position-absolute--02.xhtml
+END
+object--auto-auto--0-pct.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--0-pct.html
+END
+object--auto-auto--0-px.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--0-px.html
+END
+standalone--px-px--px-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-px--px-px.svg
+END
+object--pct-pct--0-0.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--pct-pct--0-0.html
+END
+standalone--auto-auto--px-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-auto--px-px.svg
+END
+standalone--px-pct--pct-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-pct--pct-0.svg
+END
+standalone--pct-px--pct-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-px--pct-0.svg
+END
+standalone--0-px--pct-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-px--pct-pct.svg
+END
+standalone--0-px--pct-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-px--pct-px.svg
+END
+standalone--0-px--px-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-px--px-pct.svg
+END
+standalone--px-px--0-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-px--0-px.svg
+END
+standalone--auto-pct--pct-px--viewBox.svg
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-pct--pct-px--viewBox.svg
+END
+standalone--auto-pct--px-pct--viewBox.svg
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-pct--px-pct--viewBox.svg
+END
+standalone--auto-pct--pct-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-pct--pct-pct.svg
+END
+standalone--px-pct--0-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-pct--0-0.svg
+END
+standalone--pct-px--0-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-px--0-0.svg
+END
+standalone--0-px--0-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-px--0-pct.svg
+END
+standalone--auto-pct--pct-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-pct--pct-px.svg
+END
+standalone--auto-pct--px-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-pct--px-pct.svg
+END
+standalone-sanity-height-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone-sanity-height-px.svg
+END
+standalone--pct-auto--pct-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-auto--pct-0.svg
+END
+standalone--auto-pct--0-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-pct--0-pct.svg
+END
+standalone--auto-px--pct-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-px--pct-0.svg
+END
+dynamic--inline-resize-cb-height.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/dynamic--inline-resize-cb-height.xhtml
+END
+inline--float-right--01.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/inline--float-right--01.xhtml
+END
+standalone--px-px--pct-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-px--pct-pct.svg
+END
+standalone--px-px--px-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-px--px-pct.svg
+END
+standalone--px-px--pct-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-px--pct-px.svg
+END
+dynamic--inline-css-height.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/dynamic--inline-css-height.xhtml
+END
+standalone--0-auto--0-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-auto--0-px.svg
+END
+standalone--0-pct--pct-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-pct--pct-pct.svg
+END
+inline--display-inline--01-ref.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/inline--display-inline--01-ref.xhtml
+END
+standalone--px-px--0-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-px--0-pct.svg
+END
+pass-px-px.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/pass-px-px.xhtml
+END
+standalone--auto-auto--0-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-auto--0-pct.svg
+END
+standalone--auto-auto--px-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-auto--px-0.svg
+END
+object--auto-auto--pct-px--ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--pct-px--ref.html
+END
+object--auto-auto--px-pct--ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--px-pct--ref.html
+END
+standalone--0-0--px-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-0--px-px.svg
+END
+object--auto-auto--0-pct--ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--0-pct--ref.html
+END
+object--auto-auto--px-0--ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--px-0--ref.html
+END
+dynamic--inline-resize-window-width.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/dynamic--inline-resize-window-width.xhtml
+END
+object--auto-auto--px-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--px-0.svg
+END
+standalone--0-0--0-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-0--0-px.svg
+END
+standalone--0-auto--px-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-auto--px-px.svg
+END
+standalone--px-auto--0-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-auto--0-px.svg
+END
+standalone-sanity-width-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone-sanity-width-px.svg
+END
+inline--position-absolute--01.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/inline--position-absolute--01.xhtml
+END
+inline--display-inline--01.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/inline--display-inline--01.xhtml
+END
+pass-empty.svg
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/pass-empty.svg
+END
+standalone--pct-pct--pct-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-pct--pct-pct.svg
+END
+standalone--pct-px--pct-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-px--pct-pct.svg
+END
+standalone--px-pct--pct-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-pct--pct-pct.svg
+END
+standalone--auto-0--pct-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-0--pct-0.svg
+END
+object--auto-auto--0-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--0-0.svg
+END
+dynamic--object-svg-unloaded-b.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/dynamic--object-svg-unloaded-b.xhtml
+END
+dynamic--inline-resize-cb-width.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/dynamic--inline-resize-cb-width.xhtml
+END
+pass-pct-pct.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/pass-pct-pct.xhtml
+END
+standalone--pct-pct--pct-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-pct--pct-0.svg
+END
+standalone--0-pct--px-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-pct--px-pct.svg
+END
+standalone--0-pct--pct-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-pct--pct-px.svg
+END
+pass-pct-px.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/pass-pct-px.xhtml
+END
+pass-px-pct.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/pass-px-pct.xhtml
+END
+standalone--pct-pct--px-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-pct--px-0.svg
+END
+standalone--0-pct--px-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-pct--px-px.svg
+END
+standalone--px-0--px-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-0--px-px.svg
+END
+standalone--0-0--pct-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-0--pct-pct.svg
+END
+standalone--0-0--px-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-0--px-pct.svg
+END
+standalone--0-0--pct-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-0--pct-px.svg
+END
+standalone--pct-0--px-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-0--px-0.svg
+END
+standalone--0-px--px-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-px--px-0.svg
+END
+standalone--px-0--0-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-0--0-px.svg
+END
+standalone--px-auto--px-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-auto--px-px.svg
+END
+standalone--0-0--0-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-0--0-pct.svg
+END
+standalone--auto-pct--px-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-pct--px-0.svg
+END
+standalone--0-px--0-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-px--0-0.svg
+END
+standalone--auto-px--0-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-px--0-px.svg
+END
+object--auto-auto--px-0.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--px-0.html
+END
+inline--display-inline-block--01-ref.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/inline--display-inline-block--01-ref.xhtml
+END
+standalone--pct-px--pct-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-px--pct-px.svg
+END
+standalone--pct-px--px-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-px--px-pct.svg
+END
+standalone--px-pct--pct-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-pct--pct-px.svg
+END
+standalone--px-pct--px-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-pct--px-pct.svg
+END
+standalone--pct-px--px-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-px--px-px.svg
+END
+standalone--px-pct--px-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-pct--px-px.svg
+END
+standalone--auto-pct--0-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-pct--0-0.svg
+END
+standalone--0-auto--0-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-auto--0-pct.svg
+END
+standalone--auto-auto--px-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-auto--px-pct.svg
+END
+standalone--auto-auto--pct-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-auto--pct-px.svg
+END
+inline--position-relative--01-ref.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/inline--position-relative--01-ref.xhtml
+END
+object--auto-auto--0-0.html
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--0-0.html
+END
+standalone--px-0--pct-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-0--pct-pct.svg
+END
+standalone--px-0--pct-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-0--pct-px.svg
+END
+standalone--px-0--px-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-0--px-pct.svg
+END
+standalone--px-px--px-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-px--px-0.svg
+END
+standalone-sanity-height-150px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone-sanity-height-150px.svg
+END
+standalone--0-auto--0-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-auto--0-0.svg
+END
+object--auto-auto--pct-pct--ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--pct-pct--ref.html
+END
+standalone--pct-auto--pct-pct--viewBox.svg
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-auto--pct-pct--viewBox.svg
+END
+standalone--0-pct--0-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-pct--0-pct.svg
+END
+dynamic--inline-resize-window-height.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/dynamic--inline-resize-window-height.xhtml
+END
+standalone--pct-0--pct-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-0--pct-0.svg
+END
+standalone--0-pct--0-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-pct--0-px.svg
+END
+standalone--px-0--0-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-0--0-pct.svg
+END
+standalone--pct-auto--px-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-auto--px-px.svg
+END
+standalone--px-px--0-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-px--0-0.svg
+END
+standalone--auto-px--px-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-px--px-px.svg
+END
+standalone-sanity-height-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone-sanity-height-pct.svg
+END
+reftest.list
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/reftest.list
+END
+inline--display-inline-block--01.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/inline--display-inline-block--01.xhtml
+END
+object--auto-auto--pct-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--pct-0.svg
+END
+standalone--pct-0--0-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-0--0-0.svg
+END
+standalone--0-auto--px-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-auto--px-pct.svg
+END
+standalone--0-auto--pct-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-auto--pct-px.svg
+END
+inline--position-relative--01.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/inline--position-relative--01.xhtml
+END
+standalone--pct-auto--0-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-auto--0-px.svg
+END
+standalone--px-auto--0-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-auto--0-pct.svg
+END
+standalone-sanity-width-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone-sanity-width-pct.svg
+END
+object--auto-auto--pct-0.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/object--auto-auto--pct-0.html
+END
+standalone--pct-pct--pct-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-pct--pct-px.svg
+END
+standalone--pct-pct--px-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-pct--px-pct.svg
+END
+standalone--auto-0--0-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--auto-0--0-px.svg
+END
+standalone--0-auto--px-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--0-auto--px-0.svg
+END
+standalone--px-auto--0-0.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-auto--0-0.svg
+END
+dynamic--object-svg-unloaded-a.svg
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/dynamic--object-svg-unloaded-a.svg
+END
+inline--float-right--01-ref.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/inline--float-right--01-ref.xhtml
+END
+standalone--pct-px--0-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-px--0-pct.svg
+END
+standalone--px-pct--0-pct.svg
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-pct--0-pct.svg
+END
+standalone--pct-px--0-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--pct-px--0-px.svg
+END
+standalone--px-pct--0-px.svg
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/svg/sizing/standalone--px-pct--0-px.svg
+END

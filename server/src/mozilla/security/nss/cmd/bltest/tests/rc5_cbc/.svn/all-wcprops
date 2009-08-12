@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/bltest/tests/rc5_cbc
+END
+ciphertext0
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/bltest/tests/rc5_cbc/ciphertext0
+END
+numtests
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/bltest/tests/rc5_cbc/numtests
+END
+params0
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/bltest/tests/rc5_cbc/params0
+END
+key0
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/bltest/tests/rc5_cbc/key0
+END
+plaintext0
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/bltest/tests/rc5_cbc/plaintext0
+END
+iv0
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/bltest/tests/rc5_cbc/iv0
+END

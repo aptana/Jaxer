@@ -1,0 +1,203 @@
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse
+END
+StdAfx.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/StdAfx.h
+END
+CBrowseDlg.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/CBrowseDlg.h
+END
+TabMessages.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/TabMessages.h
+END
+TestScriptHelper.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/TestScriptHelper.cpp
+END
+TabDOM.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/TabDOM.cpp
+END
+Tests.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/Tests.h
+END
+cbrowse.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/cbrowse.dsp
+END
+cbrowse.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/cbrowse.h
+END
+PickerDlg.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/PickerDlg.h
+END
+ControlEventSink.h
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/ControlEventSink.h
+END
+EditToolBar.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/EditToolBar.h
+END
+ControlEventSink.rgs
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/ControlEventSink.rgs
+END
+CBrowserCtlSite.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/CBrowserCtlSite.h
+END
+cbrowse.rc
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/cbrowse.rc
+END
+CBrowserCtlSite.rgs
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/CBrowserCtlSite.rgs
+END
+StdAfx.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/StdAfx.cpp
+END
+CBrowseDlg.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/CBrowseDlg.cpp
+END
+resource.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/resource.h
+END
+TabMessages.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/TabMessages.cpp
+END
+TabTests.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/TabTests.h
+END
+Tests.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/Tests.cpp
+END
+PickerDlg.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/PickerDlg.cpp
+END
+cbrowse.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/cbrowse.cpp
+END
+ControlEventSink.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/ControlEventSink.cpp
+END
+EditToolBar.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/EditToolBar.cpp
+END
+TestScriptHelper.h
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/TestScriptHelper.h
+END
+TabDOM.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/TabDOM.h
+END
+Cbrowse.rgs
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/Cbrowse.rgs
+END
+TestScriptHelper.rgs
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/TestScriptHelper.rgs
+END
+cbrowse.sln
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/cbrowse.sln
+END
+CBrowserCtlSite.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/CBrowserCtlSite.cpp
+END
+TabTests.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/TabTests.cpp
+END
+Cbrowse.idl
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/tests/cbrowse/Cbrowse.idl
+END

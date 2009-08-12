@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2248/trunk/products/server/src/connectors/apache/apache/apache22-lib
+END
+libhttpd.lib
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2248/trunk/products/server/src/connectors/apache/apache/apache22-lib/libhttpd.lib
+END
+aprutil-1.lib
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2248/trunk/products/server/src/connectors/apache/apache/apache22-lib/aprutil-1.lib
+END
+apr-1.lib
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2248/trunk/products/server/src/connectors/apache/apache/apache22-lib/apr-1.lib
+END
+libaprutil-1.lib
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2248/trunk/products/server/src/connectors/apache/apache/apache22-lib/libaprutil-1.lib
+END
+libapriconv-1.lib
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2248/trunk/products/server/src/connectors/apache/apache/apache22-lib/libapriconv-1.lib
+END
+libapr-1.lib
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2248/trunk/products/server/src/connectors/apache/apache/apache22-lib/libapr-1.lib
+END

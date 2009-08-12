@@ -1,0 +1,23 @@
+DEPTH		= ../../../../..
+topsrcdir	= @top_srcdir@
+srcdir		= @srcdir@
+VPATH		= @srcdir@
+
+include $(DEPTH)/config/autoconf.mk
+
+MODULE		= nativeloader
+LIBRARY_NAME	= ffi_s
+
+CSRCS		= \
+                  ffi.c \
+		  prep_cif.c \
+		  types.c \
+		  $(NULL)
+
+ASFILES        = sysv.s
+
+LOCAL_INCLUDES += -I$(srcdir)
+
+FORCE_STATIC_LIB = 1
+
+include $(topsrcdir)/config/rules.mk

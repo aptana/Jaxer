@@ -1,0 +1,67 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/security/nss/tests/iopr
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-16T23:28:56.072242Z
+2859
+mstepanov
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+cert_iopr.sh
+file
+
+
+
+
+2009-08-11T21:33:37.000000Z
+a22de80627e277e5e15093daa51565d1
+2008-05-16T23:28:56.072242Z
+2859
+mstepanov
+
+ssl_iopr.sh
+file
+
+
+
+
+2009-08-11T21:33:37.000000Z
+e70834194cfc944f8c69c0b566d6db74
+2008-05-16T23:28:56.072242Z
+2859
+mstepanov
+
+ocsp_iopr.sh
+file
+
+
+
+
+2009-08-11T21:33:37.000000Z
+288eb6d0a6280e8d2c4153a3640c169b
+2008-05-16T23:28:56.072242Z
+2859
+mstepanov
+
+server_scr
+dir
+

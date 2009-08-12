@@ -1,0 +1,10 @@
+{
+	"name": "default",
+	"tests": [
+		    "test_DB_SQLite_basic.html"
+		  , "test_DB_SQLite.html"
+		  , "test_DB_MySQL.html"
+		  , "test_DB_ResultSet.html"
+	]
+}
+

@@ -1,0 +1,179 @@
+# ***** BEGIN LICENSE BLOCK *****
+#  Version: GPL 3
+# 
+#  This program is Copyright (C) 2007-2008 Aptana, Inc. All Rights Reserved
+#  This program is licensed under the GNU General Public license, version 3 (GPL).
+# 
+#  This program is distributed in the hope that it will be useful, but
+#  AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+#  NONINFRINGEMENT. Redistribution, except as permitted by the GPL,
+#  is prohibited.
+# 
+#  You can redistribute and/or modify this program under the terms of the GPL, 
+#  as published by the Free Software Foundation.  You should
+#  have received a copy of the GNU General Public License, Version 3 along
+#  with this program; if not, write to the Free Software Foundation, Inc., 51
+#  Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+#  
+#  Aptana provides a special exception to allow redistribution of this file
+#  with certain other code and certain additional terms
+#  pursuant to Section 7 of the GPL. You may view the exception and these
+#  terms on the web at http://www.aptana.com/legal/gpl/.
+#  
+#  You may view the GPL, and Aptana's exception and additional terms in the file
+#  titled license-jaxer.html in the main distribution folder of this program.
+#  
+#  Any modifications to this file must keep this entire header intact.
+# 
+# ***** END LICENSE BLOCK *****
+
+NULL=
+!IF "$(OS)" != "Windows_NT"
+!MESSAGE This project can only be compiled on Windows platform
+!ENDIF 
+
+
+
+OUTDIR=.\Release
+INTDIR=.\Release
+MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /win32 
+RSC_PROJ=/l 0x409 /fo"$(INTDIR)\jaxer_isapi.res" /d "NDEBUG" 
+CPP_PROJ=/nologo /c /Wp64 /Zi /TP /O2 /GF /FD /EHsc /MT /Gy /W3 \
+   /I "." /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /D "VALIDATE_EXPORTS" /D "_WINDLL" /D "_MBCS"  \
+   /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\jaxer_isapi" /FD  
+
+
+LINK32_FLAGS=kernel32.lib ws2_32.lib \
+  /out:"$(OUTDIR)\jaxer_isapi.dll" \
+  /nologo /subsystem:windows /dll /incremental:no \
+  /pdb:"$(OUTDIR)\jaxer_isapi.pdb" \
+  /debug /machine:x86  \
+  /DEF:".\jaxer_isapi.def" \
+  /implib:"$(OUTDIR)\jaxer_isapi.lib"  \
+  /opt:ref /opt:icf
+  
+  
+ALL : "$(OUTDIR)\jaxer_isapi.dll"
+
+
+MTL=midl.exe
+RSC=rc.exe
+BSC32=bscmake.exe
+BSC32_FLAGS=/nologo /o"$(OUTDIR)\jaxer_isapi.bsc" 
+BSC32_SBRS= \
+
+
+CLEAN :
+	-@erase "$(INTDIR)\jaxer_config.obj"
+	-@erase "$(INTDIR)\jaxer_connection.obj"
+	-@erase "$(INTDIR)\jaxer_isapi.obj"
+	-@erase "$(INTDIR)\jaxer_log.obj"
+	-@erase "$(INTDIR)\jaxer_message.obj"
+	-@erase "$(INTDIR)\jaxer_proc.obj"
+	-@erase "$(INTDIR)\jaxer_isapi.res"
+	-@erase "$(INTDIR)\jaxer_isapi.idb"
+	-@erase "$(INTDIR)\jaxer_isapi.pdb"
+	-@erase "$(OUTDIR)\jaxer_isapi.lib"
+	-@erase "$(OUTDIR)\jaxer_isapi.exp"
+	-@erase "$(OUTDIR)\jaxer_isapi.dll"
+
+"$(OUTDIR)" :
+    if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
+
+jaxer_isapi.dll : $(LINK32_OBJS)
+
+CPP=cl.exe
+
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+
+
+LINK32=link.exe
+LINK32_OBJS= \
+	"$(INTDIR)\jaxer_connection.obj" \
+	"$(INTDIR)\jaxer_config.obj" \
+	"$(INTDIR)\jaxer_log.obj" \
+	"$(INTDIR)\jaxer_proc.obj" \
+	"$(INTDIR)\jaxer_message.obj" \
+	"$(INTDIR)\jaxer_isapi.obj" \
+	"$(INTDIR)\jaxer_isapi.res" 
+
+"$(OUTDIR)\jaxer_isapi.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+    $(LINK32) @<<
+  $(LINK32_FLAGS) $(LINK32_OBJS)
+<<
+
+"jaxer_isapi.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+    $(LINK32) @<<
+  $(LINK32_FLAGS) $(LINK32_OBJS)
+<<
+
+
+.\jaxer_config.cpp : \
+  .\stdafx.h \
+  .\jaxer_config.h
+  
+.\jaxer_log.cpp : \
+  .\stdafx.h \
+  .\jaxer_log.h
+
+.\jaxer_proc.cpp : \
+  .\stdafx.h \
+  .\jaxer_message.h \
+  .\jaxer_connection.h \
+  .\jaxer_proc.h \
+  .\jaxer_config.h
+  
+.\jaxer_connection.cpp : \
+  .\stdafx.h \
+  .\jaxer_connection.h \
+  .\jaxer_proc.h
+  
+.\jaxer_isapi.cpp : \
+  .\stdafx.h \
+  .\jaxer_message.h \
+  .\jaxer_connection.h \
+  .\jaxer_proc.h \
+  .\jaxer_config.h
+
+.\jaxer_isapi.cpp : \
+  .\stdafx.h \
+  .\jaxer_message.h \
+  .\jaxer_protocol.h
+  
+  
+SOURCE=.\jaxer_config.cpp
+"$(INTDIR)\jaxer_config.obj" : $(SOURCE) "$(INTDIR)"
+
+
+SOURCE=.\jaxer_log.cpp
+"$(INTDIR)\jaxer_log.obj" : $(SOURCE) "$(INTDIR)"
+
+
+SOURCE=.\jaxer_message.cpp
+"$(INTDIR)\jaxer_message.obj" : $(SOURCE) "$(INTDIR)"
+
+
+SOURCE=.\jaxer_proc.cpp
+"$(INTDIR)\jaxer_proc.obj" : $(SOURCE) "$(INTDIR)"
+
+
+SOURCE=.\jaxer_isapi.cpp
+"$(INTDIR)\jaxer_isapi.obj" : $(SOURCE) "$(INTDIR)"
+
+SOURCE=.\jaxer_connection.cpp
+"$(INTDIR)\jaxer_connection.obj" : $(SOURCE) "$(INTDIR)"
+
+
+SOURCE=.\jaxer_isapi.rc
+RSC=rc.exe
+RSC_PROJ=/l 0x409 /fo"$(INTDIR)\jaxer_isapi.res" /d "NDEBUG"
+"$(INTDIR)\jaxer_isapi.res" : $(SOURCE) "$(INTDIR)"
+	$(RSC) $(RSC_PROJ) $(SOURCE)
+
+

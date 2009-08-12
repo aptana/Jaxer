@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+		<title>Container Tests</title>
+		<script type='text/javascript' runat='server'>
+			
+			Jaxer.clientData.testDataForClientData = 57243588;
+			
+			function testClientData()
+			{
+				assertNotUndefined(Jaxer.clientData.testDataForClientData, "Did not find the clientData set on the server");
+				assertEquals(Jaxer.clientData.testDataForClientData, 57243588, "The clientData set on the server wasn't equal to its value on the client");
+			}
+			testClientData.runat = "client";
+			
+			function getSessionData(key)
+			{
+				return Jaxer.session[key];
+			}
+			getSessionData.proxy = true;
+			
+			function getSessionPageData(key)
+			{
+				return Jaxer.sessionPage[key];
+			}
+			getSessionPageData.proxy = true;
+			
+			var sessionKey2 = "key_" + Math.random();
+			var pageSessionKey2 = "key_" + Math.random();
+			var sessionVal2 = "value_" + Math.random();
+			var pageSessionVal2 = "value_" + Math.random();
+			var sessionKey3 = "key_" + Math.random();
+			var pageSessionKey3 = "key_" + Math.random();
+			var sessionVal3 = "value_" + Math.random();
+			var pageSessionVal3 = "value_" + Math.random();
+			Jaxer.session[sessionKey2] = sessionVal2;
+			Jaxer.sessionPage[pageSessionKey2] = pageSessionVal2;
+			Jaxer.session = {};
+			Jaxer.sessionPage = {};
+			Jaxer.session[sessionKey3] = sessionVal3;
+			Jaxer.sessionPage[pageSessionKey3] = pageSessionVal3;
+			Jaxer.clientData.sessionRemoveTestData = [sessionKey2, sessionVal2, sessionKey3, sessionVal3];
+			Jaxer.clientData.pageSessionRemoveTestData = [pageSessionKey2, pageSessionVal2, pageSessionKey3, pageSessionVal3];
+			
+			function testRemoveSessions()
+			{
+				var sessionKey2 = Jaxer.clientData.sessionRemoveTestData[0];
+				var sessionVal2 = Jaxer.clientData.sessionRemoveTestData[1];
+				var sessionKey3 = Jaxer.clientData.sessionRemoveTestData[2];
+				var sessionVal3 = Jaxer.clientData.sessionRemoveTestData[3];
+				var pageSessionKey2 = Jaxer.clientData.pageSessionRemoveTestData[0];
+				var pageSessionVal2 = Jaxer.clientData.pageSessionRemoveTestData[1];
+				var pageSessionKey3 = Jaxer.clientData.pageSessionRemoveTestData[2];
+				var pageSessionVal3 = Jaxer.clientData.pageSessionRemoveTestData[3];
+				var fetchedSessionVal2 = getSessionData(sessionKey2);
+				var fetchedPageSessionVal2 = getSessionPageData(pageSessionKey2);
+				var fetchedSessionVal3 = getSessionData(sessionKey3);
+				var fetchedPageSessionVal3 = getSessionPageData(pageSessionKey3);
+				assertEquals(null, fetchedSessionVal2, "Fetched session data should have been null since it was removed");
+				assertEquals(null, fetchedPageSessionVal2, "Fetched page session should have been null since it was removed");
+				assertEquals(sessionVal3, fetchedSessionVal3, "Fetched session data does not match set session data");
+				assertEquals(pageSessionVal3, fetchedPageSessionVal3, "Fetched page session data does not match set session data");
+			}
+			testRemoveSessions.runat = "client";
+
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

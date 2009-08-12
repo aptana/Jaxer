@@ -1,0 +1,467 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/public/idl/svg
+END
+nsIDOMSVGScriptElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGScriptElement.idl
+END
+nsIDOMSVGStylable.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGStylable.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/Makefile.in
+END
+nsIDOMSVGLength.idl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGLength.idl
+END
+nsIDOMSVGNumberList.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGNumberList.idl
+END
+nsIDOMSVGDescElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGDescElement.idl
+END
+nsIDOMSVGFitToViewBox.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGFitToViewBox.idl
+END
+nsIDOMSVGPoint.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGPoint.idl
+END
+nsIDOMSVGDefsElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGDefsElement.idl
+END
+nsIDOMSVGPathSeg.idl
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGPathSeg.idl
+END
+nsIDOMSVGImageElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGImageElement.idl
+END
+nsIDOMSVGRect.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGRect.idl
+END
+nsIDOMSVGTextElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGTextElement.idl
+END
+nsIDOMSVGException.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGException.idl
+END
+nsIDOMSVGTransformable.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGTransformable.idl
+END
+nsIDOMSVGUnitTypes.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGUnitTypes.idl
+END
+nsIDOMSVGEllipseElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGEllipseElement.idl
+END
+nsIDOMSVGAnimatedString.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGAnimatedString.idl
+END
+nsIDOMSVGSwitchElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGSwitchElement.idl
+END
+nsIDOMSVGTransform.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGTransform.idl
+END
+nsIDOMSVGTextPositionElem.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGTextPositionElem.idl
+END
+nsIDOMGetSVGDocument.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMGetSVGDocument.idl
+END
+nsIDOMSVGSymbolElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGSymbolElement.idl
+END
+nsIDOMSVGAnimatedLengthList.idl
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGAnimatedLengthList.idl
+END
+nsIDOMSVGAnimPresAspRatio.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGAnimPresAspRatio.idl
+END
+nsIDOMSVGEvent.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGEvent.idl
+END
+nsIDOMSVGAnimatedBoolean.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGAnimatedBoolean.idl
+END
+nsIDOMSVGForeignObjectElem.idl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGForeignObjectElem.idl
+END
+nsIDOMSVGViewSpec.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGViewSpec.idl
+END
+nsIDOMSVGMetadataElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGMetadataElement.idl
+END
+nsIDOMSVGAElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGAElement.idl
+END
+nsIDOMSVGTitleElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGTitleElement.idl
+END
+nsIDOMSVGAnimatedNumber.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGAnimatedNumber.idl
+END
+nsIDOMSVGMarkerElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGMarkerElement.idl
+END
+nsIDOMSVGStopElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGStopElement.idl
+END
+nsIDOMSVGAnimatedRect.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGAnimatedRect.idl
+END
+nsIDOMSVGAnimatedInteger.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGAnimatedInteger.idl
+END
+nsIDOMSVGUseElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGUseElement.idl
+END
+nsIDOMSVGStyleElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGStyleElement.idl
+END
+nsIDOMSVGTextPathElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGTextPathElement.idl
+END
+nsIDOMSVGCircleElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGCircleElement.idl
+END
+nsIDOMSVGLengthList.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGLengthList.idl
+END
+nsIDOMSVGClipPathElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGClipPathElement.idl
+END
+nsIDOMSVGPointList.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGPointList.idl
+END
+nsIDOMSVGZoomEvent.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGZoomEvent.idl
+END
+nsIDOMSVGAngle.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGAngle.idl
+END
+nsIDOMSVGLocatable.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGLocatable.idl
+END
+nsIDOMSVGPathSegList.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGPathSegList.idl
+END
+nsIDOMSVGPatternElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGPatternElement.idl
+END
+nsIDOMSVGNumber.idl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGNumber.idl
+END
+nsIDOMSVGElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGElement.idl
+END
+nsIDOMSVGAnimatedAngle.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGAnimatedAngle.idl
+END
+nsIDOMSVGAnimatedPathData.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGAnimatedPathData.idl
+END
+nsIDOMSVGTextContentElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGTextContentElement.idl
+END
+nsIDOMSVGFilterElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGFilterElement.idl
+END
+nsIDOMSVGLineElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGLineElement.idl
+END
+nsIDOMSVGPolygonElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGPolygonElement.idl
+END
+nsIDOMSVGMatrix.idl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGMatrix.idl
+END
+nsIDOMSVGMaskElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGMaskElement.idl
+END
+nsIDOMSVGPolylineElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGPolylineElement.idl
+END
+nsIDOMSVGZoomAndPan.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGZoomAndPan.idl
+END
+nsIDOMSVGTransformList.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGTransformList.idl
+END
+nsIDOMSVGAnimatedEnum.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGAnimatedEnum.idl
+END
+nsIDOMSVGGradientElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGGradientElement.idl
+END
+nsIDOMSVGFilters.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGFilters.idl
+END
+nsIDOMSVGDocument.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGDocument.idl
+END
+nsIDOMSVGURIReference.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGURIReference.idl
+END
+nsIDOMSVGAnimatedPoints.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGAnimatedPoints.idl
+END
+nsIDOMSVGAnimatedLength.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGAnimatedLength.idl
+END
+nsIDOMSVGAnimatedNumberList.idl
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGAnimatedNumberList.idl
+END
+nsIDOMSVGTSpanElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGTSpanElement.idl
+END
+nsIDOMSVGGElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGGElement.idl
+END
+nsIDOMSVGPathElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGPathElement.idl
+END
+nsIDOMSVGRectElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGRectElement.idl
+END
+nsIDOMSVGPresAspectRatio.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGPresAspectRatio.idl
+END
+nsIDOMSVGSVGElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGSVGElement.idl
+END
+nsIDOMSVGAnimTransformList.idl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/svg/nsIDOMSVGAnimTransformList.idl
+END

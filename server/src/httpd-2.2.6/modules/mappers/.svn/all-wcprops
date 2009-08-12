@@ -1,0 +1,263 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers
+END
+NWGNUactions
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/NWGNUactions
+END
+NWGNUspeling
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/NWGNUspeling
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/Makefile.in
+END
+mod_alias.exp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_alias.exp
+END
+mod_actions.exp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_actions.exp
+END
+mod_speling.exp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_speling.exp
+END
+NWGNUuserdir
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/NWGNUuserdir
+END
+mod_dir.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_dir.c
+END
+.indent.pro
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/.indent.pro
+END
+mod_negotiation.c
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_negotiation.c
+END
+mod_imagemap.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_imagemap.c
+END
+mod_rewrite.c
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_rewrite.c
+END
+mod_so.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_so.c
+END
+mod_dir.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_dir.dsp
+END
+mod_negotiation.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_negotiation.dsp
+END
+mod_imagemap.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_imagemap.dsp
+END
+mod_rewrite.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_rewrite.dsp
+END
+mod_vhost_alias.exp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_vhost_alias.exp
+END
+mod_so.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_so.h
+END
+mod_rewrite.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_rewrite.h
+END
+mod_userdir.exp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_userdir.exp
+END
+.deps
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/.deps
+END
+mod_alias.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_alias.c
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/Makefile
+END
+mod_alias.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_alias.dsp
+END
+modules.mk
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/modules.mk
+END
+mod_actions.c
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_actions.c
+END
+mod_speling.c
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_speling.c
+END
+NWGNUvhost
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/NWGNUvhost
+END
+mod_actions.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_actions.dsp
+END
+mod_speling.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_speling.dsp
+END
+NWGNUmakefile
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/NWGNUmakefile
+END
+mod_vhost_alias.c
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_vhost_alias.c
+END
+mod_userdir.c
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_userdir.c
+END
+NWGNUimagemap
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/NWGNUimagemap
+END
+NWGNUrewrite
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/NWGNUrewrite
+END
+mod_vhost_alias.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_vhost_alias.dsp
+END
+mod_userdir.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_userdir.dsp
+END
+mod_dir.exp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_dir.exp
+END
+mod_negotiation.exp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_negotiation.exp
+END
+mod_imagemap.exp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_imagemap.exp
+END
+mod_rewrite.exp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/mod_rewrite.exp
+END
+config9.m4
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/mappers/config9.m4
+END

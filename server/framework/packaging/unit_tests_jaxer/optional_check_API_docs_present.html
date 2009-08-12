@@ -1,0 +1,60 @@
+<html>
+<head>
+    <script runat='server'>// DO NOT REMOVE: needed for the Jaxer unit testing harness 
+        Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+    </script>
+</head>
+</body>
+<script type="text/javascript" runat="server">
+    
+    /**
+     * tests that API docs can be found
+     */
+    function testCheckAPIDocsPresent()
+	{
+		var docIndex = [Jaxer.Dir.resolve('resource://'), 'aptana', 'doc', 'api', 'Jaxer.index.html'].join(Jaxer.System.separator);
+		assertTrue(Jaxer.File.exists(docIndex), "Unable to locate the API doc Jaxer.index.html @" + docIndex)
+		
+		/*
+		 * Check for the existance of the api docs for important Jaxer properties
+		 * docs that are not to be included MUST be explicitly added to the exclusions
+		 * list on each getDocPAth call.
+		 */
+		function getDocPath(obj, label, exclusions)
+		{
+			var tmp = [];
+			for (var p in obj) 
+			{
+				if ((typeof obj[p] == 'function' || typeof obj[p] == 'object') &&
+				p[0] == p[0].toUpperCase() &&
+				!/^_/.test(p) &&
+				exclusions.indexOf(p) < 0) 
+				{
+					tmp.push(label + p + '.html');
+				}
+			}
+			return tmp;
+		}
+		
+		var docs = ['Jaxer.html'];
+		
+		
+		docs = docs.concat(getDocPath(Jaxer, 'Jaxer.', ['CacheManager', 'Extensions', 'TextParser', 'RUNAT_ANY_SERVER_REGEXP', 'RUNAT_ANY_BOTH_REGEXP', 'RUNAT_NO_CACHE_REGEXP', 'AUTOLOAD_ATTR_FALSE_REGEXP']));
+		docs = docs.concat(getDocPath(Jaxer.DB, 'Jaxer.DB.', ['FrameworkConnection', 'Connection']));
+		docs = docs.concat(getDocPath(Jaxer.DB.MySQL, 'Jaxer.DB.MySQL.', []));
+		docs = docs.concat(getDocPath(Jaxer.DB.SQLite, 'Jaxer.DB.SQLite.', []));
+		docs = docs.concat(getDocPath(Jaxer.Log, 'Jaxer.Log.', ['TRACE', 'DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL']));
+		docs = docs.concat(getDocPath(Jaxer.Util, 'Jaxer.Util.', []));
+		docs = docs.concat(getDocPath(Jaxer.XHR, 'Jaxer.XHR.', []));
+		
+		docs.forEach(function(item)
+		{
+			docPath = Jaxer.Dir.resolve(Jaxer.Dir.combine(Jaxer.Dir.resolve('resource://'), 'aptana', 'doc', 'api', item));
+			assertTrue(Jaxer.File.exists(docPath), "Unable to locate the expected API doc @" + docPath)
+		});
+		
+	}
+	
+</script>
+</body>
+</html>

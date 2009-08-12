@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Reference Serialization Unit Tests</title>
+		<link rel="stylesheet" type="text/css" href="/htmlunit/unit_test.css" />
+		<script type="text/javascript" runat="server" src="../../unit_test_lib.js"></script>
+		
+		<!-- cycle tests -->
+		<script type="text/javascript" runat="server">
+			function test_SerializeData_Cycles()
+			{
+				var html = { name: "html", parent: null, children: [] };
+				var head = { name: "head", parent: html, children: [] };
+				var body = { name: "body", parent: html, children: [] };
+				
+				html.children.push(head);
+				html.children.push(body);
+			
+				var json = Aptana.Serialization.toJSONString(html);
+				var expected =
+					'[' +
+						'{"name":"html","parent":null,"children":"~1~"},' +
+						'["~2~","~3~"],' +
+						'{"name":"head","parent":"~0~","children":[]},' +
+						'{"name":"body","parent":"~0~","children":[]}' +
+					']';
+					
+				$assertEquals(expected, json);
+			}
+			
+			function test_DeserializeData_Cycles()
+			{
+				var json =
+					'[' +
+						'{ "name": "html", "parent": null, "children": "~1~" },' +
+						'[ "~2~", "~3~" ],' +
+						'{ "name": "head", "parent": "~0~", "children": [] },' +
+						'{ "name": "body", "parent": "~0~", "children": [] }' +
+					']';
+				var html = Aptana.Serialization.fromJSONString(json);
+				
+				// check return type
+				$assertEquals("object", typeof html);
+				
+				// check properties
+				$assertTrue(html.hasOwnProperty("name"));
+				$assertTrue(html.hasOwnProperty("parent"));
+				$assertTrue(html.hasOwnProperty("children"));
+				$assertEquals("html", html.name);
+				$assertSame(null, html.parent);
+				$assertSame(Array, html.children.constructor, html.children);
+				$assertEquals(2, html.children.length);
+				
+				// check first child
+				var child1 = html.children[0];
+				$assertTrue(child1.hasOwnProperty("name"));
+				$assertTrue(child1.hasOwnProperty("parent"));
+				$assertTrue(child1.hasOwnProperty("children"));
+				$assertEquals("head", child1.name);
+				$assertSame(html, child1.parent);
+				$assertSame(Array, child1.children.constructor, html.children);
+				$assertEquals(0, child1.children.length);
+				
+				// check second child
+				var child2 = html.children[1];
+				$assertTrue(child2.hasOwnProperty("name"));
+				$assertTrue(child2.hasOwnProperty("parent"));
+				$assertTrue(child2.hasOwnProperty("children"));
+				$assertEquals("body", child2.name);
+				$assertSame(html, child2.parent);
+				$assertSame(Array, child2.children.constructor, html.children);
+				$assertEquals(0, child2.children.length);
+			}
+		</script>
+	</head>
+	<body>
+		<table id="output" cellpadding="2" cellspacing="0"></table>
+		<script type="text/javascript" runat="server">
+			$run_tests()
+		</script>
+	</body>
+</html>

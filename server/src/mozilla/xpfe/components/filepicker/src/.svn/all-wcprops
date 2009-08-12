@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpfe/components/filepicker/src
+END
+nsWildCard.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/filepicker/src/nsWildCard.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/filepicker/src/Makefile.in
+END
+nsWildCard.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/filepicker/src/nsWildCard.cpp
+END
+nsFileView.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpfe/components/filepicker/src/nsFileView.cpp
+END
+filepicker.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/filepicker/src/filepicker.pkg
+END
+nsFilePicker.js.in
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpfe/components/filepicker/src/nsFilePicker.js.in
+END

@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+        <title id='docTitle'>Sample Template</title>
+        <link rel='stylesheet' type='text/css' href='css/index.css'>
+		
+		<!-- This script block will execute only on the server because of the runat="server" attributes. -->
+        <script src='index.js' type="text/javascript" runat="server"></script>
+		
+    </head>
+    <body onserverload='serverInit();' onload='clientInit();'>
+        <div id='sampleDescription'>
+            A Template Layout for Sample Applications.
+        </div>
+        <script type="text/javascript" src="lib/wz_tooltip.js">
+        </script>
+        <div id='sampleSource'>
+            <li>
+                <a href="/aptana/tools/sourceViewer/index.html?filename=../../samples/???/index.html" target="_blank">Main page</a>
+            </li>
+        </div>
+        <div id='sampleHeader'>
+            <div class='sampleTitle'>
+                Sample Template
+            </div>
+            <div id='rightFloat'>
+                <img src ='images/information.png' class='sampleDescription' onmouseover="TagToTip('sampleDescription', CLICKCLOSE, true, STICKY, true, WIDTH, 300, TITLE, $('docTitle').innerHTML)"/>
+				<span id='sourceButton'>
+					<img src ='images/html.png' id='sampleSourceLink' onmouseover="TagToTip('sampleSource', STICKY, true, CLOSEBTN, true,  TITLE, 'View Source Code')"/>
+				</span>
+            </div>
+        </div>
+        <div id='applicationContent'>
+            Application Content Here.
+        </div>
+        <div id='sampleFooter'>
+        </div>
+    </body>
+</html>

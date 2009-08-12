@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/mozapps/downloads/content
+END
+downloads.css
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/mozapps/downloads/content/downloads.css
+END
+downloads.xul
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/mozapps/downloads/content/downloads.xul
+END
+unknownContentType.xul
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/mozapps/downloads/content/unknownContentType.xul
+END
+downloads.js
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/mozapps/downloads/content/downloads.js
+END
+download.xml
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/mozapps/downloads/content/download.xml
+END
+DownloadProgressListener.js
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/mozapps/downloads/content/DownloadProgressListener.js
+END
+helperApps.js
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/mozapps/downloads/content/helperApps.js
+END

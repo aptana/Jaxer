@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/urlformatter/tests/unit
+END
+test_urlformatter.js
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/urlformatter/tests/unit/test_urlformatter.js
+END
+head_urlformatter.js
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/components/urlformatter/tests/unit/head_urlformatter.js
+END

@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Test Comm Callback</title>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+	</head>
+	<body>
+		<script runat="server-proxy">
+			function sleep(milliseconds)
+			{
+				var start = new Date().getTime();
+				Jaxer.Util.sleep(milliseconds);
+				var actual = (new Date().getTime()) - start;
+				return [milliseconds, actual];
+			}
+		</script>
+		<script>
+			function testSleepAsync(callback)
+			{
+				var target = 1000; // how many milliseconds we intend to sleep
+				var result = sleep.async(callback, target);
+				return result;
+			}
+			
+			function _testSleepAsync(targetAndActual)
+			{
+				var target = targetAndActual[0];
+				var actual = targetAndActual[1];
+				var maxDiscrepancy = 100;
+				if (Math.abs(actual - target) > maxDiscrepancy)
+				{
+					throw "sleep() slept for " + actual + " ms when only asked to sleep for " + target + " ms";
+				}
+			}
+		</script>
+	</body>
+</html>

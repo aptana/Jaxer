@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/startup/public
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/startup/public/Makefile.in
+END
+nsINativeAppSupportWin.idl
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/startup/public/nsINativeAppSupportWin.idl
+END
+nsIAppStartup.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/startup/public/nsIAppStartup.idl
+END
+nsINativeAppSupport.idl
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/startup/public/nsINativeAppSupport.idl
+END
+nsICloseAllWindows.idl
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/startup/public/nsICloseAllWindows.idl
+END
+nsICmdLineHandler.idl
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/startup/public/nsICmdLineHandler.idl
+END
+nsISplashScreen.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/startup/public/nsISplashScreen.h
+END
+nsIUserInfo.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/startup/public/nsIUserInfo.idl
+END
+nsICmdLineService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/startup/public/nsICmdLineService.idl
+END

@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/caps/include
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/caps/include/Makefile.in
+END
+nsNullPrincipal.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/caps/include/nsNullPrincipal.h
+END
+nsJSPrincipals.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/caps/include/nsJSPrincipals.h
+END
+nsPrincipal.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/caps/include/nsPrincipal.h
+END
+nsSystemPrincipal.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/caps/include/nsSystemPrincipal.h
+END
+nsScriptSecurityManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/caps/include/nsScriptSecurityManager.h
+END

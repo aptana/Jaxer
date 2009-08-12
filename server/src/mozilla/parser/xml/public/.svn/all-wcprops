@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/xml/public
+END
+nsISAXLocator.idl
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/xml/public/nsISAXLocator.idl
+END
+nsISAXXMLReader.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/xml/public/nsISAXXMLReader.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/xml/public/Makefile.in
+END
+nsISAXAttributes.idl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/xml/public/nsISAXAttributes.idl
+END
+nsISAXXMLFilter.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/xml/public/nsISAXXMLFilter.idl
+END
+nsISAXErrorHandler.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/xml/public/nsISAXErrorHandler.idl
+END
+nsISAXContentHandler.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/xml/public/nsISAXContentHandler.idl
+END
+nsISAXDTDHandler.idl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/xml/public/nsISAXDTDHandler.idl
+END
+nsISAXLexicalHandler.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/xml/public/nsISAXLexicalHandler.idl
+END
+nsISAXMutableAttributes.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/xml/public/nsISAXMutableAttributes.idl
+END

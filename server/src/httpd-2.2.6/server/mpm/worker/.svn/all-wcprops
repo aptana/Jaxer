@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/server/mpm/worker
+END
+fdqueue.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/server/mpm/worker/fdqueue.c
+END
+mpm.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/server/mpm/worker/mpm.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/server/mpm/worker/Makefile.in
+END
+mpm_default.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/server/mpm/worker/mpm_default.h
+END
+pod.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/server/mpm/worker/pod.c
+END
+fdqueue.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/server/mpm/worker/fdqueue.h
+END
+pod.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/server/mpm/worker/pod.h
+END
+config5.m4
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/server/mpm/worker/config5.m4
+END
+worker.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/server/mpm/worker/worker.c
+END

@@ -1,0 +1,22 @@
+. $topsrcdir/aptana/config/mozconfig
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/ff-release
+mk_add_options MOZ_POSTFLIGHT+=postBuildJaxer.mk
+
+ac_add_options --enable-jemalloc
+ac_add_options --enable-static --disable-shared
+ac_add_options --enable-optimize --disable-debug
+# crashreporter is not supporter on 64-bit platform yet
+ac_add_options --enable-strip
+ac_add_options --disable-crashreporter
+
+mk_add_options MOZ_ENABLE_ODBC=1
+export MOZ_ENABLE_ODBC=1
+mk_add_options MOZ_ODBC_LIBS="-lodbc"
+export MOZ_ODBC_LIBS="-lodbc"
+
+# symbols for breakpad (enable for release builds)
+#export CFLAGS="-gstabs+"
+#export CXXFLAGS="-gstabs+"
+
+#CC=/tools/gcc-4.1.1/bin/gcc
+#CXX=/tools/gcc-4.1.1/bin/g++

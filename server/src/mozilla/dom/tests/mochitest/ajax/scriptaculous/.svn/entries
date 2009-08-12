@@ -1,0 +1,73 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/dom/tests/mochitest/ajax/scriptaculous
+http://svn.aptana.local/svn/jaxer
+
+
+
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+test
+dir
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:32:31.000000Z
+a2fd7d6dd10aa86dad4764eb9e739f28
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+test_Scriptaculous.html
+file
+
+
+
+
+2009-08-11T21:32:31.000000Z
+66fa635a689dfb5026c279eb28aee1b1
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+lib
+dir
+
+src
+dir
+
+manifest.json
+file
+
+
+
+
+2009-08-11T21:32:31.000000Z
+658ee4432fe6b02a3d23695ff428a19b
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+

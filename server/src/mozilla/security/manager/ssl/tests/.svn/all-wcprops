@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/manager/ssl/tests
+END
+test_datasignatureverifier.js
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/tests/test_datasignatureverifier.js
+END
+test_hmac.js
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/manager/ssl/tests/test_hmac.js
+END
+test_hash_algorithms.js
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/manager/ssl/tests/test_hash_algorithms.js
+END

@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/editor/txtsvc/public
+END
+nsITextServicesFilter.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/txtsvc/public/nsITextServicesFilter.idl
+END
+nsTextServicesCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/txtsvc/public/nsTextServicesCID.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/txtsvc/public/Makefile.in
+END
+nsIInlineSpellChecker.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/txtsvc/public/nsIInlineSpellChecker.idl
+END
+nsISpellChecker.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/txtsvc/public/nsISpellChecker.h
+END
+nsITextService.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/txtsvc/public/nsITextService.h
+END
+nsITextServicesDocument.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/txtsvc/public/nsITextServicesDocument.h
+END

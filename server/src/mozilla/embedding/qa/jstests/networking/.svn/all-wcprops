@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/jstests/networking
+END
+nsIFileProtocolHandler.js
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/jstests/networking/nsIFileProtocolHandler.js
+END
+nsIProtocolHandler.js
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/jstests/networking/nsIProtocolHandler.js
+END
+nsIURI.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/jstests/networking/nsIURI.js
+END
+nsIIOService.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/jstests/networking/nsIIOService.html
+END
+nsIFileProtocolHandler.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/jstests/networking/nsIFileProtocolHandler.html
+END
+nsIProtocolHandler.html
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/jstests/networking/nsIProtocolHandler.html
+END
+nsIURI.html
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/jstests/networking/nsIURI.html
+END
+nsIIOService.js
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/jstests/networking/nsIIOService.js
+END

@@ -1,0 +1,55 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/extensions/sql/build
+http://svn.aptana.local/svn/jaxer
+
+
+
+2009-01-15T11:11:46.621793Z
+4513
+mstepanov
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+install.js
+file
+
+
+
+
+2009-08-11T21:37:08.000000Z
+a4eaabc1811eba977f74541119ba15fb
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:37:08.000000Z
+d01607e1754f199b4e0073f69391d8e3
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+src
+dir
+

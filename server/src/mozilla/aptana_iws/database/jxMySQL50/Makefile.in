@@ -1,0 +1,188 @@
+# ***** BEGIN LICENSE BLOCK *****
+#  Version: GPL 3
+# 
+#  This program is Copyright (C) 2007-2008 Aptana, Inc. All Rights Reserved
+#  This program is licensed under the GNU General Public license, version 3 (GPL).
+# 
+#  This program is distributed in the hope that it will be useful, but
+#  AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+#  NONINFRINGEMENT. Redistribution, except as permitted by the GPL,
+#  is prohibited.
+# 
+#  You can redistribute and/or modify this program under the terms of the GPL, 
+#  as published by the Free Software Foundation.  You should
+#  have received a copy of the GNU General Public License, Version 3 along
+#  with this program; if not, write to the Free Software Foundation, Inc., 51
+#  Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+#  
+#  Aptana provides a special exception to allow redistribution of this file
+#  with certain other code and certain additional terms
+#  pursuant to Section 7 of the GPL. You may view the exception and these
+#  terms on the web at http://www.aptana.com/legal/gpl/.
+#  
+#  You may view the GPL, and Aptana's exception and additional terms in the file
+#  titled license-jaxer.html in the main distribution folder of this program.
+#  
+#  Any modifications to this file must keep this entire header intact.
+# 
+# ***** END LICENSE BLOCK *****
+
+DEPTH		= ../../..
+topsrcdir	= @top_srcdir@
+srcdir		= @srcdir@
+VPATH		= @srcdir@
+
+include $(DEPTH)/config/autoconf.mk
+
+MODULE		= jxMySQL50
+XPIDL_MODULE	= jxMySQL50
+LIBRARY_NAME	= jxMySQL50
+IS_COMPONENT	= 1
+FORCE_SHARED_LIB= 1
+MODULE_NAME	= jxMySQL50Module
+
+MOZILLA_INTERNAL_API = 1
+
+REQUIRES	=	xpcom \
+			string \
+			js \
+			dom \
+			xpconnect \
+			aptana \
+	  		$(NULL)
+
+CSRCS		= \
+		dosmap.c \
+		$(NULL)
+
+CPPSRCS		= \
+		jxMySQL50.cpp \
+		jxMySQL50Field.cpp \
+		jxMySQL50ResultSet.cpp \
+		jxMySQL50Statement.cpp \
+		jxMySQL50Module.cpp \
+		$(NULL)
+
+XPIDLSRCS	= jxIMySQL50.idl \
+		  jxIMySQL50Field.idl \
+		  jxIMySQL50ResultSet.idl \
+		  jxIMySQL50Statement.idl \
+	  	  $(NULL)
+
+EXPORTS		= \
+	jxMySQL50.h \
+	jxMySQL50Field.h \
+	jxMySQL50ResultSet.h \
+	jxMySQL50Statement.h \
+	jxMySQL50Defs.h \
+	$(NULL)
+
+LIBS		= \
+		$(MOZ_JS_LIBS) \
+		$(XPCOM_LIBS) \
+		$(NSPR_LIBS) \
+		$(NULL)
+
+
+# Jack Z.: Added the following block for cross platform on WINNT and Linux
+ifeq (,$(filter-out WINNT WINCE,$(OS_ARCH)))
+LOCAL_INCLUDES = \
+		-I$(srcdir)/include_win \
+		$(NULL)
+else
+ifeq ($(OS_ARCH),Darwin)
+LOCAL_INCLUDES = \
+		-I$(srcdir)/include_mac \
+		$(NULL)
+else
+ifeq ($(OS_ARCH),SunOS)
+LOCAL_INCLUDES = \
+		-I$(srcdir)/include_solaris \
+		$(NULL)
+else
+ifeq ($(HAVE_64BIT_OS),1)
+LOCAL_INCLUDES = \
+		-I$(srcdir)/include_linux64 \
+		$(NULL)
+else
+LOCAL_INCLUDES = \
+		-I$(srcdir)/include_linux \
+		$(NULL)
+endif
+endif
+endif
+endif
+
+include $(topsrcdir)/config/config.mk
+
+# EXTRA_DSO_LDOPTS specifies linker flags when building a shared library
+# from this Makefile. We link against the "dependent glue" and against the
+# frozen XPCOM shared library.
+EXTRA_DSO_LDOPTS = \
+		$(DIST)/lib/$(LIB_PREFIX)xpcomglue_s.$(LIB_SUFFIX) \
+		$(MOZ_COMPONENT_LIBS) \
+		$(NULL)
+
+# we don't want the shared lib, but we want to force the creation of a static lib.
+# FORCE_STATIC_LIB = 1
+
+# Need to link with the MySQL 5.0 client lib
+ifeq (,$(filter-out WINNT WINCE,$(OS_ARCH)))
+EXTRA_DSO_LDOPTS += \
+		$(DIST)/lib/$(LIB_PREFIX)js$(MOZ_BITS)$(VERSION_NUMBER).$(LIB_SUFFIX) \
+		$(DIST)/lib/$(LIB_PREFIX)libmysql.$(LIB_SUFFIX) \
+		/NODEFAULTLIB:LIBCMT \
+		/INCREMENTAL:NO \
+		$(NULL)
+else
+ifeq ($(OS_ARCH),Darwin)
+EXTRA_DSO_LDOPTS += \
+		$(DIST)/lib/$(LIB_PREFIX)mozjs$(DLL_SUFFIX) \
+		$(DIST)/lib/$(LIB_PREFIX)mysqlclient.$(LIB_SUFFIX) \
+		-lcrypto -lz -lm -lssl \
+		$(NULL)
+else
+ifeq ($(OS_ARCH),SunOS)
+EXTRA_DSO_LDOPTS += \
+		$(DIST)/lib/$(LIB_PREFIX)mozjs$(DLL_SUFFIX) \
+		$(DIST)/lib/$(LIB_PREFIX)mysqlclient.$(LIB_SUFFIX) \
+		-lcrypto -lz -lm -lssl \
+		$(NULL)
+else
+EXTRA_DSO_LDOPTS += \
+		$(DIST)/lib/$(LIB_PREFIX)mozjs$(DLL_SUFFIX) \
+		$(DIST)/lib/$(LIB_PREFIX)mysqlclient.$(LIB_SUFFIX) \
+		 -lz -lm \
+		$(NULL)
+endif
+endif
+endif
+
+include $(topsrcdir)/config/rules.mk
+
+ifeq (,$(filter-out WINNT WINCE,$(OS_ARCH)))
+$(DIST)/lib/$(LIB_PREFIX)libmysql.$(LIB_SUFFIX): $(srcdir)/lib_win/$(LIB_PREFIX)libmysql.$(LIB_SUFFIX)
+	$(INSTALL) $(IFLAGS1) $(srcdir)/lib_win/$(LIB_PREFIX)libmysql.$(LIB_SUFFIX) $(DIST)/lib
+	$(INSTALL) $(IFLAGS1) $(srcdir)/lib_win/$(LIB_PREFIX)libmysql.dll $(DIST)/bin
+else
+ifeq ($(OS_ARCH),Darwin)
+$(DIST)/lib/$(LIB_PREFIX)mysqlclient.$(LIB_SUFFIX): $(srcdir)/lib_mac/$(TARGET_CPU)/$(LIB_PREFIX)mysqlclient.$(LIB_SUFFIX)
+	$(INSTALL) $(IFLAGS1) $(srcdir)/lib_mac/$(TARGET_CPU)/$(LIB_PREFIX)mysqlclient.$(LIB_SUFFIX) $(DIST)/lib
+else
+ifeq ($(OS_ARCH),SunOS)
+$(DIST)/lib/$(LIB_PREFIX)mysqlclient.$(LIB_SUFFIX): $(srcdir)/lib_solaris/$(LIB_PREFIX)mysqlclient.$(LIB_SUFFIX)
+	$(INSTALL) $(IFLAGS1) $(srcdir)/lib_solaris/$(LIB_PREFIX)mysqlclient.$(LIB_SUFFIX) $(DIST)/lib
+else
+ifeq ($(HAVE_64BIT_OS),1)
+$(DIST)/lib/$(LIB_PREFIX)mysqlclient.$(LIB_SUFFIX): $(srcdir)/lib_linux64/$(LIB_PREFIX)mysqlclient.$(LIB_SUFFIX)
+	$(INSTALL) $(IFLAGS1) $(srcdir)/lib_linux64/$(LIB_PREFIX)mysqlclient.$(LIB_SUFFIX) $(DIST)/lib
+else
+$(DIST)/lib/$(LIB_PREFIX)mysqlclient.$(LIB_SUFFIX): $(srcdir)/lib_linux/$(LIB_PREFIX)mysqlclient.$(LIB_SUFFIX)
+	$(INSTALL) $(IFLAGS1) $(srcdir)/lib_linux/$(LIB_PREFIX)mysqlclient.$(LIB_SUFFIX) $(DIST)/lib
+endif
+
+endif
+endif
+endif
+

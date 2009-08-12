@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_6/Array
+END
+regress-310425-01.js
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_6/Array/regress-310425-01.js
+END
+regress-310425-02.js
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_6/Array/regress-310425-02.js
+END
+shell.js
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_6/Array/shell.js
+END
+regress-352742-01.js
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_6/Array/regress-352742-01.js
+END
+regress-352742-02.js
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_6/Array/regress-352742-02.js
+END
+regress-304828.js
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_6/Array/regress-304828.js
+END
+regress-305002.js
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_6/Array/regress-305002.js
+END
+regress-290592.js
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_6/Array/regress-290592.js
+END
+browser.js
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_6/Array/browser.js
+END

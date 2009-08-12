@@ -1,0 +1,336 @@
+<html>
+<head><title>Jaxer Manager Settings</title>
+</head>
+<body>
+<script type="text/javascript" runat="server">
+/*
+ * When loaded, this page displays the current settings used by Jaxer Manager.
+ * The settings are obtained from manager (not from a config file).
+ * 
+ * When Save is pressed, config file content is updated if there are changes.
+ * For settings that do not require restart of manager, they are applied
+ * immediately.  If there are changes that require restart manager, then
+ * user is informed on the response page.
+ *       
+ * Restart manager can only be done manually now.   
+ */ 
+    var mgrVersion = "";
+    var mgrCfgFile = "";
+    var mgrSettings = null;
+    var gRestart = false;
+    var gChanged = false;
+    var gMethod = "GET";
+    var gIsAdmin = false;
+    
+    var MGRCMD_CLASS_ID        = "@aptana.com/managercmdservice;1"
+    var MGRCMD_INTERFACE       = Components.interfaces.aptIManagerCmdService;
+    
+    // This is how you should get the service.  You should not try to create an instance.
+    // Even if you do, the instance will be useless.
+    var gMgrCmdService = Components.classes[MGRCMD_CLASS_ID].getService(MGRCMD_INTERFACE);
+    
+    function NewObject(title, type, bRestartNeeded)
+    {
+        var aObj = new Object();
+        aObj.title = title;
+        aObj.type = type;
+        aObj.restart = bRestartNeeded;
+        aObj.set = false;
+        return aObj;
+    }
+    function NewNumberObject(title, bRestartNeeded, minVal, maxVal)
+    {
+        var aObj = NewObject(title, "number", bRestartNeeded);
+        aObj.min = minVal;
+        aObj.max = maxVal;
+        return aObj;
+    }
+    
+    function NewPathObject(title, bRestartNeeded)
+    {
+        var aObj = NewObject(title, "path", bRestartNeeded);
+        return aObj;
+    }
+    
+    function NewChoiceObject(title, bRestartNeeded, choices)
+    {
+        var aObj = NewObject(title, "choice", bRestartNeeded);
+        aObj.choices = choices;
+        return aObj;
+    }
+    
+    function NewIPObject(title, bRestartNeeded)
+    {
+        var aObj = NewObject(title, "IP", bRestartNeeded);
+        return aObj;
+    }
+    
+    function NewBooleanObject(title, bRestartNeeded)
+    {
+        var aObj = NewChoiceObject(title, bRestartNeeded, ["true", "false"]);
+        return aObj;
+    }
+    
+    function NewMgrSettings()
+    {
+        var aMgrSettings = new Object();
+        //aMgrSettings["configfile"] = NewNumberObject("configfile", true, 1, -1);
+
+        aMgrSettings["adminhttpinterfacelocalip"] = NewIPObject("Admin HTTP Interface IP", true);
+        aMgrSettings["adminhttpport"] = NewNumberObject("Admin HTTP Port", true, 1, -1);
+
+        aMgrSettings["commandinterfacelocalip"] = NewIPObject("Admin Jaxer-Protocol Interface IP", true);
+        aMgrSettings["commandport"] = NewNumberObject("Admin Jaxer-Protocol Port", true, 1, -1);
+        
+        aMgrSettings["webhttpinterfacelocalip"] = NewIPObject("Internal Web Server Interface IP", true, 1, -1);
+        aMgrSettings["webhttpport"] = NewNumberObject("Internal Web Server Port", true, 1, -1);
+
+        aMgrSettings["webinterfacelocalip"] = NewIPObject("Web Jaxer-Protocol Interface IP", true);
+        aMgrSettings["webport"] = NewNumberObject("Web Jaxer-Protocol Port", true, 1, -1);
+        
+       //aMgrSettings["configfile"] = NewPathObject("Manager Config File", true);
+        aMgrSettings["enableinternalwebserver"] = NewBooleanObject("Enable Internal WebServer", true);
+        aMgrSettings["enableadminconnection"] = NewBooleanObject("Enable Admin Connection", true);
+        aMgrSettings["enableadminhttpconnection"] = NewBooleanObject("Enable Admin HTTP Connection", true);
+        aMgrSettings["enablewebjaxerconnection"] = NewBooleanObject("Enable Web Jaxer-Protocol Connection", true);
+        aMgrSettings["iwsconfigfile"] = NewPathObject("Internal Webserver Config file", true);
+        aMgrSettings["pid-file"] = NewPathObject("JaxerManager PID file", true);
+        
+        aMgrSettings["log:filesize"] = NewNumberObject("Log File Size (bytes)", true, 1, -1);
+        aMgrSettings["log:numbackups"] = NewNumberObject("Number of Log file backups", true, 1, -1);
+        aMgrSettings["log:output"] = NewPathObject("Log File", true); 
+    
+        aMgrSettings["loglevel"] = NewChoiceObject("JaxerManager Log Level", false, ["TRACE", "DEBUG", "INFO", "WARN", "FATAL"]);
+        
+        aMgrSettings["startjaxertimeout"] = NewNumberObject("Start Jaxer Timeout (secs)<br>(0 == no timeout)", false, 0, -1);
+        aMgrSettings["pingtimeout"] = NewNumberObject("Timeout without Ping<br>(for Studio only, 0 == no timeout)", false, 0, -1);
+        aMgrSettings["requesttimeout"] = NewNumberObject("Request timeout (secs)<br>(0 == no timeout)", false, 0, -1);
+        aMgrSettings["jaxeridletimeout"] = NewNumberObject("Jaxer Idle Timeout (seconds)", false, 0, -1);
+        
+        aMgrSettings["maxprocesses"] = NewNumberObject("Max number of Jaxers", false, 1, -1);
+        aMgrSettings["minprocesses"] = NewNumberObject("Min number of Jaxers", false, 0, -1);
+        aMgrSettings["maxmemory"] = NewNumberObject("Jaxer Max memory (MB)<br>(0 == no limit)", false, 0, -1);
+        aMgrSettings["maxrequests"] = NewNumberObject("Max number of requests servered by each Jaxer<br>(0 == no limit)", false, 0, -1);
+        aMgrSettings["roundrobinjaxers"] = NewBooleanObject("Round Robin Jaxers", false);
+        //mgrSettings["timeout"] = NewObject("NewNumberObject", false, 0, 0);
+        
+        return aMgrSettings;
+    }
+    
+    function FixWindowsPath(aPath)
+    {
+        var pos;
+        var temp = "" + aPath;
+
+        while ((pos=temp.indexOf("/"))>-1)
+        {
+            temp = "" + (temp.substring(0, pos) + "\\" + 
+                temp.substring((pos + 1), temp.length));
+        }
+        return temp;
+    }
+    
+    function BuildCfg(resp)
+    {
+        var newSettings="";
+        if (resp.failed)
+        {
+          //The cmd failed.  Here is the error info.
+          Jaxer.Log.info("get all failed: ERROR_CODE=" + resp.errorCode + 
+                         " ERROR:" +  resp.errorText);
+        }else
+        {
+          // read all data.  Calling resp.data will cause that part of the data
+          // be removed.  So you should NOT do things like
+          // if (resp.data)
+          //    var saved_it = resp.data;
+          //
+          while(resp.hasMore)
+          {
+            newSettings = newSettings + resp.data;
+          }
+       }
+       
+       var re = /([^=]*)=(.*)/;
+       var aLine = newSettings.split(/\n/);
+       
+       for (var i=0; i<aLine.length; i++)
+       {
+           rslt = re.exec(aLine[i]);
+           if (rslt)
+           {
+               if (mgrSettings[rslt[1]])
+               {
+                   mgrSettings[rslt[1]].value = rslt[2];
+               }else if (rslt[1] == "version")
+               {
+                   mgrVersion = rslt[2];
+               }else if (rslt[1] == "configfile")
+               {
+                   mgrCfgFile = rslt[2];
+               }else
+               {
+                   //Error or deprecated settings
+                   Jaxer.Log.debug("Unrecognized or deprecated setting from manager: " + aLine[i]);
+               }
+           }
+       }
+       
+    }
+    
+    function UpdateSettingsFromMgr()
+    {
+        // get all manager settings SYNC
+        gMgrCmdService.execNeedRespCmd("get all", BuildCfg, false);
+    }
+    
+    function UpdateMgrFromSettings()
+    {
+        // Apply settings to mgr that do not require restart.
+        for (var key in mgrSettings)
+        {
+            var obj = mgrSettings[key];
+            if (obj.set && !obj.restart)
+                gMgrCmdService.execNoRespCmd("set " + key + " " + obj.value);
+        }
+    }
+    
+    function BuildSettingPage()
+    {
+        document.write("<div align=\"center\">");
+        document.write("<h1>Jaxer Manager (" + mgrVersion + ") Settings</h1>")
+        document.write("Configuration file: " + mgrCfgFile + "<br>");
+        document.write("(Settings marked with <font color=red>&#10017</font> require restarting manager.)");
+        
+        if (gChanged)
+            document.write("<h2><font color=red>Settings Persisted</font></h2>");
+        if (gRestart)
+            document.write("<h3><font color=red>You must restart manager to make these changes (&#9775) to take effect.</font></h3>");
+        document.write("</div><br>");
+        
+        document.write("<form name=\"mgrsettings\" method=\"post\">")
+        document.write("<TABLE align=center><TR>");
+        document.write("<TH align=right>Setting</TH>");
+        document.write("<TH>&nbsp;&nbsp;</TH><TH align=left>Value</TH>");
+        document.write("</TR");
+        
+        for(var key in mgrSettings)
+        {
+            var aObj = mgrSettings[key];
+            var type = aObj.type;
+            document.write("<TR><TD  align=right>" + aObj.title + "</TD>");
+            if (aObj.restart)
+                document.write("<TD><font color=red>&#10017</font></TD><TD>");
+            else
+                document.write("<TD></TD><TD>");
+            if (type == "choice")
+            {
+                for (var i=0; i<aObj.choices.length; i++)
+                {
+                    document.write("<INPUT type=radio name=\"" + key + "\" value=\"" + aObj.choices[i] + "\"");
+                    if (aObj.choices[i] == aObj.value)
+                        document.write(" checked");
+                    document.write(">");
+                    document.write(aObj.choices[i]);
+                }
+            }else if (type == "path")
+            {
+                document.write("<INPUT type=text name=" + key + " value=\"" + aObj.value + "\" size=40>");
+            }else
+            {
+                document.write("<INPUT type=text name=" + key + " value=\"" + aObj.value + "\">");
+            }
+            if (aObj.set)
+            {
+                if (aObj.restart)
+                    document.write("<font color=red>&#9775</font>");
+                else
+                    document.write("<font color=green>&#10004</font>");
+            }
+            document.write("</TD></TR>")
+        }
+        
+        document.write("<TR><TD></TD><TD></TD><TD><input type=\"submit\" value=\"Save\"></TD></TR>");
+        document.write("</TABLE>");
+        document.write("</form>");
+    }
+    
+    function UpdateSettingsFromRequest()
+    {
+        var data = Jaxer.request.data;
+        for(var name in data)
+        {
+           if (mgrSettings[name])
+           {
+               //TODO: test mgrSettings[name].type, and do validation
+               // eg IP should have a valid IP
+               //    path should be valid
+               //    number should be valid
+               if (mgrSettings[name].value != data[name])
+               {
+                   mgrSettings[name].value = data[name];
+                   mgrSettings[name].set = true;
+                   if (mgrSettings[name].restart == true)
+                       gRestart = true;
+                   gChanged = true;
+               }
+           }else
+           {
+               // We should not be here.
+               Jaxer.Log.warn("Unknown setting: " + name + "=" + data[name]);
+               //TODO:report error back
+           }
+        }
+    }
+    
+    function PersistMgrSettings()
+    {
+        // TODO: This keeps all backups.  Should we do this?
+        // TODO: Check Error
+        Jaxer.File.backup(mgrCfgFile);
+        var fd = new Jaxer.File(mgrCfgFile);
+        fd.open("w");
+        fd.write("##################### JaxerManager Settings #####################\n");
+        fd.write("## These settings are applied before the command line settings ##\n");
+
+        for (var key in mgrSettings)
+        {
+            fd.write("# " + mgrSettings[key].title + "\n");
+            if (mgrSettings[key].type == "path")
+                fd.write(key + " \"" + mgrSettings[key].value + "\"\n");
+            else
+                fd.write(key + " " + mgrSettings[key].value + "\n");
+        }
+        fd.close();
+    }
+    
+    // First of all,
+    // If this is not from the admin port, reject it
+    // TODO: framework needs to populate this field. 
+    // isAdmin = Jaxer.request.isAdmin;
+    if (!gIsAdmin)
+    {
+        // build error page and return
+    }
+    
+    mgrSettings = NewMgrSettings();
+    UpdateSettingsFromMgr();
+        
+    gMethod = Jaxer.request.action;
+    if (gMethod == "POST")
+    {
+        UpdateSettingsFromRequest();
+        
+        PersistMgrSettings();
+        if (gChanged)
+        { 
+            //Update mgr
+            UpdateMgrFromSettings();
+        }
+    }
+    BuildSettingPage();
+    
+</script>
+
+</body>
+</html>

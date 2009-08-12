@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/jaxer/!svn/ver/4580/trunk/products/server/tools/conf/private
+END
+build.properties.solaris
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/4319/trunk/products/server/tools/conf/private/build.properties.solaris
+END
+build.properties.mac
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/4318/trunk/products/server/tools/conf/private/build.properties.mac
+END
+build.properties.ubu32
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/4320/trunk/products/server/tools/conf/private/build.properties.ubu32
+END
+build.properties.win32
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/4322/trunk/products/server/tools/conf/private/build.properties.win32
+END
+build.properties.ubu64
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/4580/trunk/products/server/tools/conf/private/build.properties.ubu64
+END

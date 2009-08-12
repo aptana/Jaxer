@@ -1,0 +1,94 @@
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+ * vim: set sw=4 ts=4 et: */
+/* ***** BEGIN LICENSE BLOCK *****
+ *  Version: GPL 3
+ * 
+ *  This program is Copyright (C) 2007-2008 Aptana, Inc. All Rights Reserved
+ *  This program is licensed under the GNU General Public license, version 3 (GPL).
+ * 
+ *  This program is distributed in the hope that it will be useful, but
+ *  AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+ *  NONINFRINGEMENT. Redistribution, except as permitted by the GPL,
+ *  is prohibited.
+ * 
+ *  You can redistribute and/or modify this program under the terms of the GPL, 
+ *  as published by the Free Software Foundation.  You should
+ *  have received a copy of the GNU General Public License, Version 3 along
+ *  with this program; if not, write to the Free Software Foundation, Inc., 51
+ *  Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  
+ *  Aptana provides a special exception to allow redistribution of this file
+ *  with certain other code and certain additional terms
+ *  pursuant to Section 7 of the GPL. You may view the exception and these
+ *  terms on the web at http://www.aptana.com/legal/gpl/.
+ *  
+ *  You may view the GPL, and Aptana's exception and additional terms in the file
+ *  titled license-jaxer.html in the main distribution folder of this program.
+ *  
+ *  Any modifications to this file must keep this entire header intact.
+ * 
+ * ***** END LICENSE BLOCK ***** */
+
+#include "nsISupports.idl"
+
+interface nsIFile;
+
+%{ C++
+
+#define APT_HTTP_RESPONSE_CID \
+{ 0x201f9839, 0x6af9, 0x4b75, { 0x93, 0xdb, 0xc8, 0x2f, 0xed, 0xce, 0x6c, 0x18 } }
+
+#define APT_HTTP_RESPONSE_CONTRACTID \
+	"@aptana.com/eh/httpresponse;1"
+
+%}
+
+/**
+ *
+ */
+[scriptable, uuid(3dee2cff-5fde-498d-ae0b-b6030b63e8ae)]
+interface aptIHTTPResponse : nsISupports
+{
+	/**
+     *        
+     */
+    attribute long statusCode;
+
+	/**
+     *        
+     */
+    attribute AString statusPhrase;
+
+    /**
+     * This flag specifies if the orginal document should be used instead of the current DOM.
+     */
+    attribute boolean shouldUseOriginalContent;
+
+    attribute boolean frameworkFailed;
+
+    /**
+     *        
+     */
+    void setContents(in AString contents);
+    void setBinaryContents([array, size_is(aLength)] in PRUint8 aBytes, in PRUint32 aLength);
+    void sendFile(in AString aPath);
+
+    [noscript] readonly attribute boolean hasContents;
+    [noscript] readonly attribute ACString contents;
+    [noscript] readonly attribute nsIFile pipeFile;
+
+	long getHeaderCount();
+
+	AString getHeaderName(in long index);
+
+	AString getValueByName(in AString name);
+
+	AString getValueByOrd(in long index);
+
+	boolean hasHeader(in AString name);
+
+	void addHeader(in AString name, in AString value, in boolean del);
+
+	void deleteHeader(in AString name);
+};

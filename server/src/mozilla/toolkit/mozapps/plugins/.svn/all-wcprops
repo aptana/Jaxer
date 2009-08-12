@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/toolkit/mozapps/plugins
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/plugins/Makefile.in
+END
+pluginGlue.js
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/plugins/pluginGlue.js
+END

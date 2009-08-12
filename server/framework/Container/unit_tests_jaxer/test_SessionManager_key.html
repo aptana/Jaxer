@@ -1,0 +1,20 @@
+<html>
+	<head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+	</head>
+	<script type="text/javascript" runat="server">
+	
+	/**
+	 * tests that sessionKey data is maintained by the server
+	 */
+	function testSessionKey()
+	{
+		var r = (""+Math.random()).substr(-10); //create a random string of digits
+		var request1 = Jaxer.Web.get('session.html?randomValue='+r);
+		var request2 = Jaxer.Web.get('readsession.html');
+		assertTrue(request2.indexOf(r)>0,'Generated SessionKey "UnitTestKey" did not contain expected value '+r);
+	}
+	
+	</script>

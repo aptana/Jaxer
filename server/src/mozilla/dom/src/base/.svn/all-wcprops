@@ -1,0 +1,233 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/4484/trunk/products/server/src/mozilla/dom/src/base
+END
+nsJSUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/src/base/nsJSUtils.cpp
+END
+nsDOMWindowUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/base/nsDOMWindowUtils.h
+END
+nsDOMException.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/src/base/nsDOMException.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/3050/trunk/products/server/src/mozilla/dom/src/base/Makefile.in
+END
+nsHistory.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/src/base/nsHistory.cpp
+END
+nsPluginArray.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/base/nsPluginArray.h
+END
+nsJSEnvironment.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/src/base/nsJSEnvironment.h
+END
+nsLocation.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/src/base/nsLocation.cpp
+END
+nsDOMWindowList.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/base/nsDOMWindowList.h
+END
+nsGlobalWindowCommands.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/base/nsGlobalWindowCommands.cpp
+END
+nsWindowRoot.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/base/nsWindowRoot.cpp
+END
+nsJSTimeoutHandler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/src/base/nsJSTimeoutHandler.cpp
+END
+nsDOMClassInfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/4341/trunk/products/server/src/mozilla/dom/src/base/nsDOMClassInfo.cpp
+END
+nsScriptNameSpaceManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/base/nsScriptNameSpaceManager.h
+END
+nsFocusController.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/src/base/nsFocusController.cpp
+END
+nsScreen.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/base/nsScreen.h
+END
+nsDOMWindowUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/dom/src/base/nsDOMWindowUtils.cpp
+END
+nsDOMScriptObjectFactory.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/base/nsDOMScriptObjectFactory.h
+END
+nsBarProps.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/base/nsBarProps.h
+END
+nsGlobalWindow.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/dom/src/base/nsGlobalWindow.h
+END
+nsMimeTypeArray.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/base/nsMimeTypeArray.h
+END
+nsPluginArray.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/src/base/nsPluginArray.cpp
+END
+nsJSEnvironment.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/3050/trunk/products/server/src/mozilla/dom/src/base/nsJSEnvironment.cpp
+END
+nsJSUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/src/base/nsJSUtils.h
+END
+nsDOMWindowList.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/base/nsDOMWindowList.cpp
+END
+nsDOMException.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/base/nsDOMException.h
+END
+nsHistory.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/base/nsHistory.h
+END
+nsScriptNameSpaceManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/src/base/nsScriptNameSpaceManager.cpp
+END
+nsScreen.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/4484/trunk/products/server/src/mozilla/dom/src/base/nsScreen.cpp
+END
+nsGlobalWindowCommands.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/base/nsGlobalWindowCommands.h
+END
+nsWindowRoot.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/base/nsWindowRoot.h
+END
+nsDOMScriptObjectFactory.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/src/base/nsDOMScriptObjectFactory.cpp
+END
+nsDOMClassInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/4341/trunk/products/server/src/mozilla/dom/src/base/nsDOMClassInfo.h
+END
+nsMimeTypeArray.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/base/nsMimeTypeArray.cpp
+END
+nsGlobalWindow.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/dom/src/base/nsGlobalWindow.cpp
+END
+nsFocusController.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/src/base/nsFocusController.h
+END
+nsBarProps.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/base/nsBarProps.cpp
+END
+domerr.msg
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/base/domerr.msg
+END

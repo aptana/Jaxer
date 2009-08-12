@@ -1,0 +1,263 @@
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/reftests/native-theme
+END
+textarea-nonnative.html
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/textarea-nonnative.html
+END
+textarea-nonnative-when-styled.html
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/textarea-nonnative-when-styled.html
+END
+native-theme-disabled-cascade-levels-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/native-theme-disabled-cascade-levels-ref.html
+END
+text-input-nonnative.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/text-input-nonnative.html
+END
+text-input-nonnative-when-styled.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/text-input-nonnative-when-styled.html
+END
+radio-native.html
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/radio-native.html
+END
+fieldset-not-blank.html
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/native-theme/fieldset-not-blank.html
+END
+combobox-nonnative-when-styled-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/combobox-nonnative-when-styled-ref.html
+END
+listbox-nonnative.html
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/listbox-nonnative.html
+END
+listbox-nonnative-when-styled.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/listbox-nonnative-when-styled.html
+END
+button-nonnative-when-styled-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/button-nonnative-when-styled-ref.html
+END
+checkbox-nonnative.html
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/checkbox-nonnative.html
+END
+combobox-native.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/combobox-native.html
+END
+radio-nonnative.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/radio-nonnative.html
+END
+427122-1.html
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/reftests/native-theme/427122-1.html
+END
+textarea-not-blank.html
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/native-theme/textarea-not-blank.html
+END
+textarea-native.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/textarea-native.html
+END
+file-not-blank.html
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/native-theme/file-not-blank.html
+END
+native-theme-disabled-cascade-levels.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/native-theme-disabled-cascade-levels.html
+END
+text-input-native.html
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/text-input-native.html
+END
+combobox-nonnative.html
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/combobox-nonnative.html
+END
+listbox-not-blank.html
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/native-theme/listbox-not-blank.html
+END
+combobox-nonnative-when-styled.html
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/combobox-nonnative-when-styled.html
+END
+checkbox-not-blank.html
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/native-theme/checkbox-not-blank.html
+END
+checkbox-still-native-when-styled-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/checkbox-still-native-when-styled-ref.html
+END
+button-nonnative.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/button-nonnative.html
+END
+button-nonnative-when-styled.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/button-nonnative-when-styled.html
+END
+radio-not-blank.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/native-theme/radio-not-blank.html
+END
+radio-still-native-when-styled-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/radio-still-native-when-styled-ref.html
+END
+reftest.list
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/reftests/native-theme/reftest.list
+END
+text-control-not-blank.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/native-theme/text-control-not-blank.html
+END
+textarea-nonnative-when-styled-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/textarea-nonnative-when-styled-ref.html
+END
+combobox-not-blank.html
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/native-theme/combobox-not-blank.html
+END
+text-input-nonnative-when-styled-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/text-input-nonnative-when-styled-ref.html
+END
+listbox-nonnative-when-styled-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/listbox-nonnative-when-styled-ref.html
+END
+button-not-blank.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/native-theme/button-not-blank.html
+END
+button-native.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/button-native.html
+END
+button-html-not-blank.html
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/native-theme/button-html-not-blank.html
+END
+checkbox-still-native-when-styled.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/checkbox-still-native-when-styled.html
+END
+radio-still-native-when-styled.html
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/radio-still-native-when-styled.html
+END
+listbox-native.html
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/listbox-native.html
+END
+427122-1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/reftests/native-theme/427122-1-ref.html
+END
+checkbox-native.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/native-theme/checkbox-native.html
+END

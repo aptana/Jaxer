@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html debug="true">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+		<title id='docTitle'>Client Side Logging Example</title>
+		<link rel='stylesheet' type='text/css' href='css/index.css'>
+		
+		<script type="text/javascript" src="lib/firebug/firebug.js"></script>
+		
+		<!-- This script block will be available on both client and server since the 
+			runat attribute is set to 'both'. -->		
+		<script type="text/javascript" runat="both">
+			function $(id) 
+			{ 
+				return document.getElementById(id); 
+			}
+		</script>
+			
+		<!-- This script block will execute only on the server because of the
+			runat="server" attributes. -->
+		<script type="text/javascript" runat='server'>
+
+			// a regular log statement
+			Jaxer.Log.info("some simple logging examples");
+			
+			/*
+			 * A function proxied to allow client side access to the 
+			 * server side logging facility
+			 */
+			function proxyLog(level,msg)
+			{
+				log = Jaxer.Log.forModule('proxyLogger');
+				log[level](msg);
+			}
+			proxyLog.proxy=true;
+			
+		</script>
+		
+		<!-- This script block is a standard script block and runs on the browser only -->
+		<script type="text/javascript">
+			/*
+			 * If we find Firebug (Lite) we'll let the user know.
+			 */
+			function firebugDetect()
+			{
+				if (typeof window.console == "object") {
+					$('firebugDetect').innerHTML = "Firebug console logging detected!";
+				}
+			}
+
+			/*
+			 * A clientsidefunction that logs to both firebug console 
+			 * and the jaxer server side logging facility
+			 */
+			function echoLog(level,msg)
+			{
+				if (typeof window.console == "object")
+				{
+					console[level](msg);
+				}
+				proxyLog(level,msg);
+			}
+			
+			// Do some sample logging
+			
+			proxyLog('info',"a proxied 'info' log statement");
+			proxyLog('warn',"a proxied 'warn' log statement");
+			proxyLog('error',"a proxied 'error' log statement");
+			
+			echoLog("info","this 'info' message appears in both Jaxer.Log and the Firebug console if present");
+			echoLog("warn","this 'warning' message appears in both Jaxer.Log and the Firebug console if present");
+			echoLog("error","this 'error' message appears in both Jaxer.Log and the Firebug console if present");
+			
+		</script>
+			
+    </head>
+
+	<body onload="firebugDetect()">
+		<div id='sampleDescription'>
+			This application shows how to use jaxer logging client side and also dynamically bound into Firebug if present.
+		</div>
+		
+		<div id='sampleSource'>
+			<a href="/aptana/tools/sourceViewer/index.html?filename=../../samples/logging/index.html" target="_blank">index.html</a> Source code for this single page App.
+		</div>
+		
+		<script type="text/javascript" src="lib/wz_tooltip.js"></script>
+		<div id='sampleHeader'>
+			<div class='sampleTitle'>
+				<img src='images/page_white_edit.png'/> Client Side Logging Example
+			</div>
+			<div id='rightFloat'>
+				<img src ='images/information.png' class='sampleDescription' 
+				     onmouseover="TagToTip('sampleDescription', CLICKCLOSE, true, STICKY, true, WIDTH, 300, TITLE, $('docTitle').innerHTML)"/>
+				<span id='sourceButton'><img src ='images/html.png' 	   id='sampleSourceLink' 
+					onmouseover="TagToTip('sampleSource',       STICKY, true, CLOSEBTN, true, WIDTH, 300, TITLE, 'View Source Code')"/></span>
+			</div>
+		</div>
+		
+		<div id='applicationContent'>
+			<div id='explainer'>
+			This example application demonstrates some easy methods to wrap server-side logging to make it 
+			available to client-side JavaScript.<p/>
+			
+			You can view the source for this simple Ajax application by clicking on the <img src ='images/html.png'/> icon in the title bar,
+			or inside Aptana Studio you can import this sample and view the Source tab.<p/>
+
+		    Any Jaxer log messages would appear in your Jaxer log file (<span class="path-name">jaxer.log</span>).
+            Inside Aptana Studio, you can right click on the Jaxer and internal preview servers in the servers view to view their log files.
+            For external installations, logs reside in your Jaxer installation 'logs' directory.
+            Apache log files (<span class="path-name">apache_error.log, access.log</span>) are also stored in the same folder.<p/>
+
+			If you look in your log file you will see logging statements similar to those shown below appended to the log on each refresh of this page.<p/>
+			</div>
+			<pre id='codeblock'>
+15:23:56 12/26/2007 [  5132][INFO] [JS Framework] [framework.] some simple logging examples
+15:23:56 12/26/2007 [  5132][INFO] [JS Framework] [proxyLogger.proxyLog] a proxied info log statement
+15:23:56 12/26/2007 [  5132][WARNING] [JS Framework] [proxyLogger.proxyLog] a proxied warn log statement
+15:23:56 12/26/2007 [  5132][ERROR] [JS Framework] [proxyLogger.proxyLog] a proxied error log statement
+  --> onCallback
+  --> fire
+  --> 
+15:24:34 12/26/2007 [  5132][INFO] [JS Framework] [framework.] some simple logging examples
+15:24:35 12/26/2007 [  5132][INFO] [JS Framework] [proxyLogger.proxyLog] a proxied 'info' log statement
+15:24:35 12/26/2007 [  5132][WARNING] [JS Framework] [proxyLogger.proxyLog] a proxied 'warn' log statement
+15:24:35 12/26/2007 [  5132][ERROR] [JS Framework] [proxyLogger.proxyLog] a proxied 'error' log statement
+  --> onCallback
+  --> fire
+  --> 
+</pre>
+
+			<div id='firebugDetect'></div>
+
+		</div>
+		
+		<div id='sampleFooter'>
+		</div>
+			<script runat='server'>
+				if (Jaxer.Config.LOCAL_CONF_DIR.match('com.aptana.ide.framework.jaxer')) {
+					document.getElementById('sampleSource').innerHTML="";
+					document.getElementById('sourceButton').innerHTML="";
+				}
+			</script>						 
+    </body>
+</html>

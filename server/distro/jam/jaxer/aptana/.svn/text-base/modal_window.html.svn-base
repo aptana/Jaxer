@@ -1,0 +1,14 @@
+<div id="modal_content_wrap" style="overflow: auto;">
+<iframe src="#{href}" scrolling="auto" marginheight="0" marginwidth="0" id="modal_window_iframe" width="#{width}" height="#{height}" style="overflow: auto;"></iframe>
+
+<div style="margin: 10px; text-align: center;"><a href="#" onclick="window.ContentManager.closeModalWindow();">Close This Window</a></div>
+</div>
+
+<div class="top-left-edge"></div>
+<div class="top-edge"></div>
+<div class="top-right-edge"></div>
+<div class="right-edge"></div>
+<div class="bottom-right-edge"></div>
+<div class="bottom-edge"></div>
+<div class="bottom-left-edge"></div>
+<div class="left-edge"></div>

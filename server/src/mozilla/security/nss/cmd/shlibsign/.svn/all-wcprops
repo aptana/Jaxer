@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2605/trunk/products/server/src/mozilla/security/nss/cmd/shlibsign
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/shlibsign/manifest.mn
+END
+sign.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/shlibsign/sign.cmd
+END
+shlibsign.c
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/cmd/shlibsign/shlibsign.c
+END
+sign.sh
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/shlibsign/sign.sh
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/cmd/shlibsign/Makefile
+END

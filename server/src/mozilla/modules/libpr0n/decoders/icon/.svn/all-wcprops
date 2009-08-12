@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/modules/libpr0n/decoders/icon
+END
+nsIconProtocolHandler.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/libpr0n/decoders/icon/nsIconProtocolHandler.h
+END
+nsIconURI.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/libpr0n/decoders/icon/nsIconURI.h
+END
+nsIconDecoder.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/libpr0n/decoders/icon/nsIconDecoder.cpp
+END
+nsIconModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/libpr0n/decoders/icon/nsIconModule.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/libpr0n/decoders/icon/Makefile.in
+END
+imgicon.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/libpr0n/decoders/icon/imgicon.pkg
+END
+nsIconDecoder.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/libpr0n/decoders/icon/nsIconDecoder.h
+END
+nsIIconURI.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/libpr0n/decoders/icon/nsIIconURI.idl
+END
+nsIconProtocolHandler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/libpr0n/decoders/icon/nsIconProtocolHandler.cpp
+END
+nsIconURI.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/libpr0n/decoders/icon/nsIconURI.cpp
+END

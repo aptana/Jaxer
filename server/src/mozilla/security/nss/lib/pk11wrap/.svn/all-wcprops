@@ -1,0 +1,227 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap
+END
+pk11auth.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11auth.c
+END
+pk11pbe.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11pbe.c
+END
+secmodt.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/secmodt.h
+END
+pk11obj.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11obj.c
+END
+pk11list.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11list.c
+END
+pk11mech.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11mech.c
+END
+pk11pk12.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11pk12.c
+END
+secmodti.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/secmodti.h
+END
+pk11priv.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11priv.h
+END
+pk11sdr.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11sdr.c
+END
+pk11nobj.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11nobj.c
+END
+pk11err.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11err.c
+END
+pk11akey.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11akey.c
+END
+pk11sdr.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11sdr.h
+END
+config.mk
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/config.mk
+END
+pk11cxt.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11cxt.c
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/Makefile
+END
+pk11merge.c
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11merge.c
+END
+pk11kea.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11kea.c
+END
+pk11func.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11func.h
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/manifest.mn
+END
+pk11pars.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11pars.c
+END
+pk11init.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11init.h
+END
+pk11skey.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11skey.c
+END
+pk11util.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11util.c
+END
+pk11load.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11load.c
+END
+pk11slot.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11slot.c
+END
+secmod.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/secmod.h
+END
+pk11pqg.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11pqg.c
+END
+secpkcs5.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/secpkcs5.h
+END
+dev3hack.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/dev3hack.c
+END
+pk11pub.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11pub.h
+END
+secmodi.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/secmodi.h
+END
+pk11pqg.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11pqg.h
+END
+pk11cert.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/pk11cert.c
+END
+debug_module.c
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/debug_module.c
+END
+dev3hack.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/lib/pk11wrap/dev3hack.h
+END

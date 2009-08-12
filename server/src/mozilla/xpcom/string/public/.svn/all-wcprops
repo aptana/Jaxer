@@ -1,0 +1,197 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpcom/string/public
+END
+nsTObsoleteAString.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsTObsoleteAString.h
+END
+nsTString.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/string/public/nsTString.h
+END
+nsSubstringTuple.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsSubstringTuple.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/Makefile.in
+END
+nsDependentString.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsDependentString.h
+END
+nsStringBuffer.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsStringBuffer.h
+END
+nsEmbedString.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsEmbedString.h
+END
+nsTSubstring.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsTSubstring.h
+END
+nsCharTraits.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/string/public/nsCharTraits.h
+END
+nsObsoleteAString.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsObsoleteAString.h
+END
+nsString.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsString.h
+END
+nsUTF8Utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpcom/string/public/nsUTF8Utils.h
+END
+nsStringFwd.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsStringFwd.h
+END
+string-template-undef.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/string-template-undef.h
+END
+nsSubstring.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsSubstring.h
+END
+nsStringIterator.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpcom/string/public/nsStringIterator.h
+END
+nsLiteralString.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsLiteralString.h
+END
+nsTAString.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsTAString.h
+END
+nsTDependentSubstring.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/string/public/nsTDependentSubstring.h
+END
+nsPrintfCString.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsPrintfCString.h
+END
+nsTPromiseFlatString.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsTPromiseFlatString.h
+END
+nsXPCOMStrings.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsXPCOMStrings.h
+END
+string-template-def-unichar.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/string-template-def-unichar.h
+END
+nsDependentSubstring.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsDependentSubstring.h
+END
+nsAString.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsAString.h
+END
+nsXPIDLString.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsXPIDLString.h
+END
+nsPromiseFlatString.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsPromiseFlatString.h
+END
+nsTSubstringTuple.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsTSubstringTuple.h
+END
+nsReadableUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/nsReadableUtils.h
+END
+nsTDependentString.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/string/public/nsTDependentString.h
+END
+string-template-def-char.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/string/public/string-template-def-char.h
+END
+nsAlgorithm.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpcom/string/public/nsAlgorithm.h
+END

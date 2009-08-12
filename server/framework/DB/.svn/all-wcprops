@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/jaxer/!svn/ver/4543/trunk/products/server/framework/DB
+END
+DB.js
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/jaxer/!svn/ver/4134/trunk/products/server/framework/DB/DB.js
+END
+DB_SQLite.js
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/4134/trunk/products/server/framework/DB/DB_SQLite.js
+END
+DB_ADO.js
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/jaxer/!svn/ver/4424/trunk/products/server/framework/DB/DB_ADO.js
+END
+server_db.json
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/1471/trunk/products/server/framework/DB/server_db.json
+END
+DB_MySQL.js
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/4543/trunk/products/server/framework/DB/DB_MySQL.js
+END
+ResultSet.js
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/4336/trunk/products/server/framework/DB/ResultSet.js
+END

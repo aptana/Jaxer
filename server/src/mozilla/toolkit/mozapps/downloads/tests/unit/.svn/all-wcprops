@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/mozapps/downloads/tests/unit
+END
+test_DownloadUtils.js
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/mozapps/downloads/tests/unit/test_DownloadUtils.js
+END
+test_syncedDownloadUtils.js
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/mozapps/downloads/tests/unit/test_syncedDownloadUtils.js
+END

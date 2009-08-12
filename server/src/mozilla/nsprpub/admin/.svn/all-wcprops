@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/nsprpub/admin
+END
+makeTargetDirs.sh
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/admin/makeTargetDirs.sh
+END
+symlinks.sh
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/admin/symlinks.sh
+END
+explode.pl
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/admin/explode.pl
+END
+repackage.sh
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/nsprpub/admin/repackage.sh
+END

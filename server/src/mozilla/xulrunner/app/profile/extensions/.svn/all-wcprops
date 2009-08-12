@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/app/profile/extensions
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/app/profile/extensions/Makefile.in
+END
+Extensions.rdf
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/app/profile/extensions/Extensions.rdf
+END
+installed-extensions.txt
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/app/profile/extensions/installed-extensions.txt
+END

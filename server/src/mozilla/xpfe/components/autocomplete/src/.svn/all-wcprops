@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpfe/components/autocomplete/src
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpfe/components/autocomplete/src/Makefile.in
+END
+nsAutoComplete.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/autocomplete/src/nsAutoComplete.cpp
+END
+nsAutoComplete.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/autocomplete/src/nsAutoComplete.h
+END

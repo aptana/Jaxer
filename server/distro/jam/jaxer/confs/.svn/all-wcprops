@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/jaxer/!svn/ver/4618/trunk/products/server/distro/jam/jaxer/confs
+END
+jaxer.httpd.conf
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/4585/trunk/products/server/distro/jam/jaxer/confs/jaxer.httpd.conf
+END
+jaxer-win.httpd.conf
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/4585/trunk/products/server/distro/jam/jaxer/confs/jaxer-win.httpd.conf
+END

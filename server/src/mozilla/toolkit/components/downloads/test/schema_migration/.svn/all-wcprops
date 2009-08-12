@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/components/downloads/test/schema_migration
+END
+head_migration.js
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/downloads/test/schema_migration/head_migration.js
+END
+v1.sqlite
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/downloads/test/schema_migration/v1.sqlite
+END
+test_migration_to_2.js
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/downloads/test/schema_migration/test_migration_to_2.js
+END
+v2.sqlite
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/downloads/test/schema_migration/v2.sqlite
+END
+test_migration_to_3.js
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/downloads/test/schema_migration/test_migration_to_3.js
+END
+v3.sqlite
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/downloads/test/schema_migration/v3.sqlite
+END
+test_migration_to_4.js
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/components/downloads/test/schema_migration/test_migration_to_4.js
+END
+v4.sqlite
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/components/downloads/test/schema_migration/v4.sqlite
+END
+test_migration_to_5.js
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/components/downloads/test/schema_migration/test_migration_to_5.js
+END
+v5.sqlite
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/components/downloads/test/schema_migration/v5.sqlite
+END
+test_migration_to_6.js
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/components/downloads/test/schema_migration/test_migration_to_6.js
+END
+v6.sqlite
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/components/downloads/test/schema_migration/v6.sqlite
+END
+test_migration_to_7.js
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/components/downloads/test/schema_migration/test_migration_to_7.js
+END
+v7.sqlite
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/components/downloads/test/schema_migration/v7.sqlite
+END
+test_migration_to_8.js
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/components/downloads/test/schema_migration/test_migration_to_8.js
+END

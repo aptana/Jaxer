@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/nsprpub/pr/src/pthreads
+END
+ptmisc.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/pthreads/ptmisc.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/pthreads/Makefile.in
+END
+ptsynch.c
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2151/trunk/products/server/src/mozilla/nsprpub/pr/src/pthreads/ptsynch.c
+END
+ptio.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/nsprpub/pr/src/pthreads/ptio.c
+END
+ptthread.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/nsprpub/pr/src/pthreads/ptthread.c
+END

@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/metrics/src
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/metrics/src/Makefile.in
+END
+nsMetricsConfig.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/metrics/src/nsMetricsConfig.h
+END
+nsProfileCollector.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/metrics/src/nsProfileCollector.cpp
+END
+nsAutoCompleteCollector.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/metrics/src/nsAutoCompleteCollector.cpp
+END
+nsProfileCollector.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/metrics/src/nsProfileCollector.h
+END
+nsAutoCompleteCollector.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/metrics/src/nsAutoCompleteCollector.h
+END
+nsWindowCollector.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/metrics/src/nsWindowCollector.cpp
+END
+nssstubs.c
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/metrics/src/nssstubs.c
+END
+nsWindowCollector.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/metrics/src/nsWindowCollector.h
+END
+nsUICommandCollector.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/metrics/src/nsUICommandCollector.cpp
+END
+nsLoadCollector.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/metrics/src/nsLoadCollector.cpp
+END
+nsMetricsEventItem.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/metrics/src/nsMetricsEventItem.cpp
+END
+nsMetricsService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/metrics/src/nsMetricsService.cpp
+END
+nsPtrHashKey.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/metrics/src/nsPtrHashKey.h
+END
+nsStringUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/metrics/src/nsStringUtils.cpp
+END
+nsUICommandCollector.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/metrics/src/nsUICommandCollector.h
+END
+nsLoadCollector.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/metrics/src/nsLoadCollector.h
+END
+nsStringUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/metrics/src/nsStringUtils.h
+END
+nsMetricsService.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/metrics/src/nsMetricsService.h
+END
+nsMetricsEventItem.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/metrics/src/nsMetricsEventItem.h
+END
+nsMetricsConfig.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/metrics/src/nsMetricsConfig.cpp
+END

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/browser/components/sessionstore/src
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/components/sessionstore/src/Makefile.in
+END
+nsSessionStartup.js
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/browser/components/sessionstore/src/nsSessionStartup.js
+END
+nsSessionStore.js
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/browser/components/sessionstore/src/nsSessionStore.js
+END

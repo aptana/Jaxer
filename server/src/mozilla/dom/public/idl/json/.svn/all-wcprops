@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/public/idl/json
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/public/idl/json/Makefile.in
+END
+nsIJSON.idl
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/public/idl/json/nsIJSON.idl
+END

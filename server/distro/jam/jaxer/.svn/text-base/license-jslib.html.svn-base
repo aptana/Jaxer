@@ -1,0 +1,58 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<title>License for JSLib</title>
+<style>
+	body {
+		line-height:130%;
+		padding:10px;
+	}
+	H2 {
+		font-family: "Georgia", "Times New Roman", Times, serif;
+		FONT-SIZE: 1.4em;	
+		font-weight: bold;
+	}
+</style>
+</head>
+
+<body>
+
+<h2>JSLib Licensing</h2>
+
+<p>
+The contents of the file titled JSLib.js (the "File") included in this distribution
+are subject to the Mozilla Public License Version
+1.1 (the "License"); you may not use this file except in compliance with
+the License. You may obtain a copy of the License at 
+<a href="http://www.mozilla.org/MPL/">http://www.mozilla.org/MPL/</a>
+</p>
+<p>
+Software distributed under the License is distributed on an "AS IS" basis,
+WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+for the specific language governing rights and limitations under the
+License.
+</p>
+<p>
+The original developers of the code in the File are the contributors to the 
+JSLib project at <a href="http://jslib.mozdev.org">http://jslib.mozdev.org</a>.
+Portions created by the original developers are Copyright (C) 2000-2007.
+All Rights Reserved.
+</p>
+<p>
+The code in the File is derived from a subset of the JSLib code and has been
+modified by Aptana, Inc. in 2007. The code has been modified to function as
+a self-contained subset, to use try/catch constructs in lieu of return codes,
+to include ScriptDoc documentation, and to fit certain style guidelines.
+The portions modified by Aptana, Inc. are Copyright (C) 2007 Aptana, Inc. 
+All Rights Reserved.
+</p>
+<p>
+The File is distributed by Aptana, Inc. as part of its Jaxer program.
+A copy of the MPL is available as a file titled LICENSE in the main 
+distribution folder of this program.
+</p>
+
+</body>
+
+</html>

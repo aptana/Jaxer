@@ -1,0 +1,371 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/3579/trunk/products/server/src/mozilla/layout/base
+END
+nsLayoutUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/base/nsLayoutUtils.cpp
+END
+nsQuoteList.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsQuoteList.h
+END
+nsStyleConsts.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/base/nsStyleConsts.h
+END
+nsDocumentViewer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/3579/trunk/products/server/src/mozilla/layout/base/nsDocumentViewer.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/3564/trunk/products/server/src/mozilla/layout/base/Makefile.in
+END
+nsILayoutDebugger.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsILayoutDebugger.h
+END
+nsDisplayList.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/base/nsDisplayList.cpp
+END
+nsChildIterator.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsChildIterator.h
+END
+nsCaret.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/base/nsCaret.h
+END
+nsGenConList.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/base/nsGenConList.cpp
+END
+nsIFocusEventSuppressor.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/base/nsIFocusEventSuppressor.h
+END
+nsBidi.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsBidi.cpp
+END
+nsStyleChangeList.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/base/nsStyleChangeList.h
+END
+nsCSSFrameConstructor.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/base/nsCSSFrameConstructor.cpp
+END
+nsIStyleSheetService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsIStyleSheetService.idl
+END
+nsStyleSheetService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/base/nsStyleSheetService.cpp
+END
+nsCounterManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsCounterManager.cpp
+END
+nsICaret.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/base/nsICaret.h
+END
+nsCSSColorUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsCSSColorUtils.h
+END
+nsImageLoader.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsImageLoader.h
+END
+nsIDocumentViewer.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsIDocumentViewer.h
+END
+nsCompatibility.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsCompatibility.h
+END
+nsFrameTraversal.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsFrameTraversal.cpp
+END
+nsPresState.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsPresState.h
+END
+nsLayoutErrors.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsLayoutErrors.h
+END
+nsIPresShell.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/base/nsIPresShell.h
+END
+nsIPercentHeightObserver.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsIPercentHeightObserver.h
+END
+nsPresContext.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/base/nsPresContext.h
+END
+nsFrameManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/base/nsFrameManager.cpp
+END
+nsFrameManagerBase.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsFrameManagerBase.h
+END
+nsBidiPresUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/base/nsBidiPresUtils.h
+END
+nsQuoteList.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsQuoteList.cpp
+END
+nsCSSRendering.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/base/nsCSSRendering.h
+END
+nsIFrameTraversal.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsIFrameTraversal.h
+END
+nsChildIterator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsChildIterator.cpp
+END
+nsCaret.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/base/nsCaret.cpp
+END
+nsIImageMap.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsIImageMap.h
+END
+nsLayoutHistoryState.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsLayoutHistoryState.cpp
+END
+nsPresShell.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/base/nsPresShell.cpp
+END
+nsStyleChangeList.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/base/nsStyleChangeList.cpp
+END
+nsLayoutUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/base/nsLayoutUtils.h
+END
+nsDisplayList.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/base/nsDisplayList.h
+END
+nsCSSColorUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsCSSColorUtils.cpp
+END
+nsImageLoader.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsImageLoader.cpp
+END
+nsGenConList.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsGenConList.h
+END
+nsPresState.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsPresState.cpp
+END
+nsBidi.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsBidi.h
+END
+nsChangeHint.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsChangeHint.h
+END
+nsCSSFrameConstructor.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/base/nsCSSFrameConstructor.h
+END
+nsILayoutHistoryState.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsILayoutHistoryState.h
+END
+nsPresContext.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/base/nsPresContext.cpp
+END
+nsCounterManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsCounterManager.h
+END
+nsStyleSheetService.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsStyleSheetService.h
+END
+nsBidiPresUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/base/nsBidiPresUtils.cpp
+END
+nsLayoutDebugger.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/base/nsLayoutDebugger.cpp
+END
+nsFrameTraversal.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsFrameTraversal.h
+END
+nsCSSRendering.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/base/nsCSSRendering.cpp
+END
+nsFocusEventSuppressor.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/base/nsFocusEventSuppressor.cpp
+END
+nsIReflowCallback.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/base/nsIReflowCallback.h
+END
+nsFrameManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/base/nsFrameManager.h
+END
+nsIDocumentViewerPrint.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/base/nsIDocumentViewerPrint.h
+END

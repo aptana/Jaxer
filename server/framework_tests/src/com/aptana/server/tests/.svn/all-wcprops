@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests
+END
+Global.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/Global.java
+END
+FileUtils.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/FileUtils.java
+END
+CallbackPageTable.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/CallbackPageTable.java
+END
+AbstractTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/AbstractTest.java
+END
+Database.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/Database.java
+END
+AbstractThreadedTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/AbstractThreadedTest.java
+END
+Table.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/Table.java
+END
+StringUtils.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/StringUtils.java
+END
+IResultProcessor.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/IResultProcessor.java
+END
+AbstractDatabaseTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/AbstractDatabaseTest.java
+END
+AbstractJavascriptTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/AbstractJavascriptTest.java
+END
+AllTests.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/AllTests.java
+END
+JaxerHtmlTestUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/JaxerHtmlTestUtil.java
+END

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xpfe/components
+END
+nsXPFEComponentsCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/nsXPFEComponentsCID.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/xpfe/components/Makefile.in
+END
+jar.mn
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/jar.mn
+END

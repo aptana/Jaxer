@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/universalchardet/src/xpcom
+END
+nsUdetXPCOMWrapper.h
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/universalchardet/src/xpcom/nsUdetXPCOMWrapper.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/xpcom/Makefile.in
+END
+universalchardet.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/xpcom/universalchardet.pkg
+END
+nsUniversalCharDetDll.h
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/xpcom/nsUniversalCharDetDll.h
+END
+nsUdetXPCOMWrapper.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/universalchardet/src/xpcom/nsUdetXPCOMWrapper.cpp
+END
+nsUniversalCharDetModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/universalchardet/src/xpcom/nsUniversalCharDetModule.cpp
+END

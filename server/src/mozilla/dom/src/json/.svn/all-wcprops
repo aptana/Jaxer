@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/3848/trunk/products/server/src/mozilla/dom/src/json
+END
+nsJSON.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/3840/trunk/products/server/src/mozilla/dom/src/json/nsJSON.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/src/json/Makefile.in
+END
+nsJSON.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/3848/trunk/products/server/src/mozilla/dom/src/json/nsJSON.cpp
+END

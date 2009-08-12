@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/deserialization/object
+END
+deserializeObjectOfBooleans.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/deserialization/object/deserializeObjectOfBooleans.html
+END
+deserializeEmptyObject.html
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/deserialization/object/deserializeEmptyObject.html
+END
+deserializeObjectOfStrings.html
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/deserialization/object/deserializeObjectOfStrings.html
+END
+deserializeObjectOfNumbers.html
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/deserialization/object/deserializeObjectOfNumbers.html
+END

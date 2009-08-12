@@ -1,0 +1,291 @@
+<html>
+	<head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+		<script type="text/javascript" runat="server">
+			
+			// The folder path should be and empty filesystem folder 
+			// that the tests can manipulate without dependency
+			
+			var sep = Jaxer.System.separator;
+			var testFileExt = "txt";
+			var testFileLeaf = "test_file." + testFileExt;
+			var testFileParentPath = Jaxer.System.tempFolder;
+			var testFilePath = testFileParentPath + sep + testFileLeaf;
+			
+			function testFilePathIsAvailable()
+			{
+				var testFileObject = new Jaxer.File(testFilePath);
+				assertFalse(testFileObject.exists, testFilePath + " exists");
+			}
+			
+			function testFileCreate()
+			{
+			
+				var testFileObject = new Jaxer.File(testFilePath);
+				
+				if (testFileObject.exists) 
+				{
+					testFileObject.remove();	
+				}
+				testFileObject.create();
+				
+				assertTrue(testFileObject.exists, testFilePath + " not found");
+				
+				assertTrue(testFileObject.path == testFilePath,   "path is incorrect found: " + testFileObject.path + " expected:" + testFilePath);    
+				assertTrue(testFileObject.leaf == testFileLeaf, "leaf is incorrect");
+				assertTrue(testFileObject.ext  == testFileExt,  "extension is incorrect");
+				assertTrue(testFileObject.parentPath == testFileParentPath,".parent is incorrect");
+
+				assertFalse(testFileObject.isDir, "isDir() returned true ");
+				assertTrue(testFileObject.isFile, "isFile() returned false ");
+				assertTrue(testFileObject.isReadable, "isReadable() returned false ");
+				assertTrue(testFileObject.isWritable, "isWritable() returned false ");
+				assertFalse(testFileObject.isHidden, "isHidden() returned true ");
+				
+				if (testFileObject.exists) 
+				{
+					testFileObject.remove();
+				}
+				assertFalse(testFileObject.exists, testFilePath + " exists - should have been deleted");
+				
+			}
+			
+			function testFileReInitWithNewPath()
+			{
+				var testFileObject = new Jaxer.File(testFilePath);
+			
+				testFileObject.initPath(testFilePath);
+				
+				if (testFileObject.exists) 
+				{
+					testFileObject.remove();	
+				}
+				testFileObject.create();
+				
+				assertTrue(testFileObject.exists, testFilePath + " not found");
+				
+				assertTrue(testFileObject.path == testFilePath,   "path is incorrect found: " + testFileObject.path + " expected:" + testFilePath);    
+				assertTrue(testFileObject.leaf == testFileLeaf, "leaf is incorrect");
+				assertTrue(testFileObject.ext  == testFileExt,  "extension is incorrect");
+				assertTrue(testFileObject.parentPath == testFileParentPath,".parent is incorrect");
+				
+				assertFalse(testFileObject.isDir, "isDir() returned true ");
+				assertTrue(testFileObject.isFile, "isFile() returned false ");
+				assertTrue(testFileObject.isReadable, "isReadable() returned false ");
+				assertTrue(testFileObject.isWritable, "isWritable() returned false ");
+				assertFalse(testFileObject.isHidden, "isHidden() returned true ");
+				
+				if (testFileObject.exists) 
+				{
+					testFileObject.remove();
+				}
+				assertFalse(testFileObject.exists, testFilePath + " exists - should have been deleted");
+				
+				var testFileLeaf2 =  "test_file2.txt";
+				var testFilePath2 = Jaxer.Dir.combine(testFileParentPath,testFileLeaf2);
+
+				testFileObject.initPath(testFilePath2);
+				
+				if (testFileObject.exists) 
+				{
+					testFileObject.remove();	
+				}
+				testFileObject.create();
+				
+				assertTrue(testFileObject.exists, testFilePath + " not found");
+				
+				assertTrue(testFileObject.path == testFilePath2,   "path is incorrect found: " + testFileObject.path + " expected:" + testFilePath);    
+				assertTrue(testFileObject.leaf == testFileLeaf2, "leaf is incorrect");
+				assertTrue(testFileObject.ext  == testFileExt,  "extension is incorrect");
+				assertTrue(testFileObject.parentPath == testFileParentPath, "ERROR - .parentPath returned incorrect value");
+				
+				assertFalse(testFileObject.isDir, "isDir() returned true ");
+				assertTrue(testFileObject.isFile, "isFile() returned false ");
+				assertTrue(testFileObject.isReadable, "isReadable() returned false ");
+				assertTrue(testFileObject.isWritable, "isWritable() returned false ");
+				assertFalse(testFileObject.isHidden, "isHidden() returned true ");
+				
+				if (testFileObject.exists) 
+				{
+					testFileObject.remove();
+				}
+				assertFalse(testFileObject.exists, testFilePath + " exists - should have been deleted");
+				
+			}
+			
+			// may only work with nsILocalFile
+			//	   var testFolderURL = "file:///C:/_share/FSOTest/test_fileURL/";
+			//	   testFolderObject.initWithPath(testFolderURL);
+			//	   testFolderObject.move(testFolderURL);
+			//	   assertTrue(testFolderObject.exists,"ERROR - "+testFolderURL+" missing","PASSED - folder move");
+			
+			//	   Jaxer.Log.info(testFileObject.path);
+			//	   testFileObject.append('foo');
+			//	   Jaxer.Log.info(testFileObject.path);
+			
+			
+			//	  Jaxer.Log.info(testFolderObject.path);
+			//	  testFolderObject.appendRelativePath('\\..');
+			//	  Jaxer.Log.info(testFolderObject.path);
+			
+			function testFileReadingAndWriting()
+			{
+				// reinit with new path
+				var testFileObject = new Jaxer.File(testFilePath);
+				if (testFileObject.exists) 
+				{
+					testFileObject.remove();	
+				}
+				testFileObject.create();
+				assertTrue(testFileObject.exists, testFilePath + " not found");
+				
+				assertTrue(testFileObject.size == 0, "file is non zero");
+				testFileObject.open("w", 0644);
+				testFileObject.write("one line\n");
+				testFileObject.close();
+				
+				var written = testFileObject.size;
+				assertTrue(written > 0, "file size is zero bytes, write failed" );
+				
+				testFileObject.open("a");
+				testFileObject.write("another line\n");
+				testFileObject.close();
+				
+				var appended = testFileObject.size;
+				assertTrue(written < appended, "file size is zero bytes, write failed");
+				
+				testFileObject.truncate();
+				assertTrue(testFileObject.size == 0, "file truncate failed");
+				
+				testFileObject.open("w", 0644);
+				testFileObject.write("one line\n");
+				testFileObject.write("another line\n");
+				testFileObject.close();
+				
+				testFileObject.open('r');
+				var filedata = testFileObject.read(10);
+				testFileObject.close();
+				
+				var bytesRead = filedata.length;
+				assertTrue(bytesRead == 10, "file read failed, incorrect number of bytes returned");
+				
+				testFileObject.open('r');
+				var filedata = testFileObject.read();
+				testFileObject.close();
+				
+				var bytesRead = filedata.length;
+				assertTrue(bytesRead > 0, "file read failed, incorrect number of bytes returned");
+				
+				if (testFileObject.exists) 
+				{
+					testFileObject.remove();
+				}
+				assertFalse(testFileObject.exists, testFilePath + " exists - should have been deleted");
+				
+			}
+			
+			function testnsIFileAccess()
+			{
+				var testFileObject = new Jaxer.File(testFilePath);
+				if (testFileObject.exists) 
+				{
+					testFileObject.remove();	
+				}
+				testFileObject.create();
+				
+				// assertTrue(testFileObject.nsIFile, "nsIFile property not defined");
+				
+				if (testFileObject.exists) 
+				{
+					testFileObject.remove();
+				}
+				assertFalse(testFileObject.exists, testFilePath + " exists - should have been deleted");
+				
+			}
+			
+			function testFileCopy()
+			{
+				var testFileObject = new Jaxer.File(testFilePath);
+				if (testFileObject.exists) 
+				{
+					testFileObject.remove();	
+				}
+				testFileObject.create();
+				
+				//copy
+				copyPath = testFileParentPath + sep + "copy of test_file.txt";
+				testFileObject.copy(copyPath);
+				
+				var testFileObject2 = new Jaxer.File(copyPath);
+				assertTrue(testFileObject2.exists, copyPath + " missing");
+				testFileObject2.remove();
+				assertFalse(testFileObject2.exists, copyPath + " not deleted");
+				
+				if (testFileObject.exists) 
+				{
+					testFileObject.remove();
+				}
+				assertFalse(testFileObject.exists, testFilePath + " exists - should have been deleted");
+				
+			}
+			
+			function testFileMove()
+			{
+			
+				var testFileObject = new Jaxer.File(testFilePath);
+				if (testFileObject.exists) 
+				{
+					testFileObject.remove();	
+				}
+				testFileObject.create();
+				
+				copyPath = testFileParentPath + sep + "copy of test_file.txt";
+				testFileObject.move(copyPath);
+				assertTrue(testFileObject.exists, copyPath + " missing after copy operation");
+				testFileObject.move(testFilePath);
+				assertTrue(testFileObject.exists, testFilePath + " missing after undo of copy operation");
+				
+				if (testFileObject.exists) 
+				{
+					testFileObject.remove();
+				}
+				assertFalse(testFileObject.exists, testFilePath + " exists - should have been deleted");
+				
+			}
+	
+		/**
+		 * test initing file with folder path
+		 */
+		function testInitWithFolderPath()
+		{
+			// set up folder structure to grep search
+			var path = Jaxer.System.tempFolder + Jaxer.System.separator + 'testInitWithFolderPath';
+
+			var dir = new Jaxer.Dir(path);
+			if (dir.exists) 
+			{
+				dir.remove(true);
+			}
+			dir.create();
+			
+			var folder = new Jaxer.Dir(dir.path + Jaxer.System.separator + 'testInitWithFilePath');
+			folder.create();
+			
+			try{				
+				var file = new Jaxer.File(folder.path);
+				file.open();
+				throw new Error("According to specification acessing a file object with folder path argument is incorrect and exception should be raised");
+			}
+			catch (e)
+			{
+			}
+			dir.remove(true);
+		}
+
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

@@ -1,0 +1,215 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/xpwidgets
+END
+nsBaseDragService.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsBaseDragService.h
+END
+nsBaseClipboard.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsBaseClipboard.h
+END
+nsPrintSession.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsPrintSession.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/widget/src/xpwidgets/Makefile.in
+END
+nsXPLookAndFeel.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsXPLookAndFeel.h
+END
+nsIdleService.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsIdleService.h
+END
+nsPrintSettingsImpl.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsPrintSettingsImpl.h
+END
+nsClipboardHelper.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsClipboardHelper.h
+END
+nsHTMLFormatConverter.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsHTMLFormatConverter.cpp
+END
+nsBaseAppShell.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsBaseAppShell.h
+END
+nsBaseFilePicker.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsBaseFilePicker.cpp
+END
+nsNativeTheme.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsNativeTheme.cpp
+END
+nsTransferable.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsTransferable.h
+END
+nsBaseWidget.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsBaseWidget.cpp
+END
+nsBaseDragService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsBaseDragService.cpp
+END
+nsBaseClipboard.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsBaseClipboard.cpp
+END
+nsXPLookAndFeel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsXPLookAndFeel.cpp
+END
+nsWidgetAtoms.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsWidgetAtoms.h
+END
+nsIdleService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsIdleService.cpp
+END
+nsClipboardHelper.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsClipboardHelper.cpp
+END
+nsPrintOptionsImpl.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsPrintOptionsImpl.h
+END
+nsPrintSettingsImpl.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsPrintSettingsImpl.cpp
+END
+nsAppShellSingleton.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsAppShellSingleton.h
+END
+nsPrimitiveHelpers.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsPrimitiveHelpers.h
+END
+nsBaseAppShell.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsBaseAppShell.cpp
+END
+nsPrintSession.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsPrintSession.h
+END
+nsWidgetAtomList.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsWidgetAtomList.h
+END
+nsTransferable.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsTransferable.cpp
+END
+nsHTMLFormatConverter.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsHTMLFormatConverter.h
+END
+nsBaseFilePicker.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsBaseFilePicker.h
+END
+nsNativeTheme.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsNativeTheme.h
+END
+nsBaseWidget.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsBaseWidget.h
+END
+nsWidgetAtoms.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsWidgetAtoms.cpp
+END
+nsPrintOptionsImpl.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsPrintOptionsImpl.cpp
+END
+nsPrimitiveHelpers.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/xpwidgets/nsPrimitiveHelpers.cpp
+END

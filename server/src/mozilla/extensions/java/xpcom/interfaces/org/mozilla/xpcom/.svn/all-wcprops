@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/interfaces/org/mozilla/xpcom
+END
+IXPCOM.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/interfaces/org/mozilla/xpcom/IXPCOM.java
+END
+GREVersionRange.java
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/interfaces/org/mozilla/xpcom/GREVersionRange.java
+END
+IMozilla.java
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/interfaces/org/mozilla/xpcom/IMozilla.java
+END
+IAppFileLocProvider.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/interfaces/org/mozilla/xpcom/IAppFileLocProvider.java
+END
+IJavaXPCOMUtils.java
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/interfaces/org/mozilla/xpcom/IJavaXPCOMUtils.java
+END
+XPCOMException.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/interfaces/org/mozilla/xpcom/XPCOMException.java
+END
+IGRE.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/interfaces/org/mozilla/xpcom/IGRE.java
+END
+Mozilla.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/interfaces/org/mozilla/xpcom/Mozilla.java
+END
+ProfileLock.java
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/interfaces/org/mozilla/xpcom/ProfileLock.java
+END
+INIParser.java
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/interfaces/org/mozilla/xpcom/INIParser.java
+END
+VersionComparator.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/interfaces/org/mozilla/xpcom/VersionComparator.java
+END
+XPCOMInitializationException.java
+K 25
+svn:wc:ra_dav:version-url
+V 142
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/interfaces/org/mozilla/xpcom/XPCOMInitializationException.java
+END

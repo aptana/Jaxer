@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/build_data/backtracking/signature
+END
+jes2greg.crt
+K 25
+svn:wc:ra_dav:version-url
+V 146
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/build_data/backtracking/signature/jes2greg.crt
+END
+jes.crl
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/build_data/backtracking/signature/jes.crl
+END
+labs.crl
+K 25
+svn:wc:ra_dav:version-url
+V 142
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/build_data/backtracking/signature/labs.crl
+END
+greg2yassir_badsig.crt
+K 25
+svn:wc:ra_dav:version-url
+V 156
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/build_data/backtracking/signature/greg2yassir_badsig.crt
+END
+greg.crl
+K 25
+svn:wc:ra_dav:version-url
+V 142
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/build_data/backtracking/signature/greg.crl
+END
+labs2yassir.crt
+K 25
+svn:wc:ra_dav:version-url
+V 149
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/build_data/backtracking/signature/labs2yassir.crt
+END
+yassir.crl
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/build_data/backtracking/signature/yassir.crl
+END
+jes2jes.crt
+K 25
+svn:wc:ra_dav:version-url
+V 145
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/build_data/backtracking/signature/jes2jes.crt
+END
+jes2labs.crt
+K 25
+svn:wc:ra_dav:version-url
+V 146
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/build_data/backtracking/signature/jes2labs.crt
+END
+yassir2hanfei.crt
+K 25
+svn:wc:ra_dav:version-url
+V 151
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/top/build_data/backtracking/signature/yassir2hanfei.crt
+END

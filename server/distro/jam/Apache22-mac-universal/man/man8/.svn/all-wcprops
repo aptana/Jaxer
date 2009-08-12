@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/man/man8
+END
+apxs.8
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/man/man8/apxs.8
+END
+suexec.8
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/man/man8/suexec.8
+END
+logresolve.8
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/man/man8/logresolve.8
+END
+ab.8
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/man/man8/ab.8
+END
+htcacheclean.8
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/man/man8/htcacheclean.8
+END
+httpd.8
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/man/man8/httpd.8
+END
+rotatelogs.8
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/man/man8/rotatelogs.8
+END
+apachectl.8
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/man/man8/apachectl.8
+END

@@ -1,0 +1,221 @@
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1
+END
+item_dc_creator.xml
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/item_dc_creator.xml
+END
+item_title_normalized.xml
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/item_title_normalized.xml
+END
+full_feed.xml
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/full_feed.xml
+END
+item_updated_dcterms.xml
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/item_updated_dcterms.xml
+END
+item_2_dc_description.xml
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/item_2_dc_description.xml
+END
+feed_description_normalized.xml
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/feed_description_normalized.xml
+END
+feed_updated_dctermsmodified.xml
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/feed_updated_dctermsmodified.xml
+END
+full_feed_not_bozo.xml
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/full_feed_not_bozo.xml
+END
+item_title.xml
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/item_title.xml
+END
+item_2_dc_publisher.xml
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/item_2_dc_publisher.xml
+END
+feed_title.xml
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/feed_title.xml
+END
+feed_image.xml
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/feed_image.xml
+END
+item_count.xml
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/item_count.xml
+END
+feed_generator.xml
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/feed_generator.xml
+END
+item_wiki_importance_extra_att.xml
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/item_wiki_importance_extra_att.xml
+END
+item_2_dc_publisher_extra_att_invalid_rdf.xml
+K 25
+svn:wc:ra_dav:version-url
+V 142
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/item_2_dc_publisher_extra_att_invalid_rdf.xml
+END
+feed_id.xml
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/feed_id.xml
+END
+feed_link.xml
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/feed_link.xml
+END
+feed_textInput.xml
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/feed_textInput.xml
+END
+feed_title_normalized.xml
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/feed_title_normalized.xml
+END
+item_dc_description_normalized.xml
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/item_dc_description_normalized.xml
+END
+item_link_normalized.xml
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/item_link_normalized.xml
+END
+full_feed_unknown_extension.xml
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/full_feed_unknown_extension.xml
+END
+item_description.xml
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/item_description.xml
+END
+feed_bogus_title.xml
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/feed_bogus_title.xml
+END
+feed_link_normalized.xml
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/feed_link_normalized.xml
+END
+feed_items_length_zero.xml
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/feed_items_length_zero.xml
+END
+feed_description.xml
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/feed_description.xml
+END
+feed_description_with_dc.xml
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/feed_description_with_dc.xml
+END
+item_dc_description.xml
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/item_dc_description.xml
+END
+feed_description_with_dc_only.xml
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/feed_description_with_dc_only.xml
+END
+feed_version.xml
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/feed_version.xml
+END
+feed_updated.xml
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/feed_updated.xml
+END
+item_id.xml
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/item_id.xml
+END
+item_link.xml
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/item_link.xml
+END
+feed_title_extra_att.xml
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/feeds/test/xml/rss1/feed_title_extra_att.xml
+END

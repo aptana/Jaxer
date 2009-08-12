@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/editor/txtsvc/src
+END
+nsTSDNotifier.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/txtsvc/src/nsTSDNotifier.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/editor/txtsvc/src/Makefile.in
+END
+nsTextServicesFactory.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/txtsvc/src/nsTextServicesFactory.cpp
+END
+nsFilteredContentIterator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/txtsvc/src/nsFilteredContentIterator.cpp
+END
+nsTextServicesDocument.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/editor/txtsvc/src/nsTextServicesDocument.cpp
+END
+nsFilteredContentIterator.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/txtsvc/src/nsFilteredContentIterator.h
+END
+nsTSAtomList.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/txtsvc/src/nsTSAtomList.h
+END
+nsTSDNotifier.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/txtsvc/src/nsTSDNotifier.cpp
+END
+nsTextServicesDocument.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/txtsvc/src/nsTextServicesDocument.h
+END

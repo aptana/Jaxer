@@ -1,0 +1,70 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/common
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+logger
+dir
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:28:55.000000Z
+19ab0e68811825433272ba83e97a8175
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+transporter
+dir
+
+debugger
+dir
+
+mgmcommon
+dir
+
+Makefile.am
+file
+
+
+
+
+2009-08-11T21:28:55.000000Z
+2aeb95d2b54c1f001436e1302805dea8
+2008-02-29T23:39:28.846637Z
+2224
+jzhang
+
+portlib
+dir
+
+util
+dir
+

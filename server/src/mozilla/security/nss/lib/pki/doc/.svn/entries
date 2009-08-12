@@ -1,0 +1,53 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/security/nss/lib/pki/doc
+http://svn.aptana.local/svn/jaxer
+
+
+
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+standiag.png
+file
+
+
+
+
+2009-08-11T21:33:49.000000Z
+9e1d69f1635fa30b97823c92043f949f
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+standoc.html
+file
+
+
+
+
+2009-08-11T21:33:49.000000Z
+a4230c005ec55ffd286bcd5e1eaf6a99
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+

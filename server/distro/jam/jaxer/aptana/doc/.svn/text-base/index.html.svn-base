@@ -1,0 +1,25 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Jaxer Docs</title>
+        <link rel="stylesheet" href="../css/shared.css" type="text/css">
+		<link rel="stylesheet" href="../css/local.css" type="text/css">
+	</head>
+	<body>
+		<a href='../releaseNotes.txt'>Current release notes</a>
+		<P></P>
+		<a href='http://www.aptana.com/jaxer/Getting_started_with_Jaxer.html' target='_blank'>Getting Started with Jaxer: The Aptana Server</a>
+		<P></P>
+		<a href='http://www.aptana.com/jaxer/docs/Jaxer%20and%20IDE%20Quick%20Start.html' target='_blank'>Using Jaxer with the Aptana IDE</a>
+		<P></P>
+		<a href='http://www.aptana.com/jaxer/api/' target='_blank'>Jaxer API Reference</a>
+		<P></P>
+		<a href='http://www.aptana.com/jaxer/faq.php' target='_blank'>FAQ and Known Limitations</a>
+		<P></P>
+		<a href='http://www.aptana.com/jaxer/license.php' target='_blank'>Jaxer License</a>
+		<P></P>
+		More documentation will be made available over time at <a href='http://www.aptana.com/jaxer/index.php' target='_blank'>Jaxer Central</a>
+		<P></P>
+	</body>
+</html>

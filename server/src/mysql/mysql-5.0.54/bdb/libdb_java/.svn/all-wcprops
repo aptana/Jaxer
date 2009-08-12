@@ -1,0 +1,167 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java
+END
+com_sleepycat_db_xa_DbXAResource.h
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/com_sleepycat_db_xa_DbXAResource.h
+END
+java_DbEnv.c
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/java_DbEnv.c
+END
+java_DbLock.c
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/java_DbLock.c
+END
+com_sleepycat_db_DbTxn.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/com_sleepycat_db_DbTxn.h
+END
+java_info.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/java_info.h
+END
+java_locked.c
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/java_locked.c
+END
+java_DbLsn.c
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/java_DbLsn.c
+END
+com_sleepycat_db_DbUtil.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/com_sleepycat_db_DbUtil.h
+END
+com_sleepycat_db_Db.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/com_sleepycat_db_Db.h
+END
+java_locked.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/java_locked.h
+END
+com_sleepycat_db_Dbc.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/com_sleepycat_db_Dbc.h
+END
+java_Dbt.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/java_Dbt.c
+END
+com_sleepycat_db_DbLogc.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/com_sleepycat_db_DbLogc.h
+END
+java_util.c
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/java_util.c
+END
+com_sleepycat_db_DbEnv.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/com_sleepycat_db_DbEnv.h
+END
+com_sleepycat_db_DbLock.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/com_sleepycat_db_DbLock.h
+END
+java_DbTxn.c
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/java_DbTxn.c
+END
+checkapi.prl
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/checkapi.prl
+END
+com_sleepycat_db_DbLsn.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/com_sleepycat_db_DbLsn.h
+END
+java_util.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/java_util.h
+END
+java_DbUtil.c
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/java_DbUtil.c
+END
+java_Db.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/java_Db.c
+END
+java_DbXAResource.c
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/java_DbXAResource.c
+END
+java_Dbc.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/java_Dbc.c
+END
+com_sleepycat_db_Dbt.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/com_sleepycat_db_Dbt.h
+END
+java_DbLogc.c
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/java_DbLogc.c
+END
+java_info.c
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/bdb/libdb_java/java_info.c
+END

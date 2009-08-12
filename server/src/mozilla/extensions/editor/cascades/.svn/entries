@@ -1,0 +1,70 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/extensions/editor/cascades
+http://svn.aptana.local/svn/jaxer
+
+
+
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+build
+dir
+
+readme.html
+file
+
+
+
+
+2009-08-11T21:37:08.000000Z
+2fc3d51e0ecd0361d953ffb2a441c7ef
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:37:08.000000Z
+d4659de5b15a020af98cc916ba88ec60
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+jar.mn
+file
+
+
+
+
+2009-08-11T21:37:08.000000Z
+d491414e5057cd935d495c8049218c26
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+resources
+dir
+

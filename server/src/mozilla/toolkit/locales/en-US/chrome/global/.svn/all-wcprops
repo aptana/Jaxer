@@ -1,0 +1,317 @@
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global
+END
+findbar.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/findbar.dtd
+END
+customizeToolbar.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/customizeToolbar.dtd
+END
+contentAreaCommands.properties
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/contentAreaCommands.properties
+END
+printPageSetup.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/printPageSetup.dtd
+END
+printdialog.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/printdialog.dtd
+END
+viewSource.properties
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/viewSource.properties
+END
+filepicker.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/filepicker.dtd
+END
+appPicker.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/appPicker.dtd
+END
+dialog.properties
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/dialog.properties
+END
+finddialog.properties
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/finddialog.properties
+END
+gnomeprintdialog.properties
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/gnomeprintdialog.properties
+END
+printPreviewProgress.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/printPreviewProgress.dtd
+END
+config.properties
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/config.properties
+END
+intl.properties
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/intl.properties
+END
+languageNames.properties
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/languageNames.properties
+END
+regionNames.properties
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/regionNames.properties
+END
+datetimepicker.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/datetimepicker.dtd
+END
+viewSource.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/viewSource.dtd
+END
+customizeCharset.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/customizeCharset.dtd
+END
+keys.properties
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/keys.properties
+END
+wizard.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/wizard.dtd
+END
+preferences.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/preferences.dtd
+END
+dialogOverlay.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/dialogOverlay.dtd
+END
+console.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/console.dtd
+END
+browser.properties
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/browser.properties
+END
+config.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/config.dtd
+END
+nsProgressDialog.properties
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/nsProgressDialog.properties
+END
+mozilla.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/mozilla.dtd
+END
+nsHelperAppDlg.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/nsHelperAppDlg.dtd
+END
+commonDialog.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/commonDialog.dtd
+END
+about.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/about.dtd
+END
+editMenuOverlay.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/editMenuOverlay.dtd
+END
+commonDialogs.properties
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/commonDialogs.properties
+END
+downloadProgress.properties
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/downloadProgress.properties
+END
+printProgress.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/printProgress.dtd
+END
+wizard.properties
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/wizard.properties
+END
+license.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/license.dtd
+END
+intl.css
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/intl.css
+END
+console.properties
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/console.properties
+END
+nsProgressDialog.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/nsProgressDialog.dtd
+END
+findbar.properties
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/findbar.properties
+END
+customizeToolbar.properties
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/customizeToolbar.properties
+END
+notification.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/notification.dtd
+END
+nsTreeSorting.properties
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/nsTreeSorting.properties
+END
+nsHelperAppDlg.properties
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/nsHelperAppDlg.properties
+END
+textcontext.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/textcontext.dtd
+END
+charsetOverlay.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/charsetOverlay.dtd
+END
+filepicker.properties
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/filepicker.properties
+END
+printPreview.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/printPreview.dtd
+END
+tree.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/tree.dtd
+END
+finddialog.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/finddialog.dtd
+END
+printjoboptions.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/global/printjoboptions.dtd
+END

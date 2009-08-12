@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/3307/trunk/products/server/src/mozilla/aptana/global
+END
+aptIJaxerGlobal.idl
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/3083/trunk/products/server/src/mozilla/aptana/global/aptIJaxerGlobal.idl
+END
+aptJaxerGlobal.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/3307/trunk/products/server/src/mozilla/aptana/global/aptJaxerGlobal.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/3083/trunk/products/server/src/mozilla/aptana/global/Makefile.in
+END
+aptJaxerGlobal.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/3083/trunk/products/server/src/mozilla/aptana/global/aptJaxerGlobal.h
+END

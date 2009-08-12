@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/nsprpub/pr/src/md/beos
+END
+btime.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/md/beos/btime.c
+END
+bsrcs.mk
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/md/beos/bsrcs.mk
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/md/beos/Makefile.in
+END
+bproc.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/nsprpub/pr/src/md/beos/bproc.c
+END
+bmemory.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/md/beos/bmemory.c
+END
+bseg.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/md/beos/bseg.c
+END
+bfile.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/md/beos/bfile.c
+END
+objs.mk
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/md/beos/objs.mk
+END
+beos_errors.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/md/beos/beos_errors.c
+END
+brng.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/md/beos/brng.c
+END
+bnet.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/md/beos/bnet.c
+END
+beos.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/md/beos/beos.c
+END
+bcpu.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/md/beos/bcpu.c
+END
+bmmap.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/md/beos/bmmap.c
+END
+bmisc.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/nsprpub/pr/src/md/beos/bmisc.c
+END

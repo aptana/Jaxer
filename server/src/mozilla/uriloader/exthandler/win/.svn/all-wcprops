@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/uriloader/exthandler/win
+END
+nsMIMEInfoWin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/uriloader/exthandler/win/nsMIMEInfoWin.cpp
+END
+nsOSHelperAppService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/uriloader/exthandler/win/nsOSHelperAppService.cpp
+END
+nsMIMEInfoWin.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/uriloader/exthandler/win/nsMIMEInfoWin.h
+END
+nsOSHelperAppService.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/uriloader/exthandler/win/nsOSHelperAppService.h
+END

@@ -1,0 +1,12 @@
+{
+	"name": "default",
+	"files": [
+		  "Log.js"
+		, "Level.js"
+		, "ModuleLogger.js"
+		, "Appender.js"
+		, "FileAppender.js"
+		, "CoreAppender.js"
+		, "LogInit.js"
+	]
+}

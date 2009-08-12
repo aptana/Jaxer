@@ -1,0 +1,25 @@
+<html>
+    <head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+        <script type="text/javascript" runat="server">
+        	
+			function skipIfSingleJaxer()
+			{
+				if (!multipleJaxersAvailable) throw "SKIPPED - This test requires multiple Jaxers to run; " +
+					"rerun it with '&multiJaxer=true' in the URL";
+			}
+
+			function test_unchangedDOM()
+			{
+				skipIfSingleJaxer();
+				var contents = Jaxer.Web.get(Jaxer.Web.resolve('unchangedDOM/index.html'));
+				var findRunat = new RegExp(/runat="server"/gim);
+				assertFalse(findRunat.test(contents),"found runat='server' in client source.");
+			}
+			
+       </script>
+    </head>
+    <body></body>
+</html>

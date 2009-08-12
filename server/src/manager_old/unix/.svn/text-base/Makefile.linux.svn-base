@@ -1,0 +1,48 @@
+CXX=g++
+CC=gcc
+
+BP_SRC_ROOT=../../google/google_breakpad/src
+BP_HANDLER_DIR=$(BP_SRC_ROOT)/client/linux/handler
+BP_SHARED_DIR=$(BP_SRC_ROOT)/common
+
+CXXFLAGS=-gstabs -Wall -D_REENTRANT \
+	-I../../libevent/libevent-1.4.2-rc \
+	-I../../google/google_breakpad/src
+LDFLAGS=-lpthread -levent -lrt \
+	-L../../libevent/libevent-1.4.2-rc/.libs \
+
+OBJ_DIR=.
+BIN_DIR=.
+
+MANAGER_SRC=jaxermanager.cpp
+THREAD_SRC=$(BP_HANDLER_DIR)/linux_thread.cc
+SHARE_SRC=$(BP_SRC_ROOT)/client/minidump_file_writer.cc\
+	  $(BP_SHARED_DIR)/string_conversion.cc\
+	  $(BP_SHARED_DIR)/linux/file_id.cc\
+	  $(BP_HANDLER_DIR)/minidump_generator.cc
+HANDLER_SRC=$(BP_HANDLER_DIR)/exception_handler.cc\
+	    $(BP_SHARED_DIR)/linux/guid_creator.cc
+SHARE_C_SRC=$(BP_SHARED_DIR)/convert_UTF.c
+
+THREAD_OBJ=$(patsubst %.cc,$(OBJ_DIR)/%.o,$(THREAD_SRC))
+SHARE_OBJ=$(patsubst %.cc,$(OBJ_DIR)/%.o,$(SHARE_SRC))
+HANDLER_OBJ=$(patsubst %.cc,$(OBJ_DIR)/%.o,$(HANDLER_SRC))
+SHARE_C_OBJ=$(patsubst %.c,$(OBJ_DIR)/%.o,$(SHARE_C_SRC)) md5.o
+MANAGER_OBJ=$(patsubst %.cc,$(OBJ_DIR)/%.o, $(MANAGER_SRC))\
+		   $(THREAD_OBJ) $(SHARE_OBJ) $(SHARE_C_OBJ) $(HANDLER_SRC)
+
+BIN=$(BIN_DIR)/jaxermanager
+
+.PHONY:all clean
+
+all:$(BIN)
+
+$(BIN_DIR)/jaxermanager:$(MANAGER_OBJ)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
+
+md5.o:$(BP_SHARED_DIR)/md5.c
+	$(CC) $(CXXFLAGS) -c $^
+
+clean:
+	rm -f $(BIN) *.o *.dmp
+

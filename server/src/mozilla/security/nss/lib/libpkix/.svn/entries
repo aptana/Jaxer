@@ -1,0 +1,76 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/security/nss/lib/libpkix
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-06-26T00:22:23.902780Z
+3349
+jzhang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+manifest.mn
+file
+
+
+
+
+2009-08-11T21:34:07.000000Z
+ef744c8d495ee3ea953e953e23efb92c
+2007-11-14T23:48:33.806633Z
+550
+jcohen
+has-props
+
+include
+dir
+
+pkix_pl_nss
+dir
+
+pkix
+dir
+
+config.mk
+file
+
+
+
+
+2009-08-11T21:34:07.000000Z
+a4fc0c52700837c6c7aaba81b6fe905b
+2007-11-14T23:48:33.806633Z
+550
+jcohen
+has-props
+
+Makefile
+file
+
+
+
+
+2009-08-11T21:34:07.000000Z
+7688a8a313ac543fc0da35cac9c0fe27
+2007-11-14T23:48:33.806633Z
+550
+jcohen
+has-props
+

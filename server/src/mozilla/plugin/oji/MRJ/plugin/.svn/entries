@@ -1,0 +1,72 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/plugin/oji/MRJ/plugin
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-20T18:44:20.559534Z
+2886
+jzhang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+Source
+dir
+
+MRJPlugin.jar
+file
+
+
+
+
+2009-08-11T21:36:32.000000Z
+d2fb21e510e05cc00bedb9f1785b3214
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+MRJPlugin.xml
+file
+
+
+
+
+2009-08-11T21:36:32.000000Z
+1a9c6a5fb2541ed4d8ff984f42951537
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+Resources
+dir
+
+netscape.plugin.jar
+file
+
+
+
+
+2009-08-11T21:36:32.000000Z
+2486be0f2a3910db25fe2a47e23211fe
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+

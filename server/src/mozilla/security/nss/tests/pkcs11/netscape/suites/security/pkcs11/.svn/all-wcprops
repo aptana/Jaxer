@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/pkcs11/netscape/suites/security/pkcs11
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/pkcs11/netscape/suites/security/pkcs11/manifest.mn
+END
+rules.mk
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/pkcs11/netscape/suites/security/pkcs11/rules.mk
+END
+pk11test.h
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/pkcs11/netscape/suites/security/pkcs11/pk11test.h
+END
+pk11test.htp
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/pkcs11/netscape/suites/security/pkcs11/pk11test.htp
+END
+pkcs11.rep
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/pkcs11/netscape/suites/security/pkcs11/pkcs11.rep
+END
+pkcs11.h
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/pkcs11/netscape/suites/security/pkcs11/pkcs11.h
+END
+config.mk
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/pkcs11/netscape/suites/security/pkcs11/config.mk
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/pkcs11/netscape/suites/security/pkcs11/Makefile
+END
+pk11test.c
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/pkcs11/netscape/suites/security/pkcs11/pk11test.c
+END
+pkcs11.reg
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/pkcs11/netscape/suites/security/pkcs11/pkcs11.reg
+END

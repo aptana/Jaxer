@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/places/public
+END
+nsINavBookmarksService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/places/public/nsINavBookmarksService.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/places/public/Makefile.in
+END
+nsITaggingService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/places/public/nsITaggingService.idl
+END
+nsIBrowserHistory.idl
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/places/public/nsIBrowserHistory.idl
+END
+nsIFaviconService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/places/public/nsIFaviconService.idl
+END
+nsIDynamicContainer.idl
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/places/public/nsIDynamicContainer.idl
+END
+nsINavHistoryService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/places/public/nsINavHistoryService.idl
+END
+nsIAnnotationService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/places/public/nsIAnnotationService.idl
+END
+nsILivemarkService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/places/public/nsILivemarkService.idl
+END

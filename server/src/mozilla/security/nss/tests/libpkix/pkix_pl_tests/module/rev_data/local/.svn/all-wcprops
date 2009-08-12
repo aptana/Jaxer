@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_pl_tests/module/rev_data/local
+END
+issuer-hanfei.crl
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_pl_tests/module/rev_data/local/issuer-hanfei.crl
+END
+issuer-none.crl
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_pl_tests/module/rev_data/local/issuer-none.crl
+END
+crldiff.crl
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_pl_tests/module/rev_data/local/crldiff.crl
+END
+crlgood.crl
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_pl_tests/module/rev_data/local/crlgood.crl
+END

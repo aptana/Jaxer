@@ -1,0 +1,755 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/reftests/counters
+END
+t120401-scope-01-c-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t120401-scope-01-c-reference.html
+END
+t1204-order-00-c-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-order-00-c-reference.html
+END
+t1204-order-01-d-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-order-01-d-reference.html
+END
+t1202-counter-11-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-11-b-reference.html
+END
+t1204-reset-01-c-o-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-reset-01-c-o-reference.html
+END
+t1202-counter-03-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-03-b-reference.html
+END
+t1204-increment-01-c-o-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-increment-01-c-o-reference.html
+END
+t1202-counter-15-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-15-b-reference.html
+END
+t1202-counter-07-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-07-b-reference.html
+END
+t1202-counters-16-c-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-16-c-test.html
+END
+t120401-scope-00-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t120401-scope-00-b-test.html
+END
+t120403-content-none-00-c-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t120403-content-none-00-c-test.html
+END
+t1204-multiple-01-c-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-multiple-01-c-reference.html
+END
+t1204-order-01-d-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-order-01-d-test.html
+END
+t1204-reset-00-c-o-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-reset-00-c-o-test.html
+END
+t1202-counters-10-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-10-b-reference.html
+END
+t120401-scope-04-d-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t120401-scope-04-d-test.html
+END
+t1202-counters-02-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-02-b-reference.html
+END
+t1204-reset-02-c-o-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-reset-02-c-o-test.html
+END
+t1204-increment-01-c-o-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-increment-01-c-o-test.html
+END
+t1202-counters-14-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-14-b-reference.html
+END
+t1202-counters-06-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-06-b-reference.html
+END
+t120403-display-none-00-c-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t120403-display-none-00-c-reference.html
+END
+text-boundaries-subpixel.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/text-boundaries-subpixel.html
+END
+t120403-content-none-00-c-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t120403-content-none-00-c-reference.html
+END
+t120403-visibility-00-c-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t120403-visibility-00-c-test.html
+END
+t1202-counter-00-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-00-b-reference.html
+END
+counter-name-case-sensitive.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/reftests/counters/counter-name-case-sensitive.html
+END
+t1202-counters-18-f-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-18-f-reference.html
+END
+t120401-scope-02-c-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t120401-scope-02-c-reference.html
+END
+t1204-reset-00-c-o-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-reset-00-c-o-reference.html
+END
+t1202-counter-12-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-12-b-reference.html
+END
+t1204-increment-00-c-o-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-increment-00-c-o-reference.html
+END
+t1202-counter-04-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-04-b-reference.html
+END
+t1202-counters-00-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-00-b-test.html
+END
+t1202-counters-01-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-01-b-test.html
+END
+t1202-counters-02-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-02-b-test.html
+END
+t1202-counters-03-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-03-b-test.html
+END
+t1202-counter-08-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-08-b-reference.html
+END
+t1202-counters-04-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-04-b-test.html
+END
+t1202-counters-05-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-05-b-test.html
+END
+t120403-display-none-00-c-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t120403-display-none-00-c-test.html
+END
+t1202-counters-06-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-06-b-test.html
+END
+t1202-counter-16-f-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-16-f-reference.html
+END
+t1202-counters-07-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-07-b-test.html
+END
+t1202-counters-08-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-08-b-test.html
+END
+t1204-root-e-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-root-e-test.html
+END
+t1202-counters-09-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-09-b-test.html
+END
+t120403-visibility-00-c-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t120403-visibility-00-c-reference.html
+END
+t1202-counters-11-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-11-b-reference.html
+END
+t1202-counters-03-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-03-b-reference.html
+END
+t1204-implied-00-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-implied-00-b-test.html
+END
+t1202-counters-15-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-15-b-reference.html
+END
+t1202-counters-07-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-07-b-reference.html
+END
+t1204-implied-02-d-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-implied-02-d-test.html
+END
+t1202-counters-16-c-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-16-c-reference.html
+END
+t1202-counters-17-d-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-17-d-reference.html
+END
+t1204-multiple-00-c-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-multiple-00-c-test.html
+END
+t120401-scope-03-c-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t120401-scope-03-c-reference.html
+END
+t1204-multiple-01-c-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-multiple-01-c-test.html
+END
+t1202-counter-01-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-01-b-reference.html
+END
+text-boundaries-subpixel-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/text-boundaries-subpixel-ref.html
+END
+t120401-scope-04-d-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t120401-scope-04-d-reference.html
+END
+t1202-counter-13-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-13-b-reference.html
+END
+t1202-counters-10-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-10-b-test.html
+END
+t1202-counter-05-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-05-b-reference.html
+END
+t1202-counters-11-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-11-b-test.html
+END
+t1204-implied-00-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-implied-00-b-reference.html
+END
+t1202-counters-12-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-12-b-test.html
+END
+counter-hebrew-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/reftests/counters/counter-hebrew-reference.html
+END
+t1202-counters-13-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-13-b-test.html
+END
+t1204-implied-01-c-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-implied-01-c-reference.html
+END
+t1202-counter-09-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-09-b-reference.html
+END
+t1202-counters-14-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-14-b-test.html
+END
+counter-name-case-sensitive-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/reftests/counters/counter-name-case-sensitive-ref.html
+END
+t1202-counters-15-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-15-b-test.html
+END
+t1204-implied-02-d-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-implied-02-d-reference.html
+END
+counters-hebrew-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/reftests/counters/counters-hebrew-test.html
+END
+t1202-counters-17-d-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-17-d-test.html
+END
+t1204-order-00-c-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-order-00-c-test.html
+END
+t120401-scope-01-c-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t120401-scope-01-c-test.html
+END
+t1202-counter-00-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-00-b-test.html
+END
+t1202-counters-18-f-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-18-f-test.html
+END
+t120401-scope-02-c-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t120401-scope-02-c-test.html
+END
+t1202-counter-01-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-01-b-test.html
+END
+t120401-scope-03-c-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t120401-scope-03-c-test.html
+END
+t1202-counters-00-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-00-b-reference.html
+END
+t1202-counter-02-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-02-b-test.html
+END
+t1202-counter-03-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-03-b-test.html
+END
+t1204-reset-01-c-o-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-reset-01-c-o-test.html
+END
+t1202-counter-04-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-04-b-test.html
+END
+t1204-increment-00-c-o-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-increment-00-c-o-test.html
+END
+t1202-counter-05-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-05-b-test.html
+END
+t1202-counters-12-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-12-b-reference.html
+END
+t1202-counters-04-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-04-b-reference.html
+END
+t1202-counter-06-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-06-b-test.html
+END
+t1204-increment-02-c-o-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-increment-02-c-o-test.html
+END
+t1202-counter-07-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-07-b-test.html
+END
+t1202-counter-08-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-08-b-test.html
+END
+t1202-counter-09-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-09-b-test.html
+END
+t1202-counters-08-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-08-b-reference.html
+END
+t1202-counter-10-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-10-b-reference.html
+END
+t1202-counter-02-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-02-b-reference.html
+END
+t1204-reset-02-c-o-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-reset-02-c-o-reference.html
+END
+t1202-counter-14-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-14-b-reference.html
+END
+reftest.list
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/reftests/counters/reftest.list
+END
+t1202-counter-06-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-06-b-reference.html
+END
+t1204-increment-02-c-o-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-increment-02-c-o-reference.html
+END
+t1204-multiple-00-c-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-multiple-00-c-reference.html
+END
+t1202-counter-10-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-10-b-test.html
+END
+t1202-counter-11-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-11-b-test.html
+END
+t1202-counters-01-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-01-b-reference.html
+END
+t1202-counter-12-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-12-b-test.html
+END
+t1202-counter-13-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-13-b-test.html
+END
+t1202-counter-14-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-14-b-test.html
+END
+t1202-counter-15-b-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-15-b-test.html
+END
+t1202-counters-13-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-13-b-reference.html
+END
+t1202-counters-05-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-05-b-reference.html
+END
+counter-hebrew-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/reftests/counters/counter-hebrew-test.html
+END
+t1204-implied-01-c-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-implied-01-c-test.html
+END
+counters-hebrew-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/reftests/counters/counters-hebrew-reference.html
+END
+t1202-counters-09-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counters-09-b-reference.html
+END
+t1202-counter-16-f-test.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1202-counter-16-f-test.html
+END
+t1204-root-e-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t1204-root-e-reference.html
+END
+t120401-scope-00-b-reference.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/counters/t120401-scope-00-b-reference.html
+END

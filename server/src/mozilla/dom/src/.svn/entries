@@ -1,0 +1,61 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/dom/src
+http://svn.aptana.local/svn/jaxer
+
+
+
+2009-01-08T16:14:22.547000Z
+4484
+mstepanov
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+jsurl
+dir
+
+offline
+dir
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:33:17.000000Z
+aaaf3fa58aef2c87f5fc7cf2e98dd2b2
+2008-02-18T19:26:57.266176Z
+2130
+csanders
+
+events
+dir
+
+storage
+dir
+
+json
+dir
+
+res
+dir
+
+base
+dir
+

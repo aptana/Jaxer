@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/libjar/zipwriter/test/unit/data
+END
+test.zip
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/modules/libjar/zipwriter/test/unit/data/test.zip
+END
+test_bug399727.zlib
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/libjar/zipwriter/test/unit/data/test_bug399727.zlib
+END
+test.png
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/modules/libjar/zipwriter/test/unit/data/test.png
+END
+test_bug399727.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/libjar/zipwriter/test/unit/data/test_bug399727.html
+END
+emptyfile.txt
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/libjar/zipwriter/test/unit/data/emptyfile.txt
+END
+test.txt
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/modules/libjar/zipwriter/test/unit/data/test.txt
+END

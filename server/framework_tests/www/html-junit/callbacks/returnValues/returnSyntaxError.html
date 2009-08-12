@@ -1,0 +1,31 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Untitled Document</title>
+		<script runat="server-proxy">
+			function returnException()
+			{
+				throw new SyntaxError("This is a server-side exception");
+			}
+		</script>
+		<script>
+			function init()
+			{
+				var output = document.getElementById("output");
+				
+				try
+				{
+					returnException();
+				}
+				catch (e)
+				{
+					output.innerHTML = e.toString() + "\n" + Aptana.Serialization.toJSONString(e);
+				}
+			}
+		</script>
+	</head>
+	<body onload="init()">
+		<pre id="output"></pre>
+	</body>
+</html>

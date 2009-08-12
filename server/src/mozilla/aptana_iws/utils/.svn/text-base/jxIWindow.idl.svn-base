@@ -1,0 +1,215 @@
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+ * vim: set sw=4 ts=4 et: */
+/* ***** BEGIN LICENSE BLOCK *****
+ *  Version: GPL 3
+ * 
+ *  This program is Copyright (C) 2007-2008 Aptana, Inc. All Rights Reserved
+ *  This program is licensed under the GNU General Public license, version 3 (GPL).
+ * 
+ *  This program is distributed in the hope that it will be useful, but
+ *  AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+ *  NONINFRINGEMENT. Redistribution, except as permitted by the GPL,
+ *  is prohibited.
+ * 
+ *  You can redistribute and/or modify this program under the terms of the GPL, 
+ *  as published by the Free Software Foundation.  You should
+ *  have received a copy of the GNU General Public License, Version 3 along
+ *  with this program; if not, write to the Free Software Foundation, Inc., 51
+ *  Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  
+ *  Aptana provides a special exception to allow redistribution of this file
+ *  with certain other code and certain additional terms
+ *  pursuant to Section 7 of the GPL. You may view the exception and these
+ *  terms on the web at http://www.aptana.com/legal/gpl/.
+ *  
+ *  You may view the GPL, and Aptana's exception and additional terms in the file
+ *  titled license-jaxer.html in the main distribution folder of this program.
+ *  
+ *  Any modifications to this file must keep this entire header intact.
+ * 
+ * ***** END LICENSE BLOCK ***** */
+
+#include "nsISupports.idl"
+
+interface nsIDOMDocument;
+interface nsIDOMWindow;
+interface nsIInputStream;
+interface nsIURI;
+interface nsIDOMEventListener;
+interface nsIHttpChannel;
+interface aptIBadCertHandler;
+
+interface jxILocationChangeListener;
+
+[scriptable, uuid(48691187-46B7-4a61-89A4-5727C6438B60)]
+interface jxIWindow : nsISupports {
+
+  /**
+   * Loads a given URI.  This will give priority to loading the requested URI
+   * in the object implementing	this interface.  If it can't be loaded here
+   * however, the URI dispatcher will go through its normal process of content
+   * loading.
+   *
+   * @param aURI
+   *        The URI string to load.  For HTTP and FTP URLs and possibly others,
+   *        characters above U+007F will be converted to UTF-8 and then URL-
+   *        escaped per the rules of RFC 2396.
+   * @param aReferrer
+   *        The referring URI.  If this argument is null, then the referring
+   *        URI will be inferred internally.
+   * @param aPostData
+   *        If the URI corresponds to a HTTP request, then this stream is
+   *        appended directly to the HTTP request headers.  It may be prefixed
+   *        with additional HTTP headers.  This stream must contain a "\r\n"
+   *        sequence separating any HTTP headers from the HTTP request body.
+   *        This parameter is optional and may be null.
+   * @param aHeaders
+   *        If the URI corresponds to a HTTP request, then any HTTP headers
+   *        contained in this stream are set on the HTTP request.  The HTTP
+   *        header stream is formatted as:
+   *            ( HEADER "\r\n" )*
+   *        This parameter is optional and may be null.
+   */
+  void loadURI(in wstring        aURI,
+               in nsIURI         aReferrer,
+               in nsIInputStream aPostData,
+               in nsIInputStream aHeaders);
+
+  /**
+   * Loads a given stream. This will give priority to loading the requested
+   * stream in the object implementing this interface. If it can't be loaded
+   * here however, the URL dispatched will go through its normal process of
+   * content loading.
+   *
+   * @param aStream         - The input stream that provides access to the data
+   *                          to be loaded.  This must be a blocking, threadsafe
+   *                          stream implementation.
+   * @param aURI            - The URI representing the stream, or null.
+   * @param aContentType    - The type (MIME) of data being loaded (empty if unknown).
+   * @param aContentCharset - The charset of the data being loaded (empty if unknown).
+   */
+  void loadStream(in nsIInputStream aStream,
+                            in nsIURI aURI,
+                            in ACString aContentType,
+                            in ACString aContentCharset);
+
+  /**
+   * Waits for load completion
+   *
+   * @return false - if nothing to wait for
+   */
+  boolean waitCompleted();
+
+  /**
+   * Close window object, release all resources
+   */
+  void close();
+
+  /**
+   * Retrieves the current DOM document.
+   */
+  readonly attribute nsIDOMDocument document;
+
+  /**
+   * Retrieves the current window object of loaded page.
+   */
+  readonly attribute nsIDOMWindow window;
+
+  /**
+   * The currently loaded URI or null.
+   */
+  readonly attribute nsIURI currentURI;
+
+  /**
+   * The HTTP channel of currently loaded URI or null.
+   */
+  readonly attribute nsIHttpChannel documentChannel;
+
+  /**
+   * Whether to load page asynchronously
+   */
+  attribute boolean async;
+
+  /**
+   * Whether to allow Javascript execution
+   */
+  attribute boolean allowJavascript;
+
+  /**
+   * Attribute stating if refresh based redirects can be allowed
+   */
+  attribute  boolean allowMetaRedirects;
+
+  /**
+   * Attribute stating if it should allow subframes (framesets/iframes) or not
+   */
+  attribute boolean allowSubframes;
+
+  /**
+   * Attribute stating whether or not images should be loaded.
+   */
+  attribute boolean allowImages;
+  
+  const long UNINITIALIZED = 0;
+  const long LOADING = 1;
+  const long LOADED = 2;
+  const long INTERACTIVE = 3;
+  const long COMPLETED = 4;
+
+  /**
+   * The state of the request.
+   *
+   * Possible values:
+   *   0 UNINITIALIZED loadURI()/loadStream() has not been called yet.
+   *   1 LOADING       loadURI()/loadStream() has been called.
+   *   2 LOADED        Request has been loaded.
+   *   3 INTERACTIVE   Finished with network operations.
+   *   4 COMPLETED     Finished with all operations.
+   */
+  readonly attribute long readyState;
+  
+  /**
+   * Meant to be a script-only mechanism for setting an error event listener.
+   * The attribute is expected to be JavaScript function object. When
+   * the error event occurs, the function is invoked.
+   * This attribute should not be used from native code!!
+   *
+   */
+  attribute nsIDOMEventListener onload;
+  attribute nsIDOMEventListener onerror;
+  attribute jxILocationChangeListener onlocationchange;
+
+  /**
+   * Meant to be a script-only mechanism for setting a callback function.
+   * The attribute is expected to be JavaScript function object. When a
+   * SSL certificate error occurs, the callback function will be called.
+   * This attribute should not be used from native code!!
+   *
+   * After the initial response, all event listeners will be cleared.
+   * // XXXbz what does that mean, exactly?   
+   *
+   */
+  attribute aptIBadCertHandler onsslcerterror;
+
+};
+
+[scriptable, function, uuid(7B463885-7F06-46e3-B761-6CBAF19A8160)]
+interface jxILocationChangeListener : nsISupports {
+
+  /**
+   *  @param newLocation A new URI location.
+   *
+   *  @return The consumer shall return false if it wants to cancel the new request.
+   */
+  boolean onLocationChange(in nsIURI newLocation, in boolean isRedirect);
+};
+
+%{C++
+#define JX_WINDOW_CID				    \
+{ /* F2F8CE9B-2E4B-42e8-A7F9-DE4718243FCE */        \
+  0xf2f8ce9b, 0x2e4b, 0x42e8,                       \
+ { 0xa7, 0xf9, 0xde, 0x47, 0x18, 0x24, 0x3f, 0xce } }
+#define JX_WINDOW_CONTRACTID \
+"@aptana.com/utils/jxWindow;1"
+%}

@@ -1,0 +1,40 @@
+{
+	"name": "default",
+	"tests": [
+		"test_CrockfordSerialization_Array.html"
+		,"test_CrockfordSerialization_Boolean.html"
+		,"test_CrockfordSerialization_Date.html"
+		,"test_CrockfordSerialization_Null.html"
+		,"test_CrockfordSerialization_Number.html"
+		,"test_CrockfordSerialization_Object.html"
+		,"test_CrockfordSerialization_String.html"
+		,"test_CrockfordSerialization_Undefined.html"
+		
+		,"test_JaxerSerialization_Array.html"
+		,"test_JaxerSerialization_Boolean.html"
+		,"test_JaxerSerialization_Date.html"
+		,"test_JaxerSerialization_Null.html"
+		,"test_JaxerSerialization_Number.html"
+		,"test_JaxerSerialization_Object.html"
+		,"test_JaxerSerialization_String.html"
+		,"test_JaxerSerialization_Undefined.html"
+		
+		,"test_NativeSerialization_Array.html"
+		,"test_NativeSerialization_Boolean.html"
+		,"test_NativeSerialization_Date.html"
+		,"test_NativeSerialization_Null.html"
+		,"test_NativeSerialization_Number.html"
+		,"test_NativeSerialization_Object.html"
+		,"test_NativeSerialization_String.html"
+		
+		,"test_Serialization_Bugs.html"
+		,"test_Serialization_Cycles.html"
+		,"test_Serialization_MultiReferences.html"
+		,"test_Serialization_RegExp.html"
+		,"test_Serialization_XML.html"
+		
+		// add supporting files used by unit tests
+		,"testData1.xml"
+		,"json-ref.js"
+	]
+}

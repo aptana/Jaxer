@@ -1,0 +1,503 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/editor/ui/dialogs/content
+END
+EdTextAreaProps.xul
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdTextAreaProps.xul
+END
+EdInsSrc.xul
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdInsSrc.xul
+END
+EdAEJSEAttributes.js
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdAEJSEAttributes.js
+END
+EdButtonProps.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdButtonProps.js
+END
+EdSelectProps.xul
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdSelectProps.xul
+END
+EdTextAreaProps.js
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdTextAreaProps.js
+END
+EdDictionary.xul
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdDictionary.xul
+END
+EdInsSrc.js
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdInsSrc.js
+END
+EditorPublish.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EditorPublish.js
+END
+EdDictionary.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdDictionary.js
+END
+EdAdvancedEdit.xul
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdAdvancedEdit.xul
+END
+EdReplace.xul
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdReplace.xul
+END
+EdInsertTOC.js
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdInsertTOC.js
+END
+EdTableProps.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdTableProps.js
+END
+EdHLineProps.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdHLineProps.js
+END
+EdImageOverlay.js
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdImageOverlay.js
+END
+EdImageMapShapes.js
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdImageMapShapes.js
+END
+EditorSaveAsCharset.xul
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EditorSaveAsCharset.xul
+END
+EdListProps.xul
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdListProps.xul
+END
+EdDialogTemplate.js
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdDialogTemplate.js
+END
+EdPageProps.xul
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdPageProps.xul
+END
+EdDialogOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdDialogOverlay.xul
+END
+EdImageMapHotSpot.xul
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdImageMapHotSpot.xul
+END
+EdNamedAnchorProps.xul
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdNamedAnchorProps.xul
+END
+EdImageMapHotSpot.js
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdImageMapHotSpot.js
+END
+EdInputImage.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdInputImage.js
+END
+EdLabelProps.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdLabelProps.js
+END
+EdAECSSAttributes.js
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdAECSSAttributes.js
+END
+EdInsertTOC.xul
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdInsertTOC.xul
+END
+EdImageProps.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdImageProps.js
+END
+EdInsertTable.xul
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdInsertTable.xul
+END
+EdDialogCommon.js
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdDialogCommon.js
+END
+EdColorPicker.xul
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdColorPicker.xul
+END
+EdSpellCheck.xul
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdSpellCheck.xul
+END
+EdSnapToGrid.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdSnapToGrid.js
+END
+EdImageMap.xul
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdImageMap.xul
+END
+EdSpellCheck.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdSpellCheck.js
+END
+EdLinkProps.xul
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdLinkProps.xul
+END
+EdLinkProps.js
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdLinkProps.js
+END
+EdLinkChecker.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdLinkChecker.js
+END
+EdFormProps.xul
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdFormProps.xul
+END
+EdFieldSetProps.js
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdFieldSetProps.js
+END
+EdInputProps.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdInputProps.js
+END
+EdButtonProps.xul
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdButtonProps.xul
+END
+EdConvertToTable.js
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdConvertToTable.js
+END
+EditConflict.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EditConflict.js
+END
+EdInputImage.xul
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdInputImage.xul
+END
+EdPageProps.js
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdPageProps.js
+END
+EdColorProps.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdColorProps.js
+END
+EdImageProps.xul
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdImageProps.xul
+END
+EdSelectProps.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdSelectProps.js
+END
+EdImageMapPage.html
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdImageMapPage.html
+END
+EdSnapToGrid.xul
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdSnapToGrid.xul
+END
+EdTableProps.xul
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdTableProps.xul
+END
+EdAdvancedEdit.js
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdAdvancedEdit.js
+END
+EdReplace.js
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdReplace.js
+END
+EdColorPicker.js
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdColorPicker.js
+END
+EdInsertTable.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdInsertTable.js
+END
+EdLinkChecker.xul
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdLinkChecker.xul
+END
+EdHLineProps.xul
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdHLineProps.xul
+END
+EdImageMap.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdImageMap.js
+END
+EditorPublishSettings.xul
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EditorPublishSettings.xul
+END
+EdAEHTMLAttributes.js
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdAEHTMLAttributes.js
+END
+EdInsertChars.xul
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdInsertChars.xul
+END
+EdInsertChars.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdInsertChars.js
+END
+EditorPublishSettings.js
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EditorPublishSettings.js
+END
+EdDialogTemplate.xul
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdDialogTemplate.xul
+END
+EditConflict.xul
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EditConflict.xul
+END
+EdAEAttributes.js
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdAEAttributes.js
+END
+EdColorProps.xul
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdColorProps.xul
+END
+EdListProps.js
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdListProps.js
+END
+EdLabelProps.xul
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdLabelProps.xul
+END
+EditorPublish.xul
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EditorPublish.xul
+END
+EditorPublishOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EditorPublishOverlay.xul
+END
+EdNamedAnchorProps.js
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdNamedAnchorProps.js
+END
+EdInputProps.xul
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdInputProps.xul
+END
+EdFieldSetProps.xul
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdFieldSetProps.xul
+END
+EdImageOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdImageOverlay.xul
+END
+EditorPublishProgress.xul
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EditorPublishProgress.xul
+END
+EdConvertToTable.xul
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdConvertToTable.xul
+END
+EdFormProps.js
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EdFormProps.js
+END
+EditorPublishProgress.js
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EditorPublishProgress.js
+END
+EditorSaveAsCharset.js
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/ui/dialogs/content/EditorSaveAsCharset.js
+END

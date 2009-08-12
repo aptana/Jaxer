@@ -1,0 +1,116 @@
+/**
+ * @author Curt Tudor
+ * @author Kevin Lindsey
+ */
+
+How to run the HTMLUnit test suite:
+
+1) Copy the products\server\tests\htmlunit\www\htmlunit directory and all of its sub-contents
+   to the document root of the web server you will be targeting.  For example, if the document
+   root of your web server is at "C:\Program Files\Apache Software Foundation\Apache2.2\htdocs"
+   then copy the products\server\tests\htmlunit\www\htmlunit directory in its entirety to
+   "C:\Program Files\Apache Software Foundation\Apache2.2\htdocs".  The goal is to have things
+   set up so that you can surf to http://servername/htmlunit/xxxx.html
+
+2) Open a cmd prompt and enter the products\server\tests\htmlunit\src directory.
+
+3) Set the HTMLUNIT_SERVERNAME environment variable to the name of the server you are targeting.
+   For example, "localhost", or ""MYSERVER", whatever...
+
+4) Set the HTMLUNIT_SERVER_PORT environment variable to the HTTP port the above web server is
+   accepting HTTP connections on.  For example, "80", or "8080", whatever...
+
+5) The HTMLUnit test suite has logging capabilities.  There are several levels of logging:
+   - TRACE  
+   - DEBUG  
+   - INFO   
+   - WARN   
+   - ERROR  
+   - FATAL  
+
+   By default, logging for the HTMLUnit test suite is configured at log level "FATAL", which will
+   typically leave no trace messages in the test-result.txt file at the completion of a test.  If you 
+   need/want to get a trace of the HTTP/HTML traffic going over the wire, the interaction amongst
+   the test threads, etc., you can set the HTMLUNIT_LOG_LEVEL environment variable to one of the
+   above values.  The log level names are listing in order of most verbose to least verbose.
+
+6) Make sure 3rdparty\ant\bin is on your path.
+
+7) While still in the above mentioned cmd prompt window, cd into the directory for the test you wish
+   to execute.  Fore example, to run all tests, enter the products\server\tests\htmlunit\src directory,
+   but to run only the "test0001" test, enter the products\server\tests\htmlunit\src\test0001 directory.
+
+8) type "ant", press ENTER
+
+9) Each test subdirectory will contain a file named test-result.txt after a test is run.  If the test(s)
+   are successful, ant will report "BUILD SUCCESSFUL".  IF any test fails, ant will immediate terminate
+   the run (i.e. no more tests will be run) and it will report "BUILD FAILED".  You may then examine
+   the test-result.txt file for an explanation of why the test failed.  
+   
+   Here is a contrived example that shows the content of test-result.txt after an unexpected page title
+   was encountered.  Here, the error was that an expected "x" in the page title was not returned by the 
+   server: 
+
+		Testsuite: JaxerHtmlTest
+		Tests run: 1, Failures: 1, Errors: 0, Time elapsed: 1.719 sec
+
+		Testcase: testHTMLTest took 1.704 sec
+			FAILED
+		null expected:<...he title of TEST0001[x]> but was:<...he title of TEST0001[]>
+		junit.framework.ComparisonFailure: null expected:<...he title of TEST0001[x]> but was:<...he title of TEST0001[]>
+			at JaxerHtmlTest$WorkerThread.runTest(JaxerHtmlTest.java:96)
+			at net.sourceforge.groboutils.junit.v1.TestRunnable.run(TestRunnable.java:154)
+			at java.lang.Thread.run(Thread.java:595)
+
+10) OPTIONAL and REQUIRED ENV VARS:
+	- HTMLUNIT_LOCAL [OPTIONAL]
+		Set this var to "1" if you are running the tests on a development machine and you
+		would prefer to view output files in txt format instead of xml format.  If this
+		env var is set, the test results will be left in the dir for each individual test.
+
+	- HTMLUNIT_SERVER_NAME [REQUIRED]
+		Set this to the IP address or domain name of the server where the Jaxer instance
+		you wish to tests lives. For example, to test on your local machine you could
+		define this as "127.0.0.1"
+		
+	- HTMLUNIT_SERVER_PORT [REQUIRED]
+		Set this to the port on which the Web Server where Jaxer resides is listening.
+		Typically this will default to values like 80, 8080, or 8181.
+		
+	- HTMLUNIT_THREAD_COUNT [OPTIONAL]
+		The testing infra uses a default of "5" for this value.  Set this var to 
+		a higher or lower value depending on how much stress you want to place
+		on Jaxer (and your local machine where these tests are run).  The thread
+		count refers to how many simulated browsers will simultaneously be launching
+		the request contained within the individual test.
+
+	- HTMLUNIT_REQUEST_COUNT [OPTIONAL]
+		The testing infra uses a default of "50" for this value.  Set this var to 
+		a higher or lower value depending on how much stress you want to place
+		on Jaxer (and your local machine where these tests are run).  The request
+		count refers to how many iterations through the request/response/examine
+		loop the test will run.
+
+	- HTMLUNIT_WEBCLIENT_TIMEOUT [OPTIONAL]
+		The testing infra uses a default of "10000" for this value.  Set this var to 
+		the number milliseconds each request should be allowed to take before a timeout
+		error is detected.  A value of 0 (zero) will use an infinite timeout (which
+		can be useful when stepping through Jaxer in a debugger).  Note that the timeout
+		is per HTTP request, not for the entire test.  This mechanism is designed to
+		detect when Jaxer has crashed, hung, or otherwise is not efficiently processing 
+		HTTP requests.
+		
+	- HTMLUNIT_DB_HOST [REQUIRED]
+		Set this to the IP address or domain name of the server where Jaxer's MySQL
+		database engine lives.
+		
+	- HTMLUNIT_DB_NAME [REQUIRED]
+		Set this to the name of the database to connect to once establishing a connection
+		with MySQL
+	
+	- HTMLUNIT_DB_USER [REQUIRED]
+		Set this to the user name that has access privileges to the specified MySQL database
+		
+	- HTMLUNIT_DB_PASSWORD [REQUIRED]
+		Set this to the user's password
+	

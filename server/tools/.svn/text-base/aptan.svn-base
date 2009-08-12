@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# aptan: An aptan.py launcher script.
+# version: $Revision$
+# os: linux, solaris, macos
+# env: $PATH must contain python.
+#
+PARENT=`dirname $0`
+
+python $PARENT/aptan.py $*
+
+exit $?

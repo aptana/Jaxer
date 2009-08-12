@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/4548/trunk/products/server/src/mozilla/aptana_iws/tellManager
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/tellManager/Makefile.in
+END
+tellManager.sln
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/tellManager/tellManager.sln
+END
+tellManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/4548/trunk/products/server/src/mozilla/aptana_iws/tellManager/tellManager.cpp
+END
+tellManager.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/tellManager/tellManager.vcproj
+END

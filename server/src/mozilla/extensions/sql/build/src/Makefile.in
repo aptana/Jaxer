@@ -1,0 +1,123 @@
+# ***** BEGIN LICENSE BLOCK *****
+#  Version: GPL 3
+# 
+#  This program is licensed under the GNU General Public license, version 3 (GPL).
+#  It is derived from Mozilla software and modified by Aptana, Inc.
+#  Aptana, Inc. has elected to use and license the Mozilla software 
+#  under the terms of the GPL, and licenses this file to you under the terms
+#  of the GPL.
+#  
+#  Contributor(s): Aptana, Inc.
+#  The portions modified by Aptana are Copyright (C) 2007-2008 Aptana, Inc.
+#  All Rights Reserved.
+# 
+#  This program is distributed in the hope that it will be useful, but
+#  AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+#  NONINFRINGEMENT. Redistribution, except as permitted by the GPL,
+#  is prohibited.
+# 
+#  You can redistribute and/or modify this program under the terms of the GPL, 
+#  as published by the Free Software Foundation.  You should
+#  have received a copy of the GNU General Public License, Version 3 along
+#  with this program; if not, write to the Free Software Foundation, Inc., 51
+#  Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+#  
+#  Aptana provides a special exception to allow redistribution of this file
+#  with certain other code and certain additional terms
+#  pursuant to Section 7 of the GPL. You may view the exception and these
+#  terms on the web at http://www.aptana.com/legal/gpl/.
+#  
+#  You may view the GPL, and Aptana's exception and additional terms in the file
+#  titled license-jaxer.html in the main distribution folder of this program.
+#  
+#  Any modifications to this file must keep this entire header intact.
+# 
+# ***** END LICENSE BLOCK *****
+# ***** BEGIN ORIGINAL ATTRIBUTION BLOCK *****
+# The Original Code is mozilla.org code.
+#
+# The Initial Developer of the Original Code is Jan Varga
+# Portions created by the Initial Developer are Copyright (C) 2003
+# the Initial Developer. All Rights Reserved.
+#
+# Contributor(s):
+#   Valia Vaneeva <fattie@altlinux.ru>
+#
+# ***** END ORIGINAL ATTRIBUTION BLOCK ***** */
+
+DEPTH			= ../../../..
+topsrcdir		= @top_srcdir@
+srcdir			= @srcdir@
+VPATH			= @srcdir@
+
+include $(DEPTH)/config/autoconf.mk
+
+MODULE			= sql
+MODULE_NAME    		= mozSqlModule
+LIBRARY_NAME		= sql
+IS_COMPONENT		= 1
+ifeq ($(OS_ARCH),Linux)
+FORCE_SHARED_LIB	= 1
+endif
+MOZILLA_INTERNAL_API = 1
+
+REQUIRES	= xpcom \
+		  	  string \
+		  	  rdf \
+			  $(NULL)
+
+CPPSRCS			= \
+  		  	  mozSqlModule.cpp
+
+SHARED_LIBRARY_LIBS	= \
+		 	  ../../base/src/$(LIB_PREFIX)sqlbase_s.$(LIB_SUFFIX)
+
+EXTRA_DSO_LDOPTS	= \
+			  $(MOZ_UNICHARUTIL_LIBS) \
+			  $(MOZ_COMPONENT_LIBS) \
+    			  $(NULL)
+
+ifdef MOZ_ENABLE_PGSQL
+DEFINES             	+= -DMOZ_ENABLE_PGSQL
+SHARED_LIBRARY_LIBS 	+= ../../pgsql/src/$(LIB_PREFIX)sqlpgsql_s.$(LIB_SUFFIX)
+EXTRA_DSO_LDOPTS    	+= -L$(MOZ_PGSQL_LIBS) -lpq
+endif
+
+ifdef MOZ_ENABLE_SQLITE
+DEFINES                 += -DMOZ_ENABLE_SQLITE
+SHARED_LIBRARY_LIBS     += ../../sqlite/src/$(LIB_PREFIX)sqlsqlite_s.$(LIB_SUFFIX)
+EXTRA_DSO_LDOPTS        += -L$(MOZ_SQLITE_LIBS) -lsqlite3
+endif
+
+ifdef MOZ_ENABLE_MYSQL
+DEFINES             	+= -DMOZ_ENABLE_MYSQL
+SHARED_LIBRARY_LIBS 	+= ../../mysql/src/$(LIB_PREFIX)sqlmysql_s.$(LIB_SUFFIX)
+EXTRA_DSO_LDOPTS    	+= -L$(MOZ_MYSQL_LIBS) -lmysqlclient -lz
+endif
+
+ifdef MOZ_ENABLE_ODBC
+DEFINES             	+= -DMOZ_ENABLE_ODBC
+SHARED_LIBRARY_LIBS 	+= ../../odbc/src/$(LIB_PREFIX)sqlodbc_s.$(LIB_SUFFIX)
+EXTRA_DSO_LDOPTS    	+= $(MOZ_ODBC_LIBS)
+endif
+
+include $(topsrcdir)/config/rules.mk
+
+ifdef MOZ_ENABLE_PGSQL
+INCLUDES		+= -I$(MOZ_PGSQL_INCLUDES)
+endif
+
+ifdef MOZ_ENABLE_SQLITE
+INCLUDES                += -I$(MOZ_SQLITE_INCLUDES)
+endif
+
+ifdef MOZ_ENABLE_MYSQL
+INCLUDES		+= -I$(MOZ_MYSQL_INCLUDES)
+endif
+
+ifdef MOZ_ENABLE_ODBC
+ifneq ($(MOZ_ODBC_INCLUDES),)
+INCLUDES		+= -I$(MOZ_ODBC_INCLUDES)
+endif
+endif

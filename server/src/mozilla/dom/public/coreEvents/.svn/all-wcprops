@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/public/coreEvents
+END
+nsIDOMContextMenuListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/coreEvents/nsIDOMContextMenuListener.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/coreEvents/Makefile.in
+END
+nsIDOMDragListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/public/coreEvents/nsIDOMDragListener.h
+END
+nsIDOMUIListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/coreEvents/nsIDOMUIListener.h
+END
+nsIDOMMouseMotionListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/coreEvents/nsIDOMMouseMotionListener.h
+END
+nsIDOMFocusListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/coreEvents/nsIDOMFocusListener.h
+END
+nsIDOMLoadListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/coreEvents/nsIDOMLoadListener.h
+END
+nsIDOMCompositionListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/coreEvents/nsIDOMCompositionListener.h
+END
+nsIDOMFormListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/coreEvents/nsIDOMFormListener.h
+END
+nsIDOMTextListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/coreEvents/nsIDOMTextListener.h
+END
+nsIDOMKeyListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/coreEvents/nsIDOMKeyListener.h
+END
+nsIDOMMouseListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/coreEvents/nsIDOMMouseListener.h
+END
+nsIDOMXULListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/coreEvents/nsIDOMXULListener.h
+END

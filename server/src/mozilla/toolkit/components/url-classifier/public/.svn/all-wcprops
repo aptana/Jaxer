@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/url-classifier/public
+END
+nsIUrlClassifierDBService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/url-classifier/public/nsIUrlClassifierDBService.idl
+END
+nsIUrlClassifierTable.idl
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/url-classifier/public/nsIUrlClassifierTable.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/components/url-classifier/public/Makefile.in
+END
+nsIUrlClassifierHashCompleter.idl
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/url-classifier/public/nsIUrlClassifierHashCompleter.idl
+END
+nsIUrlClassifierStreamUpdater.idl
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/components/url-classifier/public/nsIUrlClassifierStreamUpdater.idl
+END
+nsIUrlClassifierUtils.idl
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/url-classifier/public/nsIUrlClassifierUtils.idl
+END
+nsIUrlListManager.idl
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/components/url-classifier/public/nsIUrlListManager.idl
+END

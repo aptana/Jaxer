@@ -1,0 +1,221 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/3305/trunk/products/server/src/mozilla/parser/htmlparser/src
+END
+nsExpatDriver.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/parser/htmlparser/src/nsExpatDriver.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/3305/trunk/products/server/src/mozilla/parser/htmlparser/src/Makefile.in
+END
+nsParser.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/3305/trunk/products/server/src/mozilla/parser/htmlparser/src/nsParser.h
+END
+nsElementTable.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/src/nsElementTable.cpp
+END
+CParserContext.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/src/CParserContext.cpp
+END
+nsHTMLTokenizer.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/src/nsHTMLTokenizer.h
+END
+nsParserNode.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/src/nsParserNode.h
+END
+nsHTMLEntities.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/src/nsHTMLEntities.h
+END
+nsScannerString.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/parser/htmlparser/src/nsScannerString.cpp
+END
+nsLoggingSink.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/src/nsLoggingSink.h
+END
+nsParserService.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2151/trunk/products/server/src/mozilla/parser/htmlparser/src/nsParserService.h
+END
+nsHTMLTags.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/src/nsHTMLTags.cpp
+END
+nsParserMsgUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/src/nsParserMsgUtils.cpp
+END
+nsViewSourceHTML.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/parser/htmlparser/src/nsViewSourceHTML.h
+END
+CNavDTD.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/parser/htmlparser/src/CNavDTD.h
+END
+nsParser.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/3305/trunk/products/server/src/mozilla/parser/htmlparser/src/nsParser.cpp
+END
+nsScanner.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/src/nsScanner.h
+END
+nsHTMLTokenizer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/parser/htmlparser/src/nsHTMLTokenizer.cpp
+END
+nsDTDUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/parser/htmlparser/src/nsDTDUtils.h
+END
+nsHTMLEntityList.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/src/nsHTMLEntityList.h
+END
+nsExpatDriver.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/parser/htmlparser/src/nsExpatDriver.h
+END
+nsParserModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/src/nsParserModule.cpp
+END
+nsParserNode.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/parser/htmlparser/src/nsParserNode.cpp
+END
+nsElementTable.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/src/nsElementTable.h
+END
+CParserContext.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/src/CParserContext.h
+END
+nsHTMLEntities.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/src/nsHTMLEntities.cpp
+END
+nsLoggingSink.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/src/nsLoggingSink.cpp
+END
+nsParserService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/parser/htmlparser/src/nsParserService.cpp
+END
+nsViewSourceHTML.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/parser/htmlparser/src/nsViewSourceHTML.cpp
+END
+nsToken.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/parser/htmlparser/src/nsToken.cpp
+END
+CNavDTD.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/parser/htmlparser/src/CNavDTD.cpp
+END
+nsHTMLTokens.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/parser/htmlparser/src/nsHTMLTokens.cpp
+END
+nsScanner.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/parser/htmlparser/src/nsScanner.cpp
+END
+nsParserMsgUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/src/nsParserMsgUtils.h
+END
+parser.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/src/parser.pkg
+END
+nsDTDUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/htmlparser/src/nsDTDUtils.cpp
+END

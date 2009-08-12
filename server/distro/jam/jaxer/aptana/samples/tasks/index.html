@@ -1,0 +1,218 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+		<title>Jaxer Tasks Sample Application</title>
+		<link rel='stylesheet' type='text/css' href='css/index.css'>
+		<style type="text/css">
+			.tasks { 
+				background-color: #f0f0ff; 
+				padding: 8px;
+			}
+			
+			.new-task {
+				padding: 4px 0 4px 0; 
+				border-bottom: 3px solid #B5B5DF;
+			}
+			
+			.task { 
+				padding: 4px; 
+			}
+		</style>
+		
+		<!-- This script block will be available on both client and server since the 
+			runat attribute is set to 'both'. -->
+		<script type="text/javascript" runat="both">
+			/*
+			 * Easy access to a named element in the DOM
+			 */
+			function $(id) 
+			{ 
+				return document.getElementById(id); 
+			}
+			
+			/*
+			 * 
+			 */
+			function addTaskToUI(description, id)
+			{
+				var newId = id || Math.ceil(1000000000 * Math.random());
+				var div = document.createElement("div");
+				div.id = "task_" + newId;
+				div.className = "task";
+				
+				var checkbox = document.createElement("input");
+				checkbox.setAttribute("type", "checkbox");
+				checkbox.setAttribute("title", "done");
+				checkbox.setAttribute("id", "checkbox_" + newId);
+				Jaxer.setEvent(checkbox, "onclick", "completeTask(" + newId + ")");
+				div.appendChild(checkbox);
+				
+				var input = document.createElement("input");
+				input.setAttribute("type", "text");
+				input.setAttribute("size", "60");
+				input.setAttribute("title", "description");
+				input.setAttribute("id", "input_" + newId);
+				input.value = description;
+				Jaxer.setEvent(input, "onchange", "saveTaskInDB(" + newId + ", this.value)");
+				div.appendChild(input);
+				
+				$("tasks").insertBefore(div, $("tasks").firstChild);
+				
+				if (!Jaxer.isOnServer)
+				{
+					saveTaskInDB(newId, description);
+				}
+			}
+		</script>
+
+		<!-- This script block will execute only on the server because of the
+			runat="server" attributes. -->
+		<script type="text/javascript" runat="server">
+			
+			/*
+			 * The SQL to create the database table we'll use to store the tasks
+			 */
+			var sql = "CREATE TABLE IF NOT EXISTS tasks " +
+				"( id INTEGER NOT NULL" +
+				", description VARCHAR(255)" +
+				", created DATETIME NOT NULL" +
+				")";
+				
+			// Execute the sql statement against the default Jaxer database
+			Jaxer.DB.execute(sql);
+			
+			/*
+			 * Set the 'onserverload' property to call our function once the page has been fully
+			 * loaded server-side. We could have also set this attribute on the <body> tag of our
+			 * page and had it call a function by name.
+			 */
+			window.onserverload = function()
+			{
+				var resultSet = Jaxer.DB.execute("SELECT * FROM tasks ORDER BY created");
+				for (var i=0; i<resultSet.rows.length; i++)
+				{
+					var task = resultSet.rows[i];
+					addTaskToUI(task.description, task.id);
+				}
+			}
+			
+			/*
+			 * Save a task directly into the database
+			 */
+			function saveTaskInDB(id, description)
+			{
+				var resultSet = Jaxer.DB.execute("SELECT * FROM tasks WHERE id = ?", [id]);
+				if (resultSet.rows.length > 0) // task already exists
+				{
+					Jaxer.DB.execute("UPDATE tasks SET description = ? WHERE id = ?",
+						[description, id]);
+				}
+				else // insert new task
+				{
+					Jaxer.DB.execute("INSERT INTO tasks (id, description, created) " +
+						"VALUES (?, ?, ?)",
+						[id, description, new Date()]);
+				}
+			}
+			// Because we want this function callable from the client, we set it's proxy
+			// value to true
+			saveTaskInDB.proxy = true;
+
+			/*
+			 * Delete a task from the database
+			 */
+			function deleteSavedTask(id)
+			{
+				Jaxer.DB.execute("DELETE FROM tasks WHERE id = ?", [id]);
+			}
+			// Because we want this function callable from the client, we set it's proxy
+			// value to true
+			deleteSavedTask.proxy = true;
+		</script>
+		
+		<!-- This script block is a standard script block and runs on the browser only -->
+		<script type="text/javascript">
+			
+			/*
+			 * This client function sets a task as completed and calls the server-side function
+			 * 'deleteSavedTask' to remove it from the database
+			 */
+			function completeTask(taskId)
+			{
+				var div = $("task_" + taskId);
+				div.parentNode.removeChild(div);
+				deleteSavedTask(taskId);
+			}
+			
+			/*
+			 * Create a new task and add it to the user interface
+			 */
+			function newTask()
+			{
+				var description = $('txt_new').value;
+				if (description != '')
+				{
+					addTaskToUI(description);
+					$('txt_new').value = '';
+				}
+			}
+			
+			/*
+			 * Create a new task if the enter key was hit
+			 */
+			function newKeyDown(evt)
+			{
+				if (evt.keyCode == 13)
+				{
+					newTask();
+					return false;
+				}
+			}
+			
+		</script>
+
+    </head>
+
+	<body>		
+		<script type="text/javascript" src="lib/wz_tooltip.js"></script>
+
+		<div id='sampleDescription'>
+			A simple tasks application where you can add, modify, and check-off (delete) to-do's.
+		</div>
+		<div id='sampleSource'>
+		<li><a href="/aptana/tools/sourceViewer/index.html?filename=../../samples/tasks/index.html" target="_blank">Tasks Source Code</a></li>
+		</div>
+
+		<div id='sampleHeader'>
+			<div class='sampleTitle'>
+				<img src='images/date_edit.png'/> Tasks To Do
+			</div>
+			<div id='rightFloat'>
+				<img src ='images/information.png' class='sampleDescription' onmouseover="TagToTip('sampleDescription', CLICKCLOSE, true, STICKY, true, WIDTH, 300, TITLE, 'Sample Info')"/>
+				<span id='sourceButton'><img src ='images/html.png' 	   id='sampleSourceLink'  onmouseover="TagToTip('sampleSource', STICKY, true, CLOSEBTN, true,  TITLE, 'View Source Code')"/></span>
+			</div>
+		</div>
+		
+		<div id='applicationContent'>
+		<div class="new-task">
+			New:
+			<input type="text" id="txt_new" size="60" onkeydown="newKeyDown(event)">
+			<input type="button" value="add" onclick="newTask()">
+		</div>
+		<div id="tasks" class="tasks">
+		</div>
+		</div>
+		
+		<div id='sampleFooter'>
+		<BR><i>Any changes should be automatically saved to your database!</i>			
+		</div>
+		
+		<script runat='server'>
+				if (Jaxer.System.executableFolder.match('com.aptana.ide.framework.jaxer')) {
+					document.getElementById('sampleSource').innerHTML="";
+					document.getElementById('sourceButton').innerHTML="";
+				}
+		</script> 
+    </body>
+</html>

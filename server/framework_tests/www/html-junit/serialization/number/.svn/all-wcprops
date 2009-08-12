@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/serialization/number
+END
+serializeFloat.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/serialization/number/serializeFloat.html
+END
+serializeNegativeFloat.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/serialization/number/serializeNegativeFloat.html
+END
+serializeInfinity.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/serialization/number/serializeInfinity.html
+END
+serializeNaN.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/serialization/number/serializeNaN.html
+END
+serializeScientificNotation.html
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/serialization/number/serializeScientificNotation.html
+END
+serializeInteger.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/serialization/number/serializeInteger.html
+END
+serializeNegativeScientificNotation.html
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/serialization/number/serializeNegativeScientificNotation.html
+END
+serializeNegativeInteger.html
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/serialization/number/serializeNegativeInteger.html
+END
+serializeNegativeScientificNotation2.html
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/serialization/number/serializeNegativeScientificNotation2.html
+END

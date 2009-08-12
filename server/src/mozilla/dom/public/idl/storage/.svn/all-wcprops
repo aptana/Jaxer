@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/public/idl/storage
+END
+nsIDOMStorageManager.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/public/idl/storage/nsIDOMStorageManager.idl
+END
+nsIDOMStorageList.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/storage/nsIDOMStorageList.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/dom/public/idl/storage/Makefile.in
+END
+nsIDOMStorageItem.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/storage/nsIDOMStorageItem.idl
+END
+nsPIDOMStorage.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/storage/nsPIDOMStorage.h
+END
+nsIDOMStorage.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/storage/nsIDOMStorage.idl
+END
+nsIDOMStorageEvent.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/storage/nsIDOMStorageEvent.idl
+END
+nsIDOMToString.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/storage/nsIDOMToString.idl
+END
+nsIDOMStorageWindow.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/storage/nsIDOMStorageWindow.idl
+END

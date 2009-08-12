@@ -1,0 +1,137 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra
+END
+httpd-dav.conf
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-dav.conf
+END
+httpd-languages.conf.in
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-languages.conf.in
+END
+httpd-userdir.conf
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-userdir.conf
+END
+httpd-manual.conf
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-manual.conf
+END
+httpd-multilang-errordoc.conf.in
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-multilang-errordoc.conf.in
+END
+httpd-dav.conf.in
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-dav.conf.in
+END
+httpd-userdir.conf.in
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-userdir.conf.in
+END
+httpd-manual.conf.in
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-manual.conf.in
+END
+httpd-default.conf
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-default.conf
+END
+httpd-vhosts.conf
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-vhosts.conf
+END
+httpd-default.conf.in
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-default.conf.in
+END
+httpd-mpm.conf
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-mpm.conf
+END
+httpd-vhosts.conf.in
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-vhosts.conf.in
+END
+httpd-info.conf
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-info.conf
+END
+httpd-mpm.conf.in
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-mpm.conf.in
+END
+httpd-info.conf.in
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-info.conf.in
+END
+httpd-autoindex.conf
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-autoindex.conf
+END
+httpd-ssl.conf
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-ssl.conf
+END
+httpd-autoindex.conf.in
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-autoindex.conf.in
+END
+httpd-languages.conf
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-languages.conf
+END
+httpd-ssl.conf.in
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-ssl.conf.in
+END
+httpd-multilang-errordoc.conf
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/conf/extra/httpd-multilang-errordoc.conf
+END

@@ -1,0 +1,527 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/jpeg
+END
+filelist.doc
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/filelist.doc
+END
+jdatadst.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jdatadst.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/jpeg/Makefile.in
+END
+jwinfig.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jwinfig.h
+END
+jmemansi.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jmemansi.c
+END
+jchuff.c
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jchuff.c
+END
+coderules.doc
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/coderules.doc
+END
+jchuff.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jchuff.h
+END
+jcparam.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jcparam.c
+END
+structure.doc
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/structure.doc
+END
+jquant1.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jquant1.c
+END
+change.log
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/change.log
+END
+jcphuff.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jcphuff.c
+END
+jccolor.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jccolor.c
+END
+jcmarker.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jcmarker.c
+END
+jcsample.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jcsample.c
+END
+jmemmgr.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jmemmgr.c
+END
+jdsample.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jdsample.c
+END
+jdmarker.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jdmarker.c
+END
+jfdctflt.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jfdctflt.c
+END
+jmorecfg.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/jpeg/jmorecfg.h
+END
+jinclude.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jinclude.h
+END
+jconfig.doc
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jconfig.doc
+END
+jidctflt.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jidctflt.c
+END
+jpegint.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jpegint.h
+END
+jpg1640.def
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jpg1640.def
+END
+jcprepct.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jcprepct.c
+END
+jutils.c
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jutils.c
+END
+jdinput.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jdinput.c
+END
+MOZCHANGES
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/MOZCHANGES
+END
+jpeglib.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jpeglib.h
+END
+wizard.doc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/wizard.doc
+END
+ckconfig.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/ckconfig.c
+END
+jconfig.wat
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jconfig.wat
+END
+jcmainct.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jcmainct.c
+END
+jconfig-mac-cw.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jconfig-mac-cw.h
+END
+djpeg.c
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/djpeg.c
+END
+install.doc
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/install.doc
+END
+jdmainct.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jdmainct.c
+END
+jcapimin.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jcapimin.c
+END
+jdpostct.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jdpostct.c
+END
+jdapimin.c
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/jpeg/jdapimin.c
+END
+jmemsys.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jmemsys.h
+END
+cdjpeg.c
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/cdjpeg.c
+END
+jcdctmgr.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jcdctmgr.c
+END
+jddctmgr.c
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/jpeg/jddctmgr.c
+END
+cdjpeg.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/cdjpeg.h
+END
+jerror.c
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jerror.c
+END
+makefile.gen
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/makefile.gen
+END
+jdhuff.c
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jdhuff.c
+END
+netscape_mods.doc
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/netscape_mods.doc
+END
+jfdctfst.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jfdctfst.c
+END
+jos2fig.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jos2fig.h
+END
+jcmaster.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jcmaster.c
+END
+jerror.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jerror.h
+END
+jdmaster.c
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/jpeg/jdmaster.c
+END
+jmemnobs.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jmemnobs.c
+END
+jidctfst.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jidctfst.c
+END
+jdhuff.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jdhuff.h
+END
+jcinit.c
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jcinit.c
+END
+jquant2.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jquant2.c
+END
+usage.doc
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/usage.doc
+END
+jmemname.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jmemname.c
+END
+jdct.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jdct.h
+END
+jdatasrc.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jdatasrc.c
+END
+example.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/example.c
+END
+jmemdosa.asm
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jmemdosa.asm
+END
+jmemdos.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jmemdos.c
+END
+libjpeg.doc
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/libjpeg.doc
+END
+jcapistd.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jcapistd.c
+END
+jdapistd.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jdapistd.c
+END
+jversion.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jversion.h
+END
+jfdctint.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jfdctint.c
+END
+cderror.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/cderror.h
+END
+jidctint.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jidctint.c
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/README
+END
+jpeg1640.def
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jpeg1640.def
+END
+jdmerge.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jdmerge.c
+END
+jccoefct.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jccoefct.c
+END
+jdcoefct.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jdcoefct.c
+END
+jcomapi.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jcomapi.c
+END
+jconfig.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/jpeg/jconfig.h
+END
+jpegOS2.def
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jpegOS2.def
+END
+jdphuff.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jdphuff.c
+END
+jidctred.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/jidctred.c
+END
+cjpeg.c
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/jpeg/cjpeg.c
+END
+jdcolor.c
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/jpeg/jdcolor.c
+END

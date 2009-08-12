@@ -1,0 +1,7 @@
+{
+	"name": "default",
+	"files": [
+		  "XHR.js"
+		, "unit_tests_jaxer/jaxer_comm_tests.json"
+	]
+}

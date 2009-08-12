@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/manager/pki/src
+END
+nsPKIParamBlock.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/src/nsPKIParamBlock.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/src/Makefile.in
+END
+nsASN1Tree.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/src/nsASN1Tree.cpp
+END
+nsFormSigningDialog.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/src/nsFormSigningDialog.cpp
+END
+nsNSSDialogHelper.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/src/nsNSSDialogHelper.cpp
+END
+nsPKIParamBlock.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/src/nsPKIParamBlock.h
+END
+nsNSSDialogs.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/pki/src/nsNSSDialogs.cpp
+END
+nsASN1Tree.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/src/nsASN1Tree.h
+END
+nsFormSigningDialog.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/src/nsFormSigningDialog.h
+END
+nsNSSDialogHelper.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/src/nsNSSDialogHelper.h
+END
+nsPKIModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/manager/pki/src/nsPKIModule.cpp
+END
+pippki.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/pki/src/pippki.pkg
+END
+nsNSSDialogs.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/manager/pki/src/nsNSSDialogs.h
+END

@@ -1,0 +1,155 @@
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl
+END
+StdAfx.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/StdAfx.h
+END
+pluginhostctrlps.def
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/pluginhostctrlps.def
+END
+npn.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/npn.h
+END
+pluginhostctrl.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/pluginhostctrl.vcproj
+END
+pluginhostctrl.rc
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/pluginhostctrl.rc
+END
+nsPluginHostWnd.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/nsPluginHostWnd.cpp
+END
+pluginhostctrl.idl
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/pluginhostctrl.idl
+END
+nsPluginWnd.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/nsPluginWnd.cpp
+END
+pluginhostctrlps.mk
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/pluginhostctrlps.mk
+END
+nsURLDataCallback.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/nsURLDataCallback.cpp
+END
+nsPluginHostWnd.h
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/nsPluginHostWnd.h
+END
+nsPluginWnd.h
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/nsPluginWnd.h
+END
+nsURLDataCallback.h
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/nsURLDataCallback.h
+END
+pluginhostctrl.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/pluginhostctrl.cpp
+END
+pluginho.bmp
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/pluginho.bmp
+END
+nsPluginHostCtrl.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/nsPluginHostCtrl.cpp
+END
+pluginhostctrl.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/pluginhostctrl.dsp
+END
+nsPluginHostCtrl.h
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/nsPluginHostCtrl.h
+END
+StdAfx.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/StdAfx.cpp
+END
+README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/README.txt
+END
+PluginHostCtrl.rgs
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/PluginHostCtrl.rgs
+END
+npn.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/npn.cpp
+END
+pluginhostctrl.sln
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/pluginhostctrl.sln
+END
+resource.h
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/resource.h
+END
+pluginhostctrl.def
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/browser/activex/src/pluginhostctrl/pluginhostctrl.def
+END

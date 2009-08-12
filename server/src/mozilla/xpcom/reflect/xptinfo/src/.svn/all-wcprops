@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpcom/reflect/xptinfo/src
+END
+xptiZipLoader.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptinfo/src/xptiZipLoader.cpp
+END
+xptiMisc.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptinfo/src/xptiMisc.cpp
+END
+xptiTypelibGuts.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptinfo/src/xptiTypelibGuts.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptinfo/src/Makefile.in
+END
+xptiInterfaceInfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptinfo/src/xptiInterfaceInfo.cpp
+END
+xptiWorkingSet.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptinfo/src/xptiWorkingSet.cpp
+END
+TODO
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptinfo/src/TODO
+END
+xptiFile.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptinfo/src/xptiFile.cpp
+END
+xptiprivate.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptinfo/src/xptiprivate.h
+END
+xptiZipItem.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/reflect/xptinfo/src/xptiZipItem.cpp
+END
+xptiManifest.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpcom/reflect/xptinfo/src/xptiManifest.cpp
+END
+xptiInterfaceInfoManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpcom/reflect/xptinfo/src/xptiInterfaceInfoManager.cpp
+END

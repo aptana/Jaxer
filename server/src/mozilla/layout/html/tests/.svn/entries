@@ -1,0 +1,337 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/layout/html/tests
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-16T23:28:56.072242Z
+2859
+mstepanov
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+absolute.html
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+470d6b83c7cfd0c7b38849412cb7549c
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+TestAppend.js
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+80f93067384ce8c7050d28da0f770d76
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+802e3f3d394add3d99424b7f576ab17a
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+xbl
+dir
+
+attributes
+dir
+
+formctls
+dir
+
+tags
+dir
+
+Rotate.html
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+e8140d43027fb752f1d923a8a8b41610
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+SlideShow
+dir
+
+ParseCSS.cpp
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+aa0621920bfb3df23b2b6b2f508ca124
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+images
+dir
+
+TestAttributes.cpp
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+a7293306b78813bfe66adbb3c4af6c29
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+TestCSSPropertyLookup.cpp
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+762153224b7db3541106a1ffe0ca5b22
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+Rotate.js
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+6ecf2901eadf161d384f0c30f2df43b2
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+TestInlineFrame.cpp
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+1a7fb5fe4b45b8503659d7c2f54f8dd7
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+TestHTMLTagLookup.cpp
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+7f98cdca8c65b19343bb2648d893d4c2
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+FrameSetNav
+dir
+
+CellMapTest
+dir
+
+TestInsert.js
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+0776d367f9f017e29c8ff06ec0e7ae0d
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+TestInline.html
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+e8eb4af65c0af6a61ae4162bf772a66d
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+TestFloaters.html
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+72ff7ef2b329d3c19502bcaf981e08e0
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+ImageMap.html
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+1ad7886ec87cc23a2f2910910e8c6fa9
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+printer
+dir
+
+table
+dir
+
+css
+dir
+
+TestInline.js
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+99e40f2a870dab2c5637f9699f579136
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+block
+dir
+
+TestTextDOM.js
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+64bb17431856079645246d4bfb40679f
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+mynet.gif
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+5946757a7a63cfb0027a33786f59d7f4
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+style
+dir
+
+DumpTree.js
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+541ef667ca3b2e92baaffd225f2d90d9
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+bluedot.gif
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+8ea79686d50f2fa4f55eb3e3ef167009
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+TestInline2.html
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+45b0ac3457eae424351646857fce226d
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+frameset
+dir
+
+new_nav_home.gif
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+2218c6ab7b9d63a30be29d27c4dafdd8
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+TestDelete.js
+file
+
+
+
+
+2009-08-11T21:39:25.000000Z
+29337cfcbb11fee9266e93c44f37e7f4
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+

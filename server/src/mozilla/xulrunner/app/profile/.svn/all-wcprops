@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/app/profile
+END
+localstore.rdf
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/app/profile/localstore.rdf
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/app/profile/Makefile.in
+END

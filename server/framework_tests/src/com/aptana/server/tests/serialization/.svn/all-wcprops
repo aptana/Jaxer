@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/serialization
+END
+TestObjectSerialization.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/serialization/TestObjectSerialization.java
+END
+TestStringSerialization.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/serialization/TestStringSerialization.java
+END
+TestNumberSerialization.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/serialization/TestNumberSerialization.java
+END
+AllTests.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/serialization/AllTests.java
+END
+TestDateSerialization.java
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/serialization/TestDateSerialization.java
+END
+TestSpecialValueSerialization.java
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/serialization/TestSpecialValueSerialization.java
+END
+TestArraySerialization.java
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/serialization/TestArraySerialization.java
+END
+TestReferenceSerialization.java
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/serialization/TestReferenceSerialization.java
+END
+TestBooleanSerialization.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/src/com/aptana/server/tests/serialization/TestBooleanSerialization.java
+END

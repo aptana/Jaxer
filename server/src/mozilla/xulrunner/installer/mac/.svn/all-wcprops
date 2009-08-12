@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/installer/mac
+END
+Description.plist.in
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/installer/mac/Description.plist.in
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/installer/mac/Makefile.in
+END
+Info.plist.in
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/installer/mac/Info.plist.in
+END

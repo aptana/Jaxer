@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/unixprinting
+END
+printplugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/unixprinting/printplugin.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/unixprinting/Makefile.in
+END
+npunix.c
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/unixprinting/npunix.c
+END
+unixprintplugin_test1.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/unixprinting/unixprintplugin_test1.html
+END
+unixprintplugin_test2.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/unixprinting/unixprintplugin_test2.html
+END
+npshell.c
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/unixprinting/npshell.c
+END
+npprint.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/unixprinting/npprint.pkg
+END
+printplugin.c
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/unixprinting/printplugin.c
+END

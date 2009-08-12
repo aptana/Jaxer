@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/browser/installer/windows/nsis
+END
+installer.nsi
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/browser/installer/windows/nsis/installer.nsi
+END
+uninstaller.nsi
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/browser/installer/windows/nsis/uninstaller.nsi
+END
+updater_append.ini
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/browser/installer/windows/nsis/updater_append.ini
+END
+defines.nsi.in
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/browser/installer/windows/nsis/defines.nsi.in
+END
+branding.nsi
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/browser/installer/windows/nsis/branding.nsi
+END
+shared.nsh
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/browser/installer/windows/nsis/shared.nsh
+END

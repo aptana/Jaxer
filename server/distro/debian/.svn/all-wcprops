@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/jaxer/!svn/ver/4605/trunk/products/server/distro/debian
+END
+control
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/jaxer/!svn/ver/4605/trunk/products/server/distro/debian/control
+END
+dirs
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/jaxer/!svn/ver/4583/trunk/products/server/distro/debian/dirs
+END
+compat
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/jaxer/!svn/ver/4583/trunk/products/server/distro/debian/compat
+END
+postinst
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/jaxer/!svn/ver/4589/trunk/products/server/distro/debian/postinst
+END
+preinst
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/jaxer/!svn/ver/4595/trunk/products/server/distro/debian/preinst
+END
+prerm
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/jaxer/!svn/ver/4595/trunk/products/server/distro/debian/prerm
+END
+changelog
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/4595/trunk/products/server/distro/debian/changelog
+END
+copyright
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/4583/trunk/products/server/distro/debian/copyright
+END
+docs
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/jaxer/!svn/ver/4583/trunk/products/server/distro/debian/docs
+END
+rules
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/jaxer/!svn/ver/4595/trunk/products/server/distro/debian/rules
+END

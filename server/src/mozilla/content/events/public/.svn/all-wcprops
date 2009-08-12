@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/events/public
+END
+nsEventDispatcher.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/events/public/nsEventDispatcher.h
+END
+nsIPrivateCompositionEvent.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/events/public/nsIPrivateCompositionEvent.h
+END
+nsIPrivateTextEvent.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/events/public/nsIPrivateTextEvent.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/events/public/Makefile.in
+END
+nsIEventListenerManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/events/public/nsIEventListenerManager.h
+END
+nsPLDOMEvent.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/events/public/nsPLDOMEvent.h
+END
+nsPIDOMEventTarget.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/events/public/nsPIDOMEventTarget.h
+END
+nsMutationEvent.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/events/public/nsMutationEvent.h
+END
+nsIPrivateDOMEvent.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/content/events/public/nsIPrivateDOMEvent.h
+END
+nsIPrivateTextRange.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/events/public/nsIPrivateTextRange.h
+END
+nsIEventStateManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/content/events/public/nsIEventStateManager.h
+END

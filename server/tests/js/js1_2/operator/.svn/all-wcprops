@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_2/operator
+END
+strictEquality.js
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_2/operator/strictEquality.js
+END
+shell.js
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_2/operator/shell.js
+END
+browser.js
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_2/operator/browser.js
+END

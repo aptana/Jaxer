@@ -1,0 +1,4 @@
+#scp admin@10.10.1.53:"/Shared\\ Items/Public/jzhang_tmp/jdk-1_5_0_16-linux-i586.bin" .
+scp admin@10.10.1.53:"/Shared\\ Items/Public/Builds/ubu64/Archive/Jaxer_Package_withApache_4288.zip" /opt
+
+

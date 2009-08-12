@@ -1,0 +1,245 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/netwerk/test/unit
+END
+test_event_sink.js
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_event_sink.js
+END
+test_bug368702.js
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/netwerk/test/unit/test_bug368702.js
+END
+test_bug419157.js
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/netwerk/test/unit/test_bug419157.js
+END
+test_bug376660.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_bug376660.js
+END
+test_http_headers.js
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_http_headers.js
+END
+test_bug388281.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_bug388281.js
+END
+head_channels.js
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/head_channels.js
+END
+test_bug376844.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_bug376844.js
+END
+test_authentication.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/test/unit/test_authentication.js
+END
+test_bug396389.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/netwerk/test/unit/test_bug396389.js
+END
+test_readline.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/netwerk/test/unit/test_readline.js
+END
+test_standardurl.js
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/netwerk/test/unit/test_standardurl.js
+END
+test_protocolproxyservice.js
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_protocolproxyservice.js
+END
+test_httpcancel.js
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_httpcancel.js
+END
+test_content_sniffer.js
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_content_sniffer.js
+END
+test_reopen.js
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/netwerk/test/unit/test_reopen.js
+END
+test_localstreams.js
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_localstreams.js
+END
+test_bug414122.js
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/test/unit/test_bug414122.js
+END
+test_plaintext_sniff.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/test/unit/test_plaintext_sniff.js
+END
+test_bug263127.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_bug263127.js
+END
+test_bug331825.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_bug331825.js
+END
+test_authpromptwrapper.js
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_authpromptwrapper.js
+END
+test_dns_service.js
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/netwerk/test/unit/test_dns_service.js
+END
+test_parse_content_type.js
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_parse_content_type.js
+END
+test_bug371473.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_bug371473.js
+END
+test_resumable_channel.js
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/test/unit/test_resumable_channel.js
+END
+test_permmgr.js
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/netwerk/test/unit/test_permmgr.js
+END
+test_bug337744.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_bug337744.js
+END
+test_bug427957.js
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/netwerk/test/unit/test_bug427957.js
+END
+test_bug376865.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_bug376865.js
+END
+test_cookie_header.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_cookie_header.js
+END
+test_bug369787.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_bug369787.js
+END
+test_data_protocol.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_data_protocol.js
+END
+test_unescapestring.js
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_unescapestring.js
+END
+test_idnservice.js
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/netwerk/test/unit/test_idnservice.js
+END
+test_bug336501.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_bug336501.js
+END
+test_file_protocol.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_file_protocol.js
+END
+test_bug321706.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/unit/test_bug321706.js
+END
+test_extract_charset_from_content_type.js
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/test/unit/test_extract_charset_from_content_type.js
+END
+test_bug261425.js
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/netwerk/test/unit/test_bug261425.js
+END

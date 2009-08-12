@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/mozapps/preferences
+END
+removemp.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/mozapps/preferences/removemp.dtd
+END
+changemp.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/mozapps/preferences/changemp.dtd
+END
+preferences.properties
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/mozapps/preferences/preferences.properties
+END
+ocsp.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/mozapps/preferences/ocsp.dtd
+END

@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/public/idl/xul
+END
+nsIDOMXULMultSelectCntrlEl.idl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULMultSelectCntrlEl.idl
+END
+nsIDOMXULTextboxElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULTextboxElement.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/Makefile.in
+END
+nsIDOMXULTreeElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULTreeElement.idl
+END
+nsIDOMXULLabeledControlEl.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULLabeledControlEl.idl
+END
+nsIDOMXULMenuListElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULMenuListElement.idl
+END
+nsIDOMXULPopupElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULPopupElement.idl
+END
+nsIDOMXULDocument.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULDocument.idl
+END
+nsIDOMXULCommandEvent.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULCommandEvent.idl
+END
+nsIDOMXULSelectCntrlItemEl.idl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULSelectCntrlItemEl.idl
+END
+nsIDOMXULButtonElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULButtonElement.idl
+END
+nsIDOMXULCommandDispatcher.idl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULCommandDispatcher.idl
+END
+nsIDOMXULElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULElement.idl
+END
+nsIDOMXULLabelElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULLabelElement.idl
+END
+nsIDOMXULControlElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULControlElement.idl
+END
+nsIDOMXULImageElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULImageElement.idl
+END
+nsIDOMXULContainerElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULContainerElement.idl
+END
+nsIDOMXULDescriptionElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULDescriptionElement.idl
+END
+nsIDOMXULCheckboxElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULCheckboxElement.idl
+END
+nsIDOMXULSelectCntrlEl.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/xul/nsIDOMXULSelectCntrlEl.idl
+END

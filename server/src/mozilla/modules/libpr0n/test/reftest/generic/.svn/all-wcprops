@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/libpr0n/test/reftest/generic
+END
+check-header.sjs
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/libpr0n/test/reftest/generic/check-header.sjs
+END
+green.png
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/libpr0n/test/reftest/generic/green.png
+END
+accept-image-catchall-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/libpr0n/test/reftest/generic/accept-image-catchall-ref.html
+END
+reftest.list
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/libpr0n/test/reftest/generic/reftest.list
+END
+accept-image-catchall.html
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/libpr0n/test/reftest/generic/accept-image-catchall.html
+END

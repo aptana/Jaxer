@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/tridentprofile/src
+END
+nsTridentPreferencesWin.h
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/tridentprofile/src/nsTridentPreferencesWin.h
+END
+nsTridentProfileMigrator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/tridentprofile/src/nsTridentProfileMigrator.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/tridentprofile/src/Makefile.in
+END
+nsTridentPreferences.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/tridentprofile/src/nsTridentPreferences.h
+END
+nsTridentProfileMigrator.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/tridentprofile/src/nsTridentProfileMigrator.h
+END
+nsModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/tridentprofile/src/nsModule.cpp
+END
+tridentprofile.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/tridentprofile/src/tridentprofile.pkg
+END
+nsTridentPreferencesWin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/tridentprofile/src/nsTridentPreferencesWin.cpp
+END

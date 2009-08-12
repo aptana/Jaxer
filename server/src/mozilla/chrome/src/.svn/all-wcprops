@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/chrome/src
+END
+nsChromeProtocolHandler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/chrome/src/nsChromeProtocolHandler.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2151/trunk/products/server/src/mozilla/chrome/src/Makefile.in
+END
+nsChromeProtocolHandler.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/chrome/src/nsChromeProtocolHandler.h
+END
+nsChromeFactory.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/chrome/src/nsChromeFactory.cpp
+END
+nsChromeRegistry.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/chrome/src/nsChromeRegistry.cpp
+END
+chrome.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/chrome/src/chrome.pkg
+END
+nsChromeRegistry.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/chrome/src/nsChromeRegistry.h
+END

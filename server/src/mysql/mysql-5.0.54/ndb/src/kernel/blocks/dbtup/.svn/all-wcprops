@@ -1,0 +1,143 @@
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup
+END
+DbtupFixAlloc.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupFixAlloc.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/Makefile.in
+END
+DbtupTrigger.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupTrigger.cpp
+END
+DbtupStoredProcDef.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupStoredProcDef.cpp
+END
+DbtupPagMan.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupPagMan.cpp
+END
+DbtupUndoLog.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupUndoLog.cpp
+END
+DbtupAbort.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupAbort.cpp
+END
+DbtupIndex.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupIndex.cpp
+END
+DbtupRoutines.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupRoutines.cpp
+END
+DbtupBuffer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupBuffer.cpp
+END
+DbtupGen.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupGen.cpp
+END
+DbtupExecQuery.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupExecQuery.cpp
+END
+DbtupPageMap.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupPageMap.cpp
+END
+DbtupLCP.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupLCP.cpp
+END
+AttributeOffset.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/AttributeOffset.hpp
+END
+DbtupScan.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupScan.cpp
+END
+Dbtup.hpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/Dbtup.hpp
+END
+DbtupMeta.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupMeta.cpp
+END
+DbtupDebug.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupDebug.cpp
+END
+DbtupCommit.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupCommit.cpp
+END
+DbtupSystemRestart.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupSystemRestart.cpp
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/Makefile.am
+END
+DbtupTabDesMan.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/src/kernel/blocks/dbtup/DbtupTabDesMan.cpp
+END

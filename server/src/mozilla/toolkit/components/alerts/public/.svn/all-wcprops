@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/components/alerts/public
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/alerts/public/Makefile.in
+END
+nsINotificationsList.idl
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/components/alerts/public/nsINotificationsList.idl
+END
+nsIAlertsService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/components/alerts/public/nsIAlertsService.idl
+END

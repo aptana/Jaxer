@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/manual/style/latex
+END
+manualpage.xsl
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/manual/style/latex/manualpage.xsl
+END
+quickreference.xsl
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/manual/style/latex/quickreference.xsl
+END
+latex.xsl
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/manual/style/latex/latex.xsl
+END
+moduleindex.xsl
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/manual/style/latex/moduleindex.xsl
+END
+html.xsl
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/manual/style/latex/html.xsl
+END
+directiveindex.xsl
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/manual/style/latex/directiveindex.xsl
+END
+faq.xsl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/manual/style/latex/faq.xsl
+END
+synopsis.xsl
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/manual/style/latex/synopsis.xsl
+END
+common.xsl
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/manual/style/latex/common.xsl
+END
+atbeginend.sty
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/1463/trunk/products/server/distro/jam/Apache22-mac-universal/manual/style/latex/atbeginend.sty
+END

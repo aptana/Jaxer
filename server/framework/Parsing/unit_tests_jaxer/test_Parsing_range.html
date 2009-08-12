@@ -1,0 +1,141 @@
+<html>
+    <head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+        <script type="text/javascript" runat="server">
+			function SKIP_TESTS()
+			{
+				return "Jaxer.Range is only exposed (if at all) during framework development time";
+			}
+			
+            function test_Range_Empty()
+            {
+                var range = new Jaxer.Range(10, 10);
+                
+                assertTrue(range.isEmpty());
+            }
+            
+            function test_Range_NotEmpty()
+            {
+                var range = new Jaxer.Range(10, 11);
+                
+                assertFalse(range.isEmpty());
+            }
+            
+            function test_Range_ContainsToLeft()
+            {
+                var range = new Jaxer.Range(1, 100);
+                var value = 0;
+                
+                assertFalse(range.contains(value));
+            }
+            
+            function test_Range_ContainsOnLeft()
+            {
+                var range = new Jaxer.Range(1, 100);
+                var value = range.start;
+                
+                assertTrue(range.contains(value));
+            }
+            
+            function test_Range_ContainsInMiddle()
+            {
+                var range = new Jaxer.Range(1, 100);
+                var value = (range.start + range.end) * 0.5;
+                
+                assertTrue(range.contains(value));
+            }
+            
+            function test_Range_ContainsOnRight()
+            {
+                var range = new Jaxer.Range(1, 100);
+                var value = range.end - 1;
+                
+                assertTrue(range.contains(value));
+            }
+            
+            function test_Range_ContainsToRight()
+            {
+                var range = new Jaxer.Range(1, 100);
+                var value = range.end;
+                
+                assertFalse(range.contains(value));
+            }
+            
+            function test_Range_OverlapToLeft()
+            {
+                var range1 = new Jaxer.Range(50, 100);
+                var range2 = new Jaxer.Range(0, 10);
+                
+                assertFalse(range1.isOverlapping(range2));
+            }
+            
+            function test_Range_OverlapEndLeft()
+            {
+                var range1 = new Jaxer.Range(50, 100);
+                var range2 = new Jaxer.Range(0, 50);
+                
+                assertFalse(range1.isOverlapping(range2));
+            }
+            
+            function test_Range_OverlapStraddleLeft()
+            {
+                var range1 = new Jaxer.Range(50, 100);
+                var range2 = new Jaxer.Range(25, 75);
+                
+                assertTrue(range1.isOverlapping(range2));
+            }
+            
+            function test_Range_OverlapStartLeft()
+            {
+                var range1 = new Jaxer.Range(50, 100);
+                var range2 = new Jaxer.Range(50, 75);
+                
+                assertTrue(range1.isOverlapping(range2));
+            }
+            
+            function test_Range_OverlapInside()
+            {
+                var range1 = new Jaxer.Range(50, 100);
+                var range2 = new Jaxer.Range(70, 80);
+                
+                assertTrue(range1.isOverlapping(range2));
+            }
+            
+            function test_Range_OverlapEndRight()
+            {
+                var range1 = new Jaxer.Range(50, 100);
+                var range2 = new Jaxer.Range(70, 100);
+                
+                assertTrue(range1.isOverlapping(range2));
+            }
+            
+            function test_Range_OverlapStraddleRight()
+            {
+                var range1 = new Jaxer.Range(50, 100);
+                var range2 = new Jaxer.Range(70, 125);
+                
+                assertTrue(range1.isOverlapping(range2));
+            }
+            
+            function test_Range_OverlapStartRight()
+            {
+                var range1 = new Jaxer.Range(50, 100);
+                var range2 = new Jaxer.Range(100, 125);
+                
+                assertFalse(range1.isOverlapping(range2));
+            }
+            
+            function test_Range_OverlapToRight()
+            {
+                var range1 = new Jaxer.Range(50, 100);
+                var range2 = new Jaxer.Range(110, 125);
+                
+                assertFalse(range1.isOverlapping(range2));
+            }
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

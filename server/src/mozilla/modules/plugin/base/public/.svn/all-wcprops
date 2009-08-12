@@ -1,0 +1,251 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/modules/plugin/base/public
+END
+nsIPluginInstancePeer.idl
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIPluginInstancePeer.idl
+END
+nsIPluginInstanceInternal.h
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIPluginInstanceInternal.h
+END
+nsIWindowlessPlugInstPeer.idl
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIWindowlessPlugInstPeer.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/Makefile.in
+END
+nsPluginNativeWindow.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsPluginNativeWindow.h
+END
+nsplugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsplugin.h
+END
+npupp.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/modules/plugin/base/public/npupp.h
+END
+nsILegacyPluginWrapperOS2.idl
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsILegacyPluginWrapperOS2.idl
+END
+nsDefaultPlugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsDefaultPlugin.h
+END
+nsIPluginManager2.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIPluginManager2.idl
+END
+nsIFileUtilities.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIFileUtilities.idl
+END
+nsPIPluginHost.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/modules/plugin/base/public/nsPIPluginHost.idl
+END
+nsPluginError.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsPluginError.h
+END
+nsIPluginInstance.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIPluginInstance.idl
+END
+nsIJRILiveConnectPIPeer.idl
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIJRILiveConnectPIPeer.idl
+END
+nsIPluginManager.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIPluginManager.idl
+END
+nsIPluginInputStream.idl
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIPluginInputStream.idl
+END
+nsIPluginHost.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIPluginHost.idl
+END
+nsIPluginDocument.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIPluginDocument.idl
+END
+nsIPlugin.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIPlugin.idl
+END
+nsIHTTPHeaderListener.idl
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIHTTPHeaderListener.idl
+END
+nsICookieStorage.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsICookieStorage.idl
+END
+nsIPluginInstanceOwner.idl
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIPluginInstanceOwner.idl
+END
+nsplugindefs.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsplugindefs.h
+END
+nsIPluginTagInfo.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIPluginTagInfo.idl
+END
+nsPluginsCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsPluginsCID.h
+END
+nptypes.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nptypes.h
+END
+nsIScriptablePlugin.idl
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIScriptablePlugin.idl
+END
+nsPluginLogging.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsPluginLogging.h
+END
+npapi.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/plugin/base/public/npapi.h
+END
+nsPIPluginInstancePeer.idl
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsPIPluginInstancePeer.idl
+END
+nsIEventHandler.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIEventHandler.idl
+END
+nsIPluginStreamListener.idl
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIPluginStreamListener.idl
+END
+nsIPluginInstancePeer2.idl
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIPluginInstancePeer2.idl
+END
+nsIPluginStreamInfo.idl
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIPluginStreamInfo.idl
+END
+npruntime.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/plugin/base/public/npruntime.h
+END
+nsIPluginTagInfo2.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIPluginTagInfo2.idl
+END
+nsIClassicPluginFactory.idl
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIClassicPluginFactory.idl
+END
+nspluginroot.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nspluginroot.idl
+END
+nsIPluginTag.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIPluginTag.idl
+END
+nsIJRILiveConnectPlugin.idl
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/public/nsIJRILiveConnectPlugin.idl
+END

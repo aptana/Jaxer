@@ -1,0 +1,526 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+		<title>Jaxer Shell</title>
+		<link rel='stylesheet' type='text/css' href='css/index.css'>
+		
+		<script type="text/javascript" runat="both">
+			function $(id) { return document.getElementById(id); }
+		</script>
+		
+		<script type="text/javascript" runat="server">
+			
+			function accessAllowed()
+			{
+				return (typeof Jaxer.request.app.SHELL_ENABLED == 'function') ? Jaxer.request.app.SHELL_ENABLED() : false ;
+				// allow access only from localhost when shell access is configured in configApps.js
+			}
+			
+			function checkAccessAllowed()
+			{
+				if (!accessAllowed())
+				{
+					var clientScript = $('clientScript');
+					clientScript.parentNode.removeChild(clientScript);
+					document.body.innerHTML = "SORRY - ACCESS DENIED<BR>Access permission for this application can be configured by changing the settings for JAXER_SHELL in aptana.configApps.js in your local_jaxer folder";
+				}
+			}
+			
+			function evalIn(expr, global)
+			{
+				if (!accessAllowed()) throw "Sorry, access denied"
+				var exceptionProp = "__shell_exception__";
+				global[exceptionProp] = null;
+				expr = ["try", "{", expr, "}", "catch (e)", "{", exceptionProp + " = e;", "}"].join("\n");
+				Jaxer.Includer.evalOn(expr, global);
+				if (global[exceptionProp] != null)
+				{
+					var e = global[exceptionProp];
+					global[exceptionProp] = null;
+					throw e;
+				}
+			}
+			
+		</script>
+		
+		<script type="text/javascript" runat="server-proxy">
+			
+			function execute(codeToExecute)
+			{
+				if (!accessAllowed) throw "Sorry, access denied"
+				var results = [];
+				var global = Jaxer.pageWindow;
+				global.printWithType = function printWithType(obj, type)
+				{
+					var str;
+					if (typeof obj == "undefined")
+					{
+						str == "undefined";
+					}
+					else if (obj == null)
+					{
+						str = "null";
+					}
+					else if (typeof obj.toString != "function")
+					{
+						str = "(object has no toString method)";
+					}
+					else
+					{
+						str = obj.toString();
+					}
+					results.push([str, type]);
+				}
+				global.print = function print(obj)
+				{
+					for (var i=0; i<arguments.length; i++)
+					{
+						global.printWithType(arguments[i]);
+					}
+				}
+				try 
+				{
+				   evalIn(codeToExecute, global);
+				} 
+				catch (e)
+				{
+				   global.printWithType("Exception: " + e, "exception");
+				}
+				global.print = undefined;
+				global.printWithType = undefined;
+				return results;
+			}
+			
+			/**
+			 * Is the module with the given name set to log verbosely or not?
+			 * Verbose means the level is TRACE, not verbose means it's higher (usually INFO).
+			 * @param {String} name 
+			 * 	The name of the module (use "framework" for unnamed logging)
+			 * @return true if it's verbose, false if it's not, and null if there's no such module
+			 */
+			function __isLogModuleVerbose(name)
+			{
+				if (!name || !Jaxer.Log.hasModule(name)) return null;
+				var logger = Jaxer.Log.forModule(name);
+				var level = logger.getLevel();
+				return level == Jaxer.Log.TRACE;
+			}
+			
+			/**
+			 * Returns a list of all currently-defined modules, alphabetically sorted, and
+			 * whether each is verbose or not.
+			 * @return {Array} An array of two-member arrays: the first member
+			 * is the name of the module, and the second is true (if verbose) or false.
+			 */
+			function __getLogLevels()
+			{
+				var names = Jaxer.Log.getSortedModuleNames();
+				var moduleLevels = [];
+				names.forEach(function(name)
+				{
+					moduleLevels.push([name, __isLogModuleVerbose(name)]);
+				});
+				return moduleLevels;
+			}
+			
+			/**
+			 * Sets the log levels to verbose or not for all the given modules.
+			 * Does not alter any other modules. Any module names that are not currently
+			 * valid modules are ignored.
+			 * @param {Array} moduleLevels 
+			 * 	An array of two-member arrays: the first member should be the name of the module, 
+			 * 	and the second should be true (for verbose) or false.
+			 */
+			function __setLogLevels(moduleLevels)
+			{
+				moduleLevels.forEach(function(moduleLevel)
+				{
+					var name = moduleLevel[0];
+					var isVerbose = moduleLevel[1];
+					Jaxer.Log.forModule(name).setLevel(isVerbose ? Jaxer.Log.TRACE : Jaxer.Log.INFO);
+				});
+			}
+			
+			/**
+			 * Sets all the currently-defined modules to be verbose or not.
+			 * @param {Boolean} isVerbose true to set them to TRACE, false to set them to INFO.
+			 */
+			function __setAllLogLevels(isVerbose)
+			{
+				var names = Jaxer.Log.getSortedModuleNames();
+				var moduleLevels = [];
+				names.forEach(function(name)
+				{
+					moduleLevels.push([name, isVerbose]);
+				});
+				__setLogLevels(moduleLevels);
+			}
+			
+		</script>
+			
+		<script type="text/javascript" id="clientScript">
+			
+			var PREF_INPUT_HEIGHT = "_shell_inputHeight";
+			var DEFAULT_INPUT_HEIGHT = 100;
+			
+			window.onload = function() { prepareDOM(); resizeShell(); scrollToBottom(); };
+			
+			function prepareDOM()
+			{
+				$("codeToExecute").onkeydown = codeKeyDown;
+				$("execute").onclick = sendCode;
+				$("pasteLast").onclick = pasteLastInput;
+				changeInputHeight(null);
+				window.onresize = resizeShell;
+				appendToShell("Hello, I'm Jaxer, how may I assist you?", "notice-line");
+				setInputFocus();
+			}
+			
+			// input-related functions:
+			
+			function isEmpty(text)
+			{
+				return text.match(/^\s*$/) ? true : false;
+			}
+			
+			function getInputHeight()
+			{
+				return Number(getPref(PREF_INPUT_HEIGHT)) || DEFAULT_INPUT_HEIGHT;
+			}
+			
+			function codeKeyDown(evt)
+			{
+				evt = evt || window.event;
+				var keyCode = evt.keyCode;
+				var isShift = evt.shiftKey;
+				var isCtrl = evt.ctrlKey;
+				var isAlt = evt.altKey;
+				if ((keyCode == 13) && (isShift || isShift || isAlt)) // modified enter
+				{
+					sendCode();
+					return false;
+				}
+				else if (keyCode == 9) // tab
+				{
+					var whatToInsert = "\t"; // could use spaces too, but then deletion would require extra keystrokes
+					var target = evt.target || $('codeToExecute');
+					var prevScrollTop = target.scrollTop;
+					if (target.setSelectionRange) 
+					{
+						var finalCursorPosition = target.selectionStart + whatToInsert.length;
+						target.value = target.value.substring(0, target.selectionStart) + whatToInsert + target.value.substring(target.selectionEnd, target.value.length);
+						setTimeout("$('codeToExecute').focus(); $('codeToExecute').setSelectionRange(" + finalCursorPosition + ", " + finalCursorPosition + ");", 0);
+					}
+					else 
+					{
+						document.selection.createRange().text = whatToInsert;
+					}
+					if (prevScrollTop) 
+						target.scrollTop = prevScrollTop
+					return false;
+				}
+				else if ((keyCode == 38) && (isEmpty($('codeToExecute').value))) // up arrow
+				{
+					pasteLastInput();
+					return false;
+				}
+			}
+
+			var lastInput = "";
+			
+			function pasteLastInput()
+			{
+				if (!isEmpty(lastInput))
+				{
+					$("codeToExecute").value = lastInput;
+				}
+			}
+			
+			function setInputFocus()
+			{
+				setTimeout("$('codeToExecute').focus()", 0);
+			}
+			
+			function changeInputHeight(increase)
+			{
+				var change = (increase == null) ? 0 : (increase ? 20 : -20);
+				var newHeight = Math.max(getInputHeight() + change, 40);
+				setPref(PREF_INPUT_HEIGHT, newHeight);
+				var ids = ["codeToExecute", "execute", "pasteLast"];
+				for (var i=0; i<ids.length; i++)
+				{
+					$(ids[i]).style.height = newHeight + "px";
+				}
+				ids = ["expand", "contract"];
+				for (var i=0; i<ids.length; i++)
+				{
+					$(ids[i]).style.height = Math.max(20, Math.ceil(newHeight/2 - 10)) + "px";
+				}
+				resizeShell();
+			}
+			
+			// send-related functions:
+
+			function sendCode()
+			{
+				var codeToExecute = $("codeToExecute").value;
+				if (isEmpty(codeToExecute))
+				{
+					return; // Nothing to execute
+				}
+				lastInput = codeToExecute;
+				var results = execute(codeToExecute);
+				updateShell(codeToExecute, results);
+				$("codeToExecute").value = "";
+			}
+			
+			// output-related functions:
+			
+			function updateShell(codeSent, results)
+			{
+				appendToShell(codeSent, "sent-line");
+				spacerToShell();
+				for (var i=0; i<results.length; i++)
+				{
+					var text = results[i][0];
+					var type;
+					if (text == null)
+					{
+						text = "(Unspecified server evaluation error - perhaps a JavaScript error?)";
+						type = "exception";
+					}
+					else
+					{
+						type = results[i][1];
+					}
+					appendToShell(text, (type == null) ? "result-line" : type + "-line");
+				}
+				spacerToShell();
+				scrollToBottom();
+				setInputFocus();
+			}
+			
+			function spacerToShell()
+			{
+				var spacer = document.createElement("div");
+				spacer.className = "spacer";
+				$('shell').appendChild(spacer);
+			}
+			
+			function appendToShell(line, className)
+			{
+				$('shell').innerHTML += '<pre class="' + className + '">' + 
+					line.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") +
+					'</pre>';
+				// The following does not seem to make <pre> behave like a block element (as it should) in IE
+//				var container = document.createElement("pre");
+//				container.className = className;
+//				container.innerHTML = line.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+//				$('shell').appendChild(container);
+			}
+			
+			// layout-related functions:
+			
+			function scrollToBottom()
+			{
+				// IE seems to require the setTimeout() to do this properly:
+				setTimeout("$('shell').scrollTop = $('shell').scrollHeight", 0);
+			}
+			
+			function getViewportDimension(suffix)
+			{
+				if (typeof window["inner" + suffix] == "number")
+					return window["inner" + suffix];
+				else if (typeof document.documentElement["client" + suffix] == "number")
+					return document.documentElement["client" + suffix];
+				else
+					return document.body["client" + suffix];
+			}
+			
+			function resizeShell()
+			{
+				var height = Math.max(getViewportDimension("Height") - 90 - getInputHeight(), 100);
+				var width = Math.max(getViewportDimension("Width") - 50, 100);
+				$('shell').style.height = height + "px";
+				var buttonWidth = 80;
+				var resizeButtonWidth = 20;
+				$('codeToExecute').style.width = (width - buttonWidth * 2 - resizeButtonWidth) + "px";
+			}
+			
+			// help functions:
+			
+			var helpWindow = null;
+			
+			function showHelp()
+			{
+				if (!helpWindow || helpWindow.closed)
+				{
+					helpWindow = window.open("", "JaxerShellHelp", "height=600, width=600, status=0, toolbar=0, menubar=0, directories=0, resizable=1, scrollbars=1");
+					var html = [];
+					html.push("<head>");
+					html.push("<title>Jaxer Shell Help</title>");
+					html.push("<style type='text/css'>" + $('shellStyle').innerHTML + "</style>");
+					html.push("</head>");
+					html.push("<body class='default'>");
+					html.push($('helpContents').innerHTML);
+					html.push("</body>");
+					helpWindow.document.open();
+					helpWindow.document.write(html.join("\n"));
+					helpWindow.document.close();
+				}
+			}
+			
+			// local-persistence-related functions:
+			
+			function setPref(name, value)
+			{
+				var date = new Date();
+				date.setTime(date.getTime() + 365*24*24*60*1000);
+				document.cookie = name + "=" + value + "; expires=" + date.toGMTString();
+			}
+			
+			function getPref(name)
+			{
+                var pattern = new RegExp("^\\s*" + name + "\\=(.*)$");
+                var cookies = document.cookie.split(";");
+                for (var i = 0; i < cookies.length; i++) 
+                {
+                    var isMatch = cookies[i].match(pattern);
+                    if (isMatch) 
+                    {
+                        return RegExp.$1;
+                    }
+                }
+                return null;  // if it wasn't found
+			}
+
+		</script>
+
+	</head>
+	<body onserverload="checkAccessAllowed()">
+		<script type="text/javascript" src="lib/wz_tooltip.js"></script>
+		<div id='sampleHeader'>
+			<div class='sampleTitle'>
+				<span class='sampleTitleText'><img src='images/application_xp_terminal.png'/> Jaxer Interactive Shell</span>
+			</div>
+		<div id='sampleSource'>
+		<li><a href="/aptana/tools/sourceViewer/index.html?filename=../../tools/shell/index.html" target="_blank">Main page</a></li>
+		</div>
+			<div id='rightFloat'>
+				<img src ='images/information.png' class='sampleDescription' onmouseover="TagToTip('helpContents', STICKY, true, CLICKCLOSE, true, WIDTH, 750, TITLE, 'Sample info')"/>
+				<span id='sourceButton'><img src ='images/html.png' 	   id='sampleSourceLink'  onmouseover="TagToTip('sampleSource', STICKY, true, CLOSEBTN, true,  TITLE, 'View Source Code')"/></span>
+			</div>
+		</div>
+		
+		<div id='applicationContent'>
+			<table id='commandPanel'>
+				<tr >
+					<td style='width:95%;'>
+						<textarea id="codeToExecute">// click info for more examples
+var tmp = [];
+for (var p in Jaxer) {
+	tmp.push("Jaxer." + p);
+}
+print(tmp.sort().join("\n"));</textarea>
+					</td>
+					<td id="cont" nowrap>
+						<table height="100%" style="display: inline">
+							<tr>
+								<td rowspan=2>
+									<input type="button" id="execute" value="execute" title="(or click shift+enter in code area)">
+								</td>
+								<td rowspan=2>
+									<input type="button" id="pasteLast" value="last input" title="(or click the up arrow in the code area when it's empty)">
+								</td>
+								<td>
+									<input type="button" id="expand" value="+" label="increase height of input area" onclick="changeInputHeight(true)">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="button" id="contract" value="-" label="decrease height of input area" onclick="changeInputHeight(false)">
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			<div id="shell" class="shell"></div>
+		</div>
+		
+		<div id='sampleFooter'>
+		</div>
+
+		
+		<div id="helpContents" style="display:none">
+			<p>
+				This application gives you an Ajax command-line shell with which you can interact
+				with the Jaxer server. You can type your commands - one-liners or even function
+				definitions - and execute them on the Jaxer server (as callbacks), then see any results.
+			</p>
+			<p>
+				Type your JavaScript commands into the bottom panel:
+				<ul>
+					<li>
+						You can use <em>tab</em>s to indent your code if you like,
+						without leaving the panel.
+					</li>
+					<li>
+						You can use <code>print(...)</code> to print a string 
+						(or anything that implements <code>toString</code>) back to the shell.
+					</li>
+					<li>
+						To increase or decrease the height of the bottom panel, use the <em>+</em> or <em>-</em> keys.
+						Your settings will be remembered for the next time (for this browser).
+					</li>
+					<li>
+						To get back your last input, hit the up-arrow key in the bottom panel when it's empty, or click the <em>paste last input</em> button.
+					</li>
+				</ul>
+			</p>
+			<p>
+				To send your commands to Jaxer for execution, hit <em>shift+enter</em>
+				or click the <em>execute button</em>
+			</p>
+			<p>
+				The commands Jaxer received, and any output, are displayed in the top panel:
+				<ul>
+					<li>
+						Your input is displayed <span class="sent-line" style="background-color: black">in this color</span>.
+					</li>
+					<li>
+						Any output (from the <code>print(...)</code> function) is displayed <span class="result-line" style="background-color: black">in this color</span>.
+					</li>
+					<li>
+						Any errors (exceptions) are displayed <span class="exception-line" style="background-color: black">in this color</span>.
+					</li>
+				</ul>
+			</p>
+			<p>
+				Here are some examples of what you can enter:
+				<ul>
+					<li>
+						<code>print(Jaxer.File.write);</code> shows how the Jaxer framework implements this static method
+					</li>
+					<li>
+<div class="code-block">var tmp = [];
+for (var p in Jaxer)
+{
+	tmp.push("Jaxer." + p);
+}
+print(tmp.sort().join("\n"));</div> shows the properties of everything in the Jaxer namespace.
+					</li>
+				</ul>
+			</p>
+		</div>
+			<script runat='server'>
+				if (Jaxer.Config.LOCAL_CONF_DIR.match('com.aptana.ide.framework.jaxer')) {
+					document.getElementById('sampleSource').innerHTML="";
+					document.getElementById('sourceButton').innerHTML="";
+				}
+			</script>
+			
+
+	</body>
+</html>

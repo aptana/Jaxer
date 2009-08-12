@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/build
+END
+necko-tests.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/build/necko-tests.pkg
+END
+necko.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/build/necko.pkg
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/build/Makefile.in
+END
+nsNetCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/build/nsNetCID.h
+END
+nsNetModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/netwerk/build/nsNetModule.cpp
+END

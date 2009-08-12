@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/setup
+END
+nsIXULAppInstall.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/setup/nsIXULAppInstall.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/setup/Makefile.in
+END
+nsXULAppInstall.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/setup/nsXULAppInstall.js
+END

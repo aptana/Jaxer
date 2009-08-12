@@ -1,0 +1,149 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/rdf/base/idl
+END
+nsIRDFDelegateFactory.idl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFDelegateFactory.idl
+END
+nsIRDFContainerUtils.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFContainerUtils.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/Makefile.in
+END
+nsIRDFRemoteDataSource.idl
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFRemoteDataSource.idl
+END
+rdfISerializer.idl
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/rdfISerializer.idl
+END
+nsIRDFInMemoryDataSource.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFInMemoryDataSource.idl
+END
+nsIRDFPropagatableDataSource.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFPropagatableDataSource.idl
+END
+nsIRDFXMLParser.idl
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFXMLParser.idl
+END
+nsIRDFCompositeDataSource.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFCompositeDataSource.idl
+END
+rdfITripleVisitor.idl
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/rdfITripleVisitor.idl
+END
+nsIRDFInferDataSource.idl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFInferDataSource.idl
+END
+nsIRDFXMLSource.idl
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFXMLSource.idl
+END
+nsIRDFPurgeableDataSource.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFPurgeableDataSource.idl
+END
+nsIRDFContainer.idl
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFContainer.idl
+END
+xulstubs.idl
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/xulstubs.idl
+END
+nsIRDFNode.idl
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFNode.idl
+END
+nsIRDFXMLSink.idl
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFXMLSink.idl
+END
+nsIRDFResource.idl
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFResource.idl
+END
+nsIRDFObserver.idl
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFObserver.idl
+END
+rdfIDataSource.idl
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/rdfIDataSource.idl
+END
+nsIRDFDataSource.idl
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFDataSource.idl
+END
+nsIRDFXMLSerializer.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFXMLSerializer.idl
+END
+nsIRDFLiteral.idl
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFLiteral.idl
+END
+nsIRDFService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/idl/nsIRDFService.idl
+END

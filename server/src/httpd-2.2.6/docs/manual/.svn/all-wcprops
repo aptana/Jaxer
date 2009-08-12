@@ -1,0 +1,839 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual
+END
+install.html.es
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/install.html.es
+END
+bind.html
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/bind.html
+END
+stopping.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/stopping.html.ja.euc-jp
+END
+invoking.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/invoking.html.ko.euc-kr
+END
+upgrading.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/upgrading.html.en
+END
+sections.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/sections.html.ko.euc-kr
+END
+sections.html
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/sections.html
+END
+content-negotiation.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/content-negotiation.html.en
+END
+env.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/env.html.en
+END
+invoking.html.fr
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/invoking.html.fr
+END
+index.html.pt-br
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/index.html.pt-br
+END
+stopping.html.de
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/stopping.html.de
+END
+suexec.html
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/suexec.html
+END
+new_features_2_0.html.fr
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/new_features_2_0.html.fr
+END
+index.html.de
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/index.html.de
+END
+new_features_2_2.html.fr
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/new_features_2_2.html.fr
+END
+glossary.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/glossary.html.ko.euc-kr
+END
+custom-error.html
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/custom-error.html
+END
+custom-error.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/custom-error.html.en
+END
+glossary.html
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/glossary.html
+END
+install.html
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/install.html
+END
+custom-error.html.es
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/custom-error.html.es
+END
+dns-caveats.html
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/dns-caveats.html
+END
+custom-error.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/custom-error.html.ja.euc-jp
+END
+install.html.fr
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/install.html.fr
+END
+bind.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/bind.html.en
+END
+mpm.html.de
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/mpm.html.de
+END
+invoking.html.ru.koi8-r
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/invoking.html.ru.koi8-r
+END
+license.html
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/license.html
+END
+filter.html
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/filter.html
+END
+upgrading.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/upgrading.html.ja.euc-jp
+END
+suexec.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/suexec.html.en
+END
+sitemap.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/sitemap.html.ko.euc-kr
+END
+filter.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/filter.html.ja.euc-jp
+END
+new_features_2_0.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/new_features_2_0.html.ja.euc-jp
+END
+content-negotiation.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/content-negotiation.html.ja.euc-jp
+END
+env.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/env.html.ja.euc-jp
+END
+upgrading.html.pt-br
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/upgrading.html.pt-br
+END
+stopping.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/stopping.html.en
+END
+index.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/index.html.en
+END
+bind.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/bind.html.ko.euc-kr
+END
+stopping.html.es
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/stopping.html.es
+END
+configuring.html
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/configuring.html
+END
+index.html.es
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/index.html.es
+END
+logs.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/logs.html.ja.euc-jp
+END
+bind.html.fr
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/bind.html.fr
+END
+sections.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/sections.html.en
+END
+mpm.html
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/mpm.html
+END
+suexec.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/suexec.html.ko.euc-kr
+END
+mpm.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/mpm.html.en
+END
+mpm.html.es
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/mpm.html.es
+END
+mpm.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/mpm.html.ja.euc-jp
+END
+dns-caveats.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/dns-caveats.html.ko.euc-kr
+END
+server-wide.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/server-wide.html.ja.euc-jp
+END
+stopping.html.fr
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/stopping.html.fr
+END
+handler.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/handler.html.ko.euc-kr
+END
+urlmapping.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/urlmapping.html.ko.euc-kr
+END
+index.html.fr
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/index.html.fr
+END
+handler.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/handler.html.en
+END
+upgrading.html
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/upgrading.html
+END
+install.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/install.html.ja.euc-jp
+END
+dso.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/dso.html.ko.euc-kr
+END
+handler.html.es
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/handler.html.es
+END
+dso.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/dso.html.en
+END
+new_features_2_2.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/new_features_2_2.html.ko.euc-kr
+END
+env.html
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/env.html
+END
+content-negotiation.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/content-negotiation.html
+END
+mpm.html.fr
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/mpm.html.fr
+END
+stopping.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/stopping.html.ko.euc-kr
+END
+configuring.html.de
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/configuring.html.de
+END
+sitemap.html
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/sitemap.html
+END
+stopping.html
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/stopping.html
+END
+logs.html
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/logs.html
+END
+handler.html.ru.koi8-r
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/handler.html.ru.koi8-r
+END
+new_features_2_2.html.pt-br
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/new_features_2_2.html.pt-br
+END
+urlmapping.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/urlmapping.html.en
+END
+index.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/index.html.ja.euc-jp
+END
+handler.html.fr
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/handler.html.fr
+END
+license.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/license.html.en
+END
+configuring.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/configuring.html.ja.euc-jp
+END
+server-wide.html
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/server-wide.html
+END
+custom-error.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/custom-error.html.ko.euc-kr
+END
+invoking.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/invoking.html.ja.euc-jp
+END
+sections.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/sections.html.ja.euc-jp
+END
+logs.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/logs.html.en
+END
+configuring.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/configuring.html.en
+END
+upgrading.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/upgrading.html.ko.euc-kr
+END
+urlmapping.html
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/urlmapping.html
+END
+filter.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/filter.html.ko.euc-kr
+END
+new_features_2_0.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/new_features_2_0.html.ko.euc-kr
+END
+env.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/env.html.ko.euc-kr
+END
+content-negotiation.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/content-negotiation.html.ko.euc-kr
+END
+filter.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/filter.html.en
+END
+new_features_2_0.html
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/new_features_2_0.html
+END
+sitemap.html.de
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/sitemap.html.de
+END
+glossary.html.de
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/glossary.html.de
+END
+filter.html.es
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/filter.html.es
+END
+server-wide.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/server-wide.html.en
+END
+logs.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/logs.html.ko.euc-kr
+END
+convenience.map
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/convenience.map
+END
+dns-caveats.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/dns-caveats.html.en
+END
+new_features_2_0.html.pt-br
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/new_features_2_0.html.pt-br
+END
+invoking.html.de
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/invoking.html.de
+END
+upgrading.html.ru.koi8-r
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/upgrading.html.ru.koi8-r
+END
+sitemap.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/sitemap.html.ja.euc-jp
+END
+new_features_2_0.html.de
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/new_features_2_0.html.de
+END
+invoking.html
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/invoking.html
+END
+new_features_2_0.html.ru.koi8-r
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/new_features_2_0.html.ru.koi8-r
+END
+mpm.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/mpm.html.ko.euc-kr
+END
+bind.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/bind.html.ja.euc-jp
+END
+server-wide.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/server-wide.html.ko.euc-kr
+END
+filter.html.fr
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/filter.html.fr
+END
+caching.html
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/caching.html
+END
+install.html.de
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/install.html.de
+END
+install.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/install.html.ko.euc-kr
+END
+sitemap.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/sitemap.html.en
+END
+glossary.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/glossary.html.en
+END
+upgrading.html.de
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/upgrading.html.de
+END
+suexec.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/suexec.html.ja.euc-jp
+END
+sitemap.html.es
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/sitemap.html.es
+END
+glossary.html.es
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/glossary.html.es
+END
+handler.html
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/handler.html
+END
+LICENSE
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/LICENSE
+END
+dns-caveats.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/dns-caveats.html.ja.euc-jp
+END
+dso.html
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/dso.html
+END
+invoking.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/invoking.html.en
+END
+handler.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/handler.html.ja.euc-jp
+END
+new_features_2_0.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/new_features_2_0.html.en
+END
+new_features_2_2.html
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/new_features_2_2.html
+END
+urlmapping.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/urlmapping.html.ja.euc-jp
+END
+new_features_2_2.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/new_features_2_2.html.en
+END
+invoking.html.es
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/invoking.html.es
+END
+caching.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/caching.html.en
+END
+dso.html.ja.euc-jp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/dso.html.ja.euc-jp
+END
+bind.html.de
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/bind.html.de
+END
+index.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/index.html.ko.euc-kr
+END
+install.html.en
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/install.html.en
+END
+configuring.html.ko.euc-kr
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/configuring.html.ko.euc-kr
+END
+index.html
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/docs/manual/index.html
+END

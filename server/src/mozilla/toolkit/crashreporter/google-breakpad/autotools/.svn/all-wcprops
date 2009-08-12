@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/autotools
+END
+depcomp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/autotools/depcomp
+END
+missing
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/autotools/missing
+END
+config.guess
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/autotools/config.guess
+END
+config.sub
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/autotools/config.sub
+END
+ltmain.sh
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/autotools/ltmain.sh
+END
+install-sh
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/autotools/install-sh
+END

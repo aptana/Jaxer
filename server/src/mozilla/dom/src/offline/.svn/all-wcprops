@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/src/offline
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/src/offline/Makefile.in
+END
+nsDOMOfflineLoadStatusList.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/src/offline/nsDOMOfflineLoadStatusList.cpp
+END
+nsDOMOfflineResourceList.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/src/offline/nsDOMOfflineResourceList.cpp
+END
+nsDOMOfflineResourceList.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/src/offline/nsDOMOfflineResourceList.h
+END

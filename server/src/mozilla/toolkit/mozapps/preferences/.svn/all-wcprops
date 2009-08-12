@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/mozapps/preferences
+END
+ocsp.js
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/preferences/ocsp.js
+END
+preferences.xml
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/preferences/preferences.xml
+END
+removemp.xul
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/mozapps/preferences/removemp.xul
+END
+removemp.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/mozapps/preferences/removemp.js
+END
+fontbuilder.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/preferences/fontbuilder.js
+END
+preferences.css
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/preferences/preferences.css
+END
+changemp.xul
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/preferences/changemp.xul
+END
+ocsp.xul
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/preferences/ocsp.xul
+END
+changemp.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/mozapps/preferences/changemp.js
+END

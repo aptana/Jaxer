@@ -1,0 +1,13 @@
+body {
+  font: message-box;
+}
+
+th {
+  width:  100px;
+  text-align: left;
+  vertical-align: top;
+}
+
+table {
+  width: 95%;
+}

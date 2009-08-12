@@ -1,0 +1,63 @@
+<html>
+    <head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+        <script type="text/javascript" runat="server">
+      		function test_SerializeData_Null()
+			{
+				var data = null;
+				var expected = "null";
+				var result = Jaxer.Serialization.toJSONString(data, {as: Jaxer.Serialization.JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_SerializeData_NullInArray()
+			{
+				var data = [null];
+				var expected = "[null]";
+				var result = Jaxer.Serialization.toJSONString(data, {as: Jaxer.Serialization.JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_SerializeData_NullInObject()
+			{
+				var data = {a:null};
+				var expected = '{"a":null}';
+				var result = Jaxer.Serialization.toJSONString(data, {as: Jaxer.Serialization.JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_DeserializeData_Null()
+			{
+				var json = "null";
+				var result = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.JSON_METHOD});
+				
+				assertNull(result);
+			}
+			
+			function test_DeserializeData_NullInArray()
+			{
+				var json = "[null]";
+				var result = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.JSON_METHOD});
+				var expected = [null];
+				
+				assertEquals(result.toString(), expected.toString());
+			}
+			
+			function test_DeserializeData_NullInObject()
+			{
+				var json = '{"a":null}';
+				var result = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.JSON_METHOD});
+				var expected = {a:null};
+				
+				assertEquals(uneval(result), uneval(expected));
+			}
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

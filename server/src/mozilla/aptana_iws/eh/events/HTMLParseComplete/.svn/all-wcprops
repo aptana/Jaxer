@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/eh/events/HTMLParseComplete
+END
+aptEventHTMLParseCompleteData.h
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/eh/events/HTMLParseComplete/aptEventHTMLParseCompleteData.h
+END
+aptIEventHTMLParseComplete.idl
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/eh/events/HTMLParseComplete/aptIEventHTMLParseComplete.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/eh/events/HTMLParseComplete/Makefile.in
+END
+aptEventHTMLParseCompleteData.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/4520/trunk/products/server/src/mozilla/aptana_iws/eh/events/HTMLParseComplete/aptEventHTMLParseCompleteData.cpp
+END

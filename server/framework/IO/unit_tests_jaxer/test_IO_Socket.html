@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <script runat='server'>// DO NOT REMOVE: needed for the Jaxer unit testing harness 
+            Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+        </script>
+        <script type="text/javascript" runat="server">
+            function testSocketConnection()
+            {
+            	var sock = new Jaxer.Socket();
+            	
+            	try 
+            	{
+            		sock.open("www.aptana.com", 80);
+            		sock.writeString('GET / HTTP/1.0\n\n');
+            		sock.flush();
+            		
+            		var result = sock.readLine();
+            		assertEquals(result, "HTTP/1.1 200 OK", "Expected result from server not found.");
+            		assertTrue(sock.available() > 0, "No bytes received on socket beyond the first line");
+            	}
+            	finally 
+            	{
+            		try 
+            		{
+            			sock.close();
+            			
+            		} 
+            		catch (e) 
+            		{
+            		}
+            	}
+            }
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

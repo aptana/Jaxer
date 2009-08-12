@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/beos
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/beos/Makefile.in
+END
+beosd.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/beos/beosd.h
+END
+os.c
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/beos/os.c
+END
+config.m4
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/beos/config.m4
+END
+os.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/beos/os.h
+END
+beosd.c
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/os/beos/beosd.c
+END

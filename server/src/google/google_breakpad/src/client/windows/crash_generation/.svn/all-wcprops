@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/src/client/windows/crash_generation
+END
+client_info.h
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/src/client/windows/crash_generation/client_info.h
+END
+crash_generation_client.h
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/src/client/windows/crash_generation/crash_generation_client.h
+END
+crash_generation_server.cc
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/src/client/windows/crash_generation/crash_generation_server.cc
+END
+crash_generation_server.h
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/src/client/windows/crash_generation/crash_generation_server.h
+END
+ReadMe.txt
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/src/client/windows/crash_generation/ReadMe.txt
+END
+minidump_generator.cc
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/src/client/windows/crash_generation/minidump_generator.cc
+END
+client_info.cc
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/src/client/windows/crash_generation/client_info.cc
+END
+crash_generation.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/src/client/windows/crash_generation/crash_generation.vcproj
+END
+crash_generation_client.cc
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/src/client/windows/crash_generation/crash_generation_client.cc
+END
+minidump_generator.h
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/src/client/windows/crash_generation/minidump_generator.h
+END

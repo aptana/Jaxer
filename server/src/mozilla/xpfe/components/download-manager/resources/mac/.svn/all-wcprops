@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpfe/components/download-manager/resources/mac
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/download-manager/resources/mac/Makefile.in
+END
+jar.mn
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/download-manager/resources/mac/jar.mn
+END
+contents.rdf
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/download-manager/resources/mac/contents.rdf
+END
+dlmanagermenuoverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/download-manager/resources/mac/dlmanagermenuoverlay.xul
+END

@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/xul/test
+END
+test_bug394800.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/xul/test/test_bug394800.xhtml
+END
+test_bug386386.html
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/xul/test/test_bug386386.html
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/xul/test/Makefile.in
+END
+test_bug372685.xul
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/xul/test/test_bug372685.xul
+END
+test_bug398982-1.xul
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/xul/test/test_bug398982-1.xul
+END
+test_bug398982-2.xul
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/xul/test/test_bug398982-2.xul
+END

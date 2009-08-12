@@ -1,0 +1,110 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: GPL 3
+ *
+ * This program is Copyright (C) 2007-2008 Aptana, Inc. All Rights Reserved
+ * This program is licensed under the GNU General Public license, version 3 (GPL).
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+ * NONINFRINGEMENT. Redistribution, except as permitted by the GPL,
+ * is prohibited.
+ *
+ * You can redistribute and/or modify this program under the terms of the GPL, 
+ * as published by the Free Software Foundation.  You should
+ * have received a copy of the GNU General Public License, Version 3 along
+ * with this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ * 
+ * Aptana provides a special exception to allow redistribution of this file
+ * with certain other code and certain additional terms
+ * pursuant to Section 7 of the GPL. You may view the exception and these
+ * terms on the web at http://www.aptana.com/legal/gpl/.
+ * 
+ * You may view the GPL, and Aptana's exception and additional terms in the file
+ * titled license-jaxer.html in the main distribution folder of this program.
+ * 
+ * Any modifications to this file must keep this entire header intact.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+ /*
+ * Please note this exists only to add documentation for the top-level Jaxer
+ * object. Many of these properties are defined in the JavaScript bridge code
+ * needed to handle events from the Jaxer engine itself
+ */
+
+/**
+ * @namespace {Jaxer} The Jaxer namespace.
+ */
+
+/**
+ * This property exposes the current build number of the Jaxer engine
+ * 
+ * @alias Jaxer.buildNumber
+ * @property {String}
+ */
+
+/**
+ * This gives read-only access to the Jaxer Core's preferences, each of which
+ * become a property on this object.
+ * 
+ * @alias Jaxer.corePreferences
+ * @property {Object}
+ */
+
+/**
+ * This is the global execution context for JavaScript code you define in 
+ * (or load into) a page on the server. It's aliased as window in the page,
+ * so it behaves just like the window global object on the client (browser).
+ * 
+ * @advanced
+ * @alias Jaxer.pageWindow
+ * @property {ChromeWindow}
+ */
+
+/**
+ * Loads and evaluates JavaScript from the given location against the given global
+ * execution context.
+ * This is a low-level wrapper around "@mozilla.org/moz/jssubscript-loader;1" and
+ * mozIJSSubScriptLoader.loadSubScript.
+ * It's best to use the higher-level Jaxer.Includer.load(src, global, runat)
+ * which is also conveniently available as Jaxer.load(src, global, runat) inside
+ * any Jaxer server-side page (where global is defaulted to window).
+ * 
+ * @advanced
+ * @alias Jaxer.include
+ * @param {String} url
+ * 		The url of the file to include, either as an absolute URL in the form
+ * 		"file:///..." or relative to the current executable's folder (with
+ * 		or without the "resource:///" prefix.
+ * @param {Object} [global]
+ * 		An optional global context in which to evaluate the script.
+ */
+
+/**
+ * True on the server side, false on the client (browser).
+ * 
+ * @alias Jaxer.isOnServer
+ * @property {Boolean}
+ */
+
+/**
+ * The value of the runat attribute of the last script block encountered.
+ * 
+ * @advanced
+ * @alias Jaxer.lastScriptRunat
+ * @property {String}
+ */
+
+/**
+ * Notifies the framework that a fatal error has occurred, one which
+ * will require fixing and restarting Jaxer.
+ * How this is handled is then determined by the Jaxer.Config settings.
+ * 
+ * @advanced
+ * @alias Jaxer.notifyFatal
+ * @param {Object} error
+ * 	The error describing what happened. If the framework has already been notified
+ * 	of an error, this error is not used.
+ */

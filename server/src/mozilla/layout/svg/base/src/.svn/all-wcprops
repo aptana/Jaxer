@@ -1,0 +1,329 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/3033/trunk/products/server/src/mozilla/layout/svg/base/src
+END
+nsSVGGradientFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGGradientFrame.h
+END
+nsSVGClipPathFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGClipPathFrame.cpp
+END
+nsSVGFilterInstance.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGFilterInstance.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/svg/base/src/Makefile.in
+END
+nsSVGPaintServerFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGPaintServerFrame.h
+END
+nsISVGSVGFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/svg/base/src/nsISVGSVGFrame.h
+END
+nsSVGPathGeometryFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGPathGeometryFrame.h
+END
+nsSVGOuterSVGFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/3033/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGOuterSVGFrame.cpp
+END
+nsSVGGenericContainerFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGGenericContainerFrame.cpp
+END
+nsISVGGlyphFragmentNode.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/svg/base/src/nsISVGGlyphFragmentNode.h
+END
+nsSVGAFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGAFrame.cpp
+END
+nsSVGForeignObjectFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGForeignObjectFrame.cpp
+END
+nsSVGContainerFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGContainerFrame.cpp
+END
+nsSVGPatternFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGPatternFrame.h
+END
+nsSVGTextFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGTextFrame.cpp
+END
+nsSVGUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/3033/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGUtils.cpp
+END
+nsSVGTSpanFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGTSpanFrame.cpp
+END
+nsSVGFilterFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGFilterFrame.cpp
+END
+nsSVGGFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGGFrame.cpp
+END
+nsSVGMarkerFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGMarkerFrame.h
+END
+nsSVGGlyphFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGGlyphFrame.h
+END
+nsSVGInnerSVGFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGInnerSVGFrame.cpp
+END
+nsSVGMaskFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGMaskFrame.cpp
+END
+nsSVGUseFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGUseFrame.cpp
+END
+nsSVGTextContainerFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGTextContainerFrame.h
+END
+nsSVGGradientFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGGradientFrame.cpp
+END
+nsSVGGeometryFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGGeometryFrame.h
+END
+nsSVGSwitchFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGSwitchFrame.cpp
+END
+nsSVGPaintServerFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGPaintServerFrame.cpp
+END
+nsISVGGlyphFragmentLeaf.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/svg/base/src/nsISVGGlyphFragmentLeaf.h
+END
+nsSVGTextPathFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGTextPathFrame.h
+END
+nsSVGLeafFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGLeafFrame.cpp
+END
+nsSVGPathGeometryFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGPathGeometryFrame.cpp
+END
+nsSVGClipPathFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGClipPathFrame.h
+END
+svg.css
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/svg/base/src/svg.css
+END
+nsSVGPatternFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGPatternFrame.cpp
+END
+nsSVGMarkerFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGMarkerFrame.cpp
+END
+nsSVGImageFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGImageFrame.cpp
+END
+nsSVGGlyphFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGGlyphFrame.cpp
+END
+nsSVGOuterSVGFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/3033/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGOuterSVGFrame.h
+END
+nsSVGGenericContainerFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGGenericContainerFrame.h
+END
+nsSVGForeignObjectFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGForeignObjectFrame.h
+END
+nsSVGStopFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGStopFrame.cpp
+END
+nsSVGContainerFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGContainerFrame.h
+END
+nsSVGTextContainerFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGTextContainerFrame.cpp
+END
+nsSVGTextFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGTextFrame.h
+END
+nsSVGFilterFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGFilterFrame.h
+END
+nsSVGTSpanFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGTSpanFrame.h
+END
+nsSVGUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGUtils.h
+END
+nsSVGGeometryFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGGeometryFrame.cpp
+END
+nsSVGGFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGGFrame.h
+END
+nsSVGMaskFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGMaskFrame.h
+END
+nsISVGChildFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/svg/base/src/nsISVGChildFrame.h
+END
+nsSVGTextPathFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/svg/base/src/nsSVGTextPathFrame.cpp
+END

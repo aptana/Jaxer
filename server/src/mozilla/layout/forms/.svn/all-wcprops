@@ -1,0 +1,221 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/forms
+END
+nsIFormControlFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsIFormControlFrame.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/forms/Makefile.in
+END
+nsFileControlFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/forms/nsFileControlFrame.h
+END
+nsTextControlFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/forms/nsTextControlFrame.cpp
+END
+nsGfxCheckboxControlFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsGfxCheckboxControlFrame.cpp
+END
+nsLegendFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsLegendFrame.cpp
+END
+nsISelectControlFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsISelectControlFrame.h
+END
+nsFieldSetFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/forms/nsFieldSetFrame.cpp
+END
+nsSelectsAreaFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsSelectsAreaFrame.h
+END
+nsHTMLButtonControlFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsHTMLButtonControlFrame.cpp
+END
+nsButtonFrameRenderer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/forms/nsButtonFrameRenderer.cpp
+END
+nsIsIndexFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/forms/nsIsIndexFrame.cpp
+END
+nsITextControlFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsITextControlFrame.h
+END
+nsGfxRadioControlFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsGfxRadioControlFrame.cpp
+END
+nsICheckboxControlFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsICheckboxControlFrame.h
+END
+nsFormControlFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/forms/nsFormControlFrame.h
+END
+nsComboboxControlFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/forms/nsComboboxControlFrame.cpp
+END
+nsListControlFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/forms/nsListControlFrame.cpp
+END
+nsIRadioControlFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsIRadioControlFrame.h
+END
+nsFileControlFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/layout/forms/nsFileControlFrame.cpp
+END
+nsImageControlFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/forms/nsImageControlFrame.cpp
+END
+nsGfxButtonControlFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsGfxButtonControlFrame.h
+END
+nsIComboboxControlFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsIComboboxControlFrame.h
+END
+nsTextControlFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/forms/nsTextControlFrame.h
+END
+nsIListControlFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsIListControlFrame.h
+END
+nsSelectsAreaFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/forms/nsSelectsAreaFrame.cpp
+END
+nsGfxCheckboxControlFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsGfxCheckboxControlFrame.h
+END
+nsLegendFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsLegendFrame.h
+END
+nsFormControlFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/forms/nsFormControlFrame.cpp
+END
+nsHTMLButtonControlFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsHTMLButtonControlFrame.h
+END
+nsButtonFrameRenderer.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsButtonFrameRenderer.h
+END
+nsIsIndexFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsIsIndexFrame.h
+END
+nsGfxRadioControlFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsGfxRadioControlFrame.h
+END
+nsComboboxControlFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/forms/nsComboboxControlFrame.h
+END
+nsGfxButtonControlFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/forms/nsGfxButtonControlFrame.cpp
+END
+nsListControlFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/forms/nsListControlFrame.h
+END

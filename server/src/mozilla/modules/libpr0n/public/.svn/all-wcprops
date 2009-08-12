@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/libpr0n/public
+END
+ImageLogging.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/libpr0n/public/ImageLogging.h
+END
+imgIContainer.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/modules/libpr0n/public/imgIContainer.idl
+END
+imgICache.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/libpr0n/public/imgICache.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/libpr0n/public/Makefile.in
+END
+imgIDecoder.idl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/libpr0n/public/imgIDecoder.idl
+END
+imgILoader.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/libpr0n/public/imgILoader.idl
+END
+ImageErrors.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/libpr0n/public/ImageErrors.h
+END
+imgIRequest.idl
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/libpr0n/public/imgIRequest.idl
+END
+imgIContainerObserver.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/libpr0n/public/imgIContainerObserver.idl
+END
+imgIDecoderObserver.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/libpr0n/public/imgIDecoderObserver.idl
+END
+imgIEncoder.idl
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/libpr0n/public/imgIEncoder.idl
+END
+imgILoad.idl
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/libpr0n/public/imgILoad.idl
+END
+imgITools.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/libpr0n/public/imgITools.idl
+END

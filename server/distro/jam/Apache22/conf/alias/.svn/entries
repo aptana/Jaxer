@@ -1,0 +1,54 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/distro/jam/Apache22/conf/alias
+http://svn.aptana.local/svn/jaxer
+
+
+
+2007-09-28T22:13:08.104298Z
+298
+dwaterson
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+sqlitemanager.conf
+file
+
+
+
+
+2009-08-11T21:41:10.000000Z
+65136fb0aa2b594a44d652bf542a98d1
+2007-09-28T22:13:08.104298Z
+298
+dwaterson
+has-props
+
+phpmyadmin.conf
+file
+
+
+
+
+2009-08-11T21:41:10.000000Z
+dde3bf7c4861791514447326f3dbf18c
+2007-09-28T22:13:08.104298Z
+298
+dwaterson
+has-props
+

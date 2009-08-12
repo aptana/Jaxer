@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/2549/trunk/products/server/distro/jam/Apache22/conf
+END
+magic
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/conf/magic
+END
+httpd.conf
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/2549/trunk/products/server/distro/jam/Apache22/conf/httpd.conf
+END
+openssl.cnf
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/conf/openssl.cnf
+END
+mime.types
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/conf/mime.types
+END
+charset.conv
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/conf/charset.conv
+END

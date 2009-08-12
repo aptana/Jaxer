@@ -1,0 +1,7 @@
+{
+	"name": "default",
+	"files": [
+		  "Serialization.js"
+		, "unit_tests_jaxer/jaxer_serialization_tests.json"
+	]
+}

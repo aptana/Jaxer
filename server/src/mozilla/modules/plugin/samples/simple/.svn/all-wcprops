@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/plugin/samples/simple
+END
+simpleCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/simple/simpleCID.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/simple/Makefile.in
+END
+SimpleScriptableTest.html
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/simple/SimpleScriptableTest.html
+END
+npsimple.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/simple/npsimple.cpp
+END
+SimpleTest.html
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/simple/SimpleTest.html
+END
+nsISimplePluginInstance.idl
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/simple/nsISimplePluginInstance.idl
+END

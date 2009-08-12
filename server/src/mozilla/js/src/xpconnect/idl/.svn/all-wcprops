@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/js/src/xpconnect/idl
+END
+xpcexception.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/idl/xpcexception.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/548/trunk/products/server/src/mozilla/js/src/xpconnect/idl/Makefile.in
+END
+nsIJSRuntimeService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/idl/nsIJSRuntimeService.idl
+END
+nsIXPConnect.idl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/js/src/xpconnect/idl/nsIXPConnect.idl
+END
+nsIXPCScriptable.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/js/src/xpconnect/idl/nsIXPCScriptable.idl
+END
+nsIJSContextStack.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/idl/nsIJSContextStack.idl
+END
+nsIXPCScriptNotify.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/idl/nsIXPCScriptNotify.idl
+END
+XPCIDispatch.idl
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/idl/XPCIDispatch.idl
+END
+nsIActiveXSecurityPolicy.idl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/idl/nsIActiveXSecurityPolicy.idl
+END
+nsIXPCSecurityManager.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/js/src/xpconnect/idl/nsIXPCSecurityManager.idl
+END
+xpcIJSWeakReference.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/idl/xpcIJSWeakReference.idl
+END
+nsIScriptError.idl
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/idl/nsIScriptError.idl
+END
+xpcIJSModuleLoader.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/js/src/xpconnect/idl/xpcIJSModuleLoader.idl
+END
+xpccomponents.idl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/idl/xpccomponents.idl
+END
+mozIJSSubScriptLoader.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/idl/mozIJSSubScriptLoader.idl
+END
+xpcjsid.idl
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/js/src/xpconnect/idl/xpcjsid.idl
+END
+nsIScriptableInterfaces.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/idl/nsIScriptableInterfaces.idl
+END
+nsIDispatchSupport.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/idl/nsIDispatchSupport.idl
+END

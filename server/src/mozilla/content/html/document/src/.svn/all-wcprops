@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/html/document/src
+END
+nsPluginDocument.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/html/document/src/nsPluginDocument.cpp
+END
+nsMediaDocument.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/content/html/document/src/nsMediaDocument.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/html/document/src/Makefile.in
+END
+nsWyciwygChannel.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/content/html/document/src/nsWyciwygChannel.h
+END
+nsIHTMLDocument.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/html/document/src/nsIHTMLDocument.h
+END
+nsImageDocument.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/html/document/src/nsImageDocument.cpp
+END
+nsWyciwygProtocolHandler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/html/document/src/nsWyciwygProtocolHandler.cpp
+END
+nsHTMLDocument.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/html/document/src/nsHTMLDocument.cpp
+END
+nsMediaDocument.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/html/document/src/nsMediaDocument.h
+END
+nsHTMLContentSink.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/html/document/src/nsHTMLContentSink.cpp
+END
+nsWyciwygProtocolHandler.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/html/document/src/nsWyciwygProtocolHandler.h
+END
+nsHTMLDocument.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/html/document/src/nsHTMLDocument.h
+END
+nsHTMLFragmentContentSink.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/content/html/document/src/nsHTMLFragmentContentSink.cpp
+END
+nsWyciwygChannel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/content/html/document/src/nsWyciwygChannel.cpp
+END

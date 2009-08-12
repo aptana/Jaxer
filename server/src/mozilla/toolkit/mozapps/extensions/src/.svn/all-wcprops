@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/toolkit/mozapps/extensions/src
+END
+nsAddonRepository.js
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/mozapps/extensions/src/nsAddonRepository.js
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/mozapps/extensions/src/Makefile.in
+END
+nsBlocklistService.js
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/mozapps/extensions/src/nsBlocklistService.js
+END
+nsExtensionManager.js.in
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/toolkit/mozapps/extensions/src/nsExtensionManager.js.in
+END

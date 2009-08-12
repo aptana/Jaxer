@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/3508/trunk/products/server/src/google/google_breakpad/src/tools/mac/dump_syms
+END
+dump_syms_tool.m
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/src/tools/mac/dump_syms/dump_syms_tool.m
+END
+buildDumpSyms.sh
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/3505/trunk/products/server/src/google/google_breakpad/src/tools/mac/dump_syms/buildDumpSyms.sh
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/3508/trunk/products/server/src/google/google_breakpad/src/tools/mac/dump_syms/Makefile
+END

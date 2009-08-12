@@ -1,0 +1,11 @@
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/util
+END
+runTests.sh
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/tests/libpkix/pkix_tests/util/runTests.sh
+END

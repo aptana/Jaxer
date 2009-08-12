@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/src/jsurl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/jsurl/Makefile.in
+END
+nsJSProtocolHandler.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/jsurl/nsJSProtocolHandler.h
+END
+nsJSProtocolHandler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/src/jsurl/nsJSProtocolHandler.cpp
+END

@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/uriloader/prefetch
+END
+nsOfflineCacheUpdate.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/uriloader/prefetch/nsOfflineCacheUpdate.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/prefetch/Makefile.in
+END
+nsIPrefetchService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/prefetch/nsIPrefetchService.idl
+END
+nsPrefetchService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/prefetch/nsPrefetchService.cpp
+END
+nsPrefetchService.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/prefetch/nsPrefetchService.h
+END
+nsIOfflineCacheUpdate.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/uriloader/prefetch/nsIOfflineCacheUpdate.idl
+END
+nsCPrefetchService.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/prefetch/nsCPrefetchService.h
+END
+nsOfflineCacheUpdate.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/uriloader/prefetch/nsOfflineCacheUpdate.cpp
+END

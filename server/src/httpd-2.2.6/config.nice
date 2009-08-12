@@ -1,0 +1,9 @@
+#! /bin/sh
+#
+# Created by configure
+
+CC="/opt/SUNWspro/bin/cc"; export CC
+"./configure" \
+"--prefix=/opt/AptanaJaxer/Apache22" \
+"CC=/opt/SUNWspro/bin/cc" \
+"$@"

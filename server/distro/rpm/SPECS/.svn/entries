@@ -1,0 +1,40 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/distro/rpm/SPECS
+http://svn.aptana.local/svn/jaxer
+
+
+
+2009-02-06T18:24:55.987794Z
+4605
+jzhang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+jaxer.spec
+file
+
+
+
+
+2009-08-11T21:42:36.000000Z
+60639901585992f9d4c12146583e22e0
+2009-02-06T18:24:55.987794Z
+4605
+jzhang
+

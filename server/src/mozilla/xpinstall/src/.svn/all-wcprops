@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/xpinstall/src
+END
+nsSoftwareUpdate.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpinstall/src/nsSoftwareUpdate.cpp
+END
+nsInstallTrigger.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpinstall/src/nsInstallTrigger.h
+END
+nsXPITriggerInfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpinstall/src/nsXPITriggerInfo.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpinstall/src/Makefile.in
+END
+nsXPIInstallInfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpinstall/src/nsXPIInstallInfo.cpp
+END
+nsXPITriggerInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpinstall/src/nsXPITriggerInfo.h
+END
+nsXPIInstallInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpinstall/src/nsXPIInstallInfo.h
+END
+nsJSInstallTriggerGlobal.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpinstall/src/nsJSInstallTriggerGlobal.cpp
+END
+base.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpinstall/src/base.pkg
+END
+nsXPInstallManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/xpinstall/src/nsXPInstallManager.cpp
+END
+nsInstall.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpinstall/src/nsInstall.h
+END
+nsXPInstallManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpinstall/src/nsXPInstallManager.h
+END
+CertReader.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpinstall/src/CertReader.cpp
+END
+CertReader.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpinstall/src/CertReader.h
+END
+nsInstallTrigger.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpinstall/src/nsInstallTrigger.cpp
+END

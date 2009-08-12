@@ -1,0 +1,213 @@
+# ***** BEGIN LICENSE BLOCK *****
+#  Version: GPL 3
+# 
+#  This program is licensed under the GNU General Public license, version 3 (GPL).
+#  It is derived from Mozilla software and modified by Aptana, Inc.
+#  Aptana, Inc. has elected to use and license the Mozilla software 
+#  under the terms of the GPL, and licenses this file to you under the terms
+#  of the GPL.
+#  
+#  Contributor(s): Aptana, Inc.
+#  The portions modified by Aptana are Copyright (C) 2007-2008 Aptana, Inc.
+#  All Rights Reserved.
+# 
+#  This program is distributed in the hope that it will be useful, but
+#  AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+#  NONINFRINGEMENT. Redistribution, except as permitted by the GPL,
+#  is prohibited.
+# 
+#  You can redistribute and/or modify this program under the terms of the GPL, 
+#  as published by the Free Software Foundation.  You should
+#  have received a copy of the GNU General Public License, Version 3 along
+#  with this program; if not, write to the Free Software Foundation, Inc., 51
+#  Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+#  
+#  Aptana provides a special exception to allow redistribution of this file
+#  with certain other code and certain additional terms
+#  pursuant to Section 7 of the GPL. You may view the exception and these
+#  terms on the web at http://www.aptana.com/legal/gpl/.
+#  
+#  You may view the GPL, and Aptana's exception and additional terms in the file
+#  titled license-jaxer.html in the main distribution folder of this program.
+#  
+#  Any modifications to this file must keep this entire header intact.
+# 
+# ***** END LICENSE BLOCK *****
+#
+# ***** BEGIN ORIGINAL ATTRIBUTION BLOCK *****
+#
+# The Original Code is mozilla.org code.
+#
+# The Initial Developer of the Original Code is
+# Netscape Communications Corporation.
+# Portions created by the Initial Developer are Copyright (C) 1998
+# the Initial Developer. All Rights Reserved.
+#
+# Contributor(s):
+#
+# ***** END ORIGINAL ATTRIBUTION BLOCK *****
+
+DEPTH		= ../../..
+topsrcdir	= @top_srcdir@
+srcdir		= @srcdir@
+VPATH		= @srcdir@
+
+include $(DEPTH)/config/autoconf.mk
+
+MODULE		= content
+LIBRARY_NAME	= gkconbase_s
+LIBXUL_LIBRARY	= 1
+
+REQUIRES	= xpcom \
+		  string \
+		  aptana \
+		  dom \
+		  gfx \
+		  thebes \
+		  layout \
+		  widget \
+		  view \
+		  locale \
+		  htmlparser \
+		  js \
+		  webshell \
+		  necko \
+		  mimetype \
+		  exthandler \
+		  chardet \
+		  caps \
+		  lwbrk \
+		  uconv \
+		  docshell \
+		  pref \
+		  xpconnect \
+		  unicharutil \
+		  intl \
+		  webbrowserpersist \
+		  imglib2 \
+		  plugin \
+		  prefetch \
+		  xuldoc \
+		  uriloader \
+		  rdf \
+		  xultmpl \
+		  util \
+		  appshell \
+		  shistory \
+		  editor \
+		  windowwatcher \
+		  $(NULL)
+
+ifdef ACCESSIBILITY
+REQUIRES	+= accessibility
+endif
+
+EXPORTS		= \
+		nsAtomListUtils.h \
+		nsAttrName.h \
+		nsContentList.h \
+		nsGkAtomList.h \
+		nsGkAtoms.h \
+		nsNodeInfoManager.h \
+		nsPropertyTable.h \
+		nsScriptLoader.h \
+		nsStubDocumentObserver.h \
+		nsStubImageDecoderObserver.h \
+		nsStubMutationObserver.h \
+		nsTextFragment.h \
+		mozAutoDocUpdate.h \
+		$(NULL)
+
+CPPSRCS		= \
+		mozSanitizingSerializer.cpp \
+		nsAtomListUtils.cpp \
+		nsAttrAndChildArray.cpp \
+		nsAttrValue.cpp \
+		nsCCUncollectableMarker.cpp \
+		nsCommentNode.cpp \
+		nsContentAreaDragDrop.cpp \
+		nsContentIterator.cpp \
+		nsContentList.cpp \
+		nsContentPolicy.cpp \
+		nsContentSink.cpp \
+		nsContentUtils.cpp \
+		nsCopySupport.cpp \
+		nsDataDocumentContentPolicy.cpp \
+		nsDOMAttribute.cpp \
+		nsDOMAttributeMap.cpp \
+		nsDOMDocumentType.cpp \
+		nsDOMFile.cpp \
+		nsDOMLists.cpp \
+		nsDOMParser.cpp \
+		nsDOMSerializer.cpp \
+		nsDocument.cpp \
+		nsDocumentEncoder.cpp \
+		nsDocumentFragment.cpp \
+		nsFrameLoader.cpp \
+		nsGenConImageContent.cpp \
+		nsGenericDOMDataNode.cpp \
+		nsGenericDOMNodeList.cpp \
+		nsGenericElement.cpp \
+		nsGkAtoms.cpp \
+		nsHTMLContentSerializer.cpp \
+		nsImageLoadingContent.cpp \
+		nsLineBreaker.cpp \
+		nsLoadListenerProxy.cpp \
+		nsMappedAttributeElement.cpp \
+		nsMappedAttributes.cpp \
+		nsNameSpaceManager.cpp \
+		nsNoDataProtocolContentPolicy.cpp \
+		nsNodeInfo.cpp \
+		nsNodeInfoManager.cpp \
+		nsNodeUtils.cpp \
+		nsObjectLoadingContent.cpp \
+		nsParserUtils.cpp \
+		nsPlainTextSerializer.cpp \
+		nsPropertyTable.cpp \
+		nsRange.cpp \
+		nsScriptElement.cpp \
+		nsScriptEventManager.cpp \
+		nsScriptLoader.cpp \
+		nsStubDocumentObserver.cpp \
+		nsStubImageDecoderObserver.cpp \
+		nsStubMutationObserver.cpp \
+		nsStyledElement.cpp \
+		nsStyleLinkElement.cpp \
+		nsSyncLoadService.cpp \
+		nsTextFragment.cpp \
+		nsTextNode.cpp \
+		nsTreeWalker.cpp \
+		nsXMLContentSerializer.cpp \
+		nsXMLHttpRequest.cpp \
+		nsXMLNameSpaceMap.cpp \
+		$(NULL)
+
+GQI_SRCS = contentbase.gqi
+
+# we don't want the shared lib, but we want to force the creation of a
+# static lib.
+FORCE_STATIC_LIB = 1
+
+ifndef JAXER
+EXTRA_COMPONENTS = $(srcdir)/nsBadCertHandler.js
+endif
+
+include $(topsrcdir)/config/rules.mk
+
+INCLUDES	+= \
+		-I$(srcdir)/../../events/src \
+		-I$(srcdir)/../../xml/content/src \
+		-I$(srcdir)/../../xul/base/src \
+		-I$(srcdir)/../../xul/content/src \
+		-I$(srcdir)/../../html/content/src \
+		-I$(srcdir)/../../base/src \
+		-I$(srcdir)/../../xbl/src \
+		-I$(srcdir)/../../../layout/generic \
+		-I$(srcdir)/../../../layout/style \
+		-I$(srcdir)/../../../dom/src/base \
+		-I$(srcdir)/../../xml/document/src \
+		-I$(topsrcdir)/xpcom/io \
+		$(NULL)
+
+DEFINES += -D_IMPL_NS_LAYOUT

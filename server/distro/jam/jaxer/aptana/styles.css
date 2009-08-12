@@ -1,0 +1,258 @@
+/* -------------------------------------------------------------------- */
+/* Global CSS Reset														*/
+/* -------------------------------------------------------------------- */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+}
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+body {
+	line-height: 1;
+	color: black;
+	background: white;
+}
+ol, ul {
+	list-style: none;
+}
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+caption, th, td {
+	text-align: left;
+	font-weight: normal;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: "";
+}
+blockquote, q {
+	quotes: "" "";
+}
+
+/* -------------------------------------------------------------------- */
+/* General Styles														*/
+/* -------------------------------------------------------------------- */
+body { background: #565d6e url(images_global/bg_page.png); }
+body, td, p { 
+	font-family: "Lucida Grande", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #333;
+}
+
+a { color: #3369b7; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+#body_wrap { background: url(images_global/bg_page_gradient.png) repeat-x left top; }
+
+#header { 
+	background: url(images_global/img_logo.png) no-repeat left top;
+	color: #fff;
+	font-size: 11px;
+	height: 65px;
+	margin: 0 10px 0 10px;
+	overflow: hidden;
+}
+	#header_text {
+		text-align: right;
+		height: 60px;
+		line-height: 14px;
+		margin-top: 5px;
+		padding-left: 200px;
+	}
+		#header_text a { color: #fff; text-decoration: underline; }
+		#header_text a:hover { text-decoration: none; }
+		#header_text .upgrade {
+			margin-top: 5px;
+			padding-left: 25px;
+		}
+			#header_text .upgrade a { text-decoration: none; }
+			#header_text .upgrade a:hover { text-decoration: underline; }
+
+#content_wrap { margin: -3px 10px 10px 10px; }
+#content_top_wrap {
+	background: url(images_global/bg_content_tl.png) no-repeat left top;
+	height: 12px;
+	overflow: hidden;
+}
+	#content_top_inner {
+		background: url(images_global/bg_content_tr.png) no-repeat right top;
+		height: 12px;
+		margin-left: 12px;
+	}
+#content_main_wrap { background: url(images_global/bg_content_l.png) repeat-y left top; }
+	#content_main_inner {
+		background: url(images_global/bg_content_r.png) repeat-y right top;
+		margin-left: 12px;
+	}
+#content_bottom_wrap {
+	background: url(images_global/bg_content_bl.png) no-repeat left top;
+	height: 12px;
+	overflow: hidden;
+}
+	#content_bottom_inner {
+		background: url(images_global/bg_content_br.png) no-repeat right top;
+		height: 12px;
+		margin-left: 12px;
+	}
+	
+td.left_col {
+	background: #000;
+	width: 200px;
+}
+
+	td.left_col a { color: #fff; text-decoration: underline; }
+	td.left_col p {
+		color: #fff;
+		line-height: 16px;
+		padding: 10px;
+	}
+	td.left_col ul {
+		margin: 10px;
+	}
+	td.left_col li { padding-left: 25px; margin-bottom: 5px; }
+	td.left_col li.samples { background: url(images_global/img_icon_samples.png) no-repeat left center; }
+	td.left_col li.diagnostics { background: url(images_global/img_icon_diagnostics.png) no-repeat left center; }
+	td.left_col li.api { background: url(images_global/img_icon_api.png) no-repeat left center; }
+	
+	td.left_col ul li a { color: #8fcc33; display: block; height: 16px; padding-top: 2px; text-decoration: none; }
+	td.left_col ul li a:hover { text-decoration: underline; }
+	
+	td.left_col_footer { 
+		background: #000 url(images_global/bg_leftcol_bottom.png) no-repeat bottom left; 
+		height: 255px; 
+		padding-bottom: 5px;
+		text-align: center;
+	}
+	
+td.main_content {
+	padding: 0 10px 10px 10px;
+}
+	td.main_content h2 {
+		color: #555;
+		font-size: 18px;
+		font-weight: bold;
+		margin-bottom: 10px;
+	}
+	td.main_content h3 {
+		color: #555;
+		font-size: 16px;
+		font-weight: bold;
+		margin-bottom: 10px;
+	}
+	td.main_content p {
+		font-size: 13px;
+		line-height: 18px;
+		margin-bottom: 10px;
+	}
+	td.main_content ul,
+	td.main_content ol { margin-bottom: 10px; padding-left: 10px; }
+	
+	td.main_content ul { list-style-type: disc; }
+	td.main_content ol { list-style-type: decimal; padding-left: 15px; }
+	td.main_content li { margin-left: 15px; margin-bottom: 5px; line-height: 16px; }
+
+#footer { 
+	color: #fff; 
+	font-size: 10px; 
+	line-height: 14px;
+	margin: 10px;
+	text-align: center;
+}
+
+.appicon {
+	margin:3px;
+	vertical-align:middle;
+}
+
+/* -------------------------------------------------------------------- */
+/* Control.window styles												*/
+/* -------------------------------------------------------------------- */
+#control_overlay {  
+    background-color:#000;  
+} 
+.modal {  
+    background-color:#fff;  
+    border:1px solid #333;  
+} 
+
+.top-right-edge {
+background:transparent url(images_global/shadown_top-right-corner.png) repeat scroll 0%;
+height:9px;
+position:absolute;
+right:-5px;
+top:-6px;
+width:5px;
+}
+.top-left-edge {
+background:transparent url(images_global/shadown_top-left-corner.png) repeat scroll 0%;
+height:9px;
+left:-5px;
+position:absolute;
+top:-6px;
+width:5px;
+}
+.bottom-left-edge {
+background:transparent url(images_global/shadown_bottom-left-corner.png) repeat scroll 0%;
+bottom:-5px;
+height:5px;
+left:-5px;
+position:absolute;
+width:10px;
+}
+.bottom-right-edge {
+background:transparent url(images_global/shadown_bottom-right-corner.png) repeat scroll 0%;
+bottom:-5px;
+height:5px;
+position:absolute;
+right:-5px;
+width:10px;
+}
+.top-edge {
+background:transparent url(images_global/shadown_top-edge.png) repeat-x scroll 0%;
+height:4px;
+left:0pt;
+position:absolute;
+top:-5px;
+}
+.bottom-edge {
+background:transparent url(images_global/shadown_bottom-edge.png) repeat-x scroll 0%;
+bottom:-5px;
+height:5px;
+left:5px;
+position:absolute;
+right:5px;
+}
+.left-edge {
+background:transparent url(images_global/shadown_left-edge.png) repeat-y scroll 0%;
+bottom:0px;
+left:-5px;
+position:absolute;
+top:3px;
+width:5px;
+}
+.right-edge {
+background:transparent url(images_global/shadown_right-edge.png) repeat-y scroll 0%;
+bottom:0px;
+position:absolute;
+right:-5px;
+top:3px;
+width:5px;
+}

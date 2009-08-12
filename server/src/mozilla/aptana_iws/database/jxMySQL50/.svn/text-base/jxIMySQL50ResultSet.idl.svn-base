@@ -1,0 +1,304 @@
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+ * vim: set sw=4 ts=4 et: */
+/* ***** BEGIN LICENSE BLOCK *****
+ *  Version: GPL 3
+ * 
+ *  This program is Copyright (C) 2007-2008 Aptana, Inc. All Rights Reserved
+ *  This program is licensed under the GNU General Public license, version 3 (GPL).
+ * 
+ *  This program is distributed in the hope that it will be useful, but
+ *  AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+ *  NONINFRINGEMENT. Redistribution, except as permitted by the GPL,
+ *  is prohibited.
+ * 
+ *  You can redistribute and/or modify this program under the terms of the GPL, 
+ *  as published by the Free Software Foundation.  You should
+ *  have received a copy of the GNU General Public License, Version 3 along
+ *  with this program; if not, write to the Free Software Foundation, Inc., 51
+ *  Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  
+ *  Aptana provides a special exception to allow redistribution of this file
+ *  with certain other code and certain additional terms
+ *  pursuant to Section 7 of the GPL. You may view the exception and these
+ *  terms on the web at http://www.aptana.com/legal/gpl/.
+ *  
+ *  You may view the GPL, and Aptana's exception and additional terms in the file
+ *  titled license-jaxer.html in the main distribution folder of this program.
+ *  
+ *  Any modifications to this file must keep this entire header intact.
+ * 
+ * ***** END LICENSE BLOCK ***** */
+
+#include "nsISupports.idl"
+#include "jxIMySQL50.idl"
+// #include "jxIXPCBridge.idl"
+
+interface jxIMySQL50Field;
+
+
+[scriptable, uuid(480a5f73-4932-4749-a78e-9b4fa420bdb9)]
+interface jxIMySQL50ResultSet : nsISupports
+{
+
+    [noscript] void setMySQL50(in jxIMySQL50 aObj); 
+
+    [noscript] void storeResult(in jxMYSQLPtr aMYSQL); 
+
+    [noscript] void getMetaData(in jxMYSQLSTMTPtr aSTMT); 
+
+    [noscript] boolean hasRes(); 
+
+    [noscript] void setType(in unsigned long type);
+
+
+    /*************************************************************
+     *  close
+     *
+	 *  Closes this result set.  
+     */
+    void close();
+
+
+
+    /*************************************************************
+     *  dataSeek
+     *
+	 *	Seeks to an arbitrary row in a query result set. The offset 
+	 *	value is a row number and should be in the range from 0 to 
+	 *	rowCount()-1. 
+	 *
+	 *	Return Values
+	 *
+	 *	1 if offset is within valid range, 0 otherwise.
+	 */
+    boolean dataSeek(in long long offset);
+
+
+
+    /*************************************************************
+     *  errno
+     *
+     *  Accessor to the error code for the most recently invoked API function that 
+     *	can succeed or fail. A return value of zero means that no error occurred.
+     */
+    unsigned long errno();
+
+
+
+    /*************************************************************
+     *  error
+     *
+     *  Accessor to the error code for the most recently invoked API function that 
+     *	can succeed or fail. A return value of zero means that no error occurred.
+     */
+    AString error();
+
+
+
+    /*************************************************************
+     *  fetchField
+     *
+	 *	Returns the definition of one column of a result set as a 
+	 *	jxIMySQL50Field object. Call this function repeatedly to 
+	 *	retrieve information about all columns in the result set. 
+	 *	fetchField() returns NULL when no more fields are left.
+	 *
+	 *	fetchField() is reset to return information about the 
+	 *	first field each time you execute a new SELECT query. 
+	 *	The object returned by fetchField() is also affected by 
+	 *	calls to fieldSeek().
+	 *
+	 *	field.maxLength contains the length of the largest value 
+	 *	for this column in the specific query.
+	 *
+	 *	Return Values
+	 *
+	 *	The jxIMySQL50Field for the current column. NULL if no 
+	 *	columns are left.      
+	 */
+    jxIMySQL50Field fetchField();
+
+
+
+    /*************************************************************
+     *  fetchFieldDirect
+     *
+	 *	Given a field number for a column within a result 
+	 *	set, returns that column's field definition as a 
+	 *	jxIMySQL50Field object. You may use this function to 
+	 *	retrieve the definition for an arbitrary column. The value 
+	 *	of fieldNum should be in the range from 0 to fieldCount()-1.	 
+	 *
+	 *	Return Values
+	 *
+	 *	The jxIMySQL50Field for the specified column. NULL if  
+	 *	fieldNum is invalid.      
+	 */
+    jxIMySQL50Field fetchFieldDirect(in long fieldNum);
+
+
+
+    /*************************************************************
+     *  fetchFields
+     *
+	 *	Returns an array of all jxIMySQL50Field objects for a 
+	 *	result set. Each object provides the field definition 
+	 *	for one column of the result set.	 
+	 *
+	 */
+	void fetchFields(out unsigned long count, [array, size_is(count), retval]out jxIMySQL50Field retv);  
+
+
+
+    /*************************************************************
+     *  fetchRow
+     *
+	 *	Returns an associative array that corresponds to the fetched 
+	 *	row or NULL if there are no more rows.     
+	 */
+    boolean fetchRow();
+
+
+
+    /*************************************************************
+     *  fieldSeek
+     *
+	 *	Sets the field cursor to the given offset. The next call 
+	 *	to fetchField() retrieves the field definition of the 
+	 *	column associated with that offset.
+	 *
+	 *	To seek to the beginning of a row, pass an offset value 
+	 *	of zero. 	 
+	 *
+	 */
+    unsigned long long fieldSeek(in unsigned long long offset);
+
+
+
+    /*************************************************************
+     *  info
+     *
+	 *	Retrieves a string providing information about the most recently 
+	 *	executed statement, but only for the statements listed here. 
+	 *	For other statements, info() returns an empty string. 
+	 *	The format of the string varies depending on the type of statement, 
+	 *	as described here. The numbers are illustrative only; the string 
+	 *	contains values appropriate for the statement. 
+	 *
+	 *    * INSERT INTO ... SELECT ...
+	 *		String format: Records: 100 Duplicates: 0 Warnings: 0
+     *
+	 *	  * INSERT INTO ... VALUES (...),(...),(...)...
+	 *		String format: Records: 3 Duplicates: 0 Warnings: 0
+     *
+	 *	  * LOAD DATA INFILE ...
+	 *		String format: Records: 1 Deleted: 0 Skipped: 0 Warnings: 0
+     *
+	 *	  * ALTER TABLE
+	 *		String format: Records: 3 Duplicates: 0 Warnings: 0
+     *
+	 *	  * UPDATE
+	 *		String format: Rows matched: 40 Changed: 40 Warnings: 0
+	 *
+	 *	Note that info() returns a non-empty value for 
+	 *	INSERT ... VALUES only for the multiple-row form of the 
+	 *	statement (that is, only if multiple value lists are specified).     
+	 */
+    AString info();
+
+
+
+    /*************************************************************
+     *  rowCount
+     *
+     *  Accessor to the row count this ResultSet is associated with.      
+     */
+    long long rowCount();
+
+
+
+    /*************************************************************
+     *  rowSeek
+     *
+ 	 *	Sets the row cursor to an arbitrary row in a query result set. 
+ 	 *	The offset value is a row offset that should be a value 
+ 	 *	returned from rowTell() or rowSeek(). This value is not a 
+ 	 *	row number; if you want to seek to a row within a result set 
+ 	 *	by number, use dataSeek() instead.
+	 *
+	 */
+    unsigned long long rowSeek(in unsigned long long offset);
+
+
+
+    /*************************************************************
+     *  currentRow
+     *
+	 *	Returns the current position of the row cursor for the 
+	 *	last fetchRow(). This value can be used as an argument 
+	 *	to rowSeek().	 
+	 *
+	 */
+    long long currentRow();
+
+
+
+    /*************************************************************
+     *  fieldCount
+     *
+     *  Accessor to the row count this ResultSet is associated with.      
+     */
+    unsigned long fieldCount();
+
+
+
+    /*************************************************************
+     *  currentField
+     *
+     *  Accessor to the current field offset this ResultSet is associated with.      
+     */
+    long currentField();
+
+
+
+    /*************************************************************
+     *  listFields
+	 *
+	 *	Returns a result set consisting of field names in the given 
+	 *	table that match the simple regular expression specified by 
+	 *	the wild parameter. wild may contain the wildcard characters 
+	 *	‘%’ or ‘_’, or may be a NULL pointer to match all fields. 
+	 *
+	 *	Calling listFields() is similar to executing the query 
+	 *	SHOW COLUMNS FROM tbl_name [LIKE wild]. 	 
+	 *
+	 */
+    boolean listFields(in AString table, in AString wild);
+
+    /*
+     * methods for accessing values of a row
+     */
+    double getDouble(in unsigned long aIndex);
+    AString getString(in unsigned long aIndex);
+    AString getDatetimeString(in unsigned long aIndex);
+    AString getDateString(in unsigned long aIndex);
+    AString getTimeString(in unsigned long aIndex);
+
+    void getBlob(in unsigned long aIndex, out unsigned long aDataSize, [array,size_is(aDataSize)] out octet aData);
+    AUTF8String getUTF8Text(in unsigned long aIndex);
+    AUTF8String getUTF8String(in unsigned long aIndex);
+
+    boolean getIsNull(in unsigned long aIndex);
+
+    /*
+     * the type of this resultset:
+     * 0 -- error
+     * 1 -- regular recordset
+     * 2 -- only a rowcount
+     * 3 -- null recordset
+     */
+    readonly attribute unsigned long type;
+    
+};
+

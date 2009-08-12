@@ -1,0 +1,305 @@
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/universalchardet/src/base
+END
+nsEscCharsetProber.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsEscCharsetProber.cpp
+END
+LangHebrewModel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/LangHebrewModel.cpp
+END
+LangHungarianModel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/LangHungarianModel.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/Makefile.in
+END
+nsUTF8Prober.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsUTF8Prober.cpp
+END
+nsEUCTWProber.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsEUCTWProber.cpp
+END
+GB2312Freq.tab
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/GB2312Freq.tab
+END
+nsUniversalDetector.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsUniversalDetector.cpp
+END
+nsBig5Prober.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsBig5Prober.h
+END
+LangThaiModel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/LangThaiModel.cpp
+END
+nsLatin1Prober.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsLatin1Prober.h
+END
+nsCharSetProber.h
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsCharSetProber.h
+END
+nsGB2312Prober.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsGB2312Prober.cpp
+END
+JpCntx.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/JpCntx.h
+END
+nsMBCSGroupProber.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsMBCSGroupProber.cpp
+END
+nsSBCSGroupProber.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsSBCSGroupProber.cpp
+END
+CharDistribution.h
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/CharDistribution.h
+END
+nsEUCKRProber.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsEUCKRProber.cpp
+END
+nsEUCJPProber.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsEUCJPProber.h
+END
+nsSJISProber.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsSJISProber.h
+END
+Big5Freq.tab
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/Big5Freq.tab
+END
+EUCTWFreq.tab
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/EUCTWFreq.tab
+END
+nsHebrewProber.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsHebrewProber.h
+END
+nsSBCharSetProber.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsSBCharSetProber.h
+END
+nsCodingStateMachine.h
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsCodingStateMachine.h
+END
+nsBig5Prober.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsBig5Prober.cpp
+END
+nsPkgInt.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsPkgInt.h
+END
+nsLatin1Prober.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsLatin1Prober.cpp
+END
+nsCharSetProber.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsCharSetProber.cpp
+END
+nsEscCharsetProber.h
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsEscCharsetProber.h
+END
+nsUTF8Prober.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsUTF8Prober.h
+END
+JpCntx.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/JpCntx.cpp
+END
+nsEUCTWProber.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsEUCTWProber.h
+END
+nsUniversalDetector.h
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsUniversalDetector.h
+END
+nsEscSM.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsEscSM.cpp
+END
+EUCKRFreq.tab
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/EUCKRFreq.tab
+END
+CharDistribution.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/CharDistribution.cpp
+END
+nsGB2312Prober.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsGB2312Prober.h
+END
+LangGreekModel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/LangGreekModel.cpp
+END
+nsEUCJPProber.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsEUCJPProber.cpp
+END
+nsMBCSGroupProber.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsMBCSGroupProber.h
+END
+nsSJISProber.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsSJISProber.cpp
+END
+nsMBCSSM.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsMBCSSM.cpp
+END
+JISFreq.tab
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/JISFreq.tab
+END
+LangBulgarianModel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/LangBulgarianModel.cpp
+END
+nsHebrewProber.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsHebrewProber.cpp
+END
+nsSBCSGroupProber.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsSBCSGroupProber.h
+END
+nsEUCKRProber.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsEUCKRProber.h
+END
+nsSBCharSetProber.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/nsSBCharSetProber.cpp
+END
+LangCyrillicModel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/universalchardet/src/base/LangCyrillicModel.cpp
+END

@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/jaxer/!svn/ver/3944/trunk/products/server/src/scripts/cloud
+END
+svc-jaxer-start.sh
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/3944/trunk/products/server/src/scripts/cloud/svc-jaxer-start.sh
+END
+svc-jaxer-stop.sh
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/3299/trunk/products/server/src/scripts/cloud/svc-jaxer-stop.sh
+END

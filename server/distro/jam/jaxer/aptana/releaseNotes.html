@@ -1,0 +1,321 @@
+<html>
+<head>
+	<title>Jaxer Release Notes</title>
+</head>
+<body>
+<style type="text/css">
+    body {
+        font-size: 70%;
+        font-family: Helvetica, sans-serif;
+        margin: 0px 0px 0px 0px;
+    }
+    
+    ul {
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+    }
+    
+    li {
+        margin-top: 0px;
+        padding: 5px;
+        border-bottom: 1px solid #CCCCCC
+    }
+    
+    li img {
+        padding-right: 5px;
+    }
+    
+    h2 {
+        text-align: center;
+        font-size: 130%;
+        color: #333333;
+        font-weight: bold;
+        padding-top: 6px;
+        margin: 0px;
+        background-color: #878787;
+        background-image: url(http://ide.aptana.com/update/images/header_background.gif);
+        background-repeat: no-repeat;
+    }
+    
+    .nonotes {
+        text-align: center;
+        padding: 3px;
+        border-top: 1px #AAAAAA solid;
+        border-bottom: 1px #AAAAAA solid;
+        background-color: #CCCCCC;
+        line-height: 130%
+    }
+    
+    .featureInfo {
+        text-align: center;
+        padding: 3px;
+        display: block;
+        font-size: 80%;
+        font-weight: normal;
+        color: #444444;
+    }
+	
+	.add {
+		list-style-position:outside;
+		list-style-type:none;
+		padding-left:30px;
+	}
+	.bug {
+		list-style-position:outside;
+		list-style-type:none;
+		padding-left:30px;
+	}
+	
+	.important {
+		color: #aa0000;
+		border: 1px solid #CCC8AA;
+		padding: 0px 15px;
+		background-color: #EEE8AA;
+		font-size: 110%;
+		line-height: 130%;
+	}
+
+	/*
+	 * The following css should be enabled for the www.aptana.com copy 
+	 * of the release notes
+	 *
+	.add {
+		background: url(http://www.aptana.com/system/files/add.png) left no-repeat;
+	}
+	.bug {
+		background: url(http://www.aptana.com/system/files/bug.png) left no-repeat;
+	}
+	/**/
+
+	/*
+	 * The following css should be enabled for the jaxer copy 
+	 * of the release notes
+	 */
+	.add {
+		background: url(images/add.png) left no-repeat;
+	}
+	.bug {
+		background: url(images/bug.png) left no-repeat;
+	}
+	/**/
+
+	
+</style>
+<script type="text/javascript">
+    
+    function get(name){
+        var q = unescape(location.search.substring(1)).split(/[=&]/);
+        for (var j = 0; j < q.length; j += 2) {
+            if (q[j] == name) {
+                return q[j + 1];
+            }
+        }
+        return null;
+    }
+    
+    function load(buildNumber){
+        showNew(buildNumber);
+    }
+    
+    function showAll(buildNumber){
+        var elements = document.getElementsByTagName('li');
+        var id = get("lm");
+        var itemVisible = false;
+        for (var i = 0; i < elements.length; i++) {
+            var el = elements[i];
+            el.style.visibility = "visible";
+            el.style.display = "block";
+        }
+        
+        var n = document.getElementById(date);
+        n.style.visibility = "visible";
+        n.style.display = "inline";
+        itemVisible = true;
+        
+        var el = document.getElementById("nonew");
+        el.style.visibility = "hidden";
+        el.style.display = "none";
+    }
+    
+    function showNew(buildNumber){
+        var elements = document.getElementsByTagName('li');
+        var id = get("lm");
+        var itemVisible = false;
+        for (var i = 0; i < elements.length; i++) {
+        
+            var el = elements[i];
+            var date = el.getAttribute("lm");
+            var parsedDate = Date.parse(date);
+            
+            if (parsedDate < id) {
+                el.style.visibility = "hidden";
+                el.style.display = "none";
+            }
+            else {
+                var n = document.getElementById(date);
+                n.style.visibility = "visible";
+                n.style.display = "inline";
+                itemVisible = true;
+            }
+        }
+        
+        if (itemVisible == false) {
+            var el = document.getElementById("nonew");
+            el.style.visibility = "visible";
+            el.style.display = "block";
+        }
+    }
+</script>
+<div class="nonotes">
+</div>
+<h2>Release 1.0.3:</h2>
+<ul class="posts">
+    <li class="post add">
+    	The Jaxer Guide has been significantly updated, with expanded coverage of setting up Jaxer and database functionality as well as a search tool.
+    </li>
+    <li class="post add">
+    	fixed resultset handling of empty cols
+    </li>
+    <li class="post add">
+    	 API CHANGE for singleRow, firstRow, finalRow, these now return the appriate rows element as an object rather than an array. API docs updated to reflect the change.
+    </li>
+    <li class="post add">
+    	Improved SSL Cert error handling in Jaxer.Sandbox, Wrapped the onsslcerterror option for the Sandbox
+    </li>
+    <li class="post add">
+    	Added Jaxer.Util.Certificate and Jaxer.Util.Certificate.CertInfo
+    </li>
+    <li class="post add">
+    	Added Jaxer.Util.DOM.insertHTML
+    </li>
+    <li class="post add">
+    	Expanded scope of Mozilla built in_noSuchMethod__ handling to allow application on the anonymous global object.
+    </li>
+    <li class="post add">
+    	Added native support for ODBC on Linux and Mac platform.
+    </li>
+    <li class="post add">
+    	Correctly set the appKey to use the 'name' of the current Application as defined in the applications configApps.js, this fixes the issue whereby session 
+		was shared amongst different applications.
+    </li>
+    <li class="post add">
+    	Jaxer.Socket - removed the assumption of iso8859-1 and replaced with default of utf8
+    </li>
+    <li class="post add">
+    	Improved format of reported exceptions to increase readability
+    </li>
+    <li class="post add">
+    	Moved from a single large serverframework file, to individual included modules, this allows exceptions to refer to the module, and makes it easier for developers to work with the framework.
+    </li>
+    <li class="post bug">
+    	[JXR-400] Handle large response headers properly.
+    </li>
+    <li class="post bug">
+    	[JXR-91] Support addEventListener for onserverload; avoid BODY's onload handler being notified on "onload" events. Notify onaftercallbackprocessing handlers by firing an event;
+    </li>
+    <li class="post bug">
+    	[JXR-404] Allow unlimited value length in form fields
+    </li>
+    <li class="post bug">
+    	[JXR-399] Support Unicode I/O in Jaxer.Process
+    </li>
+    <li class="post bug">
+    	[JXR-418] Jaxer.request.parsedUrl.queryParts not unencoding entirely, fixed the single replace for '+' with a global replace
+    </li>
+    <li class="post bug">
+ 		[JXR-421] added fix for Jaxer.File.readline to correctly handle Macline endings    
+	</li>	
+    <li class="post bug">
+    	[JXR-422] added support for extra SMTP headers
+    </li>
+    <li class="post bug">
+    	[JXR-431] Share connection pools among the same workers
+    </li>
+    <li class="post bug">
+    	[JXR-402] implement configurable nsIDOMScreen values
+    </li>
+</ul>
+<h2>Release 1.0.2:</h2>
+<ul class="posts">
+    <li class="post add">
+    	Add onsslcerterror support to the Jaxer Sandbox, to support working with SSL connections
+		that may not have proper certificates. This was already implemented for Jaxer.XHR.
+    </li>
+    <li class="post add">
+    	Add Jaxer.Util.createObject to support creating objects from their constructor names 
+		and an arbitrary (not known in advance) number of parameters. Also enhanced
+		Jaxer.Util.findInGlobalContext to support namespaced names.
+    </li>
+    <li class="post add">
+    	Add Jaxer.Util.DOM.insertHTML to allow injection of any HTML content in the DOM.
+		It is the HTML equivalent of Jaxer.load, and the programmatic equivalent of
+		the &lt;jaxer:include&gt; element (but with a bit more control).
+    </li>
+    <li class="post add">
+		Support addEventListener for the serverload event, and even for onload (controllable
+        through Jaxer.Config.ONLOAD_ENABLED and per-request via Jaxer.onloadEnabled).
+        Similarly for the afterprocesscallbacks event.
+        (JXR-91)
+    </li>
+    <li class="post add">
+		Build into Jaxer Core (i.e. Mozilla) support for __noSuchMethod__ on the anonymous global
+		object. It works exactly the same as, e.g., window.__noSuchMethod__ and allows
+		dealing with previously-undefined tokens.
+        (https://bugzilla.mozilla.org/show_bug.cgi?id=466239)
+    </li>
+	<li class="post bug">
+		Fixed several issues with Jaxer.DB.ResultSet that occur when there are no rows (no data).
+		These arise in particular when trying to serialize (to JSON) a resultset with no rows.
+	</li>
+	<li class="post bug">
+		Corrected an inconsistency in the API for Jaxer.DB.ResultSet. The result is that
+		the singleRow, firstRow, and finalRow properties now return the row as an object
+		with column-named properties rather than as an Array. <b>Note</b> that this may break
+		code that was relying on these (inconsistent) APIs!
+	</li>
+</ul>
+
+<h2>Release 1.0.1:</h2>
+<ul class="posts">
+    <li class="post add">
+    	Great simplified how developers can build Jaxer from source on their own
+    </li>
+    <li class="post add">
+    	Jaxer Community Edition vs Jaxer Pro (same code, different licensing and support)
+    </li>
+	<li class="post bug">
+		Fix bug in most of the Util.DOM methods that insert script tags: 
+	discrepancy between how they were documented (correct) and the params they take (wrong).
+	</li>
+    <li class="post bug">
+    	Correct and improve when and how the type attribute of emitted script elements 
+		is used (JXR-338)
+    </li>
+    <li class="post add">
+    	Add new JaxerManager command line options to restrict the local network
+		interface on which it is listening: webinterfacelocalip and commandinterfacelocalip (JXR-395)
+    </li>
+    <li class="post add">
+    	Added an onlocationchange event handler to Jaxer.Sandbox to detect, and optionally
+		cancel, the location (URL) of the Sandbox's content from being changed
+    </li>
+    <li class="post add">
+    	Fixes to serviceDispatcher and rpcDispatcher: 
+		interpret the findFile() method's first argument as a true (native OS) path on disk;
+		do not allow a path part of ".." (so you cannot go above the service root);
+		restrict looking for the .js file at or above the service root.
+    </li>
+</ul>
+
+<h2>Release 1.0.0:</h2>
+<div class="important">
+	<p>Much has been added and improved in Jaxer 1.0 &mdash; too much to capture in these release notes.</p>
+	<p>For more information on what has changed, and for guidelines on migrating 
+	applications based on the Jaxer beta (0.9.x) APIs to Jaxer 1.0 APIs,
+	please refer to 
+	<a href="http://www.aptana.com/docs/index.php/Migrating_from_Jaxer_beta">http://www.aptana.com/docs/index.php/Migrating_from_Jaxer_beta</a>.</p>
+</div>
+
+</body>
+</html>

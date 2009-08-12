@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/sroaming/resources/locale/en-US
+END
+transfer.properties
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/sroaming/resources/locale/en-US/transfer.properties
+END
+contents.rdf
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/resources/locale/en-US/contents.rdf
+END
+prefs.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/sroaming/resources/locale/en-US/prefs.dtd
+END
+prefs.properties
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/resources/locale/en-US/prefs.properties
+END
+conflictResolve.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/resources/locale/en-US/conflictResolve.dtd
+END
+filedescr.properties
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/resources/locale/en-US/filedescr.properties
+END
+progressDialog.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sroaming/resources/locale/en-US/progressDialog.dtd
+END

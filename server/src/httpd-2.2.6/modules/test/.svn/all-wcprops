@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/test
+END
+mod_optional_hook_import.c
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/test/mod_optional_hook_import.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/test/Makefile.in
+END
+mod_optional_fn_import.c
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/test/mod_optional_fn_import.c
+END
+config.m4
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/test/config.m4
+END
+mod_optional_hook_export.c
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/test/mod_optional_hook_export.c
+END
+.deps
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/test/.deps
+END
+mod_optional_fn_export.c
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/test/mod_optional_fn_export.c
+END
+mod_optional_hook_export.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/test/mod_optional_hook_export.h
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/test/Makefile
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/test/README
+END
+.indent.pro
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/test/.indent.pro
+END
+mod_optional_fn_export.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/test/mod_optional_fn_export.h
+END
+modules.mk
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/test/modules.mk
+END

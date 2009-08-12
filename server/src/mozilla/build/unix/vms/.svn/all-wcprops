@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/vms
+END
+libxpcom_dbg_symvec.opt
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/vms/libxpcom_dbg_symvec.opt
+END
+install.com
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/vms/install.com
+END
+libxpcom_symvec.opt
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/vms/libxpcom_symvec.opt
+END
+mozilla.com
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/vms/mozilla.com
+END
+getinfo.com
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/vms/getinfo.com
+END
+component_symvec.opt
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/unix/vms/component_symvec.opt
+END

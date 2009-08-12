@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/minimo/chromelite
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/minimo/chromelite/Makefile.in
+END
+nsSimpleChromeRegistry.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/minimo/chromelite/nsSimpleChromeRegistry.cpp
+END
+nsSimpleChromeHandler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/minimo/chromelite/nsSimpleChromeHandler.cpp
+END
+nsSimpleChromeRegistry.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/minimo/chromelite/nsSimpleChromeRegistry.h
+END
+nsSimpleChromeHandler.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/minimo/chromelite/nsSimpleChromeHandler.h
+END

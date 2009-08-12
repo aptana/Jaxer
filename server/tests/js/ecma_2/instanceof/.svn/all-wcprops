@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/ecma_2/instanceof
+END
+instanceof-001.js
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/ecma_2/instanceof/instanceof-001.js
+END
+shell.js
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/ecma_2/instanceof/shell.js
+END
+instanceof-002.js
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/ecma_2/instanceof/instanceof-002.js
+END
+instanceof-003.js
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/ecma_2/instanceof/instanceof-003.js
+END
+regress-7635.js
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/ecma_2/instanceof/regress-7635.js
+END
+browser.js
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/ecma_2/instanceof/browser.js
+END

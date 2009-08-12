@@ -1,0 +1,55 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/extensions/python/dom/test/pyxultest/chrome
+http://svn.aptana.local/svn/jaxer
+
+
+
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+chrome.manifest
+file
+
+
+
+
+2009-08-11T21:36:43.000000Z
+aebe3c181eedfe339611097dcfa93845
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+contents.rdf
+file
+
+
+
+
+2009-08-11T21:36:43.000000Z
+efa6a631654ce9ffc9fe92c24e29af76
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+content
+dir
+

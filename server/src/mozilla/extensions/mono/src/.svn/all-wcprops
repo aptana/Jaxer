@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/mono/src
+END
+typeinfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/mono/src/typeinfo.cs
+END
+wrapped-clr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/mono/src/wrapped-clr.cpp
+END
+wrapped-clr.cs
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/mono/src/wrapped-clr.cs
+END
+interface-generator.cs
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/mono/src/interface-generator.cs
+END
+components.cs
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/mono/src/components.cs
+END
+proxy-generator.cs
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/mono/src/proxy-generator.cs
+END
+xptinvoke.cs
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/mono/src/xptinvoke.cs
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/mono/src/Makefile
+END
+xpcom-core.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/mono/src/xpcom-core.cpp
+END
+typeinfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/mono/src/typeinfo.cpp
+END

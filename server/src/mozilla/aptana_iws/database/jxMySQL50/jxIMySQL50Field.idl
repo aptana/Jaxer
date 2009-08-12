@@ -1,0 +1,110 @@
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+ * vim: set sw=4 ts=4 et: */
+/* ***** BEGIN LICENSE BLOCK *****
+ *  Version: GPL 3
+ * 
+ *  This program is Copyright (C) 2007-2008 Aptana, Inc. All Rights Reserved
+ *  This program is licensed under the GNU General Public license, version 3 (GPL).
+ * 
+ *  This program is distributed in the hope that it will be useful, but
+ *  AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+ *  NONINFRINGEMENT. Redistribution, except as permitted by the GPL,
+ *  is prohibited.
+ * 
+ *  You can redistribute and/or modify this program under the terms of the GPL, 
+ *  as published by the Free Software Foundation.  You should
+ *  have received a copy of the GNU General Public License, Version 3 along
+ *  with this program; if not, write to the Free Software Foundation, Inc., 51
+ *  Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  
+ *  Aptana provides a special exception to allow redistribution of this file
+ *  with certain other code and certain additional terms
+ *  pursuant to Section 7 of the GPL. You may view the exception and these
+ *  terms on the web at http://www.aptana.com/legal/gpl/.
+ *  
+ *  You may view the GPL, and Aptana's exception and additional terms in the file
+ *  titled license-jaxer.html in the main distribution folder of this program.
+ *  
+ *  Any modifications to this file must keep this entire header intact.
+ * 
+ * ***** END LICENSE BLOCK ***** */
+
+#include "nsISupports.idl"
+#include "jxIMySQL50.idl"
+
+[scriptable, uuid(ef4409a2-3818-45e2-8fa5-070c9a19826d)]
+interface jxIMySQL50Field : nsISupports
+{
+    [noscript] boolean init(
+	    in string name,
+	    in string orgName,
+	    in string table,
+	    in string orgTable,
+	    in string db,
+	    in string catalog,
+	    in string def,
+	    in unsigned long length,
+	    in unsigned long maxLength,
+	    in unsigned long nameLength,
+	    in unsigned long orgNameLength,
+	    in unsigned long tableLength,
+	    in unsigned long orgTableLength,
+	    in unsigned long dbLength,
+	    in unsigned long catalogLength,
+	    in unsigned long defLength,
+	    in unsigned long flags,
+	    in unsigned long decimals,
+	    in unsigned long charsetnr,
+	    in unsigned long type
+    );
+
+
+    /**
+     *  Flag Accessors
+     */
+    readonly attribute unsigned long NOT_NULL_FLAG;
+    readonly attribute unsigned long PRI_KEY_FLAG;
+    readonly attribute unsigned long UNIQUE_KEY_FLAG;
+    readonly attribute unsigned long MULTIPLE_KEY_FLAG;
+    readonly attribute unsigned long BLOB_FLAG;
+    readonly attribute unsigned long UNSIGNED_FLAG;
+    readonly attribute unsigned long ZEROFILL_FLAG;
+    readonly attribute unsigned long BINARY_FLAG;
+    readonly attribute unsigned long ENUM_FLAG;
+    readonly attribute unsigned long AUTO_INCREMENT_FLAG;
+    readonly attribute unsigned long TIMESTAMP_FLAG;
+    readonly attribute unsigned long SET_FLAG;
+    readonly attribute unsigned long NO_DEFAULT_VALUE_FLAG;
+    readonly attribute unsigned long NUM_FLAG;
+
+
+
+
+
+    AString name();
+    AString orgName();
+    AString table();
+    AString orgTable();
+    AString db();
+    AString catalog();
+    AString def();
+
+    unsigned long length();
+    unsigned long maxLength();
+    unsigned long nameLength();
+    unsigned long orgNameLength();
+    unsigned long tableLength();
+    unsigned long orgTableLength();
+    unsigned long dbLength();
+    unsigned long catalogLength();
+    unsigned long defLength();
+    unsigned long flags();
+    unsigned long decimals();
+    unsigned long charsetnr();
+    unsigned long type();
+    AString typeName();
+
+
+};
+

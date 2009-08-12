@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/jsurl/test
+END
+test_bug384981.html
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/jsurl/test/test_bug384981.html
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/jsurl/test/Makefile.in
+END
+load-stopping-1a.html
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/jsurl/test/load-stopping-1a.html
+END
+test_bug351633-1.html
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/jsurl/test/test_bug351633-1.html
+END
+load-stopping-1b.html
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/jsurl/test/load-stopping-1b.html
+END
+test_bug351633-2.html
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/jsurl/test/test_bug351633-2.html
+END
+load-stopping-1c.html
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/jsurl/test/load-stopping-1c.html
+END
+test_bug351633-3.html
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/jsurl/test/test_bug351633-3.html
+END
+load-stopping-1d.html
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/jsurl/test/load-stopping-1d.html
+END
+test_bug351633-4.html
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/jsurl/test/test_bug351633-4.html
+END
+form-submit.html
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/jsurl/test/form-submit.html
+END
+pass.html
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/jsurl/test/pass.html
+END
+fail.html
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/src/jsurl/test/fail.html
+END

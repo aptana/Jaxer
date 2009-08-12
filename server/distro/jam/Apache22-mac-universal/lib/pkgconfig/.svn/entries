@@ -1,0 +1,52 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/distro/jam/Apache22-mac-universal/lib/pkgconfig
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-01-02T23:00:22.485051Z
+1463
+pcolton
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+apr-1.pc
+file
+
+
+
+
+2009-08-11T21:42:10.000000Z
+ca63f9566726cd16c62d4e487c759650
+2008-01-02T23:00:22.485051Z
+1463
+pcolton
+
+apr-util-1.pc
+file
+
+
+
+
+2009-08-11T21:42:10.000000Z
+807b7229a27e5e19da6de87c2ecf1a75
+2008-01-02T23:00:22.485051Z
+1463
+pcolton
+

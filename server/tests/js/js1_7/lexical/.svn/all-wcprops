@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/lexical
+END
+shell.js
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/lexical/shell.js
+END
+regress-355004.js
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/lexical/regress-355004.js
+END
+regress-355105.js
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/lexical/regress-355105.js
+END
+destructuring-order.js
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/lexical/destructuring-order.js
+END
+regress-351515.js
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/lexical/regress-351515.js
+END
+regress-346642-01.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/lexical/regress-346642-01.js
+END
+regress-346642-02.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/lexical/regress-346642-02.js
+END
+regress-352068.js
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/lexical/regress-352068.js
+END
+regress-346642-03.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/lexical/regress-346642-03.js
+END
+regress-336376-01.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/lexical/regress-336376-01.js
+END
+regress-346642-04.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/lexical/regress-346642-04.js
+END
+regress-352079.js
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/lexical/regress-352079.js
+END
+browser.js
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/lexical/browser.js
+END
+regress-346642-06.js
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_7/lexical/regress-346642-06.js
+END

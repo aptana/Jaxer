@@ -1,0 +1,94 @@
+[
+	{
+		"name": "default",
+		"build": [
+			  "server framework"
+			, "server api sdoc"
+			, "JSLib"
+			, "client framework" 
+		]
+	},
+	{
+		"name": "server framework",
+		"output": SERVER_OUTPUT,
+		"buildMode":"include",
+		"trace": true,
+		"files": [
+			  LICENSE_HEADER
+			, "frameworkStart.js"
+			, "Utilities/server_utilities.json"
+			, "Logging/server_logging.json"
+			, "Comm/server_comm.json"
+			, "IO/server_io.json"
+			, "Exception/server_exception.json"
+			, "DB/server_db.json"
+			, "System/server_system.json"
+			, "Threading/server_threading.json"
+			, "Cache/server_cache.json"
+			, "Container/server_container.json"
+			, "CoreEvents/server_core_events.json"
+			, "Sandbox/server_sandbox.json"
+			, "App/server_app.json"
+			, "Extend/server_extend.json"
+			, "Serialization/server_serialization.json"
+			, "Parsing/server_parsing.json"
+			, "packaging/packaging.json"
+			, "packaging/FunctionExtensions.sdoc"
+			, "packaging/Jaxer.sdoc"
+			, "frameworkEnd.js"
+			, "General/server_general.json"
+		]
+	},
+	{
+		"name": "server api sdoc",
+		"output": API_OUTPUT,
+		"trace": true,
+		"files": [
+			  LICENSE_HEADER
+			, "frameworkStart.js"
+			, "Utilities/server_utilities.json"
+			, "Logging/server_logging.json"
+			, "Comm/server_comm.json"
+			, "IO/server_io.json"
+			, "Exception/server_exception.json"
+			, "DB/server_db.json"
+			, "System/server_system.json"
+			, "Threading/server_threading.json"
+			, "Cache/server_cache.json"
+			, "Container/server_container.json"
+			, "CoreEvents/server_core_events.json"
+			, "Sandbox/server_sandbox.json"
+			, "App/server_app.json"
+			, "Extend/server_extend.json"
+			, "Serialization/server_serialization.json"
+			, "Parsing/server_parsing.json"
+			, "packaging/packaging.json"
+			, "packaging/FunctionExtensions.sdoc"
+			, "packaging/Jaxer.sdoc"
+			, "frameworkEnd.js"
+			, "General/server_general.json"
+		]
+	},
+	{
+		"name": "JSLib",
+		"output": JSLIB_OUTPUT,
+		"trace": true,
+		"files": [
+			  "jslib_header.txt"
+			, "JSLIB/jslib.json"
+		]
+	},
+	{
+		"name": "client framework",
+		"output": CLIENT_OUTPUT,
+		"compress": true,
+		"compress_prepend": COMPRESSED_LICENSE_HEADER,
+		"files": [
+			  LICENSE_HEADER
+			, "clientConfig.js"
+			, "Serialization/client_serialization.json"
+			, "Comm/client_comm.json"
+			, "Utilities/client_utilities.json"
+		]
+	}
+]

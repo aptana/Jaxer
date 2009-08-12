@@ -1,0 +1,13 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Regression test for single external script being served to client</title>
+	</head>
+	<body>
+		<script runat="server">
+			//set session key UnitTestKey to random value passed in as a query param.
+			Jaxer.SessionManager.keyToResponse('UnitTestKey',Jaxer.request.data.randomValue);
+		</script>
+	</body>
+</html>

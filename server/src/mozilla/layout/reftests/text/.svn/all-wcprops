@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/reftests/text
+END
+zwnj-01-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/text/zwnj-01-ref.html
+END
+white-space-1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/text/white-space-1-ref.html
+END
+zwnj-02-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/text/zwnj-02-ref.html
+END
+white-space-2-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/layout/reftests/text/white-space-2-ref.html
+END
+reftest.list
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/text/reftest.list
+END
+soft-hyphens-1a.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/text/soft-hyphens-1a.html
+END
+soft-hyphens-1b.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/text/soft-hyphens-1b.html
+END
+soft-hyphens-1c.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/text/soft-hyphens-1c.html
+END
+long-1.html
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/text/long-1.html
+END
+soft-hyphens-1-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/text/soft-hyphens-1-ref.html
+END
+zwnj-01.html
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/text/zwnj-01.html
+END
+zwnj-02.html
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/layout/reftests/text/zwnj-02.html
+END
+white-space-1a.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/reftests/text/white-space-1a.html
+END
+white-space-2.html
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/reftests/text/white-space-2.html
+END
+long-ref.html
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/layout/reftests/text/long-ref.html
+END
+white-space-1b.html
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/layout/reftests/text/white-space-1b.html
+END

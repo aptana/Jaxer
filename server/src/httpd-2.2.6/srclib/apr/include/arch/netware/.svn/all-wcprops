@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/include/arch/netware
+END
+apr_arch_internal_time.h
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/include/arch/netware/apr_arch_internal_time.h
+END
+apr_arch_pre_nw.h
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/include/arch/netware/apr_arch_pre_nw.h
+END
+apr_arch_thread_cond.h
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/include/arch/netware/apr_arch_thread_cond.h
+END
+apr_arch_threadproc.h
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/include/arch/netware/apr_arch_threadproc.h
+END
+apr_private.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/include/arch/netware/apr_private.h
+END
+apr_arch_networkio.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/include/arch/netware/apr_arch_networkio.h
+END
+apr_arch_global_mutex.h
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/include/arch/netware/apr_arch_global_mutex.h
+END
+apr_arch_dso.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/include/arch/netware/apr_arch_dso.h
+END
+apr_arch_proc_mutex.h
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/include/arch/netware/apr_arch_proc_mutex.h
+END
+apr_arch_file_io.h
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/include/arch/netware/apr_arch_file_io.h
+END
+apr_arch_thread_rwlock.h
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/include/arch/netware/apr_arch_thread_rwlock.h
+END
+apr_arch_thread_mutex.h
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/srclib/apr/include/arch/netware/apr_arch_thread_mutex.h
+END

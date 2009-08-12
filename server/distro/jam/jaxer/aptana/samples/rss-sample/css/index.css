@@ -1,0 +1,52 @@
+BODY {
+    background-color: #ddddff;
+    font-family: verdana;
+    font-size: 8pt;
+}
+
+#applicationContent {
+    border: 3px solid #B5B5DF;
+    padding: 0px;
+    background-color: #d0ddff;
+}
+
+#sampleHeader {
+    border: 1px #aaa solid;
+    background-color: #FFFFF1;
+    margin: 0 0 5px 0;
+    padding: 5px;
+    height: 1.4em;
+}
+
+.sampleTitle {
+    font-weight: 900;
+    float: left;
+}
+
+#rightFloat {
+    float: right;
+}
+
+html {
+	height: 95%;
+	width: 99%;
+	padding: 0;
+	margin: 0;
+}
+
+#contents {
+	width: 100%;
+	height: 95%;
+}
+
+#editOrSave {
+	width: 100%;
+}
+
+.readonly {
+	font: 8pt verdana;
+	background-color: #f0f0ff;
+	border: none;
+	padding: 8px;
+}
+			

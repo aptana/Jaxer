@@ -1,0 +1,55 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/embedding/wrappers
+http://svn.aptana.local/svn/jaxer
+
+
+
+2007-11-14T23:48:33.806633Z
+550
+jcohen
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:32:26.000000Z
+25a1d69ebc7ec4324c82e444efe09d38
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+DotNETEmbed
+dir
+
+readme.txt
+file
+
+
+
+
+2009-08-11T21:32:26.000000Z
+18180cc8532e308304f3876001c84f08
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+

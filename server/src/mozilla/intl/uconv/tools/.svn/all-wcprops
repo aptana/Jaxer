@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/tools
+END
+cp936tocdx.pl
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/tools/cp936tocdx.pl
+END
+genimpldefine.pl
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/tools/genimpldefine.pl
+END
+mozilla-xscii-hkscs-2001-ut.txt
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/tools/mozilla-xscii-hkscs-2001-ut.txt
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/tools/Makefile.in
+END
+unihan2cns.pl
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/tools/unihan2cns.pl
+END
+cp932tojdx.pl
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/tools/cp932tojdx.pl
+END
+gengb18030tables.pl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/tools/gengb18030tables.pl
+END
+adobe.pl
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/tools/adobe.pl
+END
+gen-big5hkscs-2001-mozilla.pl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/tools/gen-big5hkscs-2001-mozilla.pl
+END
+umaptable.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/tools/umaptable.c
+END
+cns.sh
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/tools/cns.sh
+END
+nonhan.txt
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/tools/nonhan.txt
+END
+parse-mozilla-encoding-table.pl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/tools/parse-mozilla-encoding-table.pl
+END
+mozilla-xscii-hkscs-2001-uf.txt
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/tools/mozilla-xscii-hkscs-2001-uf.txt
+END
+jis0212tojdx.pl
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/tools/jis0212tojdx.pl
+END
+jis0208fromcp932.pl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/tools/jis0208fromcp932.pl
+END

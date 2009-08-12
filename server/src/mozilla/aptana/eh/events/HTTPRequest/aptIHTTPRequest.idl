@@ -1,0 +1,196 @@
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+ * vim: set sw=4 ts=4 et: */
+/* ***** BEGIN LICENSE BLOCK *****
+ *  Version: GPL 3
+ * 
+ *  This program is Copyright (C) 2007-2008 Aptana, Inc. All Rights Reserved
+ *  This program is licensed under the GNU General Public license, version 3 (GPL).
+ * 
+ *  This program is distributed in the hope that it will be useful, but
+ *  AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+ *  NONINFRINGEMENT. Redistribution, except as permitted by the GPL,
+ *  is prohibited.
+ * 
+ *  You can redistribute and/or modify this program under the terms of the GPL, 
+ *  as published by the Free Software Foundation.  You should
+ *  have received a copy of the GNU General Public License, Version 3 along
+ *  with this program; if not, write to the Free Software Foundation, Inc., 51
+ *  Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  
+ *  Aptana provides a special exception to allow redistribution of this file
+ *  with certain other code and certain additional terms
+ *  pursuant to Section 7 of the GPL. You may view the exception and these
+ *  terms on the web at http://www.aptana.com/legal/gpl/.
+ *  
+ *  You may view the GPL, and Aptana's exception and additional terms in the file
+ *  titled license-jaxer.html in the main distribution folder of this program.
+ *  
+ *  Any modifications to this file must keep this entire header intact.
+ * 
+ * ***** END LICENSE BLOCK ***** */
+
+#include "nsISupports.idl"
+interface nsIInputStream;
+interface nsIFile;
+interface nsIStorageStream;
+interface nsIURL;
+
+
+%{ C++
+
+#define APT_HTTP_REQUEST_CID \
+{ 0x97111509, 0xf63, 0x47fa, { 0xaa, 0x1, 0xc2, 0xb1, 0x34, 0xd9, 0xe7, 0x74 } }
+
+#define APT_HTTP_REQUEST_CONTRACTID \
+	"@aptana.com/eh/httprequest;1"
+
+%}
+
+interface nsIDocShell;
+interface nsIDOMHTMLImageElement;
+
+/**
+ *
+ */
+[scriptable, uuid(8af8a826-b07d-4d79-82f6-d27e3e1c24c4)]
+interface aptIHTTPRequest : nsISupports
+{
+	/**
+     *        
+     */
+    attribute AString method;
+
+	/**
+     *        
+     */
+    attribute AString uri;
+
+	/**
+     *        
+     */
+    attribute AString protocol;
+
+	/**
+     *        
+     */
+    //attribute AString postData;
+
+
+    readonly attribute AString remoteUser;
+    readonly attribute AString remoteHost;
+    readonly attribute AString remoteAddr;
+    readonly attribute long remotePort;
+    readonly attribute long statusCode;
+
+    readonly attribute AString pageFile;
+    readonly attribute AString documentRoot;
+    readonly attribute ACString OS;
+    readonly attribute boolean isJaxerServer; /* OBSOLETED: use isHandler instead */
+    readonly attribute boolean isHandler;
+    readonly attribute boolean isHTTPS;
+	readonly attribute boolean isAdmin;
+    readonly attribute AString queryString;
+
+    
+	/**
+	 *
+	 */
+	//[noscript] void AppendPostData(in string aData);
+
+
+	unsigned long GetHeaderCount();
+
+	AString GetHeaderName(in unsigned long index);
+
+	AString GetValueByName(in AString name);
+
+	AString GetValueByOrd(in unsigned long index);
+
+	boolean HasHeader(in AString name);
+
+    [noscript] void AppendHeader(in AString name, in AString value);
+
+    boolean HasEnv(in AString name);
+    unsigned long GetEnvCount();
+    AString GetEnvName(in unsigned long index);
+    AString GetEnvValueByName(in AString name);
+    AString GetEnvValueByOrd(in unsigned long index);
+
+	[noscript] void AddEnv(in AString name, in AString value);
+
+	[noscript] void AddPostStringItem( in AString name, in AString value);
+	//[noscript] void AddPostDataItem( in AString name, [array, size_is(size)] in octet value, in AString ctype, in unsigned long size);
+	[noscript] void AddPostFileItem( in AString name, in AString fileName, in AString tmpFileName, in AString contentType, in unsigned long size);
+
+    [noscript] void SetRemoteUser(in AString val);
+    [noscript] void SetRemoteHost(in AString val);
+    [noscript] void SetRemoteAddr(in AString val);
+    [noscript] void SetRemotePort(in long val);
+    [noscript] void SetStatusCode(in long val);
+    [noscript] void SetIsHandler(in boolean bIsJaxerServer);
+    [noscript] void SetIsHTTPS(in boolean bIsHTTPS);
+	[noscript] void SetIsAdmin(in boolean bIsAdmin);
+    [noscript] void SetQueryString(in AString aData);
+    [noscript] void SetPageFile(in AString aData);
+    [noscript] void SetDocumentRoot(in AString aData);
+
+	boolean HasPostData();
+	unsigned long GetDataItemCount();
+	AString GetDataItemName( in unsigned long index);
+	AString GetDataItemValue( in unsigned long index);
+
+	[noscript] void SetRawPostDataBytes(in unsigned long size, [array, size_is(size)] in octet value);
+	[noscript] void SetRawPostDataFile(in unsigned long size, in nsIFile aFile);
+	[noscript] void SetRawPostDataContentType(in AString ctype);
+	
+	AString GetRawPostDataAsString();
+	AString GetRawPostDataContentType();
+	unsigned long GetRawPostDataLength();
+	void GetRawPostDataAsByteArray(out unsigned long aValueSize, [array,size_is(aValueSize)] out octet aValue);
+	nsIInputStream GetRawPostDataAsInputStream();
+
+	boolean HasFiles();
+	unsigned long GetFileCount();
+	AString GetFileName( in unsigned long index);
+	AString GetOriginalFileName( in unsigned long index);
+	AString GetTmpFileName( in unsigned long index);
+	AString GetFileContentType( in unsigned long index);
+	unsigned long GetFileSize( in unsigned long index);
+	boolean SaveFile( in unsigned long index, in AString destPath);
+
+    void ExecuteJavascript(in wstring script /* [, in string url [, in JSObject target_obj] ] */);
+
+    void CompileScript(in wstring script /* [, in string url [, in JSObject target_obj] ] */);
+    void RunScript(in wstring data /* [, in JSObject target_obj] */);
+
+	// This is a workaround for removing the uploaded tmp files.
+	[noscript] void RemoveUploadedTmpFiles();
+
+    // Native path of the log file
+    readonly attribute AString logFileNativePath;
+    void SetLogFileNativePath(in AString path);
+
+    void StopRequest();
+    void Exit();
+
+	/**
+	 * Set document stream.
+	 */
+	[noscript] void setDocumentStream(in nsIStorageStream stream);
+	
+	/**
+	 * Create a new input stream to read page data. Multiple, independent input streams
+	 * can be created.
+	 */
+	nsIInputStream getDocumentInputStream();
+
+	/**
+	 * Set document URL
+	 */
+	[noscript] void setDocumentURL(in nsIURL url);
+
+	readonly attribute nsIURL documentURL;
+		
+    void LoadImage(in nsIDOMHTMLImageElement image);
+};

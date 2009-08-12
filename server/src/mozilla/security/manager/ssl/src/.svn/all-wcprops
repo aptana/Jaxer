@@ -1,0 +1,593 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/3947/trunk/products/server/src/mozilla/security/manager/ssl/src
+END
+nsSDR.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsSDR.h
+END
+nsNSSIOLayer.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSIOLayer.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/3947/trunk/products/server/src/mozilla/security/manager/ssl/src/Makefile.in
+END
+nsCertPicker.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCertPicker.h
+END
+nsPKCS12Blob.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsPKCS12Blob.cpp
+END
+nsNTLMAuthModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNTLMAuthModule.cpp
+END
+nsProtectedAuthThread.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/ssl/src/nsProtectedAuthThread.cpp
+END
+nsCMSSecureMessage.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCMSSecureMessage.h
+END
+nsPKCS11Slot.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsPKCS11Slot.cpp
+END
+nsNSSShutDown.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSShutDown.h
+END
+pipnss.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/pipnss.pkg
+END
+nsCrypto.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCrypto.cpp
+END
+nsCRLManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCRLManager.h
+END
+nsCertTree.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCertTree.h
+END
+nsIdentityChecking.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/manager/ssl/src/nsIdentityChecking.cpp
+END
+nsCMS.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCMS.h
+END
+nsSmartCardEvent.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsSmartCardEvent.h
+END
+nsNSSIOLayer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/3947/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSIOLayer.cpp
+END
+nsPK11TokenDB.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsPK11TokenDB.h
+END
+nsSDR.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsSDR.cpp
+END
+nsNSSComponent.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSComponent.h
+END
+nsNSSCertValidity.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSCertValidity.h
+END
+nsNSSCleaner.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSCleaner.cpp
+END
+nsSmartCardMonitor.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsSmartCardMonitor.h
+END
+nsCMSSecureMessage.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCMSSecureMessage.cpp
+END
+nsKeyModule.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsKeyModule.h
+END
+nsSSLStatus.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/ssl/src/nsSSLStatus.cpp
+END
+nsNSSHelper.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSHelper.h
+END
+nsProtectedAuthThread.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/ssl/src/nsProtectedAuthThread.h
+END
+nsNSSCertificate.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSCertificate.h
+END
+nsKeygenThread.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsKeygenThread.h
+END
+nsNSSCertHelper.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSCertHelper.cpp
+END
+nsNSSCertificateDB.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSCertificateDB.h
+END
+nsSmartCardEvent.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/manager/ssl/src/nsSmartCardEvent.cpp
+END
+nsCMS.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCMS.cpp
+END
+nsSSLSocketProvider.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsSSLSocketProvider.cpp
+END
+nsKeygenHandler.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/ssl/src/nsKeygenHandler.h
+END
+nsNSSComponent.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSComponent.cpp
+END
+nsRandomGenerator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/manager/ssl/src/nsRandomGenerator.cpp
+END
+nsSmartCardMonitor.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsSmartCardMonitor.cpp
+END
+nsSSLThread.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/manager/ssl/src/nsSSLThread.cpp
+END
+nsTLSSocketProvider.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsTLSSocketProvider.h
+END
+nsStreamCipher.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsStreamCipher.h
+END
+nsCipherInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCipherInfo.h
+END
+nsCertVerificationThread.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCertVerificationThread.h
+END
+nsKeyModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/manager/ssl/src/nsKeyModule.cpp
+END
+nsNSSCleaner.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSCleaner.h
+END
+nsUsageArrayHelper.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsUsageArrayHelper.cpp
+END
+nsNSSCallbacks.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSCallbacks.cpp
+END
+nsNSSCertCache.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSCertCache.cpp
+END
+nsNSSCertificate.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSCertificate.cpp
+END
+nsNSSModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSModule.cpp
+END
+nsSSLStatus.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/ssl/src/nsSSLStatus.h
+END
+nsKeygenThread.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsKeygenThread.cpp
+END
+nsNSSCertificateDB.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSCertificateDB.cpp
+END
+nsNSSASN1Object.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSASN1Object.cpp
+END
+nsKeygenHandler.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/ssl/src/nsKeygenHandler.cpp
+END
+nsVerificationJob.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsVerificationJob.h
+END
+md4.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/md4.c
+END
+nsCertOverrideService.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCertOverrideService.h
+END
+nsNSSCertTrust.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSCertTrust.cpp
+END
+nsStreamCipher.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsStreamCipher.cpp
+END
+nsCipherInfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCipherInfo.cpp
+END
+nsNSSCertHelper.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSCertHelper.h
+END
+nsTLSSocketProvider.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsTLSSocketProvider.cpp
+END
+nsDataSignatureVerifier.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsDataSignatureVerifier.cpp
+END
+nsPSMBackgroundThread.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsPSMBackgroundThread.cpp
+END
+md4.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/md4.h
+END
+nsCertVerificationThread.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCertVerificationThread.cpp
+END
+nsSSLSocketProvider.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsSSLSocketProvider.h
+END
+nsOCSPResponder.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsOCSPResponder.h
+END
+nsCertPicker.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCertPicker.cpp
+END
+nsRandomGenerator.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/manager/ssl/src/nsRandomGenerator.h
+END
+nsRecentBadCerts.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/manager/ssl/src/nsRecentBadCerts.h
+END
+nsSSLThread.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/manager/ssl/src/nsSSLThread.h
+END
+nsNSSShutDown.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSShutDown.cpp
+END
+nsNSSCertHeader.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSCertHeader.h
+END
+nsNSSErrors.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSErrors.cpp
+END
+nsCRLInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCRLInfo.h
+END
+nsNTLMAuthModule.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNTLMAuthModule.h
+END
+nsPKCS12Blob.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsPKCS12Blob.h
+END
+nsNSSCallbacks.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSCallbacks.h
+END
+nsUsageArrayHelper.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsUsageArrayHelper.h
+END
+nsPKCS11Slot.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsPKCS11Slot.h
+END
+nsNSSCertCache.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSCertCache.h
+END
+nsCRLManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCRLManager.cpp
+END
+nsCertTree.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCertTree.cpp
+END
+nsCertOverrideService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCertOverrideService.cpp
+END
+nsNSSASN1Object.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSASN1Object.h
+END
+nsPK11TokenDB.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsPK11TokenDB.cpp
+END
+nsCrypto.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCrypto.h
+END
+nsOCSPResponder.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsOCSPResponder.cpp
+END
+nsNSSCertValidity.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSCertValidity.cpp
+END
+nsNSSCertTrust.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsNSSCertTrust.h
+END
+nsRecentBadCerts.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/manager/ssl/src/nsRecentBadCerts.cpp
+END
+nsCRLInfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsCRLInfo.cpp
+END
+nsDataSignatureVerifier.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsDataSignatureVerifier.h
+END
+nsPSMBackgroundThread.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/security/manager/ssl/src/nsPSMBackgroundThread.h
+END

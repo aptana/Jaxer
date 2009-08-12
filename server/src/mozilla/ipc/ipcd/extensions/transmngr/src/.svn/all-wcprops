@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/ipc/ipcd/extensions/transmngr/src
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/extensions/transmngr/src/Makefile.in
+END
+tmTransactionService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/extensions/transmngr/src/tmTransactionService.cpp
+END
+tmTransactionService.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/ipc/ipcd/extensions/transmngr/src/tmTransactionService.h
+END

@@ -1,0 +1,184 @@
+<html>
+    <head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+        <script type="text/javascript" runat="server">
+            function test_TextParser_MultilineCommentRange()
+            {
+                var source = "/*\n" +
+                " *\n" +
+                " *\n" +
+                " */\n" +
+                "function abc(a, b, c) {\n" +
+                "}";
+                var ranges = Jaxer.TextParser.getCommentRanges(source);
+                assertEquals(1, ranges.length);
+                
+                var range = ranges[0];
+                assertEquals(0, range.start);
+                assertEquals(12, range.end);
+            }
+            
+            function test_TextParser_SinglelineCommentRange()
+            {
+                var source = "// comment\n" +
+                "function abc(a, b, c) {\n" +
+                "}";
+                var ranges = Jaxer.TextParser.getCommentRanges(source);
+                assertEquals(1, ranges.length);
+                
+                var range = ranges[0];
+                assertEquals(0, range.start);
+                assertEquals(10, range.end);
+            }
+            
+            function test_TextParser_CommentRanges()
+            {
+                var source = "/*\n" +
+                " *\n" +
+                " *\n" +
+                " */\n" +
+                "function abc(a, b, c) {\n" +
+                "}\n" +
+                "// comment\n" +
+                "function abc(a, b, c) {\n" +
+                "}";
+                var ranges = Jaxer.TextParser.getCommentRanges(source);
+                assertEquals(2, ranges.length);
+                
+                var range = ranges[0];
+                assertEquals(0, range.start);
+                assertEquals(12, range.end);
+                
+                range = ranges[1];
+                assertEquals(39, range.start);
+                assertEquals(49, range.end);
+            }
+            
+            function abc()
+            {
+                // needed for unit test
+            }
+            
+            function test_TextParser_NoParamFunction()
+            {
+                var source = "// comment\n" +
+                "function abc() {\n" +
+                "}";
+                var infos = Jaxer.TextParser.getFunctionInfos(source);
+                assertEquals(1, infos.length);
+                
+                var info = infos[0];
+                assertEquals("abc", info.name);
+                
+                var params = info.parameterNames;
+                assertEquals(0, params.length);
+            }
+            
+            function test_TextParser_NoParamFunction2()
+            {
+                var source = "// comment\n" +
+                "function abc(   ) {\n" +
+                "}";
+                var infos = Jaxer.TextParser.getFunctionInfos(source);
+                assertEquals(1, infos.length);
+                
+                var info = infos[0];
+                assertEquals("abc", info.name);
+                
+                var params = info.parameterNames;
+                assertEquals(0, params.length);
+            }
+            
+            function test_TextParser_NoParamFunction3()
+            {
+                var source = "// comment\n" +
+                "function abc(\n" +
+                ") {\n" +
+                "}";
+                var infos = Jaxer.TextParser.getFunctionInfos(source);
+                assertEquals(1, infos.length);
+                
+                var info = infos[0];
+                assertEquals("abc", info.name);
+                
+                var params = info.parameterNames;
+                assertEquals(0, params.length);
+            }
+            
+            function test_TextParser_NoParamFunction4()
+            {
+                var source = "// comment\n" +
+                "function abc\n" +
+                "()\n" +
+                "{}";
+                var infos = Jaxer.TextParser.getFunctionInfos(source);
+                assertEquals(1, infos.length);
+                
+                var info = infos[0];
+                assertEquals("abc", info.name);
+                
+                var params = info.parameterNames;
+                assertEquals(0, params.length);
+            }
+            
+            function def(a, b, c)
+            {
+                // needed for unit test
+            }
+            
+            function test_TextParser_Function()
+            {
+                var source = "// comment\n" +
+                "function def(a, b, c) {\n" +
+                "}";
+                var infos = Jaxer.TextParser.getFunctionInfos(source);
+                assertEquals(1, infos.length);
+                
+                var info = infos[0];
+                assertEquals("def", info.name);
+                
+                var params = info.parameterNames;
+                assertEquals(3, params.length);
+                
+                assertEquals("a", params[0]);
+                assertEquals("b", params[1]);
+                assertEquals("c", params[2]);
+            }
+            
+            function test_TextParser_FunctionInMultilineComment()
+            {
+                var source = "/*\n" +
+                "function def(a, b, c) {\n" +
+                "}\n" +
+                "*/";
+                var infos = Jaxer.TextParser.getFunctionInfos(source);
+                assertEquals(0, infos.length);
+            }
+            
+            function test_TextParser_FunctionInSinglelineComment()
+            {
+                var source = "// function def(a, b, c) {}\n";
+                var infos = Jaxer.TextParser.getFunctionInfos(source);
+                assertEquals(0, infos.length);
+            }
+            
+            function test_TextParser_Functions()
+            {
+                var source = "function abc() {} \n" +
+                "function def() {}";
+                var infos = Jaxer.TextParser.getFunctionInfos(source);
+                assertEquals(2, infos.length);
+                
+                var info = infos[0];
+                assertEquals("abc", info.name);
+                
+                info = infos[1];
+                assertEquals("def", info.name);
+            }
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/jaxer/!svn/ver/3584/trunk/products/server/aptana_license
+END
+JaxerMozLicense.txt
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/1372/trunk/products/server/aptana_license/JaxerMozLicense.txt
+END
+modified_file_list.txt
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/3584/trunk/products/server/aptana_license/modified_file_list.txt
+END
+JaxerLicense.txt
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/1372/trunk/products/server/aptana_license/JaxerLicense.txt
+END
+update_license.py
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/2826/trunk/products/server/aptana_license/update_license.py
+END

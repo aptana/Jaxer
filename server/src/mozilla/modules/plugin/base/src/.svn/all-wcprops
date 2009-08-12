@@ -1,0 +1,185 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/modules/plugin/base/src
+END
+nsPluginNativeWindow.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginNativeWindow.cpp
+END
+nsPluginsDirWin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginsDirWin.cpp
+END
+nsPluginDirServiceProvider.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginDirServiceProvider.h
+END
+ns4xPluginInstance.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/plugin/base/src/ns4xPluginInstance.cpp
+END
+nsPluginInstancePeer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginInstancePeer.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/src/Makefile.in
+END
+ns4xPluginStreamListener.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/plugin/base/src/ns4xPluginStreamListener.h
+END
+nsPluginsDirOS2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginsDirOS2.cpp
+END
+nsPluginModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginModule.cpp
+END
+ns4xPluginInstance.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/plugin/base/src/ns4xPluginInstance.h
+END
+nsPluginInstancePeer.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginInstancePeer.h
+END
+extradefs.os2
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/src/extradefs.os2
+END
+nsPluginsDirUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginsDirUtils.h
+END
+ns4xPlugin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/modules/plugin/base/src/ns4xPlugin.cpp
+END
+nsPluginNativeWindowWin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginNativeWindowWin.cpp
+END
+nsPluginHostImpl.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginHostImpl.cpp
+END
+nsJSNPRuntime.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/modules/plugin/base/src/nsJSNPRuntime.cpp
+END
+ns4xPlugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/plugin/base/src/ns4xPlugin.h
+END
+nsPluginSafety.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginSafety.h
+END
+nsPluginNativeWindowOS2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginNativeWindowOS2.cpp
+END
+nsPluginHostImpl.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginHostImpl.h
+END
+nsJSNPRuntime.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/modules/plugin/base/src/nsJSNPRuntime.h
+END
+nsPluginsDirUnix.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginsDirUnix.cpp
+END
+nsPluginManifestLineReader.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginManifestLineReader.h
+END
+nsPluginNativeWindowGtk2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginNativeWindowGtk2.cpp
+END
+nsPluginsDir.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginsDir.h
+END
+nsPluginsDirDarwin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginsDirDarwin.cpp
+END
+nsPluginDirServiceProvider.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginDirServiceProvider.cpp
+END
+nsPluginsDirBeOS.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/src/nsPluginsDirBeOS.cpp
+END
+plugin.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/base/src/plugin.pkg
+END

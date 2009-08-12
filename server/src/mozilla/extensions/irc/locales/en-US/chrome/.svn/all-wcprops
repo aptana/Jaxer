@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/irc/locales/en-US/chrome
+END
+browserOverlay.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/locales/en-US/chrome/browserOverlay.dtd
+END
+config.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/irc/locales/en-US/chrome/config.dtd
+END
+pref-irc.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/locales/en-US/chrome/pref-irc.dtd
+END
+channels.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/locales/en-US/chrome/channels.dtd
+END
+chatzilla.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/locales/en-US/chrome/chatzilla.dtd
+END
+chatzilla.properties
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/irc/locales/en-US/chrome/chatzilla.properties
+END
+chatzillaOverlay.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/locales/en-US/chrome/chatzillaOverlay.dtd
+END
+ceip.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/irc/locales/en-US/chrome/ceip.dtd
+END

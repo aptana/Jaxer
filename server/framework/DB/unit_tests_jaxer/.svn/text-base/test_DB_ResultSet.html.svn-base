@@ -1,0 +1,193 @@
+<html>
+	<head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+		<title>Test DB ResultSet</title>
+	</head>
+	<body>
+		<script runat="server">
+			
+			function testResultSetBasics()
+			{
+				var db = Jaxer.DB;
+				var conn = Jaxer.DB.connection;
+				db.execute("CREATE TABLE IF NOT EXISTS testResultSetGGAPI (id INTEGER PRIMARY KEY AUTO_INCREMENT, first TEXT, last TEXT, col4 TEXT, col5 TEXT)");
+				try 
+				{
+					
+					db.execute("DELETE FROM testResultSetGGAPI");
+					db.execute("INSERT INTO testResultSetGGAPI (first, last, col4, col5) VALUES (?, ?, ?, ?)", ["Marco", "Polo","hp" ,"p"]);
+					var idMarco = conn.lastInsertRowId;
+					db.execute("INSERT INTO testResultSetGGAPI (first, last, col4, col5) VALUES (?, ?, ?, ?)", ["Hank", "Aaron","ha" ,"a"]);
+					db.execute("INSERT INTO testResultSetGGAPI (first, last, col4, col5) VALUES (?, ?, ?, ?)", ["Groucho", "Marx","gm" ,"m"]);
+					db.execute("INSERT INTO testResultSetGGAPI (first, last, col4, col5) VALUES (?, ?, ?, ?)", ["Harpo", "Marx","hm" ,"m"]);
+					var idHarpo = db.lastInsertRowId;
+					var rs = db.execute("SELECT * FROM testResultSetGGAPI");
+		
+					assertEquals(rs.rows.length, 4, "There should be 4 rows");
+					assertEquals(rs.columns.length, 5, "There should be 5 columns");
+					assertEquals(rs.columns[2], 'last', "The third column name should be 'last'");
+					assertEquals(rs.rows[3].first, 'Harpo', "The cell in the fourth row and the column called 'first' should have a value 'Harpo'");
+					assertEquals(rs.rows[0].id, idMarco, "The value of lastInsertRowId right after INSERTing Marco should have been " + rs.rows[0].id)
+					assertEquals(rs.rows[3].id, idHarpo, "The value of lastInsertRowId right after INSERTing Harpo should have been " + rs.rows[3].id)
+					
+					var arr1 = rs.singleRow;
+					assertEquals(arr1.__count__,5, "The length of singleRow should be 5 found " + arr1.__count__);
+					
+					var arr1 = rs.firstRow;
+					assertEquals(arr1.__count__,5, "The length of firstRow should be 5 found " + arr1.__count__);
+					
+					var arr1 = rs.finalRow;
+					assertEquals(arr1.__count__,5, "The length of finalRow should be 5 found " + arr1.__count__);
+			
+					var arr1 = rs.singleColumn;
+					assertEquals(arr1.length,4, "The length of singleColumn should be 4 found " + arr1.length);
+					
+					var arr1 = rs.columnsAsArray(2);
+					assertEquals(arr1.length,4, "The length of columnsAsArray(2) should be 4 found " + arr1.length);
+					
+					var arr1 = rs.columnsAsArray(2,4);
+					assertEquals(arr1.length,4, "The length of columnsAsArray(2,4) should be 4 found " + arr1.length);
+					assertEquals(arr1[0].length,2, "The length of columnsAsArray(2,4)[0] should be 2 found " + arr1.length);
+			
+					var arr1 = rs.columnsAsArray('first','last');
+					assertEquals(arr1.length,4, "The length of columnsAsArray('first','last') should be 4 found " + arr1.length);
+					assertEquals(arr1[0].length,2, "The length of columnsAsArray('first','last')[0] should be 2 found " + arr1.length);
+					
+					var arr1 = rs.singleRowAsArray('first',3,'col5');
+					assertEquals(arr1.length,3, "The length of singleRowAsArray('first',3,'col5')[0] should be 3 found " + arr1.length);
+					
+					var arr1 = rs.firstRowAsArray(1,3,'col5');
+					assertEquals(arr1.length,3, "The length of firstRowAsArray(1,3,'col5')[0] should be 3 found " + arr1.length);
+					
+					var arr1 = rs.finalRowAsArray('first',3,'col5');
+					assertEquals(arr1.length,3, "The length of finalRowAsArray('first',3,'col5')[0] should be 3 found " + arr1.length);
+					
+					var arr1 = rs.lastRowAsArray(1,3,'col5');
+					assertEquals(arr1.length,3, "The length of columnsAsArray(1,3,'col5')[0] should be 3 found " + arr1.length);
+			
+					var arr1 = rs.map( function(row,index){return row[2]+":"+row[3]} );
+					assertEquals(arr1.length,4, "The length of rs.map should be 4 found " + arr1.length);
+					
+					assertEquals(arr1[0],"Polo:hp", "");
+					assertEquals(arr1[1],"Aaron:ha", "");
+					assertEquals(arr1[2],"Marx:gm", "");
+					assertEquals(arr1[3],"Marx:hm", "");
+			
+					var arr1 = rs.reduce( function(a,b) {
+						return a.concat(b[1])
+						}
+					, 	[] );
+					
+					assertEquals(arr1.length,4, "The length of rs.reduce should be 4 found " + arr1.length);
+					
+					assertEquals(arr1[0],"Marco", "");
+					assertEquals(arr1[1],"Hank", "");
+					assertEquals(arr1[2],"Groucho", "");
+					assertEquals(arr1[3],"Harpo", "");
+			
+					var arr1 = rs.reduceRight( function(a,b){return a.concat(b[0]>2)}, [] );
+					
+					assertEquals(arr1[0],true, "");
+					assertEquals(arr1[1],true, "");
+					assertEquals(arr1[2],false, "");
+					assertEquals(arr1[3],false, "");
+					
+					var idx = rs.indexOf(2,'Marx');
+					assertEquals(idx,2, "indexOf(2,'Marx') expected 2, found " + idx);
+					
+					var idx = rs.indexOf('last','Aaron');
+					assertEquals(idx,1, "indexOf('last','Aaron') expected 1, found " + idx);
+			
+					var idx = rs.lastIndexOf(2,'Marx');
+					assertEquals(idx,3, "lastIndexOf(2,'Marx') expected 3, found " + idx);
+				
+					var idx = rs.lastIndexOf('last','Marx');
+					assertEquals(idx,3, "lastIndexOf('last','Marx') expected 3, found " + idx);
+			
+					var counter = 0;
+					rs.forEach( function(element,index){ counter++ }, this);
+					
+					assertEquals(counter,4, "forEach expected 4, found " + counter);
+			
+					var arr1 = rs.filter( function(element) {return /Marx/.test(element[2])});
+					assertEquals(arr1.length,2, "filter expected 2, found " + arr1.length);
+			
+					var allElements = rs.every( function(element) {return element[0]<5});
+					assertEquals(allElements,true, "every expected true, found " + allElements);
+					
+					var allElements = rs.every( function(element) {return /Marx/.test(element[2])} );
+					assertEquals(allElements,false, "every expected false, found " + allElements);
+					
+					var someElements = rs.some( function(element) {return element[0]<2});
+					assertEquals(someElements,true, "every expected true, found " + someElements);
+					
+					var someElements = rs.some( function(element) {return /NONE/.test(element[2])} );
+					assertEquals(someElements,false, "every expected false, found " + someElements);
+					
+					var marxBros = [];
+					var others = [];
+					
+				    var f = function(element) { return /Marx/.test(element[2]) };
+					
+					[marxBros, others] = rs.split( f );
+					
+					assertEquals(marxBros.length,2, "split matched expected 2, found " + marxBros.length);
+					assertEquals(marxBros[0][2],'Marx', "split matched expected 'Marx', found " + marxBros[0][2]);
+					assertEquals(others.length,2, "split not matched expected 2, found " + others.length);
+					assertEquals(others[0][2],'Polo', "split not matched expected 'Polo', found " + others[0][2]);
+	
+					var rowIndex = 0;
+					while (rs.isValidRow()) 
+					{
+						var row = rs.rows[rowIndex];
+						var rowAsArray = rs.rowsAsArrays[rowIndex];
+						assertEquals(rs.fieldName(0), "id", "The first field name should be 'id'");
+						assertEquals(rs.field(0), rowAsArray[0], "The first field value should be " + rowAsArray[0]);
+						assertEquals(rs.fieldName(1), "first", "The second field name should be 'first'");
+						assertEquals(rs.fieldByName("first"), row.first, "The field named 'first' should have a value '" + row.first + "'");
+						rs.next();
+						rowIndex++;
+					}
+					rs.close();
+					assertEquals(rowIndex, 4, "There should have been 4 rows to iterate over");
+					var rs2 = db.execute("SELECT * FROM testResultSetGGAPI WHERE first=? AND last=?", ["Groucho", "Marx"]);
+					assertEquals(rs2.rows.length, 1, "There should be 1 row");
+					rs2.close();
+					var rs3 = db.execute("SELECT * FROM testResultSetGGAPI WHERE first=? AND last=?", "Groucho", "Marx");
+					assertEquals(rs3.rows.length, 1, "There should be 1 row");
+					rs3.close();
+					var rs4 = db.execute("SELECT * FROM testResultSetGGAPI WHERE first=?", "Groucho");
+					assertEquals(rs4.rows.length, 1, "There should be 1 row");
+					rs4.close();
+					
+					var rs5 = db.execute("SELECT * FROM testResultSetGGAPI where 0=1");
+					var arr1 = rs5.singleRow;
+					assertEquals(arr1.__count__,0, "The length of singleRow should be 0 found " + arr1.__count__);
+					
+					var arr1 = rs5.firstRow;
+					assertEquals(arr1.__count__,0, "The length of firstRow should be 0 found " + arr1.__count__);
+					
+					var arr1 = rs5.finalRow;
+					assertEquals(arr1.__count__,0, "The length of finalRow should be 0 found " + arr1.__count__);
+			
+					var arr1 = rs5.singleColumn;
+					assertEquals(arr1.length,0, "The length of singleColumn should be 0 found " + arr1.length);
+					
+					var arr1 = rs5.columnsAsArray(2);
+					assertEquals(arr1.length,0, "The length of columnsAsArray(2) should be 0 found " + arr1.length);
+					
+					var arr1 = rs5.columnsAsArray(2,4);
+					assertEquals(arr1.length,0, "The length of columnsAsArray(2,4) should be 4 found " + arr1.length);
+
+				}
+				finally 
+				{
+					db.execute("DROP TABLE testResultSetGGAPI");
+				}
+			}
+			
+		</script>
+	</body>
+</html>

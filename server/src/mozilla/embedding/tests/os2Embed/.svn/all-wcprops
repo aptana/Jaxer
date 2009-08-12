@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/embedding/tests/os2Embed
+END
+WebBrowserChrome.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/os2Embed/WebBrowserChrome.cpp
+END
+os2embed.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/os2Embed/os2embed.pkg
+END
+SMALL.ICO
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/os2Embed/SMALL.ICO
+END
+os2Embed.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/os2Embed/os2Embed.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/os2Embed/Makefile.in
+END
+os2Embed.rc
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/os2Embed/os2Embed.rc
+END
+WebBrowserChrome.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/os2Embed/WebBrowserChrome.h
+END
+os2Embed.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/os2Embed/os2Embed.h
+END
+WindowCreator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/os2Embed/WindowCreator.cpp
+END
+os2Embed.ICO
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/os2Embed/os2Embed.ICO
+END
+WindowCreator.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/os2Embed/WindowCreator.h
+END
+resource.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/os2Embed/resource.h
+END

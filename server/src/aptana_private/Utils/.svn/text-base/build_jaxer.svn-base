@@ -1,0 +1,39 @@
+#!/bin/sh
+# Start/stop the jaxer build process
+#
+### BEGIN INIT INFO
+# Provides:          local_build.sh
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: The Jaxer build script
+# Description:       This is the script that should be run on each build server to
+#                    build jaxer consistently whenever there is a check in.
+### END INIT INFO
+
+BUILD_SCRIPT=/home/build/dev/trunk/products/server/tools/local_build.sh
+
+test -f $BUILD_SCRIPT || exit 0
+
+. /lib/lsb/init-functions
+
+case "$1" in
+start)	log_daemon_msg "Starting jaxer build script" "jaxer"
+        start-stop-daemon --start -c build --quiet -b --name local_build.sh --startas $BUILD_SCRIPT
+	;;
+stop)	log_daemon_msg "Stopping jaxer build script" "jaxer"
+        killall local_build.sh
+        log_end_msg $?
+        ;;
+restart) log_daemon_msg "Restarting jaxer build script" "jaxer" 
+        killall local_build.sh
+        start-stop-daemon --start -c build --quiet -b --name local_build.sh --startas $BUILD_SCRIPT
+        ;;
+reload|force-reload) log_daemon_msg "Reloading jaxer build config files" "jaxer"
+	# nothing to do
+        log_end_msg 0
+        ;;
+*)	log_action_msg "Usage: /etc/init.d/build_jaxer {start|stop|restart|reload|force-reload}"
+        exit 2
+        ;;
+esac
+exit 0

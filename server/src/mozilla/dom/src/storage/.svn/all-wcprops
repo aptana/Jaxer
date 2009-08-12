@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/src/storage
+END
+nsDOMStorageDB.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/src/storage/nsDOMStorageDB.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/src/storage/Makefile.in
+END
+nsDOMStorage.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/src/storage/nsDOMStorage.cpp
+END
+nsDOMStorage.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/dom/src/storage/nsDOMStorage.h
+END
+nsDOMStorageDB.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/dom/src/storage/nsDOMStorageDB.cpp
+END

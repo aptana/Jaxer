@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/netwerk/dns/src
+END
+nsHostResolver.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/netwerk/dns/src/nsHostResolver.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/dns/src/Makefile.in
+END
+nameprepdata.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/dns/src/nameprepdata.c
+END
+nsIDNService.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/netwerk/dns/src/nsIDNService.h
+END
+nameprep_template.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/dns/src/nameprep_template.c
+END
+nsHostResolver.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/dns/src/nsHostResolver.h
+END
+nameprep.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/dns/src/nameprep.c
+END
+nsIDNKitInterface.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/dns/src/nsIDNKitInterface.h
+END
+race.c
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/dns/src/race.c
+END
+effective_tld_names.dat
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/dns/src/effective_tld_names.dat
+END
+nsEffectiveTLDService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/dns/src/nsEffectiveTLDService.cpp
+END
+punycode.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/dns/src/punycode.c
+END
+nsDNSService2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/netwerk/dns/src/nsDNSService2.cpp
+END
+prepare_tlds.py
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/dns/src/prepare_tlds.py
+END
+punycode.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/dns/src/punycode.h
+END
+nsEffectiveTLDService.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/netwerk/dns/src/nsEffectiveTLDService.h
+END
+nsIDNService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/netwerk/dns/src/nsIDNService.cpp
+END
+nsDNSService2.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/dns/src/nsDNSService2.h
+END

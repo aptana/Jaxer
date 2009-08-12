@@ -1,0 +1,68 @@
+<html>
+    <head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+        <script type="text/javascript" runat="server">
+        	function test_SerializeData_XMLDocument()
+			{
+				var parser = new DOMParser();
+				var doc = parser.parseFromString("<test><item name='Apple'/></test>", "text/xml");
+				var expected = "\"~XMLDocument:<test><item name=\\\"Apple\\\"/></test>~\"";
+				var result = Jaxer.Serialization.toJSONString(doc, {as: Jaxer.Serialization.JAXER_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_Deserialization_XMLDocument()
+			{
+				var json = "\"~XMLDocument:<test><item name=\\\"Apple\\\"/></test>~\"";
+				var result = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.JAXER_METHOD});
+				
+				assertSame(XMLDocument, result.constructor);
+				
+				var serializer = new window.XMLSerializer();
+				var xml = serializer.serializeToString(result);
+				var expected = "<test><item name=\"Apple\"/></test>";
+				
+				assertEquals(xml, expected);
+			}
+
+			function getXMLDoc()
+			{
+				return Jaxer.Web.get("testData1.xml", {as: 'xml'});
+			}
+			getXMLDoc.proxy = true;
+			
+			function test_XMLOnServer_XMLOnClient()
+			{
+				if (!window.ActiveXObject && !window.XMLSerializer)
+				{
+					throw "SKIPPED - This test requires an XML serializer on the client";
+				}
+				
+				var docFromJaxer = getXMLDoc();
+				var url = window.location.pathname.replace(/[^\/]*$/, '') + 'testData1.xml';
+				var docFromWebServer = Jaxer.XHR.send(null, {url: url, as: 'xml', async: false});
+				var xmlFromJaxer, xmlFromWebServer;
+				
+				if (window.ActiveXObject)
+				{
+					xmlFromJaxer = docFromJaxer.xml;
+					xmlFromWebServer = docFromWebServer.xml;
+				}
+				else
+				{
+					var serializer = new window.XMLSerializer();
+					xmlFromJaxer = serializer.serializeToString(docFromJaxer);
+					xmlFromWebServer = serializer.serializeToString(docFromWebServer);
+				}
+				
+				assertEquals(xmlFromJaxer, xmlFromWebServer, "Should have had the same XML contents");
+			}
+			test_XMLOnServer_XMLOnClient.runat = 'client';
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

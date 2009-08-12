@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/pref/autoconfig/src
+END
+nsConfigFactory.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/pref/autoconfig/src/nsConfigFactory.cpp
+END
+nsAutoConfig.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/pref/autoconfig/src/nsAutoConfig.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/pref/autoconfig/src/Makefile.in
+END
+nsReadConfig.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/extensions/pref/autoconfig/src/nsReadConfig.cpp
+END
+nsLDAPSyncQuery.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/extensions/pref/autoconfig/src/nsLDAPSyncQuery.cpp
+END
+nsAutoConfig.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/pref/autoconfig/src/nsAutoConfig.h
+END
+prefcalls.js
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/pref/autoconfig/src/prefcalls.js
+END
+nsReadConfig.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/pref/autoconfig/src/nsReadConfig.h
+END
+nsLDAPSyncQuery.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/pref/autoconfig/src/nsLDAPSyncQuery.h
+END
+nsJSConfigTriggers.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/pref/autoconfig/src/nsJSConfigTriggers.cpp
+END
+autoconfig.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/pref/autoconfig/src/autoconfig.pkg
+END

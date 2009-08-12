@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/storage/src
+END
+mozStorage.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/storage/src/mozStorage.h
+END
+mozStorageConnection.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/storage/src/mozStorageConnection.h
+END
+mozStorageStatement.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2868/trunk/products/server/src/mozilla/storage/src/mozStorageStatement.cpp
+END
+mozStorageUnicodeFunctions.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/storage/src/mozStorageUnicodeFunctions.h
+END
+mozStorageService.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/storage/src/mozStorageService.h
+END
+mozStorageStatementWrapper.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/storage/src/mozStorageStatementWrapper.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/storage/src/Makefile.in
+END
+mozStorageStatement.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/storage/src/mozStorageStatement.h
+END
+mozStorageStatementWrapper.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/storage/src/mozStorageStatementWrapper.h
+END
+mozStorageValueArray.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/storage/src/mozStorageValueArray.cpp
+END
+mozStorageConnection.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/storage/src/mozStorageConnection.cpp
+END
+mozStorageUnicodeFunctions.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/storage/src/mozStorageUnicodeFunctions.cpp
+END
+mozStorageService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/storage/src/mozStorageService.cpp
+END
+mozStorageValueArray.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/storage/src/mozStorageValueArray.h
+END

@@ -1,0 +1,10 @@
+/*
+	category: Jaxer
+	name: LST Snippet Template
+	prompt(name): Enter the name for this snippet
+*/
+/*
+	category: Jaxer
+	name: ${name}
+	toolTip: ${name}
+*/

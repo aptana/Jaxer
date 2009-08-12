@@ -1,0 +1,74 @@
+<html>
+    <head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+        <script type="text/javascript" runat="server">
+      		function test_SerializeData_Cycles()
+			{
+				var html = { name: "html", parent: null, children: [] };
+				var head = { name: "head", parent: html, children: [] };
+				var body = { name: "body", parent: html, children: [] };
+				
+				html.children.push(head);
+				html.children.push(body);
+				var expected = "[" +
+					"{\"name\":\"html\",\"parent\":null,\"children\":\"~1~\"}," +
+					"[\"~2~\",\"~3~\"]," +
+					"{\"name\":\"head\",\"parent\":\"~0~\",\"children\":[]}," +
+					"{\"name\":\"body\",\"parent\":\"~0~\",\"children\":[]}" +
+				"]";
+				var result = Jaxer.Serialization.toJSONString(html, {as: Jaxer.Serialization.JAXER_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_DeserializeData_Cycles()
+			{
+				var json =
+					'[' +
+						'{ "name": "html", "parent": null, "children": "~1~" },' +
+						'[ "~2~", "~3~" ],' +
+						'{ "name": "head", "parent": "~0~", "children": [] },' +
+						'{ "name": "body", "parent": "~0~", "children": [] }' +
+					']';
+				var html = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.JAXER_METHOD});
+				var itemGlobal = (typeof html.__parent__ == "undefined") ? window : html.__parent__;
+
+				// check return type
+				assertEquals("object", typeof html);
+				
+				// check properties
+				assertTrue(html.hasOwnProperty("name"));
+				assertTrue(html.hasOwnProperty("parent"));
+				assertTrue(html.hasOwnProperty("children"));
+				assertEquals(html.name, "html");
+				assertNull(html.parent);
+				assertSame(itemGlobal.Array, html.children.constructor, html.children);
+				assertEquals(html.children.length, 2);
+				
+				// check first child
+				var child1 = html.children[0];
+				assertTrue(child1.hasOwnProperty("name"));
+				assertTrue(child1.hasOwnProperty("parent"));
+				assertTrue(child1.hasOwnProperty("children"));
+				assertEquals(child1.name, "head");
+				assertSame(html, child1.parent);
+				assertSame(itemGlobal.Array, child1.children.constructor, html.children);
+				assertEquals(0, child1.children.length);
+				
+				// check second child
+				var child2 = html.children[1];
+				assertTrue(child2.hasOwnProperty("name"));
+				assertTrue(child2.hasOwnProperty("parent"));
+				assertTrue(child2.hasOwnProperty("children"));
+				assertEquals(child2.name, "body");
+				assertSame(html, child2.parent);
+				assertSame(itemGlobal.Array, child2.children.constructor, html.children);
+				assertEquals(0, child2.children.length);
+			}
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

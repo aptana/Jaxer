@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/uriloader/exthandler/beos
+END
+nsMIMEInfoBeOS.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/exthandler/beos/nsMIMEInfoBeOS.h
+END
+nsOSHelperAppService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/uriloader/exthandler/beos/nsOSHelperAppService.cpp
+END
+nsOSHelperAppService.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/uriloader/exthandler/beos/nsOSHelperAppService.h
+END
+nsMIMEInfoBeOS.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/exthandler/beos/nsMIMEInfoBeOS.cpp
+END

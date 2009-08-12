@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/downloads/test/browser
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/components/downloads/test/browser/Makefile.in
+END
+browser_nsIDownloadManagerUI.js
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/downloads/test/browser/browser_nsIDownloadManagerUI.js
+END
+browser_bug414214.js
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/components/downloads/test/browser/browser_bug414214.js
+END

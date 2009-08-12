@@ -1,0 +1,60 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                changePrefs = id; 
+                closePrefs = id; 
+                launchMamp = id; 
+                launchMampPro = id; 
+                openPageClicked = id; 
+                openPrefs = id; 
+                openStartPage = id; 
+                php4Clicked = id; 
+                php5Clicked = id; 
+                quitStartAll = id; 
+                resetDefaultPorts = id; 
+                resetMampPorts = id; 
+                selectApc = id; 
+                selectDocumentRoot = id; 
+                startServersClicked = id; 
+                stopServersClicked = id; 
+                zendClicked = id; 
+            }; 
+            CLASS = MAMP; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                allButton = id; 
+                apachePortField = id; 
+                documentRootInput = id; 
+                lightApacheGreen = id; 
+                lightApacheRed = id; 
+                lightMySqlGreen = id; 
+                lightMySqlRed = id; 
+                mainWindow = id; 
+                mampProWarningWindow = id; 
+                mySqlPortField = id; 
+                openPageCheckbox = id; 
+                pageButton = id; 
+                pageField = id; 
+                phpCachePopupButton = id; 
+                phpRadioBut = id; 
+                preferencesButton = id; 
+                prefsWindow = id; 
+                progressIndicator = id; 
+                quitButton = id; 
+                serversMenu = id; 
+                startPageButton = id; 
+                startServersCheckbox = id; 
+                startServersMenuEntry = id; 
+                stopServersCheckbox = id; 
+                stopServersMenuEntry = id; 
+                zendOptimizerCheckbox = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = MampApplicationDelegate; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = MampPortFormatter; LANGUAGE = ObjC; SUPERCLASS = NSNumberFormatter; }
+    ); 
+    IBVersion = 1; 
+}

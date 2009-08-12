@@ -1,0 +1,119 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src
+END
+StdAfx.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/StdAfx.h
+END
+SMALL.ICO
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/SMALL.ICO
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/Makefile.in
+END
+nsQABrowserView.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/nsQABrowserView.cpp
+END
+mozEmbed.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/mozEmbed.cpp
+END
+nsQABrowserChrome.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/nsQABrowserChrome.cpp
+END
+nsQABrowserView.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/nsQABrowserView.h
+END
+mozEmbed.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/mozEmbed.h
+END
+nsQABrowserChrome.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/nsQABrowserChrome.h
+END
+nsQAWindowCreator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/nsQAWindowCreator.cpp
+END
+nsQABrowserModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/nsQABrowserModule.cpp
+END
+nsQAWindowCreator.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/nsQAWindowCreator.h
+END
+mozEmbed.rc
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/mozEmbed.rc
+END
+nsQABrowserUIGlue.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/nsQABrowserUIGlue.h
+END
+makefile.win
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/makefile.win
+END
+StdAfx.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/StdAfx.cpp
+END
+mozEmbed.ICO
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/mozEmbed.ICO
+END
+nsQABrowserCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/nsQABrowserCID.h
+END
+resource.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/qa/mozembed/src/resource.h
+END

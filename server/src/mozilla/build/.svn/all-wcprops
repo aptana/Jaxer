@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/build
+END
+build.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/build.pkg
+END
+file_migrate.pl
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/file_migrate.pl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/build/Makefile.in
+END
+bloatcycle.html
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/bloatcycle.html
+END
+bloaturls.txt
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/bloaturls.txt
+END
+profile_pageloader.html
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/profile_pageloader.html
+END
+genrc.sh
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/genrc.sh
+END
+hcpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/hcpp
+END
+profile_pageloader.pl
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/profile_pageloader.pl
+END
+hcc
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/hcc
+END
+cygwin-wrapper
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/cygwin-wrapper
+END

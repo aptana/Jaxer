@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/xml/content/src
+END
+nsXMLElement.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xml/content/src/nsXMLElement.h
+END
+nsXMLProcessingInstruction.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/xml/content/src/nsXMLProcessingInstruction.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/content/xml/content/src/Makefile.in
+END
+nsXMLCDATASection.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xml/content/src/nsXMLCDATASection.cpp
+END
+nsXMLStylesheetPI.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xml/content/src/nsXMLStylesheetPI.cpp
+END
+nsXMLProcessingInstruction.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xml/content/src/nsXMLProcessingInstruction.h
+END
+xhtml11.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xml/content/src/xhtml11.dtd
+END
+nsXMLElement.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xml/content/src/nsXMLElement.cpp
+END

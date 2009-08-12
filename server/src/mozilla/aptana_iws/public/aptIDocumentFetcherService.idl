@@ -1,0 +1,90 @@
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+ * vim: set sw=4 ts=4 et: */
+/* ***** BEGIN LICENSE BLOCK *****
+ *  Version: GPL 3
+ * 
+ *  This program is Copyright (C) 2007-2008 Aptana, Inc. All Rights Reserved
+ *  This program is licensed under the GNU General Public license, version 3 (GPL).
+ * 
+ *  This program is distributed in the hope that it will be useful, but
+ *  AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+ *  NONINFRINGEMENT. Redistribution, except as permitted by the GPL,
+ *  is prohibited.
+ * 
+ *  You can redistribute and/or modify this program under the terms of the GPL, 
+ *  as published by the Free Software Foundation.  You should
+ *  have received a copy of the GNU General Public License, Version 3 along
+ *  with this program; if not, write to the Free Software Foundation, Inc., 51
+ *  Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  
+ *  Aptana provides a special exception to allow redistribution of this file
+ *  with certain other code and certain additional terms
+ *  pursuant to Section 7 of the GPL. You may view the exception and these
+ *  terms on the web at http://www.aptana.com/legal/gpl/.
+ *  
+ *  You may view the GPL, and Aptana's exception and additional terms in the file
+ *  titled license-jaxer.html in the main distribution folder of this program.
+ *  
+ *  Any modifications to this file must keep this entire header intact.
+ * 
+ * ***** END LICENSE BLOCK ***** */
+
+#include "nsISupports.idl"
+
+%{C++
+
+/* 107807CB-2CA8-4941-B4D6-FB9F2B89D507 */
+#define APT_DOCUMENTFETCHERSERVICE_CID \
+{ 0x107807cb, 0x2ca8, 0x4941, { 0xb4, 0xd6, 0xfb, 0x9f, 0x2b, 0x89, 0xd5, 0x7 } }
+#define APT_DOCUMENTFETCHERSERVICE_CONTRACTID \
+"@aptana.com/httpdocumentfetcher;1"
+
+%}
+
+//interface IFCGXStream;
+interface nsIDocShell;
+interface nsIPrefBranch;
+
+[scriptable, uuid(ca83df9f-c4c4-40b8-a412-d57d178a0482)]
+interface aptIDocumentFetcherService : nsISupports
+{
+     /**
+     * initialze the object to make sure all needed components can be created/inited
+     */
+    [noscript] void init();
+
+        /**
+     * callback for pref change
+     */
+    [noscript] void UpdatePrefSettings(in nsIPrefBranch aPrefBranch, in string pref);
+
+
+    /**
+     * Loads a given FCGX
+     *
+     * @param fcgx
+     *        The stream to load.
+     */
+    //[noscript] void fetchFCGX(in IFCGXStream fcgx);
+
+    /**
+     * Current DocShell
+     */
+    [noscript] readonly attribute nsIDocShell docShell;
+
+    /**
+     * Process one incoming request from the socket fd
+     */
+    [noscript] void processRequest(in long fd);
+
+	/**
+     * Process one incoming HTTP request from the socket fd
+     */
+    [noscript] void processHTTPRequest(in long fd, in long type);
+
+	/**
+	 * Exit Jaxer process
+	 */
+	void exit();
+};

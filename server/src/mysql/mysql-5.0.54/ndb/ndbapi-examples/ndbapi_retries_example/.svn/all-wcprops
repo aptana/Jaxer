@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/ndbapi-examples/ndbapi_retries_example
+END
+ndbapi_retries.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/ndbapi-examples/ndbapi_retries_example/ndbapi_retries.cpp
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/ndb/ndbapi-examples/ndbapi_retries_example/Makefile
+END

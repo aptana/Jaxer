@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/webshell/public
+END
+nsIRefreshURI.idl
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/webshell/public/nsIRefreshURI.idl
+END
+nsIContentViewerContainer.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/webshell/public/nsIContentViewerContainer.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/webshell/public/Makefile.in
+END
+nsIClipboardCommands.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/webshell/public/nsIClipboardCommands.idl
+END
+webshell.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/webshell/public/webshell.pkg
+END
+nsIWebShellServices.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/webshell/public/nsIWebShellServices.h
+END
+nsILinkHandler.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/webshell/public/nsILinkHandler.h
+END
+nsIDocumentLoaderFactory.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/webshell/public/nsIDocumentLoaderFactory.idl
+END

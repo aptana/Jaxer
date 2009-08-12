@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/rdf/datasource/src
+END
+nsFileSystemDataSource.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/rdf/datasource/src/nsFileSystemDataSource.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/datasource/src/Makefile.in
+END
+nsFileSystemDataSource.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/rdf/datasource/src/nsFileSystemDataSource.h
+END
+nsRDFBuiltInDataSources.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/datasource/src/nsRDFBuiltInDataSources.h
+END
+nsLocalStore.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/rdf/datasource/src/nsLocalStore.cpp
+END

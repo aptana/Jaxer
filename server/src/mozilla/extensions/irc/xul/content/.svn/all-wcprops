@@ -1,0 +1,191 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/extensions/irc/xul/content
+END
+config.js
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/irc/xul/content/config.js
+END
+chatzilla.xul
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/irc/xul/content/chatzilla.xul
+END
+chatzillaOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/content/chatzillaOverlay.xul
+END
+rdf.js
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/content/rdf.js
+END
+prefsOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/irc/xul/content/prefsOverlay.xul
+END
+config.css
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/content/config.css
+END
+popups.xul
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/content/popups.xul
+END
+menus.xul
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/content/menus.xul
+END
+output-base.css
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/irc/xul/content/output-base.css
+END
+pref-irc-toolkit.xul
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/irc/xul/content/pref-irc-toolkit.xul
+END
+config-add.xul
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/content/config-add.xul
+END
+channels.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/irc/xul/content/channels.js
+END
+contents.rdf
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/extensions/irc/xul/content/contents.rdf
+END
+output-window.html
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/content/output-window.html
+END
+dynamic.css
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/content/dynamic.css
+END
+config.xul
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/extensions/irc/xul/content/config.xul
+END
+output-window.js
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/irc/xul/content/output-window.js
+END
+messages.js
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/content/messages.js
+END
+networks.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/irc/xul/content/networks.js
+END
+chatzillaOverlay.js
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/content/chatzillaOverlay.js
+END
+prefs.js
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/irc/xul/content/prefs.js
+END
+mungers.js
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/irc/xul/content/mungers.js
+END
+browserOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/content/browserOverlay.xul
+END
+scripts.xul
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/irc/xul/content/scripts.xul
+END
+static.js
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/extensions/irc/xul/content/static.js
+END
+channels.xul
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/irc/xul/content/channels.xul
+END
+menus.js
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/irc/xul/content/menus.js
+END
+config-add.js
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/content/config-add.js
+END
+handlers.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/irc/xul/content/handlers.js
+END
+commands.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/irc/xul/content/commands.js
+END
+pref-irc.xul
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/irc/xul/content/pref-irc.xul
+END

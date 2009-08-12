@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/mozapps/update
+END
+updates.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/mozapps/update/updates.dtd
+END
+incompatible.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/mozapps/update/incompatible.dtd
+END
+updates.properties
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/mozapps/update/updates.properties
+END
+errors.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/mozapps/update/errors.dtd
+END
+history.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/en-US/chrome/mozapps/update/history.dtd
+END

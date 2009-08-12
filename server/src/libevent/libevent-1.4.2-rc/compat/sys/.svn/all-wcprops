@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/compat/sys
+END
+_time.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/compat/sys/_time.h
+END
+queue.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/compat/sys/queue.h
+END

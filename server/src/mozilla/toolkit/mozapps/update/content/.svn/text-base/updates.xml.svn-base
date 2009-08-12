@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE bindings SYSTEM "chrome://mozapps/locale/update/updates.dtd">
+
+<bindings id="updatesBindings"
+          xmlns="http://www.mozilla.org/xbl"
+          xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+          xmlns:xbl="http://www.mozilla.org/xbl">
+  
+  <binding id="license">
+    <content>
+      <xul:vbox flex="1" class="loadingBox">
+        <xul:hbox align="start">
+          <xul:image class="licenseLoadingThrobber" xbl:inherits="state"/>
+          <xul:vbox flex="1">
+            <xul:description flex="1" class="licenseLoadingMessage" crop="right"/>
+          </xul:vbox>
+        </xul:hbox>
+      </xul:vbox>
+      <xul:vbox flex="1">
+        <xul:browser class="licenseContent" type="content" flex="1"/>
+      </xul:vbox>
+      <xul:stringbundle anonid="strings" 
+                        src="chrome://mozapps/locale/update/updates.properties"/>
+    </content>
+    <implementation>
+      <constructor><![CDATA[
+        // just to be safe, turn off js, auth, plugins, and subframes
+        var docShell = this._content.docShell;
+        docShell.allowJavascript = false;
+        docShell.allowAuth = false;
+        docShell.allowPlugins = false;
+        //allow redirects
+        //docShell.allowMetaRedirects = false;
+        docShell.allowSubframes = false;
+        //allow images
+        //docShell.allowImages = false;
+      ]]></constructor>
+
+      <destructor><![CDATA[
+        // clean up the listener
+        // but you may not have one if you never showed the page with
+        // a <license> element
+        if (this._licenseProgressListener) 
+          this._content.webProgress
+              .removeProgressListener(this._licenseProgressListener);
+      ]]></destructor>
+
+      <field name="_message">
+        document.getAnonymousElementByAttribute(this, "class", "licenseLoadingMessage");
+      </field>
+      <field name="_content">
+        document.getAnonymousElementByAttribute(this, "class", "licenseContent");
+      </field>
+      <field name="_strings">
+        document.getAnonymousElementByAttribute(this, "anonid", "strings");
+      </field>
+      
+      <field name="update_name">null</field>
+      <field name="update_version">null</field>
+      <field name="_licenseProgressListener">null</field>
+
+      <method name="_setMessageValue">
+        <parameter name="value"/>
+        <body><![CDATA[
+          while (this._message.hasChildNodes())
+            this._message.removeChild(this._message.firstChild);
+          this._message.appendChild(document.createTextNode(value));
+        ]]></body>
+      </method>
+
+      <method name="onError">
+        <body><![CDATA[
+          this.setAttribute("selectedIndex", "0");
+
+          var errorPropertyName = this.getAttribute("id") + "NotFound";
+          var statusText = this._strings.getFormattedString(errorPropertyName, 
+                                                            [this.update_name]);
+          this._setMessageValue(statusText);
+          this.setAttribute("state", "error");
+        ]]></body>
+      </method>
+
+      <method name="onLoad">
+        <body><![CDATA[
+          this.setAttribute("selectedIndex", "1");
+
+          var e = document.createEvent("Events");
+          e.initEvent("load", false, true);
+          this.dispatchEvent(e);
+        ]]></body>
+      </method>
+
+      <method name="onStart">
+        <body><![CDATA[
+          this.setAttribute("selectedIndex", "0");
+
+          this.setAttribute("state", "loading");
+          var loadingPropertyName = this.getAttribute("id") + "Downloading";
+          this._setMessageValue(this._strings.getFormattedString(
+            loadingPropertyName, [this.update_name, this.update_version]));
+        ]]></body>
+      </method>
+
+      <property name="url">
+        <getter><![CDATA[
+          return this.getAttribute("url");
+        ]]></getter>
+        <setter><![CDATA[
+          var self = this;
+
+          this._licenseProgressListener = {
+            QueryInterface: function(aIID) 
+            {
+              if (aIID.equals(Components.interfaces.nsIWebProgressListener) ||
+                  aIID.equals(Components.interfaces.nsISupportsWeakReference) ||
+                  aIID.equals(Components.interfaces.nsISupports))
+                return this;
+              throw Components.results.NS_NOINTERFACE;
+            },
+            onLocationChange: function() {},
+            onProgressChange: function() {},
+            onStatusChange:   function() {},
+            onSecurityChange: function() {},
+            onStateChange:    function(aWebProgress, aRequest, 
+                                       aStateFlags, aStatus) 
+            {
+              if (!aRequest)
+                return;
+
+              const nsIWebProgressListener = 
+                Components.interfaces.nsIWebProgressListener;
+ 
+              if (aStateFlags & nsIWebProgressListener.STATE_IS_NETWORK) 
+              {
+                if (aStateFlags & nsIWebProgressListener.STATE_START) 
+                  self.onStart();
+                else if (aStateFlags & nsIWebProgressListener.STATE_STOP)
+                {
+                  const nsIHttpChannel = Components.interfaces.nsIHttpChannel;
+                  try {
+                    var channel = aRequest.QueryInterface(nsIHttpChannel);
+                    if (channel.requestSucceeded) 
+                    {
+                      // if we get here, the load was OK, report success
+                      self.onLoad();
+                      return;
+                    }
+                  }
+                  catch (ex) 
+                  { 
+                    // the channel.requestSucceeded can throw 
+                    // NS_ERROR_NOT_AVAILABLE if you can't reach the server
+                    // so we treat that as an error
+                  }
+
+                  // everything else (like a 404) is an error
+                  self.onError();
+                }
+              }
+            }
+          }
+
+          this._content.webProgress
+              .addProgressListener(this._licenseProgressListener,
+               Components.interfaces.nsIWebProgress.NOTIFY_ALL);
+
+          // load the url now that the listener is registered
+          this._content.setAttribute("src", val);
+        ]]></setter>
+      </property>
+      
+      <method name="stopDownloading">
+        <body><![CDATA[
+          this._content.stop();
+        ]]></body>
+      </method>
+    </implementation>
+  </binding>
+  
+  <binding id="update" extends="chrome://global/content/bindings/richlistbox.xml#richlistitem">
+    <content>
+      <xul:hbox>
+        <xul:label class="update-name" xbl:inherits="value=name" flex="1" crop="right"/>
+        <xul:link xbl:inherits="href=detailsURL" class="update-details-link">
+          <xul:label>&update.details.label;</xul:label>
+        </xul:link>
+      </xul:hbox>
+      <xul:label class="update-type" xbl:inherits="value=type"/>
+      <xul:grid>
+        <xul:columns>
+          <xul:column class="update-label-column"/>
+          <xul:column flex="1"/>
+        </xul:columns>
+        <xul:rows>
+          <xul:row>
+            <xul:label class="update-installedOn-label">&update.installedOn.label;</xul:label>
+            <xul:label class="update-installedOn-value" xbl:inherits="value=installDate" flex="1" crop="right"/>
+          </xul:row>
+          <xul:row>
+            <xul:label class="update-status-label">&update.status.label;</xul:label>
+            <xul:description class="update-status-value" flex="1"/>
+          </xul:row>
+        </xul:rows>
+      </xul:grid>
+    </content>
+    <implementation>
+      <property name="name"
+                onget="return this.getAttribute('name');"
+                onset="this.setAttribute('name', val); return val;"/>
+      <property name="detailsURL"
+                onget="return this.getAttribute('detailsURL');"
+                onset="this.setAttribute('detailsURL', val); return val;"/>
+      <property name="installDate"
+                onget="return this.getAttribute('installDate');"
+                onset="this.setAttribute('installDate', val); return val;"/>
+      <property name="type"
+                onget="return this.getAttribute('type');"
+                onset="this.setAttribute('type', val); return val;"/>
+      <property name="status"
+                onget="return this.getAttribute('status');">
+        <setter><![CDATA[
+          this.setAttribute("status", val);
+          var field = document.getAnonymousElementByAttribute(this, "class", "update-status-value");
+          while (field.hasChildNodes())
+            field.removeChild(field.firstChild);
+          field.appendChild(document.createTextNode(val));
+          return val;
+        ]]></setter>
+      </property>
+    </implementation>
+  </binding>
+</bindings>
+

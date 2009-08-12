@@ -1,0 +1,28 @@
+<html>
+    <head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+        <script type="text/javascript" runat="server">
+      		function test_SerializeData_String()
+			{
+				var data = "string";
+				var expected = '"string"';
+				var result = Jaxer.Serialization.toJSONString(data, {as: Jaxer.Serialization.JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_DeserializeData_String()
+			{
+				var json = "\"hello\"";
+				var expected = "hello";
+				var result = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

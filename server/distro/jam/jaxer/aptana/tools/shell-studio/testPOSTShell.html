@@ -1,0 +1,54 @@
+<html>
+	<head>
+		<title>Test POST Shell</title>
+		<script runat="server">//Force Jaxer to process this page and give us XHR on the client side</script>
+	</head>
+	<body>
+		<h3>Test the POST Shell - Only in Firefox / Mozilla</h3>
+		<table>
+			<tr>
+				<td>URL:</td>
+				<td>index.html?paramsAs=text&amp;<input type="text" id="query" value="command=execute" size=50></td>
+			</tr>
+			<tr>
+				<td>Input:</td>
+				<td><textarea id="data" rows=10 cols=80>print(42);</textarea></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td><button onclick="submit()">Submit</button></td>
+			</tr>
+			<tr>
+				<td>Output:</td>
+				<td><textarea id="display" rows=20 cols=80></textarea></td>
+			</tr>
+			<tr>
+				<td>Errors:</td>
+				<td><textarea id="error" rows=5 cols=80></textarea></td>
+			</tr>
+		</table>
+		
+		<script>
+			function $(id)
+			{
+				return document.getElementById(id);
+			}
+			
+			function submit()
+			{
+				var data = $("data").value;
+				var result = Jaxer.XHR.send(data, 
+				{
+					url: 'index.html?paramsAs=text&' + $("query").value,
+					async: false
+				});
+				var matches = result.match(/<body>\s*(Success|Failure)\:\s*([\w\=]*)\s*<\/body>/);
+				var results = (matches && matches.length == 3) ? [matches[1], unescape(atob(matches[2]))] : ["Failure", "MALFORMED RESULT: " + result];
+				var isError = (results[0] != "Success");
+				$("display").value = isError ? '' : results[1];
+				$("error").value = isError ? results[1] : '';
+			}
+			
+		</script>
+	</body>
+</html>

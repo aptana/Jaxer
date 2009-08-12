@@ -1,0 +1,41 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/security/nss/tests/pkits
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-20T18:44:20.559534Z
+2886
+jzhang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+pkits.sh
+file
+
+
+
+
+2009-08-11T21:33:36.000000Z
+a81e39e0732f401ab395f27033c3b762
+2008-05-20T18:44:20.559534Z
+2886
+jzhang
+has-props
+

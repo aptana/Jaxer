@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dbm/src
+END
+hash_buf.c
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dbm/src/hash_buf.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dbm/src/Makefile.in
+END
+h_bigkey.c
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dbm/src/h_bigkey.c
+END
+h_func.c
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dbm/src/h_func.c
+END
+strerror.c
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dbm/src/strerror.c
+END
+h_page.c
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dbm/src/h_page.c
+END
+hash.c
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dbm/src/hash.c
+END
+snprintf.c
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dbm/src/snprintf.c
+END
+db.c
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dbm/src/db.c
+END
+memmove.c
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dbm/src/memmove.c
+END
+Makefile.win
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dbm/src/Makefile.win
+END
+h_log2.c
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dbm/src/h_log2.c
+END
+mktemp.c
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dbm/src/mktemp.c
+END

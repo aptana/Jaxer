@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/tests/html/dojo-0.4.0-mini/src/event
+END
+__package__.js
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/tests/html/dojo-0.4.0-mini/src/event/__package__.js
+END
+common.js
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/tests/html/dojo-0.4.0-mini/src/event/common.js
+END
+topic.js
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/tests/html/dojo-0.4.0-mini/src/event/topic.js
+END
+browser.js
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/tests/html/dojo-0.4.0-mini/src/event/browser.js
+END

@@ -1,0 +1,81 @@
+<html>
+    <head>
+        <script runat='server'>// DO NOT REMOVE: needed for the Jaxer unit testing harness 
+            Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+        </script>
+        <script type="text/javascript" runat="server">
+            function testBinarySocketByteArray()
+            {
+            	var sock = new Jaxer.BinarySocket();
+            	
+            	try 
+            	{
+            		sock.open("www.aptana.com", 80);
+					var strData = 'HEAD / HTTP/1.0\n\n';
+					var byteArray = [];
+					for (var i=0, len = strData.length; i<len; i++)
+					{
+						byteArray.push(strData.charCodeAt(i));
+					}
+            		sock.writeByteArray(byteArray);
+            		sock.flush();
+            		
+					var expectedFirstLine = "HTTP/1.1 200 OK";
+					var numExpectedFirstLine = expectedFirstLine.length;
+            		var result = sock.readByteArray(numExpectedFirstLine);
+					var arrChars = [];
+					result.forEach(function(b)
+					{
+						arrChars.push(String.fromCharCode(b));
+					});
+            		assertEquals(arrChars.join(''), expectedFirstLine, "Expected result from server not found.");
+            		assertTrue(sock.available() > 0, "No bytes received on socket beyond the first line");
+            	}
+            	finally 
+            	{
+            		try 
+            		{
+            			sock.close();
+            			
+            		} 
+            		catch (e) 
+            		{
+            		}
+            	}
+            }
+			
+			function testBinarySocketString()
+            {
+            	var sock = new Jaxer.BinarySocket();
+            	
+            	try 
+            	{
+            		sock.open("www.aptana.com", 80);
+					var strData = 'HEAD / HTTP/1.0\n\n';
+            		sock.writeByteString(strData);
+            		sock.flush();
+            		
+					var expectedFirstLine = "HTTP/1.1 200 OK";
+					var numExpectedFirstLine = expectedFirstLine.length;
+            		var result = sock.readByteString(numExpectedFirstLine);
+            		assertEquals(result, expectedFirstLine, "Expected result from server not found.");
+            		assertTrue(sock.available() > 0, "No bytes received on socket beyond the first line");
+            	}
+            	finally 
+            	{
+            		try 
+            		{
+            			sock.close();
+            			
+            		} 
+            		catch (e) 
+            		{
+            		}
+            	}
+            }
+
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

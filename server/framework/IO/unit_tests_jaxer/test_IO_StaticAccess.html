@@ -1,0 +1,118 @@
+<html>
+	<head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+	</head>
+	<script type="text/javascript" runat="server">
+		
+		/**
+		 * testing static Jaxer.File.remove
+		 */
+		function testStaticRemove()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file12.txt';
+			var f = new Jaxer.File(file0);
+			if (f.exists) 
+			{
+				f.remove();
+			}
+			Jaxer.File.getOrCreate(file0);
+			assertTrue(Jaxer.File.exists(file0), "file should exist now but exists() method returns false");
+			Jaxer.File.remove(file0);
+			assertFalse(Jaxer.File.exists(file0), "file should not exist now but exists() method returns true");
+		}
+		
+		/**
+		 * testing file appending
+		 */
+		function testStaticAppend()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file12.txt';
+			var f = new Jaxer.File(file0);
+			Jaxer.File.getOrCreate(file0);
+			var content = "Hello world";
+			Jaxer.File.write(file0, content);
+			var content1 = Jaxer.File.read(file0);
+			Jaxer.File.append(file0, " 1");
+			var content2 = content + " 1";
+			var content3 = Jaxer.File.read(file0);
+			f.remove();
+			assertEquals(content, content1, "Content that was written should be same that was read but it is not");
+			assertEquals(content2, content3, "Content that was written should be same that was read but it is not");
+		}
+		
+		/**
+		 * testing static get or create methods
+		 */
+		function testStaticGetOrCreate()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file12.txt';
+			var f = new Jaxer.File(file0);
+			if (f.exists) 
+			{
+				f.remove();
+			}
+			assertFalse(Jaxer.File.exists(file0), "file should not exist now but exists() method returns true");
+			Jaxer.File.getOrCreate(file0);
+			assertTrue(Jaxer.File.exists(file0), "file should exist now but exists() method returns false");
+			f.remove();
+		}
+		
+		
+		/**
+		 * testing exist not exist
+		 */
+		function testStaticDirExists()
+		{
+			var dir = Jaxer.System.tempFolder;
+			var dir1 = Jaxer.System.tempFolder + '+';
+			if (Jaxer.Dir.exists(dir1)) 
+			{
+				new Jaxer.Dir(dir1).remove(true);
+			}
+			assertTrue(Jaxer.Dir.exists(dir), "directory should exist but directory.exists returned false");
+			assertTrue(!Jaxer.Dir.exists(dir1), "directory should not exist but directory.exists returned true");
+		}
+		
+		/**
+		 * testing static file remove method
+		 */
+		function testStaticFileRemove()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file0.txt';
+			var f0 = new Jaxer.File(file0);
+			if (f0.exists) 
+			{
+				f0.remove(true);
+			}
+			f0.create();
+			Jaxer.File.remove(file0);
+			assertTrue(!f0.exists,"file should not exist now but exists() method returns true");
+		}
+		
+		/**
+		 * testing file appending
+		 */
+		function testStaticWriteAndRead()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file12.txt';
+			var f = new Jaxer.File(file0);
+			Jaxer.File.getOrCreate(file0);
+			var content = "Hello world";
+			Jaxer.File.write(file0, content);
+			var content1 = Jaxer.File.read(file0);
+			Jaxer.File.write(file0, " 1");
+			var content2 = " 1";
+			var content3 = Jaxer.File.read(file0);
+			f.remove();
+			assertEquals(content, content1, "Content that was written should be same that was read but it is not");
+			assertEquals(content2, content3, "Content that was written should be same that was read but it is not");
+		}
+	</script>
+</html>

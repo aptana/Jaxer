@@ -1,0 +1,44 @@
+<h2>About Jaxer</h2>
+<p>
+	Jaxer is the Aptana Ajax Server, that's also built into Aptana Studio. Jaxer allows you to execute some of your Ajax code - HTML, JavaScript, XMLHttpRequests, etc. - on the server, before the page is served or during a callback. Now you can write your entire application, or your presentation layer, using a single, familiar Ajax codebase. It's standards-based and open-source. And if your page doesn't use any Jaxer features, it will be unaffected by running it through Jaxer.
+</p>
+<p>
+	Rich, "Ajax-style" web sites and applications offer tremendous advantages over both static web sites and desktop applications. But they can be difficult to develop, maintain, and expand.
+</p>
+<p>
+	Many of the difficulties on the client side are alleviated by Ajax libraries such as jQuery, ext, and Dojo, and by development environments such as the Aptana Studio development environement.
+</p>
+<p>
+	Jaxer completes the picture by offering a powerful <b>Ajax Server</b>.
+	With Jaxer, you can:
+	<ul>
+		<li>
+			develop your entire site or application using only standards-based DHTML, JavaScript, and CSS;
+		</li>
+		<li>
+			prepare the HTML DOM on the server before the page is served,
+			using the same techniques and libraries you would use on the client;
+		</li>
+		<li>
+			call server-side JavaScript functions directly from client-side JavaScript;
+		</li>
+		<li>
+			and validate your data with the same code on both the server and the client.
+		</li>
+	</ul>
+</p>
+
+<h3>Where do I start?</h3>
+<ol>
+	<li>
+		<a href="diagnostics/index.html" title='Server Diagnostics' target="_blank">Run through the server diagnostics</a> to make sure Jaxer is running
+	</li>
+	<li>
+		<i>Optionally</i>, set up your Aptana Studio by creating a Jaxer project to ease creating web content
+	</li>
+	<li>
+		Then <a href="javascript: ContentManager.fetchContent('apps_and_tools.html');" title="Samples and Tools">browse the existing apps</a>
+		to see some simple or more involved Jaxer code, or just create an html page in the public folder in your Jaxer installation
+		and start adding Jaxer <span class="tech-name">&lt;script&nbsp;runat="server"&gt;...&lt;/script&gt;</span> code.
+	</li>
+</ol>

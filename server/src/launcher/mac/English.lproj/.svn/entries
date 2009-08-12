@@ -1,0 +1,100 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/launcher/mac/English.lproj
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-07-30T03:09:57.635779Z
+3685
+blazar
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+InfoPlist.strings
+file
+
+
+
+
+2009-08-11T21:25:49.000000Z
+82e9f33b343a7e709f20e01cc48f5894
+2007-12-12T17:42:59.459582Z
+1108
+pcolton
+has-props
+
+MainMenu.nib
+dir
+
+Credits.html
+file
+
+
+
+
+2009-08-11T21:25:49.000000Z
+8372b8d7cd947bcc0c9c90f154f97b84
+2007-12-21T19:55:19.596585Z
+1332
+pcolton
+
+Jaxer Launcher Help
+dir
+
+aptana_sm.png
+file
+
+
+
+
+2009-08-11T21:25:49.000000Z
+72a82ea2e7fcc8bb20871ea6c9c82986
+2007-12-21T19:55:19.596585Z
+1332
+pcolton
+has-props
+
+Localizable.strings
+file
+
+
+
+
+2009-08-11T21:25:49.000000Z
+822604bdb7872355238b400fc5659cf2
+2008-03-17T22:21:06.025786Z
+2337
+pcolton
+has-props
+
+locversion.plist
+file
+
+
+
+
+2009-08-11T21:25:49.000000Z
+808e9e03ae64da5fa08ea5a0d9ff9e3d
+2007-12-12T17:42:59.459582Z
+1108
+pcolton
+
+MainMenu~.nib
+dir
+

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpfe/components/download-manager/public
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/download-manager/public/Makefile.in
+END
+nsIDownloadManager.idl
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/download-manager/public/nsIDownloadManager.idl
+END
+nsIDownloadProgressListener.idl
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/download-manager/public/nsIDownloadProgressListener.idl
+END
+nsIProgressDialog.idl
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/download-manager/public/nsIProgressDialog.idl
+END
+nsIDownload.idl
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/download-manager/public/nsIDownload.idl
+END

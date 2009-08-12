@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/245/trunk/products/server/framework_tests/www/tests/Serialization
+END
+Serialization.html
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/tests/Serialization/Serialization.html
+END
+dateTests.html
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/245/trunk/products/server/framework_tests/www/tests/Serialization/dateTests.html
+END
+References.html
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/tests/Serialization/References.html
+END
+arrayTests.html
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/245/trunk/products/server/framework_tests/www/tests/Serialization/arrayTests.html
+END
+referenceTests.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/245/trunk/products/server/framework_tests/www/tests/Serialization/referenceTests.html
+END
+booleanTests.html
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/245/trunk/products/server/framework_tests/www/tests/Serialization/booleanTests.html
+END
+specialTests.html
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/245/trunk/products/server/framework_tests/www/tests/Serialization/specialTests.html
+END
+Deserialization.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/tests/Serialization/Deserialization.html
+END
+objectTests.html
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/245/trunk/products/server/framework_tests/www/tests/Serialization/objectTests.html
+END
+stringTests.html
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/245/trunk/products/server/framework_tests/www/tests/Serialization/stringTests.html
+END
+numberTests.html
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/245/trunk/products/server/framework_tests/www/tests/Serialization/numberTests.html
+END

@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/autotools
+END
+depcomp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/autotools/depcomp
+END
+missing
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/autotools/missing
+END
+config.guess
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/autotools/config.guess
+END
+config.sub
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/autotools/config.sub
+END
+ltmain.sh
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/autotools/ltmain.sh
+END
+install-sh
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/3435/trunk/products/server/src/google/google_breakpad/autotools/install-sh
+END

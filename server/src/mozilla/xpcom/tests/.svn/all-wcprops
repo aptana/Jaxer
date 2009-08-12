@@ -1,0 +1,317 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/xpcom/tests
+END
+TestExpirationTracker.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestExpirationTracker.cpp
+END
+TestAutoPtr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/xpcom/tests/TestAutoPtr.cpp
+END
+TestStringAPI.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/xpcom/tests/TestStringAPI.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/xpcom/tests/Makefile.in
+END
+TestCOMPtr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/xpcom/tests/TestCOMPtr.cpp
+END
+TestRegistrationOrder.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/xpcom/tests/TestRegistrationOrder.cpp
+END
+TestXPIDLString.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestXPIDLString.cpp
+END
+TestTextFormatter.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/xpcom/tests/TestTextFormatter.cpp
+END
+SizeTest01.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/SizeTest01.cpp
+END
+TestFactory.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestFactory.h
+END
+SizeTest02.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/SizeTest02.cpp
+END
+SizeTest03.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/SizeTest03.cpp
+END
+SizeTest04.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/SizeTest04.cpp
+END
+TestArray.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestArray.cpp
+END
+SizeTest05.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/SizeTest05.cpp
+END
+resources.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/resources.h
+END
+TestStorageStream.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestStorageStream.cpp
+END
+SizeTest06.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/SizeTest06.cpp
+END
+TestAutoLock.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestAutoLock.cpp
+END
+TestVoidBTree.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestVoidBTree.cpp
+END
+TestAtoms.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestAtoms.cpp
+END
+TestWinReg.js
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestWinReg.js
+END
+TestCRT.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestCRT.cpp
+END
+TestStrings.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestStrings.cpp
+END
+TestThreads.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestThreads.cpp
+END
+TestCOMPtrEq.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestCOMPtrEq.cpp
+END
+TestCallTemplates.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestCallTemplates.cpp
+END
+TestID.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestID.cpp
+END
+TestINIParser.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestINIParser.cpp
+END
+TestStackCrawl.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestStackCrawl.cpp
+END
+TestVersionComparatorRunner.pl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestVersionComparatorRunner.pl
+END
+TestThreadPool.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestThreadPool.cpp
+END
+TestTArray.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/tests/TestTArray.cpp
+END
+TestDeque.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestDeque.cpp
+END
+RegFactory.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/RegFactory.cpp
+END
+TestFactory.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestFactory.cpp
+END
+TestObserverService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestObserverService.cpp
+END
+TestHarness.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/xpcom/tests/TestHarness.h
+END
+TestShutdown.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestShutdown.cpp
+END
+TestStreamUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestStreamUtils.cpp
+END
+TestVersionComparator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestVersionComparator.cpp
+END
+TestHashtables.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestHashtables.cpp
+END
+TestScriptable.idl
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/tests/TestScriptable.idl
+END
+CvtURL.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/CvtURL.cpp
+END
+TestPipes.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpcom/tests/TestPipes.cpp
+END
+TestServMgr.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestServMgr.cpp
+END
+TestProxies.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/xpcom/tests/TestProxies.cpp
+END
+nsIFileTest.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/nsIFileTest.cpp
+END
+test.properties
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/test.properties
+END
+nsIFileEnumerator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/nsIFileEnumerator.cpp
+END
+TestPipe.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/xpcom/tests/TestPipe.cpp
+END
+TestPermanentAtoms.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/TestPermanentAtoms.cpp
+END

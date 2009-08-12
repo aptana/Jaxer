@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/build/win32
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/win32/Makefile.in
+END
+mozilla-dos2unix.py
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/win32/mozilla-dos2unix.py
+END
+pgomerge.py
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/build/win32/pgomerge.py
+END

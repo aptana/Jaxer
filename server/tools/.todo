@@ -1,0 +1,109 @@
+Status
+======
+- builds are currently running in parallel
+  - auto tests
+    - works, but the polling grabs the zip file mid-push which results in a corrupt zip file test.  how to fix?
+    - also, changes since is borked
+    - loopretrydelay is broken
+- mac builds not working live
+  - need a way to do a full build on demand
+
+- way many emails; tough to see a missing email or overall status.
+  - bamboo?  parallel builds are an issue?
+  - tinderbox?  should be quick
+  - ASAP TSK-54
+- take over csanders' old static vm ips so i can administer test build machines from home
+  - i've got these on ports atm, decent for vnc, don't think it works for ssh
+
+- updates to aptan.(bat|py) are issues on windows.  maybe this will be stable soon.
+
+
+
+Enhancements
+============
+
+- configuration
+  - AES: default values for command line options cannot be customized or overridden
+    in the build.properties file, as it clashes with the config registry order
+  - AES: all path creation should be done with os.path.join, build methods can be
+    retrofitted and tested one at a time if necessary to avoid introducing new bugs
+  - split build.properties up and allow for easier custom configs.  Encouraging the creation of a new non-svn config file will help prevent svn conflicts when someone checks in a new build.properties, as well.
+  - if configuration is fully fleshed out, one should be able to create a conf file for a particular machine that allows for an 'aptan.py --conf=conffile' with no other args, where the entire workflow is set, e.g. equivalent to autobuild with --nobuildmozilla --notests or something.
+    - though, of course, you could add other args to override the conffile
+    - things still run in a particular order, but will individual run or skip depending on config settings.  can simplify by calling autobuild(), autotest(), or autopackage() 
+    - as far as passing down working config + dumping/reloading, it's as simple
+      as creating a working[-buildnum?].conf that you can archive and reference.
+      or pass a reference to the conf object with appropriate query() functions
+  - build.properties single file weaknesses
+    - i've horked build.properties via file conflicts by checking in one too many times.  also checked in changed build.properties by accident too many times.  i need to have it look at a default (unchanged file) if a local file doesn't exist
+
+    - conf/default.cfg, in svn, not edited
+      - possibly conf/default_[platform].cfg
+    - conf/local.cfg, not in svn, edited
+      - possibly conf/local_[hostname].cfg, can be in svn
+    - this will require more file edits when changing something but will
+      end up in fewer horked builds (hopefully)
+
+
+    - really, we need
+      1) a default conf.  don't touch this one unless you're changing
+         behavior for everything; check it in if you are.
+      2) a local conf.  be good to check it in, can be platform or
+         host specific.  this should only override certain things in the
+         default &  everything else should follow. e.g. a file with only
+
+             JAXER_SRCDIR=d:\\jaxer\\trunk
+
+         should change *everything* based on that.  this is difficult to do
+         ... we'd have to expand ${JAXER_SRCDIR} *after* everything is read in.
+
+         alternately have jxrconf.py with a def queryvar(self, varname):
+         where a queryvar("jaxer_distrodir") will build it from
+         queryvar("jaxer_srcdir") + products/server/distro
+
+       3) cmdln options
+
+       this is all going to get complicated, so we should build this all at
+       the beginning + have it static by the time we need to use it.
+
+
+- packaging
+  - solaris pkg manager
+  - rpms
+  - debs
+  - possibly create an autopackage function that rsyncs the tarball and creates the appropriate packages; rumors have it that ubu32 and fc8-32 (for example) are only different in terms of packaging.
+
+  - solaris keeps running out of disk space.  add a max number of logs/builds to keep around in the conf file.
+    - my fedora32 vm too.  need disk space check?
+
+  - allow for other methods of publishing.  rsync over ssh should probably be the first alternative to ftp.
+
+- logging
+  - enable tee (stderr/stdout to both console + log)
+  - is everything logged?
+  - more debug and info level "this is what i'm doing" messages.
+  - command level logging
+    - When Process runs a command, it should be able to parse the output
+      and determine whether to send that output to info(), warn(), or error().
+
+      With some processes this is doable on the fly; others require a certain
+      number of lines of context to determine so the output should be cached
+      and parsed after the command exits.
+
+    - allow for configurable timeouts for testing on slow machines.  after self.reinstall(), add a file tweak to jam_install/local_jaxer/conf/JaxerManager.cfg
+
+- unit tests
+  - it's possible to run multiple profiles of firefox on osx.
+    - other platforms?  possibly recompile firefox under a different name?
+- python errors can kill the loop
+  - perhaps fix this by wrapping everything in a shell process?
+  - may be moot if we move this to bamboo or other system
+- sysadmin
+  - fix hostname on these boxen; it's hard to tell what machine i'm on in ssh
+  - ssh screen + DISPLAY quite a bit faster than VNC.  test.
+- documentation
+  - mac, windows, solaris
+
+- misc
+  - viewvc link in mail?
+  - ftp link to packages in mail?

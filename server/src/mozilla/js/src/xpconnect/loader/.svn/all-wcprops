@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/4596/trunk/products/server/src/mozilla/js/src/xpconnect/loader
+END
+XPCOMUtils.jsm
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/js/src/xpconnect/loader/XPCOMUtils.jsm
+END
+ISO8601DateUtils.jsm
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/js/src/xpconnect/loader/ISO8601DateUtils.jsm
+END
+JSON.jsm
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/js/src/xpconnect/loader/JSON.jsm
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/js/src/xpconnect/loader/Makefile.in
+END
+mozJSComponentLoader.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/js/src/xpconnect/loader/mozJSComponentLoader.h
+END
+mozJSLoaderConstructors.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/loader/mozJSLoaderConstructors.h
+END
+mozJSSubScriptLoader.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/4596/trunk/products/server/src/mozilla/js/src/xpconnect/loader/mozJSSubScriptLoader.cpp
+END
+mozJSComponentLoader.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/js/src/xpconnect/loader/mozJSComponentLoader.cpp
+END
+mozJSSubScriptLoader.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/js/src/xpconnect/loader/mozJSSubScriptLoader.h
+END

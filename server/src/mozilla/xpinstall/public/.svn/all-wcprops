@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpinstall/public
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpinstall/public/Makefile.in
+END
+nsIXPIDialogService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpinstall/public/nsIXPIDialogService.idl
+END
+nsIXPIInstallInfo.idl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpinstall/public/nsIXPIInstallInfo.idl
+END
+nsPICertNotification.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpinstall/public/nsPICertNotification.idl
+END
+nsIXPIProgressDialog.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpinstall/public/nsIXPIProgressDialog.idl
+END
+xpinstall.js
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpinstall/public/xpinstall.js
+END
+nsIXPInstallManager.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpinstall/public/nsIXPInstallManager.idl
+END
+nsIDOMInstallTriggerGlobal.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpinstall/public/nsIDOMInstallTriggerGlobal.h
+END
+nsSoftwareUpdateIIDs.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpinstall/public/nsSoftwareUpdateIIDs.h
+END

@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xtf/public
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xtf/public/Makefile.in
+END
+nsIXMLContentBuilder.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xtf/public/nsIXMLContentBuilder.idl
+END
+nsIXTFAttributeHandler.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xtf/public/nsIXTFAttributeHandler.idl
+END
+nsIXTFElementFactory.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xtf/public/nsIXTFElementFactory.idl
+END
+nsIXTFElement.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xtf/public/nsIXTFElement.idl
+END
+nsIXTFElementWrapper.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xtf/public/nsIXTFElementWrapper.idl
+END
+nsIXTFPrivate.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/content/xtf/public/nsIXTFPrivate.idl
+END

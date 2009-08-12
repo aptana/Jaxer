@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/xpcom/proxy/src
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/proxy/src/Makefile.in
+END
+nsProxyEvent.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/xpcom/proxy/src/nsProxyEvent.cpp
+END
+nsProxyEventPrivate.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/xpcom/proxy/src/nsProxyEventPrivate.h
+END
+nsProxyObjectManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/xpcom/proxy/src/nsProxyObjectManager.cpp
+END
+nsProxyEventClass.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/proxy/src/nsProxyEventClass.cpp
+END
+nsProxyEventObject.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/xpcom/proxy/src/nsProxyEventObject.cpp
+END

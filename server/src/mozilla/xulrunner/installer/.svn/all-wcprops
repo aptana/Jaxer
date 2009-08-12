@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/installer
+END
+mozilla-gtkmozembed-embedding.pc.in
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/installer/mozilla-gtkmozembed-embedding.pc.in
+END
+libxul-unstable.pc.in
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/installer/libxul-unstable.pc.in
+END
+libxul-embedding.pc.in
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/installer/libxul-embedding.pc.in
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/installer/Makefile.in
+END
+mozilla-gtkmozembed.pc.in
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/installer/mozilla-gtkmozembed.pc.in
+END
+libxul.pc.in
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/installer/libxul.pc.in
+END
+mozilla-js.pc.in
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/installer/mozilla-js.pc.in
+END
+mozilla-plugin.pc.in
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/installer/mozilla-plugin.pc.in
+END
+libxul-embedding-unstable.pc.in
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/installer/libxul-embedding-unstable.pc.in
+END
+mozilla-nspr.pc.in
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/installer/mozilla-nspr.pc.in
+END
+mozilla-nss.pc.in
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/installer/mozilla-nss.pc.in
+END

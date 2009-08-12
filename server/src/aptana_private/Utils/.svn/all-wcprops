@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/4557/trunk/products/server/src/aptana_private/Utils
+END
+build_jaxer
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/4411/trunk/products/server/src/aptana_private/Utils/build_jaxer
+END
+push.sh
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/4151/trunk/products/server/src/aptana_private/Utils/push.sh
+END
+jzscp
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/4290/trunk/products/server/src/aptana_private/Utils/jzscp
+END
+mac_mv_old_builds.py
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/4339/trunk/products/server/src/aptana_private/Utils/mac_mv_old_builds.py
+END
+mac_rm_failed_old_builds.py
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/4313/trunk/products/server/src/aptana_private/Utils/mac_rm_failed_old_builds.py
+END
+JaxerSrc.sh
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/4150/trunk/products/server/src/aptana_private/Utils/JaxerSrc.sh
+END
+JaxerSrc2.sh
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/4557/trunk/products/server/src/aptana_private/Utils/JaxerSrc2.sh
+END

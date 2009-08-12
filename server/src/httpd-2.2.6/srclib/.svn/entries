@@ -1,0 +1,73 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/httpd-2.2.6/srclib
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-03-18T23:35:20.509531Z
+2358
+build
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+apr
+dir
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:29:49.000000Z
+92aad5c5b1ee1ce8d8bc7ee859a1bcff
+2007-12-12T00:38:15.247516Z
+1090
+pcolton
+
+pcre
+dir
+
+.deps
+file
+
+
+
+
+2009-08-11T21:29:49.000000Z
+d41d8cd98f00b204e9800998ecf8427e
+2007-12-12T00:38:15.247516Z
+1090
+pcolton
+
+apr-util
+dir
+
+Makefile
+file
+
+
+
+
+2009-08-11T21:29:49.000000Z
+1c422fbfc2e965efa8d8c1d6c70d7205
+2007-12-12T00:38:15.247516Z
+1090
+pcolton
+

@@ -1,0 +1,79 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/extensions/wallet/signonviewer
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-16T23:28:56.072242Z
+2859
+mstepanov
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+nsISignonViewer.idl
+file
+
+
+
+
+2009-08-11T21:36:48.000000Z
+e6d5f94e3ca5b8dfcedf8c3e883cb48f
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+nsSignonViewer.cpp
+file
+
+
+
+
+2009-08-11T21:36:48.000000Z
+5f821ddfff0cbed5e19dcd0c986dcbb4
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:36:48.000000Z
+57ef625093fb1980d625dfe47146b02f
+2008-05-16T23:28:56.072242Z
+2859
+mstepanov
+
+nsSignonViewer.h
+file
+
+
+
+
+2009-08-11T21:36:48.000000Z
+16fff825ff1c8a59aefe82709a8ffedd
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+resources
+dir
+

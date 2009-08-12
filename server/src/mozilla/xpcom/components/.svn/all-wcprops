@@ -1,0 +1,143 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/xpcom/components
+END
+nsComponentManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/xpcom/components/nsComponentManager.cpp
+END
+nsCategoryManagerUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpcom/components/nsCategoryManagerUtils.h
+END
+nsNativeComponentLoader.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/components/nsNativeComponentLoader.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/components/Makefile.in
+END
+nsStaticComponentLoader.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/components/nsStaticComponentLoader.cpp
+END
+nsComponentManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/components/nsComponentManager.h
+END
+nsNativeComponentLoader.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/components/nsNativeComponentLoader.h
+END
+nsStaticComponentLoader.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/components/nsStaticComponentLoader.h
+END
+nsIFactory.idl
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/components/nsIFactory.idl
+END
+nsIServiceManagerObsolete.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/components/nsIServiceManagerObsolete.h
+END
+nsICategoryManager.idl
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/components/nsICategoryManager.idl
+END
+nsCategoryManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/components/nsCategoryManager.cpp
+END
+nsIModuleLoader.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/components/nsIModuleLoader.idl
+END
+nsCategoryManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/xpcom/components/nsCategoryManager.h
+END
+nsIClassInfo.idl
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/components/nsIClassInfo.idl
+END
+nsIModule.idl
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/components/nsIModule.idl
+END
+nsIComponentRegistrar.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/components/nsIComponentRegistrar.idl
+END
+nsObsoleteModuleLoading.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/components/nsObsoleteModuleLoading.h
+END
+nsServiceManagerObsolete.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/components/nsServiceManagerObsolete.cpp
+END
+nsIComponentManagerObsolete.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/components/nsIComponentManagerObsolete.idl
+END
+nsIServiceManager.idl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/components/nsIServiceManager.idl
+END
+nsModule.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/components/nsModule.h
+END
+nsIComponentManager.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/548/trunk/products/server/src/mozilla/xpcom/components/nsIComponentManager.idl
+END

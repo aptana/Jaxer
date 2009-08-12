@@ -1,0 +1,6 @@
+{
+	"name": "default",
+	"files": [
+		"tests/jaxer_testing_tests.json"
+	]
+}

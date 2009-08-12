@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/jaxer/!svn/ver/4597/trunk/products/server/framework
+END
+clientConfig.js
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/4337/trunk/products/server/framework/clientConfig.js
+END
+config.js
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/jaxer/!svn/ver/4340/trunk/products/server/framework/config.js
+END
+unitTestingServerOnly.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/4181/trunk/products/server/framework/unitTestingServerOnly.js
+END
+configLog.js
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/jaxer/!svn/ver/1608/trunk/products/server/framework/configLog.js
+END
+framework_header.txt
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/1275/trunk/products/server/framework/framework_header.txt
+END
+.project
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/jaxer/!svn/ver/2971/trunk/products/server/framework/.project
+END
+frameworkStart.js
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/2641/trunk/products/server/framework/frameworkStart.js
+END
+pro_framework_compressed_header.txt
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/4190/trunk/products/server/framework/pro_framework_compressed_header.txt
+END
+jslib_header.txt
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/1275/trunk/products/server/framework/jslib_header.txt
+END
+local_config-move_to_jaxer.js
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2687/trunk/products/server/framework/local_config-move_to_jaxer.js
+END
+frameworkEnd.js
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/1417/trunk/products/server/framework/frameworkEnd.js
+END
+unitTestingHeader.js
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/2224/trunk/products/server/framework/unitTestingHeader.js
+END
+buildConfig_sample.js
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/4503/trunk/products/server/framework/buildConfig_sample.js
+END
+pro_framework_header.txt
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/4196/trunk/products/server/framework/pro_framework_header.txt
+END
+configApps.js
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/4586/trunk/products/server/framework/configApps.js
+END
+unitTestingBoth.js
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/3950/trunk/products/server/framework/unitTestingBoth.js
+END
+framework_compressed_header.txt
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/1055/trunk/products/server/framework/framework_compressed_header.txt
+END
+build.json
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/jaxer/!svn/ver/4532/trunk/products/server/framework/build.json
+END
+studio_config.js
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/3636/trunk/products/server/framework/studio_config.js
+END
+testRunner.html
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/3727/trunk/products/server/framework/testRunner.html
+END

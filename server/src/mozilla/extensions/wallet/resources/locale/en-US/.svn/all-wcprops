@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/wallet/resources/locale/en-US
+END
+walletNavigatorOverlay.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/resources/locale/en-US/walletNavigatorOverlay.dtd
+END
+walletPrefsOverlay.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/resources/locale/en-US/walletPrefsOverlay.dtd
+END
+contents.rdf
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/resources/locale/en-US/contents.rdf
+END
+pref-passwords.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/resources/locale/en-US/pref-passwords.dtd
+END
+walletTasksOverlay.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/wallet/resources/locale/en-US/walletTasksOverlay.dtd
+END
+pref-wallet.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/resources/locale/en-US/pref-wallet.dtd
+END

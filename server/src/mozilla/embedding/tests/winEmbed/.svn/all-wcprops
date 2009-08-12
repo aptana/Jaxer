@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/embedding/tests/winEmbed
+END
+winembed.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/winEmbed/winembed.dsp
+END
+WebBrowserChrome.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/winEmbed/WebBrowserChrome.cpp
+END
+winEmbed.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/winEmbed/winEmbed.h
+END
+SMALL.ICO
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/winEmbed/SMALL.ICO
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/winEmbed/Makefile.in
+END
+winEmbed.ICO
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/winEmbed/winEmbed.ICO
+END
+WebBrowserChrome.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/winEmbed/WebBrowserChrome.h
+END
+WindowCreator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/winEmbed/WindowCreator.cpp
+END
+winembed.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/winEmbed/winembed.pkg
+END
+winEmbed.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/winEmbed/winEmbed.cpp
+END
+WindowCreator.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/winEmbed/WindowCreator.h
+END
+resource.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/winEmbed/resource.h
+END
+winEmbed.rc
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/tests/winEmbed/winEmbed.rc
+END

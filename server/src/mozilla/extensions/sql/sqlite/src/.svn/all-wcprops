@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/sqlite/src
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/sqlite/src/Makefile.in
+END
+mozSqlResultSqlite.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/sqlite/src/mozSqlResultSqlite.cpp
+END
+mozSqlConnectionSqlite.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/sqlite/src/mozSqlConnectionSqlite.cpp
+END
+mozSqlResultSqlite.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/sqlite/src/mozSqlResultSqlite.h
+END
+mozSqlConnectionSqlite.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/sql/sqlite/src/mozSqlConnectionSqlite.h
+END

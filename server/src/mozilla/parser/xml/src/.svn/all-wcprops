@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/parser/xml/src
+END
+nsSAXLocator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/xml/src/nsSAXLocator.cpp
+END
+nsSAXXMLReader.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/parser/xml/src/nsSAXXMLReader.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/xml/src/Makefile.in
+END
+nsSAXAttributes.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/xml/src/nsSAXAttributes.cpp
+END
+nsSAXLocator.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/xml/src/nsSAXLocator.h
+END
+nsSAXXMLReader.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/parser/xml/src/nsSAXXMLReader.h
+END
+nsSAXAttributes.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/parser/xml/src/nsSAXAttributes.h
+END

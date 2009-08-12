@@ -1,0 +1,15 @@
+The terms under which this software (Aptana Jaxer) is licensed are described in license files included
+in the jaxer folder and, if included, in the Apache22 folder in this package.
+
+The following products are used in Jaxer and they are licensed under the terms of 
+their own licenses.
+
+Mozilla (jaxer/LICENSE_MPL)
+Apache (http://www.apache.org/licenses/)
+
+The following products are used in Jaxer and they are licensed under the terms of 
+the licenses in their respective source files.
+
+Libevent
+mini_httpd
+

@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/412/trunk/products/server/framework_tests/www/tests
+END
+results-to-junit.xslt
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/tests/results-to-junit.xslt
+END
+sandbox.httpd.conf
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/381/trunk/products/server/framework_tests/www/tests/sandbox.httpd.conf
+END
+unit-tests.httpd.conf
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/381/trunk/products/server/framework_tests/www/tests/unit-tests.httpd.conf
+END
+unit-tests-sample.properties
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/412/trunk/products/server/framework_tests/www/tests/unit-tests-sample.properties
+END
+postToFile.html
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/411/trunk/products/server/framework_tests/www/tests/postToFile.html
+END
+testSuite.html
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/260/trunk/products/server/framework_tests/www/tests/testSuite.html
+END
+build.xml
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/412/trunk/products/server/framework_tests/www/tests/build.xml
+END
+jaxer.bat
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/381/trunk/products/server/framework_tests/www/tests/jaxer.bat
+END
+postToFile.php
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/tests/postToFile.php
+END

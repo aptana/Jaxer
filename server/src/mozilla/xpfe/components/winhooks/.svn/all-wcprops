@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpfe/components/winhooks
+END
+nsIWindowsHooks.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/winhooks/nsIWindowsHooks.idl
+END
+nsSetDefaultMail.js
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/winhooks/nsSetDefaultMail.js
+END
+nsSetDefaultBrowser.js
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/winhooks/nsSetDefaultBrowser.js
+END
+nsWindowsHooks.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpfe/components/winhooks/nsWindowsHooks.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/winhooks/Makefile.in
+END
+nsUnsetDefaultMail.js
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/winhooks/nsUnsetDefaultMail.js
+END
+nsWindowsHooksUtil.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/winhooks/nsWindowsHooksUtil.h
+END
+jar.mn
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/winhooks/jar.mn
+END
+nsWindowsHooks.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/winhooks/nsWindowsHooks.h
+END
+dummyWindow.xul
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/winhooks/dummyWindow.xul
+END
+nsWindowsHooksUtil.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/components/winhooks/nsWindowsHooksUtil.cpp
+END

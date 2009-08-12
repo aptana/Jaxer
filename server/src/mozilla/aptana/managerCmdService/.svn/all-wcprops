@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/4524/trunk/products/server/src/mozilla/aptana/managerCmdService
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/3875/trunk/products/server/src/mozilla/aptana/managerCmdService/Makefile.in
+END
+aptIManagerCmdResponse.idl
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/3817/trunk/products/server/src/mozilla/aptana/managerCmdService/aptIManagerCmdResponse.idl
+END
+aptManagerCmdResponse.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/4384/trunk/products/server/src/mozilla/aptana/managerCmdService/aptManagerCmdResponse.cpp
+END
+aptIManagerCmdService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/3875/trunk/products/server/src/mozilla/aptana/managerCmdService/aptIManagerCmdService.idl
+END
+aptICmdCallback.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/3875/trunk/products/server/src/mozilla/aptana/managerCmdService/aptICmdCallback.idl
+END
+aptManagerCmdService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/4524/trunk/products/server/src/mozilla/aptana/managerCmdService/aptManagerCmdService.cpp
+END
+aptCmdCallbackEvent.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/3875/trunk/products/server/src/mozilla/aptana/managerCmdService/aptCmdCallbackEvent.cpp
+END
+aptManagerCmdResponse.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/3817/trunk/products/server/src/mozilla/aptana/managerCmdService/aptManagerCmdResponse.h
+END
+aptManagerCmdService.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/3838/trunk/products/server/src/mozilla/aptana/managerCmdService/aptManagerCmdService.h
+END
+aptCmdCallbackEvent.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/3875/trunk/products/server/src/mozilla/aptana/managerCmdService/aptCmdCallbackEvent.h
+END

@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/uriloader/base
+END
+nsCURILoader.idl
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/base/nsCURILoader.idl
+END
+nsIURIContentListener.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/base/nsIURIContentListener.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/base/Makefile.in
+END
+nsDocLoader.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/base/nsDocLoader.h
+END
+nsIWebProgress.idl
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/base/nsIWebProgress.idl
+END
+nsITransfer.idl
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/base/nsITransfer.idl
+END
+nsIDocumentLoader.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/base/nsIDocumentLoader.idl
+END
+nsIURILoader.idl
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/base/nsIURILoader.idl
+END
+nsURILoader.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/uriloader/base/nsURILoader.cpp
+END
+nsIContentHandler.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/base/nsIContentHandler.idl
+END
+nsIWebProgressListener.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/base/nsIWebProgressListener.idl
+END
+nsIWebProgressListener2.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/base/nsIWebProgressListener2.idl
+END
+nsURILoader.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/uriloader/base/nsURILoader.h
+END
+nsDocLoader.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/uriloader/base/nsDocLoader.cpp
+END

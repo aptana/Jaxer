@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/examples/simple/components/src
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/examples/simple/components/src/Makefile.in
+END
+SimpleTest.js
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/examples/simple/components/src/SimpleTest.js
+END
+SimpleTest.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/examples/simple/components/src/SimpleTest.cpp
+END

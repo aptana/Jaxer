@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/editor/resources/content
+END
+WalletTree.xul
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/editor/resources/content/WalletTree.xul
+END
+WalletViewer.xul
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/editor/resources/content/WalletViewer.xul
+END
+WalletViewer.js
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/editor/resources/content/WalletViewer.js
+END
+WalletEmploy.xul
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/editor/resources/content/WalletEmploy.xul
+END
+WalletUrlspecific.xul
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/editor/resources/content/WalletUrlspecific.xul
+END
+WalletPhone.xul
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/editor/resources/content/WalletPhone.xul
+END
+WalletCredit.xul
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/editor/resources/content/WalletCredit.xul
+END
+WalletName.xul
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/editor/resources/content/WalletName.xul
+END
+WalletBilling.xul
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/editor/resources/content/WalletBilling.xul
+END
+WalletShipping.xul
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/editor/resources/content/WalletShipping.xul
+END
+WalletOther.xul
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/editor/resources/content/WalletOther.xul
+END
+WalletPrimary.xul
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/editor/resources/content/WalletPrimary.xul
+END
+WalletAddress.xul
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/editor/resources/content/WalletAddress.xul
+END
+WalletConcatenated.xul
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/editor/resources/content/WalletConcatenated.xul
+END
+WalletMisc.xul
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/wallet/editor/resources/content/WalletMisc.xul
+END

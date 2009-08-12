@@ -1,0 +1,191 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/webservices/public
+END
+nsISOAPCall.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISOAPCall.idl
+END
+nsISOAPAttachments.idl
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISOAPAttachments.idl
+END
+nsISchema.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISchema.idl
+END
+nsIWebServiceProxy.idl
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsIWebServiceProxy.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/Makefile.in
+END
+nsISOAPEncoder.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISOAPEncoder.idl
+END
+nsIInterfaceInfoToIDL.idl
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsIInterfaceInfoToIDL.idl
+END
+nsISOAPEncoding.idl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISOAPEncoding.idl
+END
+nsIWSDL.idl
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsIWSDL.idl
+END
+nsISOAPBlock.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISOAPBlock.idl
+END
+nsISOAPTransport.idl
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISOAPTransport.idl
+END
+nsISOAPResponse.idl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISOAPResponse.idl
+END
+nsISOAPService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISOAPService.idl
+END
+nsIScriptableInterfaceInfo.idl
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsIScriptableInterfaceInfo.idl
+END
+nsISchemaLoader.idl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISchemaLoader.idl
+END
+nsIWebScriptsAccessService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsIWebScriptsAccessService.idl
+END
+nsISOAPDecoder.idl
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISOAPDecoder.idl
+END
+nsISOAPFault.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISOAPFault.idl
+END
+nsIWSDLLoader.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsIWSDLLoader.idl
+END
+nsISOAPParameter.idl
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISOAPParameter.idl
+END
+nsIWebServiceErrorHandler.idl
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsIWebServiceErrorHandler.idl
+END
+nsISOAPMessage.idl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/webservices/public/nsISOAPMessage.idl
+END
+nsISOAPServiceRegistry.idl
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISOAPServiceRegistry.idl
+END
+nsISOAPTransportListener.idl
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISOAPTransportListener.idl
+END
+nsIGenericInterfaceInfoSet.idl
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsIGenericInterfaceInfoSet.idl
+END
+nsISOAPHeaderBlock.idl
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISOAPHeaderBlock.idl
+END
+nsIWSPInterfaceInfoService.idl
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsIWSPInterfaceInfoService.idl
+END
+nsIWSDLSOAPBinding.idl
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsIWSDLSOAPBinding.idl
+END
+nsISOAPResponseListener.idl
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISOAPResponseListener.idl
+END
+nsISOAPCallCompletion.idl
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISOAPCallCompletion.idl
+END
+nsISOAPPropertyBagMutator.idl
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/webservices/public/nsISOAPPropertyBagMutator.idl
+END

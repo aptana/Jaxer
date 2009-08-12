@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/embedding/wrappers/DotNETEmbed
+END
+DotNETProfileManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/wrappers/DotNETEmbed/DotNETProfileManager.h
+END
+DotNETEmbed.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/wrappers/DotNETEmbed/DotNETEmbed.h
+END
+DotNETXPCOM_IO.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/wrappers/DotNETEmbed/DotNETXPCOM_IO.h
+END
+umWebChrome.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/wrappers/DotNETEmbed/umWebChrome.h
+END
+DotNETEmbed.snk
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/wrappers/DotNETEmbed/DotNETEmbed.snk
+END
+DotNETWebBrowser.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/wrappers/DotNETEmbed/DotNETWebBrowser.h
+END
+DotNETNetworking.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/wrappers/DotNETEmbed/DotNETNetworking.cpp
+END
+ManagedGecko.html
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/wrappers/DotNETEmbed/ManagedGecko.html
+END
+DotNETProfileManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/wrappers/DotNETEmbed/DotNETProfileManager.cpp
+END
+DotNETEmbed.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/wrappers/DotNETEmbed/DotNETEmbed.cpp
+END
+DotNETNetworking.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/wrappers/DotNETEmbed/DotNETNetworking.h
+END
+AssemblyInfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/wrappers/DotNETEmbed/AssemblyInfo.cpp
+END
+WebChrome.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/wrappers/DotNETEmbed/WebChrome.cpp
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/embedding/wrappers/DotNETEmbed/Makefile
+END

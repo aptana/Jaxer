@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/windows
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/windows/Makefile.in
+END
+guid_string.cc
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/windows/guid_string.cc
+END
+guid_string.h
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/windows/guid_string.h
+END
+http_upload.cc
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/windows/http_upload.cc
+END
+http_upload.h
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/windows/http_upload.h
+END
+string_utils.cc
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/windows/string_utils.cc
+END
+pdb_source_line_writer.cc
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/windows/pdb_source_line_writer.cc
+END
+string_utils-inl.h
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/windows/string_utils-inl.h
+END
+pdb_source_line_writer.h
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/crashreporter/google-breakpad/src/common/windows/pdb_source_line_writer.h
+END

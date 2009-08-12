@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app
+END
+main-frame.html
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/main-frame.html
+END
+jsUnitTestManager.js
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/jsUnitTestManager.js
+END
+testContainer.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/testContainer.html
+END
+main-counts-runs.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/main-counts-runs.html
+END
+main-results.html
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/main-results.html
+END
+jsUnitTracer.js
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/jsUnitTracer.js
+END
+testContainerController.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/testContainerController.html
+END
+main-progress.html
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/main-progress.html
+END
+xbDebug.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/xbDebug.js
+END
+jsUnitVersionCheck.js
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/jsUnitVersionCheck.js
+END
+main-loader.html
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/main-loader.html
+END
+emptyPage.html
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/emptyPage.html
+END
+main-data.html
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/main-data.html
+END
+jsUnitCore.js
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/jsUnitCore.js
+END
+main-counts.html
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/main-counts.html
+END
+main-errors.html
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/main-errors.html
+END
+jsUnitTestSuite.js
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/jsUnitTestSuite.js
+END
+main-counts-failures.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/main-counts-failures.html
+END
+jsUnitMockTimeout.js
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/jsUnitMockTimeout.js
+END
+main-status.html
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/main-status.html
+END
+main-counts-errors.html
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/selenium-core/jsunit/app/main-counts-errors.html
+END

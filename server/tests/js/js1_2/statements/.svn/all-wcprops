@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_2/statements
+END
+break.js
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_2/statements/break.js
+END
+continue.js
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_2/statements/continue.js
+END
+shell.js
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_2/statements/shell.js
+END
+do_while.js
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_2/statements/do_while.js
+END
+switch.js
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_2/statements/switch.js
+END
+browser.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_2/statements/browser.js
+END
+switch2.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_2/statements/switch2.js
+END

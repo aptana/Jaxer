@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/intl/uconv/ucvja
+END
+nsUCVJACID.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvja/nsUCVJACID.h
+END
+sjis.uf
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvja/sjis.uf
+END
+nsUnicodeToJISx0201.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvja/nsUnicodeToJISx0201.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/intl/uconv/ucvja/Makefile.in
+END
+nsJapaneseToUnicode.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/intl/uconv/ucvja/nsJapaneseToUnicode.cpp
+END
+jis0201gl.uf
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvja/jis0201gl.uf
+END
+nsUnicodeToISO2022JP.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvja/nsUnicodeToISO2022JP.cpp
+END
+nsJapaneseToUnicode.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvja/nsJapaneseToUnicode.h
+END
+jis0208ext.uf
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvja/jis0208ext.uf
+END
+nsUCVJADll.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvja/nsUCVJADll.h
+END
+nsUnicodeToISO2022JP.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvja/nsUnicodeToISO2022JP.h
+END
+jis0201.uf
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvja/jis0201.uf
+END
+nsUCVJA2CID.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/intl/uconv/ucvja/nsUCVJA2CID.h
+END
+japanese.map
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvja/japanese.map
+END
+nsUnicodeToEUCJP.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvja/nsUnicodeToEUCJP.cpp
+END
+jis0212.uf
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvja/jis0212.uf
+END
+nsUnicodeToSJIS.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvja/nsUnicodeToSJIS.cpp
+END
+nsUnicodeToEUCJP.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvja/nsUnicodeToEUCJP.h
+END
+jis0208.uf
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvja/jis0208.uf
+END
+nsUnicodeToSJIS.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvja/nsUnicodeToSJIS.h
+END
+nsUnicodeToJISx0201.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvja/nsUnicodeToJISx0201.cpp
+END

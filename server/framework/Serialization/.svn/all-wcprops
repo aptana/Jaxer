@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaxer/!svn/ver/4273/trunk/products/server/framework/Serialization
+END
+client_serialization.json
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1470/trunk/products/server/framework/Serialization/client_serialization.json
+END
+Serialization.js
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/4273/trunk/products/server/framework/Serialization/Serialization.js
+END
+server_serialization.json
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1470/trunk/products/server/framework/Serialization/server_serialization.json
+END

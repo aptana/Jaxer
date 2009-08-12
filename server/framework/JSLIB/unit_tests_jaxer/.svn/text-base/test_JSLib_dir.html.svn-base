@@ -1,0 +1,156 @@
+<html><head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+<script type="text/javascript" runat="server">
+                        
+// The folder path should be and empty filesystem folder 
+// that the tests can manipulate without dependency
+
+var sep = Jaxer.System.separator;
+
+var testFolderLeaf = "test";
+var testFolderParentPath =  Jaxer.System.tempFolder;
+var testFolderPath = Jaxer.Dir.combine(testFolderParentPath,testFolderLeaf);
+
+function testKnownFolderExists()
+{
+    var testFolderObject = new Jaxer.Dir(testFolderParentPath);
+    assertTrue(testFolderObject.exists, testFolderParentPath + " missing");
+}
+            
+function testCreateNewFolder()
+{
+    var testFolderObject = new Jaxer.Dir(testFolderPath);
+    
+    if (testFolderObject.exists) 
+    {
+        testFolderObject.remove();
+    }
+    testFolderObject.create();
+    
+    assertTrue(testFolderObject.exists, testFolderPath + " folder not found");
+    
+    assertTrue(testFolderObject.path == testFolderPath, "folder path is incorrect expected : " + testFolderPath + " found : " + testFolderObject.path);			
+    
+    assertTrue(testFolderObject.isDir, "isDir returned false ");
+    assertFalse(testFolderObject.isFile, ".isFile returned true ");
+    
+    assertTrue(testFolderObject.isReadable, ".isReadable returned false ");
+    assertTrue(testFolderObject.isWritable, ".isWritable returned false ");
+    assertFalse(testFolderObject.isHidden, ".isHidden returned true ");
+    
+    if (testFolderObject.exists) 
+    {
+        testFolderObject.remove();
+    }
+    
+}
+            
+function testReInitFolderPath()
+{
+    var testFolderObject = new Jaxer.Dir(testFolderPath);
+    var targetFolderObject = Jaxer.Dir.combine(testFolderParentPath,'reinit');
+
+    testFolderObject.initPath(targetFolderObject);
+    testFolderObject.create();
+    
+    assertTrue(testFolderObject.exists, targetFolderObject + " folder not found");
+    
+    assertTrue(testFolderObject.path == targetFolderObject, "folder path is incorrect expected : " + targetFolderObject + " found : " + testFolderObject.path);
+    
+    assertTrue(testFolderObject.isDir, "isDir returned false ");
+    assertFalse(testFolderObject.isFile, ".isFile returned true ");
+    
+    assertTrue(testFolderObject.isReadable, ".isReadable returned false ");
+    assertTrue(testFolderObject.isWritable, ".isWritable returned false ");
+    assertFalse(testFolderObject.isHidden, ".isHidden returned true ");
+    
+    testFolderObject.remove();
+    
+    assertFalse(testFolderObject.exists, "failed to remove " + targetFolderObject);
+    
+}
+            
+function testFolderMove()
+{
+    var testFolderObject = new Jaxer.Dir(testFolderPath);
+    var targetFolderObject = Jaxer.Dir.combine(testFolderParentPath,'moved');
+    
+	if (testFolderObject.exists) 
+    {
+        testFolderObject.remove();
+    }
+    testFolderObject.create();
+	
+    testFolderObject.move(targetFolderObject);
+    
+    assertTrue(testFolderObject.exists, targetFolderObject + " folder not found");
+    			
+    assertTrue(testFolderObject.path == targetFolderObject, "folder path is incorrect expected : " + targetFolderObject + " found : " + testFolderObject.path);
+    
+    assertTrue(testFolderObject.isDir, "isDir returned false ");
+    assertFalse(testFolderObject.isFile, ".isFile returned true ");
+    
+    assertTrue(testFolderObject.isReadable, ".isReadable returned false ");
+    assertTrue(testFolderObject.isWritable, ".isWritable returned false ");
+    assertFalse(testFolderObject.isHidden, ".isHidden returned true ");
+    
+    testFolderObject.remove();
+    
+    assertFalse(testFolderObject.exists, "failed to remove " + targetFolderObject);
+    
+}
+        
+function testAppendLeaf()
+{
+    var testFolderObject = new Jaxer.Dir(testFolderPath);
+    
+	if (testFolderObject.exists) 
+    {
+        testFolderObject.remove();
+    }
+    testFolderObject.create();
+
+    var testFolderLeafAppend = "testAppendLeaf";
+	
+    testFolderObject.append(testFolderLeafAppend);
+    assertTrue(testFolderObject.path == testFolderPath + sep+ testFolderLeafAppend, "folder leaf is incorrect expected : " + testFolderLeafAppend + " found : " + testFolderObject.leaf);
+    
+	if (testFolderObject.exists) 
+    {
+        testFolderObject.remove();
+    }
+	
+}
+			
+function testResetToParent()
+{
+    var testFolderObject = new Jaxer.Dir(testFolderPath);
+	var testFolderLeafAppend =  "testResetToParent";
+	
+    if (testFolderObject.exists) 
+    {
+        testFolderObject.remove();
+    }
+    testFolderObject.create();
+    		
+    testFolderObject.append(testFolderLeafAppend);
+	
+    assertTrue(testFolderObject.path == testFolderPath + sep + testFolderLeafAppend, "folder leaf is incorrect expected : " + testFolderLeafAppend + " found : " + testFolderObject.leaf);
+    
+    testFolderObject.initPath(testFolderObject.parentPath);
+    assertTrue(testFolderObject.path == testFolderPath, "failed reseting folder path after append expected" + testFolderPath + " found" + testFolderObject.path);
+    
+    if (testFolderObject.exists) 
+    {
+        testFolderObject.remove();
+    }
+    
+}            			
+                    
+</script>
+</head>
+<body>
+</body>
+</html>

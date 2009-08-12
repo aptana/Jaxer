@@ -1,0 +1,1685 @@
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core
+END
+test_namednodemapgetnameditemns01.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapgetnameditemns01.html
+END
+test_documentimportnode04.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode04.html
+END
+test_importNode03.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_importNode03.html
+END
+test_createElementNS06.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createElementNS06.html
+END
+DOMTestCase.js
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/DOMTestCase.js
+END
+test_importNode15.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_importNode15.html
+END
+test_setAttributeNS09.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setAttributeNS09.html
+END
+test_namednodemapsetnameditemns01.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapsetnameditemns01.html
+END
+test_nodehasattributes02.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodehasattributes02.html
+END
+test_domimplementationhasfeature02.html
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_domimplementationhasfeature02.html
+END
+test_prefix02.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_prefix02.html
+END
+test_documentgetelementsbytagnameNS01.html
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentgetelementsbytagnameNS01.html
+END
+test_createDocument06.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createDocument06.html
+END
+test_elementhasattribute04.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementhasattribute04.html
+END
+test_documentimportnode01.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode01.html
+END
+test_createElementNS03.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createElementNS03.html
+END
+test_documentcreateelementNS05.html
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentcreateelementNS05.html
+END
+test_importNode12.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_importNode12.html
+END
+test_documentimportnode13.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode13.html
+END
+test_removeAttributeNS01.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_removeAttributeNS01.html
+END
+test_isSupported12.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_isSupported12.html
+END
+test_removeNamedItemNS03.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_removeNamedItemNS03.html
+END
+test_setAttributeNS06.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setAttributeNS06.html
+END
+test_namednodemapsetnameditemns10.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapsetnameditemns10.html
+END
+test_setAttributeNodeNS04.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setAttributeNodeNS04.html
+END
+test_elementremoveattributens01.html
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementremoveattributens01.html
+END
+test_documentcreateattributeNS07.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentcreateattributeNS07.html
+END
+test_prefix11.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_prefix11.html
+END
+test_hasAttributeNS05.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_hasAttributeNS05.html
+END
+test_createDocument03.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createDocument03.html
+END
+test_elementsetattributenodens05.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementsetattributenodens05.html
+END
+test_getAttributeNS03.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getAttributeNS03.html
+END
+test_elementhasattribute01.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementhasattribute01.html
+END
+test_getAttributeNodeNS01.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getAttributeNodeNS01.html
+END
+test_getElementsByTagNameNS08.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getElementsByTagNameNS08.html
+END
+test_documentcreateelementNS02.html
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentcreateelementNS02.html
+END
+test_documentimportnode10.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode10.html
+END
+test_setAttributeNS03.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setAttributeNS03.html
+END
+test_documentimportnode22.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode22.html
+END
+test_hasAttributes02.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_hasAttributes02.html
+END
+test_setNamedItemNS05.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setNamedItemNS05.html
+END
+test_elementgetattributenodens02.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementgetattributenodens02.html
+END
+test_setAttributeNodeNS01.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setAttributeNodeNS01.html
+END
+test_nodesetprefix08.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodesetprefix08.html
+END
+test_nodeissupported03.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodeissupported03.html
+END
+test_documentcreateattributeNS04.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentcreateattributeNS04.html
+END
+test_elementsetattributenodens02.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementsetattributenodens02.html
+END
+test_hasAttributeNS02.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_hasAttributeNS02.html
+END
+test_namednodemapremovenameditemns07.html
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapremovenameditemns07.html
+END
+test_getNamedItemNS02.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getNamedItemNS02.html
+END
+test_createDocumentType03.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createDocumentType03.html
+END
+test_getElementsByTagNameNS05.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getElementsByTagNameNS05.html
+END
+test_setNamedItemNS02.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setNamedItemNS02.html
+END
+test_elementgetelementsbytagnamens04.html
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementgetelementsbytagnamens04.html
+END
+test_hc_nodedocumentfragmentnormalize1.html
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_hc_nodedocumentfragmentnormalize1.html
+END
+test_nodesetprefix05.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodesetprefix05.html
+END
+test_documentcreateattributeNS01.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentcreateattributeNS01.html
+END
+test_createAttributeNS05.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createAttributeNS05.html
+END
+test_namednodemapremovenameditemns04.html
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapremovenameditemns04.html
+END
+test_namednodemapsetnameditemns08.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapsetnameditemns08.html
+END
+test_getElementById01.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getElementById01.html
+END
+test_attrgetownerelement05.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_attrgetownerelement05.html
+END
+test_prefix09.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_prefix09.html
+END
+test_getElementsByTagNameNS02.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getElementsByTagNameNS02.html
+END
+test_getElementsByTagNameNS14.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getElementsByTagNameNS14.html
+END
+test_domimplementationcreatedocument05.html
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_domimplementationcreatedocument05.html
+END
+test_namespaceURI04.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namespaceURI04.html
+END
+test_nodesetprefix02.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodesetprefix02.html
+END
+test_namednodemapgetnameditemns05.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapgetnameditemns05.html
+END
+test_importNode07.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_importNode07.html
+END
+test_documentimportnode08.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode08.html
+END
+test_isSupported07.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_isSupported07.html
+END
+test_createAttributeNS02.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createAttributeNS02.html
+END
+test_namednodemapremovenameditemns01.html
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapremovenameditemns01.html
+END
+test_localName02.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_localName02.html
+END
+test_elementsetattributens03.html
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementsetattributens03.html
+END
+test_namednodemapsetnameditemns05.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapsetnameditemns05.html
+END
+test_nodegetownerdocument02.html
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodegetownerdocument02.html
+END
+test_attrgetownerelement02.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_attrgetownerelement02.html
+END
+test_prefix06.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_prefix06.html
+END
+test_internalSubset01.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_internalSubset01.html
+END
+test_hasAttribute04.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_hasAttribute04.html
+END
+test_nodegetprefix03.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodegetprefix03.html
+END
+test_getElementsByTagNameNS11.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getElementsByTagNameNS11.html
+END
+test_documentgetelementsbytagnameNS05.html
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentgetelementsbytagnameNS05.html
+END
+test_elementhasattributens02.html
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementhasattributens02.html
+END
+test_namespaceURI01.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namespaceURI01.html
+END
+test_namednodemapgetnameditemns02.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapgetnameditemns02.html
+END
+test_importNode04.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_importNode04.html
+END
+test_documentimportnode05.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode05.html
+END
+test_nodegetnamespaceuri03.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodegetnamespaceuri03.html
+END
+test_isSupported04.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_isSupported04.html
+END
+test_importNode16.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_importNode16.html
+END
+test_documentimportnode17.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode17.html
+END
+test_ownerDocument01.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_ownerDocument01.html
+END
+test_nodehasattributes03.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodehasattributes03.html
+END
+test_namednodemapsetnameditemns02.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapsetnameditemns02.html
+END
+test_documenttypepublicid01.html
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documenttypepublicid01.html
+END
+test_prefix03.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_prefix03.html
+END
+test_hasAttribute01.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_hasAttribute01.html
+END
+test_normalize01.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_normalize01.html
+END
+test_documentgetelementsbytagnameNS02.html
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentgetelementsbytagnameNS02.html
+END
+test_createDocument07.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createDocument07.html
+END
+test_domimplementationfeaturexmlversion2.html
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_domimplementationfeaturexmlversion2.html
+END
+test_importNode01.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_importNode01.html
+END
+test_documentimportnode02.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode02.html
+END
+test_isSupported01.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_isSupported01.html
+END
+test_createElementNS04.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createElementNS04.html
+END
+test_documentcreateelementNS06.html
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentcreateelementNS06.html
+END
+test_importNode13.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_importNode13.html
+END
+test_documentimportnode14.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode14.html
+END
+test_removeAttributeNS02.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_removeAttributeNS02.html
+END
+test_isSupported13.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_isSupported13.html
+END
+test_setAttributeNS07.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setAttributeNS07.html
+END
+test_namednodemapsetnameditemns11.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapsetnameditemns11.html
+END
+test_setAttributeNodeNS05.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setAttributeNodeNS05.html
+END
+test_publicId01.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_publicId01.html
+END
+test_hc_namednodemapinvalidtype1.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_hc_namednodemapinvalidtype1.html
+END
+test_createDocument04.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createDocument04.html
+END
+test_elementsetattributenodens06.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementsetattributenodens06.html
+END
+test_getAttributeNS04.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getAttributeNS04.html
+END
+test_domimplementationfeaturecore.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_domimplementationfeaturecore.html
+END
+test_elementhasattribute02.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementhasattribute02.html
+END
+test_getAttributeNodeNS02.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getAttributeNodeNS02.html
+END
+test_getElementsByTagNameNS09.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getElementsByTagNameNS09.html
+END
+test_createElementNS01.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createElementNS01.html
+END
+test_importNode10.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_importNode10.html
+END
+test_documentimportnode11.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode11.html
+END
+test_isSupported10.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_isSupported10.html
+END
+test_removeNamedItemNS01.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_removeNamedItemNS01.html
+END
+test_setAttributeNS04.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setAttributeNS04.html
+END
+test_elementgetattributenodens03.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementgetattributenodens03.html
+END
+test_setAttributeNodeNS02.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setAttributeNodeNS02.html
+END
+test_nodesetprefix09.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodesetprefix09.html
+END
+test_nodeissupported04.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodeissupported04.html
+END
+test_documentcreateattributeNS05.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentcreateattributeNS05.html
+END
+test_elementsetattributenodens03.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementsetattributenodens03.html
+END
+test_createDocument01.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createDocument01.html
+END
+test_hasAttributeNS03.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_hasAttributeNS03.html
+END
+test_namednodemapremovenameditemns08.html
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapremovenameditemns08.html
+END
+test_getAttributeNS01.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getAttributeNS01.html
+END
+test_getNamedItemNS03.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getNamedItemNS03.html
+END
+test_getElementsByTagNameNS06.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getElementsByTagNameNS06.html
+END
+test_setAttributeNS01.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setAttributeNS01.html
+END
+test_documentimportnode20.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode20.html
+END
+test_setNamedItemNS03.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setNamedItemNS03.html
+END
+test_elementgetelementsbytagnamens05.html
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementgetelementsbytagnamens05.html
+END
+test_hc_nodedocumentfragmentnormalize2.html
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_hc_nodedocumentfragmentnormalize2.html
+END
+test_nodesetprefix06.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodesetprefix06.html
+END
+test_nodeissupported01.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodeissupported01.html
+END
+test_documentcreateattributeNS02.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentcreateattributeNS02.html
+END
+test_createAttributeNS06.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createAttributeNS06.html
+END
+test_namednodemapremovenameditemns05.html
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapremovenameditemns05.html
+END
+test_namednodemapsetnameditemns09.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapsetnameditemns09.html
+END
+test_getElementById02.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getElementById02.html
+END
+test_documenttypeinternalSubset01.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documenttypeinternalSubset01.html
+END
+test_createDocumentType01.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createDocumentType01.html
+END
+test_getElementsByTagNameNS03.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getElementsByTagNameNS03.html
+END
+test_domimplementationcreatedocumenttype04.html
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_domimplementationcreatedocumenttype04.html
+END
+test_setAttributeNS10.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setAttributeNS10.html
+END
+test_elementgetelementsbytagnamens02.html
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementgetelementsbytagnamens02.html
+END
+test_nodesetprefix03.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodesetprefix03.html
+END
+test_namednodemapgetnameditemns06.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapgetnameditemns06.html
+END
+test_documentimportnode09.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode09.html
+END
+test_importNode08.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_importNode08.html
+END
+test_createAttributeNS03.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createAttributeNS03.html
+END
+test_namednodemapremovenameditemns02.html
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapremovenameditemns02.html
+END
+test_elementsetattributens04.html
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementsetattributens04.html
+END
+test_localName03.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_localName03.html
+END
+test_namednodemapsetnameditemns06.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapsetnameditemns06.html
+END
+test_attrgetownerelement03.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_attrgetownerelement03.html
+END
+test_prefix07.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_prefix07.html
+END
+test_ownerElement01.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_ownerElement01.html
+END
+test_getElementsByTagNameNS12.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getElementsByTagNameNS12.html
+END
+test_domimplementationcreatedocumenttype01.html
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_domimplementationcreatedocumenttype01.html
+END
+test_domimplementationcreatedocument03.html
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_domimplementationcreatedocument03.html
+END
+test_elementhasattributens03.html
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementhasattributens03.html
+END
+test_namespaceURI02.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namespaceURI02.html
+END
+test_namednodemapgetnameditemns03.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapgetnameditemns03.html
+END
+test_documentimportnode06.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode06.html
+END
+test_importNode05.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_importNode05.html
+END
+test_isSupported05.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_isSupported05.html
+END
+test_documentimportnode18.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode18.html
+END
+test_importNode17.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_importNode17.html
+END
+test_elementsetattributens01.html
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementsetattributens01.html
+END
+test_namednodemapsetnameditemns03.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapsetnameditemns03.html
+END
+test_nodehasattributes04.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodehasattributes04.html
+END
+test_hasAttribute02.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_hasAttribute02.html
+END
+test_prefix04.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_prefix04.html
+END
+test_documenttypesystemid01.html
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documenttypesystemid01.html
+END
+test_documentgetelementsbytagnameNS03.html
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentgetelementsbytagnameNS03.html
+END
+test_nodenormalize01.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodenormalize01.html
+END
+test_documentimportnode03.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode03.html
+END
+test_importNode02.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_importNode02.html
+END
+test_createElementNS05.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createElementNS05.html
+END
+test_isSupported02.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_isSupported02.html
+END
+test_documentimportnode15.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode15.html
+END
+test_importNode14.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_importNode14.html
+END
+test_isSupported14.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_isSupported14.html
+END
+test_nodehasattributes01.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodehasattributes01.html
+END
+test_domimplementationhasfeature01.html
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_domimplementationhasfeature01.html
+END
+test_prefix01.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_prefix01.html
+END
+test_systemId01.html
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_systemId01.html
+END
+test_nodegetlocalname03.html
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodegetlocalname03.html
+END
+test_createDocument05.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createDocument05.html
+END
+test_getAttributeNS05.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getAttributeNS05.html
+END
+test_elementhasattribute03.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementhasattribute03.html
+END
+test_createElementNS02.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createElementNS02.html
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/Makefile.in
+END
+test_documentimportnode12.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode12.html
+END
+test_importNode11.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_importNode11.html
+END
+test_isSupported11.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_isSupported11.html
+END
+test_removeNamedItemNS02.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_removeNamedItemNS02.html
+END
+test_setAttributeNS05.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setAttributeNS05.html
+END
+test_setAttributeNodeNS03.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setAttributeNodeNS03.html
+END
+test_nodeissupported05.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodeissupported05.html
+END
+test_documentcreateattributeNS06.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentcreateattributeNS06.html
+END
+test_prefix10.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_prefix10.html
+END
+test_documentgetelementbyid01.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentgetelementbyid01.html
+END
+test_elementsetattributenodens04.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementsetattributenodens04.html
+END
+test_createDocument02.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createDocument02.html
+END
+test_hasAttributeNS04.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_hasAttributeNS04.html
+END
+test_namednodemapremovenameditemns09.html
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapremovenameditemns09.html
+END
+test_getAttributeNS02.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getAttributeNS02.html
+END
+test_getNamedItemNS04.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getNamedItemNS04.html
+END
+test_getElementsByTagNameNS07.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getElementsByTagNameNS07.html
+END
+test_documentcreateelementNS01.html
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentcreateelementNS01.html
+END
+test_setAttributeNS02.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setAttributeNS02.html
+END
+test_documentimportnode21.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode21.html
+END
+test_hasAttributes01.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_hasAttributes01.html
+END
+test_setNamedItemNS04.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setNamedItemNS04.html
+END
+test_elementgetattributenodens01.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementgetattributenodens01.html
+END
+test_nodesetprefix07.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodesetprefix07.html
+END
+test_nodeissupported02.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodeissupported02.html
+END
+test_documentcreateattributeNS03.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentcreateattributeNS03.html
+END
+test_elementsetattributenodens01.html
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementsetattributenodens01.html
+END
+test_hasAttributeNS01.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_hasAttributeNS01.html
+END
+test_namednodemapremovenameditemns06.html
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapremovenameditemns06.html
+END
+test_elementsetattributens08.html
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementsetattributens08.html
+END
+exclusions.js
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/exclusions.js
+END
+test_getNamedItemNS01.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getNamedItemNS01.html
+END
+test_createDocumentType02.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createDocumentType02.html
+END
+test_getElementsByTagNameNS04.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getElementsByTagNameNS04.html
+END
+test_domimplementationcreatedocument07.html
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_domimplementationcreatedocument07.html
+END
+test_setNamedItemNS01.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_setNamedItemNS01.html
+END
+test_nodesetprefix04.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodesetprefix04.html
+END
+test_importNode09.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_importNode09.html
+END
+test_isSupported09.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_isSupported09.html
+END
+test_createAttributeNS04.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createAttributeNS04.html
+END
+test_namednodemapremovenameditemns03.html
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapremovenameditemns03.html
+END
+test_elementsetattributens05.html
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementsetattributens05.html
+END
+test_localName04.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_localName04.html
+END
+test_namednodemapsetnameditemns07.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapsetnameditemns07.html
+END
+test_attrgetownerelement04.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_attrgetownerelement04.html
+END
+test_prefix08.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_prefix08.html
+END
+test_ownerElement02.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_ownerElement02.html
+END
+test_getElementsByTagNameNS01.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getElementsByTagNameNS01.html
+END
+test_getElementsByTagNameNS13.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getElementsByTagNameNS13.html
+END
+test_domimplementationcreatedocument04.html
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_domimplementationcreatedocument04.html
+END
+test_domimplementationcreatedocumenttype02.html
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_domimplementationcreatedocumenttype02.html
+END
+test_namespaceURI03.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namespaceURI03.html
+END
+test_nodesetprefix01.html
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodesetprefix01.html
+END
+test_elementgetattributens02.html
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementgetattributens02.html
+END
+test_namednodemapgetnameditemns04.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapgetnameditemns04.html
+END
+test_importNode06.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_importNode06.html
+END
+test_documentimportnode07.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode07.html
+END
+test_isSupported06.html
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_isSupported06.html
+END
+test_createAttributeNS01.html
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_createAttributeNS01.html
+END
+test_documentimportnode19.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentimportnode19.html
+END
+test_localName01.html
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_localName01.html
+END
+test_elementsetattributens02.html
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementsetattributens02.html
+END
+test_namednodemapsetnameditemns04.html
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_namednodemapsetnameditemns04.html
+END
+test_nodegetownerdocument01.html
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_nodegetownerdocument01.html
+END
+test_attrgetownerelement01.html
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_attrgetownerelement01.html
+END
+test_prefix05.html
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_prefix05.html
+END
+test_hasAttribute03.html
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_hasAttribute03.html
+END
+test_elementsetattributensurinull.html
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementsetattributensurinull.html
+END
+test_getElementsByTagNameNS10.html
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_getElementsByTagNameNS10.html
+END
+test_documentgetelementsbytagnameNS04.html
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_documentgetelementsbytagnameNS04.html
+END
+test_elementhasattributens01.html
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level2-core/test_elementhasattributens01.html
+END

@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/cck/browser/resources/content/cckwizard/srcfiles
+END
+cck-config.css.in
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/cck/browser/resources/content/cckwizard/srcfiles/cck-config.css.in
+END
+cck.dtd.in
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/cck/browser/resources/content/cckwizard/srcfiles/cck.dtd.in
+END
+cck.js.in
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/cck/browser/resources/content/cckwizard/srcfiles/cck.js.in
+END
+cck.properties.in
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/cck/browser/resources/content/cckwizard/srcfiles/cck.properties.in
+END
+cckService.js.in
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/cck/browser/resources/content/cckwizard/srcfiles/cckService.js.in
+END
+disableAboutConfig.js.in
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/cck/browser/resources/content/cckwizard/srcfiles/disableAboutConfig.js.in
+END
+install.rdf.in
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/cck/browser/resources/content/cckwizard/srcfiles/install.rdf.in
+END
+install.js.in
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/cck/browser/resources/content/cckwizard/srcfiles/install.js.in
+END
+chrome.manifest.in
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/cck/browser/resources/content/cckwizard/srcfiles/chrome.manifest.in
+END
+install.rdf.mip.in
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/cck/browser/resources/content/cckwizard/srcfiles/install.rdf.mip.in
+END
+cck-browser-overlay.xul.in
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/cck/browser/resources/content/cckwizard/srcfiles/cck-browser-overlay.xul.in
+END

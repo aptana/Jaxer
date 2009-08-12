@@ -1,0 +1,185 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US
+END
+config.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/config.dtd
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/Makefile.in
+END
+commonDialog.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/commonDialog.dtd
+END
+printPageSetup.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/printPageSetup.dtd
+END
+tabbrowser.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/tabbrowser.dtd
+END
+about.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/about.dtd
+END
+wizardManager.properties
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/wizardManager.properties
+END
+printdialog.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/printdialog.dtd
+END
+commonDialogs.properties
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/commonDialogs.properties
+END
+contents-region.rdf
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/contents-region.rdf
+END
+dialog.properties
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/dialog.properties
+END
+printProgress.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/printProgress.dtd
+END
+printPreviewProgress.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/printPreviewProgress.dtd
+END
+region.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/region.dtd
+END
+intl.css
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/intl.css
+END
+config.properties
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/config.properties
+END
+brand.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/brand.dtd
+END
+nsTreeSorting.properties
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/nsTreeSorting.properties
+END
+languageNames.properties
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/languageNames.properties
+END
+regionNames.properties
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/regionNames.properties
+END
+textcontext.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/textcontext.dtd
+END
+printPageSetup.properties
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/printPageSetup.properties
+END
+tabbrowser.properties
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/tabbrowser.properties
+END
+charsetOverlay.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/charsetOverlay.dtd
+END
+keys.properties
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/keys.properties
+END
+contents.rdf
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/contents.rdf
+END
+tree.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/tree.dtd
+END
+dialogOverlay.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/dialogOverlay.dtd
+END
+wizardOverlay.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/wizardOverlay.dtd
+END
+region.properties
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/global/resources/locale/en-US/region.properties
+END

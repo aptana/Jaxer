@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/modules/plugin/samples/SanePlugin
+END
+nsSanePluginFactory.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/SanePlugin/nsSanePluginFactory.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/SanePlugin/Makefile.in
+END
+nsSanePluginFactory.h
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/SanePlugin/nsSanePluginFactory.h
+END
+nsSanePlugin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/SanePlugin/nsSanePlugin.cpp
+END
+nsSanePlugin_CID.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/SanePlugin/nsSanePlugin_CID.h
+END
+nsSanePlugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/SanePlugin/nsSanePlugin.h
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/SanePlugin/README
+END
+nsSanePluginControl.idl
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/samples/SanePlugin/nsSanePluginControl.idl
+END

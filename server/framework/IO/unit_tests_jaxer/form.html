@@ -1,0 +1,11 @@
+<script runAt="server">
+	document.write(Jaxer.request.method);
+	for (a in Jaxer.request.data){
+		var value=Jaxer.request.data[a];
+		if (value != null) 
+		{
+			document.write(a + "=" + value);
+		}
+		else document.write(a);
+	}
+</script>

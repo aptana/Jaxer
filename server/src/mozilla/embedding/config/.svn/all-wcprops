@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/embedding/config
+END
+xulprefs.mn
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/embedding/config/xulprefs.mn
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/embedding/config/Makefile.in
+END
+basebrowser-qnx
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/embedding/config/basebrowser-qnx
+END
+gre-installer-win.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/config/gre-installer-win.pkg
+END
+basebrowser-installer-win.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/embedding/config/basebrowser-installer-win.pkg
+END
+gre.pl
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/config/gre.pl
+END
+GenerateManifest.pm
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/config/GenerateManifest.pm
+END
+minimo-qnx
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/embedding/config/minimo-qnx
+END
+gre-win-supp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/config/gre-win-supp
+END
+basebrowser-win-supp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/config/basebrowser-win-supp
+END
+basebrowser-unix
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/embedding/config/basebrowser-unix
+END
+embed-jar.mn
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/config/embed-jar.mn
+END
+readme.html
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/config/readme.html
+END
+mk_sdk_hdr_lst.pl
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/config/mk_sdk_hdr_lst.pl
+END
+basebrowser-mac-macho
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/embedding/config/basebrowser-mac-macho
+END
+installed-chrome.txt
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/config/installed-chrome.txt
+END
+gre-win
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/config/gre-win
+END
+basebrowser-win
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/embedding/config/basebrowser-win
+END
+minimo-unix
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/embedding/config/minimo-unix
+END
+xulsecurity.mn
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/config/xulsecurity.mn
+END
+gen_mn.pl
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/config/gen_mn.pl
+END

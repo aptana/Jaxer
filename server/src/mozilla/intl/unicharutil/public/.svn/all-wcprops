@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/intl/unicharutil/public
+END
+nsIUGenDetailCategory.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/public/nsIUGenDetailCategory.h
+END
+nsITextTransform.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/intl/unicharutil/public/nsITextTransform.h
+END
+nsICaseConversion.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/public/nsICaseConversion.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/intl/unicharutil/public/Makefile.in
+END
+nsHankakuToZenkakuCID.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/public/nsHankakuToZenkakuCID.h
+END
+nsUnicharUtilCIID.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/public/nsUnicharUtilCIID.h
+END
+nsIUGenCategory.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/unicharutil/public/nsIUGenCategory.h
+END

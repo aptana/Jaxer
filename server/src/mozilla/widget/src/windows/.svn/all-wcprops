@@ -1,0 +1,317 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/windows
+END
+nsBidiKeyboard.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/widget/src/windows/nsBidiKeyboard.h
+END
+nsSound.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsSound.h
+END
+nsSwitchToUIThread.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsSwitchToUIThread.h
+END
+nsNativeDragTarget.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/widget/src/windows/nsNativeDragTarget.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/widget/src/windows/Makefile.in
+END
+nsPrintSettingsWin.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsPrintSettingsWin.h
+END
+nsImageClipboard.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/widget/src/windows/nsImageClipboard.cpp
+END
+nsDeviceContextSpecWin.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/windows/nsDeviceContextSpecWin.h
+END
+nsScreenWin.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsScreenWin.h
+END
+nsKeyboardLayout.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/windows/nsKeyboardLayout.h
+END
+nsDragService.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/widget/src/windows/nsDragService.h
+END
+nsClipboard.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/widget/src/windows/nsClipboard.h
+END
+nsDataObj.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/windows/nsDataObj.cpp
+END
+nsWindow.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/windows/nsWindow.cpp
+END
+nsAppShell.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsAppShell.cpp
+END
+nsNativeDragSource.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsNativeDragSource.h
+END
+nsIdleServiceWin.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsIdleServiceWin.h
+END
+nsFilePicker.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/widget/src/windows/nsFilePicker.h
+END
+nsToolkit.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsToolkit.cpp
+END
+nsDataObjCollection.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsDataObjCollection.h
+END
+nsdefs.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsdefs.h
+END
+nsPrintOptionsWin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsPrintOptionsWin.cpp
+END
+IENUMFE.CPP
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/widget/src/windows/IENUMFE.CPP
+END
+nsSound.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsSound.cpp
+END
+nsBidiKeyboard.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/widget/src/windows/nsBidiKeyboard.cpp
+END
+nsLookAndFeel.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/windows/nsLookAndFeel.h
+END
+resource.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/widget/src/windows/resource.h
+END
+nsPrintSettingsWin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsPrintSettingsWin.cpp
+END
+nsNativeDragTarget.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/windows/nsNativeDragTarget.cpp
+END
+nsNativeThemeWin.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/windows/nsNativeThemeWin.h
+END
+nsScreenManagerWin.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsScreenManagerWin.h
+END
+nsDeviceContextSpecWin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/widget/src/windows/nsDeviceContextSpecWin.cpp
+END
+nsScreenWin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsScreenWin.cpp
+END
+nsKeyboardLayout.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/windows/nsKeyboardLayout.cpp
+END
+nsDragService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/widget/src/windows/nsDragService.cpp
+END
+nsClipboard.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/widget/src/windows/nsClipboard.cpp
+END
+nsNativeDragSource.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsNativeDragSource.cpp
+END
+nsWindowAPI.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsWindowAPI.h
+END
+nsImageClipboard.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsImageClipboard.h
+END
+nsDataObj.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/widget/src/windows/nsDataObj.h
+END
+nsIdleServiceWin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsIdleServiceWin.cpp
+END
+nsWindow.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/windows/nsWindow.h
+END
+nsFilePicker.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/widget/src/windows/nsFilePicker.cpp
+END
+nsAppShell.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsAppShell.h
+END
+nsDataObjCollection.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsDataObjCollection.cpp
+END
+nsLookAndFeel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/windows/nsLookAndFeel.cpp
+END
+aimm.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/aimm.h
+END
+nsNativeThemeWin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/widget/src/windows/nsNativeThemeWin.cpp
+END
+nsScreenManagerWin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsScreenManagerWin.cpp
+END
+nsToolkit.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsToolkit.h
+END
+nsPrintOptionsWin.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/nsPrintOptionsWin.h
+END
+IENUMFE.H
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/widget/src/windows/IENUMFE.H
+END

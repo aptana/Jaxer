@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser
+END
+browserwindow.cs
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser/browserwindow.cs
+END
+PrefsDialog.resx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser/PrefsDialog.resx
+END
+PrefPanel.cs
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser/PrefPanel.cs
+END
+browser-toolbar.xml
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser/browser-toolbar.xml
+END
+OpenLocDialog.cs
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser/OpenLocDialog.cs
+END
+browser-menu.xml
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser/browser-menu.xml
+END
+RestoreSessionSettings.resx
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser/RestoreSessionSettings.resx
+END
+browserwindow.resx
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser/browserwindow.resx
+END
+PrefPanel.resx
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser/PrefPanel.resx
+END
+BrowserDisplayPanel.cs
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser/BrowserDisplayPanel.cs
+END
+PrefPanels.xml
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser/PrefPanels.xml
+END
+aboutdialog.cs
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser/aboutdialog.cs
+END
+OpenLocDialog.resx
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser/OpenLocDialog.resx
+END
+LocationBar.cs
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser/LocationBar.cs
+END
+PrefsDialog.cs
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser/PrefsDialog.cs
+END
+BrowserDisplayPanel.resx
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser/BrowserDisplayPanel.resx
+END
+RestoreSessionSettings.cs
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser/RestoreSessionSettings.cs
+END
+LocationBar.resx
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/manticore/browser/LocationBar.resx
+END

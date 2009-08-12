@@ -1,0 +1,299 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc
+END
+evrpc-internal.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/evrpc-internal.h
+END
+evdns.3
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/evdns.3
+END
+kqueue.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/kqueue.c
+END
+event-internal.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/event-internal.h
+END
+configure
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/configure
+END
+event.3
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/event.3
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/Makefile.in
+END
+poll.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/poll.c
+END
+evutil.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/evutil.c
+END
+config.guess
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/config.guess
+END
+config.sub
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/config.sub
+END
+ltmain.sh
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/ltmain.sh
+END
+evutil.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/evutil.h
+END
+strlcpy-internal.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/strlcpy-internal.h
+END
+select.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/select.c
+END
+evport.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/evport.c
+END
+evhttp.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/evhttp.h
+END
+http.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/http.c
+END
+event_tagging.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/event_tagging.c
+END
+epoll_sub.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/epoll_sub.c
+END
+min_heap.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/min_heap.h
+END
+event_rpcgen.py
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/event_rpcgen.py
+END
+event-config.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/event-config.h
+END
+autogen.sh
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/autogen.sh
+END
+http-internal.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/http-internal.h
+END
+mkinstalldirs
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/mkinstalldirs
+END
+strlcpy.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/strlcpy.c
+END
+evbuffer.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/evbuffer.c
+END
+devpoll.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/devpoll.c
+END
+configure.in
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/configure.in
+END
+ChangeLog
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/ChangeLog
+END
+buffer.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/buffer.c
+END
+epoll.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/epoll.c
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/README
+END
+evsignal.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/evsignal.h
+END
+signal.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/signal.c
+END
+evdns.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/evdns.c
+END
+config.h.in
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/config.h.in
+END
+evrpc.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/evrpc.c
+END
+event.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/event.c
+END
+log.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/log.c
+END
+evdns.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/evdns.h
+END
+evrpc.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/evrpc.h
+END
+event.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/event.h
+END
+log.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/log.h
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/Makefile.am
+END
+missing
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/missing
+END
+aclocal.m4
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/aclocal.m4
+END
+install-sh
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2489/trunk/products/server/src/libevent/libevent-1.4.2-rc/install-sh
+END

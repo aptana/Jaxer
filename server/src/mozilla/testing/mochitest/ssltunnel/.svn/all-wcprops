@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/testing/mochitest/ssltunnel
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/testing/mochitest/ssltunnel/Makefile.in
+END
+ssltunnel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/testing/mochitest/ssltunnel/ssltunnel.cpp
+END

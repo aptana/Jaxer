@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level0
+END
+idn_child.html
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level0/idn_child.html
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level0/Makefile.in
+END
+file_crossdomainprops_inner.html
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level0/file_crossdomainprops_inner.html
+END
+child_ip_address.html
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level0/child_ip_address.html
+END
+test_setting_document.domain_to_shortened_ipaddr.html
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level0/test_setting_document.domain_to_shortened_ipaddr.html
+END
+test_crossdomainprops.html
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level0/test_crossdomainprops.html
+END
+test_setting_document.domain_idn.html
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/dom/tests/mochitest/dom-level0/test_setting_document.domain_idn.html
+END

@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/embedding/lite
+END
+nsEmbedGlobalHistory.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/lite/nsEmbedGlobalHistory.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/embedding/lite/Makefile.in
+END
+nsEmbedLiteModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/lite/nsEmbedLiteModule.cpp
+END
+nsEmbedChromeRegistry.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/lite/nsEmbedChromeRegistry.cpp
+END
+nsEmbedGlobalHistory.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/lite/nsEmbedGlobalHistory.h
+END
+embedlite.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/lite/embedlite.pkg
+END
+nsEmbedChromeRegistry.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/lite/nsEmbedChromeRegistry.h
+END

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/embedding/components/webbrowserpersist/src
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/webbrowserpersist/src/Makefile.in
+END
+nsWebBrowserPersist.h
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/webbrowserpersist/src/nsWebBrowserPersist.h
+END
+nsWebBrowserPersist.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/embedding/components/webbrowserpersist/src/nsWebBrowserPersist.cpp
+END

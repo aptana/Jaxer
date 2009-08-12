@@ -1,0 +1,984 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<title>SQLite DB Tests</title>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+		<script type='text/javascript' runat='server'>
+			
+			function SKIP_TESTS()
+			{
+				var isSQLite = Jaxer.Config.DEFAULT_DB.IMPLEMENTATION == "SQLite";
+				return isSQLite ? null : "Not using SQLite for user database";
+			}
+			
+			/**
+			 * Utility method that drops a table.
+			 * @param {String} tableName
+			 * 	The name of a table to drop
+			 */
+			function dropTable(tableName)
+			{
+				Jaxer.DB.execute("DROP TABLE IF EXISTS " + tableName);
+			}
+			
+			/**
+             * Utility method that drops a table if exists and creates a new one.
+             * @param {String} tableName
+             * @param {String} type - DB row type
+             * 	The name of a table to drop
+             */
+			function initTable(tableName, typeOrTypes)
+			{
+				Jaxer.DB.execute("DROP TABLE IF EXISTS " + tableName);
+				
+				if (typeof typeOrTypes == "string") typeOrTypes = [typeOrTypes];
+				var nameTypePairs = typeOrTypes.map(function(type, index) { return "value" + index + " " + type; });
+				
+				var createTestDBtable = 
+            	 	"CREATE TABLE IF NOT EXISTS " + tableName + " (" +
+            		nameTypePairs.join(", ") + 
+            		");"
+            
+            	Jaxer.DB.execute(createTestDBtable);
+			}
+			
+			/**
+			 * Creates test date object.
+			 */
+			function createTestDate()
+			{
+				var toReturn = new Date();
+				toReturn.setUTCFullYear(2010);
+				toReturn.setUTCMonth(0);
+				toReturn.setUTCDate(14);
+				toReturn.setUTCHours(6);
+				toReturn.setUTCMinutes(7);
+				toReturn.setUTCSeconds(8);
+				toReturn.setUTCMilliseconds(500);
+				
+				return toReturn;
+			}
+			
+			function testInsertStringToTEXT()
+			{
+				//creating DB table
+				initTable("testStringToTEXTInsertTable", "TEXT");
+				
+				//inserting record
+				var toInsert = "Test string";
+				Jaxer.DB.execute("INSERT INTO testStringToTEXTInsertTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking the value that has been written to that table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testStringToTEXTInsertTable " +
+				"WHERE value0='Test string'").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testStringToTEXTInsertTable");
+			}
+			
+			function testInsertStringToINTEGER()
+			{
+				//creating DB table
+				initTable("testStringToINTEGERInsertTable", "INTEGER");
+				
+				//inserting record
+				var toInsert = "12";
+				Jaxer.DB.execute("INSERT INTO testStringToINTEGERInsertTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking the value that has been written to that table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testStringToINTEGERInsertTable " +
+				"WHERE value0='12'").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testStringToINTEGERInsertTable");
+			}
+			
+			function testInsertStringToREAL()
+			{
+				//creating DB table
+				initTable("testStringToREALInsertTable", "REAL");
+				
+				//inserting record
+				var toInsert = "17.5";
+				Jaxer.DB.execute("INSERT INTO testStringToREALInsertTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking the value that has been written to that table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testStringToREALInsertTable " +
+				"WHERE value0='17.5'").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testStringToREALInsertTable");
+			}
+			
+			function testInsertStringToBLOB()
+			{
+				//creating DB table
+				initTable("testStringToBLOBInsertTable", "BLOB");
+				
+				//inserting record
+				var toInsert = "Test string";
+				Jaxer.DB.execute("INSERT INTO testStringToBLOBInsertTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking that the value is written to the table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testStringToBLOBInsertTable").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testStringToBLOBInsertTable");
+			}
+			
+			function testInsertIntegerToTEXT()
+			{
+				//creating DB table
+				initTable("testInsertIntegerToTEXTTable", "TEXT");
+				
+				//inserting record
+				var toInsert = 12;
+				Jaxer.DB.execute("INSERT INTO testInsertIntegerToTEXTTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking the value that has been written to that table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testInsertIntegerToTEXTTable " +
+				"WHERE value0='12.0'").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testInsertIntegerToTEXTTable");
+			}
+			
+			function testInsertIntegerToINTEGER()
+			{
+				//creating DB table
+				initTable("testInsertIntegerToINTEGERTable", "INTEGER");
+				
+				//inserting record
+				var toInsert = 12;
+				Jaxer.DB.execute("INSERT INTO testInsertIntegerToINTEGERTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking the value that has been written to that table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testInsertIntegerToINTEGERTable " +
+				"WHERE value0='12'").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testInsertIntegerToINTEGERTable");
+			}
+			
+			function testInsertIntegerToREAL()
+			{
+				//creating DB table
+				initTable("testInsertINTEGERtoREALTable", "REAL");
+				
+				//inserting record
+				var toInsert = 12;
+				Jaxer.DB.execute("INSERT INTO testInsertINTEGERtoREALTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking the value that has been written to that table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testInsertINTEGERtoREALTable " +
+				"WHERE value0='12'").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testInsertINTEGERtoREALTable");
+			}
+			
+			function testInsertIntegerToBLOB()
+			{
+				//creating DB table
+				initTable("testInsertIntegerToBLOBTable", "BLOB");
+				
+				//inserting record
+				var toInsert = 12;
+				Jaxer.DB.execute("INSERT INTO testInsertIntegerToBLOBTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking that the value is written to the table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testInsertIntegerToBLOBTable").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testInsertIntegerToBLOBTable");
+			}
+			
+			function testInsertFloatToTEXT()
+			{
+				//creating DB table
+				initTable("testInsertFloatToTEXTTable", "TEXT");
+				
+				//inserting record
+				var toInsert = 18.5;
+				Jaxer.DB.execute("INSERT INTO testInsertFloatToTEXTTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking the value that has been written to that table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testInsertFloatToTEXTTable " +
+				"WHERE value0='18.5'").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testInsertFloatToTEXTTable");
+			}
+			
+			function testInsertFloatToINTEGER()
+			{
+				//creating DB table
+				initTable("testInsertFloatToINTEGERTable", "INTEGER");
+				
+				//inserting record
+				var toInsert = 18.5;
+				Jaxer.DB.execute("INSERT INTO testInsertFloatToINTEGERTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking the value that has been written to that table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testInsertFloatToINTEGERTable " +
+				"WHERE value0='18.5'").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testInsertFloatToINTEGERTable");
+			}
+			
+			function testInsertFloatToREAL()
+			{
+				//creating DB table
+				initTable("testInsertINTEGERtoREALTable", "REAL");
+				
+				//inserting record
+				var toInsert = 18.5;
+				Jaxer.DB.execute("INSERT INTO testInsertINTEGERtoREALTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking the value that has been written to that table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testInsertINTEGERtoREALTable " +
+				"WHERE value0='18.5'").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testInsertINTEGERtoREALTable");
+			}
+			
+			function testInsertFloatToBLOB()
+			{
+				//creating DB table
+				initTable("testInsertFloatToBLOBTable", "BLOB");
+				
+				//inserting record
+				var toInsert = 18.5;
+				Jaxer.DB.execute("INSERT INTO testInsertFloatToBLOBTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking that the value is written to the table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testInsertFloatToBLOBTable").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testInsertFloatToBLOBTable");
+			}
+			
+			function testInsertBooleanToTEXT()
+			{
+				//creating DB table
+				initTable("testInsertBooleanToTEXTTable", "TEXT");
+				
+				//inserting record
+				var toInsert = true;
+				Jaxer.DB.execute("INSERT INTO testInsertBooleanToTEXTTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking the value that has been written to that table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testInsertBooleanToTEXTTable " +
+				"WHERE value0='1'").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testInsertBooleanToTEXTTable");
+			}
+			
+			function testInsertBooleanToINTEGER()
+			{
+				//creating DB table
+				initTable("testInsertBooleanToINTEGERTable", "INTEGER");
+				
+				//inserting record
+				var toInsert = true;
+				Jaxer.DB.execute("INSERT INTO testInsertBooleanToINTEGERTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking the value that has been written to that table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testInsertBooleanToINTEGERTable " +
+				"WHERE value0='1'").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testInsertBooleanToINTEGERTable");
+			}
+			
+			function testInsertBooleanToREAL()
+			{
+				//creating DB table
+				initTable("testInsertINTEGERtoREALTable", "REAL");
+				
+				//inserting record
+				var toInsert = true;
+				Jaxer.DB.execute("INSERT INTO testInsertINTEGERtoREALTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking the value that has been written to that table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testInsertINTEGERtoREALTable " +
+				"WHERE value0='1.0'").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testInsertINTEGERtoREALTable");
+			}
+			
+			function testInsertBooleanToBLOB()
+			{
+				//creating DB table
+				initTable("testInsertBooleanToBLOBTable", "BLOB");
+				
+				//inserting record
+				var toInsert = true;
+				Jaxer.DB.execute("INSERT INTO testInsertBooleanToBLOBTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking that the value is written to the table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testInsertBooleanToBLOBTable").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testInsertBooleanToBLOBTable");
+			}
+			
+			function testExtractStringFromTEXT()
+			{
+				//creating DB table
+				initTable("testStringFromTEXTExtractTable", "TEXT");
+				
+				//inserting record
+				Jaxer.DB.execute("INSERT INTO testStringFromTEXTExtractTable (value0) VALUES ('Test string')");
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testStringFromTEXTExtractTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, 'Test string', "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testStringFromTEXTExtractTable");
+			}
+			
+			function testExtractStringFromINTEGER()
+			{
+				//creating DB table
+				initTable("testStringFromINTEGERExtractTable", "INTEGER");
+				
+				//inserting record
+				Jaxer.DB.execute("INSERT INTO testStringFromINTEGERExtractTable (value0) VALUES ('12')");
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testStringFromINTEGERExtractTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, "12", "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testStringFromINTEGERExtractTable");
+			}
+			
+			function testExtractStringFromREAL()
+			{
+				//creating DB table
+				initTable("testStringFromREALExtractTable", "REAL");
+				
+				//inserting record
+				Jaxer.DB.execute("INSERT INTO testStringFromREALExtractTable (value0) VALUES ('17.5')");
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testStringFromREALExtractTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, "17.5", "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testStringFromREALExtractTable");
+			}
+			
+			function testExtractStringFromBLOB()
+			{
+				//creating DB table
+				initTable("testStringFromBLOBExtractTable", "BLOB");
+				
+				//inserting record
+				Jaxer.DB.execute("INSERT INTO testStringFromBLOBExtractTable (value0) VALUES ('Test string')");
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testStringFromBLOBExtractTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, "Test string", "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testStringFromBLOBExtractTable");
+			}
+			
+			function testExtractIntegerFromTEXT()
+			{
+				//creating DB table
+				initTable("testExtractIntegerFromTEXTTable", "TEXT");
+				
+				//inserting record
+				Jaxer.DB.execute("INSERT INTO testExtractIntegerFromTEXTTable (value0) VALUES ('12')");
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testExtractIntegerFromTEXTTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, 12, "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testExtractIntegerFromTEXTTable");
+			}
+			
+			function testExtractIntegerFromINTEGER()
+			{
+				//creating DB table
+				initTable("testExtractIntegerFromINTEGERTable", "INTEGER");
+				
+				//inserting record
+				Jaxer.DB.execute("INSERT INTO testExtractIntegerFromINTEGERTable (value0) VALUES ('12')");
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testExtractIntegerFromINTEGERTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, 12, "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testExtractIntegerFromINTEGERTable");
+			}
+			
+			function testExtractIntegerFromREAL()
+			{
+				//creating DB table
+				initTable("testExtractINTEGERtoREALTable", "REAL");
+				
+				//inserting record
+				Jaxer.DB.execute("INSERT INTO testExtractINTEGERtoREALTable (value0) VALUES ('12')");
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testExtractINTEGERtoREALTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, 12, "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testExtractINTEGERtoREALTable");
+			}
+			
+			function testExtractIntegerFromBLOB()
+			{
+				//creating DB table
+				initTable("testExtractIntegerFromBLOBTable", "BLOB");
+				
+				//inserting record
+				Jaxer.DB.execute("INSERT INTO testExtractIntegerFromBLOBTable (value0) VALUES ('12')");
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testExtractIntegerFromBLOBTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, 12, "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testExtractIntegerFromBLOBTable");
+			}
+			
+			function testExtractFloatFromTEXT()
+			{
+				//creating DB table
+				initTable("testExtractFloatFromTEXTTable", "TEXT");
+				
+				//inserting record
+				Jaxer.DB.execute("INSERT INTO testExtractFloatFromTEXTTable (value0) VALUES ('18.5')");
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testExtractFloatFromTEXTTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, 18.5, "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testExtractFloatFromTEXTTable");
+			}
+			
+			function testExtractFloatFromINTEGER()
+			{
+				//creating DB table
+				initTable("testExtractFloatFromINTEGERTable", "INTEGER");
+				
+				//inserting record
+				Jaxer.DB.execute("INSERT INTO testExtractFloatFromINTEGERTable (value0) VALUES ('18.5')");
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testExtractFloatFromINTEGERTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, 18.5, "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testExtractFloatFromINTEGERTable");
+			}
+			
+			function testExtractFloatFromREAL()
+			{
+				//creating DB table
+				initTable("testExtractINTEGERtoREALTable", "REAL");
+				
+				//inserting record
+				Jaxer.DB.execute("INSERT INTO testExtractINTEGERtoREALTable (value0) VALUES ('18.5')");
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testExtractINTEGERtoREALTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, 18.5, "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testExtractINTEGERtoREALTable");
+			}
+			
+			function testExtractFloatFromBLOB()
+			{
+				//creating DB table
+				initTable("testExtractFloatFromBLOBTable", "BLOB");
+				
+				//inserting record
+				Jaxer.DB.execute("INSERT INTO testExtractFloatFromBLOBTable (value0) VALUES ('18.5')");
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testExtractFloatFromBLOBTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, 18.5, "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testExtractFloatFromBLOBTable");
+			}
+			
+			function testExtractBooleanFromTEXT()
+			{
+				//creating DB table
+				initTable("testExtractBooleanFromTEXTTable", "TEXT");
+				
+				//inserting record
+				Jaxer.DB.execute("INSERT INTO testExtractBooleanFromTEXTTable (value0) VALUES ('1')");
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testExtractBooleanFromTEXTTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, true, "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testExtractBooleanFromTEXTTable");
+			}
+			
+			function testExtractBooleanFromINTEGER()
+			{
+				//creating DB table
+				initTable("testExtractBooleanFromINTEGERTable", "INTEGER");
+				
+				//inserting record
+				Jaxer.DB.execute("INSERT INTO testExtractBooleanFromINTEGERTable (value0) VALUES ('1')");
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testExtractBooleanFromINTEGERTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, true, "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testExtractBooleanFromINTEGERTable");
+			}
+			
+			function testExtractBooleanFromREAL()
+			{
+				//creating DB table
+				initTable("testExtractINTEGERtoREALTable", "REAL");
+				
+				//inserting record
+				Jaxer.DB.execute("INSERT INTO testExtractINTEGERtoREALTable (value0) VALUES ('1')");
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testExtractINTEGERtoREALTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, true, "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testExtractINTEGERtoREALTable");
+			}
+			
+			function testExtractBooleanFromBLOB()
+			{
+				//creating DB table
+				initTable("testExtractBooleanFromBLOBTable", "BLOB");
+				
+				//inserting record
+				Jaxer.DB.execute("INSERT INTO testExtractBooleanFromBLOBTable (value0) VALUES ('1')");
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testExtractBooleanFromBLOBTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, true, "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testExtractBooleanFromBLOBTable");
+			}
+			
+			function testInsertExtractDateToDATETIME()
+			{
+				//creating DB table
+				initTable("testInsertExtractDateToDATETIMETable", "DATETIME");
+				
+				//inserting record
+				var toInsert = createTestDate();
+				Jaxer.DB.execute("INSERT INTO testInsertExtractDateToDATETIMETable (value0) VALUES (?)", [toInsert]);
+				
+				//checking that the value is written to the table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testInsertExtractDateToDATETIMETable").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testInsertExtractDateToDATETIMETable");
+			}
+			
+			function testInsertExtractStringToBLOB()
+			{
+				//creating DB table
+				initTable("testStringToBLOBInsertExtractTable", "BLOB");
+				
+				//inserting record
+				var toInsert = "Test string";
+				Jaxer.DB.execute("INSERT INTO testStringToBLOBInsertExtractTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testStringToBLOBInsertExtractTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, toInsert, "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testStringToBLOBInsertExtractTable");
+			}
+			
+			function testInsertExtractIntegerToBLOB()
+			{
+				//creating DB table
+				initTable("testInsertExtractIntegerToBLOBTable", "BLOB");
+				
+				//inserting record
+				var toInsert = 12;
+				Jaxer.DB.execute("INSERT INTO testInsertExtractIntegerToBLOBTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testInsertExtractIntegerToBLOBTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, toInsert, "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testInsertExtractIntegerToBLOBTable");
+			}
+			
+			function testInsertExtractFloatToBLOB()
+			{
+				//creating DB table
+				initTable("testInsertExtractFloatToBLOBTable", "BLOB");
+				
+				//inserting record
+				var toInsert = 18.5;
+				Jaxer.DB.execute("INSERT INTO testInsertExtractFloatToBLOBTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testInsertExtractFloatToBLOBTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, toInsert, "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testInsertExtractFloatToBLOBTable");
+			}
+			
+			function testInsertExtractBooleanToBLOB()
+			{
+				//creating DB table
+				initTable("testInsertExtractBooleanToBLOBTable", "BLOB");
+				
+				//inserting record
+				var toInsert = true;
+				Jaxer.DB.execute("INSERT INTO testInsertExtractBooleanToBLOBTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testInsertExtractBooleanToBLOBTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, toInsert, "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testInsertExtractBooleanToBLOBTable");
+			}
+			
+			function testInsertExtractDateToTEXT()
+			{
+				//creating DB table
+				initTable("testInsertExtractExtractDateToTEXTTable", "TEXT");
+				
+				//inserting record
+				var toInsert = createTestDate();
+				Jaxer.DB.execute("INSERT INTO testInsertExtractExtractDateToTEXTTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testInsertExtractExtractDateToTEXTTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, '1263449228500', "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testInsertExtractExtractDateToTEXTTable");
+			}
+			
+			function testInsertExtractDateToBLOB()
+			{
+				//creating DB table
+				initTable("testInsertExtractExtractDateToBLOBTable", "BLOB");
+				
+				//inserting record
+				var toInsert = createTestDate();
+				Jaxer.DB.execute("INSERT INTO testInsertExtractExtractDateToBLOBTable (value0) VALUES (?)", [toInsert]);
+				
+				//checking the value that has been written to that table
+				resultSet = Jaxer.DB.execute("SELECT value0 FROM testInsertExtractExtractDateToBLOBTable");
+				assertTrue(resultSet.hasData, "We should have a data");
+				assertTrue(resultSet.rows.length == 1, "We should have exactly one record, but have " + resultSet.rows.length);
+				assertEquals(resultSet.rows[0].value0, 1263449228500, "Stored value should be the same as initial one");
+				
+				//dropping the table
+				dropTable("testInsertExtractExtractDateToBLOBTable");
+			}
+			
+			function testInsertNonNumericStringToINTEGER()
+			{
+				//creating DB table
+				initTable("testInsertNonNumericStringToINTEGERTable", "INTEGER");
+				
+				//inserting record
+				var toInsert = "aa";
+				
+				Jaxer.DB.execute("INSERT INTO testInsertNonNumericStringToINTEGERTable (value0) VALUES (?)", [toInsert]);
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testInsertNonNumericStringToINTEGERTable " +
+				"WHERE value0='aa'").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testInsertNonNumericStringToINTEGERTable");
+			}
+			
+			function testInsertNonNumericStringToREAL()
+			{
+				//creating DB table
+				initTable("testInsertNonNumericStringToREALTable", "REAL");
+				
+				//inserting record
+				var toInsert = "aa";
+				
+				Jaxer.DB.execute("INSERT INTO testInsertNonNumericStringToREALTable (value0) VALUES (?)", [toInsert]);
+				
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testInsertNonNumericStringToREALTable " +
+				"WHERE value0='aa'").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testInsertNonNumericStringToREALTable");
+			}
+			
+			function testInsertExtractDateToINTEGER()
+			{
+				//creating DB table
+				initTable("testInsertExtractDateToINTEGERTable", "INTEGER");
+				
+				//inserting record
+				var toInsert = createTestDate();
+				Jaxer.DB.execute("INSERT INTO testInsertExtractDateToINTEGERTable (value0) VALUES (?)", [toInsert]);
+				
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testInsertExtractDateToINTEGERTable " +
+				"WHERE value0=1263449228500").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testInsertExtractDateToINTEGERTable");
+			}
+			
+			function testInsertExtractDateToREAL()
+			{
+				//creating DB table
+				initTable("testInsertExtractDateToREALTable", "REAL");
+				
+				//inserting record
+				var toInsert = createTestDate();
+				
+				Jaxer.DB.execute("INSERT INTO testInsertExtractDateToREALTable (value0) VALUES (?)", [toInsert]);
+				
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testInsertExtractDateToREALTable " +
+				"WHERE value0=1263449228500").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testInsertExtractDateToREALTable");
+			}
+			
+			function testAutoWrappingSingleParameterToArray()
+			{
+				//creating DB table
+				initTable("testStringToTEXTInsertTable", "TEXT");
+				
+				//inserting record
+				var toInsert = "Test string";
+				Jaxer.DB.execute("INSERT INTO testStringToTEXTInsertTable (value0) VALUES (?)", toInsert);
+				
+				//checking the value that has been written to that table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testStringToTEXTInsertTable " +
+				"WHERE value0='Test string'").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testStringToTEXTInsertTable");
+			}
+			
+			function testAutoWrappingSingleParameterToArray2()
+			{
+				//creating DB table
+				initTable("testInsertINTEGERtoREALTable", "REAL");
+				
+				//inserting record
+				var toInsert = 12;
+				Jaxer.DB.execute("INSERT INTO testInsertINTEGERtoREALTable (value0) VALUES (?)", toInsert);
+				
+				//checking the value that has been written to that table
+				result = Jaxer.DB.execute("SELECT count(*) as c FROM testInsertINTEGERtoREALTable " +
+				"WHERE value0='12'").singleResult;
+				assertTrue(result == 1, "We should have a record containing inserted value");
+				
+				//dropping the table
+				dropTable("testInsertINTEGERtoREALTable");
+			}
+			
+			function testResultSetColumnIndex()
+			{
+				//creating and clearing the table
+				var createTestDBtable = 
+				<SQL>
+            	 	CREATE TABLE IF NOT EXISTS testResultSetColumnIndexTable (
+            			column1 TEXT,
+						column2 TEXT,
+						column3 TEXT
+            		);
+				</SQL>            
+				Jaxer.DB.execute(createTestDBtable);
+				
+				var clearTestDBTable = "DELETE FROM testResultSetColumnIndexTable";
+				Jaxer.DB.execute(clearTestDBTable);
+				
+				//inserting record
+				Jaxer.DB.execute("INSERT INTO testResultSetColumnIndexTable " +
+				"(column1, column2, column3) VALUES ('text1', 'text2', 'text3')");
+				
+				//reading te table	
+				resultSet = Jaxer.DB.execute("SELECT * FROM testResultSetColumnIndexTable");
+				assertEquals(resultSet.indexOfColumn("column2"), 1, "Expecting 2 as index column");
+				//dropping the table	
+				dropTable("testResultSetColumnIndexTable");
+			}
+						
+			function testResultSetExtractColumns()
+			{
+				//creating and clearing the table
+				var createTestDBtable = 
+				<SQL>
+            	 	CREATE TABLE IF NOT EXISTS testResultSetColumnIndexTable (
+            			column1 TEXT,
+						column2 TEXT,
+						column3 TEXT
+            		);
+				</SQL>            
+            	Jaxer.DB.execute(createTestDBtable);
+				
+				var clearTestDBTable = "DELETE FROM testResultSetColumnIndexTable";
+				Jaxer.DB.execute(clearTestDBTable);	
+				
+				//inserting record
+				Jaxer.DB.execute("INSERT INTO testResultSetColumnIndexTable " +
+					"(column1, column2, column3) VALUES ('text1', 'text2', 'text3')");
+				
+				//reading te table	
+				resultSet = Jaxer.DB.execute("SELECT * FROM testResultSetColumnIndexTable");
+				assertEquals(resultSet.columns[0], 'column1', "No column found");
+				assertEquals(resultSet.columns[1], 'column2', "No column found");
+				assertEquals(resultSet.columns[2], 'column3', "No column found");
+				var cols = new Array();
+				cols[0] = 'column1';
+				cols[1] = 'column3';
+				extractedSet = resultSet.extractColumns(cols);
+				assertEquals(extractedSet[0].column1, 'text1', "No column found");
+				assertEquals(extractedSet[0].column3, 'text3', "No column found");
+				try
+				{
+					assertEquals(extractedSet[0].column2, 'text2', "No column found");
+				}
+				catch (err)
+				{
+					//dropping the table
+					dropTable("testResultSetColumnIndexTable");
+					return;
+				}
+				
+				//dropping the table
+				dropTable("testResultSetColumnIndexTable");
+				throw("Should not reach this point");
+			}
+
+			function testMapExecute()
+			{
+				initTable("testMapExecuteTable", ["INTEGER", "TEXT", "DATETIME"]);
+				
+				var results = Jaxer.DB.mapExecute("INSERT INTO testMapExecuteTable (value0, value1, value2) VALUES (?, ?, ?)",
+					[[1, "test1", (new Date())], [2, "test2", (new Date())], [3, "test3", (new Date())], [3, "test3-2", (new Date())]]);
+				assertEquals(results.length, 4, "mapExecute of INSERT should have returned 4 results");
+				assertEquals(results[0], 1, "First result of mapExecute should have been 1");
+				
+				var resultSets = Jaxer.DB.mapExecute("SELECT * FROM testMapExecuteTable WHERE value0 = ?", [1, 2, 3]);
+				assertEquals(resultSets.length, 3, "Should have found 3 resultSets");
+				assertEquals(resultSets[1].columns.length, 3, "Should have found 3 columns in the second resultSet");
+				assertEquals(resultSets[2].rows.length, 2, "Should have found 2 rows in the 3rd resultSet");
+				assertEquals(resultSets[2].rows[1].value1, "test3-2", "Should have retrieved this value from the 3rd resultSet's second row in the second column");
+
+				var resultSets2 = Jaxer.DB.mapExecute("SELECT * FROM testMapExecuteTable WHERE value0 = ? AND value1 = ?", [[1, "test1"], [3, "test3"], [3, "testX"]]);
+				assertEquals(resultSets2.length, 3, "Should have found 3 resultSets");
+				assertEquals(resultSets2[0].columns.length, 3, "Should have found 3 columns in the first resultSet");
+				assertEquals(resultSets2[1].rows.length, 1, "Should have found 1 row in the 2nd resultSet");
+				assertEquals(resultSets2[2].rows.length, 0, "Should have found no rows in the 3rd resultSet");
+				assertEquals(resultSets2[0].rows[0].value0, 1, "Should have retrieved this value from the 1st resultSet's first row in the first column");
+				
+				var resultSet = Jaxer.DB.mapExecute("SELECT * FROM testMapExecuteTable WHERE value0 = ?", [[1], [3], [5]], {flatten: true});
+				assertTrue(resultSet instanceof Jaxer.DB.ResultSet, "Should have come back with an object of type Jaxer.DB.ResultSet");
+				assertEquals(resultSet.columns.length, 3, "Should have found 3 columns in the resultSet");
+				assertEquals(resultSet.rows.length, 3, "Should have found 3 rows in the combined resultSet")
+				assertEquals(resultSet.rows[0].value0, 1, "Should have retrieved this value from the resultSet's first row in the first column");
+				assertEquals(resultSet.rows[1].value1, "test3", "Should have retrieved this value from the resultSet's second row in the second column");
+				assertEquals(resultSet.rows[2].value1, "test3-2", "Should have retrieved this value from the resultSet's third row in the second column");
+				
+				dropTable("testMapExecuteTable");
+			}
+
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

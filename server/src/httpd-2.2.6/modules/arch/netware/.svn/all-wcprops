@@ -1,0 +1,221 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware
+END
+mod_status.def
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_status.def
+END
+mod_authn_default.def
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_authn_default.def
+END
+mod_proxy_connect.def
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_proxy_connect.def
+END
+mod_authn_anon.def
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_authn_anon.def
+END
+mod_info.def
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_info.def
+END
+mod_cern_meta.def
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_cern_meta.def
+END
+mod_authz_default.def
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_authz_default.def
+END
+mod_auth_digest.def
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_auth_digest.def
+END
+mod_speling.def
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_speling.def
+END
+mod_mem_cache.def
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_mem_cache.def
+END
+mod_authn_dbm.def
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_authn_dbm.def
+END
+mod_auth_basic.def
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_auth_basic.def
+END
+moddavfs.def
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/moddavfs.def
+END
+mod_authz_groupfile.def
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_authz_groupfile.def
+END
+mod_headers.def
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_headers.def
+END
+mod_vhost_alias.def
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_vhost_alias.def
+END
+libprews.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/libprews.c
+END
+mod_disk_cache.def
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_disk_cache.def
+END
+mod_authz_dbm.def
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_authz_dbm.def
+END
+mod_expires.def
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_expires.def
+END
+mod_proxy_http.def
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_proxy_http.def
+END
+mod_proxy.def
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_proxy.def
+END
+mod_mime_magic.def
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_mime_magic.def
+END
+mod_authz_user.def
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_authz_user.def
+END
+mod_netware.c
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_netware.c
+END
+mod_nw_ssl.c
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_nw_ssl.c
+END
+mod_proxy_ftp.def
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_proxy_ftp.def
+END
+mod_file_cache.def
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_file_cache.def
+END
+mod_usertrack.def
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_usertrack.def
+END
+mod_cache.def
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_cache.def
+END
+mod_logio.def
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_logio.def
+END
+mod_dav.def
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_dav.def
+END
+mod_authn_file.def
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_authn_file.def
+END
+mod_echo.def
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_echo.def
+END
+mod_rewrite.def
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_rewrite.def
+END
+mod_unique_id.def
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/1090/trunk/products/server/src/httpd-2.2.6/modules/arch/netware/mod_unique_id.def
+END

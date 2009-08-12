@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/httpserver/test/data/name-scheme
+END
+bar.html^^
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/httpserver/test/data/name-scheme/bar.html%5E%5E
+END
+normal-file.txt
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/httpserver/test/data/name-scheme/normal-file.txt
+END
+foo.html^
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/httpserver/test/data/name-scheme/foo.html%5E
+END
+bar.html^^headers^
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/netwerk/test/httpserver/test/data/name-scheme/bar.html%5E%5Eheaders%5E
+END

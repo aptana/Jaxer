@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/xpfe/communicator/resources/content/mac
+END
+platformEditorBindings.xul
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/communicator/resources/content/mac/platformEditorBindings.xul
+END
+platformBrowserBindings.xul
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/communicator/resources/content/mac/platformBrowserBindings.xul
+END
+platformCommunicatorOverlay.xul
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpfe/communicator/resources/content/mac/platformCommunicatorOverlay.xul
+END

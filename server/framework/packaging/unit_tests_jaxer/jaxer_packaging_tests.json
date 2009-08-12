@@ -1,0 +1,7 @@
+{
+	"name": "default",
+	"tests": [
+		 "optional_check_API_docs_present.html"
+//	,	 "test_verify_clientframework.html"
+	]
+}

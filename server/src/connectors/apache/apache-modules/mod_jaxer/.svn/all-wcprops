@@ -1,0 +1,149 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/4606/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer
+END
+mod_jaxer_protocol.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/3766/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/mod_jaxer_protocol.h
+END
+mod_jaxer.dep
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2248/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/mod_jaxer.dep
+END
+mod_jaxer.mak
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2248/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/mod_jaxer.mak
+END
+BaseAddr.ref
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2248/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/BaseAddr.ref
+END
+mod_jaxer_proc.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/4606/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/mod_jaxer_proc.h
+END
+buildMacUniversal.sh
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/3574/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/buildMacUniversal.sh
+END
+buildMacIntel.sh
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/3574/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/buildMacIntel.sh
+END
+mod_jaxer.c
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/4606/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/mod_jaxer.c
+END
+buildMacPPC.sh
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/3574/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/buildMacPPC.sh
+END
+mod_jaxer_message.c
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/3761/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/mod_jaxer_message.c
+END
+mod_jaxer_filter.c
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/4606/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/mod_jaxer_filter.c
+END
+buildMacIntel64bit.sh
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/3574/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/buildMacIntel64bit.sh
+END
+mod_jaxer_conf.c
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/4482/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/mod_jaxer_conf.c
+END
+mod_jaxer_message.h
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/3761/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/mod_jaxer_message.h
+END
+mod_jaxer.sln
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2248/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/mod_jaxer.sln
+END
+mod_jaxer_conf.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/4482/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/mod_jaxer_conf.h
+END
+mod_jaxer_filter.h
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2248/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/mod_jaxer_filter.h
+END
+mod_jaxer_connection.c
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/4365/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/mod_jaxer_connection.c
+END
+COPYING
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/2248/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/COPYING
+END
+Makefile.win
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2248/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/Makefile.win
+END
+mod_jaxer.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2248/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/mod_jaxer.vcproj
+END
+mod_jaxer.rc
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2248/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/mod_jaxer.rc
+END
+mod_jaxer_proc.c
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/4606/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/mod_jaxer_proc.c
+END
+mod_jaxer_connection.h
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/4365/trunk/products/server/src/connectors/apache/apache-modules/mod_jaxer/mod_jaxer_connection.h
+END

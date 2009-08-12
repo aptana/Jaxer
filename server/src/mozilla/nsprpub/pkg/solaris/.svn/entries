@@ -1,0 +1,123 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/nsprpub/pkg/solaris
+http://svn.aptana.local/svn/jaxer
+
+
+
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+Makefile-devl.targ
+file
+
+
+
+
+2009-08-11T21:36:12.000000Z
+f1bf55937aa3101f8f680be2d5d3e8aa
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+SUNWprd
+dir
+
+Makefile-devl.com
+file
+
+
+
+
+2009-08-11T21:36:12.000000Z
+b625f32f4826c707da4eeb053ec44987
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+has-props
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:36:12.000000Z
+51db93fac8efc826e4077a30c2e28cfa
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+proto64.mk
+file
+
+
+
+
+2009-08-11T21:36:12.000000Z
+dd1ffede7b6d4b78cc102f221fa5771b
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+bld_awk_pkginfo.ksh
+file
+
+
+
+
+2009-08-11T21:36:12.000000Z
+6bcde0fdb49a098d9fc68892682ad4a2
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+Makefile.targ
+file
+
+
+
+
+2009-08-11T21:36:12.000000Z
+4dab009e3f592789e13c61b7d4dfb732
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+common_files
+dir
+
+Makefile.com
+file
+
+
+
+
+2009-08-11T21:36:12.000000Z
+a09ad6e926781436a25fa2086bc4e534
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+SUNWpr
+dir
+

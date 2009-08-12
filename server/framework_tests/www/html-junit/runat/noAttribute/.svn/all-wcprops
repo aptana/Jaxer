@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/runat/noAttribute
+END
+noAttributeServerProperty.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/runat/noAttribute/noAttributeServerProperty.html
+END
+noAttributeServerProxyProperty.html
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/runat/noAttribute/noAttributeServerProxyProperty.html
+END
+noAttributeServerCacheProperty.html
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/runat/noAttribute/noAttributeServerCacheProperty.html
+END
+noAttributeBothProperty.html
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/runat/noAttribute/noAttributeBothProperty.html
+END
+noAttributeNoProperty.html
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/runat/noAttribute/noAttributeNoProperty.html
+END
+noAttributeBothProxyProperty.html
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/runat/noAttribute/noAttributeBothProxyProperty.html
+END
+noAttributeClientProperty.html
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/runat/noAttribute/noAttributeClientProperty.html
+END
+noAttributeBothCacheProperty.html
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/68/trunk/products/server/framework_tests/www/html-junit/runat/noAttribute/noAttributeBothCacheProperty.html
+END

@@ -1,0 +1,137 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/intl/uconv/ucvtw2
+END
+cns3.uf
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/cns3.uf
+END
+cns4.uf
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/cns4.uf
+END
+cns5.uf
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/cns5.uf
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/Makefile.in
+END
+cns6.uf
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/cns6.uf
+END
+nsUnicodeToEUCTW.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/nsUnicodeToEUCTW.cpp
+END
+cns7.uf
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/cns7.uf
+END
+nsEUCTWToUnicode.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/nsEUCTWToUnicode.cpp
+END
+nsUnicodeToEUCTW.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/nsUnicodeToEUCTW.h
+END
+nsEUCTWToUnicode.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/nsEUCTWToUnicode.h
+END
+cns_1.ut
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/cns_1.ut
+END
+cns_2.ut
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/cns_2.ut
+END
+cns3.ut
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/cns3.ut
+END
+cns4.ut
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/cns4.ut
+END
+cns5.ut
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/cns5.ut
+END
+cns6.ut
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/cns6.ut
+END
+cns7.ut
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/cns7.ut
+END
+nsUCvTW2CID.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/nsUCvTW2CID.h
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/readme.txt
+END
+cns_1.uf
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/cns_1.uf
+END
+cns_2.uf
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/cns_2.uf
+END
+nsUCvTW2Dll.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/intl/uconv/ucvtw2/nsUCvTW2Dll.h
+END

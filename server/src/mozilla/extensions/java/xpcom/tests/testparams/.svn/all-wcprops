@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/tests/testparams
+END
+nsJXTestParams.js
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/tests/testparams/nsJXTestParams.js
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/tests/testparams/Makefile.in
+END
+TestParams.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/tests/testparams/TestParams.java
+END
+nsIJXTestArrayParams.idl
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/tests/testparams/nsIJXTestArrayParams.idl
+END
+nsIJXTestParams.idl
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/tests/testparams/nsIJXTestParams.idl
+END
+xpctests.js
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/java/xpcom/tests/testparams/xpctests.js
+END

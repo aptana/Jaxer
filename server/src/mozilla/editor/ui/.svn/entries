@@ -1,0 +1,85 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/editor/ui
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-06-26T00:22:23.902780Z
+3349
+jzhang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+dialogs
+dir
+
+locales
+dir
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:40:01.000000Z
+bcb13dcffe97431fc4fcac18ac90ddc2
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+composer.js
+file
+
+
+
+
+2009-08-11T21:40:01.000000Z
+b4314f0ce05410bb96adad14947076fc
+2008-05-20T18:44:20.559534Z
+2886
+jzhang
+
+jar.mn
+file
+
+
+
+
+2009-08-11T21:40:01.000000Z
+d1e5c67d70813cd812e782778e4259b7
+2008-05-20T18:44:20.559534Z
+2886
+jzhang
+
+composer
+dir
+
+nsComposerCmdLineHandler.js
+file
+
+
+
+
+2009-08-11T21:40:01.000000Z
+b2f15ecebf9e0a75031cd7e00f79526d
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+

@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <script runat='server'>// DO NOT REMOVE: needed for the Jaxer unit testing harness 
+            Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+        </script>
+        <script type="text/javascript" runat="server">
+        	
+		function testProcessExec()
+		{		
+			var opts={stdout:'',stderr:''};
+			
+			var tellJaxer = Jaxer.Dir.resolve('resource://tellJaxerManager.exe');
+			
+			// set to mac path
+			if (Jaxer.File.exists(Jaxer.Dir.resolve('resource://tellJaxerManager')))
+			{
+				tellJaxer = Jaxer.Dir.resolve('resource://tellJaxerManager');				
+			}
+				
+			// set to unix path
+			if (Jaxer.File.exists(Jaxer.Dir.resolve('resource://telljaxermanager')))
+			{
+				tellJaxer = Jaxer.Dir.resolve('resource://telljaxermanager');				
+			}
+			
+			var jaxerPort = Jaxer.Config.COMMAND_LINE_PARAMS.commandport;
+
+			Jaxer.Process.exec(tellJaxer,'-p',jaxerPort,'get','version',opts);
+			
+			assertEquals(opts.stdout.indexOf(Jaxer.buildNumber),4, 'Expected *** '+Jaxer.buildNumber+" found "+opts.stdout)
+		}
+		
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

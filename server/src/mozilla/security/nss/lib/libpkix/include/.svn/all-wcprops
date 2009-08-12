@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/nss/lib/libpkix/include
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/libpkix/include/manifest.mn
+END
+pkix_certsel.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/libpkix/include/pkix_certsel.h
+END
+pkix_results.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/libpkix/include/pkix_results.h
+END
+pkix_errorstrings.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/nss/lib/libpkix/include/pkix_errorstrings.h
+END
+pkixt.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/libpkix/include/pkixt.h
+END
+pkix_checker.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/libpkix/include/pkix_checker.h
+END
+pkix_sample_modules.h
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/libpkix/include/pkix_sample_modules.h
+END
+pkix_certstore.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/libpkix/include/pkix_certstore.h
+END
+pkix_util.h
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/lib/libpkix/include/pkix_util.h
+END
+pkix_pl_pki.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/libpkix/include/pkix_pl_pki.h
+END
+pkix_pl_system.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/libpkix/include/pkix_pl_system.h
+END
+pkix.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/security/nss/lib/libpkix/include/pkix.h
+END
+pkix_revchecker.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/libpkix/include/pkix_revchecker.h
+END
+pkix_params.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/security/nss/lib/libpkix/include/pkix_params.h
+END
+pkix_crlsel.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/libpkix/include/pkix_crlsel.h
+END
+config.mk
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/libpkix/include/config.mk
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/lib/libpkix/include/Makefile
+END

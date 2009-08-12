@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/embedding/components/printingui/src/win
+END
+nsPrintingPromptService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/printingui/src/win/nsPrintingPromptService.cpp
+END
+nsPrintDialogUtil.h
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/printingui/src/win/nsPrintDialogUtil.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/printingui/src/win/Makefile.in
+END
+nsPrintProgress.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/printingui/src/win/nsPrintProgress.cpp
+END
+nsPrintingPromptService.h
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/printingui/src/win/nsPrintingPromptService.h
+END
+nsPrintProgressParams.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/printingui/src/win/nsPrintProgressParams.cpp
+END
+nsPrintProgress.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/printingui/src/win/nsPrintProgress.h
+END
+nsPrintDialogUtil.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/embedding/components/printingui/src/win/nsPrintDialogUtil.cpp
+END
+nsPrintProgressParams.h
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/embedding/components/printingui/src/win/nsPrintProgressParams.h
+END

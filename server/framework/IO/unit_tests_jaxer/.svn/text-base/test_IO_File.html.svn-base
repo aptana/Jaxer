@@ -1,0 +1,543 @@
+<html>
+	<head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+		<script type="text/javascript" runat="server">
+			function testDirToPath()
+			{
+				var path = Jaxer.Dir.resolve(Jaxer.request.pageFile);
+				assertTrue(Jaxer.File.exists(path), "Cannot find my own file: " + path);
+			}
+			
+			function writeRandom(contents)
+			{
+				var filename = "filetest_" + Math.random().toString().replace(/\D/, '');
+				var filepath = Jaxer.Dir.resolve(Jaxer.Dir.combine(Jaxer.System.tempFolder,filename));
+				Jaxer.File.write(filepath, contents);
+				return filepath;
+			}
+			
+			function testWriteAndReadLines()
+			{
+				var originalContents = ["Test ", Math.random().toString(), "Hi", Math.random().toString()];
+				var filepath = writeRandom(originalContents.join("\n"));
+				assertTrue(Jaxer.File.exists(filepath), "Could not find the file I just created: " + filepath);
+				var readContents = Jaxer.File.readLines(filepath);
+				assertEquals(originalContents.length, readContents.length);
+				for (var i=0; i<originalContents.length; i++)
+				{
+					assertEquals(originalContents[i], readContents[i], "Written line differs from read line");
+				}
+				try
+				{
+					Jaxer.File.remove(filepath);
+				}
+				catch (e)
+				{
+					throw new Error("Could not remove the file " + filepath + ": " + e);
+				}
+			}
+		
+			function testWriteAndRead()
+			{
+				var originalContents = "Test " + Math.random() + "\nHi\n" + Math.random();
+				var filepath = writeRandom(originalContents);
+				assertTrue(Jaxer.File.exists(filepath), "Could not find the file I just created: " + filepath);
+				var readContents = Jaxer.File.read(filepath);
+				assertEquals(originalContents, readContents, "Read content not equal to written content");
+				try
+				{
+					Jaxer.File.remove(filepath);
+				}
+				catch (e)
+				{
+					throw new Error("Could not remove the file " + filepath + ": " + e);
+				}
+			}
+
+		/**
+		 * reading all lines from empty file returns array with one empty line
+		 */
+		function testReadAllEmpty()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file0.txt';
+			var f0 = new Jaxer.File(file0);
+			if (f0.exists) 
+			{
+				f0.remove(true);
+			}
+			f0.create();
+			var contents = f0.readAllLines();
+			assertTrue(contents.length == 1, "Empty file content should be contained in exactly one line but here are :" + contents.length + " lines");
+			assertTrue(contents[0] == "", "line contained in empty file content should be empty but it is not: '" + contents[0] + "'");
+			f0.remove();
+		}
+		
+		/**
+		 * reading line from empty file returns null
+		 */
+		function testReadingLineFromEmptyFile()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file0.txt';
+			var f0 = new Jaxer.File(file0);
+			if (f0.exists) 
+			{
+				f0.remove(true);
+			}
+			f0.create();
+			f0.open("r");
+			var contents = f0.readline();
+			f0.close();
+			assertTrue(contents == '', "line that was read from empty file should be empty but we have:'" + contents + "'");
+			f0.remove(true);
+		}
+		
+		/**
+		 * according to specification returned string should contain exactly n bytes
+		 * but i am not sure thst this is incorrect to return empty string in this case,
+		 */
+		function testReadingCharacterFromBinaryFile()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file0.txt';
+			var f0 = new Jaxer.File(file0);
+			if (f0.exists) 
+			{
+				f0.remove(true);
+			}
+			f0.create();
+			f0.open("r");
+			var contents = f0.read(1);
+			f0.close();
+			assertTrue(contents.length == 0, "File is empty so result array should also be empty, but contents is:" + contents);
+			f0.remove(true);
+		}
+		
+		/**
+		 * reading 10 characters from file with size 1
+		 */
+		function testReadMoreCharacterThanFileHas()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file0.txt';
+			var f0 = new Jaxer.File(file0);
+			if (f0.exists) 
+			{
+				f0.remove(true);
+			}
+			f0.create();
+			f0.open("w");
+			f0.write("a");
+			f0.close();
+			f0.open("r");
+			var contents = f0.read(10);
+			assertTrue(contents.length == 1, contents.length, "File has length 1 so we should have only one char, but we have:" + contents.length);
+			assertEquals(contents[0], "a", "File character of file should be 'a' but is '" + contents[0] + "'");
+			f0.close();
+			f0.remove(true);
+		}
+		
+		/**
+		 * read and write binary
+		 */
+		function testReadAndWriteOneCharactedToBinaryFile()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file2.txt';
+			var f0 = new Jaxer.File(file0);
+			if (f0.exists) 
+			{
+				f0.remove(true);
+			}
+			f0.create();
+			f0.open("rb");
+			try 
+			{
+				f0.read();
+			} 
+			catch (e) 
+			{
+			
+			}
+			f0.close();
+			f0.open("wb");
+			f0.write("a");
+			f0.close();
+			f0.open("rb");
+			var contents = f0.read(1);
+			assertTrue(contents.length == 1, contents.length, "File has length 1 so we should have only one char, but we have:" + contents.length);
+			assertEquals(contents[0], 97, "value should be ASC-II value of 'a' but we have " + contents[0]);
+			f0.close();
+			f0.open("rb");
+			try 
+			{
+				f0.read(10);
+				throw new Exception("It is not allowed to read 10 characters from file that has length 1 and it open in 'binary' mode, but we did it");
+			} 
+			catch (e) 
+			{
+			}
+			f0.close();
+			f0.remove(true);
+		}
+		
+		
+		
+		/**
+		 * testing eof and empty file content
+		 */
+		function testEmptyFileReadUntilEOF()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file1112.txt';
+			var f = new Jaxer.File(file0);
+			if (f.exists) 
+			{
+				f.remove(true);
+			}
+			f.open("r");
+			var z = "";
+			while (!f.EOF) 
+			{
+				z += f.readline();
+			}
+			f.close();
+			assertEquals(z.length, 0, "Empty file content should be empty string but we have " + z);
+			f.remove(true);
+		}
+
+		/**
+		 * testing eof and non-empty file content
+		 */
+		function testFileReadUntilEOF()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file123.txt';
+			var f = new Jaxer.File(file0);
+			if (f.exists) 
+			{
+				f.remove(true);
+			}
+			
+			f.create();
+			f.open('w')
+			f.write('Text');
+			f.close();
+			
+			f.open("r");
+			var z = "";
+			while (!f.EOF) 
+			{
+				z += f.readline();
+			}
+			f.close();
+			assertTrue(z.length > 0, "File content should not be empty string but we found no data");
+			f.remove(true);
+		}
+		
+		/**
+		 * testing empty file
+		 */
+		function testPropertiesOfNewEmptyFile()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file12.txt';
+			var f = new Jaxer.File(file0);
+			f.createUnique();
+			assertTrue(f.exists, "newly created file should exists but exists() method returned false");
+			assertTrue(f.size == 0, "newly created file should be empty but getSize() returned:" + f.size);
+			assertTrue(f.pos == 0, "newly created file should have position setted to zero but getPos() returned:" + f.pos);
+			f.remove(true);
+		}
+		
+		/**
+		 * testing that size is working correctly
+		 */
+		function testgetSizeAndCallingExistsOnOpenFile()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file12.txt';
+			var f = new Jaxer.File(file0);
+			f.createUnique();
+			f.open("w");
+			f.write("QQQQ");
+			f.close();
+			assertEquals(4, f.size, "exactly 4 characters was written but getSize() returned " + f.size);
+			f.open("r");
+			f.read(1);
+			assertTrue(f.exists, "method exists() should return true on opened file, but it returned false");
+			f.close();
+			f.remove(true);
+		}
+		
+		/**
+		 * testing position
+		 * Pending Issue #JXI-156
+		 */
+//		function testPosition()
+//		{
+//			var path = Jaxer.System.tempFolder;
+//			var file0 = path + Jaxer.System.separator + 'file12.txt';
+//			var f = new Jaxer.File(file0);
+//			f.createUnique();
+//			f.open("w");
+//			f.write("QQQQ");
+//			f.close();
+//			f.open("r");
+//			f.read(1);
+//			assertEquals(1, f.getPos(), "File position should be 1 but getPos() returned "+f.getPos());
+//			f.close();
+//			f.remove(true);
+//		}
+		
+		/**
+		 * testing reading closed file
+		 */
+		function testReadingClosedFile()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file12.txt';
+			var file1 = path + Jaxer.System.separator + 'file1112.txt'
+			var f1 = new Jaxer.File(file1);
+			if (f1.exists) 
+			{
+				f1.remove();
+			}
+			var f = new Jaxer.File(file0);
+			f.createUnique();
+			f.open("w");
+			var content = "QQQQ";
+			f.write(content);
+			f.close();
+			f.copy(file1);
+			try 
+			{
+				var q = f1.read();
+				throw new Error("Exception should be raised when reading not opened file but it is not succeded");
+			} 
+			catch (e) 
+			{
+			
+			}
+			f1.open("r");
+			var q = f1.read();
+			assertEquals(q, content, "Content that was written should be same that was read but it is not");
+			f1.close();
+			f.remove(true);
+			f1.remove(true);
+		}
+		
+		/**
+		 * testing writing not ASCII text content
+		 * Pending Issue #JXI-157
+		 */
+		function testEncoding()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file12.txt';
+			var file1 = path + Jaxer.System.separator + 'file111112.txt'
+			var f = new Jaxer.File(file0);
+			var f1 = new Jaxer.File(file1);
+			if (f1.exists) 
+			{
+				f1.remove();
+			}
+			f.createUnique();
+			f.open("w");
+			var content = "Привет в�?ем";
+			f.write(content);
+			f.close();
+			f.copy(file1);
+			f1.open("r");
+			var q = f1.read();
+			assertEquals(q, content, "Wrote non-ASCII content which was read back as different content");
+			f1.close();
+			f.remove(true);
+			f1.remove(true);
+		}
+		
+		/**
+		 * testing writing/reading bytes in a binary file
+		 */
+		function testBinary()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file12.txt';
+			var file1 = path + Jaxer.System.separator + 'file111112.txt'
+			var f = new Jaxer.File(file0);
+			var f1 = new Jaxer.File(file1);
+			if (f1.exists) 
+			{
+				f1.remove();
+			}
+			f.createUnique();
+			f.open("wb");
+			var written = "abcde"; // These serve as bytes
+			f.write(written);
+			f.close();
+			f.copy(file1);
+			f1.open("rb");
+			var byteArray = f1.read();
+			var read = "";
+			byteArray.forEach(function(b)
+			{
+				read += String.fromCharCode(b);
+			});
+			assertEquals(written, read, "Binary content changed after it was written and read back");
+			f1.close();
+			f.remove(true);
+			f1.remove(true);
+		}
+		
+		/**
+		 * testing truncate of open file
+		 */
+		// Pending JXI-214
+//		function testTruncateOpenFile()
+//		{
+//			var path = Jaxer.System.tempFolder;
+//			var file0 = path + Jaxer.System.separator + 'file12.txt';
+//			var f = new Jaxer.File(file0);
+//			f.createUnique();
+//			f.open("w");
+//			f.write("QQQQ");
+//			f.close();
+//			f.open("r");
+//			try 
+//			{
+//				f.truncate();
+//				
+//			} 
+//			catch (e) 
+//			{
+//				f.close();
+//				f.remove(true);
+//				return;
+//			}
+//			throw new Error("calling method truncate() on opened file should throw error but it does not");
+//		}
+		
+		/**
+		 * testing truncate
+		 */
+		function testTruncate2()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file12.txt';
+			var f = new Jaxer.File(file0);
+			f.createUnique();
+			f.open("w");
+			f.write("QQQQ");
+			f.close();
+			f.truncate();
+			assertEquals(0, f.size, "File should be truncated but his size is still:" + f.size);
+			f.remove(true);
+		}
+		
+		
+		/**
+		 * 
+		 * testing clone and equals
+		 */
+		function testCloneAndEquals()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file12.txt';
+			var f = new Jaxer.File(file0);
+			f.createUnique();
+			f.open("w");
+			f.write("QQQQ");
+			f.close();
+			var f1 = f.clone();
+			f1.truncate();
+			assertTrue(f.equals(f1), "File should be equal to its clone");
+			assertTrue(f.path == f1.path, "A file and its clone should have the same path");
+			f.remove(true);
+		}
+		
+		/**
+		 * testing two writes
+		 * 
+		 * Pending Issue #JXI-158
+		 */
+//		function testTwoWritesToSameFile()
+//		{
+//			var path = Jaxer.System.tempFolder;
+//			var file0 = path + Jaxer.System.separator + 'file12.txt';
+//			var f = new Jaxer.File(file0);
+//			var f1 = new Jaxer.File(file0);
+//			if (f.exists) 
+//			{
+//				f.remove();
+//			}
+//			f.create();
+//			f.open("w");
+//			f.write("QQQQ");
+//			try 
+//			{
+//				f1.open("w");
+//			} 
+//			catch (e) 
+//			{
+//				//this seems to be correct behaviour
+//				f.close();
+//				f.remove();
+//				return;
+//			}
+//			
+//			throw new Error("Two write streams are opened on the same time at one moment of time, this is not correct");
+//		}
+		
+		/**
+		 * test initing file with folder path
+		 */
+		function testInitWithFolderPath()
+		{
+			// set up folder structure to grep search
+			var path = Jaxer.System.tempFolder + Jaxer.System.separator + 'testInitWithFolderPath';
+
+			var dir = new Jaxer.Dir(path);
+			if (dir.exists) 
+			{
+				dir.remove(true);
+			}
+			dir.create();
+			
+			var folder = new Jaxer.Dir(dir.path + Jaxer.System.separator + 'testInitWithFilePath');
+			folder.create();
+			
+			try{				
+				Jaxer.File.exists(folder.path);
+				throw new Error("According to specification accessing a file object with folder path argument is incorrect and exception should be raised");
+			}
+			catch (e)
+			{
+			}
+			dir.remove(true);
+		}
+
+		/**
+		 * testing getExt()
+		 */
+		function testgetExt()
+		{
+			var path = Jaxer.System.tempFolder;
+			var file0 = path + Jaxer.System.separator + 'file12.txt';
+			var f = new Jaxer.File(file0);
+			if (f.exists) 
+			{
+				f.remove();
+			}
+			Jaxer.File.getOrCreate(file0);
+			assertEquals(f.ext, "txt", "Extension should be 'txt' but getExt() method returned :" + f.ext);
+			f.remove();
+		}
+				
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

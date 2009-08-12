@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/extra/yassl/taocrypt/benchmark
+END
+benchmark.dsp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/extra/yassl/taocrypt/benchmark/benchmark.dsp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/extra/yassl/taocrypt/benchmark/Makefile.in
+END
+make.bat
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/extra/yassl/taocrypt/benchmark/make.bat
+END
+rsa1024.der
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/extra/yassl/taocrypt/benchmark/rsa1024.der
+END
+dsa1024.der
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/extra/yassl/taocrypt/benchmark/dsa1024.der
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/extra/yassl/taocrypt/benchmark/Makefile.am
+END
+benchmark.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/extra/yassl/taocrypt/benchmark/benchmark.cpp
+END
+dh1024.der
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2224/trunk/products/server/src/mysql/mysql-5.0.54/extra/yassl/taocrypt/benchmark/dh1024.der
+END

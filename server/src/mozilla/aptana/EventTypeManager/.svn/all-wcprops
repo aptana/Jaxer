@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/4404/trunk/products/server/src/mozilla/aptana/EventTypeManager
+END
+aptEventNames.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/4404/trunk/products/server/src/mozilla/aptana/EventTypeManager/aptEventNames.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/1268/trunk/products/server/src/mozilla/aptana/EventTypeManager/Makefile.in
+END
+aptIEventTypeManager.idl
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/1268/trunk/products/server/src/mozilla/aptana/EventTypeManager/aptIEventTypeManager.idl
+END
+aptEventTypeManager.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/3911/trunk/products/server/src/mozilla/aptana/EventTypeManager/aptEventTypeManager.cpp
+END
+aptEventTypeManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/3911/trunk/products/server/src/mozilla/aptana/EventTypeManager/aptEventTypeManager.h
+END
+aptEventNames.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/4404/trunk/products/server/src/mozilla/aptana/EventTypeManager/aptEventNames.cpp
+END

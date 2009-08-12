@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/app/profile/chrome
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/app/profile/chrome/Makefile.in
+END
+userContent-example.css
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/app/profile/chrome/userContent-example.css
+END
+userChrome-example.css
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/xulrunner/app/profile/chrome/userChrome-example.css
+END

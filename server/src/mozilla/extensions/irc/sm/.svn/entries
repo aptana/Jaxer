@@ -1,0 +1,52 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/extensions/irc/sm
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-16T23:28:56.072242Z
+2859
+mstepanov
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:37:16.000000Z
+f711391cd9f7f7eb895d10426ea1be65
+2007-11-14T23:48:33.806633Z
+550
+jcohen
+
+jar.mn
+file
+
+
+
+
+2009-08-11T21:37:16.000000Z
+d3f5f9ee19b1962baa42b113ba78a1a1
+2008-05-16T23:28:56.072242Z
+2859
+mstepanov
+

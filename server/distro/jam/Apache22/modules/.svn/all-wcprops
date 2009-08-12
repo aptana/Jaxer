@@ -1,0 +1,149 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/4010/trunk/products/server/distro/jam/Apache22/modules
+END
+mod_actions.so
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_actions.so
+END
+mod_autoindex.so
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_autoindex.so
+END
+mod_auth_basic.so
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_auth_basic.so
+END
+mod_cgi.so
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_cgi.so
+END
+mod_isapi.so
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_isapi.so
+END
+mod_log_config.so
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_log_config.so
+END
+mod_authz_groupfile.so
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_authz_groupfile.so
+END
+mod_userdir.so
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_userdir.so
+END
+mod_authn_file.so
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_authn_file.so
+END
+mod_dir.so
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_dir.so
+END
+mod_negotiation.so
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_negotiation.so
+END
+mod_imagemap.so
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_imagemap.so
+END
+mod_rewrite.so
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/4010/trunk/products/server/distro/jam/Apache22/modules/mod_rewrite.so
+END
+mod_setenvif.so
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_setenvif.so
+END
+mod_include.so
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_include.so
+END
+mod_authn_default.so
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_authn_default.so
+END
+mod_mime.so
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_mime.so
+END
+mod_env.so
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_env.so
+END
+mod_authz_host.so
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_authz_host.so
+END
+mod_authz_user.so
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_authz_user.so
+END
+mod_alias.so
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_alias.so
+END
+mod_cern_meta.so
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_cern_meta.so
+END
+mod_authz_default.so
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_authz_default.so
+END
+mod_asis.so
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/1020/trunk/products/server/distro/jam/Apache22/modules/mod_asis.so
+END

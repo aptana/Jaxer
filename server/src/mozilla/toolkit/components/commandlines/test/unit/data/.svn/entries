@@ -1,0 +1,52 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/toolkit/components/commandlines/test/unit/data
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-20T18:44:20.559534Z
+2886
+jzhang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+test_bug410156.desktop
+file
+
+
+
+
+2009-08-11T21:35:35.000000Z
+9c7856ffd9240afd4e14fb93c931a871
+2008-05-20T18:44:20.559534Z
+2886
+jzhang
+
+test_bug410156.url
+file
+
+
+
+
+2009-08-11T21:35:35.000000Z
+c32de6e8634be21dfe73be8d1db6b9b4
+2008-05-20T18:44:20.559534Z
+2886
+jzhang
+

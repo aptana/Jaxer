@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/schema-validation/src
+END
+nsSchemaSimpleTypes.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSchemaSimpleTypes.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/src/Makefile.in
+END
+nsSchema.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSchema.cpp
+END
+nsSchemaPrivate.h
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSchemaPrivate.h
+END
+nsDOMUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsDOMUtils.h
+END
+nsSchemaDuration.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSchemaDuration.cpp
+END
+nsSchemaValidator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSchemaValidator.cpp
+END
+nsSchemaAttributes.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSchemaAttributes.cpp
+END
+nsSchemaParticles.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSchemaParticles.cpp
+END
+nsSchemaValidatorRegexp.js
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSchemaValidatorRegexp.js
+END
+nsSchemaValidator.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSchemaValidator.h
+END
+nsSchemaDuration.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSchemaDuration.h
+END
+nsSchemaValidatorModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSchemaValidatorModule.cpp
+END
+nsSchemaComponentBase.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSchemaComponentBase.cpp
+END
+nsSchemaAtomList.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSchemaAtomList.h
+END
+nsSchemaLoader.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSchemaLoader.cpp
+END
+nsSOAPTypes.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSOAPTypes.cpp
+END
+nsSchemaValidatorUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSchemaValidatorUtils.cpp
+END
+nsSchemaComplexType.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSchemaComplexType.cpp
+END
+nsSchemaLoader.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSchemaLoader.h
+END
+nsSchemaValidatorUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/extensions/schema-validation/src/nsSchemaValidatorUtils.h
+END

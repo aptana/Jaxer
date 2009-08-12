@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/extensions/irc/xpi
+END
+makelocalexpi.sh
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/irc/xpi/makelocalexpi.sh
+END
+makexpi.sh
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/extensions/irc/xpi/makexpi.sh
+END

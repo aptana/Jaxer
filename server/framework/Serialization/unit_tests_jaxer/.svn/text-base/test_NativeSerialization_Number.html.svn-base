@@ -1,0 +1,174 @@
+<html>
+    <head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+        <script type="text/javascript" runat="server">
+      		function test_Serialization_Integer()
+			{
+				var data = 10;
+				var expected = "10";
+				var result = Jaxer.Serialization.toJSONString(data, {as: Jaxer.Serialization.NATIVE_JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_Serialization_NegativeInteger()
+			{
+				var data = -10;
+				var expected = "-10";
+				var result = Jaxer.Serialization.toJSONString(data, {as: Jaxer.Serialization.NATIVE_JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_Serialization_Float()
+			{
+				var data = 10.5;
+				var expected = "10.5";
+				var result = Jaxer.Serialization.toJSONString(data, {as: Jaxer.Serialization.NATIVE_JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_Serialization_NegativeFloat()
+			{
+				var data = -10.5;
+				var expected = "-10.5";
+				var result = Jaxer.Serialization.toJSONString(data, {as: Jaxer.Serialization.NATIVE_JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_Serialization_ScientificNotation()
+			{
+				var data = 1.5e50;
+				var expected = "1.5e+50";
+				var result = Jaxer.Serialization.toJSONString(data, {as: Jaxer.Serialization.NATIVE_JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_Serialization_NegativeScientificiNotation()
+			{
+				var data = -1.1e50;
+				var expected = "-1.1e+50";
+				var result = Jaxer.Serialization.toJSONString(data, {as: Jaxer.Serialization.NATIVE_JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_Serialization_NegativeScientificNotation2()
+			{
+				var data = -1.5e-20
+				var expected = "-1.5e-20"
+				var result = Jaxer.Serialization.toJSONString(data, {as: Jaxer.Serialization.NATIVE_JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_Serialization_NegativeInfinity()
+			{
+				var data = -Infinity;
+				var expected = "null";
+				var result = Jaxer.Serialization.toJSONString(data, { as: Jaxer.Serialization.NATIVE_JSON_METHOD });
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_Serialization_Infinity()
+			{
+				var data = Infinity;
+				var expected = "null";
+				var result = Jaxer.Serialization.toJSONString(data, { as: Jaxer.Serialization.NATIVE_JSON_METHOD });
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_Serialization_PositiveInfinity()
+			{
+				var data = +Infinity;
+				var expected = "null";
+				var result = Jaxer.Serialization.toJSONString(data, { as: Jaxer.Serialization.NATIVE_JSON_METHOD });
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_Serialization_NaN()
+			{
+				var data = NaN;
+				var expected = "null";
+				var result = Jaxer.Serialization.toJSONString(data, { as: Jaxer.Serialization.NATIVE_JSON_METHOD });
+				
+				assertEquals(result, expected);
+			}
+			
+			// BEGIN: deserialization tests
+			
+			function test_Deserialization_Integer()
+			{
+				var json = "10";
+				var expected = 10;
+				var result = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.NATIVE_JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_Deserialization_NegativeInteger()
+			{
+				var json = "-10";
+				var expected = -10;
+				var result = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.NATIVE_JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_Deserialization_Float()
+			{
+				var json = "10.5";
+				var expected = 10.5;
+				var result = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.NATIVE_JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_Deserialization_NegativeFloat()
+			{
+				var json = "-10.5";
+				var expected = -10.5;
+				var result = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.NATIVE_JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_Deserialization_ScientificNotation()
+			{
+				var json = "1.5e+50";
+				var expected = 1.5e50;
+				var result = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.NATIVE_JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_Deserialization_NegativeScientificiNotation()
+			{
+				var json = "-1.1e+50";
+				var expected = -1.1e50;
+				var result = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.NATIVE_JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_Deserialization_NegativeScientificNotation2()
+			{
+				var json = "-1.5e-20"
+				var expected = -1.5e-20
+				var result = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.NATIVE_JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

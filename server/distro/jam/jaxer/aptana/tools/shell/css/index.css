@@ -1,0 +1,91 @@
+BODY {
+    background-color: #ddddff;
+    font-family: verdana;
+    font-size: 8pt;
+}
+
+#applicationContent {
+    border: 3px solid #B5B5DF;
+    padding: 0px;
+    background-color: #d0ddff;
+}
+
+#sampleHeader {
+    border: 1px #aaa solid;
+    background-color: #FFFFF1;
+    margin: 0 0 5px 0;
+    padding: 5px;
+    height: 1.4em;
+}
+
+.sampleTitle {
+    font-weight: 900;
+    float: left;
+}
+
+.sampleTitleText {
+}
+
+#rightFloat {
+    float: right;
+}
+
+.default {
+    background-color: #ddddff;
+    font-family: verdana;
+    font-size: 10pt;
+}
+
+.shell {
+	overflow: auto;
+    min-height: 400px;
+    background-color: black;
+    color: white;
+    border-top: 3px solid #B5B5DF;
+	width: 100%;
+}
+
+#codeToExecute {
+	width:100%;
+}
+
+.shell pre, h3 {
+    padding: 0pt;
+    margin: 0pt 0pt 2pt 2pt;
+}
+
+.spacer {
+    padding: 0pt;
+    margin: 4pt;
+}
+
+.sent-line {
+    color: lime;
+}
+
+.result-line {
+    color: white;
+}
+
+.exception-line {
+    color: #ff3333;
+}
+
+.notice-line {
+    color: aqua;
+}
+
+em {
+    font-weight: bold;
+    font-style: normal;
+}
+
+code {
+    background-color: white;
+}
+
+.code-block {
+    font-family: monospace;
+    background-color: white;
+    white-space: pre;
+}

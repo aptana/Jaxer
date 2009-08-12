@@ -1,0 +1,36 @@
+<html>
+    <head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+        <script type="text/javascript" runat="server">
+      		function test_SerializeDate()
+			{
+				var data = new Date(Date.UTC(2007, 7, 17, 11, 57, 30));
+				var expected = "{}";
+				var result = Jaxer.Serialization.toJSONString(data, {as: Jaxer.Serialization.NATIVE_JSON_METHOD});
+				
+				assertEquals(result, expected);
+			}
+			
+			// date deserialization not supported until we support replacers
+			// and revivers
+			
+//			function test_DeserializeDate()
+//			{
+//				var json = "\"2007-07-17T13:04:35\"";
+//				/** @type {Date} */
+//				var result = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.NATIVE_JSON_METHOD});
+//				
+//				assertEquals(result.getUTCSeconds(), 35);
+//				assertEquals(result.getUTCMinutes(), 4);
+//				assertEquals(result.getUTCHours(), 13);
+//				assertEquals(result.getUTCDate(), 17);
+//				assertEquals(result.getUTCMonth(), 6);
+//				assertEquals(result.getUTCFullYear(), 2007);
+//			}
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

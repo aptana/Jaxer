@@ -1,0 +1,255 @@
+<html>
+	<head>
+		<script runat='server'> //DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+		<script type="text/javascript" runat="server">
+				
+		/**
+		 * Test coverage for static File methods on Jaxer.File
+		 * 
+		 */
+
+		function testJaxerFile_chmod()
+		{
+			var filePath = createTestFile('testJaxerFile_chmod.txt','testJaxerFile_chmod');	
+						
+			var originalPermissions = Jaxer.File.chmod(filePath);
+			var samePermissions 	= Jaxer.File.chmod(filePath,originalPermissions);
+
+			assertTrue(originalPermissions == samePermissions, "testJaxerFile_chmod.txt setting permissions to original permission value failed");	
+			
+			var testPermissions = Jaxer.File.chmod(filePath,0444);							
+			assertTrue(testPermissions == 0444, "testJaxerFile_chmod.txt setting permissions to '0444' permission value failed - found "+testPermissions);	
+
+			var testPermissions = Jaxer.File.chmod(filePath,0666);							
+			assertTrue(testPermissions == 0666, "testJaxerFile_chmod.txt setting permissions to '0666' permission value failed - found "+testPermissions);					
+
+			removeTestFile(filePath);
+		}
+
+		function testJaxerFile_backup()
+		{
+			var filePath = createTestFile('testJaxerFile_backup.txt','testJaxerFile_backup');	
+			
+			var origChecksum 	= Jaxer.File.checksum(filePath);
+			var backupPath 		= Jaxer.File.backup(filePath);
+			var copyChecksum 	= Jaxer.File.checksum(backupPath);
+			
+			assertTrue(Jaxer.File.exists(filePath), "testJaxerFile_backup.txt original file was removed");	
+			assertTrue(Jaxer.File.exists(backupPath),backupPath+" file was not backed up correctly");	
+			assertTrue(origChecksum==copyChecksum,"testJaxerFile_backup.txt file was backed up incorrectly");	
+												
+			removeTestFile(filePath);
+			removeTestFile(backupPath);
+		}
+
+		function testJaxerFile_move()
+		{
+			var filePath = createTestFile('testJaxerFile_move.txt','testJaxerFile_move');	
+			var filePath2 = createTestFile('testJaxerFile_move.move','different contents');	
+			
+			var origChecksum = Jaxer.File.checksum(filePath);
+			Jaxer.File.move(filePath,filePath2);
+			
+			var copyChecksum = Jaxer.File.checksum(filePath2);
+			
+			assertFalse(Jaxer.File.exists(filePath), "testJaxerFile_move.txt original file was not removed");	
+			assertTrue(Jaxer.File.exists(filePath2),"testJaxerFile_move.txt file was not moved to testJaxerFile_move.move");	
+			assertTrue(origChecksum==copyChecksum,"testJaxerFile_move.txt file was moved incorrectly");	
+												
+			removeTestFile(filePath);
+			removeTestFile(filePath2);
+		}
+
+		function testJaxerFile_copy()
+		{
+			var filePath = createTestFile('testJaxerFile_copy.txt','testJaxerFile_copy');	
+			var filePath2 = createTestFile('testJaxerFile_copy.copy','different contents');	
+			
+			var origChecksum = Jaxer.File.checksum(filePath);
+			Jaxer.File.copy(filePath,filePath2);
+			var copyChecksum = Jaxer.File.checksum(filePath2);
+			
+			assertTrue(Jaxer.File.exists(filePath), "testJaxerFile_copy.txt original file was removed");	
+			assertTrue(Jaxer.File.exists(filePath2),"testJaxerFile_copy.txt file was not copied to testJaxerFile_copy.copy");	
+			assertTrue(origChecksum==copyChecksum,"testJaxerFile_copy.txt file was copied incorrectly");	
+												
+			removeTestFile(filePath);
+			removeTestFile(filePath2);
+		}
+
+		function testJaxerFile_appendLine()
+		{
+			var filePath = createTestFile('testJaxerFile_appendLine.txt','testJaxerFile_appendLine');	
+			
+			Jaxer.File.appendLine(filePath,'testJaxerFile_appendLine');
+			
+			assertTrue(Jaxer.File.read(filePath)=='testJaxerFile_appendLinetestJaxerFile_appendLine\n',"testJaxerFile_appendLine.txt text was appended incorrectly");	
+												
+			removeTestFile(filePath);
+		}
+		
+		function testJaxerFile_append()
+		{
+			var filePath = createTestFile('testJaxerFile_append.txt','testJaxerFile_append');	
+			
+			Jaxer.File.append(filePath,'testJaxerFile_append')
+			
+			assertTrue(Jaxer.File.read(filePath)=='testJaxerFile_appendtestJaxerFile_append',"testJaxerFile_append.txt text was appended incorrectly");	
+												
+			removeTestFile(filePath);
+		}
+
+		function testJaxerFile_read()
+		{
+			var filePath = createTestFile('testJaxerFile_read.txt','testJaxerFile_read');	
+			
+			assertTrue(Jaxer.File.read(filePath)=='testJaxerFile_read',"testJaxerFile_read.txt contents not as expected");	
+												
+			removeTestFile(filePath);
+		}
+
+		function testJaxerFile_checksum()
+		{
+			var filePath = createTestFile('testJaxerFile_checksum.txt','testJaxerFile_checksum');	
+							
+			assertTrue(Jaxer.File.checksum(filePath)==1507481739,"testJaxerFile_checksum.txt checksum reported incorrectly");	
+												
+			removeTestFile(filePath);
+		}
+		
+		function testJaxerFile_dateModified()
+		{
+			var filePath = createTestFile('testJaxerFile_dateModified.txt','testJaxerFile_dateModified');	
+				
+			var f = new Jaxer.File(filePath);
+			var dateModified = f.dateModified;
+			
+			assertTrue(Jaxer.File.dateModified(filePath).toString()==dateModified.toString(),"testJaxerFile_dateModified.txt dateModifed reported incorrectly");	
+												
+			removeTestFile(filePath);
+		}
+
+		function testJaxerFile_parentPath()
+		{
+			var filePath = createTestFile('testJaxerFile_parentPath.txt','testJaxerFile_parentPath');	
+				
+			var f = new Jaxer.File(filePath);
+			var parentPath = f.parentPath;
+			
+			//assertTrue(Jaxer.File.parentPath(filePath)==parentPath,"testJaxerFile_parentPath.txt parentPath reported incorrectly");	
+												
+			removeTestFile(filePath);
+		}
+		
+		function testJaxerFile_absolutePath()
+		{
+			var filePath = createTestFile('testJaxerFile_absolutePath.txt','testJaxerFile_absolutePath');	
+				
+			var fPath = Jaxer.Dir.resolve(filePath);
+			assertTrue(Jaxer.File.absolutePath(filePath)==fPath,"testJaxerFile_absolutePath.txt absolutePath reported incorrectly");	
+												
+			removeTestFile(filePath);
+		}
+
+		function testJaxerFile_extension()
+		{
+			var filePath = createTestFile('testJaxerFile_extension.txt','testJaxerFile_extension');		
+			var filePath2 = createTestFile('testJaxerFile_noextension','testJaxerFile_noextension');		
+			
+			assertTrue(Jaxer.File.extension(filePath)=='txt',"testJaxerFile_extension.txt extension reported incorrectly");	
+			assertTrue(Jaxer.File.extension(filePath2)=='',"testJaxerFile_noextension extension reported incorrectly");	
+												
+			removeTestFile(filePath);
+			removeTestFile(filePath2);
+		}
+
+		function testJaxerFile_filename()
+		{
+			var filePath = createTestFile('testJaxerFile_filename.txt','testJaxerFile_filename');		
+			
+			assertTrue(Jaxer.File.filename(filePath)=='testJaxerFile_filename.txt',"testJaxerFile_filename.txt filename reported incorrectly");	
+												
+			removeTestFile(filePath);
+		}
+		
+		function testJaxerFile_truncate()
+		{
+			var filePath = createTestFile('testJaxerFile_truncate.txt','testJaxerFile_truncate');
+						
+			assertTrue(Jaxer.File.size(filePath)==22,"testJaxerFile_truncate.txt size reported incorrectly");						
+			Jaxer.File.truncate(filePath);
+			assertTrue(Jaxer.File.size(filePath)==0,"testJaxerFile_truncate.txt was not truncated");						
+			
+			removeTestFile(filePath);
+		}
+
+		function testJaxerFile_size()
+		{
+			var filePath = createTestFile('testJaxerFile_size.txt','testJaxerFile_size');
+			
+			assertTrue(Jaxer.File.size(filePath)!=0,"testJaxerFile_size.txt size reported as 0 bytes");						
+			assertTrue(Jaxer.File.size(filePath)==18,"testJaxerFile_size.txt size reported incorrectly");						
+
+			removeTestFile(filePath);
+		}
+
+		function testJaxerFile_touch()
+		{						
+			var filePath = createTestFile('testJaxerFile_touch.txt','testJaxerFile_size');
+			Jaxer.File.touch(filePath);
+			assertTrue(Jaxer.File.exists(filePath), "testJaxerFile_remove.txt not found and should have been created" );
+
+			removeTestFile(filePath);
+		}
+		
+		function testJaxerFile_remove()
+		{
+			var filePath = createTestFile('testJaxerFile_remove.txt','testJaxerFile_remove');
+			
+			Jaxer.File.remove(filePath);
+			assertFalse( Jaxer.File.exists(filePath), "testJaxerFile_remove.txt exists and should have been deleted" );
+
+			removeTestFile(filePath);
+		}
+
+		function testJaxerFile_exists()
+		{
+			var filePath = createTestFile('testJaxerFile_exists.txt','testJaxerFile_exists');
+			
+			assertTrue(Jaxer.File.exists(filePath,"testJaxerFile_exists.txt not found"));				
+			assertFalse(Jaxer.File.exists('thisShouldNotExist.txt',"thisShouldNotExist.txt found"));				
+
+			removeTestFile(filePath);
+		}
+
+		function createTestFile(path,contents)
+		{
+			var sPath = Jaxer.Dir.combine(Jaxer.System.tempFolder, path);
+			var sourceFile = new Jaxer.File(sPath);
+			
+			removeTestFile(sPath);
+
+			sourceFile.create();
+			sourceFile.open('w');
+			sourceFile.write(contents);
+			sourceFile.close();
+			
+			return sPath;
+		}
+		
+		function removeTestFile(path)
+		{
+			var sourceFile = new Jaxer.File(path);
+			if (sourceFile.exists)
+			{
+				sourceFile.remove();
+			}
+		}
+
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

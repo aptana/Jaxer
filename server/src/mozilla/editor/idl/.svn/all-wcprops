@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/editor/idl
+END
+nsITableEditor.idl
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/idl/nsITableEditor.idl
+END
+nsIEditorObserver.idl
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/idl/nsIEditorObserver.idl
+END
+nsIHTMLObjectResizer.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/editor/idl/nsIHTMLObjectResizer.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/idl/Makefile.in
+END
+nsICiter.idl
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/idl/nsICiter.idl
+END
+nsIHTMLEditor.idl
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/idl/nsIHTMLEditor.idl
+END
+nsPIEditorTransaction.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/idl/nsPIEditorTransaction.idl
+END
+nsIEditorIMESupport.idl
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/editor/idl/nsIEditorIMESupport.idl
+END
+nsIPlaintextEditor.idl
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/idl/nsIPlaintextEditor.idl
+END
+nsIContentFilter.idl
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/idl/nsIContentFilter.idl
+END
+nsIHTMLInlineTableEditor.idl
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/idl/nsIHTMLInlineTableEditor.idl
+END
+nsIURIRefObject.idl
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/idl/nsIURIRefObject.idl
+END
+nsIEditorStyleSheets.idl
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/idl/nsIEditorStyleSheets.idl
+END
+nsIHTMLAbsPosEditor.idl
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/idl/nsIHTMLAbsPosEditor.idl
+END
+nsIHTMLObjectResizeListener.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/idl/nsIHTMLObjectResizeListener.idl
+END
+nsIEditorSpellCheck.idl
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/idl/nsIEditorSpellCheck.idl
+END
+nsIDocumentStateListener.idl
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/idl/nsIDocumentStateListener.idl
+END
+nsIEditorMailSupport.idl
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/idl/nsIEditorMailSupport.idl
+END
+nsIEditor.idl
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/editor/idl/nsIEditor.idl
+END
+nsIEditActionListener.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/idl/nsIEditActionListener.idl
+END
+nsIEditorLogging.idl
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/editor/idl/nsIEditorLogging.idl
+END

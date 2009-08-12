@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/toolkit/locales
+END
+compare-locales.pl
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/toolkit/locales/compare-locales.pl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/toolkit/locales/Makefile.in
+END
+jar.mn
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/toolkit/locales/jar.mn
+END
+all-locales
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/toolkit/locales/all-locales
+END

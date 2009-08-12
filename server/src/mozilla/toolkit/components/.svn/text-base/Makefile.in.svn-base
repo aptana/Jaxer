@@ -1,0 +1,175 @@
+# ***** BEGIN LICENSE BLOCK *****
+#  Version: GPL 3
+# 
+#  This program is licensed under the GNU General Public license, version 3 (GPL).
+#  It is derived from Mozilla software and modified by Aptana, Inc.
+#  Aptana, Inc. has elected to use and license the Mozilla software 
+#  under the terms of the GPL, and licenses this file to you under the terms
+#  of the GPL.
+#  
+#  Contributor(s): Aptana, Inc.
+#  The portions modified by Aptana are Copyright (C) 2007-2008 Aptana, Inc.
+#  All Rights Reserved.
+# 
+#  This program is distributed in the hope that it will be useful, but
+#  AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+#  NONINFRINGEMENT. Redistribution, except as permitted by the GPL,
+#  is prohibited.
+# 
+#  You can redistribute and/or modify this program under the terms of the GPL, 
+#  as published by the Free Software Foundation.  You should
+#  have received a copy of the GNU General Public License, Version 3 along
+#  with this program; if not, write to the Free Software Foundation, Inc., 51
+#  Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+#  
+#  Aptana provides a special exception to allow redistribution of this file
+#  with certain other code and certain additional terms
+#  pursuant to Section 7 of the GPL. You may view the exception and these
+#  terms on the web at http://www.aptana.com/legal/gpl/.
+#  
+#  You may view the GPL, and Aptana's exception and additional terms in the file
+#  titled license-jaxer.html in the main distribution folder of this program.
+#  
+#  Any modifications to this file must keep this entire header intact.
+# 
+# ***** END LICENSE BLOCK *****
+# ***** BEGIN ORIGINAL ATTRIBUTION BLOCK ***** 
+#
+# The Original Code is the Mozilla Browser code.
+#
+# The Initial Developer of the Original Code is
+# Netscape Communications Corporation.
+# Portions created by the Initial Developer are Copyright (C) 2003
+# the Initial Developer. All Rights Reserved.
+#
+# Contributor(s):
+#  Brian Ryner <bryner@brianryner.com>
+#  Benjamin Smedberg <benjamin@smedbergs.us>
+#
+# ***** END ORIGINAL ATTRIBUTION BLOCK *****
+
+DEPTH   = ../..
+topsrcdir = @top_srcdir@
+srcdir    = @srcdir@
+VPATH   = @srcdir@
+
+include $(DEPTH)/config/autoconf.mk
+
+# These component dirs are built for all apps (including suite)
+
+ifdef MOZ_ENABLE_XREMOTE
+DIRS += remote
+endif
+
+ifndef JAXER
+DIRS += \
+        urlformatter \
+        contentprefs \
+        microformats \
+        places \
+        $(NULL)
+endif
+
+# These component dirs are built only for XUL apps
+
+ifdef MOZ_XUL_APP
+DIRS += \
+	apppicker \
+	filepicker \
+	console \
+	exthelper \
+	viewconfig \
+	typeaheadfind \
+	parentalcontrols \
+	$(NULL)
+
+ifneq (,$(filter cocoa, $(MOZ_WIDGET_TOOLKIT)))
+TOOL_DIRS += alerts
+else
+DIRS += alerts
+endif
+
+ifdef MOZ_FEEDS
+DIRS += feeds
+endif
+
+ifdef MOZ_HELP_VIEWER
+DIRS += help
+endif
+
+ifdef NS_PRINTING
+DIRS +=	printing
+endif
+
+ifdef MOZ_VIEW_SOURCE
+DIRS +=	viewsource
+endif
+
+ifdef MOZ_THUNDERBIRD
+DIRS += autocomplete/public
+else
+DIRS +=	\
+	cookie \
+	$(NULL)
+
+ifdef MOZ_XUL
+DIRS += \
+	autocomplete \
+	satchel \
+	$(NULL)
+endif # MOZ_XUL
+
+ifdef MOZ_SUITE
+# Suite can't use passwordmgr because mail still depends on wallet (bug 239131)
+DIRS += passwordmgr/public
+else
+DIRS += passwordmgr
+ifndef MOZ_PLACES
+DIRS +=	history
+endif # MOZ_PLACES
+endif # MOZ_SUITE
+endif # MOZ_THUNDERBIRD
+
+ifndef MOZ_SUITE
+# XXX Suite doesn't want these just yet
+ifdef MOZ_RDF
+DIRS +=	downloads
+endif
+endif # MOZ_SUITE
+
+ifdef MOZ_URL_CLASSIFIER
+DIRS += url-classifier
+endif
+
+DIRS += \
+	commandlines \
+	startup \
+	build \
+	$(NULL)
+
+EXTRA_PP_COMPONENTS = nsDefaultCLH.js
+
+endif # MOZ_XUL_APP
+
+ifeq ($(MOZ_BUILD_APP),camino)
+DIRS += autocomplete/public
+DIRS += downloads/public
+endif
+
+# JAXER INSERT
+ifdef JAXER
+ifdef MOZ_FEEDS
+DIRS += \
+	feeds \
+	commandlines
+endif
+
+DIRS += \
+	build \
+	microformats \
+	$(NULL)
+endif
+# END JAXER INSERT
+
+include $(topsrcdir)/config/rules.mk

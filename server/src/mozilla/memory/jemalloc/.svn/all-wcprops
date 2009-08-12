@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/memory/jemalloc
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/memory/jemalloc/Makefile.in
+END
+crtsp1.diff
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/memory/jemalloc/crtsp1.diff
+END
+tree.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/memory/jemalloc/tree.h
+END
+jemalloc.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/memory/jemalloc/jemalloc.c
+END
+ed.exe
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/memory/jemalloc/ed.exe
+END
+apply-ed-patches.pl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/memory/jemalloc/apply-ed-patches.pl
+END
+build-crt.py
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/memory/jemalloc/build-crt.py
+END

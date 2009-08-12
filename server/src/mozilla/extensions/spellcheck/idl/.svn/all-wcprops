@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/extensions/spellcheck/idl
+END
+mozIPersonalDictionary.idl
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/spellcheck/idl/mozIPersonalDictionary.idl
+END
+mozISpellI18NManager.idl
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/spellcheck/idl/mozISpellI18NManager.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/spellcheck/idl/Makefile.in
+END
+mozISpellI18NUtil.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/spellcheck/idl/mozISpellI18NUtil.idl
+END
+mozISpellCheckingEngine.idl
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/extensions/spellcheck/idl/mozISpellCheckingEngine.idl
+END

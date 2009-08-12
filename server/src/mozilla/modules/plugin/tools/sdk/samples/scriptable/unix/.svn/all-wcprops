@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/scriptable/unix
+END
+plugin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/scriptable/unix/plugin.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/scriptable/unix/Makefile.in
+END
+plugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/scriptable/unix/plugin.h
+END
+nsScriptablePeer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/scriptable/unix/nsScriptablePeer.cpp
+END
+nsIScriptablePluginSample.idl
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/scriptable/unix/nsIScriptablePluginSample.idl
+END
+nsScriptablePeer.h
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/plugin/tools/sdk/samples/scriptable/unix/nsScriptablePeer.h
+END

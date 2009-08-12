@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Jaxer Async SMTP Email - Index</title>
+		<link type="text/css" rel="stylesheet" href="css/index.css">
+		<link type="text/css" rel="stylesheet" href="css/commonStyles.css">
+		
+		<script type="text/javascript" runat="server-proxy">
+			/**
+			 * This server-side function sends an email message over SMTP. 
+			 * This function needs to run server-side as a browser cannot 
+			 * make an arbitrary network connection.
+			 * 
+			 * @param {String} server The server host or ip that honors SMTP requests.
+			 * @param {String} from An email address of the sender of this message.
+			 * @param {String} to The email address of the recipient of this message.
+			 * @param {String} subject The subject of the email message.
+			 * @param {String} body The body text of the email message.
+			 */
+			function sendSMTPEmail(server, from, to, subject, body)
+			{
+				// We start by creating a 'MailMessage' object that contains
+				// all of the properties we need for sending an email via SMTP.
+				var msg = new Jaxer.SMTP.MailMessage();
+				msg.setFrom(from);
+				msg.addRecipient(to);
+				msg.setSubject(subject);
+				msg.setBody(body);
+
+				// We now put a try/catch around the send so we can detect any errors
+				// that might occur (i.e. cannot connect to server)
+				try {
+					// Send the MailMessage object we created to the 'server' specified
+					// over SMTP. Note: No authentication is performed.
+					Jaxer.SMTP.sendMessage(server, Jaxer.SMTP.DEFAULT_PORT, msg);
+				} 
+				catch (e) {
+					// If there is an error, the exception will contain a description of it.
+					return e.toString();
+				}
+				
+				// If nothing went wrong, then we are successful.
+				return "Mail successfully sent.";
+			}
+		</script>
+		
+		<script type="text/javascript">
+			/**
+			 * This client-side function 'fetches' all of the values from the form and submits them
+			 * to the server-side sendSMTPEmail function.
+			 * 
+			 * @param {Object} form The form on the page.
+			 */
+			function fetchValuesAndSend(form)
+			{
+				// Set the form's submit button to display a 'Sending...' message and disable it
+				form.sendButton.value = "Sending email via " + form.server.value + "...";
+				form.sendButton.disabled = true;
+				
+				// Fetch all of the values needed from the form
+				var server	= form.server.value;
+				var from	= form.from.value;
+				var to		= form.to.value;
+				var subject	= form.subject.value;
+				var body	= form.body.value;
+				
+				// If any of the values are blank, let the user know.
+				// This is not fancy, as we're showing off email sending, not forms validation :-)
+				if(server == "" || from == "" || to == "" || subject == "" || body == "")
+				{
+					alert("One of the fields is blank, please enter values for all fields.");
+					form.sendButton.value = "Send Email";
+					form.sendButton.disabled = false;
+					return;
+				}
+
+				// Now that we're ready to send, let's use an Asynchronous version of the call so that our
+				// browser doesn't hang (i.e. block) waiting for the email server to return.
+				// You do this by simply calling the function name you wrote, but adding 'Async' to the end
+				// of the name, and using the callback function as the first parameter. In this case,
+				// when the call is done, 'emailSent()' is called.
+				sendSMTPEmail.async(emailSent, server, from, to, subject, body);
+			}
+			
+			/**
+			 * This client-side function is called once the server-side sendSMTPEmail
+			 * function returns from sending out the emai
+			 * 
+			 * @param {String} msg The message returned from the sendSMTPEmail() function
+			 */
+			function emailSent(msg)
+			{
+				// Set the button state and label back to normal
+				document.getElementById('mailSenderForm').sendButton.value = "Send Email";
+				document.getElementById('mailSenderForm').sendButton.disabled = false;
+
+				// Show the user what we got back
+				alert(msg);
+			}
+			
+			/*
+			 * We override the ontimeoutAsync function so that we can know if we timed out
+			 * in trying to talk to the server.
+			 */
+			Jaxer.Callback.ontimeoutAsync = function(xhr, timeout, extra)
+			{
+				emailSent("The request timed out after " + timeout/1000 + " seconds, aborting.");
+			}
+
+		</script>
+				
+	</head>
+	
+    <body>
+		<script type="text/javascript" src="lib/wz_tooltip.js"></script>
+		<div id='sampleDescription'>
+			An example of how to use the Jaxer SMTP object for sending email asynchronously.
+		</div>
+		<div id='sampleSource'>
+		<li><a href="/aptana/tools/sourceViewer/index.html?filename=../../samples/smtp-email/index.html" target="_blank">Main page</a></li>
+		</div>
+
+        <div id='sampleHeader'>
+            <div class='sampleTitle'>
+               <img src='images/user_comment.png'/> Async SMTP Email Demo
+            </div>
+            <div id='rightFloat'>
+                <img src ='images/information.png' class='sampleDescription' 
+						onmouseover="TagToTip('sampleDescription', CLICKCLOSE, true, STICKY, true, WIDTH, 300, TITLE, 'Sample info')" />
+				<span id='sourceButton'><img src ='images/html.png' id='sampleSourceLink' 
+						onmouseover="TagToTip('sampleSource', STICKY, true, CLOSEBTN, true,  TITLE, 'View Source Code')"/></span>
+            </div>
+        </div>
+        <div id='applicationContent'>
+			<div class='roomPanel'>
+	            <div>
+	                <span class="rooms-title">Send Async SMTP Mail Message:</span>
+					
+					<p></p>
+					<p></p>
+					
+					<form id="mailSenderForm">
+					<table>
+						<tr>
+							<td>Mail host:</td>
+							<td><input name="server" size="50"> <i>(eg: smtp.myISPcompany.com)</i></td>
+						</tr>
+						<tr>
+							<td>From:</td>
+							<td><input name="from" size="50"> <i>(ie: your email address)</i></td>
+						</tr>
+						<tr>
+							<td>To:</td>
+							<td><input name="to" size="50"> <i>(eg: someone's email address)</i></td>
+						</tr>
+						<tr>
+							<td>Subject:</td>
+							<td><input name="subject" value="Test Email From Aptana Jaxer" size="50"></td>
+						</tr>
+						<tr>
+							<td>Message:</td>
+							<td><textarea name="body" cols="50" rows="8"></textarea></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><input id="sendButton" type="button" onclick="fetchValuesAndSend(this.form)" value="Send Email"></td>
+						</tr>
+					</table>
+
+					</form>
+	            </div>
+			</div>
+			<script runat='server'>
+				if (Jaxer.System.executableFolder.match('com.aptana.ide.framework.jaxer')) {
+					document.getElementById('sampleSource').innerHTML="";
+					document.getElementById('sourceButton').innerHTML="";
+				}
+			</script>			
+	</body>
+</html>

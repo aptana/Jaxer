@@ -1,0 +1,98 @@
+<html>
+    <head>
+		<script runat='server'> // DO NOT REMOVE: needed for the Jaxer unit testing harness 
+			Jaxer.load(Jaxer.request.parsedUrl.queryParts.testHarnessHeader);
+		</script>	
+        <script type="text/javascript" runat="server">
+        	function test_SerializeData_InvalidMethod()
+			{
+				try 
+				{
+					var result = Jaxer.Serialization.toJSONString(true, { as: "super-duper-cool-serialization" });
+					
+					fail("toJSONString did not throw an error with an unrecognized serialization method");
+				} 
+				catch (e) 
+				{
+					// doing nothing is the same as success
+				}
+			}
+			
+			function test_SerializeData_CustomObject()
+			{
+				var CE = function CE(info, options)
+				{
+				    this.info = info;
+				    this.options = options;
+				};
+				
+				var obj = new CE("Help!");
+				var result = Jaxer.Serialization.toJSONString(obj, {as: Jaxer.Serialization.JAXER_METHOD});
+				var expected = "{\"info\":\"Help!\",\"options\":undefined}";
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_SerializeData_CustomObject2()
+			{
+				var CE = function CE(info, options)
+				{
+				    this.info = info;
+				    this.options = options;
+				};
+				
+				var obj = new CE("Help!");
+				var result = Jaxer.Serialization.toJSONString(
+					obj,
+					{
+						as: Jaxer.Serialization.JAXER_METHOD,
+						useCustomSerializers: false
+					}
+				);
+				var expected = "{\"info\":\"Help!\",\"options\":undefined}";
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_SerializeData_NestedDate()
+			{
+				var CE = function CE(info, options)
+				{
+				    this.info = new Date(Date.UTC(2007, 7, 17, 11, 57, 30));
+				    this.options = options;
+				};
+				
+				var obj = new CE("Help!");
+				var result = Jaxer.Serialization.toJSONString(obj, {as: Jaxer.Serialization.JAXER_METHOD});
+				var expected = "{\"info\":\"~Date:2007-08-17T11:57:30~\",\"options\":undefined}";
+				
+				assertEquals(result, expected);
+			}
+			
+			function test_SerializerData_MultipleGlobals()
+			{
+				var obj = Jaxer.Includer.evalOn('new Jaxer.ClientError(new Date(Date.UTC(2007, 7, 17, 11, 57, 30)))', Jaxer.Serialization.__parent__);
+				var result = Jaxer.Serialization.toJSONString(obj, {as: Jaxer.Serialization.JAXER_METHOD});
+				var expected = "{\"info\":\"~Date:2007-08-17T11:57:30~\",\"options\":{}}";
+				
+				assertEquals(result, expected);
+			}
+			
+      		function test_DeserializeData_NestedDate()
+			{
+				var json = '[[{"date":"~Date:2007-07-17T13:04:35~"}]]';
+				var nestedObject = Jaxer.Serialization.fromJSONString(json, {as: Jaxer.Serialization.JAXER_METHOD});
+				var result = nestedObject[0][0].date;
+				
+				assertEquals(result.getUTCSeconds(), 35);
+				assertEquals(result.getUTCMinutes(), 4);
+				assertEquals(result.getUTCHours(), 13);
+				assertEquals(result.getUTCDate(), 17);
+				assertEquals(result.getUTCMonth(), 6);
+				assertEquals(result.getUTCFullYear(), 2007);
+			}
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

@@ -1,0 +1,81 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/framework/Comm
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-11-25T02:58:20.697630Z
+4337
+usarid
+has-props
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+client_comm.json
+file
+
+
+
+
+2009-08-11T21:40:39.000000Z
+e44901be494c283f9432d599bc2c0bc4
+2008-01-03T02:49:26.764024Z
+1470
+usarid
+
+Callback.js
+file
+
+
+
+
+2009-08-11T21:40:39.000000Z
+eb5eb491443fe454fecc284681175685
+2008-11-15T18:46:13.619268Z
+4296
+usarid
+has-props
+
+server_comm.json
+file
+
+
+
+
+2009-08-11T21:40:39.000000Z
+4dd8c8280998ed47a5e2cad0523cae68
+2008-01-04T01:41:02.925782Z
+1504
+usarid
+
+unit_tests_jaxer
+dir
+
+XHR.js
+file
+
+
+
+
+2009-08-11T21:40:39.000000Z
+38c8e064b699c7f2ea40fab986377410
+2008-11-25T02:58:20.697630Z
+4337
+usarid
+has-props
+

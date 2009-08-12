@@ -1,0 +1,167 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/gfx/src/thebes
+END
+nsThebesFontMetrics.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/src/thebes/nsThebesFontMetrics.h
+END
+nsThebesDeviceContext.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/3349/trunk/products/server/src/mozilla/gfx/src/thebes/nsThebesDeviceContext.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/src/thebes/Makefile.in
+END
+nsThebesFontEnumerator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/src/thebes/nsThebesFontEnumerator.cpp
+END
+nsThebesDeviceContext.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/src/thebes/nsThebesDeviceContext.h
+END
+nsIThebesFontMetrics.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/gfx/src/thebes/nsIThebesFontMetrics.h
+END
+nsThebesGfxFactory.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/thebes/nsThebesGfxFactory.cpp
+END
+nsSystemFontsBeOS.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/src/thebes/nsSystemFontsBeOS.cpp
+END
+nsThebesFontEnumerator.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/thebes/nsThebesFontEnumerator.h
+END
+mozilla-decoder.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/thebes/mozilla-decoder.cpp
+END
+nsSystemFontsBeOS.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/thebes/nsSystemFontsBeOS.h
+END
+nsSystemFontsWin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/thebes/nsSystemFontsWin.cpp
+END
+nsThebesRenderingContext.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/src/thebes/nsThebesRenderingContext.cpp
+END
+nsThebesImage.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/src/thebes/nsThebesImage.cpp
+END
+nsThebesRegion.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/thebes/nsThebesRegion.cpp
+END
+mozilla-decoder.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/thebes/mozilla-decoder.h
+END
+nsSystemFontsMac.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/thebes/nsSystemFontsMac.cpp
+END
+nsSystemFontsWin.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/thebes/nsSystemFontsWin.h
+END
+nsSystemFontsOS2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/gfx/src/thebes/nsSystemFontsOS2.cpp
+END
+nsThebesImage.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/src/thebes/nsThebesImage.h
+END
+nsThebesRenderingContext.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/src/thebes/nsThebesRenderingContext.h
+END
+nsThebesRegion.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/thebes/nsThebesRegion.h
+END
+nsSystemFontsMac.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/thebes/nsSystemFontsMac.h
+END
+nsSystemFontsGTK2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/src/thebes/nsSystemFontsGTK2.cpp
+END
+nsSystemFontsOS2.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/thebes/nsSystemFontsOS2.h
+END
+nsThebesFontMetrics.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/2886/trunk/products/server/src/mozilla/gfx/src/thebes/nsThebesFontMetrics.cpp
+END
+nsSystemFontsGTK2.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/thebes/nsSystemFontsGTK2.h
+END

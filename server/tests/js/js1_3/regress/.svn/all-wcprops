@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_3/regress
+END
+function-002.js
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_3/regress/function-002.js
+END
+in-001.js
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_3/regress/in-001.js
+END
+new-001.js
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_3/regress/new-001.js
+END
+shell.js
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_3/regress/shell.js
+END
+switch-001.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_3/regress/switch-001.js
+END
+delete-001.js
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_3/regress/delete-001.js
+END
+browser.js
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/jaxer/!svn/ver/68/trunk/products/server/tests/js/js1_3/regress/browser.js
+END

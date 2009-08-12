@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/gfx/src/beos
+END
+nsRenderingContextBeOS.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/gfx/src/beos/nsRenderingContextBeOS.h
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/beos/Makefile.in
+END
+nsImageBeOS.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/beos/nsImageBeOS.h
+END
+nsRegionBeOS.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/beos/nsRegionBeOS.h
+END
+nsFontMetricsBeOS.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/beos/nsFontMetricsBeOS.cpp
+END
+nsGraphicsStateBeOS.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/beos/nsGraphicsStateBeOS.cpp
+END
+nsFontMetricsBeOS.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/gfx/src/beos/nsFontMetricsBeOS.h
+END
+nsDeviceContextBeOS.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/beos/nsDeviceContextBeOS.cpp
+END
+nsDrawingSurfaceBeOS.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/beos/nsDrawingSurfaceBeOS.cpp
+END
+nsGraphicsStateBeOS.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/beos/nsGraphicsStateBeOS.h
+END
+nsDeviceContextBeOS.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/gfx/src/beos/nsDeviceContextBeOS.h
+END
+nsDrawingSurfaceBeOS.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/beos/nsDrawingSurfaceBeOS.h
+END
+nsGfxFactoryBeOS.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/gfx/src/beos/nsGfxFactoryBeOS.cpp
+END
+gfxbeos.pkg
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/beos/gfxbeos.pkg
+END
+nsIDrawingSurfaceBeOS.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/beos/nsIDrawingSurfaceBeOS.h
+END
+nsImageBeOS.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/beos/nsImageBeOS.cpp
+END
+nsRenderingContextBeOS.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/beos/nsRenderingContextBeOS.cpp
+END
+nsRegionBeOS.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/gfx/src/beos/nsRegionBeOS.cpp
+END

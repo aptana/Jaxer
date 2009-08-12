@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix
+END
+manifest.mn
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix/manifest.mn
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/security/nss/cmd/libpkix/pkix/Makefile
+END

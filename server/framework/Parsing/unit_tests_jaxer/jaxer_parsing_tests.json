@@ -1,0 +1,12 @@
+{
+	"name": "default",
+	"tests": [
+		    "test_Parsing_Runat.html"
+		  , "test_Parsing_textParser.html"
+		  , "test_Parsing_globals.html"
+		  , "unchangedDOM/index.html"
+		  , "unchangedDOM/server.js"
+		  , "test_Parsing_unchangedDOM.html"
+	]
+}
+

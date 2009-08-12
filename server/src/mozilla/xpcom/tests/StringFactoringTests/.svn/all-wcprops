@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpcom/tests/StringFactoringTests
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/550/trunk/products/server/src/mozilla/xpcom/tests/StringFactoringTests/Makefile.in
+END
+StringTest.Prefix
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/StringFactoringTests/StringTest.Prefix
+END
+StringTestProfileOld.Prefix
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/StringFactoringTests/StringTestProfileOld.Prefix
+END
+StringTest.mcp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/StringFactoringTests/StringTest.mcp
+END
+test_main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/xpcom/tests/StringFactoringTests/test_main.cpp
+END
+profile_main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/StringFactoringTests/profile_main.cpp
+END
+StringTestNo_wchar_t.Prefix
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/StringFactoringTests/StringTestNo_wchar_t.Prefix
+END
+StringTestDebug.Prefix
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/StringFactoringTests/StringTestDebug.Prefix
+END
+ToDo.doc
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/StringFactoringTests/ToDo.doc
+END
+nsStdStringWrapper.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/StringFactoringTests/nsStdStringWrapper.h
+END
+StringTestProfileNew.Prefix
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/StringFactoringTests/StringTestProfileNew.Prefix
+END
+StringTestProfileStd.Prefix
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/xpcom/tests/StringFactoringTests/StringTestProfileStd.Prefix
+END

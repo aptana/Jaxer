@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/ls
+END
+nsIDOMLSInput.idl
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/ls/nsIDOMLSInput.idl
+END
+nsIDOMLSSerializerFilter.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/ls/nsIDOMLSSerializerFilter.idl
+END
+nsIDOMLSOutput.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/ls/nsIDOMLSOutput.idl
+END
+nsIDOMLSLoadEvent.idl
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/ls/nsIDOMLSLoadEvent.idl
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/ls/Makefile.in
+END
+nsIDOMLSParserFilter.idl
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/ls/nsIDOMLSParserFilter.idl
+END
+nsIDOMDOMImplementationLS.idl
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/ls/nsIDOMDOMImplementationLS.idl
+END
+nsIDOMLSProgressEvent.idl
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/ls/nsIDOMLSProgressEvent.idl
+END
+nsIDOMLSResourceResolver.idl
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/ls/nsIDOMLSResourceResolver.idl
+END
+nsIDOMLSSerializer.idl
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/ls/nsIDOMLSSerializer.idl
+END
+nsIDOMLSParser.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/ls/nsIDOMLSParser.idl
+END
+nsIDOMLSException.idl
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/ls/nsIDOMLSException.idl
+END

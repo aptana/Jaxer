@@ -1,0 +1,79 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/extensions/python/dom/nsdom
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-16T23:28:56.072242Z
+2859
+mstepanov
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+test
+dir
+
+domcompile.py
+file
+
+
+
+
+2009-08-11T21:36:43.000000Z
+71bf4d5c94450786fbf4c35172142909
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:36:43.000000Z
+e151d821f6ea34d7d3c82e7c3eed1960
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+__init__.py
+file
+
+
+
+
+2009-08-11T21:36:43.000000Z
+98d885f7c3850915f8326ef1994e743b
+2007-10-02T20:40:14.421796Z
+321
+jcohen
+
+context.py
+file
+
+
+
+
+2009-08-11T21:36:43.000000Z
+982dc2ae6d2dea0451aec9fed59b4f0c
+2008-05-16T23:28:56.072242Z
+2859
+mstepanov
+

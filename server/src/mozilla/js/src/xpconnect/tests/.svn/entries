@@ -1,0 +1,70 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/js/src/xpconnect/tests
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-20T18:44:20.559534Z
+2886
+jzhang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+mochitest
+dir
+
+unit
+dir
+
+Makefile.in
+file
+
+
+
+
+2009-08-11T21:32:06.000000Z
+aad2b5f1dafe9c7120c3d906e9ba6d35
+2008-02-18T19:26:57.266176Z
+2130
+csanders
+
+components
+dir
+
+idispatch
+dir
+
+idl
+dir
+
+TestXPC.cpp
+file
+
+
+
+
+2009-08-11T21:32:06.000000Z
+370de52877ccdbe6b4af6e8668f08841
+2008-02-18T19:26:57.266176Z
+2130
+csanders
+
+js
+dir
+

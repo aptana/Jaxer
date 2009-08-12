@@ -1,0 +1,701 @@
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations
+END
+ReleaseBoolArrayElems_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseBoolArrayElems_1.cpp
+END
+ReleaseBoolArrayElems_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseBoolArrayElems_2.cpp
+END
+ReleaseBoolArrayElems_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseBoolArrayElems_3.cpp
+END
+NewCharArray_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewCharArray_1.cpp
+END
+NewCharArray_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewCharArray_2.cpp
+END
+NewCharArray_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewCharArray_3.cpp
+END
+NewIntArray_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewIntArray_1.cpp
+END
+NewIntArray_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewIntArray_2.cpp
+END
+NewIntArray_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewIntArray_3.cpp
+END
+ArrayOperations.h
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ArrayOperations.h
+END
+NewLongArray_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewLongArray_1.cpp
+END
+NewLongArray_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewLongArray_2.cpp
+END
+ReleaseCharArrayElements_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseCharArrayElements_1.cpp
+END
+NewLongArray_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewLongArray_3.cpp
+END
+ReleaseCharArrayElements_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseCharArrayElements_2.cpp
+END
+NewByteArray_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewByteArray_1.cpp
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/Makefile
+END
+ReleaseCharArrayElements_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseCharArrayElements_3.cpp
+END
+NewByteArray_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewByteArray_2.cpp
+END
+NewByteArray_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewByteArray_3.cpp
+END
+GetCharArrayRegion_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetCharArrayRegion_1.cpp
+END
+GetArrayLength_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetArrayLength_1.cpp
+END
+GetArrayLength_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetArrayLength_2.cpp
+END
+GetBooleanArrayRegion_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetBooleanArrayRegion_1.cpp
+END
+GetArrayLength_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetArrayLength_3.cpp
+END
+GetIntArrayElements_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetIntArrayElements_1.cpp
+END
+GetIntArrayElements_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetIntArrayElements_2.cpp
+END
+GetIntArrayElements_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetIntArrayElements_3.cpp
+END
+ReleaseLongArrayElements_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseLongArrayElements_1.cpp
+END
+SetCharArrayRegion_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/SetCharArrayRegion_1.cpp
+END
+GetIntArrayRegion_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetIntArrayRegion_1.cpp
+END
+ReleaseLongArrayElements_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseLongArrayElements_2.cpp
+END
+SetBooleanArrayRegion_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/SetBooleanArrayRegion_1.cpp
+END
+ReleaseLongArrayElements_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseLongArrayElements_3.cpp
+END
+GetIntArrayRegion_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetIntArrayRegion_2.cpp
+END
+GetIntArrayRegion_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetIntArrayRegion_3.cpp
+END
+ReleaseByteArrayElements_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseByteArrayElements_1.cpp
+END
+GetIntArrayRegion_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetIntArrayRegion_4.cpp
+END
+ReleaseByteArrayElements_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseByteArrayElements_2.cpp
+END
+ReleaseByteArrayElements_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseByteArrayElements_3.cpp
+END
+GetLongArrayRegion_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetLongArrayRegion_1.cpp
+END
+GetShortArrayRegion_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetShortArrayRegion_1.cpp
+END
+GetDoubleArrayElements_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetDoubleArrayElements_1.cpp
+END
+GetByteArrayRegion_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetByteArrayRegion_1.cpp
+END
+GetDoubleArrayElements_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetDoubleArrayElements_2.cpp
+END
+GetFloatArrayRegion_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetFloatArrayRegion_1.cpp
+END
+GetDoubleArrayElements_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetDoubleArrayElements_3.cpp
+END
+Makefile.win
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/Makefile.win
+END
+SetIntArrayRegion_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/SetIntArrayRegion_1.cpp
+END
+SetIntArrayRegion_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/SetIntArrayRegion_2.cpp
+END
+SetIntArrayRegion_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/SetIntArrayRegion_3.cpp
+END
+SetIntArrayRegion_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/SetIntArrayRegion_4.cpp
+END
+GetDoubleArrayRegion_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetDoubleArrayRegion_1.cpp
+END
+SetShortArrayRegion_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/SetShortArrayRegion_1.cpp
+END
+SetLongArrayRegion_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/SetLongArrayRegion_1.cpp
+END
+NewObjectArray_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewObjectArray_1.cpp
+END
+NewObjectArray_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewObjectArray_2.cpp
+END
+NewObjectArray_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewObjectArray_3.cpp
+END
+SetByteArrayRegion_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/SetByteArrayRegion_1.cpp
+END
+NewObjectArray_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewObjectArray_4.cpp
+END
+NewObjectArray_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewObjectArray_5.cpp
+END
+SetFloatArrayRegion_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/SetFloatArrayRegion_1.cpp
+END
+NewObjectArray_6.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewObjectArray_6.cpp
+END
+ReleaseDblArrayElems_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseDblArrayElems_1.cpp
+END
+ReleaseIntArrayElements_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseIntArrayElements_1.cpp
+END
+NewBooleanArray_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewBooleanArray_1.cpp
+END
+ReleaseDblArrayElems_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseDblArrayElems_2.cpp
+END
+ReleaseIntArrayElements_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseIntArrayElements_2.cpp
+END
+NewBooleanArray_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewBooleanArray_2.cpp
+END
+ReleaseDblArrayElems_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseDblArrayElems_3.cpp
+END
+ReleaseIntArrayElements_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseIntArrayElements_3.cpp
+END
+SetDoubleArrayRegion_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/SetDoubleArrayRegion_1.cpp
+END
+NewBooleanArray_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewBooleanArray_3.cpp
+END
+ReleaseShortArrayElements_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseShortArrayElements_1.cpp
+END
+ReleaseShortArrayElements_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseShortArrayElements_2.cpp
+END
+ReleaseShortArrayElements_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseShortArrayElements_3.cpp
+END
+ReleaseFloatArrayElements_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseFloatArrayElements_1.cpp
+END
+ReleaseFloatArrayElements_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseFloatArrayElements_2.cpp
+END
+ReleaseFloatArrayElements_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/ReleaseFloatArrayElements_3.cpp
+END
+NewShortArray_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewShortArray_1.cpp
+END
+GetCharArrayElements_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetCharArrayElements_1.cpp
+END
+NewShortArray_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewShortArray_2.cpp
+END
+GetCharArrayElements_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetCharArrayElements_2.cpp
+END
+NewShortArray_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewShortArray_3.cpp
+END
+GetCharArrayElements_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetCharArrayElements_3.cpp
+END
+GetBooleanArrayElements_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetBooleanArrayElements_1.cpp
+END
+GetBooleanArrayElements_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetBooleanArrayElements_2.cpp
+END
+GetBooleanArrayElements_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetBooleanArrayElements_3.cpp
+END
+NewFloatArray_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewFloatArray_1.cpp
+END
+NewFloatArray_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewFloatArray_2.cpp
+END
+GetObjectArrayElement_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetObjectArrayElement_1.cpp
+END
+NewFloatArray_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewFloatArray_3.cpp
+END
+GetObjectArrayElement_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetObjectArrayElement_2.cpp
+END
+GetObjectArrayElement_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetObjectArrayElement_3.cpp
+END
+GetObjectArrayElement_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetObjectArrayElement_4.cpp
+END
+NewDoubleArray_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewDoubleArray_1.cpp
+END
+GetObjectArrayElement_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetObjectArrayElement_5.cpp
+END
+NewDoubleArray_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewDoubleArray_2.cpp
+END
+NewDoubleArray_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/NewDoubleArray_3.cpp
+END
+GetShortArrayElements_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetShortArrayElements_1.cpp
+END
+GetLongArrayElements_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetLongArrayElements_1.cpp
+END
+SetObjectArrayElement_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/SetObjectArrayElement_1.cpp
+END
+GetShortArrayElements_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetShortArrayElements_2.cpp
+END
+GetLongArrayElements_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetLongArrayElements_2.cpp
+END
+SetObjectArrayElement_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/SetObjectArrayElement_2.cpp
+END
+GetShortArrayElements_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetShortArrayElements_3.cpp
+END
+GetLongArrayElements_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetLongArrayElements_3.cpp
+END
+SetObjectArrayElement_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/SetObjectArrayElement_3.cpp
+END
+SetObjectArrayElement_4.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/SetObjectArrayElement_4.cpp
+END
+GetByteArrayElements_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetByteArrayElements_1.cpp
+END
+SetObjectArrayElement_5.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/SetObjectArrayElement_5.cpp
+END
+GetByteArrayElements_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetByteArrayElements_2.cpp
+END
+GetByteArrayElements_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetByteArrayElements_3.cpp
+END
+GetFloatArrayElements_1.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetFloatArrayElements_1.cpp
+END
+GetFloatArrayElements_2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetFloatArrayElements_2.cpp
+END
+GetFloatArrayElements_3.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/modules/oji/tests/src/JNI/ArrayOperations/GetFloatArrayElements_3.cpp
+END

@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/rdf/base/src
+END
+nsNameSpaceMap.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/nsNameSpaceMap.h
+END
+nsRDFContainerUtils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/nsRDFContainerUtils.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/Makefile.in
+END
+nsRDFService.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/nsRDFService.h
+END
+rdfTriplesSerializer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/rdfTriplesSerializer.cpp
+END
+nsRDFXMLDataSource.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/nsRDFXMLDataSource.cpp
+END
+rdfutil.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/rdf/base/src/rdfutil.cpp
+END
+nsRDFBaseDataSources.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/nsRDFBaseDataSources.h
+END
+nsRDFXMLParser.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/nsRDFXMLParser.cpp
+END
+nsInMemoryDataSource.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/nsInMemoryDataSource.cpp
+END
+rdfutil.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/rdfutil.h
+END
+nsCompositeDataSource.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/nsCompositeDataSource.cpp
+END
+nsRDFContainer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/nsRDFContainer.cpp
+END
+nsRDFXMLParser.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/nsRDFXMLParser.h
+END
+nsContainerEnumerator.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/nsContainerEnumerator.cpp
+END
+nsDefaultResourceFactory.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/nsDefaultResourceFactory.cpp
+END
+nsRDFXMLSerializer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/nsRDFXMLSerializer.cpp
+END
+nsNameSpaceMap.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/nsNameSpaceMap.cpp
+END
+nsRDFContentSink.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/nsRDFContentSink.cpp
+END
+nsRDFXMLSerializer.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/rdf/base/src/nsRDFXMLSerializer.h
+END
+nsRDFService.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/rdf/base/src/nsRDFService.cpp
+END

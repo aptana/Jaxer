@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/jaxer/!svn/ver/4359/trunk/products/server/src/mozilla/aptana/utils
+END
+jxWindow.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaxer/!svn/ver/4324/trunk/products/server/src/mozilla/aptana/utils/jxWindow.h
+END
+jxIProcess.idl
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaxer/!svn/ver/4357/trunk/products/server/src/mozilla/aptana/utils/jxIProcess.idl
+END
+jxProcess.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/4359/trunk/products/server/src/mozilla/aptana/utils/jxProcess.cpp
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/4357/trunk/products/server/src/mozilla/aptana/utils/Makefile.in
+END
+jxProcess.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaxer/!svn/ver/4357/trunk/products/server/src/mozilla/aptana/utils/jxProcess.h
+END
+jxIWindow.idl
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaxer/!svn/ver/4324/trunk/products/server/src/mozilla/aptana/utils/jxIWindow.idl
+END
+jxUtilsModule.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaxer/!svn/ver/2876/trunk/products/server/src/mozilla/aptana/utils/jxUtilsModule.cpp
+END
+jxWindow.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaxer/!svn/ver/4324/trunk/products/server/src/mozilla/aptana/utils/jxWindow.cpp
+END

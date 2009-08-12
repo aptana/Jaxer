@@ -1,0 +1,188 @@
+<html>
+	<head>
+		<title>Jaxer POST Shell</title>
+		<script runat="server-nocache">
+			
+		function accessAllowed()
+		{
+			return Jaxer.request.remoteAddr == "127.0.0.1"; // allow access only from localhost
+		}
+
+		function evalIn(expr, global)
+		{
+			if (!accessAllowed()) throw "Sorry, access denied"
+			var exceptionProp = "__shell_exception__";
+			global[exceptionProp] = null;
+			expr = ["try", "{", expr, "}", "catch (e)", "{", exceptionProp + " = e;", "}"].join("\n");
+			Jaxer.Includer.evalOn(expr, global);
+			if (global[exceptionProp] != null)
+			{
+				var e = global[exceptionProp];
+				global[exceptionProp] = null;
+				throw e;
+			}
+		}
+
+		function execute(codeToExecute)
+		{
+			if (!accessAllowed()) 
+				throw "Sorry, access denied"
+			var results = [];
+			var global = Jaxer.pageWindow;
+			global.print = function print(obj)
+			{
+				for (var i = 0; i < arguments.length; i++) 
+				{
+					var str;
+					var obj = arguments[i];
+					if (typeof obj == "undefined") 
+					{
+						str == "undefined";
+					}
+					else if (obj == null) 
+					{
+						str = "null";
+					}
+					else if (typeof obj.toString != "function") 
+					{
+						str = "(object has no toString method)";
+					}
+					else 
+					{
+						str = obj.toString();
+					}
+					results.push(str);
+				}
+			}
+			
+			try 
+			{
+				evalIn(codeToExecute, global);
+			} 
+			finally 
+			{
+				global.print = undefined;
+				global.printWithType = undefined;
+			}
+			
+			return results;
+		}
+		
+		/**
+		 * Is the module with the given name set to log verbosely or not?
+		 * Verbose means the level is TRACE, not verbose means it's higher (usually INFO).
+		 * @param {String} name 
+		 * 	The name of the module (use "framework" for unnamed logging)
+		 * @return true if it's verbose, false if it's not, and null if there's no such module
+		 */
+		function __isLogModuleVerbose(name)
+		{
+			if (!name || !Jaxer.Log.hasModule(name)) return null;
+			var logger = Jaxer.Log.forModule(name);
+			var level = logger.getLevel();
+			return level == Jaxer.Log.TRACE;
+		}
+		
+		/**
+		 * Returns a list of all currently-defined modules, alphabetically sorted, and
+		 * whether each is verbose or not.
+		 * @return {Array} An array of two-member arrays: the first member
+		 * is the name of the module, and the second is true (if verbose) or false.
+		 */
+		function __getLogLevels()
+		{
+			var names = Jaxer.Log.getSortedModuleNames();
+			var moduleLevels = [];
+			names.forEach(function(name)
+			{
+				moduleLevels.push('"' + name + '",' + __isLogModuleVerbose(name));
+			});
+			return moduleLevels.join(';');
+		}
+		
+		/**
+		 * Sets the log levels to verbose or not for all the given modules.
+		 * Does not alter any other modules. Any module names that are not currently
+		 * valid modules are ignored.
+		 * @param {Array} moduleLevels 
+		 * 	An array of two-member arrays: the first member should be the name of the module, 
+		 * 	and the second should be true (for verbose) or false.
+		 */
+		function __setLogLevels(moduleLevels)
+		{
+			if (!moduleLevels.match(/^(?:\"[\w\.]+\"\,(?:true|false)\;?)+$/))
+			{
+				throw "Malformed data for setting log levels: " + moduleLevels;
+			}
+			var pairs = moduleLevels.split(/\;/);
+			pairs.forEach(function(pair)
+			{
+				var matches = pair.match(/"([\w\.]+)"\,(\w+)/);
+				var name = matches[1];
+				var isVerbose = (matches[2] == 'true');
+				Jaxer.Log.forModule(name).setLevel(isVerbose ? Jaxer.Log.TRACE : Jaxer.Log.INFO);
+			});
+		}
+		
+		/**
+		 * Sets all the currently-defined modules to be verbose or not.
+		 * @param {Boolean} isVerbose true to set them to TRACE, false to set them to INFO.
+		 */
+		function __setAllLogLevels(isVerbose)
+		{
+			if (!isVerbose.match(/^(true|false)$/))
+			{
+				throw "Mapformed data for setting all log levels (must be 'true' or 'false'): " + isVerbose;
+			}
+			isVerbose = (isVerbose == 'true');
+			var names = Jaxer.Log.getSortedModuleNames();
+			var moduleLevels = [];
+			names.forEach(function(name)
+			{
+				Jaxer.Log.forModule(name).setLevel(isVerbose ? Jaxer.Log.TRACE : Jaxer.Log.INFO);
+			});
+		}
+		
+		</script>
+		
+	</head>
+	<body>
+		
+		<script runat="server-nocache"> // This is where we process the inputs and create the output
+
+			var result = ''; // By default, return nothing for successful execution of commands that don't ask for data
+			var error = null;
+			try
+			{
+				var queryParams = Jaxer.request.parsedUrl.queryParts;
+				var postData = Jaxer.Util.String.trim(Jaxer.request.body || '');
+				switch (queryParams.command)
+				{
+					case "execute":
+						result = execute(postData).join("\n");
+						break;
+					case "getloglevels":
+						result = __getLogLevels();
+						break;
+					case "setloglevel":
+					case "setloglevels":
+						__setLogLevels(postData);
+						break;
+					case "setallloglevels":
+						__setAllLogLevels(postData);
+						break;
+					default:
+						result = "No recognized command specified";
+				}
+			}
+			catch (e)
+			{
+				error = String(e);
+			}
+			
+			var encoded = (error == null) ? ("Success: " + btoa(escape(result))) : ("Failure: " + btoa(escape(error)));
+			Jaxer.response.setContents("<html><head></head><body>" + encoded + "</body></html>");
+		
+		</script>
+	</body>
+</html>

@@ -1,0 +1,139 @@
+<html>
+	<head>
+		<title>RSS Sample</title>
+		<link rel='stylesheet' type='text/css' href='css/index.css'>
+
+		<!-- This script block will be available on both client and server since the 
+			runat attribute is set to 'both'. -->
+		<script type="text/javascript" runat="both">
+			/*
+			 * Easy access to a named element in the DOM
+			 */
+			function $(id) 
+			{ 
+				return document.getElementById(id); 
+			}
+		</script>
+
+		<!-- These script blocks will execute only on the server because of the
+			runat="server" attributes. -->
+	    <script src="lib/ajaxslt-0.8.1/util.js" type="text/javascript" runat="server"></script>
+		<script src="lib/ajaxslt-0.8.1/xmltoken.js" type="text/javascript" runat="server"></script>
+		<script src="lib/ajaxslt-0.8.1/dom.js" type="text/javascript" runat="server"></script>
+		<script src="lib/ajaxslt-0.8.1/xpath.js" type="text/javascript" runat="server"></script>
+		<script src="lib/ajaxslt-0.8.1/xslt.js" type="text/javascript" runat="server"></script>
+		<script type="text/javascript" runat="server">
+		    
+			/*
+			 * The stylesheet to apply to the XML news feed we'll fetch remotely.
+			 */
+			var xsl = 
+				'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" ' +
+						'xmlns:content="http://purl.org/rss/1.0/modules/content/">' +
+					'<xsl:template match="/">' +
+	            		'<xsl:for-each select="/rss/channel/item[position() &lt; 10]">' +
+							'<p style="padding:0px; margin:2px 0px 10px 0px"><a target="_blank" href="{link}?diff=y" ' +
+								'onclick="showStory(this.href); return false;" title="{pubDate}"><xsl:value-of select="title"/></a></p>' +
+							'<p><xsl:value-of select="description"/></a></p>' +
+		            	'</xsl:for-each>' +
+					'</xsl:template>' +
+				'</xsl:stylesheet>';
+
+			/*
+			 * Fetch the news feed from the remote server, in this case, from news.com, and
+			 * save the results to the 'feed' variable.
+			 */
+			function showNews()
+			{
+				// Get the XML from news.com
+				var feed = Jaxer.Web.get("http://www.news.com/2547-1_3-0-20.xml?tag=pre_ft");
+				
+				// Now apply the xsl we defined earlier to the XML we just retrieved
+				applyXSLToFeed(feed);	
+			}
+		
+			/*
+			 * This function takes the xml document from the news feed and applies the xsl
+			 * to it using the ajaxslt library. All of this code is running server-side.
+			 */
+			function applyXSLToFeed(feed)
+			{
+				// Google XSLT settings		
+				logging__ = false;
+				
+				try 
+				{
+					var xml  = xmlParse(feed);
+					var xslt = xmlParse(xsl);
+					var html = xsltProcess(xml, xslt);
+					
+					// Set the inner HTML of the 'news' div to the resulting list of stories
+					$("news").innerHTML = '<h2>Latest News.com Stories</h2>\n\n' + html;
+				} 
+				catch(e)
+				{
+					// If we encounter any errors, we log them and display a message to the user
+					Jaxer.Log.error(e.toString());
+					
+					$("news").innerHTML = '<h3>There was an error processing the feed. See server log for details.</h3>';
+				}
+			}
+			
+			// In this case, we don't need to send the Jaxer client framework to the browser, so we turn it off
+			Jaxer.response.setClientFramework(null);
+			
+		</script>
+
+		<!-- This script block is a standard script block and runs on the browser only -->
+		<script type="text/javascript">
+			/*
+			 * This client function is called when the user clicks on a news story title.
+			 * It sets the 'src' attribute of the iframe to the location of the story url.
+			 */
+			function showStory(url)
+			{
+				$('story').src = url;
+			}
+		</script>		
+
+	</head>
+
+	<!-- We set a new attribute on the body tag: 'onserverload'. It works just like 'onload', but
+			on the server-side. When Jaxer is done loading the page, the function specified will
+			be executed. You can have both onserverload and onload, for server and client, 
+			respectively. -->
+	<body onserverload="showNews()">
+		
+		<script type="text/javascript" src="lib/wz_tooltip.js"></script>
+		
+		<div id='sampleDescription'>
+			Server-side RSS feed reading and display on client.
+		</div>
+		
+		<div id='sampleSource'>
+			<li><a href="/aptana/tools/sourceViewer/index.html?filename=../../samples/rss-sample/index.html" target="_blank">Main page</a></li>
+		</div>
+
+		<div id='sampleHeader'>
+			<div class='sampleTitle'>
+				<img src='images/page_edit.png'/> RSS Sample
+			</div>
+			<div id='rightFloat'>
+				<img src ='images/information.png' class='sampleDescription' onmouseover="TagToTip('sampleDescription', CLICKCLOSE, true, STICKY, true, WIDTH, 300, TITLE, 'Sample info')"/>
+				<span id='sourceButton'><img src ='images/html.png' 	   id='sampleSourceLink'  onmouseover="TagToTip('sampleSource',       STICKY, true, CLOSEBTN, true,  TITLE, 'View Source Code')"/></span>
+			</div>
+		</div>
+		
+		<div id='applicationContent'>
+			<div id="news"></div>
+			<iframe style="width:100%; height:300px" id="story"></iframe>
+		</div>
+		<script runat='server'>
+			if (Jaxer.System.executableFolder.match('com.aptana.ide.framework.jaxer')) {
+				document.getElementById('sampleSource').innerHTML="";
+				document.getElementById('sourceButton').innerHTML="";
+			}
+		</script>
+	</body>
+	
+</html>

@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/build/wince/tools/vs8ppc2003arm
+END
+toolspath.h
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/build/wince/tools/vs8ppc2003arm/toolspath.h
+END
+arm-wince-as.c
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/2130/trunk/products/server/src/mozilla/build/wince/tools/vs8ppc2003arm/arm-wince-as.c
+END
+build_tools.bat
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/build/wince/tools/vs8ppc2003arm/build_tools.bat
+END
+arm-wince-lib.c
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/build/wince/tools/vs8ppc2003arm/arm-wince-lib.c
+END
+arm-wince-gcc.c
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/build/wince/tools/vs8ppc2003arm/arm-wince-gcc.c
+END
+arm-wince-link.c
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaxer/!svn/ver/2751/trunk/products/server/src/mozilla/build/wince/tools/vs8ppc2003arm/arm-wince-link.c
+END

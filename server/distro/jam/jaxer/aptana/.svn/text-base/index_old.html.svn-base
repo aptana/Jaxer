@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Aptana: Jaxer</title>
+        <link rel="stylesheet" href="css/shared.css" type="text/css">
+		<link rel="stylesheet" href="css/local.css" type="text/css">
+		<link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon">
+        <style>
+            .mnuicon {
+                border: none;
+                vertical-align: middle;
+                padding: 3px 5px 3px 5px;
+            }
+            .navselect, .navmenu {
+                cursor: pointer;
+                list-style-type: none;
+            }
+            #view {
+                border: none;
+                height: 850px;				
+                width: 700px;
+                margin-top: 20px;
+                margin-left: 10px;
+				display:inline;
+            }
+            #hText {
+                padding: 25px 11px 20px 40px;
+            }
+        </style>
+    </head>
+    <body>
+    <div id="navigation">
+        <div id="header">
+            <h1><a title="Go to Aptana Home Page" accesskey="1" href="http://www.aptana.com">Aptana</a></h1> 
+        </div>
+    </div>
+    <div class="inner-header">
+        &nbsp;
+    </div>
+    <div id="content" style="margin-top:-6em">
+        <div>
+            <div id="sidebar">
+                <div>
+                    Questions, comments or bugs? Please <b><a href="http://support.aptana.com" target="_blank">tell&nbsp;us</a></b>!
+                    <P/>Build:
+                    <script runat='server'>
+                        var buildNumber = Jaxer.buildNumber;
+                            
+                        document.write(buildNumber);
+                   	
+						function parseBuildNumber(content)
+						{
+							return parseFloat(content.replace(/"|\x0A|\x0D/g,'').replace(/[^0123456789]/g,'0'));
+						}
+						
+                        function fetchCurrentBuildNumber(){
+							
+							var platform = Jaxer.request.OS;
+							var platforms = {
+									'WINNT' : "win32"
+								,	'Darwin': "mac"
+								,	'Linux': "ubu32"
+								,	'SunOS': "ubu32"
+							}
+                            
+							var target = platforms[platform];
+							
+                            var buildVal = parseBuildNumber(Jaxer.buildNumber);
+                            
+                            var xhrOptions = new Jaxer.XHR.SendOptions();
+                            
+                            xhrOptions.cacheBuster = false;
+                            xhrOptions.timeout = 0;
+                            xhrOptions.headers = null;
+                            xhrOptions.onreadytosend = null;
+                            xhrOptions.onfinished = null;
+                            xhrOptions.getTransport = Jaxer.XHR.getTransport;
+                            
+                            xhrOptions.method = "GET";
+                            xhrOptions.async = false;
+                            xhrOptions.url = "http://update.aptana.com/update/jaxer/"+target+"/version.txt?"+Jaxer.buildNumber;			
+							
+                            xhrOptions.onsuccess = null;
+                            xhrOptions.onfailure = null;
+                            
+                            var result = Jaxer.XHR.send("", xhrOptions);
+                            
+							var latestBuildNumber = result.replace(/[^\.0123456789]/g,'');
+							
+                            var latest = parseBuildNumber(result);                   
+							
+                            if (latest > buildVal) {
+                                return "<BR/><a href='http://www.aptana.com/jaxer/download'>Update to "+latestBuildNumber+"</a>";
+                            }
+                            if (latest == 0) {
+                                return  result ;
+                            }
+							
+							return ""; // return empty if we dont recognize the content.
+                            
+                        }	
+						fetchCurrentBuildNumber.proxy=true;
+										
+                   </script>
+				   <span id='updateMessage'></span>
+				   <script>
+				   		function setBuildMessage(response){
+							 document.getElementById('updateMessage').innerHTML = response;
+						}
+					
+					    fetchCurrentBuildNumber.async(setBuildMessage);
+						
+				   </script>
+				   
+                    <br/>
+                    <a href='releaseNotes.html' title="Release Notes" onclick='loadContent(this);return false;'>Release Notes</a>
+                </div>
+                <ul class='menuItems'>
+                    <li>
+                        <img src="images/help.png"/><a href='jaxer_about.html' title="About Jaxer" onclick='loadContent(this);return false;'>About Jaxer</a>
+                    </li>
+                    <li>
+                        <img src="images/world.png"/><a href='apps_and_tools.html' title="Samples and Tools" onclick='loadContent(this);return false;'>Samples and Tools</a>
+                    </li>
+                    <li>
+                        <img src="images/wrench.png"/><a href='diagnostics/index.html' title="Server Diagnostics" onclick='loadContent(this);return false;'>Server Diagnostics</a>
+                    </li>
+                    <li>
+						<img src="images/folder_wrench.png"/><a href='doc/api/Jaxer.index-frame.html' title="Jaxer JS API" target='_blank'>Jaxer Javascript API</a>
+                    </li>
+                </ul>
+                Visit <a href='http://www.aptana.com/jaxer' target='_blank'><b>Jaxer&nbsp;Central</b></a>
+                for the latest Jaxer updates and news. 
+            </div>
+            <div>
+                <div id='iframeContainer'>
+                </div>
+                <br clear="all">
+            </div>
+            <div id="footer">
+			<script runat='server'>document.write(navigator.userAgent);</script>
+                <br/>
+				Copyright 2007-2008 Aptana, Inc.
+                <br/>
+                <div style="margin-top:5px">
+                    <a href="http://aptana.com"><img src="images/built_with_aptana.gif" alt="built with aptana" title="Aptana" border="0"/></a>
+                </div>
+            </div>
+        </div>
+	</div>
+	<script>
+		
+    document.getElementById('iframeContainer').innerHTML = '<iframe id="view" frameborder="0" style="border:0;"></iframe>';
+    document.getElementById('view').src = 'jaxer_about.html';
+	
+    function loadContent(obj){
+        document.getElementById('view').src = obj.href;
+    }
+	
+	</script>
+ </body>
+</html>

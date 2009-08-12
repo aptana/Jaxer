@@ -1,0 +1,193 @@
+<html>
+	<head>
+		<title>WikiLite</title>
+		<link rel='stylesheet' type='text/css' href='css/index.css'>
+
+		<style>
+			html {
+				height: 95%;
+				width: 99%;
+				padding: 0;
+				margin: 0;
+			}
+
+			#contents {
+				width: 100%;
+				height: 95%;
+			}
+			
+			#editOrSave {
+				width: 100%;
+			}
+			
+			.readonly {
+				font: 8pt verdana;
+				background-color: #f0f0ff;
+				border: none;
+				padding: 8px;
+			}
+			
+			#applicationContent {
+				height: 90%;
+			}
+		</style>
+		
+		<!-- This script block is a standard script block and runs on the browser only -->
+		<script type="text/javascript">
+			/*
+			 * Depending on the state of the editing text area, either save the contents to the
+			 * server or go into edit mode.
+			 */
+			function editOrSave()
+			{
+				var isEditing = !$("contents").readOnly;
+				if (isEditing) // try to save and get out of edit mode
+				{
+					try
+					{
+						var contents = $("contents").value;
+						checkValid(contents);
+						save(contents);
+						setEditing(false);
+					}
+					catch (e)
+					{
+						alert(e);
+					}
+				}
+				else // go into edit mode
+				{
+					setEditing(true);
+				}
+			}
+		</script>
+
+		<!-- This script block will execute only on the server because of the
+			runat="server" attributes. -->
+		<script type="text/javascript" runat="server">
+
+			/*
+			 * Set the initial editing state to false and read in the last saved
+			 * value of the 'wiki'
+			 */
+			function init()
+			{
+				setEditing(false);
+				readAndFill();
+			}
+
+			/*
+			 * Open up the file we're using to save data and read in its contents
+			 * and set that to the value of the textarea.
+			 */
+			function readAndFill()
+			{
+				var filePath = getFilePath();
+				var fileExists = Jaxer.File.exists(filePath);
+				$("contents").value = fileExists ? Jaxer.File.read(filePath) : "";
+			}
+			
+			/*
+			 * Return the filename of the file that will persist our wiki contents
+			 */
+			function getFilePath()
+			{
+				return "contents.txt";
+			}
+			
+			/*
+			 * Do the actual saving of the text that was entered.
+			 */
+			function save(contents)
+			{
+				contents = contents.replace(/\r\n/g, "\n"); // normalize newlines for Windows/IE;
+				contents = contents.replace(/\r/g, "\n"); // normalize newlines for Mac;
+				checkValid(contents);
+				Jaxer.File.write(getFilePath(), contents);
+			}
+			// Because we want this function available to the client as well, we set its 'proxy'
+			// value to 'true'
+			save.proxy = true;
+						
+		</script>
+		
+		<!-- This script block will be available on both client and server since the 
+			runat attribute is set to 'both'. -->
+		<script type="text/javascript" runat="both">
+			/*
+			 * Easy access to a named element in the DOM
+			 */
+			function $(id)
+			{
+				return document.getElementById(id);
+			}
+
+			/*
+			 * Set the editing state of the textarea as well as the label of the action button
+			 */
+			function setEditing(editable)
+			{
+				$("contents").readOnly = !editable;
+				$("contents").className = editable ? "" : "readonly";
+				$("editOrSave").value = editable ? "save" : "edit"; // set the button label
+				if (editable)
+				{
+					$("contents").focus();
+				}
+			}
+
+			/*
+			 * Check to make sure our wiki entry isn't too long, this is arbitrary
+			 */
+			function checkValid(contents)
+			{
+				if (contents.length > 10000)
+				{
+					throw new Jaxer.ClientError("Too long!");
+				}
+			}
+		</script>
+				
+	</head>
+	
+	<!-- We set a new attribute on the body tag: 'onserverload'. It works just like 'onload', but
+			on the server-side. When Jaxer is done loading the page, the function specified will
+			be executed. You can have both onserverload and onload, for server and client, 
+			respectively. -->
+	<body onserverload="init()">
+		<script type="text/javascript" src="lib/wz_tooltip.js"></script>
+		<div id='sampleDescription'>
+			An extremely lightweight single-page Wiki, just an editable box that persists to a file
+		</div>
+		<div id='sampleSource'>
+		<li><a href="/aptana/tools/sourceViewer/index.html?filename=../../samples/wikilite/index.html" target="_blank">WikiLite Source Code</a></li>
+		</div>
+
+		<div id='sampleHeader'>
+			<div class='sampleTitle'>
+				<img src='images/page_edit.png'/> WikiLite
+			</div>
+			<div id='rightFloat'>
+				<img src ='images/information.png' class='sampleDescription' onmouseover="TagToTip('sampleDescription', CLICKCLOSE, true, STICKY, true, WIDTH, 300, TITLE, 'Sample info')"/>
+				<span id='sourceButton'><img src ='images/html.png' 	   id='sampleSourceLink'  onmouseover="TagToTip('sampleSource', STICKY, true, CLOSEBTN, true,  TITLE, 'View Source Code')"/></span>
+			</div>
+		</div>
+		
+		<div id='applicationContent'>
+			<input type="button" id="editOrSave" onclick="editOrSave()">
+			<textarea id="contents"></textarea>
+		</div>
+		
+		<div id='sampleFooter'>
+		</div>
+			<script runat='server'>
+				if (Jaxer.System.executableFolder.match('com.aptana.ide.framework.jaxer')) {
+					document.getElementById('sampleSource').innerHTML="";
+					document.getElementById('sourceButton').innerHTML="";
+				}
+			</script>
+
+		
+	</body>
+	
+</html>

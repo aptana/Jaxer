@@ -1,0 +1,110 @@
+8
+
+dir
+4779
+http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/security/nss/cmd/libpkix
+http://svn.aptana.local/svn/jaxer
+
+
+
+2008-05-16T23:28:56.072242Z
+2859
+mstepanov
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+fcaafd38-d4b0-1042-bf73-916b6a05956d
+
+manifest.mn
+file
+
+
+
+
+2009-08-11T21:33:47.000000Z
+145933ad74a5022f95dcf04d960ac6d9
+2007-11-14T23:48:33.806633Z
+550
+jcohen
+has-props
+
+sample_apps
+dir
+
+pkix_pl
+dir
+
+pkixutil
+dir
+
+pkix
+dir
+
+config.mk
+file
+
+
+
+
+2009-08-11T21:33:47.000000Z
+fea41137449f0db3cfd2c7a2c12c3959
+2007-11-14T23:48:33.806633Z
+550
+jcohen
+
+pkixlibs.mk
+file
+
+
+
+
+2009-08-11T21:33:47.000000Z
+e6e34bf2a7ca9e6fb068cda32c5a0bb3
+2007-11-14T23:48:33.806633Z
+550
+jcohen
+has-props
+
+perf
+dir
+
+pkixrules.mk
+file
+
+
+
+
+2009-08-11T21:33:47.000000Z
+785d7cc87d2e84bd51d910629993cef1
+2007-11-14T23:48:33.806633Z
+550
+jcohen
+has-props
+
+testutil
+dir
+
+Makefile
+file
+
+
+
+
+2009-08-11T21:33:47.000000Z
+8f2acd7b3d30cd7747c108bbc0f2fe5e
+2007-11-14T23:48:33.806633Z
+550
+jcohen
+has-props
+

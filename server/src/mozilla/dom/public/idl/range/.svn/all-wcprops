@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaxer/!svn/ver/2859/trunk/products/server/src/mozilla/dom/public/idl/range
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/range/Makefile.in
+END
+nsIDOMDocumentRange.idl
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/range/nsIDOMDocumentRange.idl
+END
+nsIDOMRangeException.idl
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/range/nsIDOMRangeException.idl
+END
+nsIDOMRange.idl
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/range/nsIDOMRange.idl
+END
+nsIDOMNSRange.idl
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaxer/!svn/ver/415/trunk/products/server/src/mozilla/dom/public/idl/range/nsIDOMNSRange.idl
+END

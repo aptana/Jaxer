@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon">
+	
+	<title>Aptana: Jaxer</title>
+	
+	<link href="styles.css" rel="stylesheet" type="text/css" />
+	
+	<script type="text/javascript" src="lib/prototype.js" runat="both"></script>
+	<script type="text/javascript" src="lib/base_server.js" runat="server"></script>
+	<script type="text/javascript" src="lib/base_client.js"></script>
+	<script type="text/javascript" src="lib/livepipe.js"></script>
+	<script type="text/javascript" src="lib/control.window.js"></script>
+	
+</head>
+<body>
+
+<div id="body_wrap">
+	<div id="header">
+		<div id="header_text">
+			Current Build: <span id="jaxer_build"></span><br />
+			<a href="javascript: ContentManager.fetchContentModal('releaseNotes.html');">Release Notes</a>
+			
+			<div class="upgrade" id="upgrade" style="display: none;"><img src="images_global/img_icon_upgrade.png" align="absmiddle" /></div>
+		</div>
+	</div>
+	
+	<div id="content_wrap">
+		<div id="content_top_wrap">
+			<div id="content_top_inner">&nbsp;</div>
+		</div>
+		
+		<div id="content_main_wrap">
+			<div id="content_main_inner">
+				
+				<!-- tables are better than css kung fu :) -->
+				
+				<table width="100%" cellspacing="0" cellpadding="0" border="0">
+					<tr>
+						<td class="left_col" valign="top">
+							<div><a href="javascript: ContentManager.fetchContent('jaxer_about.html');"><img src="images_global/bg_leftcol_top.png" /></a></div>
+							
+							<ul>
+								<li class="samples"><a href="javascript: ContentManager.fetchContent('apps_and_tools.html');">Samples And Tools</a></li>
+								<li class="diagnostics"><a href="diagnostics/index.html" target="_blank">Server Diagnostics</a></li>
+								<li class="api"><a href="doc/api/Jaxer.index-frame.html" target="_blank">Jaxer Javascript API</a></li>
+							</ul>
+							
+							<p>
+								Visit <a href="http://www.aptana.com/jaxer" target="_blank">Jaxer Central</a> for the latest Jaxer updates and news.
+							</p>
+							
+						</td>
+						
+						<td class="main_content" valign="top" rowspan="2">
+							<div id="main_content_cage"></div>
+						</td>
+					</tr>
+					<tr>
+						<td valign="bottom" class="left_col_footer">
+							<a href="http://support.aptana.com/" target="_blank">
+								<img src="images_global/img_leftcol_feedback.png" />
+							</a>
+						</td>
+					</tr>
+				</table>
+				
+			</div>
+		</div>
+		
+		<div id="content_bottom_wrap">
+			<div id="content_bottom_inner">&nbsp;</div>
+		</div>
+		
+	</div>
+	
+	<div id="footer">
+		<div id="user_agent"></div>
+		<div>
+			Copyright &copy; 2007-2008 Aptana, Inc.<br /><br />
+			<a href="http://aptana.com"><img src="images_global/built_with_aptana.gif" alt="built with aptana" title="Aptana" border="0"/></a>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>
