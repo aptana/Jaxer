@@ -1,8 +1,0 @@
-{
-	"name": "default",
-	"tests": [
-			"sleeper.html"
-		  , "test_Threading_Thread.html"
-	]
-}
-

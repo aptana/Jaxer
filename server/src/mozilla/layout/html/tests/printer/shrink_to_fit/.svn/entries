@@ -1,49 +1,0 @@
-8
-
-dir
-4779
-http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/layout/html/tests/printer/shrink_to_fit
-http://svn.aptana.local/svn/jaxer
-
-
-
-2007-10-02T20:40:14.421796Z
-321
-jcohen
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-fcaafd38-d4b0-1042-bf73-916b6a05956d
-
-test1
-dir
-
-test2
-dir
-
-test3
-dir
-
-test4
-dir
-
-test5
-dir
-
-test6
-dir
-
-test7
-dir
-

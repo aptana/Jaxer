@@ -1,8 +1,0 @@
-{
-	"name": "default",
-	"files": [
-		  "System.js"
-		, "Process.js"
-		, "unit_tests_jaxer/jaxer_system_tests.json"
-	]
-}

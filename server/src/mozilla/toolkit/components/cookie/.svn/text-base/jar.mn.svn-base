@@ -1,4 +1,0 @@
-comm.jar:
-% content cookie %content/cookie/ xpcnativewrappers=yes
-  content/cookie/cookieAcceptDialog.xul          (content/cookieAcceptDialog.xul)
-* content/cookie/cookieAcceptDialog.js           (content/cookieAcceptDialog.js)

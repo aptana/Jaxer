@@ -1,7 +1,0 @@
-{
-	"name": "default",
-	"tests": [
-		  "test_System_Process.html"
-	]
-}
-

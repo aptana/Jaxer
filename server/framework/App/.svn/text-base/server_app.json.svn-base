@@ -1,7 +1,0 @@
-{
-	"name": "default",
-	"files": [
-		  "App.js"
-		, "unit_tests_jaxer/jaxer_app_tests.json"
-	]
-}

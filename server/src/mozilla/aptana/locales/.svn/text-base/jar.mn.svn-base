@@ -1,4 +1,0 @@
-#filter substitution
-
-@AB_CD@.jar:
-% locale global @AB_CD@ %locale/@AB_CD@/global/

@@ -1,50 +1,0 @@
-8
-
-dir
-4779
-http://svn.aptana.local/svn/jaxer/trunk/products/server/distro/jam/jaxer/aptana/tools/hexer
-http://svn.aptana.local/svn/jaxer
-
-
-
-2008-09-26T01:29:34.487954Z
-3927
-dwaterson
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-fcaafd38-d4b0-1042-bf73-916b6a05956d
-
-images
-dir
-
-lib
-dir
-
-css
-dir
-
-index.html
-file
-
-
-
-
-2009-08-11T21:42:33.000000Z
-d25bd8953ab5c7692609214267bd728c
-2008-09-26T01:29:34.487954Z
-3927
-dwaterson
-has-props
-

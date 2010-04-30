@@ -1,374 +1,0 @@
-8
-
-dir
-4779
-http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mysql/mysql-5.0.54
-http://svn.aptana.local/svn/jaxer
-
-
-
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-fcaafd38-d4b0-1042-bf73-916b6a05956d
-
-dbug
-dir
-
-configure
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-585a0885136e3c963b2d82b932d4d680
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-has-props
-
-mysql-test
-dir
-
-Makefile.in
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-b4024000a3e9eb573e250efcd7b0332e
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-
-mysys
-dir
-
-sql-common
-dir
-
-scripts
-dir
-
-depcomp
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-d7d8db17e074dcabf513d766b728993d
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-has-props
-
-strings
-dir
-
-config.guess
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-7fc030a85a8f3d4864a65db5fb70c794
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-has-props
-
-config.sub
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-a1ad4822ccc53519fe519a9d353407d0
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-has-props
-
-EXCEPTIONS-CLIENT
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-d9ad42b427ace53cb3e752092b040c59
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-
-ltmain.sh
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-70cf70a682442a6f827513ae73c18622
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-
-innobase
-dir
-
-BUILD
-dir
-
-INSTALL-WIN-SOURCE
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-33fb84f43aa65a626882b89dffe7de81
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-
-tools
-dir
-
-zlib
-dir
-
-SSL
-dir
-
-tests
-dir
-
-INSTALL-SOURCE
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-ecf4343aca662d5170ffd88fd8b56068
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-
-COPYING
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-477ab0a4c8ca64b482b3f2a365d0fdfa
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-
-regex
-dir
-
-man
-dir
-
-support-files
-dir
-
-libmysql_r
-dir
-
-CMakeLists.txt
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-4c50d91781ba955a169f78e8422724df
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-has-props
-
-extra
-dir
-
-include
-dir
-
-pstack
-dir
-
-cmd-line-utils
-dir
-
-configure.in
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-231d33208db1a2c55c1ed80e60b9507b
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-
-bdb
-dir
-
-ChangeLog
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-0fd4ab1beec7460e73fa2b279e865332
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-
-Docs
-dir
-
-libmysql
-dir
-
-win
-dir
-
-vio
-dir
-
-README
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-f042efae8bc01e77901896b6e94843f3
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-
-sql
-dir
-
-myisam
-dir
-
-libmysqld
-dir
-
-config.h.in
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-5a92fc0e62ffee489f2c078b2ede649a
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-
-os2
-dir
-
-ndb
-dir
-
-server-tools
-dir
-
-config
-dir
-
-myisammrg
-dir
-
-netware
-dir
-
-Makefile.am
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-79d761fa56f8857901438b99ad901978
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-
-missing
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-5d58f0dd4262171a71b65bd515d85d07
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-has-props
-
-sql-bench
-dir
-
-heap
-dir
-
-aclocal.m4
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-b5c103005b59009ea197b971cc670990
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-
-client
-dir
-
-install-sh
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-aded5875c5d5830de6653181e8ced19c
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-has-props
-

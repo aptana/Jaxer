@@ -1,109 +1,0 @@
-8
-
-dir
-4779
-http://svn.aptana.local/svn/jaxer/trunk/products/server/src/httpd-2.2.6/os
-http://svn.aptana.local/svn/jaxer
-
-
-
-2007-12-12T00:38:15.247516Z
-1090
-pcolton
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-fcaafd38-d4b0-1042-bf73-916b6a05956d
-
-win32
-dir
-
-Makefile.in
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-5d526c682e037853dcf2a076cf810624
-2007-12-12T00:38:15.247516Z
-1090
-pcolton
-
-os2
-dir
-
-unix
-dir
-
-config.m4
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-4fee3650015192b1699bb87324a16953
-2007-12-12T00:38:15.247516Z
-1090
-pcolton
-
-netware
-dir
-
-bs2000
-dir
-
-beos
-dir
-
-tpf
-dir
-
-.deps
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-d41d8cd98f00b204e9800998ecf8427e
-2007-12-12T00:38:15.247516Z
-1090
-pcolton
-
-Makefile
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-c34ebe16e7890033d287ea44a513f842
-2007-12-12T00:38:15.247516Z
-1090
-pcolton
-
-.indent.pro
-file
-
-
-
-
-2009-08-11T21:29:05.000000Z
-01a66a413bfdbc294ae15defad3e56e8
-2007-12-12T00:38:15.247516Z
-1090
-pcolton
-

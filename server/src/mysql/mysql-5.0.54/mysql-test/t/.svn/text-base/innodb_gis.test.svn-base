@@ -1,4 +1,0 @@
---source include/have_innodb.inc
-SET storage_engine=innodb;
---source include/gis_generic.inc
---source include/gis_keys.inc

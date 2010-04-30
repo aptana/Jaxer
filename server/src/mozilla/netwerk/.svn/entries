@@ -1,119 +1,0 @@
-8
-
-dir
-4779
-http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/netwerk
-http://svn.aptana.local/svn/jaxer
-
-
-
-2008-05-20T18:44:20.559534Z
-2886
-jzhang
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-fcaafd38-d4b0-1042-bf73-916b6a05956d
-
-test
-dir
-
-streamconv
-dir
-
-Makefile.in
-file
-
-
-
-
-2009-08-11T21:34:29.000000Z
-c4ec82105cf2f22be048f8ed6ad0b701
-2008-02-20T16:56:14.949956Z
-2151
-jzhang
-
-locales
-dir
-
-dns
-dir
-
-system
-dir
-
-mime
-dir
-
-socket
-dir
-
-confvars.sh
-file
-
-
-
-
-2009-08-11T21:34:29.000000Z
-08cb349ecb0c32449f6a8013fd014945
-2007-10-02T20:40:14.421796Z
-321
-jcohen
-has-props
-
-necko-config.h.in
-file
-
-
-
-
-2009-08-11T21:34:29.000000Z
-0189a319b2f2c794f869e903edc3d41f
-2007-10-02T20:40:14.421796Z
-321
-jcohen
-
-build
-dir
-
-protocol
-dir
-
-cache
-dir
-
-build.mk
-file
-
-
-
-
-2009-08-11T21:34:29.000000Z
-0eefeb0803f69a14068db8d15a53e1ae
-2007-10-02T20:40:14.421796Z
-321
-jcohen
-
-testserver
-dir
-
-cookie
-dir
-
-base
-dir
-
-resources
-dir
-

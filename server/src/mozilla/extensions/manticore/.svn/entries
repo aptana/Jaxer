@@ -1,145 +1,0 @@
-8
-
-dir
-4779
-http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla/extensions/manticore
-http://svn.aptana.local/svn/jaxer
-
-
-
-2007-10-02T20:40:14.421796Z
-321
-jcohen
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-fcaafd38-d4b0-1042-bf73-916b6a05956d
-
-Manticore.csproj
-file
-
-
-
-
-2009-08-11T21:36:47.000000Z
-306b46e0e772878f5f079802b52aa326
-2007-10-02T20:40:14.421796Z
-321
-jcohen
-
-browser
-dir
-
-app.cs
-file
-
-
-
-
-2009-08-11T21:36:47.000000Z
-1c6fe91637315732d55b9b4c0f31aba1
-2007-10-02T20:40:14.421796Z
-321
-jcohen
-
-toolkit
-dir
-
-bookmarks.xml
-file
-
-
-
-
-2009-08-11T21:36:47.000000Z
-caecac1c878218de07103e8b6f0720a1
-2007-10-02T20:40:14.421796Z
-321
-jcohen
-
-core
-dir
-
-bookmarks
-dir
-
-README
-file
-
-
-
-
-2009-08-11T21:36:47.000000Z
-935ad39b5192936cd7fbcfad03188528
-2007-10-02T20:40:14.421796Z
-321
-jcohen
-
-Manticore.csproj.user
-file
-
-
-
-
-2009-08-11T21:36:47.000000Z
-04b279829c6a7edad9443d8429eee0f4
-2007-10-02T20:40:14.421796Z
-321
-jcohen
-
-manticore.exe.manifest
-file
-
-
-
-
-2009-08-11T21:36:47.000000Z
-eef3a9db6c81b9479f68a9e6932af83d
-2007-10-02T20:40:14.421796Z
-321
-jcohen
-
-defaults
-dir
-
-makefile.win
-file
-
-
-
-
-2009-08-11T21:36:47.000000Z
-be22e47967c349fcec0c5a001a297910
-2007-10-02T20:40:14.421796Z
-321
-jcohen
-
-resources
-dir
-
-manticore.sln
-file
-
-
-
-
-2009-08-11T21:36:47.000000Z
-7010fdac04f7ebc277dfe0bade47a30c
-2007-10-02T20:40:14.421796Z
-321
-jcohen
-
-layout
-dir
-

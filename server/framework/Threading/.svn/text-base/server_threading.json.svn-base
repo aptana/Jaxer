@@ -1,7 +1,0 @@
-{
-	"name": "default",
-	"files": [
-		  "Thread.js"
-		, "unit_tests_jaxer/jaxer_threading_tests.json"
-	]
-}

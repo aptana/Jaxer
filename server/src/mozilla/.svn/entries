@@ -1,446 +1,0 @@
-8
-
-dir
-4779
-http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mozilla
-http://svn.aptana.local/svn/jaxer
-
-
-
-2009-02-09T12:09:37.805196Z
-4624
-mstepanov
-has-props
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-fcaafd38-d4b0-1042-bf73-916b6a05956d
-
-.mozconfig-linux64
-file
-
-
-
-
-2009-08-11T21:40:12.000000Z
-369b7b5b3ae5b88b3c5d66770015f8c4
-2009-01-15T11:11:46.621793Z
-4513
-mstepanov
-
-Makefile.in
-file
-
-
-
-
-2009-08-11T21:40:12.000000Z
-1c8c0722f85165053ce633c6ab5a58ef
-2008-07-29T21:27:44.713916Z
-3676
-jzhang
-
-client.mk
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-f462c9731222b03018d46606eb2ac8f5
-2008-06-26T00:22:23.902780Z
-3349
-jzhang
-
-.mozconfig-mac-universal_crs
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-6bcf2eea40d8d9752c1886c8b39b56ab
-2009-01-15T17:21:58.953623Z
-4514
-jzhang
-
-sun-java
-dir
-
-jpeg
-dir
-
-caps
-dir
-
-aptana_iws
-dir
-
-.mozconfig-solaris_crs
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-d824b4e792cd102bac91861cbb8a3fce
-2008-07-16T21:06:31.498614Z
-3587
-jzhang
-
-tools
-dir
-
-aptana
-dir
-
-storage
-dir
-
-postBuildJaxer.mk
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-41ccd5ad2c17944e3e16f14f877d9418
-2008-11-03T16:53:32.764480Z
-4244
-build
-has-props
-
-.mozconfig-linux
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-a1dc9ced0ac0d4e9891617633d26f533
-2009-01-12T18:36:45.203630Z
-4501
-mstepanov
-
-intl
-dir
-
-memory
-dir
-
-modules
-dir
-
-content
-dir
-
-js
-dir
-
-testing
-dir
-
-xpinstall
-dir
-
-embedding
-dir
-
-dom
-dir
-
-.mozconfig-win32_crs
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-9afccebcd239ba2edd7924ad30a8913a
-2009-01-08T19:01:31.803858Z
-4486
-mstepanov
-
-LEGAL
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-b8da4acd28bf994d70e4c5790d599f1a
-2007-10-02T20:40:14.421796Z
-321
-jcohen
-
-configure.in
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-3cbaeb54b567fa0dd0bdbfe738ebb634
-2009-01-12T18:33:38.039504Z
-4500
-mstepanov
-
-parser
-dir
-
-docshell
-dir
-
-build
-dir
-
-profile
-dir
-
-allmakefiles.sh
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-755bd842bac8e870f23a4d3c7bb0587f
-2008-05-02T21:16:24.976240Z
-2751
-mstepanov
-has-props
-
-config
-dir
-
-webshell
-dir
-
-security
-dir
-
-README.txt
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-45461db61f3eb6af18a8aebc52cfaba3
-2008-02-18T19:26:57.266176Z
-2130
-csanders
-
-rdf
-dir
-
-.mozconfig-mac-universal
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-114c9505623a9173757a82aaa9af293d
-2009-01-15T17:21:58.953623Z
-4514
-jzhang
-
-netwerk
-dir
-
-configure
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-7aee9eb2d2df656e6c8ce1f3c6ad1f02
-2009-01-12T18:33:38.039504Z
-4500
-mstepanov
-has-props
-
-browser
-dir
-
-widget
-dir
-
-.mozconfig-solaris
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-d824b4e792cd102bac91861cbb8a3fce
-2008-05-21T20:21:15.026767Z
-2924
-mstepanov
-
-other-licenses
-dir
-
-gfx
-dir
-
-toolkit
-dir
-
-db
-dir
-
-xpcom
-dir
-
-uriloader
-dir
-
-.mozconfig-linux64_crs
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-369b7b5b3ae5b88b3c5d66770015f8c4
-2009-01-15T11:11:46.621793Z
-4513
-mstepanov
-
-nsprpub
-dir
-
-suite
-dir
-
-probes
-dir
-
-accessible
-dir
-
-plugin
-dir
-
-extensions
-dir
-
-makeUniversalJaxer.mk
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-2e1bd4125254f7da6cce06240577efd9
-2008-10-31T19:59:36.672798Z
-4228
-build
-has-props
-
-.mozconfig-win32
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-765f6a03d9c2b0186df29dfab98a9799
-2008-12-17T23:51:58.105109Z
-4407
-mstepanov
-
-view
-dir
-
-layout
-dir
-
-.mozconfig-linux_crs
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-fd540ade91a8429090cb4e77583e4e8f
-2009-01-12T18:36:45.203630Z
-4501
-mstepanov
-
-mail
-dir
-
-LICENSE
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-6a168402790208145f7dc05e95de08ce
-2007-10-02T20:40:14.421796Z
-321
-jcohen
-
-editor
-dir
-
-README
-dir
-
-xulrunner
-dir
-
-xpfe
-dir
-
-dbm
-dir
-
-calendar
-dir
-
-ipc
-dir
-
-camino.mk
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-7c790e1a47e750d2c90f268486199fba
-2007-10-02T20:40:14.421796Z
-321
-jcohen
-
-chrome
-dir
-
-aclocal.m4
-file
-
-
-
-
-2009-08-11T21:40:13.000000Z
-ff3aa43946e140b1270a20935d0c6afb
-2007-10-02T20:40:14.421796Z
-321
-jcohen
-

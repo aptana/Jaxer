@@ -1,8 +1,0 @@
-K 10
-svn:ignore
-V 60
-testRunner.html
-unitTestingBoth.js
-unitTestingServerOnly.js
-
-END

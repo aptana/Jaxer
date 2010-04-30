@@ -1,64 +1,0 @@
-8
-
-dir
-4779
-http://svn.aptana.local/svn/jaxer/trunk/products/server/src/mysql/mysql-5.0.54/ndb/ndbapi-examples
-http://svn.aptana.local/svn/jaxer
-
-
-
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-fcaafd38-d4b0-1042-bf73-916b6a05956d
-
-ndbapi_simple_example
-dir
-
-ndbapi_async_example
-dir
-
-ndbapi_retries_example
-dir
-
-ndbapi_async_example1
-dir
-
-mgmapi_logevent_example
-dir
-
-ndbapi_simple_index_example
-dir
-
-ndbapi_event_example
-dir
-
-ndbapi_scan_example
-dir
-
-Makefile
-file
-
-
-
-
-2009-08-11T21:28:57.000000Z
-f5cc56369b94f989bfa60a12b9d14524
-2008-02-29T23:39:28.846637Z
-2224
-jzhang
-
