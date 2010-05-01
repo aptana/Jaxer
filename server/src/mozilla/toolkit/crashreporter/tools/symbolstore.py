@@ -575,7 +575,7 @@ class Dumper_Solaris(Dumper):
         """Utility function, returns the output of file(1)"""
         try:
             output = os.popen("file " + file).read()
-            return output.split(' ')[1];
+            return output.split('\t')[1];
         except:
             return ""
 
