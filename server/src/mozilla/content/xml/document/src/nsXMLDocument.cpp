@@ -371,7 +371,7 @@ nsXMLDocument::Load(const nsAString& aUrl, PRBool *aReturn)
 #else
     rv = principal->CheckMayLoad(uri, PR_FALSE);
     NS_ENSURE_SUCCESS(rv, rv);
-#endif
+#endif /* JAXER */
   } else {
     // We're called from chrome, check to make sure the URI we're
     // about to load is also chrome.

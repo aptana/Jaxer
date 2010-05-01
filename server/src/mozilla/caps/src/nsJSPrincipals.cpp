@@ -61,7 +61,9 @@
 #include "nsIServiceManager.h"
 #include "nsMemory.h"
 #include "nsStringBuffer.h"
+#ifdef JAXER
 #include "nsScriptSecurityManager.h"
+#endif /* JAXER */
 
 JS_STATIC_DLL_CALLBACK(void *)
 nsGetPrincipalArray(JSContext *cx, JSPrincipals *prin)
@@ -125,8 +127,8 @@ nsTranscodeJSPrincipals(JSXDRState *xdr, JSPrincipals **jsprinp)
 		principal->GetJSPrincipals(xdr->cx, jsprinp);
 		return JS_TRUE;
 }
-#endif
-	if (xdr->mode == JSXDR_ENCODE) {
+#endif /* JAXER */
+    if (xdr->mode == JSXDR_ENCODE) {
         nsIObjectOutputStream *stream =
             reinterpret_cast<nsIObjectOutputStream*>(xdr->userdata);
 

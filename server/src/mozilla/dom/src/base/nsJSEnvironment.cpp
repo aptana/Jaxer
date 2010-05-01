@@ -124,7 +124,7 @@
 
 #ifdef JAXER
 #include "aptIDocumentFetcherService.h"
-#endif
+#endif /* JAXER */
 
 #ifdef MOZ_LOGGING
 // Force PR_LOGGING so we can get JS strict warnings even in release builds
@@ -453,7 +453,7 @@ PRBool IsJaxerDocShell(nsIDocShell *pDocShell)
 
 	return (docShell == pDocShell);
 }
-#endif
+#endif /* JAXER */
 
 // NOTE: This function could be refactored to use the above.  The only reason
 // it has not been done is that the code below only fills the error event
@@ -509,7 +509,7 @@ NS_ScriptErrorReporter(JSContext *cx,
 		if (docShell && !IsJaxerDocShell(docShell)) {
 			return;
 		}
-#endif
+#endif /* JAXER */
         if (docShell &&
             (report->errorNumber != JSMSG_OUT_OF_MEMORY &&
               !JSREPORT_IS_WARNING(report->flags))) {
@@ -883,7 +883,7 @@ PrintWinCodebase(nsGlobalWindow *win)
 const PRUint32 MAYBE_GC_OPERATION_WEIGHT = 5000 * JS_OPERATION_WEIGHT_BASE;
 #ifdef JAXER
 const PRUint32 JAXER_OPERATION_LIMIT = 200 * JS_OPERATION_WEIGHT_BASE;
-#endif
+#endif /* JAXER */
 
 static void
 MaybeGC(JSContext *cx)
@@ -926,7 +926,7 @@ nsJSContext::DOMOperationCallback(JSContext *cx)
   }
 #else
   MaybeGC(cx);
-#endif
+#endif /* JAXER */
 
   // Now restore the callback time and count, in case they got reset.
   ctx->mOperationCallbackTime = callbackTime;
@@ -950,7 +950,7 @@ nsJSContext::DOMOperationCallback(JSContext *cx)
     PR_FALSE;
 #else
     ::JS_IsSystemObject(cx, ::JS_GetGlobalObject(cx));
-#endif
+#endif /* JAXER */
   if (duration < (isTrackingChromeCodeTime ?
                   sMaxChromeScriptRunTime : sMaxScriptRunTime)) {
     return JS_TRUE;
@@ -1004,7 +1004,7 @@ nsJSContext::DOMOperationCallback(JSContext *cx)
     debugPossible = (jsds_IsOn && (jsdHook != nsnull));
 #else
     debugPossible = ((jsds_IsOn && (jsdHook != nsnull)) || !jsds_IsOn);
-#endif
+#endif /* JAXER */
   }
 #endif
 
@@ -1114,7 +1114,7 @@ nsJSContext::DOMOperationCallback(JSContext *cx)
 #else
   if (debugPossible) {
 	  JSScript *script = fp ? ::JS_GetFrameScript(cx, fp) : nsnull;
-#endif
+#endif /* JAXER */
     // Debug the script
     jsval rval;
     switch(cx->debugHooks->debuggerHandler(cx, script, ::JS_GetFramePC(cx, fp),
@@ -1234,7 +1234,7 @@ nsJSContext::nsJSContext(JSRuntime *aRuntime) : mGCOnDestruction(PR_TRUE)
                               JAXER_OPERATION_LIMIT);
 #else
                               MAYBE_GC_OPERATION_WEIGHT);
-#endif
+#endif /* JAXER */
 
     static JSLocaleCallbacks localeCallbacks =
       {

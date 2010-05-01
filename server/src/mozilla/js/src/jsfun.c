@@ -1261,7 +1261,7 @@ fun_xdrObject(JSXDRState *xdr, JSObject **objp)
 				}
 			}
 		}
-#endif
+#endif /* JAXER */
     }
 
     /* do arguments and local vars */

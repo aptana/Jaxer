@@ -274,6 +274,7 @@ mozStorageConnection::GetLastErrorString(nsACString& aLastErrorString)
     return NS_OK;
 }
 
+#ifdef JAXER
 NS_IMETHODIMP
 mozStorageConnection::GetChangedRowCount(PRInt32 *aRowCount)
 {
@@ -283,6 +284,7 @@ mozStorageConnection::GetChangedRowCount(PRInt32 *aRowCount)
 
     return NS_OK;
 }
+#endif /* JAXER */
 
 NS_IMETHODIMP
 mozStorageConnection::GetSchemaVersion(PRInt32 *version)

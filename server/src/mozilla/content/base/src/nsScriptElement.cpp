@@ -60,7 +60,6 @@
 #include "nsAutoPtr.h"
 #include "nsGkAtoms.h"
 
-// JAXER INSERT
 #ifdef JAXER
 #include "nsServiceManagerUtils.h"
 #include "nsIDocShell.h"
@@ -101,8 +100,7 @@ PRBool IsJaxerDocShell(nsIDocShell *pDocShell)
 
 	return (docShell == pDocShell);
 }
-#endif
-// END JAXER INSERT
+#endif /* JAXER */
 
 NS_IMETHODIMP
 nsScriptElement::ScriptAvailable(nsresult aResult,
@@ -265,8 +263,7 @@ nsScriptElement::MaybeProcessScript()
 			return NS_OK;
 		}
 	}
-#endif
-
+#endif /* JAXER */
   nsresult scriptresult = NS_OK;
   nsRefPtr<nsScriptLoader> loader = cont->GetOwnerDoc()->ScriptLoader();
   mIsEvaluated = PR_TRUE;
@@ -283,8 +280,7 @@ nsScriptElement::MaybeProcessScript()
 		// Fire the AfterScriptEvaluated event out to all observers.
 		GetEventTypeManager()->FireEvent(ase, aptEventName_AfterScriptEvaluated);
 	}
-#endif
-
+#endif /* JAXER */
   // The only error we don't ignore is NS_ERROR_HTMLPARSER_BLOCK
   // However we don't want to override other success values
   // (such as NS_CONTENT_SCRIPT_IS_EVENTHANDLER)

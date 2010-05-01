@@ -167,12 +167,16 @@ ifeq ($(OS_ARCH),Darwin)
 # need to pass arch flags for universal builds
 ifdef UNIVERSAL_BINARY
 MAKE_SYM_STORE_ARGS := -a "ppc i386" --vcs-info
+ifdef JAXER
 #JAXER: The next var points to the final after unify.
 #       So Generate symbols must be called after
 #       Universal build is done.  Or you will get nothing.
 #       The original make logic did not work either.
 #
 MAKE_SYM_STORE_PATH := $(MOZ_OBJDIR)/universal/final
+else
+MAKE_SYM_STORE_PATH := $(DIST)/universal
+endif
 else
 MAKE_SYM_STORE_ARGS := -a $(OS_TEST) --vcs-info
 MAKE_SYM_STORE_PATH := $(DIST)/bin
@@ -204,18 +208,27 @@ ifdef MOZ_CRASHREPORTER
 	  $(MAKE_SYM_STORE_PATH) >                                    \
 	  $(DIST)/crashreporter-symbols/$(BUILDID)/$(SYMBOL_ARCHIVE_BASENAME)-symbols.txt
 	echo packing symbols
+ifdef JAXER
 	#JAXER: put the symbol zips under a single folder rather than many.
 	mkdir -p $(topsrcdir)/../crashreporter-symbols
 	cd $(DIST)/crashreporter-symbols/$(BUILDID) && \
 	       zip -r9D ../Jaxer_Symbols_$(BUILDID).zip .
-    #      zip -r9D ../crashreporter-symbols-$(SYMBOL_ARCHIVE_BASENAME).zip .
-	#mv $(DIST)/crashreporter-symbols/crashreporter-symbols-$(SYMBOL_ARCHIVE_BASENAME).zip \
-    #      $(topsrcdir)/../crashreporter-symbols
+else
+	mkdir -p $(topsrcdir)/../$(BUILDID)
+	cd $(DIST)/crashreporter-symbols/$(BUILDID) && \
+          zip -r9D ../crashreporter-symbols-$(SYMBOL_ARCHIVE_BASENAME).zip .
+	mv $(DIST)/crashreporter-symbols/crashreporter-symbols-$(SYMBOL_ARCHIVE_BASENAME).zip \
+          $(topsrcdir)/../$(BUILDID)
+endif
 endif # MOZ_CRASHREPORTER
 
 uploadsymbols:
 ifdef MOZ_CRASHREPORTER
+ifdef JAXER
 	$(topsrcdir)/toolkit/crashreporter/tools/upload_symbols.sh $(topsrcdir)/../crashreporter-symbols/crashreporter-symbols-$(SYMBOL_ARCHIVE_BASENAME).zip
+else
+	$(topsrcdir)/toolkit/crashreporter/tools/upload_symbols.sh $(topsrcdir)/../$(BUILDID)/crashreporter-symbols-$(SYMBOL_ARCHIVE_BASENAME).zip
+endif
 endif
 
 ifeq ($(OS_ARCH),WINNT)

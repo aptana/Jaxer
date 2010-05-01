@@ -1,4 +1,5 @@
-/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
+/* vim:set expandtab ts=4 sw=4 sts=4 cin: */
 /* ***** BEGIN LICENSE BLOCK *****
  *  Version: GPL 3
  * 
@@ -1340,12 +1341,10 @@ nsHttpChannel::OpenCacheEntry(PRBool offline, PRBool *delayed)
 
     *delayed = PR_FALSE;
 
-// JAXER INSERT
 #ifdef JAXER
     if (PR_TRUE)
         return NS_ERROR_NOT_AVAILABLE;
-#endif
-// END JAXER INSERT
+#endif /* JAXER */
 
     LOG(("nsHttpChannel::OpenCacheEntry [this=%x]", this));
 

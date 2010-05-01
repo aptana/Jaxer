@@ -168,8 +168,11 @@ HRESULT XPCDispObject::COMCreateInstance(XPCCallContext & ccx, BSTR className,
         return SecurityCheck(ccx, classID, result);
     
     CComPtr<IDispatch> disp;
-    // JAXER MODiFIED NEXT LINE
-    hr = disp.CoCreateInstance(classID, NULL, CLSCTX_SERVER);
+#ifdef JAXER
+	hr = disp.CoCreateInstance(classID, NULL, CLSCTX_SERVER);
+#else
+    hr = disp.CoCreateInstance(classID);
+#endif /* JAXER */
     if(FAILED(hr))
         return hr;
 

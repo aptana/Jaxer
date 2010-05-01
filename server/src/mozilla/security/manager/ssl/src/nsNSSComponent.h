@@ -90,6 +90,7 @@
 
 //Define an interface that we can use to look up from the
 //callbacks passed to NSS.
+
 #define NS_INSSCOMPONENT_IID_STR "d4b49dd6-1dd1-11b2-b6fe-b14cfaf69cbd"
 #define NS_INSSCOMPONENT_IID \
   {0xd4b49dd6, 0x1dd1, 0x11b2, \
@@ -311,7 +312,7 @@ private:
   void DoProfileChangeTeardown(nsISupports* aSubject);
   void DoProfileBeforeChange(nsISupports* aSubject);
   void DoProfileChangeNetRestore();
-#endif // JAXER
+#endif /* JAXER */
 
   PRLock *mutex;
   

@@ -8720,10 +8720,10 @@ static void TitleConsoleWarning()
 NS_IMETHODIMP
 nsGlobalChromeWindow::GetTitle(nsAString& aTitle)
 {
-#if 0 // JAXER
+#ifndef JAXER
   NS_ERROR("nsIDOMChromeWindow::GetTitle is deprecated, use nsIDOMNSDocument instead");
   TitleConsoleWarning();
-#endif // JAXER
+#endif /* JAXER */
 
   nsresult rv;
   nsCOMPtr<nsIDOMNSDocument> nsdoc(do_QueryInterface(mDocument, &rv));

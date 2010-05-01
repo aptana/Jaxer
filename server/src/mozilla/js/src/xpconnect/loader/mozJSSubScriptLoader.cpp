@@ -274,12 +274,7 @@ mozJSSubScriptLoader::LoadSubScript (const PRUnichar * /*url*/
         goto return_exception;
     }
 
-#ifdef JAXER0
-    if (!scheme.EqualsLiteral("chrome")
-		&& !scheme.EqualsLiteral("file"))
-#else
     if (!scheme.EqualsLiteral("chrome"))
-#endif
     {
         // This might be a URI to a local file, though!
         nsCOMPtr<nsIFileURL> fileURL = do_QueryInterface(uri);

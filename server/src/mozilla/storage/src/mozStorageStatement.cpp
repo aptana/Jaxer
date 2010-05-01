@@ -836,6 +836,7 @@ mozStorageStatement::GetColumnDecltype(PRUint32 aParamIndex,
     return NS_OK;
 }
 
+#ifdef JAXER
 /* readonly attribute long changedRowCount; */
 NS_IMETHODIMP
 mozStorageStatement::GetChangedRowCount(PRInt32 *aRowCount)
@@ -845,3 +846,4 @@ mozStorageStatement::GetChangedRowCount(PRInt32 *aRowCount)
 
     return mDBConnection->GetChangedRowCount(aRowCount);
 }
+#endif /* JAXER */

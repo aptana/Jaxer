@@ -1757,14 +1757,11 @@ CSSLoaderImpl::LoadStyleLink(nsIContent* aElement,
                              nsICSSLoaderObserver* aObserver,
                              PRBool* aIsAlternate)
 {
-// JAXER INSERT
 #ifdef JAXER
   // Do not load css
   if (PR_TRUE)
     return NS_ERROR_NOT_AVAILABLE;
-#endif
-// END JAXER INSERT
-
+#endif /* JAXER */
   LOG(("CSSLoaderImpl::LoadStyleLink"));
   NS_PRECONDITION(aURL, "Must have URL to load");
   NS_ASSERTION(mParsingDatas.Count() == 0, "We're in the middle of a parse?");

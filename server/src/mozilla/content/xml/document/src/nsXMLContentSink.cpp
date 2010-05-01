@@ -1424,9 +1424,13 @@ nsXMLContentSink::ReportError(const PRUnichar* aErrorText,
   nsresult rv = NS_OK;
 
   // The expat driver should report the error.  We're just cleaning up the mess.
-  *_retval = PR_FALSE; // JAXER_MODIFIED
-  
+  *_retval = PR_TRUE;
+
+#ifdef JAXER
+  mPrettyPrintXML = PR_TRUE;
+#else
   mPrettyPrintXML = PR_FALSE;
+#endif /* JAXER */
 
   mState = eXMLContentSinkState_InProlog;
 

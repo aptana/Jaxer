@@ -91,18 +91,17 @@ public:
   virtual void GetScriptType(nsAString& type);
   virtual already_AddRefed<nsIURI> GetScriptURI();
   virtual void GetScriptText(nsAString& text);
-  
-  // JAXER INSERT
-  virtual void SetScriptText(nsAString& text) { }
-  virtual PRPackedBool GetIsRunatClient() { return PR_TRUE; }
-  virtual PRPackedBool GetIsEmpty() { return PR_FALSE; }
-  virtual void SetIsEmpty() { }
-  virtual PRPackedBool GetEnableEval() { return PR_FALSE; }
-  virtual void SetEnableEval() { }
-  virtual void Execute() { }
-  // END JAXER INSERT
-  
-  virtual void GetScriptCharset(nsAString& charset);   
+  virtual void GetScriptCharset(nsAString& charset); 
+
+#ifdef JAXER
+	virtual void SetScriptText(nsAString& text) { }
+	virtual PRPackedBool GetIsRunatClient() { return PR_TRUE; }
+	virtual PRPackedBool GetIsEmpty() { return PR_FALSE; }
+	virtual void SetIsEmpty() { }
+	virtual PRPackedBool GetEnableEval() { return PR_FALSE; }
+	virtual void SetEnableEval() { }
+	virtual void Execute() { }
+#endif /* JAXER*/
 
   // nsScriptElement
   virtual PRBool HasScriptContent();

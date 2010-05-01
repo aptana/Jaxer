@@ -518,7 +518,7 @@ nsImageLoadingContent::LoadImage(nsIURI* aNewURI,
       }
 	  return NS_OK;
   }
-#endif
+#endif /* JAXER */
 
   if (!mLoadingEnabled) {
     FireEvent(NS_LITERAL_STRING("error"));

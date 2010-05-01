@@ -73,20 +73,20 @@
 #include "imgILoader.h"
 #include "nsIParser.h"
 
-// JAXER INSERT
+#ifdef JAXER
 #include "nsIDOMDocument.h"
 #include "aptEventDocInitializedData.h"
 #include "aptEventTypeManager.h"
-// END JAXER INSERT
-
+#endif /* JAXER */
 // plugins
 #include "nsIPluginManager.h"
 #include "nsIPluginHost.h"
 static NS_DEFINE_CID(kPluginManagerCID, NS_PLUGINMANAGER_CID);
 static NS_DEFINE_CID(kPluginDocumentCID, NS_PLUGINDOCUMENT_CID);
 
-// JAXER ADDED NEXT LINE
+#ifdef JAXER
 static NS_DEFINE_CID(kEventTypeManagerCID, APT_EVENTTYPEMANAGER_CID);
+#endif /* JAXER */
 
 // URL for the "user agent" style sheet
 #define UA_CSS_URL "resource://gre/res/ua.css"
@@ -330,8 +330,10 @@ nsContentDLF::CreateInstanceForDocument(nsISupports* aContainer,
     if (NS_FAILED(rv))
       break;
 
-    // JAXER
-    if (gUAStyleSheet) docv->SetUAStyleSheet(static_cast<nsIStyleSheet*>(gUAStyleSheet));
+#ifdef JAXER
+	  if (gUAStyleSheet)
+#endif /* JAXER */
+    docv->SetUAStyleSheet(static_cast<nsIStyleSheet*>(gUAStyleSheet));
 
     // Bind the document to the Content Viewer
     nsIContentViewer* cv = static_cast<nsIContentViewer*>(docv.get());
@@ -451,9 +453,10 @@ nsContentDLF::CreateDocument(const char* aCommand,
     rv = NS_NewDocumentViewer(getter_AddRefs(docv));
     if (NS_FAILED(rv))
       break;
-    
-    // JAXER
-    if (gUAStyleSheet) docv->SetUAStyleSheet(gUAStyleSheet);
+#ifdef JAXER
+	  if (gUAStyleSheet)
+#endif /* JAXER */
+    docv->SetUAStyleSheet(gUAStyleSheet);
 
     doc->SetContainer(aContainer);
 
@@ -470,7 +473,7 @@ nsContentDLF::CreateDocument(const char* aCommand,
     NS_IF_ADDREF(*aDocViewer);
   } while (PR_FALSE);
 
-  // JAXER INSERT  
+#ifdef JAXER
   // Allocate a DocInitialized event object.
   nsCOMPtr<aptIEventDocInitialized> di = do_CreateInstance(APT_EVENT_DOC_INITIALIZED_CONTRACTID);
   NS_ENSURE_STATE(di);
@@ -484,8 +487,7 @@ nsContentDLF::CreateDocument(const char* aCommand,
   // Fire the DocInitialized event out to all observers.
   nsCOMPtr<aptEventTypeManager> mEventTypeManager = do_GetService(kEventTypeManagerCID, &rv);
   rv = mEventTypeManager->FireEvent(di, aptEventName_DocInitialized);
-  // END JAXER INSERT
-  
+#endif /* JAXER */
   return rv;
 }
 
@@ -508,8 +510,10 @@ nsContentDLF::CreateXULDocument(const char* aCommand,
   if (NS_FAILED(rv)) return rv;
 
   // Load the UA style sheet if we haven't already done that
-  // JAXER
-  if (gUAStyleSheet) docv->SetUAStyleSheet(gUAStyleSheet);
+#ifdef JAXER
+	if (gUAStyleSheet)
+#endif /* JAXER */
+  docv->SetUAStyleSheet(gUAStyleSheet);
 
   nsCOMPtr<nsIURI> aURL;
   rv = aChannel->GetURI(getter_AddRefs(aURL));
@@ -653,7 +657,11 @@ nsContentDLF::UnregisterDocumentFactories(nsIComponentManager* aCompMgr,
 /* static */ nsresult
 nsContentDLF::EnsureUAStyleSheet()
 {
-  if (gUAStyleSheet || PR_TRUE) // JAXER MODIFIED
+#ifdef JAXER
+	if (PR_TRUE)
+		return NS_OK;
+#endif /* JAXER */
+  if (gUAStyleSheet)
     return NS_OK;
 
   // Load the UA style sheet

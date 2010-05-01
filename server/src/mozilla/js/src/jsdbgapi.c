@@ -1049,7 +1049,7 @@ JS_EvalFramePrincipals(JSContext *cx, JSStackFrame *fp, JSStackFrame *caller)
             !callerPrincipals->subsume(callerPrincipals, principals))
 #else
             callerPrincipals->subsume(callerPrincipals, principals))
-#endif
+#endif /* JAXER */
            ? principals
            : callerPrincipals;
 }

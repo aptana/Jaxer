@@ -1,3 +1,39 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ *  Version: GPL 3
+ * 
+ *  This program is licensed under the GNU General Public license, version 3 (GPL).
+ *  It is derived from Mozilla software and modified by Aptana, Inc.
+ *  Aptana, Inc. has elected to use and license the Mozilla software 
+ *  under the terms of the GPL, and licenses this file to you under the terms
+ *  of the GPL.
+ *  
+ *  Contributor(s): Aptana, Inc.
+ *  The portions modified by Aptana are Copyright (C) 2007-2008 Aptana, Inc.
+ *  All Rights Reserved.
+ * 
+ *  This program is distributed in the hope that it will be useful, but
+ *  AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
+ *  NONINFRINGEMENT. Redistribution, except as permitted by the GPL,
+ *  is prohibited.
+ * 
+ *  You can redistribute and/or modify this program under the terms of the GPL, 
+ *  as published by the Free Software Foundation.  You should
+ *  have received a copy of the GNU General Public License, Version 3 along
+ *  with this program; if not, write to the Free Software Foundation, Inc., 51
+ *  Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  
+ *  Aptana provides a special exception to allow redistribution of this file
+ *  with certain other code and certain additional terms
+ *  pursuant to Section 7 of the GPL. You may view the exception and these
+ *  terms on the web at http://www.aptana.com/legal/gpl/.
+ *  
+ *  You may view the GPL, and Aptana's exception and additional terms in the file
+ *  titled license-jaxer.html in the main distribution folder of this program.
+ *  
+ *  Any modifications to this file must keep this entire header intact.
+ * 
+ * ***** END LICENSE BLOCK ***** */
 /* ***** BEGIN ORIGINAL ATTRIBUTION BLOCK *****
  *
  * The Original Code is mozilla.org code.
@@ -351,6 +387,7 @@ nsJSON::EncodeObject(JSContext *cx, jsval *vp, nsJSONWriter *writer,
       if (NS_FAILED(rv))
         break;
     } else {
+      nsAutoString valueOutput;
       s = JS_ValueToString(cx, outputValue);
       if (!s) {
         ok = JS_FALSE;
@@ -359,7 +396,6 @@ nsJSON::EncodeObject(JSContext *cx, jsval *vp, nsJSONWriter *writer,
 #ifdef JAXER
 	  rv = EncodePrimitive(cx, outputValue, writer);
 #else
-      nsAutoString valueOutput;
 
       if (type == JSTYPE_STRING) {
         rv = writer->WriteString((PRUnichar*)JS_GetStringChars(s),

@@ -1,4 +1,5 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* vim: set sw=2 ts=2 et tw=78: */
 /* ***** BEGIN LICENSE BLOCK *****
  *  Version: GPL 3
  * 
@@ -2048,7 +2049,7 @@ nsParser::DetectCharsetByteOrderMark(const char* buf,
     return DetectByteOrderMark((const unsigned char*)buf,
                              aLen, oCharset, oCharsetSource);
 }
-#endif
+#endif /* JAXER */
 
 PRBool
 nsParser::DetectMetaTag(const char* aBytes,

@@ -89,7 +89,9 @@ class nsIParserService : public nsISupports {
  public:
   NS_DECLARE_STATIC_IID_ACCESSOR(NS_IPARSERSERVICE_IID)
 
-  virtual PRBool IsTagMonitored(PRInt32 aID) const = 0; // JAXER
+#ifdef JAXER
+  virtual PRBool IsTagMonitored(PRInt32 aID) const = 0;
+#endif
 
   /**
    * Looks up the nsHTMLTag enum value corresponding to the tag in aAtom. The

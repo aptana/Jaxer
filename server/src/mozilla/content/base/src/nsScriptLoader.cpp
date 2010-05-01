@@ -151,7 +151,7 @@ IsScriptEventHandler(nsIScriptElement *aScriptElement)
 #else
   if (!StringBeginsWith(event_str, NS_LITERAL_STRING("onload"),
                         nsCaseInsensitiveStringComparator())) {
-#endif
+#endif /* JAXER */
     // It ain't "onload.*".
 
     return PR_TRUE;
@@ -396,7 +396,7 @@ nsScriptLoader::ProcessScriptElement(nsIScriptElement *aElement)
 			scriptURI = nsnull;
 		}
 	}
-#endif
+#endif /* JAXER */
   if (scriptURI) {
     // Check that the containing page is allowed to load this URI.
     rv = nsContentUtils::GetSecurityManager()->

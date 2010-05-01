@@ -132,13 +132,16 @@ REQUIRES	= nspr \
 		  windowwatcher \
 		  js \
 		  widget \
-		  aptana \
 		  layout \
 		  content \
 		  xpconnect \
 		  unicharutil \
 		  pipboot \
 		  $(NULL)
+
+ifdef JAXER
+REQUIRES	+= aptana
+endif
 
 EXTRA_DEPS = $(NSS_DEP_LIBS)
 

@@ -1,4 +1,4 @@
-/* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* ***** BEGIN LICENSE BLOCK *****
  *  Version: GPL 3
  * 
@@ -555,20 +555,17 @@ PR_IMPLEMENT(PRStatus) PR_ExitMonitor(PRMonitor *mon)
     pthread_t self = pthread_self();
 
     PR_ASSERT(mon != NULL);
-    
-    //JAXER INSERT
+
+#ifndef JAXER
     /* Aptana note: these asserts violate the semantics of this function as
      * described in the header file.  The Windows implementation works
      * correctly. */
-#if 0
-    // END JAXER INSERT
-    
     /* The lock better be that - locked */
     PR_ASSERT(_PT_PTHREAD_MUTEX_IS_LOCKED(mon->lock.mutex));
     /* we'd better be the owner */
     PR_ASSERT(pthread_equal(mon->owner, self));
-#endif // JAXER
-    
+#endif /* JAXER */
+
     if (!pthread_equal(mon->owner, self))
         return PR_FAILURE;
 

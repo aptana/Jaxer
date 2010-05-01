@@ -127,10 +127,10 @@ interface nsIThread : nsIEventTarget
    */
   boolean processNextEvent(in boolean mayWait);
 
-  // JAXER INSERT
+#ifdef JAXER
   /*
    * Sleep to at least this many milliseconds (only works on currrent thread).
    */
   void sleep(in PRUint32 msec);
-  // END JAXER INSERT
+#endif /* JAXER */
 };

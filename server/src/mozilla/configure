@@ -5825,8 +5825,10 @@ FIREFOX_VERSION=`cat $topsrcdir/browser/config/version.txt`
 THUNDERBIRD_VERSION=`cat $topsrcdir/mail/config/version.txt`
 SUNBIRD_VERSION=`cat $topsrcdir/calendar/sunbird/config/version.txt`
 SEAMONKEY_VERSION=`cat $topsrcdir/suite/config/version.txt`
+# JAXER INSERT
 JAXER_VERSION=`cat $topsrcdir/aptana/jaxerBuildId.h | grep JAXER_MAJOR_VERSION | cut -f2 -d\"`
 JAXER_BUILDID=`cat $topsrcdir/aptana/jaxerBuildId.h | grep JAXER_BUILD_NUMBER | cut -f2 -d\"`
+# END JAXER INSERT
 
 cat >> confdefs.h <<EOF
 #define MOZILLA_VERSION "$MOZILLA_VERSION"
@@ -21366,7 +21368,7 @@ xpcom/xpcom-private.h
 EOF
 cat >> $CONFIG_STATUS <<EOF
 
-# JAXER INSERTED @JAXER@ DB support in next section
+# JAXER MODIFICATIONS IN THE NEXT SECTION
 
 # Protect against being on the right side of a sed subst in config.status.
 sed 's/%@/@@/; s/@%/@@/; s/%g\$/@g/; /@g\$/s/[\\\\&%]/\\\\&/g;

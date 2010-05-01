@@ -7626,13 +7626,9 @@ nsresult nsDocShell::DoChannelLoad(nsIChannel * aChannel,
     case LOAD_LINK:
         // Set cache checking flags
         PRInt32 prefSetting;
-        
-        // JAXER INSERT
-#if JAXER
+#ifdef JAXER
         loadFlags |= nsIRequest::VALIDATE_ALWAYS;
 #else
-        // END JAXER INSERT
-        
         if (NS_SUCCEEDED
             (mPrefs->
              GetIntPref("browser.cache.check_doc_frequency",
@@ -9028,15 +9024,12 @@ nsDocShell::EnsureScriptEnvironment()
     factory->NewScriptGlobalObject(mItemType == typeChrome,
                                    isModalContentWindow,
                                    getter_AddRefs(mScriptGlobal));
-    // JAXER INSERT
 #else
-    // No chrome in Aptana.
+    // No chrome in Jaxer.
     factory->NewScriptGlobalObject(true,
                                    false,
                                    getter_AddRefs(mScriptGlobal));
 #endif /* JAXER */
-    // END JAXER INSERT
-
     NS_ENSURE_TRUE(mScriptGlobal, NS_ERROR_FAILURE);
 
     nsCOMPtr<nsPIDOMWindow> win(do_QueryInterface(mScriptGlobal));

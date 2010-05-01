@@ -103,7 +103,7 @@ EXPORTS = \
      nsScanner.h       \
      $(NULL)
 endif
-     
+
 CPPSRCS = \
 		nsScannerString.cpp \
 		nsDTDUtils.cpp      \

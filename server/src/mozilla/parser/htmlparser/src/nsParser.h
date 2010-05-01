@@ -1,4 +1,4 @@
-/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 /* ***** BEGIN LICENSE BLOCK *****
  *  Version: GPL 3
  * 
@@ -337,8 +337,8 @@ class nsParser : public nsIParser,
                          PRInt32 aLen, 
                          nsCString& oCharset, 
                          PRInt32& oCharsetSource);
-    
-#ifdef JAXER                     
+
+#ifdef JAXER
     /**
      * Expose the static function, so we can use it on the object.
      */
@@ -346,7 +346,7 @@ class nsParser : public nsIParser,
                         PRInt32 aLen,
                         nsCString& oCharset,
                         PRInt32& oCharsetSource); 
-#endif          
+#endif /* JAXER */
 
     void SetSinkCharset(nsACString& aCharset);
 

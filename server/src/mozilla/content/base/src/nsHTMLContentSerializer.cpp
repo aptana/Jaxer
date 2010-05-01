@@ -597,7 +597,7 @@ nsHTMLContentSerializer::SerializeAttributes(nsIContent* aContent,
     }
 
 #ifndef JAXER
-	if (mIsWholeDocument && aTagName == nsGkAtoms::meta &&
+    if (mIsWholeDocument && aTagName == nsGkAtoms::meta &&
         attrName == nsGkAtoms::content) {
       // If we're serializing a <meta http-equiv="content-type">,
       // use the proper value, rather than what's in the document.
@@ -608,7 +608,7 @@ nsHTMLContentSerializer::SerializeAttributes(nsIContent* aContent,
           NS_ConvertASCIItoUTF16(mCharset);
       }
     }
-#endif
+#endif /* JAXER */
 
     attrName->ToString(nameStr);
     

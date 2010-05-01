@@ -195,9 +195,11 @@ interface mozIStorageStatement : mozIStorageValueArray {
    */
   AString escapeStringForLIKE(in AString aValue, in wchar aEscapeChar);
 
+#ifdef JAXER
   /**
    * The number of database rows that were changed or inserted or 
    * deleted by the most recently completed SQL statement on the connection.
    */
   readonly attribute long changedRowCount;
+#endif /* JAXER */
 };

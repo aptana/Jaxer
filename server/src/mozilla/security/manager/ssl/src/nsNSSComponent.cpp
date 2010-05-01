@@ -76,7 +76,7 @@
 #include "nsIX509CertDB.h"
 #ifndef JAXER
 #include "nsIProfileChangeStatus.h"
-#endif
+#endif /* JAXER */
 #include "nsNSSCertificate.h"
 #include "nsNSSHelper.h"
 #include "nsSmartCardMonitor.h"
@@ -2027,7 +2027,7 @@ nsNSSComponent::Observe(nsISupports *aSubject, const char *aTopic,
     InitializeCRLUpdateTimer();
   }
   else
-#endif // JAXER
+#endif /* JAXER */
   if (nsCRT::strcmp(aTopic, NS_XPCOM_SHUTDOWN_OBSERVER_ID) == 0) {
 
     PR_LOG(gPIPNSSLog, PR_LOG_DEBUG, ("nsNSSComponent: XPCom shutdown observed\n"));
@@ -2109,7 +2109,7 @@ nsNSSComponent::Observe(nsISupports *aSubject, const char *aTopic,
     PR_LOG(gPIPNSSLog, PR_LOG_DEBUG, ("receiving network restore topic\n"));
     DoProfileChangeNetRestore();
   }
-#endif
+#endif /* JAXER */
 
   return NS_OK;
 }

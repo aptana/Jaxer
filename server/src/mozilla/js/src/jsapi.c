@@ -4558,14 +4558,12 @@ JS_CompileUCScript(JSContext *cx, JSObject *obj,
             js_ReportUncaughtException(cx);                                   \
     JS_END_MACRO
 
-// JAXER INSERT
 #ifdef JAXER
 #define LAST_FRAME_CHECKS(cx,result)                                          \
     JS_BEGIN_MACRO                                                            \
                 LAST_FRAME_EXCEPTION_CHECK(cx, result);                       \
     JS_END_MACRO
 #else
-// END JAXER INSERT
 #define LAST_FRAME_CHECKS(cx,result)                                          \
     JS_BEGIN_MACRO                                                            \
         if (!(cx)->fp) {                                                      \
@@ -4573,7 +4571,7 @@ JS_CompileUCScript(JSContext *cx, JSObject *obj,
             LAST_FRAME_EXCEPTION_CHECK(cx, result);                           \
         }                                                                     \
     JS_END_MACRO
-#endif // JAXER
+#endif /* JAXER */
 
 JS_PUBLIC_API(JSScript *)
 JS_CompileUCScriptForPrincipals(JSContext *cx, JSObject *obj,
@@ -5576,7 +5574,7 @@ JS_ReportOutOfMemory(JSContext *cx)
 		/* same as default in nsJSRuntimeServiceImpl::GetRuntime(JSRuntime **runtime) */
         JS_SetGCParameter(rt, JSGC_MAX_BYTES, 0xffffffff);
     }
-#endif
+#endif /* JAXER */
     js_ReportOutOfMemory(cx);
 }
 

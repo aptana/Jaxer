@@ -1193,11 +1193,7 @@ static void	*huge_malloc(size_t size, bool zero);
 static void	*huge_palloc(size_t alignment, size_t size);
 static void	*huge_ralloc(void *ptr, size_t size, size_t oldsize);
 static void	huge_dalloc(void *ptr);
-#ifdef JAXER
-void	malloc_print_stats(void);
-#else
 static void	malloc_print_stats(void);
-#endif
 #ifndef MOZ_MEMORY_WINDOWS
 static
 #endif
@@ -5018,11 +5014,7 @@ malloc_ncpus(void)
 }
 #endif
 
-#ifdef JAXER
-void
-#else
 static void
-#endif
 malloc_print_stats(void)
 {
 

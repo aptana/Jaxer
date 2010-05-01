@@ -174,11 +174,15 @@ nsCertOverrideService::Init()
                                  NS_PROXY_TO_MAIN_THREAD, &rv);
 
   if (mObserverService) {
-    // JAXER MODIFIED
-    mObserverService->AddObserver(this, "profile-before-change", PR_FALSE);
-    mObserverService->AddObserver(this, "profile-do-change", PR_FALSE);
-    mObserverService->AddObserver(this, "shutdown-cleanse", PR_FALSE);
-    // END JAXER MODIFIED
+#ifdef JAXER
+	  mObserverService->AddObserver(this, "profile-before-change", PR_FALSE);
+	  mObserverService->AddObserver(this, "profile-do-change", PR_FALSE);
+	  mObserverService->AddObserver(this, "shutdown-cleanse", PR_FALSE);
+#else	  
+    mObserverService->AddObserver(this, "profile-before-change", PR_TRUE);
+    mObserverService->AddObserver(this, "profile-do-change", PR_TRUE);
+    mObserverService->AddObserver(this, "shutdown-cleanse", PR_TRUE);
+#endif /* JAXER */
   }
 
   return NS_OK;

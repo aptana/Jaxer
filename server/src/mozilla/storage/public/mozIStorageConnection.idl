@@ -108,12 +108,13 @@ interface mozIStorageConnection : nsISupports {
    */
   readonly attribute AUTF8String lastErrorString;
 
+#ifdef JAXER
   /**
    * The number of database rows that were changed or inserted or 
    * deleted by the most recently completed SQL statement on the connection.
    */
   readonly attribute long changedRowCount;
-
+#endif /* JAXER */
   
   /**
    * The schema version of the database.  This should not be used until the 

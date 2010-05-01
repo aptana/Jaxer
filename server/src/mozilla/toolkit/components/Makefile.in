@@ -157,7 +157,6 @@ DIRS += autocomplete/public
 DIRS += downloads/public
 endif
 
-# JAXER INSERT
 ifdef JAXER
 ifdef MOZ_FEEDS
 DIRS += \
@@ -170,6 +169,5 @@ DIRS += \
 	microformats \
 	$(NULL)
 endif
-# END JAXER INSERT
 
 include $(topsrcdir)/config/rules.mk

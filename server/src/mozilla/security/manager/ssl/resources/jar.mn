@@ -2,6 +2,5 @@
 #ifndef JAXER
 pipnss.jar:
 *   content/pipnss/contents.rdf             (content/contents.rdf)
+#endif /* JAXER */
 #endif
-#endif
-

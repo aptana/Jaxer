@@ -1280,7 +1280,7 @@ jsval nsDOMClassInfo::sOnload_id          = JSVAL_VOID;
 #ifdef JAXER
 jsval nsDOMClassInfo::sOnserverload_id    = JSVAL_VOID;
 jsval nsDOMClassInfo::sOnaftercallbackprocessing_id = JSVAL_VOID;
-#endif
+#endif /* JAXER */
 jsval nsDOMClassInfo::sOnbeforeunload_id  = JSVAL_VOID;
 jsval nsDOMClassInfo::sOnunload_id        = JSVAL_VOID;
 jsval nsDOMClassInfo::sOnpageshow_id      = JSVAL_VOID;
@@ -1476,7 +1476,7 @@ nsDOMClassInfo::DefineStaticJSVals(JSContext *cx)
 #ifdef JAXER
   SET_JSVAL_TO_STRING(sOnserverload_id,    cx, "onserverload");
   SET_JSVAL_TO_STRING(sOnaftercallbackprocessing_id, cx, "onaftercallbackprocessing");
-#endif
+#endif /* JAXER */
   SET_JSVAL_TO_STRING(sOnbeforeunload_id,  cx, "onbeforeunload");
   SET_JSVAL_TO_STRING(sOnunload_id,        cx, "onunload");
   SET_JSVAL_TO_STRING(sOnpageshow_id,      cx, "onpageshow");
@@ -4045,7 +4045,7 @@ nsDOMClassInfo::ShutDown()
 #ifdef JAXER
   sOnserverload_id    = JSVAL_VOID;
   sOnaftercallbackprocessing_id = JSVAL_VOID;
-#endif
+#endif /* JAXER */
   sOnbeforeunload_id  = JSVAL_VOID;
   sOnunload_id        = JSVAL_VOID;
   sOnpageshow_id      = JSVAL_VOID;
@@ -6790,7 +6790,7 @@ nsEventReceiverSH::ReallyIsEventName(jsval id, jschar aFirstChar)
 			id == sOnaftercallbackprocessing_id;
 #else
     return id == sOnabort_id;
-#endif
+#endif /* JAXER */
   case 'b' :
     return (id == sOnbeforeunload_id ||
             id == sOnblur_id);
@@ -6833,7 +6833,7 @@ nsEventReceiverSH::ReallyIsEventName(jsval id, jschar aFirstChar)
             id == sOnselect_id       ||
 #ifdef JAXER
             id == sOnserverload_id   ||
-#endif
+#endif /* JAXER */
             id == sOnsubmit_id);
   }
 

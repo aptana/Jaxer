@@ -278,6 +278,7 @@ nsConsoleService::GetMessageArray(nsIConsoleMessage ***messages, PRUint32 *count
 
 NS_IMETHODIMP
 nsConsoleService::RegisterListener(nsIConsoleListener *listener) {
+    nsresult rv;
 
     /*
      * Store a threadsafe proxy to the listener rather than the
@@ -286,13 +287,13 @@ nsConsoleService::RegisterListener(nsIConsoleListener *listener) {
      * thread-specific ways, and we always want to call them on their
      * originating thread.  JavaScript is the motivating example.
      */
-#if 0 //JAXER
+#ifndef JAXER
     nsCOMPtr<nsIConsoleListener> proxiedListener;
 
     rv = GetProxyForListener(listener, getter_AddRefs(proxiedListener));
     if (NS_FAILED(rv))
         return rv;
-#endif //JAXER
+#endif /* JAXER */
 
     {
         nsAutoLock lock(mLock);
@@ -307,10 +308,12 @@ nsConsoleService::RegisterListener(nsIConsoleListener *listener) {
          * can return different proxies for the same object (see bug #85831)
          * we need to use the real object as the unique key...
          */
-        //JAXER CHANGE
+#ifdef JAXER
         if (!mListeners.Exists(&key))
             mListeners.Put(&key, listener);
-        // END JAXER CHANGE
+#else
+        mListeners.Put(&key, proxiedListener);
+#endif /* JAXER */
     }
     return NS_OK;
 }

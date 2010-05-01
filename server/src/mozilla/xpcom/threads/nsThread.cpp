@@ -535,7 +535,7 @@ nsThread::ProcessNextEvent(PRBool mayWait, PRBool *result)
   return rv;
 }
 
-// JAXER INSERT
+#ifdef JAXER
 /* void sleep (in PRUint32 msec); */
 NS_IMETHODIMP 
 nsThread::Sleep(PRUint32 msec)
@@ -548,7 +548,7 @@ nsThread::Sleep(PRUint32 msec)
 
     return NS_OK;
 }
-// END JAXER INSERT
+#endif /* JAXER */
 
 //-----------------------------------------------------------------------------
 // nsISupportsPriority

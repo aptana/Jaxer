@@ -1,4 +1,3 @@
-/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* ***** BEGIN LICENSE BLOCK *****
  *  Version: GPL 3
  * 
@@ -59,7 +58,11 @@
 #define NET_DEFAULT_SEGMENT_SIZE  2048
 #define NET_DEFAULT_SEGMENT_COUNT 4
 #else
-#define NET_DEFAULT_SEGMENT_SIZE  32768 //JAXER
+#ifdef JAXER
+#define NET_DEFAULT_SEGMENT_SIZE  32768
+#else
+#define NET_DEFAULT_SEGMENT_SIZE  4096
+#endif /* JAXER */
 #define NET_DEFAULT_SEGMENT_COUNT 16
 #endif
 

@@ -84,7 +84,7 @@
 #include "nsParser.h"
 #else
 #include "nsIParser.h"
-#endif
+#endif /* JAXER */
 
 #include "nsLoadListenerProxy.h"
 #include "nsStringStream.h"
@@ -369,7 +369,7 @@ nsXMLHttpRequest::nsXMLHttpRequest()
   : mState(XML_HTTP_REQUEST_UNINITIALIZED)
 #ifdef JAXER
 , mStatus(NS_OK)
-#endif
+#endif /* JAXER */
 {
   nsLayoutStatics::AddRef();
 }
@@ -873,7 +873,7 @@ nsXMLHttpRequest::DetectCharsetFromDoc(nsACString& aCharset)
   }
   return NS_ERROR_NOT_AVAILABLE;
 }
-#endif
+#endif /* JAXER */
 
 
 nsresult
@@ -897,9 +897,13 @@ nsXMLHttpRequest::ConvertBodyToText(nsAString& aOutBuffer)
   } else {
     if (NS_FAILED(DetectCharset(dataCharset)) || dataCharset.IsEmpty()) {
       // MS documentation states UTF-8 is default for responseText
-        if (NS_FAILED(DetectCharsetFromDoc(dataCharset)) || dataCharset.IsEmpty()) {
-            dataCharset.AssignLiteral("UTF-8");
-        }
+#ifdef JAXER
+		if (NS_FAILED(DetectCharsetFromDoc(dataCharset)) || dataCharset.IsEmpty()) {
+			dataCharset.AssignLiteral("UTF-8");
+		}
+#else
+      dataCharset.AssignLiteral("UTF-8");
+#endif /* JAXER */
     }
   }
 
@@ -1774,7 +1778,7 @@ nsXMLHttpRequest::OnStopRequest(nsIRequest *request, nsISupports *ctxt, nsresult
     Error(nsnull);
 #ifdef JAXER
 	mStatus = status;
-#endif
+#endif /* JAXER */
 
     // By nulling out channel here we make it so that Send() can test
     // for that and throw. Also calling the various status
@@ -1945,7 +1949,7 @@ nsXMLHttpRequest::Send(nsIVariant *aBody)
 			httpChannel->SetReferrer(doc->GetDocumentURI());
 		}
 	}
-#endif
+#endif /* JAXER */
   }
 
   if (aBody && httpChannel && !method.EqualsLiteral("GET")) {
@@ -2174,8 +2178,8 @@ nsXMLHttpRequest::Send(nsIVariant *aBody)
 	if (NS_FAILED(mStatus)) {
 		return mStatus;
 	}
-#endif
-	return NS_ERROR_FAILURE;
+#endif /* JAXER */
+    return NS_ERROR_FAILURE;
   }
 
   return rv;
@@ -2573,7 +2577,6 @@ nsXMLHttpRequest::GetInterface(const nsIID & aIID, void **aResult)
     return NS_OK;
   }
 #endif /* JAXER */
-
   if (mState & XML_HTTP_REQUEST_BACKGROUND) {
     nsCOMPtr<nsIInterfaceRequestor> badCertHandler(do_CreateInstance(NS_BADCERTHANDLER_CONTRACTID, &rv));
 

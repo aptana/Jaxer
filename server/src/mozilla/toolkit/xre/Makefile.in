@@ -58,13 +58,11 @@ include $(DEPTH)/config/autoconf.mk
 
 MODULE = xulapp
 
-# JAXER ADDED NEXT LINE
-ifdef MOZ_XUL_APP
+ifndef JAXER
 
 LIBRARY_NAME = xulapp_s
 LIBXUL_LIBRARY = 1
 
-# JAXER ADDED NEXT LINE
 endif
 
 REQUIRES = \
@@ -121,8 +119,7 @@ EXPORTS = \
 	nsXULAppAPI.h \
 	$(NULL)
 
-# JAXER ADDED LINE
-ifdef MOZ_XUL_APP
+ifndef JAXER
 
 SHAREDCPPSRCS = \
 	showOSAlert.cpp \
@@ -237,12 +234,11 @@ SHARED_LIBRARY_LIBS += \
 endif
 endif
 
-# JAXER ADDED
 endif
 
 include $(topsrcdir)/config/rules.mk
 
-ifdef MOZ_XUL_APP
+ifndef JAXER
 ifdef BUILD_STATIC_LIBS
 export::
 	@$(PERL) -I$(MOZILLA_DIR)/config $(MOZILLA_DIR)/config/build-list.pl $(FINAL_LINK_COMP_NAMES) Apprunner

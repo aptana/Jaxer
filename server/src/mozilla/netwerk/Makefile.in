@@ -57,7 +57,6 @@ include $(DEPTH)/config/autoconf.mk
 
 MODULE		= necko
 
-# JAXER REMOVED resources FROM DIRS
 DIRS		= \
 		base \
 		cookie \
@@ -69,6 +68,9 @@ DIRS		= \
 		protocol \
 		system \
 		build \
+ifndef JAXER
+		resources \
+endif
 		locales \
 		$(NULL)
 

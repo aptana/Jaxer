@@ -86,9 +86,9 @@
 #include "nsTextFormatter.h"
 
 #include "nsIAtom.h"
-#ifdef MOZ_XUL_APP // JAXER INSERT
+#ifdef JAXER
 #include "nsICommandLine.h"
-#endif // JAXER INSERT
+#endif /* JAXER */
 #include "nsICSSLoader.h"
 #include "nsICSSStyleSheet.h"
 #include "nsIConsoleService.h"
@@ -1488,7 +1488,7 @@ NS_IMETHODIMP nsChromeRegistry::Observe(nsISupports *aSubject, const char *aTopi
     }
   }
   else if (!strcmp("command-line-startup", aTopic)) {
-#ifdef MOZ_XUL_APP // JAXER INSERT
+#ifdef JAXER
     nsCOMPtr<nsICommandLine> cmdLine (do_QueryInterface(aSubject));
     if (cmdLine) {
       nsAutoString uiLocale;
@@ -1502,7 +1502,7 @@ NS_IMETHODIMP nsChromeRegistry::Observe(nsISupports *aSubject, const char *aTopi
         }
       }
     }
-#endif // JAXER INSERT
+#endif /* JAXER */
   }
   else {
     NS_ERROR("Unexpected observer topic!");

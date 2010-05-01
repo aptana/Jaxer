@@ -94,17 +94,14 @@ Initialize(nsIModule* aSelf)
   }
   gInitialized = PR_TRUE;
 
-  // JAXER INSERT
-#if 1
+#if JAXER
   nsresult rv = NS_OK;
 #else
-  // END JAXER INSERT
-  
   nsresult rv = nsSHistory::Startup();
   NS_ENSURE_SUCCESS(rv, rv);
 
   rv = nsSHEntry::Startup();
-#endif // JAXER
+#endif /* JAXER */
   return rv;
 }
 

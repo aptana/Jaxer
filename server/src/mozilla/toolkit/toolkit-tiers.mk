@@ -101,8 +101,9 @@ tier_gecko_dirs += \
 		intl/chardet \
 		$(NULL)
 
-# JAXER ADDED NEXT LINE
+ifdef JAXER
 tier_gecko_dirs += aptana
+endif
 
 ifdef MOZ_ENABLE_GTK2
 tier_gecko_dirs     += widget/src/gtkxtbin
@@ -196,7 +197,6 @@ endif
 # "toolkit" was.
 #
 
-# JAXER INSERT
 ifdef JAXER
 tier_toolkit_dirs += chrome
 tier_toolkit_dirs += toolkit/components
@@ -204,7 +204,6 @@ ifdef MOZ_CRASHREPORTER
 tier_toolkit_dirs += toolkit/crashreporter
 endif
 else
-# END JAXER INSERT
 
 ifdef MOZ_XUL_APP
 tier_toolkit_dirs += chrome
@@ -232,13 +231,11 @@ tier_toolkit_dirs	+= \
 	toolkit/components \
 	$(NULL)
 
-# JAXER ADDED NEXT LINE
 endif
 
 ifndef MOZ_XUL_APP
 ifndef JAXER
 tier_toolkit_dirs += themes
-# JAXER ADDED NEXT LINE
 endif
 endif
 
@@ -252,12 +249,10 @@ endif
 
 ifdef MOZ_XUL_APP
 tier_toolkit_dirs	+= toolkit
-#JAXER INSERT
 else
 ifdef JAXER
 tier_toolkit_dirs	+= toolkit/xre
 endif
-#END JAXER INSERT
 endif
 
 ifdef MOZ_XPINSTALL

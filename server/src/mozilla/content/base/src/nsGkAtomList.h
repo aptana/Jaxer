@@ -750,11 +750,9 @@ GK_ATOM(rowspan, "rowspan")
 GK_ATOM(rtl, "rtl")
 GK_ATOM(rule, "rule")
 GK_ATOM(rules, "rules")
-
-// JAXER INSERT
+#ifdef JAXER
 GK_ATOM(runat, "runat")
-// END JAXER INSERT
-
+#endif /* JAXER */
 GK_ATOM(s, "s")
 GK_ATOM(samp, "samp")
 GK_ATOM(scheme, "scheme")

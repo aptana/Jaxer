@@ -66,7 +66,9 @@ public:
 
   NS_DECL_ISUPPORTS
 
-  PRBool IsTagMonitored(PRInt32 aID) const; // JAXER
+#ifdef JAXER
+  PRBool IsTagMonitored(PRInt32 aID) const;
+#endif
 
   PRInt32 HTMLAtomTagToId(nsIAtom* aAtom) const;
 

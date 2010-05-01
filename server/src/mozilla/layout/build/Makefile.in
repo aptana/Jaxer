@@ -79,10 +79,8 @@ EXTRA_DSO_LIBS	= gkgfx
 endif
 EXTRA_DSO_LIBS	+= thebes
 
-# JAXER ADDED aptana in REQUIRES
 REQUIRES	= xpcom \
 		  string \
-		  aptana \
 		  content \
 		  gfx \
 		  widget \
@@ -113,6 +111,9 @@ REQUIRES	= xpcom \
 		  txtsvc \
 		  thebes \
 		  $(NULL)
+ifdef JAXER
+REQUIRES	+= aptana
+endif
 
 CPPSRCS		= \
 		nsLayoutModule.cpp \

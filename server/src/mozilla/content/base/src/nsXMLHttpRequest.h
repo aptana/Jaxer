@@ -271,8 +271,7 @@ protected:
 
   // Try to get the charset from the 1st 2K of doc
   nsresult DetectCharsetFromDoc(nsACString& aCharset);
-#endif
-
+#endif /* JAXER */
   // List of potentially dangerous headers explicitly set using
   // SetRequestHeader.
   nsTArray<nsCString> mExtraRequestHeaders;

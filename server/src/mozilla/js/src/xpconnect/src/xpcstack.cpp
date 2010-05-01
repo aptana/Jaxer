@@ -53,7 +53,9 @@
 /* Implements nsIStackFrame. */
 
 #include "xpcprivate.h"
-#include "jsfun.h" // JAXER
+#ifdef JAXER
+#include "jsfun.h"
+#endif /* JAXER */
 
 class XPCJSStackFrame : public nsIStackFrame
 {
@@ -141,7 +143,7 @@ XPCJSStackFrame::~XPCJSStackFrame()
 
 NS_IMPL_THREADSAFE_ISUPPORTS1(XPCJSStackFrame, nsIStackFrame)
 
-// JAXER INSERTED FUNCTION
+#ifdef JAXER
 static char*
 ValueToSource(JSContext *cx, jsval v)
 {
@@ -182,7 +184,7 @@ ValueToSource(JSContext *cx, jsval v)
 	}
     return nsnull;
 }
-// END JAXER INSERTED FUNCTION
+#endif /* JAXER */
 
 nsresult
 XPCJSStackFrame::CreateStack(JSContext* cx, JSStackFrame* fp,
@@ -230,7 +232,7 @@ XPCJSStackFrame::CreateStack(JSContext* cx, JSStackFrame* fp,
                         const char* funname = JS_GetFunctionName(fun);
                         if(funname)
                         {
-                        // JAXER MODIFIED
+#ifdef JAXER
 							char * args = nsnull;
 							int len = 0;
 							if (fp->argc > 0)
@@ -268,7 +270,11 @@ XPCJSStackFrame::CreateStack(JSContext* cx, JSStackFrame* fp,
 							JS_snprintf(self->mFunname, sizeof(char)*len, format, funname, args ? args : "");
 							if (args)
 								nsMemory::Free(args);
-							// END JAXER MODIFIED
+#else
+                        self->mFunname = (char*)
+                                nsMemory::Clone(funname,
+                                        sizeof(char)*(strlen(funname)+1));
+#endif /* JAXER */
                         }
                     }
                 }

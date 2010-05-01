@@ -56,7 +56,7 @@
 #include "nsICategoryManager.h"
 #include "nsCategoryManagerUtils.h"
 
-// JAXER INSERT
+#ifdef JAXER
 #include "nsCRT.h"
 #include "nsReadableUtils.h"
 #include "plhash.h"
@@ -73,7 +73,7 @@ static PLHashNumber PR_CALLBACK HashNumber(const void* aKey)
 {
   return PLHashNumber(NS_PTR_TO_INT32(aKey));
 }
-// END JAXER INSERT
+#endif /* JAXER */
 
 extern "C" int MOZ_XMLCheckQName(const char* ptr, const char* end,
                                  int ns_aware, const char** colon);
@@ -81,8 +81,7 @@ extern "C" int MOZ_XMLCheckQName(const char* ptr, const char* end,
 nsParserService::nsParserService() : mEntries(0)
 {
   mHaveNotifiedCategoryObservers = PR_FALSE;
-  
-  // JAXER INSERT
+#ifdef JAXER
   if (gTableRefCount++ == 0) {
     NS_ASSERTION(!gHTMLTagTable, "pre existing hash!");
 
@@ -113,7 +112,7 @@ nsParserService::nsParserService() : mEntries(0)
       PL_HashTableAdd(gHTMLTagTable, (const void*)tag_id, (void*)tag_id);
     }
   }
-  // END JAXER INSERT
+#endif /* JAXER */
 }
 
 nsParserService::~nsParserService()
@@ -126,14 +125,14 @@ nsParserService::~nsParserService()
 
 NS_IMPL_ISUPPORTS1(nsParserService, nsIParserService)
 
-// JAXER INSERT
+#ifdef JAXER
 PRBool
 nsParserService::IsTagMonitored(PRInt32 aID) const
 {
   PLHashEntry **hep = PL_HashTableRawLookup(gHTMLTagTable, aID, (void*)aID);
   return hep && *hep;
 }
-// END JAXER INSERT
+#endif /* JAXER */
 
 PRInt32
 nsParserService::HTMLAtomTagToId(nsIAtom* aAtom) const

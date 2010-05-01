@@ -60,7 +60,6 @@ LIBRARY_NAME	= gkconhtmlcon_s
 LIBXUL_LIBRARY	= 1
 
 REQUIRES	= xpcom \
-		  aptana \
 		  string \
 		  gfx \
 		  thebes \
@@ -89,6 +88,9 @@ REQUIRES	= xpcom \
 		  intl \
 		  plugin \
 		  $(NULL)
+ifdef JAXER
+REQUIRES	+= aptana
+endif
 
 EXPORTS		= \
 		nsImageMapUtils.h \

@@ -124,14 +124,12 @@
 #include "nsContentCreatorFunctions.h"
 #include "mozAutoDocUpdate.h"
 
-// JAXER INSERT
 #ifdef JAXER
 #include "aptEventTypeManager.h"
 #include "aptEventNewHTMLElementData.h"
 #include "nsIParserService.h"
 #include "aptIDocumentFetcherService.h"
-#endif
-// END JAXER INSERT
+#endif /* JAXER */
 
 class nsINodeInfo;
 class nsIDOMNodeList;
@@ -146,7 +144,6 @@ GetStyledFrameFor(nsGenericHTMLElement* aElement)
     frame->GetFirstChild(nsnull) : frame;
 }
 
-// JAXER INSERT
 #ifdef JAXER
 NS_DEFINE_CID(kEventTypeManagerCID, APT_EVENTTYPEMANAGER_CID);
 static aptEventTypeManager *g_EventTypeManager = nsnull;
@@ -180,8 +177,7 @@ PRBool IsJaxerDocShell(nsIDocShell *pDocShell)
 
 	return (docShell == pDocShell);
 }
-#endif
-// END JAXER INSERT
+#endif /* JAXER */
 
 // XXX todo: add in missing out-of-memory checks
 
@@ -1192,7 +1188,6 @@ nsGenericHTMLElement::UpdateEditableState()
   nsGenericElement::UpdateEditableState();
 }
 
-// JAXER INSERT
 #ifdef JAXER
 static PRBool g_doNextTag = PR_FALSE;
 static char *sScriptRunAtTags[] =
@@ -1200,16 +1195,13 @@ static char *sScriptRunAtTags[] =
     "runat",
     0 // Must be the last entry
 };
-#endif
-// END JAXER INSERT
+#endif /* JAXER */
 
-// JAXER MODIFIED NEXT FUNCTION
 nsresult
 nsGenericHTMLElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
                                  nsIContent* aBindingParent,
                                  PRBool aCompileEventHandlers)
 {
-  PRBool aEnableBind = PR_TRUE;
   nsresult rv = nsGenericHTMLElementBase::BindToTree(aDocument, aParent,
                                                      aBindingParent,
                                                      aCompileEventHandlers);
@@ -1272,14 +1264,12 @@ nsGenericHTMLElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
     if (g_doNextTag || doThisTag) {
       // Wrap the element in a aptIEventNewHTMLElement interface.
       nsCOMPtr<aptIEventNewHTMLElement> nhe = do_CreateInstance(APT_EVENT_NEW_HTML_ELEMENT_CONTRACTID);
-      
+
       // Fire event for the next element after head no matter what.
       if (tagname.LowerCaseEqualsLiteral("head"))
          g_doNextTag = PR_TRUE;
        else
          g_doNextTag = PR_FALSE;
-
-      
 
       // Set some state for the event
       rv = nhe->Init();
@@ -1309,7 +1299,7 @@ nsGenericHTMLElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
             PRBool aEnableScriptEval = PR_TRUE;
             // Obtain the xeq/no-xeq indicator set by the event handler.
             rv = nhe->GetEnableScriptEvaluation(&aEnableScriptEval);
-        
+
             // If event handler has disallowed this element to be evaluated...
             if (!aEnableScriptEval) {
 				nsCOMPtr<nsIScriptElement> sele = do_QueryInterface(this);
@@ -1325,7 +1315,6 @@ nsGenericHTMLElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
 		sele->PreventExecution();
 	}
 #endif /* JAXER */
- 
   }
 
   return rv;
@@ -1513,12 +1502,12 @@ nsGenericHTMLElement::AfterSetAttr(PRInt32 aNamespaceID, nsIAtom* aName,
 				nsCOMPtr<nsIDocShell> docShell = do_QueryInterface(container);
 				if (docShell && IsJaxerDocShell(docShell)) {
 					skipScriptEvent = PR_TRUE;
+					}
 				}
 			}
-		}
 		if (!skipScriptEvent) {
 #endif /* JAXER */
-		nsresult rv = AddScriptEventListener(aName, *aValue);
+      nsresult rv = AddScriptEventListener(aName, *aValue);
       NS_ENSURE_SUCCESS(rv, rv);
 #ifdef JAXER
 		}

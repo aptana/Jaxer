@@ -108,7 +108,7 @@
 
 #ifdef JAXER
 #include "nsThreadUtils.h"
-#endif
+#endif /* JAXER */
 
 #include "cairo.h"
 #include "imgIEncoder.h"
@@ -2202,19 +2202,18 @@ nsCanvasRenderingContext2D::CairoSurfaceFromElement(nsIDOMElement *imgElt,
 			rv = imageLoader->GetRequest(nsIImageLoadingContent::CURRENT_REQUEST,
 										 getter_AddRefs(imgRequest));
 			NS_ENSURE_SUCCESS(rv, rv);
-
 			PRUint32 status;
 			imgRequest->GetImageStatus(&status);
 			nsIThread *thread = NS_GetCurrentThread();
 			while ((status & imgIRequest::STATUS_ERROR) == 0 && (status & imgIRequest::STATUS_LOAD_COMPLETE) == 0) {
-			  if (!NS_ProcessNextEvent(thread)) {
-				  return NS_ERROR_UNEXPECTED;
-			  }
-			  imgRequest->GetImageStatus(&status);
+				if (!NS_ProcessNextEvent(thread)) {
+					return NS_ERROR_UNEXPECTED;
+				}
+				imgRequest->GetImageStatus(&status);
 			}
         }
-#endif
-		if (!imgRequest)
+#endif /* JAXER */
+        if (!imgRequest)
             // XXX ERRMSG we need to report an error to developers here! (bug 329026)
             return NS_ERROR_NOT_AVAILABLE;
 

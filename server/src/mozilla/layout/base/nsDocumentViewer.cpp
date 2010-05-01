@@ -234,7 +234,6 @@ static PRLogModuleInfo * kPrintingLogMod = PR_NewLogModule("printing");
 #endif
 //-----------------------------------------------------
 
-// JAXER INSERT
 #ifdef JAXER
 #include "aptIDocumentFetcherService.h"
 
@@ -257,8 +256,7 @@ PRBool IsJaxerDocShell(nsIDocShell *pDocShell, PRBool nullIsTrue = PR_FALSE)
 
 	return (docShell == pDocShell);
 }
-#endif
-// END JAXER INSERT
+#endif /* JAXER */
 
 class DocumentViewerImpl;
 

@@ -463,7 +463,7 @@ nsChromeProtocolHandler::NewChannel(nsIURI* aURI,
 
     NS_ENSURE_ARG_POINTER(aURI);
     NS_PRECONDITION(aResult, "Null out param");
-
+    
 #ifdef DEBUG
     // Check that the uri we got is already canonified
     nsresult debug_rv;

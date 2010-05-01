@@ -129,7 +129,6 @@ static const char *gPrefLangNames[] = {
 gfxPlatform*
 gfxPlatform::GetPlatform()
 {
-// JAXER INSERT
 #ifdef JAXER
     if (!gPlatform) {
         nsresult rv = Init();
@@ -137,9 +136,7 @@ gfxPlatform::GetPlatform()
             NS_ERROR("Could not initialize gfxPlatform");
         }
     }
-#endif
-// END JAXER INSERT
-
+#endif /* JAXER */
     return gPlatform;
 }
 
@@ -150,7 +147,7 @@ gfxPlatform::Init()
     if (gPlatform) {
         return NS_OK;
 	}
-#endif
+#endif /* JAXER */
     NS_ASSERTION(!gPlatform, "Already started???");
 #if defined(XP_WIN)
     gPlatform = new gfxWindowsPlatform;

@@ -369,7 +369,9 @@ JSBool XPCDispInterface::Member::GetValue(XPCCallContext& ccx,
             callback = XPC_IDispatch_GetterSetter;
         }
 
-        JSAutoRequest ar(cx); // JAXER INSERT
+#ifdef JAXER
+        JSAutoRequest ar(cx);
+#endif
         JSFunction *fun = JS_NewFunction(cx, callback, argc, flags, nsnull,
                                          JS_GetStringBytes(JSVAL_TO_STRING(mName)));
         if(!fun)

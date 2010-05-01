@@ -58,14 +58,11 @@ include $(DEPTH)/config/autoconf.mk
 # You'd think we could skip building ui if XUL is disabled,
 # but we need to export interface headers from those directories.
 
-# JAXER removed ui from DIRS
+ifdef JAXER
 DIRS = windowwatcher appstartup find webbrowserpersist commandhandler
-
-# JAXER INSERT
-ifdef MOZ_XUL_APP
-DIRS += ui
+else
+DIRS = windowwatcher appstartup find webbrowserpersist commandhandler ui
 endif
-# END JAXER INSERT
 
 ifdef MOZ_XUL
 ifdef NS_PRINTING
