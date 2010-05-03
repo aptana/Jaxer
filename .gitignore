@@ -1,3 +1,6 @@
+.DS_Store
+CVS/
+.cvsignore
 .svn/
 .deps/
 *.o
@@ -8,6 +11,7 @@
 *.so
 *.so.*
 *.slo
+*.pyc
 server/distro/*.zip
 server/distro/jam/Apache22-local/
 server/distro/jam/Apache22/
@@ -15,5 +19,8 @@ server/AptanaJaxer/
 server/src/httpd-2.2.6/
 server/src/libevent/
 server/src/google/google_breakpad/
+server/local_settings.py
+server/src/mozilla/.mozconfig
+server/src/mozilla/.mozconfig.mk
 server/src/mozilla/ff-release/
 server/src/mozilla/ff-debug/

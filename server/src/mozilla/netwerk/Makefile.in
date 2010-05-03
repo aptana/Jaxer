@@ -57,6 +57,7 @@ include $(DEPTH)/config/autoconf.mk
 
 MODULE		= necko
 
+ifdef JAXER
 DIRS		= \
 		base \
 		cookie \
@@ -68,11 +69,24 @@ DIRS		= \
 		protocol \
 		system \
 		build \
-ifndef JAXER
-		resources \
-endif
 		locales \
 		$(NULL)
+else
+DIRS		= \
+		base \
+		cookie \
+		dns \
+		socket \
+		mime \
+		streamconv \
+		cache \
+		protocol \
+		system \
+		build \
+		resources \
+		locales \
+		$(NULL)
+endif
 
 ifdef ENABLE_TESTS
 TOOL_DIRS  += test
