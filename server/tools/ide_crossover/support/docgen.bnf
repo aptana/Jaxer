@@ -1,0 +1,153 @@
+Grammar
+	:	Blocks
+	;
+	
+Blocks
+	:	Blocks Block {AddBlock}
+	|	Block {FirstBlock}
+	;
+	
+Block
+	:	START_DOCUMENTATION Text END_DOCUMENTATION {TextBlock}
+	|	START_DOCUMENTATION Tags END_DOCUMENTATION {TagsBlock}
+	|	START_DOCUMENTATION Text Tags END_DOCUMENTATION {Block}
+	|	LOCATION {Location}
+	|	NEXT_LINE {NextLine}
+	;
+
+Text
+	:	Text TextPart {AddText}
+	|	TextPart {PassThrough}
+	;
+	
+TextPart
+	:	TEXT {Text}
+	|	LBRACKET {Text}
+	|	RBRACKET {Text}
+	|	LCURLY {Text}
+	|	RCURLY {Text}
+	|	POUND {Text}
+	|	IDENTIFIER {Text}
+	|	COLON {Text}
+	|	ERROR {Text}
+	;
+	
+Tags
+	:	Tags Tag {AddTag}
+	|	Tag {FirstTag}
+	;
+
+Tag
+	:	ADVANCED {Advanced}
+	|	ADVANCED Text {Advanced}
+	|	ALIAS Text {Alias}
+	|	AUTHOR Text {Author}
+	|	CLASS_DESCRIPTION LCURLY Namespace RCURLY Text {ClassDescription}
+	|	CONSTRUCTOR {Constructor}
+	|	CONSTRUCTOR Text {Constructor}
+	|	EXAMPLE Text {Example}
+	|	EXCEPTION LCURLY Types RCURLY {Exception}
+	|	EXCEPTION LCURLY Types RCURLY Text {ExceptionText}
+	|	EXTENDS LCURLY Types RCURLY {Extends}
+	|	EXTENDS LCURLY Types RCURLY Text {Extends}
+	|	INTERNAL {Internal}
+	|	INTERNAL Text {Internal}
+	|	METHOD {Method}
+	|	METHOD Text {Method}
+	|	NAMESPACE LCURLY Namespace RCURLY {Namespace}
+	|	NAMESPACE LCURLY Namespace RCURLY Text {NamespaceText}
+	|	OVERVIEW Text {Overview}
+	|	PARAM LCURLY Types RCURLY ParamName {Param}
+	|	PARAM LCURLY Types RCURLY ParamName Text {ParamText}
+	|	PRIVATE {Private}
+	|	PRIVATE Text {Private}
+	|	PROPERTY LCURLY Types RCURLY {Property}
+	|	PROPERTY LCURLY Types RCURLY Text {Property}
+	|	RETURN LCURLY Types RCURLY {Return}
+	|	RETURN LCURLY Types RCURLY Text {ReturnText}
+	|	SEE Text {SeeText}
+	|	UNKNOWN {Unknown}
+	|	UNKNOWN Text {UnknownText}
+	;
+
+Types
+	:	Types TypeDelimiter Type {AddType}
+	|	Type {FirstType}
+	;
+
+TypeDelimiter
+	:	COMMA
+	|	PIPE
+	;
+	
+Type
+	:	IDENTIFIER {Type}
+	|	IDENTIFIER LBRACKET RBRACKET {SimpleArrayType}
+	|	ARRAY LBRACKET RBRACKET {SimpleArrayType}
+	|	FUNCTION LBRACKET RBRACKET {SimpleArrayType}
+	|	ARRAY {Type}
+	|	ARRAY LESS_THAN Type GREATER_THAN {ComplexArrayType}
+	|	FUNCTION {SimpleProcedure}
+	|	FUNCTION ReturnDelimiter Type {SimpleFunction}
+	|	FUNCTION ReturnDelimiter LPAREN Types RPAREN {SimpleFunctionComplexReturn}
+	|	FUNCTION LPAREN RPAREN {SimpleProcedure}
+	|	FUNCTION LPAREN RPAREN ReturnDelimiter Type {SimpleFunction2}
+	|	FUNCTION LPAREN RPAREN ReturnDelimiter LPAREN Types RPAREN {SimpleFunctionComplexReturn2}
+	|	FUNCTION LPAREN Types RPAREN {Procedure}
+	|	FUNCTION LPAREN Types RPAREN ReturnDelimiter Type {Function}
+	|	FUNCTION LPAREN Types RPAREN ReturnDelimiter LPAREN Types RPAREN {FunctionComplexReturn}
+#	|	FUNCTION FunctionParameterTypes FunctionReturnTypes {TestFunction}
+	;
+
+#FunctionParameterTypes
+#	:	<empty> {NoParameterTypes}
+#	|	LPAREN RPAREN {NoParameterTypes}
+#	|	LPAREN Types RPAREN {ParameterTypes}
+#	;
+#
+#FunctionReturnTypes
+#	:	<empty> {NoReturnType}
+#	|	ReturnDelimiter Type {ReturnType}
+#	|	ReturnDelimiter LPAREN Types RPAREN {ReturnTypes}
+#	;
+	
+ReturnDelimiter
+	:	COLON {PassThrough}
+	|	ARROW {PassThrough}
+	;
+	
+ParamName
+	:	TEXT {ParamName}
+	|	LBRACKET TEXT RBRACKET {OptionalParamName}
+	|	ELLIPSIS {VarArgs}
+	|	LBRACKET ELLIPSIS RBRACKET {OptionalVarArgs}
+	;
+
+Namespace
+	:	IDENTIFIER {PassThrough}
+	|	FUNCTION {PassThrough}
+	|	ARRAY {PassThrough}
+	;
+	
+##
+# Below is a list of tags defined by the sdoc parser that are not supported yet in this parser
+##
+
+#Param
+#	|	CLASS_DESCRIPTION
+#	|	COPYRIGHT
+#	|	DEPRECATED
+#	|	EXTENDS
+#	|	ID
+#	|	IGNORE
+#	|	LICENSE
+#	|	LINK
+#	|	MEMBER_OF
+#	|	NATIVE
+#	|	PROJECT_DESCRIPTION
+#	|	PROTECTED
+#	|	SDOC
+#	|	SINCE
+#	|	TYPE
+#	|	VERSION
+#	;

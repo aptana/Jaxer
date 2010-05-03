@@ -37,6 +37,7 @@
 #include <sys/stat.h>
 
 #include <cassert>
+#include <algorithm>
 
 #include "processor/simple_symbol_supplier.h"
 #include "google_breakpad/processor/code_module.h"

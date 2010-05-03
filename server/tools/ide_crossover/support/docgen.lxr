@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lexer
+	xmlns="http://www.aptana.com/2007/lexer/1.2"
+	language="text/docgen">
+	
+	<token-group group="default">
+		<category-group category="WHITESPACE">
+			<one-or-more>
+				<character-class type="WHITESPACE"> \t\v\f</character-class>
+			</one-or-more>
+			<line-terminator type="LINE_TERMINATOR"/>
+		</category-group>
+		<string category="DELIMITER" type="START_DOCUMENTATION" switch-to="documentation">/**</string>
+		<category-group category="PRAGMA">
+			<and type="LOCATION">
+				<string>@location=</string>
+				<one-or-more>
+					<character-class negate="true">\r\n</character-class>
+				</one-or-more>
+			</and>
+			<and type="NEXT_LINE">
+				<string>@next-line=</string>
+				<zero-or-more>
+					<character-class negate="true">\r\n</character-class>
+				</zero-or-more>
+			</and>
+		</category-group>
+	</token-group>
+	
+	<token-group group="documentation">
+		<category-group category="WHITESPACE">
+			<and type="WHITESPACE">
+				<start-of-line/>
+				<zero-or-more>
+					<character-class> \t\v\f</character-class>
+				</zero-or-more>
+				<character>*</character>
+				<lookahead negate="true">
+					<character>/</character>
+				</lookahead>
+				<zero-or-more>
+					<character-class> \t\v\f</character-class>
+				</zero-or-more>
+			</and>
+			<one-or-more>
+				<character-class type="WHITESPACE"> \t\v\f</character-class>
+			</one-or-more>
+			<line-terminator type="LINE_TERMINATOR"/>
+		</category-group>
+		
+		<category-group category="KEYWORD">
+			<and>
+				<character>@</character>
+				<or>
+					<!--
+					<string type="COPYRIGHT">copyright</string>
+					<string type="DEPRECATED">deprecated</string>
+					<string type="ID">id</string>		
+					<string type="IGNORE">ignore</string>
+					<string type="LICENSE">license</string>
+					<string type="LINK">link</string>
+					<string type="MEMBER_OF">memberOf</string>
+					<string type="NATIVE">native</string>
+					<string type="PROJECT_DESCRIPTION">projectDescription</string>
+					<string type="PROTECTED">protected</string>
+					<string type="SDOC">sdoc</string>
+					<string type="SINCE">since</string>
+					<string type="TYPE">type</string>
+					<string type="VERSION">version</string>
+					-->
+					<string type="ADVANCED">advanced</string>
+					<string type="ALIAS">alias</string>
+					<string type="AUTHOR">author</string>
+					<string type="CLASS_DESCRIPTION">classDescription</string>
+					<string type="CONSTRUCTOR">constructor</string>
+					<string type="EXAMPLE" switch-to="example">example</string>
+					<string type="EXCEPTION">exception</string>
+					<string type="EXTENDS">extends</string>
+					<string type="INTERNAL">internal</string>
+					<string type="METHOD">method</string>
+					<string type="NAMESPACE">namespace</string>	
+					<string type="OVERVIEW">overview</string>
+					<string type="PARAM">param</string>
+					<string type="PRIVATE">private</string>
+					<string type="PROPERTY">property</string>
+					<string type="RETURN">return</string>
+					<string type="SEE">see</string>
+					<one-or-more type="UNKNOWN">
+						<letter/>
+					</one-or-more>
+				</or>
+				<lookahead negate="true">
+					<letter/>
+				</lookahead>
+			</and>
+		</category-group>
+		
+		<string category="DELIMITER" type="END_DOCUMENTATION" switch-to="default">*/</string>
+
+		<category-group category="PUNCTUATOR">
+			<character type="LCURLY" switch-to="identifier">{</character>
+			<string type="DOLLAR_LCURLY" switch-to="identifier">${</string>
+			<character type="POUND">#</character>
+			<character type="LBRACKET">[</character>
+			<character type="RBRACKET">]</character>
+		</category-group>
+		
+		<one-or-more category="LITERAL" type="TEXT">
+			<character-class negate="true"> \t\r\n\f\v{[]#</character-class>
+		</one-or-more>
+	</token-group>
+	
+	<token-group group="identifier">
+		<category-group category="WHITESPACE">
+			<one-or-more>
+				<character-class type="WHITESPACE"> \t\v\f</character-class>
+			</one-or-more>
+			<line-terminator type="LINE_TERMINATOR" switch-to="documentation" />
+		</category-group>
+
+		<category-group category="KEYWORD">
+			<and>
+				<or>
+					<string type="ARRAY">Array</string>
+					<string type="FUNCTION">Function</string>
+				</or>
+				<lookahead negate="true">
+					<letter/>
+				</lookahead>
+			</and>
+		</category-group>
+		
+		<identifier category="IDENTIFIER" type="IDENTIFIER" start-characters="$_" part-characters="$_."/>
+		
+		<category-group category="PUNCTUATOR">
+			<character type="RCURLY" switch-to="documentation">}</character>
+			<string type="ELLIPSIS">...</string>
+			<character type="LBRACKET">[</character>
+			<character type="RBRACKET">]</character>
+			<character type="COMMA">,</character>
+			<character type="PIPE">|</character>
+
+			<character type="LESS_THAN">&lt;</character>
+			<character type="GREATER_THAN">></character>
+			<character type="LPAREN">(</character>
+			<character type="RPAREN">)</character>
+			<character type="COLON">:</character>
+			<string type="ARROW">-></string>
+		</category-group>
+	</token-group>
+	
+	<token-group group="example">
+		<category-group category="LITERAL">
+			<to-delimiter type="TEXT" include-delimiter="false" switch-to="documentation">
+				<or>
+					<string>*/</string>
+					<character>@</character>
+				</or>
+			</to-delimiter>
+		</category-group>
+	</token-group>
+	
+	<token-group group="error">
+		<one-or-more category="ERROR" type="ERROR" switch-to="documentation">
+			<character-class negate="true">\r\n</character-class>
+		</one-or-more>
+	</token-group>
+	
+</lexer>

@@ -467,6 +467,7 @@ static void usage(const char *program_name) {
           "    -m : Output in machine-readable format\n",
           program_name);
 }
+#include <string.h>
 
 int main(int argc, char **argv) {
   BPLOG_INIT(&argc, &argv);

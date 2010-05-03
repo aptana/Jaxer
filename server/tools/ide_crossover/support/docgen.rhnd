@@ -1,0 +1,69 @@
+AddBlock, FirstBlock {
+	// simply return block
+	Block
+}
+
+TextBlock {
+	// do nothing
+}
+
+TagsBlock {
+	Tags
+}
+
+Block {
+	Tags
+}
+
+AddText {
+	// do nothing
+}
+
+PassThrough {
+	// do nothing
+}
+
+Text {
+	// do nothing
+}
+
+AddTag, FirstTag {
+	// simply return tag
+	Tag
+}
+
+Alias, Author, Example {
+	OutlineItem(Nodes[0], Text)
+}
+
+Constructor, Internal, Method, Private, Property {
+	OutlineItem(Nodes[0])
+}
+
+Exception, Namespace, NamespaceText, Return, ReturnText {
+	OutlineItem(Nodes[0], Types)
+}
+
+Param, ParamText {
+	OutlineItem(ParamName, Types)
+}
+
+AddType, FirstType {
+	OutlineItem(Type)
+}
+
+Type {
+	OutlineItem(IDENTIFIER)
+}
+
+ArrayType {
+	OutlineItem(IDENTIFIER + "[]")
+}
+
+ParamName, VarArgs {
+	OutlineItem(Nodes[0])
+}
+
+OptionalParamName, OptionalVarArgs {
+	OutlineItem("[" + Nodes[1] + "]")
+}

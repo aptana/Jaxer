@@ -1,0 +1,28 @@
+/**
+ * This is a descripion of the MyStaticMethod static method
+ *
+ * @alias MyClass1.MyStaticMethod
+ */
+/**
+ * This is a description of the MyInstanceMethod instance method
+ *
+ * @alias MyClass2.prototype.MyInstanceMethod
+ */
+/**
+ * This is a description of the myStaticProperty static property
+ *
+ * @property {Object}
+ * @alias MClass3.myStaticProperty
+ */
+/**
+ * This is a description of the myInstanceProperty instance property
+ *
+ * @property {Object}
+ * @alias MClass4.prototype.myInstanceProperty
+ */
+/**
+ * This is a description of the MyClass4 constructor
+ *
+ * @constructor
+ * @alias MyClass5
+ */

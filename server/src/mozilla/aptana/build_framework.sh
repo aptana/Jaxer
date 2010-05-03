@@ -8,7 +8,7 @@ fi
 OBJ_DIR=$1
 
 SrcFD=../../../framework
-SrcTools=../../../../../tools
+SrcTools=../../../../tools
 FFDIR=`echo $OBJ_DIR | sed -e 's/.*\///'`
 
 DestFD=$OBJ_DIR/dist/bin/framework

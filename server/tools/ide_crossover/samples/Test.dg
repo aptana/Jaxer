@@ -1,0 +1,6 @@
+/**
+ * An object containing a property for each name=value pair in the query string of the URL,
+ * e.g. 'http://www.aptana.com/staff?name=joe&id=12' leads to {name: "joe", id: "12"}
+ * @alias Util.Url.parsedUrl.queryParts
+ * @property {Object}
+ */

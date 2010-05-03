@@ -16,7 +16,7 @@ def system(cmd):
         exit(rc)
 
 # make sure supporting files for docgen are up to date
-system('svn up %s' % cfg['docgenRoot'])
+#system('svn up %s' % cfg['docgenRoot'])
 
 # define constants
 serverBrowser = "Jaxer Server Framework"

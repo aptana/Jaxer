@@ -1,0 +1,10 @@
+/**
+ * @namespace {Namespace.MyClass1} This is a description of MyClass1's namespace
+ */
+/**
+ * @constructor
+ * @alias Namespace.MyClass1
+ */
+/**
+ * @namespace {Namespace.MyNamespace} This is a description of MyNamespace
+ */
