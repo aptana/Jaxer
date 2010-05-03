@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<colorizer
+	xmlns="http://www.aptana.com/2007/colorizer/1.0"
+	language="text/docgen">
+
+	<category name="ERROR" style="ERROR"/>
+	<category name="PRAGMA" style="PRAGMA"/>
+	<category name="DELIMITER" style="DELIMITER"/>
+	<category name="LITERAL" style="LITERAL"/>
+	<category name="IDENTIFIER" style="IDENTIFIER"/>
+	<category name="KEYWORD" style="KEYWORD">
+		<token style="KEYWORD_UNKNOWN" type="UNKNOWN"/>
+	</category>
+	<category name="PUNCTUATOR" style="PUNCTUATOR"/>
+	<category name="WHITESPACE" style="WHITESPACE"/>
+
+	<style foreground="rgb(126,0,0)" id="ERROR"/>
+	<style foreground="rgb(0,129,0)" id="PRAGMA"/>
+	<style font-weight="bold" foreground="rgb(0,0,182)" id="DELIMITER"/>
+	<style foreground="rgb(120,124,181)" id="LITERAL"/>
+	<style foreground="rgb(0,188,0)" id="IDENTIFIER"/>
+	<style foreground="rgb(0,126,190)" id="KEYWORD"/>
+	<style foreground="rgb(0,84,126)" id="KEYWORD_UNKNOWN"/>
+	<style foreground="rgb(0,0,0)" id="PUNCTUATOR"/>
+	<style foreground="rgb(0,0,0)" id="WHITESPACE"/>
+
+</colorizer>

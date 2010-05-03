@@ -46,6 +46,7 @@
 #include <list>
 #include <vector>
 #include <string.h>
+#include <stdio.h>
 
 #include "common/linux/dump_symbols.h"
 #include "common/linux/file_id.h"

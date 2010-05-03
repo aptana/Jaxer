@@ -1,0 +1,85 @@
+usage: DocGenCreator <options>* <javascript-file>+
+
+    Standalone filenames will be treated as JavaScript files. All ScriptDoc-
+    style comments will be processed and converted to the ScriptDoc XML format.
+    Note that this version requires the use of @alias tags to specify the
+    entire path to a given Class, Constructor, Method, or Property. ScriptDoc
+    comments that do not have @alias tags will not generate output in the
+    resulting XML output. All ScriptDoc XML content is sent to stdout unless
+    the -o or --output-file option is specified.
+
+    Many of the tags take effect at the point they are defined in the argument
+    list. For example, setting a browser with -b will remain in effect until
+    processing completes or another -b is defined on the command-line. In
+    short, order is important. Some settings can be reversed using a leading
+    '+' (or '++' for long-names) allowing that setting to be in effect for only
+    a part of the command-line.
+
+    Below are the options that are available on the DocGenCreator command-line
+
+    -b, --browser
+    --------------
+    The name of the browser to associate with Classes, Constructors, Methods
+    and Properties. Note that standalone files following -b (and -bv) will
+    acquire that browser info. If another -b (and -bv) follows, then that new
+    value will take effect on all files following that point. This allows for
+    processing of multiple JavaScript files with varying user agent info.
+
+    -bv, --browser-version
+    ----------------------
+    The version number of the browser to associate with Classes, Constructors,
+    Methods, and Properties.
+
+    -e, --extract
+    -------------
+    Extract all ScriptDoc comments (and the following line) and emit to stdout.
+    
+    -f, --filter
+    ------------
+    The name to be removed from the generated XML. Note that a 'startsWith' is
+    used with this name against each type as it is being exported. If the type
+    starts with the specified filter, then it will be excluded from the XML.
+    You can remove entire namespaces and their children using the namespace or
+    you can remove children only by ending the name with a period.
+
+    -fp, --filter-private, +fp, ++filter-private
+    --------------------------------------------
+    Filter all members that are tagged as private. Note that this setting can
+    be turned off with +fp or ++filter-private.
+
+    -i, --import
+    ------------
+    Import one namespace into another. Note that types will be merged by adding
+    types and members that do not exist in the target namespace. The parameter
+    is in the following form: target=source where target is the namespace to
+    import into and source is the namespace from which to import. Note that
+    similar rules about namespace matches occur here as described in -f.
+
+    -l, --show-locations, +l, ++show-locations
+    ------------------------------------------
+    Emit into the XML the file name or resource name and the offsets where a
+    type is referenced. The locations are emitted as XML comments and precede
+    the class element to which they refer. Note that this setting can be turned
+    off with +l or ++show-locations.
+
+    -o, --output-file
+    -----------------
+    The name of the file to which the resulting XML will be written. When this
+    option is used, the result XML will not be emitted to stdout.
+
+    -r, --resource
+    --------------
+    The name of the resource to process. This is used for testing only.
+
+    -v, --verbose, +v, ++verbose
+    ----------------------------
+    Provide verbose output as files are being processed. Note that this setting
+    can be turned off with +v or ++verbose.
+
+    -w, --show-warnings, +w, ++show-warnings
+    ----------------------------------------
+    Show warnings for blocks that do not contain @alias tags. Note that blocks
+    containing @classDefinition, @namespace, and @overview do not require
+    @alias tags and will not be reported in the warning list. Note that this
+    setting can be turned off with +w or ++show-warnings.
+

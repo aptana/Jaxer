@@ -38,6 +38,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <linux/limits.h>
+#include <stdio.h>
 
 #include "client/linux/handler/exception_handler.h"
 #include "common/linux/guid_creator.h"

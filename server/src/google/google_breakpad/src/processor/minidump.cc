@@ -38,6 +38,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>
+#include <string.h>
 #ifdef _WIN32
 #include <io.h>
 typedef SSIZE_T ssize_t;

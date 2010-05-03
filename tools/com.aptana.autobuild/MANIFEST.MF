@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: js.jar
+Created-By: Kevin Lindsey
+Main-Class: com.aptana.autobuild.Main

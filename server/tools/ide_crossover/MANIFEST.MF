@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: AptanaParsing.jar AptanaParsingAdapter.jar
+Created-By: Kevin Lindsey
+Main-Class: com.aptana.docgen.DocGenCreator

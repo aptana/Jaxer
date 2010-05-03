@@ -421,7 +421,7 @@ class Build(aptana.script.Script):
         self.logbuildevent("===== Building JavaScript framework for pro...")
 
         # resolve path to trunk
-        treeroot = os.path.abspath("../..")
+        treeroot = os.path.abspath("..")
         # create framework output dir
         self.shell.mkdirs(self.framework)
         # write conf
@@ -443,7 +443,7 @@ class Build(aptana.script.Script):
         self.logbuildevent("===== Building JavaScript framework...")
 
         # resolve path to trunk
-        treeroot = os.path.abspath("../..")
+        treeroot = os.path.abspath("..")
         # create framework output dir
         self.shell.mkdirs(self.framework)
         # write conf

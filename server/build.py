@@ -227,40 +227,40 @@ if cfg['skipBuilds'] == False:
                  'src/mozilla/' + ffdir + '/dist/bin/')
 
     # Build Manager.
-    print "\n===== Building JaxerManager."
-    if GetOS() == SOLARIS:
-        #system('cd src/manager/unix && gcc -DSOLARIS -I../../libevent/libevent-1.4.2-rc -o jaxermanager jaxermanager.cpp -L../../libevent/libevent-1.4.2-rc/.libs -levent -lxnet -lstdc++')
-        system('cd src/manager/unix && gmake -f Makefile.sun clean && gmake -f Makefile.sun')
-        copyfile('src/manager/unix/jaxermanager',
-                 'src/mozilla/' + ffdir + '/dist/bin/jaxermanager')
-    elif GetOS() == LINUX:
-        #system('cd src/manager/unix && g++ -I../../libevent/libevent-1.4.2-rc -L../../libevent/libevent-1.4.2-rc/.libs -levent -lrt -o jaxermanager jaxermanager.cpp')
-        if (platform.architecture()[0] == "32bit"):
-            system('cd src/manager/unix && make -f Makefile.linux clean && make -f Makefile.linux')
-        else:
-            system('cd src/manager/unix && g++ -DLINUX_64 -I../../libevent/libevent-1.4.2-rc -L../../libevent/libevent-1.4.2-rc/.libs -levent -lrt -o jaxermanager jaxermanager.cpp')
-        copyfile('src/manager/unix/jaxermanager',
-                 'src/mozilla/' + ffdir + '/dist/bin/jaxermanager')
-    elif GetOS() == MACOS:
-        if gcfg['generateDebuggerSymbols'] == True:
-            system('cd src/manager/unix && bash ./buildMacUniversal.sh GENERATE_SYMBOLS=1')
-        else:
-            system('cd src/manager/unix && bash ./buildMacUniversal.sh')
+#    print "\n===== Building JaxerManager."
+#    if GetOS() == SOLARIS:
+#        #system('cd src/manager/unix && gcc -DSOLARIS -I../../libevent/libevent-1.4.2-rc -o jaxermanager jaxermanager.cpp -L../../libevent/libevent-1.4.2-rc/.libs -levent -lxnet -lstdc++')
+#        system('cd src/manager/unix && gmake -f Makefile.sun clean && gmake -f Makefile.sun')
+#        copyfile('src/manager/unix/jaxermanager',
+#                 'src/mozilla/' + ffdir + '/dist/bin/jaxermanager')
+#    elif GetOS() == LINUX:
+#        #system('cd src/manager/unix && g++ -I../../libevent/libevent-1.4.2-rc -L../../libevent/libevent-1.4.2-rc/.libs -levent -lrt -o jaxermanager jaxermanager.cpp')
+#        if (platform.architecture()[0] == "32bit"):
+#            system('cd src/manager/unix && make -f Makefile.linux clean && make -f Makefile.linux')
+#        else:
+#            system('cd src/manager/unix && g++ -DLINUX_64 -I../../libevent/libevent-1.4.2-rc -L../../libevent/libevent-1.4.2-rc/.libs -levent -lrt -o jaxermanager jaxermanager.cpp')
+#        copyfile('src/manager/unix/jaxermanager',
+#                 'src/mozilla/' + ffdir + '/dist/bin/jaxermanager')
+#    elif GetOS() == MACOS:
+#        if gcfg['generateDebuggerSymbols'] == True:
+#            system('cd src/manager/unix && bash ./buildMacUniversal.sh GENERATE_SYMBOLS=1')
+#        else:
+#            system('cd src/manager/unix && bash ./buildMacUniversal.sh')
             
-        copyfile('src/manager/unix/JaxerManager',
-                 'src/mozilla/' + ffdir + '/ppc/dist/bin/JaxerManager')
-        copyfile('src/manager/unix/JaxerManager',
-                 'src/mozilla/' + ffdir + '/i386/dist/bin/JaxerManager')
-    elif GetOS() == WINDOWS:
-        system('cd src/manager/win32 && MSBuild.exe JaxerManager.sln /p:Configuration=release')
-        copyfile('src/manager/win32/Release/JaxerManager.exe',
-                 'src/mozilla/' + ffdir + '/dist/bin/JaxerManager.exe')
-        copyfile('src/manager/win32/Release/JaxerManager.pdb',
-                 'src/mozilla/' + ffdir + '/dist/bin/JaxerManager.pdb')
+#        copyfile('src/manager/unix/JaxerManager',
+#                 'src/mozilla/' + ffdir + '/ppc/dist/bin/JaxerManager')
+#        copyfile('src/manager/unix/JaxerManager',
+#                 'src/mozilla/' + ffdir + '/i386/dist/bin/JaxerManager')
+#    elif GetOS() == WINDOWS:
+#        system('cd src/manager/win32 && MSBuild.exe JaxerManager.sln /p:Configuration=release')
+#        copyfile('src/manager/win32/Release/JaxerManager.exe',
+#                 'src/mozilla/' + ffdir + '/dist/bin/JaxerManager.exe')
+#        copyfile('src/manager/win32/Release/JaxerManager.pdb',
+#                 'src/mozilla/' + ffdir + '/dist/bin/JaxerManager.pdb')
 
-    if GetOS() != MACOS:
-        copyfile('src/manager/JaxerManager.cfg',
-                 'src/mozilla/' + ffdir + '/dist/bin/JaxerManager.cfg')
+#    if GetOS() != MACOS:
+#        copyfile('src/manager/JaxerManager.cfg',
+#                 'src/mozilla/' + ffdir + '/dist/bin/JaxerManager.cfg')
 
     # Build LogServer
     print "\n===== Building JaxerLogger."
@@ -272,7 +272,7 @@ if cfg['skipBuilds'] == False:
         system('cd src/Utils/JaxerLog && gcc -I../../libevent/libevent-1.4.2-rc -o jaxerlogger LogServerUnix.cpp -L../../libevent/libevent-1.4.2-rc/.libs -levent -lxnet -lstdc++')
         copyfile('src/Utils/JaxerLog/jaxerlogger',
                  'src/mozilla/' + ffdir + '/dist/bin/jaxerlogger')
-    elif GetOS() == LINUX:
+    elif GetOS()+'x' == LINUX:
         system('cd src/Utils/JaxerLog && g++ -I../../libevent/libevent-1.4.2-rc -L../../libevent/libevent-1.4.2-rc/.libs -levent -lrt -o jaxerlogger LogServerUnix.cpp')
         copyfile('src/Utils/JaxerLog/jaxerlogger',
                  'src/mozilla/' + ffdir + '/dist/bin/jaxerlogger')
@@ -312,9 +312,9 @@ if cfg['skipBuilds'] == False:
     path = os.path.abspath(jaxer)
     xpts = ' '.join(filesmatching('%s/components' % path, 'components/', r'\.xpt$'))
     if GetOS() == WINDOWS:
-        system('cd %s && xpt_link.exe components/components.xpt_ %s' % (path, xpts))
+        system('cd %s && ../sdk/bin/xpt_link.exe components/components.xpt_ %s' % (path, xpts))
     else:
-        system('cd %s && ./xpt_link components/components.xpt_ %s' % (path, xpts))
+        system('cd %s && ../sdk/bin/xpt_link components/components.xpt_ %s' % (path, xpts))
     system('rm %s/components/*.xpt' % path)
     system('mv %s/components/components.xpt_ %s/components/components.xpt' % (path, path))
     unlinkifexists(jaxer + '/components/compreg.dat')
@@ -355,35 +355,35 @@ if cfg['skipBuilds'] == False:
                  'src/mozilla/' + ffdir + '/dist/bin/connectors/Microsoft.VC80.CRT.manifest')
 
     # Build JavaScript framework.
-    print "\n===== Building JavaScript framework."
-    os.environ['TREEROOT'] = os.path.abspath('../..')
-    f = open('framework/buildConfig.js', 'w')
-    f.write('SERVER_OUTPUT = "../src/mozilla/' + ffdir + '/dist/bin/framework/serverFramework.js";\n')
-    f.write('JSLIB_OUTPUT = "../src/mozilla/' + ffdir + '/dist/bin/framework/JSLib.js";\n')
-    f.write('CLIENT_OUTPUT = "../src/mozilla/' + ffdir + '/dist/bin/framework/clientFramework.js";\n')
-    f.write('LICENSE_HEADER = "framework_header.txt";\n')
-    f.write('COMPRESSED_LICENSE_HEADER = "framework_compresed_header.txt";\n')
-    f.close()
-    clientFramework = 'products/server/src/mozilla/' + ffdir + '/dist/bin/framework/clientFramework.js'
-    compressedFramework = 'products/server/src/mozilla/' + ffdir + '/dist/bin/framework/clientFramework_compressed.js'
-    if GetOS() == WINDOWS:
-        system('cd ../../tools/com.aptana.autobuild/libs && build.bat')
-    else:
-        system('cd ../../tools/com.aptana.autobuild/libs && bash ./build.sh')
-    copyfile('framework/config.js', framework + '/config.js')
-    copyfile('framework/configLog.js', framework + '/configLog.js')
-    copyfile('framework/configApps.js', framework + '/configApps.js')
-    copyfile('framework/studio_config.js', framework + '/studio_config.js')
-    if os.path.exists(framework + '/extensions'):
-        shutil.rmtree(framework + '/extensions')
-    for root, dirs, files in os.walk('framework/extensions'):
-        destdir = framework + root.partition('framework')[2]
-        os.mkdir(destdir)
-        root = root + '/'
-        destdir = destdir + '/'
-        for file in files:
-            copyfile(root + file, destdir + file)
-        dirs.remove('.svn')
+#    print "\n===== Building JavaScript framework."
+#    os.environ['TREEROOT'] = os.path.abspath('..')
+#    f = open('framework/buildConfig.js', 'w')
+#    f.write('SERVER_OUTPUT = "../src/mozilla/' + ffdir + '/dist/bin/framework/serverFramework.js";\n')
+#    f.write('JSLIB_OUTPUT = "../src/mozilla/' + ffdir + '/dist/bin/framework/JSLib.js";\n')
+#    f.write('CLIENT_OUTPUT = "../src/mozilla/' + ffdir + '/dist/bin/framework/clientFramework.js";\n')
+#    f.write('LICENSE_HEADER = "framework_header.txt";\n')
+#    f.write('COMPRESSED_LICENSE_HEADER = "framework_compresed_header.txt";\n')
+#    f.close()
+#    clientFramework = 'products/server/src/mozilla/' + ffdir + '/dist/bin/framework/clientFramework.js'
+#    compressedFramework = 'products/server/src/mozilla/' + ffdir + '/dist/bin/framework/clientFramework_compressed.js'
+#    if GetOS() == WINDOWS:
+#        system('cd ../tools/com.aptana.autobuild/libs && build.bat')
+#    else:
+#        system('cd ../tools/com.aptana.autobuild/libs && bash ./build.sh')
+#    copyfile('framework/config.js', framework + '/config.js')
+#    copyfile('framework/configLog.js', framework + '/configLog.js')
+#    copyfile('framework/configApps.js', framework + '/configApps.js')
+#    copyfile('framework/studio_config.js', framework + '/studio_config.js')
+#    if os.path.exists(framework + '/extensions'):
+#        shutil.rmtree(framework + '/extensions')
+#    for root, dirs, files in os.walk('framework/extensions'):
+#        destdir = framework + root.partition('framework')[2]
+#        os.mkdir(destdir)
+#        root = root + '/'
+#        destdir = destdir + '/'
+#        for file in files:
+#            copyfile(root + file, destdir + file)
+#        dirs.remove('.svn')
 
     # Build servlet.
     print "\n===== Building servlet."
@@ -435,23 +435,23 @@ if cfg['skipBuilds'] == False:
         system('cd src/launcher/mac && xcodebuild')
 
     # Build tellJaxerManager.
-    if GetOS() == WINDOWS:
-        print "\n===== Building tellJaxerManager."
-        system('cd src/Utils/tellManager && cl.exe /D "WIN32" /nologo /Ox /MT tellManager.cpp /link ws2_32.lib')
-        copyfile ('src/Utils/tellManager/tellManager.exe',
-                  'src/mozilla/' + ffdir + '/dist/bin/tellJaxerManager.exe')
-    elif GetOS() == MACOS:
-        system('cd src/Utils/tellManager && bash ./buildMacUniversal.sh')
-        copyfile('src/Utils/tellManager/tellJaxerManager',
-                 'src/mozilla/' + ffdir + '/dist/bin/tellJaxerManager')
-    elif GetOS() == LINUX:
-        system('cd src/Utils/tellManager && g++ -lrt tellManager.cpp')
-        copyfile('src/Utils/tellManager/a.out',
-                 'src/mozilla/' + ffdir + '/dist/bin/telljaxermanager')
-    elif GetOS() == SOLARIS:
-        system('cd src/Utils/tellManager && gcc tellManager.cpp -lxnet -lstdc++')
-        copyfile('src/Utils/tellManager/a.out',
-                 'src/mozilla/' + ffdir + '/dist/bin/telljaxermanager')
+#    if GetOS() == WINDOWS:
+#        print "\n===== Building tellJaxerManager."
+#        system('cd src/Utils/tellManager && cl.exe /D "WIN32" /nologo /Ox /MT tellManager.cpp /link ws2_32.lib')
+#        copyfile ('src/Utils/tellManager/tellManager.exe',
+#                  'src/mozilla/' + ffdir + '/dist/bin/tellJaxerManager.exe')
+#    elif GetOS() == MACOS:
+#        system('cd src/Utils/tellManager && bash ./buildMacUniversal.sh')
+#        copyfile('src/Utils/tellManager/tellJaxerManager',
+#                 'src/mozilla/' + ffdir + '/dist/bin/tellJaxerManager')
+#    elif GetOS() == LINUX:
+#        system('cd src/Utils/tellManager && g++ -lrt tellManager.cpp')
+#        copyfile('src/Utils/tellManager/a.out',
+#                 'src/mozilla/' + ffdir + '/dist/bin/telljaxermanager')
+#    elif GetOS() == SOLARIS:
+#        system('cd src/Utils/tellManager && gcc tellManager.cpp -lxnet -lstdc++')
+#        copyfile('src/Utils/tellManager/a.out',
+#                 'src/mozilla/' + ffdir + '/dist/bin/telljaxermanager')
 
 # Build jam distribution.
 print "\n===== Building jam distributions."
@@ -534,8 +534,8 @@ print "\n  === Renaming/Removing extra stuff."
 if GetOS() == LINUX:
     print "\n   == Renaming jam/Apache22-local to jam/Apache22."
     os.rename('jam/Apache22-local', 'jam/Apache22')
-    shutil.copytree('src/scripts/linux', 'jam/scripts')
-    shutil.rmtree('jam/scripts/.svn')
+    shutil.copytree('src/scripts/unix', 'jam/scripts')
+#    shutil.rmtree('jam/scripts/.svn')
     os.remove('jam/StartServers.bat')
     os.remove('jam/ConfigureFirewall.exe')
 elif GetOS() == MACOS:
@@ -544,36 +544,37 @@ elif GetOS() == MACOS:
 
     print "\n   == Extra process for MAC."
     shutil.copytree('src/launcher/mac/build/Default/Jaxer Launcher.app', 'jam/Jaxer Launcher.app')
-    shutil.copytree('src/scripts/mac', 'jam/scripts')
-    shutil.rmtree('jam/scripts/.svn')
+    shutil.copytree('src/scripts/unix', 'jam/scripts')
+#    shutil.rmtree('jam/scripts/.svn')
     os.remove('jam/StartServers.bat')
     os.remove('jam/ConfigureFirewall.exe')
 elif GetOS() == SOLARIS:
     print "\n   == Renaming jam/Apache22-local to jam/Apache22."
     os.rename('jam/Apache22-local', 'jam/Apache22')
     shutil.copytree('src/scripts/solaris', 'jam/scripts')
-    shutil.rmtree('jam/scripts/.svn')
+#    shutil.rmtree('jam/scripts/.svn')
     os.remove('jam/StartServers.bat')
     os.remove('jam/ConfigureFirewall.exe')
 
 print "\n  === Copying chrome (should be reviewed/removed in the future)"
+os.mkdir('jam/jaxer/chrome');
 copyfile('src/mozilla/' + ffdir +'/dist/bin/chrome/en-US.manifest',
          'jam/jaxer/chrome/en-US.manifest')
 copyfile('src/mozilla/' + ffdir +'/dist/bin/chrome/en-US.jar',
          'jam/jaxer/chrome/en-US.jar')
 
 # Copy the build-time generated framework tests as well.
-shutil.copytree('framework/tests', 
-         'jam/jaxer/aptana/diagnostics/unit_tests_jaxer')
+#shutil.copytree('framework/tests', 
+#         'jam/jaxer/aptana/diagnostics/unit_tests_jaxer')
 
-copyfile('framework/testRunner.html',
-         'jam/jaxer/aptana/diagnostics/testRunner.html')
-copyfile('framework/unitTestingBoth.js',
-         'jam/jaxer/aptana/diagnostics/unitTestingBoth.js')
-copyfile('framework/unitTestingServerOnly.js',
-         'jam/jaxer/aptana/diagnostics/unitTestingServerOnly.js')
-copyfile('framework/unitTestingHeader.js',
-         'jam/jaxer/aptana/diagnostics/unitTestingHeader.js')
+#copyfile('framework/testRunner.html',
+#         'jam/jaxer/aptana/diagnostics/testRunner.html')
+#copyfile('framework/unitTestingBoth.js',
+#         'jam/jaxer/aptana/diagnostics/unitTestingBoth.js')
+#copyfile('framework/unitTestingServerOnly.js',
+#         'jam/jaxer/aptana/diagnostics/unitTestingServerOnly.js')
+#copyfile('framework/unitTestingHeader.js',
+#         'jam/jaxer/aptana/diagnostics/unitTestingHeader.js')
 
 # Create a version file in NSIS format
 print "\n  === Creating a version file in NSIS format."
@@ -586,9 +587,9 @@ for line in lines:
         break
 
 # Create docs
-print "\n  === Creating docs."
-if (cfg['makeDocs']):
-    system('python make-docs.py %s' % (fullversion))
+#print "\n  === Creating docs."
+#if (cfg['makeDocs']):
+#    system('python make-docs.py %s' % (fullversion))
 
 # Create subset distributions and zip them.
 print "\n===== Creating and zipping distributions."

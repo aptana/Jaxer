@@ -1,0 +1,2317 @@
+/**
+ * Remove items from an array that do not pass a given criteria. Each item in
+ * the specified array will be passed to the filtering function. If that
+ * function returns true, then the item will be appended to the resulting array.
+ * If the function returns false, the item is not added to the resulting array.
+ * 
+ * Note that the specified array is not altered in place. A new array is created
+ * as a result of this function call.
+ * 
+ * @alias Jaxer.Util.filter
+ * @param {Array} array
+ * 		The source array to be filtered
+ * @param {Function} func
+ * 		The filtering function to apply to each array item. This filter has two
+ * 		parameters. The first parameter is the current item in the array that is
+ *		potentially being filtered. The second parameter is the index of the
+ *		item potentially being filtered. The index can be used in cases where
+ *		the filtering decision needs to be determined based on proximity to
+ *		other items in the array
+ * @return {Array}
+ * 		Returns a new array containing only items that were approved by the
+ * 		filtering function.
+ */
+/**
+ * Remove items from an array that do not pass a given criteria. Each item in
+ * the specified array will be passed to the filtering function. If that
+ * function returns true, then the item will remain in the specified array. If
+ * the function returns false, the item is removed from the specified array.
+ * 
+ * Note that the specified array is altered in place. If you prefer to create a
+ * new array, leaving the original in tact, then use Util.filter instead
+ * 
+ * @alias Jaxer.Util.filterInPlace
+ * @param {Array} array
+ * 		The source array to be filtered
+ * @param {Function} func
+ * 		The filtering function to apply to each array item. This filter has two
+ * 		parameters. The first parameter is the current item in the array that is
+ *		potentially being filtered. The second parameter is the index of the
+ *		item potentially being filtered. The index can be used in cases where
+ *		the filtering decision needs to be determined based on proximity to
+ *		other items in the array
+ * @return {Array}
+ * 		Returns the filtered array containing only items that were approved by
+ * 		the filtering function. Note that this instance will be the same as the
+ * 		instance passed into the function. This is provided as a convenience and
+ * 		to keep this function signature the same as Util.filter's signature.
+ */
+/**
+ * Apply a function to each element in an array.
+ * 
+ * @alias Jaxer.Util.foreach
+ * @param {Array} array
+ * 		The source array
+ * @param {Function} func
+ * 		The function to apply to each of the items in the source array. The
+ * 		function has two parameters. The first parameter is the current item in
+ * 		the array that is potentially being filtered. The second parameter is
+ * 		the index of the item potentially being filtered.
+ */
+/**
+ * Create a new array by applying the result of a function to each of the items
+ * in the array.
+ * 
+ * @alias Jaxer.Util.map
+ * @param {Array} array
+ * 		The source array
+ * @param {Function} func
+ * 		The function to apply to each of the items in the source array. The
+ * 		function has two parameters. The first parameter is the current item in
+ * 		the array that is being transformed. The second parameter is the index
+ * 		of the item being transformed.
+ * @return {Array}
+ * 		Returns a new array where each item is the result of the specified
+ * 		function as it was applied to each of the source array items.
+ */
+/**
+ * Replace each item of an array by applying a function and then replacing the
+ * original item with the results of that function.
+ * 
+ * @alias Jaxer.Util.mapInPlace
+ * @param {Array} array
+ * 		The source array
+ * @param {Function} func
+ * 		The function to apply to each of the items in the source array. The
+ * 		function has two parameters. The first parameter is the current item in
+ * 		the array that is being transformed. The second parameter is the index
+ * 		of the item being transformed.
+ * @return {Array}
+ * 		Returns the mapped array containing. Note that this instance will be the
+ * 		same the instance passed into the function. This is provided as a
+ * 		convenience and to keep this function signature the same as
+ * 		Util.map's signature.
+ */
+/**
+ * Determine if the specified object contains all properties in a list of
+ * property names.
+ * 
+ * @alias Jaxer.Util.hasProperties
+ * @param {Object} object
+ * 		The source object
+ * @param {String[]} properties
+ * 		The list of property names to test on the specified object
+ * @return {Boolean}
+ * 		Returns true if all properties in the list exist on the specified object
+ */
+/**
+ * Get a list of all (or a filtered subset) of the properties of the source object.
+ * 
+ * @alias Jaxer.Util.getPropertyNames
+ * @param {Object} object
+ * 		The source object
+ * @param {Function} [filter]
+ * 		An optional filter function to apply to the property's name and value. 
+ * 		filter(name, value) should return something that's equivalent to true if the property is to be included.
+ * @param {Boolean} [asHash]
+ * 		If true, returns the result as a hash (with all values set to true)
+ * @return {Array|Object}
+ * 		A list or hash of the property names 
+ */
+/**
+ * Tests whether the given function is native (i.e. for which there is actually no source code)
+ * 
+ * @alias Jaxer.Util.isNativeFunction
+ * @param {Function} func
+ * 		The function to test
+ * @return {Boolean}
+ * 		True if it's a native function, false otherwise 
+ */
+/**
+ * Tests whether the given string is the source of a native function (i.e. for which there is actually no source code)
+ * 
+ * @alias Jaxer.Util.isNativeFunctionSource
+ * @param {String} source
+ * 		The source string to test
+ * @return {Boolean}
+ * 		True if it's a native function's source, false otherwise 
+ */
+/**
+ * Tests whether the given object is a Date object (even if it's from a different global context)
+ * @alias Jaxer.Util.isDate
+ * @param {Object} obj The object to test
+ * @return {Boolean} True if it's a Date (or at least seems to be a Date), false otherwise
+ */
+/**
+ * Create a string representation of all properties in an object. A separator
+ * string can be used as a delimited between each property and the user has the
+ * object of showing the property values or not.
+ * 
+ * @private
+ * @alias Jaxer.Util.__listProps
+ * @param {Object} obj
+ * 		The source object
+ * @param {String} [separator]
+ * 		The separator string to use between properties. If this value is not
+ * 		specified or if it is undefined, the string "; " will be used by default
+ * @param {Boolean} showContents
+ * 		A boolean value indicating whether property values should shown in
+ * 		addition to the property names.
+ * @return {String} Returns a string representation of the specified object.
+ */
+/**
+ * Escapes an input string for use with javascript
+ * 
+ * @alias Jaxer.Util.String.escapeForJS
+ * @param {String} raw
+ * 		The source string
+ * @return {String}
+ * 		The escaped string suitable for use in an eval statement
+ */
+/**
+ * Escapes an input string for use with SQL
+ * 
+ * @alias Jaxer.Util.String.escapeForSQL
+ * @param {String} raw
+ * 		The source string
+ * @return {String}
+ * 		The escaped string suitable for use in a SQL query
+ */
+/**
+ * Surround the provided string in single quotation marks
+ * 
+ * @alias Jaxer.Util.String.singleQuote
+ * @param {String} text
+ * 		The original string
+ * @return {String}
+ * 		The original string encased in single quotes
+ */
+/**
+ * Left or right trim the provided string. Optionally, the user can specify a
+ * list of character to trim form the source string. By default, whitespace is
+ * removed. Also, the user can control which side of the string (start or end)
+ * is trimmed with the default being both sides.
+ * 
+ * @alias Jaxer.Util.String.trim
+ * @param {String} str
+ * 		The source string
+ * @param {String} [charsToTrim]
+ * 		This optional parameter can be used to specify a list of characters to
+ * 		remove from the sides of the source string. Any combination of these
+ * 		characters will be removed. If this parameter is not specified, then all
+ * 		whitespace characters will be removed.
+ * @param {String} [leftOrRight]
+ * 		This optional parameter can be used to control which side of the string
+ * 		is trimmed. A value of "L" will trim the start of the string and all
+ * 		other string values will trim the end of the string. If this parameter
+ * 		is not specified, then both sides of the string will be trimmed
+ * @return {String}
+ * 		The resulting trimmed string
+ */
+/**
+ * Convert a string to a CamelCase representation by removing interword spaces
+ * and capitalizing the first letter of each word following an underscore
+ * 
+ * @alias Jaxer.Util.String.upperCaseToCamelCase
+ * @param {String} orig
+ * 		The orignal string containing underscores between words
+ * @return {String}
+ * 		The resulting string with underscores removed and the first letter of a
+ * 		word capitalized
+ */
+/**
+ * Check to see if a string starts with another string
+ * 
+ * @alias Jaxer.Util.String.startsWith
+ * @param {String} orig
+ * 	The string to look in
+ * @param {String} str
+ * 	The string to look for
+ * @param {String} i Set to 'i' for case insensitive searches
+ */
+/**
+ * Check to see if a string ends with a string
+ * 
+ * @alias Jaxer.Util.String.endsWith
+ * @param {String} orig
+ * 	The string to look in
+ * @param {String} str
+ * 	The string to look for
+ * @param {String} i Set to 'i' for case insensitive searches
+ */
+/**
+ * Converts a date to a string and pads the month and date values to align
+ * all date values in columns.
+ * 
+ * @alias Jaxer.Util.DateTime.toPaddedString
+ * @param {Date} date
+ * 		The source date
+ * @return {String}
+ * 		The source data converted to a string with month and data values padded
+ * 		with spaces to align all values
+ */
+/**
+ * Determine whether the specified value is an integer value
+ * 
+ * @alias Jaxer.Util.Math.isInteger
+ * @param {Number} num
+ * 		The number to test
+ * @return {Boolean}
+ * 		Returns true if the number is an integer value
+ */
+/**
+ * Parse a URL into the following components, which are the
+ * names of the properties on the resulting object used to access these values:
+ * "url", "protocol", "host", "port", "path", "file", "query", "hostAndPost", 
+ * "base" (protocol + host + port), "subdomain", "domain", "pathParts", 
+ * "pathAndFile", and "queryParts".
+ * @alias Jaxer.Util.Url.parseUrl
+ * @param {String} url
+ * 		The URL to parse
+ * @return {Object}
+ * 		The parts of a URL broken down as listed above
+ */
+/**
+ * Parse URL fragments into the following components, which are the
+ * names of the properties on the resulting object used to access these values:
+ * "url", "protocol", "host", "port", "path", "file", "query", "hostAndPost", 
+ * "base" (protocol + host + port), "subdomain", "domain", "pathParts", 
+ * "pathAndFile", and "queryParts".
+ * 
+ * @alias Jaxer.Util.Url.parseUrlFragments 
+ * @param {String} hostAndPort
+ * 		The host (and port, if any) containing the given path 
+ * @param {String} absolutePath
+ * 		The absolute path to a resource on the host
+ * @return {Object}
+ * 		The parts of a URL broken down as listed above
+ */
+/**
+ * Divides the key/value pairs in a query string and builds an object for these
+ * values. The key will become the property name of the object and the value
+ * will become the value of that property
+ * 
+ * @alias Jaxer.Util.Url.queryToHash
+ * @param {String} query
+ * 		A query string
+ * @return {Object}
+ */
+/**
+ * Decode a URL by replacing +'s with spaces and all hex values (%xx) with their character value
+ * 
+ * @alias Jaxer.Util.Url.formUrlDecode
+ * @param {String} str
+ * 		The source URL to decode
+ * @return {String}
+ * 		The resulting URL after all hex values have been  converted
+ */
+/**
+ * Converts an object's properties and property values to a string suitable as
+ * a query string. Each property name becomes a key in the query string and each
+ * property value becomes the key value. A key and its value are separated by
+ * the '=' character. Each key/value pair is separated by '&'. Note that each
+ * value is encoded so invalid URL characters are encoded properly.
+ * 
+ * @alias Jaxer.Util.Url.hashToQuery
+ * @param {Object} hash
+ * 		The object to convert to a query string
+ * @return {String}
+ * 		The resulting query string
+ */
+/**
+ * Encode a URL by replacing all special characters with hex values (%xx)
+ * 
+ * @alias Jaxer.Util.Url.formUrlEncode
+ * @param {String} str
+ * 		The string to encode
+ * @return {String}
+ * 		The resulting URL after special characters and spaces have been encoded
+ */
+/**
+ * Combines any number of URL fragments into a single URL, using / as the separator.
+ * Before joining two fragments with the separator, it strips any
+ * existing separators on the fragment ends to be joined
+ * @alias Jaxer.Util.Url.combine
+ * @param {String} ... Takes any number of string URL fragments
+ * @return {String} The fragments joined into a URL
+ */
+/**
+ * Tests whether the given URL is a reasonable file URL rather than something that's available over the network.
+ * The test is pretty simplistic: the URL must start with file://, resource://, or chrome://,
+ * or it must contain a backslash (i.e. a Windows filesystem separator)
+ * @alias Jaxer.Util.Url.isFile
+ * @param {String} url
+ * @return {Boolean} true if a reasonable file URL, false otherwise
+ */
+/**
+ * If the given URL is already a file-type URL, it's returned untouched.
+ * Otherwise we turn it into a file-type URL by prefixing it with "file:///"
+ * @alias Jaxer.Util.Url.ensureFileProtocol
+ * @param {String} url
+ * 	The URL to apply this to
+ */
+/**
+ * Original code comes from KevLinDev.com at
+ * http://www.kevlindev.com/utilities/crc32/crc32.zip
+ */
+/**
+ * Create a CRC32 from the characters of a string
+ * 
+ * @alias Jaxer.CRC32.getStringCRC
+ * @param {String} text
+ * 		The source string to convert
+ * @return {Number}
+ * 		The resulting CRC32 of the source string
+ */
+/**
+ * Create a CRC32 from an array of bytes. The user may specify the starting
+ * offset within the array and the total number of bytes past the offset to
+ * include in the resulting CRC32 
+ * 
+ * @alias Jaxer.CRC32.getCRC
+ * @param {Array} data
+ * 		An array of byte values
+ * @param {Number} [offset]
+ * 		The offset within the array where the calculated CRC32 should start
+ * @param {Number} [count]
+ * 		The number of bytes starting from the offset to include in the resulting
+ * 		CRC32.
+ * @return {Number}
+ * 		The resulting CRC32
+ */
+/**
+ * Convert an object's properties and property values into a string of
+ * attributes suitable for use in an HTMLElement's innerHTML property. Each
+ * property is used as the attribute name and each property value becomes the
+ * attribute value. Attribute values are surrounding in double-quotes and all
+ * property values containing double-quotes will have those characters properly
+ * escaped.
+ * 
+ * @alias Jaxer.Util.DOM.hashToAttributesString
+ * @param {Object} hash
+ * 		The source object
+ * @return {String}
+ * 		The resulting string of attribute name/value pairs
+ */
+/**
+ * Convert an array into a string where each item is separated by a newline. If
+ * the specfied item is not an Array, then the value itself will be returned.
+ * 
+ * @private
+ * @alias Jaxer.prepareContents
+ * @param {Object} contents
+ * 		The item to process
+ * @return {Object}
+ * 		The resulting string value if the "contents" item was an Array;
+ * 		otherwise this returns the "contents" item itself
+ */
+/**
+ * Create a new script element with the specified content and attributes
+ * 
+ * @alias Jaxer.Util.DOM.createScript
+ * @param {Document} doc
+ * 		The DocumentElement to use when creating elements for the active
+ * 		document.
+ * @param {String} contents
+ * 		The text content for the script element. This value will be set via
+ * 		innerHTML once the new script element has been created
+ * @param {Object} [attributes]
+ * 		A list of attributes and attribute values to apply to the new
+ * 		ScriptElement. Each property name will become the attribute name and
+ * 		each property value will become that attributes value. Note that no
+ * 		escaping is done on the attributes values, so it is expected those
+ * 		values are valid attribute values
+ * @return {ScriptElement}
+ * 		The new script element with content and attributes applied.
+ */
+/**
+ * Creates a new script element and adds it before a specified element in the
+ * DOM.
+ * 
+ * @alias Jaxer.Util.DOM.insertScriptBefore
+ * @param {Document} doc
+ * 		The DocumentElement to use when creating elements for the active
+ * 		document.
+ * @param {Object} contents
+ * 		The text content for the script element. This value will be set via
+ * 		innerHTML once the new script element has been created
+ * @param {Node} elt
+ * 		The element in the DOM before which the new script element will be
+ * 		inserted
+ * @param {Object} [attributes]
+ * 		A list of attributes and attribute values to apply to the new
+ * 		ScriptElement. Each property name will become the attribute name and
+ * 		each property value will become that attributes value. Note that no
+ * 		escaping is done on the attributes values, so it is expected those
+ * 		values are valid attribute values
+ * @return {ScriptElement}
+ * 		The new script element with content and attributes applied.
+ */
+/**
+ * Creates a new script element and adds it as the first child of a specified
+ * element in the DOM.
+ * 
+ * @alias Jaxer.Util.DOM.insertScriptAtBeginning
+ * @param {Document} doc
+ * 		The DocumentElement to use when creating elements for the active
+ * 		document.
+ * @param {Object} contents
+ * 		The text content for the script element. This value will be set via
+ * 		innerHTML once the new script element has been created
+ * @param {Node} elt
+ * 		The element in the DOM where the new script element will be added as the
+ * 		element's first child.
+ * @param {Object} [attributes]
+ * 		A list of attributes and attribute values to apply to the new
+ * 		ScriptElement. Each property name will become the attribute name and
+ * 		each property value will become that attributes value. Note that no
+ * 		escaping is done on the attributes values, so it is expected those
+ * 		values are valid attribute values
+ * @return {ScriptElement}
+ * 		The new script element with content and attributes applied.
+ */
+/**
+ * Creates a new script element and add it as the first child of the specified
+ * element in the DOM.
+ * 
+ * @alias Jaxer.Util.DOM.insertScriptAfter
+ * @param {Document} doc
+ * 		The DocumentElement to use when creating elements for the active
+ * 		document.
+ * @param {Object} contents
+ * 		The text content for the script element. This value will be set via
+ * 		innerHTML once the new script element has been created
+ * @param {Node} elt
+ * 		The element in the DOM after which the new script element will be
+ * 		inserted
+ * @param {Object} [attributes]
+ * 		A list of attributes and attribute values to apply to the new
+ * 		ScriptElement. Each property name will become the attribute name and
+ * 		each property value will become that attributes value. Note that no
+ * 		escaping is done on the attributes values, so it is expected those
+ * 		values are valid attribute values
+ * @return {ScriptElement}
+ * 		The new script element with content and attributes applied.
+ */
+/**
+ * Creates a new script element and adds it as the last child of a specified
+ * element in the DOM.
+ * 
+ * @alias Jaxer.Util.DOM.insertScriptAtEnd
+ * @param {Document} doc
+ * 		The DocumentElement to use when creating elements for the active
+ * 		document.
+ * @param {Object} contents
+ * 		The text content for the script element. This value will be set via
+ * 		innerHTML once the new script element has been created
+ * @param {Node} elt
+ * 		The element in the DOM where the new script element will be added as the
+ * 		element's last child.
+ * @param {Object} [attributes]
+ * 		A list of attributes and attribute values to apply to the new
+ * 		ScriptElement. Each property name will become the attribute name and
+ * 		each property value will become that attributes value. Note that no
+ * 		escaping is done on the attributes values, so it is expected those
+ * 		values are valid attribute values
+ * @return {ScriptElement}
+ * 		The new script element with content and attributes applied.
+ */
+/**
+ * Replace a specified element in the DOM with a new script element.
+ * 
+ * @alias Jaxer.Util.DOM.replaceWithScript
+ * @param {Document} doc
+ * 		The DocumentElement to use when creating elements for the active
+ * 		document.
+ * @param {Object} contents
+ * 		The text content for the script element. This value will be set via
+ * 		innerHTML once the new script element has been created
+ * @param {Node} elt
+ * 		The element to replace with the a script element
+ * @param {Object} [attributes]
+ * 		A list of attributes and attribute values to apply to the new
+ * 		ScriptElement. Each property name will become the attribute name and
+ * 		each property value will become that attributes value. Note that no
+ * 		escaping is done on the attributes values, so it is expected those
+ * 		values are valid attribute values
+ * @return {ScriptElement}
+ * 		The new script element with content and attributes applied.
+ */
+/**
+ * @namespace {Util.Cookie}
+ */
+/**
+ * Set a cookie name/value pair
+ * 
+ * @alias Jaxer.Util.Cookie.set
+ * @param {String} name
+ * 		The name of the cookie to set
+ * @param {String} value
+ * 		The value of the cookie
+ */
+/**
+ * Get a cookie key value
+ * 
+ * @alias Jaxer.Util.Cookie.get
+ * @param {String} name
+ * 		The name of the cookie to retrieve
+ * @return {String|null}
+ * 		Returns the value of the specified cookie or null if the vaule does not
+ * 		exist.
+ */
+/**
+ * Get an object containing all cookie keys and values. Each cookie name will
+ * become a property on the object and each cookie value will become that
+ * property's value.
+ * 
+ * @alias Jaxer.Util.Cookie.getAll
+ * @return {Object}
+ * 		The resulting object of all cookie key/value pairs
+ */
+/**
+ * Alert in a server-side context will generate an info-level log message
+ * @alias Jaxer.Overrides.alert
+ * @param {String} message
+ */
+/**
+ * Prompt in a server-side context will generate an info-level log message
+ * @alias Jaxer.Overrides.prompt
+ * @param {String} message
+ */
+/**
+ * Confirm in a server-side context will generate an info-level log message
+ * @alias Jaxer.Overrides.confirm
+ * @param {String} message
+ */
+/**
+ * Applies all the overrides on the given global object, including the no-ops "setTimeout" and "setInterval"
+ * @alias Jaxer.Overrides.applyAll
+ * @param {Object} global
+ * 	The global (typically window) object
+ */
+/**
+ * Log is a static object meant to be shared across the framework and perhaps even the user's code.
+ * In a module, use it to create a module-specific logger and then log with it.
+ * 
+ * @example
+ * To log without a module name, use Jaxer.Log.info("my message"), where instead of info you can use any of the 
+ * six logging levels: trace(...), debug(...), info(...), warn(...), error(...), and fatal(...).
+ * The generic logger is set by default to only log messages at or above the info level.
+ * 
+ * @example
+ * To log with a module name, first define a log helper: var log = Jaxer.Log.forModule("myModule");
+ * This will get or create the module logger with this name.
+ * Then use log.info(...) or any of the other methods.
+ * 
+ * The default level of messages to log is set in configLog.js and can also be changed in memory:
+ * see setLevel() and selAllModuleLevels().
+ * 
+ * @alias Jaxer.Log
+ */
+/**
+ * return a array of implemented Logger levelnames
+ * e.g. "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"
+ * @alias Jaxer.Log.getLevelNames
+ * @return {String[]}
+ */
+/**
+ * Lazily creates a logger for the given module name, if needed,
+ * and in any case returns it. The referenced Log object knows to create log entries
+ * marked as belonging to the specific module.
+ * @alias Jaxer.Log.forModule
+ * @param {String} moduleName 
+ * 	The name of the module (just an identifier string).
+ * @return {Log.ModuleLogger} The module-specific logger to use for log entries.
+ */
+/**
+ * Returns a boolean to indicate whether the referenced Log object is wired to do logging for the provided modulename
+ * @alias Jaxer.Log.hasModule
+ * @param {String} moduleName
+ * 	The name of the module to look up
+ * @return {Boolean}
+ */
+/**
+ * Gets a sorted array of all the currently-defined modules.
+ * @alias Jaxer.Log.getSortedModuleNames
+ * @return {Array} An array of strings, sorted alphabetically, of the names of modules
+ * for which ModuleLoggers have been defined.
+ */
+/**
+ * set the logging level on ALL modules to level provided for the referenced Log object
+ * @alias Jaxer.Log.setAllModuleLevels
+ * @param {Jaxer.Log.Level} level
+ * 	The new level to use for all of them
+ */
+/**
+ * add an appender to the referenced Log object
+ * @alias Jaxer.Log.addAppender
+ * @param {String} name
+ * 	The name of the appender
+ * @param {Log.Appender} appender
+ * 	An instance of the appender. It should be derived from Jaxer.Log.Appender.
+ */
+/**
+ * remove the specified appender from the referenced Log object
+ * @alias Jaxer.Log.removeAppender
+ * @param {String} name
+ * 	The name of the appender to use.
+ */
+/**
+ * get an appender reference from the referenced Log object
+ * @alias Jaxer.Log.getAppender
+ * @param {String} name
+ * 	The name of the appender to look for
+ * @return {Log.Appender} The appender instance
+ */
+/**
+ * The internal logging method which logs to all the current appenders
+ * @alias Jaxer.Log._log
+ * @private
+ * @param {String} moduleName
+ * 	The associated module
+ * @param {Jaxer.Log.Level} level
+ * 	The level of this message
+ * @param {String} message
+ * 	The message to log
+ * @param {Object} [exception]
+ * 	An optional exception to use
+ */
+/**
+ * Initialize the logging system
+ * @alias Jaxer.Log.init
+ * @private
+ * @param {String} defModuleLevelName
+ * 	The default name to use when there's no module name specified
+ */
+/**
+ * Set the logging level for the referenced Log object
+ * @alias Jaxer.Log.setLevel
+ * @param {Jaxer.Log.Level} level
+ * 	The level to use on the generic logger (the one that's not module-specific)
+ */
+/**
+ * get the logging level of the generic logger
+ * @alias Jaxer.Log.getLevel
+ * @return {Jaxer.Log.Level} The level below which non-module-specific messages will not be logged
+ */
+/**
+ * The constructor of a logging level object. 
+ * Messages must exceed a certain severity level before they are logged.
+ * @alias Jaxer.Log.Level
+ * @constructor
+ * @param {String} name
+ * 	The name of the level
+ * @param {Number} value
+ * 	The numeric value to associate with this level. Higher numbers are more severe.
+ */
+/**
+ * The textual representation of a level, namely its name
+ * @alias Jaxer.Log.Level.prototype.toString
+ * @return {String} The name
+ */
+/**
+ * A common comparison operator on Jaxer.Log.Level objects: is the current level at or above the given level?
+ * @alias Jaxer.Log.Level.prototype.isAtLeast
+ * @return {Boolean} true if matches or exceeds the given level
+ */
+/**
+ * A common comparison operator on Jaxer.Log.Level objects: is the current level below the given level?
+ * @alias Jaxer.Log.Level.prototype.isBelow
+ * @return {Boolean} true if falls below the given level
+ */
+/**
+ * An object that's created only through the global Log.forModule("...") method for module-specific logging.
+ * Usually you create such a logger at the beginning of your module, and then use it throughout your module
+ * for logging at various levels. It has its own level, so you can control the verbosity of logging per module.
+ * @alias Jaxer.Log.ModuleLogger
+ * @constructor
+ * @param {String} moduleName
+ * 	The name to use for the module
+ */
+/**
+ * The internal logging function for the module logger, meant to be called from the level-specific methods.
+ * It ASSUMES that its caller's caller is the function that's really doing the logging, and uses its name
+ * in the log (as well as the module's name).
+ * @alias Jaxer.Log.ModuleLogger.prototype._log
+ * @param {Jaxer.Log.Level} level
+ * 		The level at which to log the message
+ * @param {String} message
+ * 		The message (the module and caller will be prepended automatically)
+ * @param {Exception} [exception]
+ * 		Optional: an exception to log
+ * @param {Function} [inFunction]
+ * 	The function that should be associated with this message, otherwise the caller will be used
+ */
+/**
+ * Gets the level to which this ModuleLogger is set -- appending messages below this level will do nothing
+ * @alias Jaxer.Log.ModuleLogger.prototype.getLevel
+ * @return {Jaxer.Log.Level} The current level
+ */
+/**
+ * Sets the level below which this moduleLogger will not log messages.
+ * @alias Jaxer.Log.ModuleLogger.prototype.getLevel
+ * @param {Jaxer.Log.Level} level
+ * 	The minimum loggable level. Should be one of Log.TRACE, Log.DEBUG,
+ * 	Log.INFO, Log.WARN, Log.ERROR, Log.FATAL.
+ */
+/**
+ * This is the base class of all Appenders: listeners that know how to append log messages somewhere,
+ * e.g. to a file or a database.
+ * @alias Jaxer.Log.Appender
+ * @constructor
+ * @param {String} name
+ * 	The name to use to identify this appender
+ * @param {Jaxer.Log.Level} level
+ * 	The level to start this appender at -- messages below this will not be appended
+ */
+/**
+ * Append a message associated with the given module to the log
+ * @alias Jaxer.Log.Appender.append
+ * @private
+ * @param {String} moduleName
+ * 	The name of the module to use
+ * @param {Jaxer.Log.Level} level
+ * 	The level to use for this message
+ * @param {String} message
+ * 	The message to log
+ * @param {Object} [exception]
+ * 	An optional exception object to use
+ */
+/**
+ * The level to which this moduleLogger is set. Messages below this level will not be logged.
+ * @alias Jaxer.Log.Appender.getLevel
+ * @return {Jaxer.Log.Level} The current level
+ */
+/**
+ * Sets the level below which this moduleLogger will not log messages.
+ * @alias Jaxer.Appender.prototype.setLevel
+ * @param {Jaxer.Log.Level} level
+ *	The minimum loggable level. Should be one of Log.TRACE, Log.DEBUG,
+ *	Log.INFO, Log.WARN, Log.ERROR, Log.FATAL.
+ */
+/**
+ * Identifies this appender instance by name
+ * @alias Jaxer.Appender.prototype.toString
+ * @return {String}	The appender's name
+ */
+/**
+* Create an instance of the FileAppender, a file-based Appender
+* @alias Jaxer.Log.FileAppender
+* @constructor
+* @param {String} name 
+* 	the appender name
+* @param {Jaxer.Log.Level} level 
+* 	the logging level to start using with this appender
+* @param {String} logPath 
+* 	the path to the logfile
+*/
+/**
+* Set the  path for the filesystem logging target
+* @alias Jaxer.Log.FileAppender.setPath
+* @param {String} newPath 
+* 	the new path to use for this appender. 
+*/
+/**
+* Appends the provided message to the referenced appenders log
+* @alias Jaxer.Log.FileAppender.append
+ * @param {String} moduleName
+ * 	The name of the module to use
+ * @param {Jaxer.Log.Level} level
+ * 	The level to use for this message
+ * @param {String} message
+ * 	The message to log
+ * @param {Object} [exception]
+ * 	An optional exception object to use
+*/
+/**
+ * Create an instance of the Core appender -- appends log messages to the same file as the Jaxer core
+ * @alias Jaxer.Log.CoreAppender
+ * @constructor
+ * @param {String} name 
+ * 	The name to use to identify this appender
+ * @param {Jaxer.Log.Level} level
+ * 	The level to start this appender at -- messages below this will not be appended
+ * @param {coreTraceMethods} coreTraceMethods
+ * 	The hashtable of core trace methods that this should invoke
+ * @param {coreTraceBefore} coreTraceBefore
+ * 	The core function to call before calling any core method -- it will turn on logging regardless of the core's settings
+ * @param {coreTraceAfter}  coreTraceAfter
+ * 	The core function to call after calling any core method -- it will restore using the core's log settings
+ */
+/**
+ * Append a message associated with the given module to the log
+ * @alias Jaxer.Log.CoreAppender.append
+ * @private
+ * @param {String} moduleName
+ * 	The name of the module to use
+ * @param {Jaxer.Log.Level} level
+ * 	The level to use for this message
+ * @param {String} message
+ * 	The message to log
+ * @param {Object} [exception]
+ * 	An optional exception object to use
+ */
+	/**
+	 * import the JSLib namespace objects into Jaxer and the window object
+	 */
+    /**
+     * The path on disk of the current executable's folder
+     * @alias Jaxer.System.executableFolder
+     * @private
+     */
+    /**
+     * The path on disk of the current user's home folder
+     * @alias Jaxer.System.homeFolder
+     * @private
+     */
+    /**
+     * The path on disk of the current user's desktop folder
+     * @alias Jaxer.DirUtils.prototype.desktopFolder
+     * @private
+     */
+    /**
+     * The path on disk of the system's temp folder
+     * @alias Jaxer.DirUtils.prototype.tempFolder
+     * @private
+     */
+    /**
+     * The filesystem separator character (either \ or /)
+     * @alias Jaxer.System.separator
+     *
+     * @return {String} fileSystem path separator
+     */
+/**
+ * Read the contents of a file on local disk. If the file does not exist, returns a null
+ * @alias Jaxer.File.read
+ * @param {String} path	
+ * 	The full or partial (to be resolved) path to read
+ * @return {String|null} the contents of the file as a string, or null if the file does not exist
+ */
+/**
+ * Does the file (or folder) exist on disk?
+ * @alias Jaxer.File.exists
+ * @param {String} path	
+ * 	The full or partial (to be resolved) path to test
+ * @return {Boolean} true if exists, false otherwise
+ */
+/**
+ * Read the contents of a textfile on local disk, 
+ * return an array of lines. When the optional sep parameter is not provided
+ * return a string with the lines concatenated by the provided parameter.
+ * If the file does not exist, returns a null
+ * @alias Jaxer.File.readLines
+ * @param {String} path
+ * 	The full or partial (to be resolved) path to read
+ * @param {String} [sep]
+ * 	An optional separator to use between lines. If none is specified, returns an array of lines.
+ * @return {Array|String|null} The contents of the file as a string or array of lines, or null if the file does not exist
+ */
+/**
+ * Writes the provided text to file specified by the path. WARNING - destructive! This will overwrite an existing file
+ * so use File.append if you want to add the data to the end of an existing file.
+ * @alias Jaxer.File.write
+ * @param {String} path
+ * 	The full or partial (to be resolved) path to read
+ * @param {String} text
+ * 	The text to write to the file
+ */
+/**
+ * add the provided text to the end of an existing file.
+ * @alias Jaxer.File.append
+ * @param {String} path
+ * 	The full or partial (to be resolved) path to append to
+ * @param {String} text
+ * 	The text to append
+ */
+/**
+ * add a line to the end of an existing file.
+ * @alias Jaxer.File.appendLine
+ * @param {String} path
+ * 	The full or partial (to be resolved) path to append to
+ * @param {String} text
+ * 	The text to append, as a new line
+ */
+/**
+ * get a file object, and if the object doesn't exist then automagically create it.
+ * @alias File.getOrCreate
+ * @param {String} path
+ * 	The full or partial (to be resolved) path to get or create
+ * @return {File} The file, possibly newly-created
+ */
+/**
+ * delete a file (only if it already exists).
+ * @alias File.remove
+ * @param {String} path
+ * 	The full or partial (to be resolved) path to delete
+ */
+/**
+ * convert a URL in string format to a filesystem path.
+ * @alias Jaxer.urlToPath
+ * @param {String} url
+ * 	The URL to convert
+ * @return {String|null} the full path, or null if the URL could not be converted
+ */
+/**
+ * convert a filesystem path to a URL format
+ * @alias Jaxer.pathToUrl
+ * @param {String} path
+ * 	The full path to be converted
+ * @return {String|null} the URL, or null if the path could not be converted
+ */
+/**
+ * Combines any number of path fragments into a single path, using the 
+ * current operating system's filesystem path separator.
+ * Before joining two fragments with the path separator, it strips any
+ * existing path separators on the fragment ends to be joined
+ * @alias Jaxer.combine
+ * @param {String} ... 
+ * 	Takes any number of string path fragments
+ * @return {String} The fragments joined into a path
+ */
+/**
+ * Resolves a path to an absolute path on the filesystem, using as a reference (base) 
+ * the given path or the current page's path.
+ * @alias Jaxer.Dir.resolvePath
+ * @param {String} pathToResolve
+ * 	The path to resolve, e.g. a filename. It can also be a resource pattern (e.g. "resource:///...") 
+ * 	or a file pattern (e.g. "file:///...")
+ * @param {String} [referencePath]
+ * 	An optional path to use as a reference.
+ * @return {String} The full path on the filesystem
+ */
+/**
+ * Resolves a URL fragment to a full URL, using as a reference (base) the given URL or the current page's URL.
+ * @alias Jaxer.Dir.resolveUrl
+ * @param {String} urlToResolve
+ * 	The URL to resolve, e.g. a pagename.
+ * @param {String} [referenceUrl]
+ * 	An optional URL to use as a reference
+ * @return {String} The fully-resolved URL
+ */
+/**
+ * Does the directory exist on disk?
+ * @alias Dir.exists
+ * @param {String} path
+ * 	The full or partial (to be resolved) path to test
+ * @return {Boolean} true if exists, false otherwise
+ */
+/**
+ * Replaces the element with the contents of its source or path
+ * @alias Jaxer.Includer.includeElement
+ * @private
+ * @param {DocumentElement} doc
+ * 	The document of the element
+ * @param {HTMLElement} includeTag
+ * 	The HTML element to replace
+ * @return {Boolean} true if successful, false otherwise
+ */
+/**
+ * Evaluate the given JavaScript string on the given global context
+ * @alias Jaxer.Includer.evalOn
+ * @param {String} source
+ * 	The string of script code to evaluate
+ * @param {Object} global
+ * 	The global (usually a window object) on which to evaluate it
+ */
+/**
+ * Loads and evaluates a JavaScript file on the given global execution object with the given runat attribute.
+ * @alias Jaxer.Includer.load
+ * @private 
+ * @param {String} src
+ * 	Where the JavaScript file should be retrieved from
+ * @param {Boolean} global
+ * 	The global (usually a window object) on which to evaluate it
+ */
+/**
+ * Resolves a URL to an absolute URL (one starting with protocol://domain...)
+ * To resolve a relative URL (with or without a leading /), use a current document or callback for reference.
+ * Uses the base href of the current document, if specified.
+ * If Jaxer.Config.REWRITE_RELATIVE_URL exists, its value is used to rewrite the relative URL. Replaces the 
+ *  Jaxer.Config.REWRITE_RELATIVE_URL_REGEX pattern, if it exists. Otherwise, replaces the http or https protocol 
+ *  followed by the domain name and port.
+ * @alias Jaxer.Web.resolve
+ * @param {String} url 
+ * 	The URL to resolve
+ * @param {String} [referenceUrl] 
+ * 	An optional reference URL to use, overriding the built-in logic
+ * @return {String} The fully-resolved URL, or the original URL if the input was already an absolute URL
+ */
+/**
+ * Returns the URL to be used as a reference for resolving relative URLs if no other reference is given
+ * @alias Jaxer.Web.getDefaultReferenceUrl
+ * @return {String}	The absolute URL
+ */
+/**
+ * A generalized method to synchronously access a web URL via the built-in XMLHttpRequest object.
+ * @alias Jaxer.Web.send
+ * @param {String} url 
+ * 	The url to access
+ * @param {String} [method] 
+ * 	Usually 'GET' (default) or 'POST'
+ * @param {String|Object} [data] 
+ * 	Use for POST submissions. This may be a string, or an object whose name->value pairs will be used as the query string
+ * @param {Array} [requestHeaders] 
+ * 	Optional array of [headerName, headerValue] headers to use as headers on the request.
+ *	If the method is POST, a header of ['Content-Type', 'application/x-www-form-urlencoded'] will be added unless
+ *	another Content-Type header is specified explicitly.
+ * @param {String} [mimeType] 
+ * 	If specified, use this to force the response to be handled as a particular content type.
+ * @param {Array} [responseHeaders] 
+ * 	An optional array of header names to fetch from the response.
+ * @return {Object} 
+ * 	An object having the properties 'text' (the responseText), 
+ * 'xml' (the responseXML as an XmlDocument, if any), 
+ * and 'headers' if any responseHeaders were requested.
+ * If there was no response, or the response status code was < 200 or >= 400, an Exception is thrown. 
+ */
+/**
+ * Fetch a document from a URL by resolving it to a local file (if it starts with file://) or by a GET command.
+ * @alias Jaxer.Web.get
+ * @param {String} url 
+ * 	The URL to fetch, which may be a file:// URL if desired. This will first be resolved by Dir.resolvePath() or Web.resolve().
+ * @param {Boolean} [insertCacheBuster] 
+ * 	If true, inserts a cache-busting random query string into the URL.
+ * @param {Array} [requestHeaders] 
+ * 	Optional array of [headerName, headerValue] headers to use as headers on the request.
+ *	If the method is POST, a header of ['Content-Type', 'application/x-www-form-urlencoded'] will be added unless
+ *	another Content-Type header is specified explicitly.
+ * @param {String} [mimeType] 
+ * 	If specified, use this to force the response to be handled as a particular content type.
+ * @return {String} The text of the requested document. An Exception is thrown if not successful.
+ */
+/**
+ * POST data to a URL and return the response web page.
+ * @alias Jaxer.Web.post
+ * @param {String} url 
+ * 	The URL of the page to POST to and fetch. This will first be resolved by Web.resolve().
+ * @param {String|Object} data 
+ * 	The data to submit. 
+ *	If a string, it should be a query string in a format (name1=value1&name2=value2) suitable for a Content-Type of 'application/x-www-form-urlencoded'. 
+ *	If an object, its enumerable properties will be used to construct the query string.
+ * @return {String} The text of the response web page. An Exception is thrown if not successful.
+ */
+/**
+ * @author Paul Colton
+ */
+/**
+ * The constructor of a network socket object
+ * @alias Jaxer.socket
+ * @constructor
+ */
+/**
+ * Open the socket for communication
+ * @alias Jaxer.Socket.prototype.open
+ * @param {String} host
+ * 	The host to connect to
+ * @param {Number} port
+ * 	The port on which to connect
+ */
+/**
+ * Close the socket
+ * @alias Jaxer.Socket.prototype.close
+ */
+/**
+ * Write a string to the socket
+ * @alias Jaxer.Socket.prototype.writeString
+ * @param {String} data
+ * 	The text to write
+ */
+/**
+ * Read a single line from the socket
+ * @alias Jaxer.Socket.prototype.readLine
+ * @return {String}	The text read in
+ */
+/**
+ * Read characters from the socket into a string
+ * @alias Jaxer.Socket.prototype.readString
+ * @param {Number} count
+ * 	How many characters to read
+ * @return {String}	The text read in
+ */
+/**
+ * Is the socket connection available?
+ * @alias Jaxer.Socket.prototype.available
+ * @return {String}	true if available, false otherwise
+ */
+/**
+ * Flush the socket's output stream
+ * @alias Jaxer.Socket.prototype.flush
+ */
+/**
+ * Sends an email via SMTP
+ * @alias Jaxer.SMTP.sendEmail
+ * @param {String} mailhost
+ * 	The host to connect to
+ * @param {Number} mailport
+ * 	The port to connect on
+ * @param {String} from
+ * 	The address this message is coming from
+ * @param {String} to
+ * 	The address this message is going to
+ * @param {String} subject
+ * 	The subject of the message
+ * @param {String} msg
+ * 	The body of the message
+ */
+/**
+ * Sends an email message object via SMTP
+ * @alias Jaxer.SMTP.sendMessage
+ * @param {String} mailhost
+ * 	The host to connect to
+ * @param {Number} mailport
+ * 	The port to connect on
+ * @param {MailMessage} mailMessage
+ * 	The Jaxer.SMTP.MailMessage object to send
+ */
+/**
+ * A structure holding email message information
+ * @alias Jaxer.MailMessage
+ * @constructor
+ */
+/**
+ * Adds a recipient to the message
+ * @alias Jaxer.MailMessage.prototype.addRecipient
+ * @param {String} recipient
+ * 	The email address
+ */
+/**
+ * Sets the "From" address on the message
+ * @alias Jaxer.MailMessage.prototype.setFrom
+ * @param {String} from
+ * 	The email address from which this message is coming
+ */
+/**
+ * Sets the "Subject" of the message
+ * @alias Jaxer.MailMessage.prototype.setSubject
+ * @param {String} subject
+ * 	The subject text
+ */
+/** 
+ * Sets the timestamp on the message
+ * @alias Jaxer.MailMessage.prototype.setDate
+ * @param {Object} date
+ * 	The date it's sent
+ */
+/**
+ * Sets the body (contents) of the message
+ * @alias Jaxer.MailMessage.prototype.setBody
+ * @param {String} body
+ * 	The text of the message
+ */
+/**
+ * The exception used by the Jaxer framework. At runtime this is available from the window object
+ * @alias Jaxer.Exception
+ * @constructor
+ * @param {String, Error} info
+ * 	The descriptive text of the Exception to be thrown, or an Error-derived object
+ * @param {Object} [logger]
+ * 	An optional reference to an instance of the framework logger to be used. A default setting is used if this parameter is omitted
+ * @return {Exception} an instance of Exception
+ */
+/**
+ * Provides a string representation of the Exception description.
+ * @alias Jaxer.Exception.prototype.toString
+ * @method
+ * @return {String}	A description of the exception
+ */
+/**
+ * Returns a JavaScript Error (or Error-derived) object based on the given object
+ * @alias Jaxer.Exception.toError
+ * @method
+ * @param {Object} obj
+ * 		If this is already derived from an Error, it will just be returned.
+ * 		Otherwise it will be stringified and used as the description of the error.
+ * @return {Error} The Error-derived representation
+ */
+/**
+ * Get verbose details on the error
+ * @alias Jaxer.Exception.toDetails
+ * @param {Object} obj
+ * 	The error object on which details are desired. An attempt is made to convert it into an Error-derived object before details are retrieved.
+ * @return {String} The detailed description
+ */
+/**
+ * @namespace {Jaxer.DB}
+ * @private
+ * 
+ */
+/**
+ * Returns a boolean value to indicate whether the referenced database is the framwork DB or the developer DB
+ * 
+ * @example
+ * 
+ *	var name = isFramework ? DB.FRAMEWORK : DB.DEVELOPER;
+ * @private  
+ * @alias Jaxer.DB.isSpecified
+ * @param {Boolean} isFramework 
+ * 	indicates which DB (true : framework , false : developer)
+ * @return {Boolean} Whether the given default database's implementation and connection paramaters have been specified
+ */
+/**
+ * The default implementation of execute if there is no connection: just throws an exception
+ * @private
+ * @alias Jaxer.DB.executeWithoutConnection
+ */
+/**
+ * The default implementation of a connection if there is no implementation defined: just throws an exception
+ * @private
+ * @alias Jaxer.DB.connectionWithoutImplementation
+ */
+/**
+ * Initializes the default database implementations for the framework and optionally for the developer 
+ * @private  
+ * @alias DB.init
+ * @param {Boolean} isFramework
+ * @param {Object} impl
+ * @param {Object} conn
+ */
+/**
+ * Returned value of a SQL query, containing the named rows and columns of the result and 
+ * to be used as the return value of execute().
+ * Each row has a special property, $values, that is an array ordered according to the columns array.
+ * The rowsAsArray array is similar to the rows array but each row in it is an array itself: 
+ * it is the corresponding $values array. 
+ * 
+ * To see if there is any data, check whether hasData is true or whether rows.length or rowsAsArrays.length exceed 0.
+ * To get a single result (the first column of the first row) grab singleResult.
+ * 
+ * @example
+ * If the third column is named "account" you can get to a given cell value either through
+ * resultSet.rows[10].account or through
+ * resultSet.rows[10].$values[2] or through
+ * resultSet.rowsAsArrays[10][2]
+ * 
+ * @alias Jaxer.ResultSet
+ * @constructor
+ */
+/**
+ * Returns the index of the column with the given name
+ * @alias Jaxer.ResultSet.prototype.indexOfColumn
+ * @param {String} columnName the textual name of the database column 
+ * @return {Integer} The 0-based index in the columns array (and in each row in the rows array)
+ */
+/**
+ * Returns an array of objects, one per row, that only have properties corresponding
+ * to the given columns.
+ * @alias Jaxer.ResultSet.prototype.extractColumns
+ * @param {Array} columns The names of the columns that should be made available for each row.
+ * @return {Array} An array of simple objects, each with the requested properties.
+ */
+/**
+ * Returns a string representation of the resultset object
+ * @alias Jaxer.ResultSet.prototype.toString
+ * @return {String} a string representation of the resultset object
+ */
+/**
+ * Returns a HTML table snippet containing the resultset items
+ * @alias Jaxer.ResultSet.prototype.toHTML
+ * @param {Object} tableAttributes
+ * 	A hashmap which will be turned into attribute-value pairs on the table tag
+ * @param {Object} headingAttributes
+ * 	A hashmap which will be turned into attribute-value pairs on the thead tag
+ * @param {Object} bodyAttributes
+ * 	A hashmap which will be turned into attribute-value pairs on the tbody tag
+ * @return {String} HTML table snippet containing the resultset items
+ */
+/**
+ * @namespace {Jaxer.MySQL} This is the namespace that holds the MySQL implementation of the Jaxer DB API
+ */
+/**
+ * Creates a new database named according to connectionParams.NAME
+ * @alias Jaxer.MySQL.createDB
+ * @param {Object} connectionParams A hashmap of parameters needed to connect to the database.
+ * The properties required of connectionParams are:
+ *   HOST: the hostname of the server
+ *   USER: the username for authentication
+ *   PASS: the password for authentication
+ *   NAME: the name of the database to create
+ *   PORT: the port on which to connect (defaults to 3306)
+ */
+/**
+ * Creates a new connection to the given databaseName (file).
+ * Can be any string value, including an empty string.
+ * Creates the specified database if it does not yet exist.
+ * The resulting connection object is the only way to interact with the database.
+ * @alias Jaxer.MySQL.Connection
+ * @constructor
+ * @param {Object} connectionParams 
+ * 	A hashmap of required parameters to connect to the database. Required properties are HOST (hostname of the server),
+ *  USER (username for authentication), PASS (password for authentication), NAME (database name), 
+ *  PORT (connection port, default value is "3306"), and CLOSE_AFTER_EXECUTE (whether to close the connection after
+ *  each call to execute, default is open).
+ */
+/**
+ * Opens the connection so queries can be executed.
+ * This is optional, since if the connection is not open when it's asked to
+ * execute some SQL, it will open the connection automatically.
+ * Also closing the connection is optional.
+ * @alias Jaxer.MySQL.Connection.prototype.open
+ */
+/**
+ * Executes the given sql using the connection.
+ * If the second argument is used, it should be an array of parameters
+ * to be substituted sequentially for question marks ("?") in the sql statement,
+ * which functions as a prepared statement.
+ * @alias Jaxer.MySQL.Connection.prototype.execute
+ * @param {String} sql the sql statement to be executed as a prepared statement
+ * @param {Array} params the sequential parameters passed to the prepared statement for execution
+ * @return {DB.ResultSet} The results of the query, which may or may not contain any data
+ */
+/**
+ * Retrieves the specified value from the prepared statement (at its current cursor location), casting to the given type
+ * @param {Object} stmt
+ * 	the statement object
+ * @param {Object} iCol
+ * 	The index of the column whose value is to be fetched
+ * @param {Object} iType
+ * 	The type object containing information on how to return this value
+ * @return {String}	The value as the requested type
+ */
+/**
+ * Retrieves the specified value from the MySQL resultset (at its current cursor location), casting to the given type
+ * @param {Object} rs
+ * 	the MySQL resultset
+ * @param {Object} iCol
+ * 	The index of the column whose value is to be fetched
+ * @param {Object} iType
+ * 	The type object containing information on how to return this value
+ * @return {String}	The value as the requested type
+ */
+/**
+ * Closes the connection if it's open. This is optional, and only does something if the connection is open.
+ * @alias MySQL.Connection.prototype.close
+ */
+/**
+ * @namespace {Jaxer.SQLite} This is the namespace that holds the SQLite implementation of the Jaxer DB API
+ */
+/**
+ * Creates a new database file according to connectionParams.PATH
+ * @alias Jaxer.SQLite.createDB
+ * @param {Object} connectionParams A hashmap of parameters needed to connect to the database.
+ * The properties required of connectionParams are:
+ *   PATH: the path to the file of the database
+ */
+/**
+ * Creates a new connection to the given databaseName (file).
+ * This can be any string you want, including the empty string.
+ * If the given database does not yet exist, it is created for you.
+ * The resulting connection object is the only way you interact with the database.
+ * @alias Jaxer.SQLite.Connection
+ * @constructor
+ * @param {Object} connectionParams 
+ * 	A hashmap of parameters needed to connect to the database. Required properties are PATH (database path) and
+ *  CLOSE_AFTER_EXECUTE (whether to close the connection after each call to execute, default is open).
+ */
+/**
+ * Opens the connection so queries can be executed.
+ * This is optional, since if the connection is not open when it's asked to
+ * execute some SQL, it will open the connection automatically.
+ * Also closing the connection is optional.
+ * @alias Jaxer.SQLite.Connection.prototype.open
+ */
+/**
+ * Executes the given sql using the connection.
+ * If the second argument is used, it should be an array of parameters
+ * to be substituted sequentially for question marks ("?") in the sql statement,
+ * which functions as a prepared statement.
+ * @alias Jaxer.SQLite.Connection.prototype.execute
+ * @param {String} sql the sql statement to be executed as a prepared statement
+ * @param {Array} params the sequential parameters passed to the prepared statement for execution
+ * @return {DB.ResultSet} The results of the query, which may or may not contain any data
+ */
+/**
+ * Retrieves the specified value from the prepared statement (at its current cursor location), casting to the given type
+ * @param {Object} stmt
+ * 	the statement object
+ * @param {Object} iCol
+ * 	The index of the column whose value is to be fetched
+ * @param {Object} iType
+ * 	The type object containing information on how to return this value
+ * @return {String}	The value as the requested type
+ */
+/**
+ * Closes the connection if it's open. This is optional, and only does something if the connection is open.
+ * @alias Jaxer.SQLite.Connection.prototype.close
+ */
+/**
+ * @namespace {Jaxer.Container}
+ */
+/**
+ * This is the contructor for the Container object, used for all types of containers (session, sessionPage, etc.)
+ * @alias Jaxer.Container
+ * @constructor
+ * @param {String} type
+ * 	The type of the container
+ * @param {String} key
+ * 	The key for the specific instance of the container (e.g. the sessionPage container is per page, and the page's key is used here)
+ * @param {Object} persistor
+ * 	An instance of the persistor (e.g. a DBPersistor) to be used to persist this container
+ */
+/**
+ * Load the container from its store, but only if it has not yet been loaded
+ * @alias Jaxer.Container.prototype.loadIfNeeded
+ * @private
+ */
+/**
+ * Gets the value of the given property
+ * @alias Jaxer.Container.prototype.get
+ * @param {String} name
+ * 	The name of the property whose value we need
+ * @return {Object}	The value
+ */
+/**
+ * Sets a name-value pair in the current container.
+ * @alias Jaxer.Container.prototype.set
+ * @param {String} name
+ * 	The name of the property to set
+ * @param {Object} value
+ * 	The value of the property
+ */
+/**
+ * Mark a property as changed so it persists
+ * @alias Jaxer.Container.prototype.touch
+ * @param {String} name
+ * 	The name of the property to touch
+ */
+/**
+ * Does the container have the given property set?
+ * @alias Jaxer.Container.prototype.exists
+ * @param {String} name
+ * 	The name of the property to look for
+ * @return {Boolean} true if it exists, false otherwise
+ */
+/**
+ * Was this property just created, or was it previously persisted?
+ * @alias Jaxer.Container.prototype.isPreviouslyPersisted
+ * @param {String} name
+ * 	The name of the property to query
+ * @return {Boolean} true if it was already there before, false if it's newly added
+ */
+/**
+ * Remove (unset) a property
+ * @alias Jaxer.Container.prototype.remove
+ * @param {String} name
+ * 	The name of the property to remove
+ */
+/**
+ * Revert a property to its previously-persisted value
+ * @alias Jaxer.Container.prototype.revert
+ * @param {String} name
+ * 	The name of the property to revert
+ */
+/**
+ * Persists a container.
+ * @alias Jaxer.Container.prototype.persist
+ */
+/**
+ * Initialize the Containers subsystem.
+ * @alias  Jaxer.Container.init
+ * @method
+ */
+/**
+ * Persists all container data to the store (as needed).
+ * @alias Jaxer.Container.persistAll
+ * @method
+ * @param {Object} doc
+ * 	The current document, if any, into which the clientData container's data will be inserted. 
+ * 	Not applicable for callbacks.
+ */
+/**
+ * A database-based persistor for Jaxer Container objects (session, sessionPage, etc.)
+ * @alias Jaxer.DBPersistor
+ * @constructor
+ */
+/**
+ * Retrieve a given container type's and name's property, by name
+ * @alias Jaxer.DBPersistor.prototype.load
+ * @param {String} type
+ * 	The type of the container
+ * @param {String} key
+ * 	The key for the specific instance of the container (e.g. the sessionPage container is per page, and the page's key is used here)
+ * @param {String} name
+ * 	The name of the property to query for
+ * @return {Object}	The value of the requested property, or the empty object if there is none
+ */
+/**
+ * Load all the name-value properties at once for the given container type and key
+ * @alias Jaxer.DBPersistor.prototype.loadAll
+ * @param {String} type
+ * 	The type of the container
+ * @param {String} key
+ * 	The key for the specific instance of the container (e.g. the sessionPage container is per page, and the page's key is used here)
+ * @return {Object}	A hashmap of name-value pairs
+ */
+/**
+ * Persist a particular property (by name) for the given container type and key
+ * @alias Jaxer.DBPersistor.prototype.persist
+ * @param {String} type
+ * 	The type of the container
+ * @param {String} key
+ * 	The key for the specific instance of the container (e.g. the sessionPage container is per page, and the page's key is used here)
+ * @param {String} name
+ * 	The name of the property to persist
+ * @param {Object} data
+ * 	The value to persist for this property
+ */
+/**
+ * Completely remove the given property from the database
+ * @alias Jaxer.DBPersistor.prototype.remove
+ * @param {String} type
+ * 	The type of the container
+ * @param {String} key
+ * 	The key for the specific instance of the container (e.g. the sessionPage container is per page, and the page's key is used here)
+ * @param {String} name
+ * 	The name of the property to remove
+ */
+/**
+ * Creates the database schema needed to persist containers
+ * @alias Jaxer.DBPersistor.createSchema
+ */
+/**
+ * Get session key from the client via cookie, or create one as needed
+ * @alias Jaxer.SessionManager.keyFromRequest
+ * @param {String} appKey
+ * 	The key that uniquely identifies the current application
+ * @return {String}	A session key that can be used to track the current session (new or existing)
+ */
+/**
+ * Set session key on the response to the client via a cookie
+ * @alias Jaxer.SessionManager.keyToResponse
+ * @param {String} appKey
+ * 	The key that uniquely identifies the current application
+ * @param {String} key
+ * 	The session key to use
+ */
+/**
+ * Get app and page keys from Request.
+ * @alias Jaxer.Route.getAppAndPage
+ * @return {Object}	A hashmap containing the app and page matched for the current request from the routes table (in configRoutes.js)
+ */
+/**
+ * An instance of this object has the lifecycle of the current request and contains information about it.
+ * @alias Jaxer.Request
+ * @constructor
+ * @param {Object} evt
+ * 	The core event whose data is used to initialize this Request object instance
+ */
+/**
+ * Create a string representation of all request header key/value pairs
+ * @internal
+ * @alias Jaxer.Request.prototype.listHeaders
+ * @param {String} [separator]
+ * 		This optional parameter can be used to specify the string to use between
+ * 		request header entries. If this value is not specified, then the string
+ * 		"; " will be used
+ * @return {String}
+ * 		A string of all header key/value pairs
+ */
+/**
+ * An internal container for information about uploaded files
+ * @param {Object} req
+ * 	The core's request object
+ * @param {Object} i
+ * 	An index into the list of uploaded files
+ */
+/**
+ * Save the uploaded file to the given path -- otherwise it will be automatically purged after this request
+ * @alias Jaxer.FileInfo.prototype.save
+ * @param {String} newFileName
+ * 	The name (or full path) of the file to which the uploaded file should be saved.
+ */
+/**
+ * An instance of this object has the lifecycle of the current response and contains information about it.
+ * @alias Jaxer.Response
+ * @constructor
+ * @param {Object} evt
+ * 	The core event whose data is used to initialize this Response object instance and to output to the client
+ */
+/**
+ * getEventNames returns a (copy of the) array of framework event names to which you can register handlers
+ * @alias Jaxer.CoreEvents.getEventNames
+ * @return {Array} an array of handler names (modifying it has no impact on CoreEvents)
+ */
+/**
+ * bind a handler to the specified eventType.
+ * @alias Jaxer.CoreEvents.addHandler
+ * @param {String} eventType
+ * 	one of the allowed event types (see Jaxer.CoreEvents.getEventNames)
+ * @param {Function} handlerFunction
+ * 	a function reference invoked when the event specified by eventType is triggered
+ * @param {Function} [testFunction]
+ * 	an optional function to be evaluated when the event is about to be fired; 
+ * 	it'll only be fired if the function evaluates to true.
+ * 	The one argument passed to this function is the request (same as Jaxer.request)
+ * @param {Object} [handlerFunctionObject]
+ * 	optional object on which to call the handlerFunction (it becomes the value of 'this' within the function). 
+ */
+/**
+ * remove an existing handler on an event type
+ * @alias Jaxer.CoreEvents.removeHandler
+ * @param {String} eventType
+ * 	one of the allowed event types (see Jaxer.CoreEvents.getEventNames)
+ * @param {Function} handlerFunction
+ * 	the handler to remove
+ */
+/**
+ * returns an array of handlers for the specified eventType.
+ * @alias Jaxer.CoreEvents.getHandlers
+ * @param {String} eventType
+ * 	one of the allowed event types (see Jaxer.CoreEvents.getEventNames)
+ * @return {Array} an array of handlers
+ */
+/**
+ * removes the handlers for the specified eventType. 
+ * @alias Jaxer.CoreEvents.clearHandlers
+ * @param {String} eventType
+ * 	one of the allowed event types (see Jaxer.CoreEvents.getEventNames)
+ */
+/**
+ * triggers the handlers for the specified eventType.
+ * @alias Jaxer.CoreEvents.fire
+ * @param {String} eventType
+ * 	one of the allowed event types (see Jaxer.CoreEvents.getEventNames)
+ */
+/**
+ * Should the given script element be evaluated (server-side) rather than passed to the client without being evaluated
+ * @alias Jaxer.CoreEvents.isScriptEvaluateEnabled
+ * @param {Object} scriptElement
+ * 	The DOM script element
+ * @return {Boolean} true if it should be evaluated, false if it should not
+ */
+/**
+ * Creates the framework or developer database according to the Config settings
+ * @param {Boolean} isFramework
+ * 	If true, create the framework database, else create the developer database
+ */
+/**
+ * Creates the framework's database schema needed by the framework
+ */
+/**
+ * Get and include the given script element's source, and turn the script element into an inline one
+ * @param {ScriptElement} script
+ * 	The script element to be inlined
+ */
+/**
+ * Do the right thing if the developer specified an onserverload handler for this page
+ * @param {DocumentElement} doc
+ * 	The document whose onserverload (if any) is to be processed
+ */
+/**
+ * Loads a framework extension (already defined in memory).
+ * If the namespaceObject defines an onLoad method, it will be called (without arguments)
+ * @alias Jaxer.loadExtension
+ * @param {String} name
+ * 	The (unique) name to use for this extension
+ * @param {Object} namespaceObject
+ * 	The object holding all the members of this extension
+ */
+/**
+ * Unloads a previously-loaded framework extension.
+ * If its namespaceObject defines an onUnload method, it will be called (without arguments)
+ * @alias Jaxer.unloadExtension
+ * @param {String} name
+ * 	The name used to load this extension
+ * @param {Boolean} noWarnings
+ * 	Whether to warn if the extension was not loaded when this was called, or its namespaceObject was not there.
+ */
+/**
+ * Loads all extensions from the folder defined in Config.EXTENSIONS_DIR.
+ * @alias Jaxer.loadAllExtensions
+ */
+/**
+ * Original code from Douglas Crockford's json.js, 2007-04-30
+ */
+/**
+ * Reconstruct a Javascript data structure from a JSON string. Note that we have
+ * extended JSON to support object references and to support dates. Object
+ * references allow multiple places within the JSON data structure to point to
+ * the same object as opposed to clones of those objects. Date support uses a
+ * special string format to store a given date in GMT
+ * 
+ * @alias Serialization.fromJSONString
+ * @param {String} json
+ * 		A string in the JSON format
+ * @return {Object}
+ * 		The resulting object graph after converting the JSON string to the
+ * 		equivalent Javascript data structure
+ */
+	/**
+	 * A reference constitutes an object and a property on the object. This
+	 * class is used to specify a specific property on an object for later
+	 * setting of that value.
+	 *
+	 * @private
+	 * @alias Serialization.fromJSONString.Reference
+	 * @param {Object} object
+	 * 		The source object of this reference
+	 * @param {String} property
+	 * 		the property on the object representing this reference value
+	 * @param {Number} index
+	 * 		The reference ID that uniquely identifies this reference 
+	 */
+	/**
+	 * Walks the list of nodes passed in the method and sets all properties
+	 * on this instance's underlying object to the values in the node list
+	 *
+	 * @private
+	 * @method
+	 * @alias Serialization.fromJSONString.Reference.prototype.setValue
+	 * @param {Array} nodes
+	 * 		A list of all nodes in the data graph. This array is used to
+	 * 		extract the value of this reference via this reference's unique id.
+	 */
+	/**
+	 * This post-processing steps replaces all reference strings with the actual
+	 * object reference to which they refer.
+	 * 
+	 * @private
+	 * @alias Serialization.fromJSONString.postProcess
+	 * @param {Array} input
+	 * 		The source array created by the first step of eval'ing the JSON
+	 * 		source string.
+	 * @return {Object}
+	 * 		The resulting object created by dereferencing all reference values
+	 * 		and rewiring of the object graph
+	 */
+	/**
+	 * This post-processing step replaces all object references that are members
+	 * of the specified array with actual references to the object to which they
+	 * refer
+	 * 
+	 * @private
+	 * @alias Serialization.fromJSONString.postProcessArray
+	 * @param {Array} ary
+	 * 		The source array to process
+	 * @return {Boolean}
+	 * 		Returns true if the specified array was a valid reference array
+	 */
+	/**
+	 * This post-processing step replaces all object references that are members
+	 * of the specified object with actual references to the object to which
+	 * they refer
+	 * 
+	 * @private
+	 * @alias Serialization.fromJSONString.postProcessObject
+	 * @param {Object} obj
+	 * 		The source object to process
+	 * @param {Array} references
+	 * 		An array of reference instances
+	 * @return {Boolean}
+	 * 		Returns true if the specified object was a valid reference object
+	 */
+	/**
+	 * This post-processing steps replaces all reference strings with the actual
+	 * object reference to which they refer. Also, special date string formats
+	 * are replaced with actual Date objects.
+	 * 
+	 * @private
+	 * @alias Serialization.fromJSONString.postProcessMember
+	 * @param {Object} obj
+	 * 		The object to post-process
+	 * @param {String|Number} property
+	 * 		The name or index of the object to process.
+	 * @return {Boolean}
+	 * 		Returns true if the obj[property] value is a valid reference object
+	 */
+	/**
+	 * For JSON strings that do not contain references, we make a
+	 * post-processing step to replace all special date strings with actual
+	 * Date instances.
+	 * 
+	 * @private
+	 * @alias Serialization.fromJSONString.filter
+	 * @param {String} property
+	 * 		The property name to filter
+	 * @param {Object} value
+	 * 		The value of the property being filtered
+	 */
+	/**
+	 * Traverse the resulting JSON object to perform any post-processing needed
+	 * to convert references and date strings to their proper instances.
+	 * 
+	 * @private
+	 * @alias Serialization.fromJSONString.walk
+	 * @param {String} property
+	 * 		The name of the propery to visit
+	 * @param {Object} obj
+	 * 		The object whose property will be visited
+	 * @return {Object}
+	 * 		The resulting filter property value
+	 */
+/**
+ * Convert the specified object into a JSON representation. Note that we have
+ * modified JSON to support object references (cycles) and to convert Dates into
+ * a special format that will be recognized by our code during deserialization.
+ * 
+ * @alias Serialization.toJSONString
+ * @param {Object} data
+ * 		The source object to convert to a JSON string
+ * @return {String}
+ * 		The resulting JSON string which can be reversed back into the source
+ * 		object via Serialization.fromJSONString
+ */
+	/**
+	 * Convert an Array to a JSON string
+	 * 
+	 * @private
+	 * @alias Serialization.toJSONString.ArrayToJSON
+	 * @param {Array} ary
+	 * 		The source Array to be serialized
+	 * @return {String}
+	 * 		The resulting JSON string
+	 */
+	/**
+	 * Convert a date to a our special string format for later deserizliation
+	 * 
+	 * @private
+	 * @alias Serialization.toJSONString.DateToJSON
+	 * @param {Date} data
+	 * 		The source Date to be serialized
+	 * @return {String}
+	 * 		The resulting JSON string
+	 */
+	/**
+	 * Convert an object to a JSON string
+	 * 
+	 * @private
+	 * @alias Serialization.toJSONString.ObjectToJSON
+	 * @param {Object} data
+	 * 		The source object to be serialized
+	 * @return {String}
+	 * 		The resulting JSON string
+	 */
+	/**
+	 * Convert a string to a JSON string
+	 * 
+	 * @private
+	 * @alias Serialization.toJSONString.StringToJSON
+	 * @param {Object} data
+	 * 		The source string to be serialized
+	 * @return {String}
+	 * 		The resulting JSON string
+	 */
+	/**
+	 * Walk the object graph and tag all items in the graph. Note that cycles
+	 * are detected in this process and all special properties used for this
+	 * discovery process are later removed.
+	 * 
+	 * @private
+	 * @alias Serialization.toJSONString.tagReferences
+	 * @param {Object} obj
+	 * 		The top-most object in the data graph.
+	 * @return {Boolean}
+	 * 		Return true if this specifed object contains references; otherwise,
+	 * 		return false. This value can be used to decide if this object needs
+	 * 		to be represented as standard JSON or in our extended format.
+	 */
+	/**
+	 * Remove all temporary properties used in cycle discovery
+	 * 
+	 * @private
+	 * @alias Serialization.toJSONString.untagReferences
+	 */
+	/**
+	 * Convert the specified object into a JSON string
+	 * 
+	 * @private
+	 * @alias Serialization.toJSONString.JSONify
+	 * @param {Object} data
+	 * 		The Javascript value to be serialized
+	 * @return {String}
+	 * 		The resulting JSON string
+	 */
+/**
+ * FunctionInfo
+ * 
+ * This class encapsulates function information needed for generating
+ * client-side proxies and for server-side storage of functions used in
+ * callbacks.
+ * 
+ * @constructor
+ * @alias Jaxer.FunctionInfo
+ * @param {Function|String} functionReference
+ * 		If there are 3 arguments passed to this constructor, this parameter is
+ * 		the name of the function this info represents. Otherwise, this is a
+ * 		reference to the actual Javascript function instance this info
+ * 		represents.
+ * @param {Node|String[]} [functionNode]
+ * 		If there are 3 arguments passed to this constructor, this parameter is
+ * 		an array of parameter names for the function this info represents.
+ * 		Otherwise, this is an optional parameter that is the root node of an AST
+ * 		representing the function this info represents.
+ * @param {String} [source]
+ * 		If there are 3 arguments passed to this constructor, this parameter is
+ * 		the actual source code of the function this info represents.
+ */
+/**
+ * Create a string representation of the underlying function to be used
+ * client-side as a callback to this function on the server
+ * 
+ * @method
+ * @alias Jaxer.FunctionInfo.prototype.createClientCallback
+ * @return {String}
+ * 		Returns a string representation of this function info's underlying
+ * 		Javascript function in a form suitable for invocation on the client
+ * 		but with execution being done on the server
+ */
+/**
+ * Is the underlying function a native one (for which no actual source is available)?
+ * 
+ * @method
+ * @alias Jaxer.FunctionInfo.prototype.isNative
+ * @return {Boolean}
+ */
+/**
+ * Create a string representation of the underlying function to be used
+ * client-side as the source of this function.
+ * 
+ * @method
+ * @alias Jaxer.FunctionInfo.prototype.createClientSource
+ * @return {String}
+ * 		Returns a string representation of this function info's underlying
+ * 		Javascript function in a form needed to execute the function on the
+ * 		client
+ */
+/**
+ * Create a string representation of the underlying function to be used
+ * client-side as a callback to this function on the server. This differs from
+ * createClientCallback in that this version namespaces the function. This is
+ * needed when a client-side function exists both as a client-side function and
+ * as a server-side callback. The namespace allows the developer to distinguish
+ * between which version of the function that needs to be invoked.
+ * 
+ * @method
+ * @alias Jaxer.FunctionInfo.prototype.createNamespacedClientCallback
+ * @return {String}
+ * 		Returns a string representation of this function info's underlying
+ * 		Javascript function in a form suitable for invocation on the client
+ * 		but with execution being done on the server
+ */
+/**
+ * Create a string representation of the underlying function to be used
+ * during a callback. This source will be stored in the callback database and
+ * will be used to reconstitute the function during a callback. This is used
+ * for cached and proxied functions.
+ * 
+ * @method
+ * @alias Jaxer.FunctionInfo.prototype.createServerFunction
+ * @param {String} [namespace]
+ * 		If specified, the function is specified as a property on the given namespace object.
+ * 		Otherwise, the function is specified as a global property
+ * @param {Boolean} [proxied]
+ * 		If specified and true, the function will have a property called "proxy" and set to true.
+ * @return {String}
+ * 		Returns a string representation of this function info's underlying
+ * 		Javascript function in a form needed to execute the function on the
+ * 		server.
+ */
+/**
+ * The Range class is used to represent a block of text within a string.
+ * @constructor
+ * @alias Jaxer.Range
+ * @param {Number} start
+ * 	The offset to the beginning of the range
+ * @param {Number} end
+ * 	The offset to the end of the range
+ */
+/**
+ * Determine if the specified value is contained by this range. Note that the
+ * value must be contained by the half-open interval [start,end). This means
+ * that a value equal to the ending offset of this range is not considered to
+ * be contained by the range. However, an offset equal to the start of this
+ * range is within the ragne.
+ * @method
+ * @alias Jaxer.Range.prototype.contains
+ * @param {Number} value
+ * 		The value to test
+ * @return {Boolean}
+ * 		Returns true if the value is contained within this range
+ */
+/**
+ * Determine if this range contains any content. This method will return true
+ * if the start of this rang eis greater than or equal to the end of this range.
+ * @method
+ * @alias Jaxer.Range.prototype.isEmpty
+ * @return {Boolean}
+ * 		Returns true if this range is empty
+ */
+/**
+ * Determines if two ranges are overlapping. Note this uses the contains method
+ * to determine the overlap so the same rules about half-open intervals
+ * mentioned in that method's description also apply here.
+ * @method
+ * @alias Jaxer.Range.prototype.isOverlapping
+ * @param {Range} range
+ * 		The range to test
+ * @return {Boolean}
+ * 		Returns true if the ranges overlap
+ */
+/**
+ * Find all comments in the specified source and return an array of Ranges, one
+ * for each comment.
+ * 
+ * @alias Jaxer.TextParser.getCommentRanges
+ * @param {String} source
+ * 		The Javascript source code to parse
+ * @return {Range[]}
+ * 		A list of range objects representing the range of all multi-line
+ * 		comments in the source code
+ */
+/**
+ * Find all uncommented function definitions in the specified source and return
+ * an array of FunctionInfos, one for each function found.
+ * 
+ * @alias Jaxer.TextParser.getFunctionInfos
+ * @param {String} source
+ * 		The Javascript source code to parse
+ * @return {FunctionInfo[]}
+ * 		A list of function info instances, one for each Javascript function
+ * 		found in the source code
+ */
+/**
+ * Use Narcissus to create an AST of the specified source.
+ * 
+ * @private
+ * @alias Jaxer.TextParser.fullParse
+ * @param {String} source
+ * 		The Javascript source code to parse
+ * @return {Node}
+ * 		The resulting Narcissus AST of the source code
+ */
+/**
+ * Create a list of function info instances, one for each function in the source
+ * code. Note that special checks are done so as not to include functions
+ * contained within multi-line comments. This function is used in place of
+ * fullParse when Narcissus is not available.
+ * 
+ * @private
+ * @alias Jaxer.TextParser.simpleParse
+ * @param {String} source
+ * 		The Javascript source code to parse
+ * @return {FunctionInfo[]}
+ * 		A list of function info instances, one for each Javascript function
+ * 		found in the source code
+ */
+/**
+ * This is a container object used during runat attribute and property
+ * processing. This allows all runat-related state to be passed around in one
+ * simple container object. At the same time, this formalizes what is being
+ * passed around which is preferable to using a simple anonymous object.
+ * 
+ * @constructor
+ * @alias Jaxer.ScriptInfo
+ */
+/**
+ * This class processes script elements to determine which of its functions fall
+ * into the various runat categories. This class collects each function into
+ * its appropriate category and provides convenience functions to generate
+ * the necessary source code for this block needed for both client-side and
+ * server-side use.
+ * 
+ * @constructor
+ * @alias Jaxer.ScriptProcessor
+ * @param {ScriptElement} element
+ * 		The underlying script element to be processed by this class
+ * @param {object} jaxerProxies
+ * 		If a non-null object, its properties are the function names that should be proxied
+ * 		even if not explicitly marked as such.
+ * 		If null, no functions should be proxied.
+ */
+/**
+ * Generates the source code for all functions that will live as callbacks on
+ * the server and as client-side code. This effectively generates the original
+ * function source for the client as well as a namespaced version of the
+ * function which can be used to call the server-side function from the client.
+ * 
+ * @method
+ * @alias Jaxer.ScriptProcessor.prototype.getBothClientSource
+ * @return {String}
+ * 		The source code of all functions in this underlying script element
+ */
+/**
+ * Generates the source code for all functions that will execute on the client
+ * only. This comes into play, for example, when a server script element has
+ * tagged one of its containing functions for client-side execution. Other cases
+ * include dynamic generation of functions that did not actually exist in the
+ * script element's source text.
+ * 
+ * @method
+ * @alias Jaxer.ScriptProcessor.prototype.getClientSource
+ * @return {String}
+ * 		The source code of all functions in this underlying script element
+ */
+/**
+ * Determine the value of the underlying script elements runat attribute. If the
+ * attribute does not exist, then this method will return the default value of
+ * "client"
+ * 
+ * @method
+ * @alias Jaxer.ScriptProcessor.prototype.getRunatAttribute
+ * @return {String}
+ * 		The runat attribute value 
+ */
+/**
+ * Process the content of all functions inside this instance's underlying script
+ * element. The script element's runat attribute is applied to all function
+ * instances that exist in global. FunctionInfo's are created for all of those
+ * functions. Any changes to the role of a function in this script element are
+ * updated. For example, if a script element is tagged to run on the server, but
+ * upon execution, if one of the functions in that element is tagged to run
+ * client-side, then the content of the script element served to the client will
+ * contain only that one client-side function. If that function has not been
+ * tagged for client-side execution, the entire script element would have been
+ * removed since the functions were intended to run on the server only.
+ * 
+ * @method
+ * @alias Jaxer.ScriptProcessor.prototype.process
+ */
+/**
+ * NOT CURRENTLY USED
+ * This is a convenience function which creates a FunctionInfo from a Narcissus
+ * AST node and then calls the processFunctionInfo method.
+ * 
+ * @method
+ * @alias Jaxer.ScriptProcessor.prototype.processFunctionNode
+ * @param {Node} functionNode
+ * 		A top-level Narcissus AST node representing the parse tree of the
+ * 		specified function
+ * @param {Function} functionReference
+ * 		A reference to the actual Javascript function instance
+ * @param {String} runatProperty
+ * 		The runat property value active for this function
+ */
+/**
+ * This method is responsible for classifying each function based on the
+ * specified runat and proxy property values. The classifications are later used for
+ * emission of client-side functions, proxies, and callback storage.
+ * 
+ * @method
+ * @alias Jaxer.ScriptProcessor.prototype.processFunctionInfo
+ * @param {FunctionInfo} functionInfo
+ * 		A function info instance representing a Javascript function
+ * @param {String} runatProperty
+ * 		The runat property value active for this function
+ * @param {String} proxyProperty
+ * 		The proxy property value active for this function, or null if there isn't one
+ */
+/**
+ * This method removes the underlying script element from the DOM.
+ * 
+ * @method
+ * @alias Jaxer.ScriptProcessor.prototype.removeElement
+ */
+/**
+ * This method removes all runat property assignments in the underlying script
+ * element's source. This prevents the runat property from being exposed on the
+ * client. This method relies on an underlying Narcissus AST node to function
+ * properly.
+ * 
+ * @method
+ * @alias Jaxer.ScriptProcessor.prototype.removeRunatAssignments
+ * @return {String}
+ * 		The original source code with all runat assignments whited out
+ */
+/**
+ * This method removes all runat property assignments in the underlying script
+ * element's source. This prevents the runat property from being exposed on the
+ * client. This method is used to remove these assignments when we do not have
+ * a Narcissus AST node for this script element's source.
+ * 
+ * @method
+ * @alias Jaxer.ScriptProcessor.prototype.removeRunatAssignmentsSimple
+ * @return {String}
+ * 		The original source code with all runat assignements whited out
+ */
+/**
+ * Process all functions for possible caching, proxying, and callback
+ * invocation.
+ * @alias Jaxer.CallbackManager.processCallbacks
+ * @param {Document} doc
+ * 		The current document's DocumentElement. This is used to create elements
+ * 		in the active DOM as needed.
+ */
+/**
+ * Once all functions have been processed, we need to make sure all cached and
+ * proxied functions are added to the database so we can reconstitute those
+ * functions during callbacks.
+ * 
+ * @private
+ * @alias Jaxer.CallbackManager.cacheServerFunctions
+ * @param {ScriptInfo} scriptsInfo
+ * 		The active scriptInfo being used to manage state in this callback
+ * 		manager session
+ */
+/**
+ * Generates a key out of the page name
+ * @alias Jaxer.CallbackManager.pageNameToKey
+ * @param {String} pageName
+ * 	The name (URL) of the page
+ * @return {String} the text-only key we will use
+ */
+/**
+ * Cache the callback page in memory for faster execution on callback
+ * @alias Jaxer.CallbackManager.cacheCallbackPage
+ * @param {String} pageKey
+ * 	The key by which to store/retrieve the code page
+ * @param {String} crc32
+ * 	Used to see whether the code has changed
+ * @param {String} source
+ * 	The JavaScript source code (function definitions) to execute
+ */
+/**
+ * Visit all functions hanging off of global and process each one that has a
+ * runat property defined. This approach allows server-executed code to modify
+ * the role a function plays regardless of its containing script elements runat
+ * attribute value. This also allows functions to be generated on the fly and
+ * for functions to change roles based on queries performed in the server-side
+ * code.
+ * 
+ * @private
+ * @alias Jaxer.CallbackManager.processGlobalFunctions
+ * @param {ScriptInfo} scriptsInfo
+ * 		The active scriptInfo being used to manage state in this callback
+ * 		manager session
+ */
+/**
+ * Process each script element in this page. Each function in each script
+ * element is visited. All processing is delegated to the
+ * ScriptProcessor.process method.
+ * 
+ * @private
+ * @alias Jaxer.CallbackManager.processScriptElements
+ * @param {ScriptInfo} scriptInfo
+ * 		The active scriptInfo being used to manage state in this callback
+ * 		manager session
+ */
+/**
+ * Calculates the effective proxy attribute of a function based on settings on the function
+ * and on global settings.
+ * 
+ * @private
+ * @alias Jaxer.CallbackManager.calculateProxyAttribute
+ * @param {Function} func
+ * 		The function whose proxy attribute is to be calculated
+ * @param {Object} jaxerProxies
+ * 		An object containing names (as its properties) of functions to implicitly proxy.
+ * 		If null, no functions will be proxied.
+ */
+/**
+ * Used to set events on DOM elements such that they "do the right thing" both client-side and server-side.
+ * On the client, this acts as expected, setting a property with the name eventName (e.g. onclick) on the DOM element.
+ * On the server, the eventName attribute is set on the DOM element so it can be serialized with the DOM before sending to the client.
+ * If the handler is a (server side) function with a name, the attribute's value is handler.name + "()"
+ * On the server, 
+ * @alias Jaxer.setEvent
+ * @param {Object} domElement
+ * 	The element on which to set the event
+ * @param {String} eventName
+ * 	The name of the event to set
+ * @param {Object} handler
+ * 	The handler function, or the body (as a string)
+ */
+/**
+ * Sets the title of the document and works on either the server or the client. 
+ * @alias Jaxer.setTitle
+ * @param {String} title
+ * 	The text of the title
+ */
