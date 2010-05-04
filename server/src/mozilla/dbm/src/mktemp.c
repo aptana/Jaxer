@@ -33,8 +33,6 @@
 static char sccsid[] = "@(#)mktemp.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 
-#include "watcomfx.h"
-
 #ifdef macintosh
 #include <unix.h>
 #else
@@ -47,12 +45,8 @@ static char sccsid[] = "@(#)mktemp.c	8.1 (Berkeley) 6/4/93";
 #include <ctype.h>
 #include "mcom_db.h"
 
-#if !defined(_WINDOWS) && !defined(XP_OS2_VACPP)
+#ifndef _WINDOWS
 #include <unistd.h>
-#endif
-
-#ifdef XP_OS2_VACPP
-#include <process.h>
 #endif
 
 #ifdef _WINDOWS
@@ -84,11 +78,13 @@ mkstempflags(char *path, int extraFlags)
 	return (_gettemp(path, &fd, extraFlags) ? fd : -1);
 }
 
+#ifdef WINCE /* otherwise, use the one in libc */
 char *
 mktemp(char *path)
 {
 	return(_gettemp(path, (int *)NULL, 0) ? path : (char *)NULL);
 }
+#endif
 
 /* NB: This routine modifies its input string, and does not always restore it.
 ** returns 1 on success, 0 on failure.

@@ -7,27 +7,44 @@ interface nsIPrintSettings;
 
 %{ C++
 class nsIWidget;
-class nsIDeviceContext;
-struct nsRect;
+struct nsIntRect;
 %}
 
 [ptr] native nsIWidgetPtr(nsIWidget);
-[ptr] native nsIDeviceContextPtr(nsIDeviceContext);
-[ref] native nsRectRef(nsRect);
+[ref] native nsIntRectRef(nsIntRect);
 
-[scriptable, uuid(89653afe-182f-401f-9f3c-8858d91387cd)]
+[scriptable, uuid(08665a60-b398-11de-8a39-0800200c9a66)]
 interface nsIContentViewer : nsISupports
 {
 
   [noscript] void init(in nsIWidgetPtr aParentWidget,
-                       in nsIDeviceContextPtr aDeviceContext,
-                       [const] in nsRectRef aBounds);
+                       [const] in nsIntRectRef aBounds);
 
   attribute nsISupports container;
 
   void loadStart(in nsISupports aDoc);
   void loadComplete(in unsigned long aStatus);
-  boolean permitUnload();
+
+  /**
+   * Checks if the document wants to prevent unloading by firing beforeunload on
+   * the document, and if it does, prompts the user. The result is returned.
+   *
+   * @param aCallerClosesWindow indicates that the current caller will close the
+   *        window. If the method returns true, all subsequent calls will be
+   *        ignored.
+   */
+  boolean permitUnload([optional] in boolean aCallerClosesWindow);
+
+  /**
+   * Works in tandem with permitUnload, if the caller decides not to close the
+   * window it indicated it will, it is the caller's responsibility to reset
+   * that with this method.
+   *
+   * @Note this method is only meant to be called on documents for which the
+   *  caller has indicated that it will close the window. If that is not the case
+   *  the behavior of this method is undefined.
+   */
+  void resetCloseWindow();
   void pageHide(in boolean isUnload);
 
   /**
@@ -58,8 +75,8 @@ interface nsIContentViewer : nsISupports
 
   attribute nsIDOMDocument DOMDocument;
 
-  [noscript] void getBounds(in nsRectRef aBounds);
-  [noscript] void setBounds([const] in nsRectRef aBounds);
+  [noscript] void getBounds(in nsIntRectRef aBounds);
+  [noscript] void setBounds([const] in nsIntRectRef aBounds);
 
   /**
    * The previous content viewer, which has been |close|d but not

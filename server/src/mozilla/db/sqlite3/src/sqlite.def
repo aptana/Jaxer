@@ -38,7 +38,6 @@ LIBRARY sqlite3.dll
 EXPORTS
         sqlite3_aggregate_context
         sqlite3_aggregate_count
-        sqlite3_apis
         sqlite3_auto_extension
         sqlite3_bind_blob
         sqlite3_bind_double
@@ -76,6 +75,7 @@ EXPORTS
         sqlite3_commit_hook
         sqlite3_complete
         sqlite3_complete16
+        sqlite3_config
         sqlite3_create_collation
         sqlite3_create_collation16
         sqlite3_create_function
@@ -100,6 +100,7 @@ EXPORTS
         sqlite3_get_auxdata
         sqlite3_get_table
         sqlite3_global_recover
+        sqlite3_initialize
         sqlite3_interrupt
         sqlite3_last_insert_rowid
         sqlite3_libversion
@@ -112,11 +113,10 @@ EXPORTS
         sqlite3_mutex_alloc
         sqlite3_mutex_enter
         sqlite3_mutex_free
-        sqlite3_mutex_held
         sqlite3_mutex_leave
-        sqlite3_mutex_notheld
         sqlite3_mutex_try
         sqlite3_mprintf
+        sqlite3_next_stmt
         sqlite3_open
         sqlite3_open_v2
         sqlite3_open16
@@ -135,6 +135,7 @@ EXPORTS
         sqlite3_result_double
         sqlite3_result_error
         sqlite3_result_error16
+        sqlite3_result_error_nomem
         sqlite3_result_int
         sqlite3_result_int64
         sqlite3_result_null
@@ -146,9 +147,12 @@ EXPORTS
         sqlite3_rollback_hook
         sqlite3_set_authorizer
         sqlite3_set_auxdata
+        sqlite3_shutdown
         sqlite3_sleep
         sqlite3_snprintf
+        sqlite3_sql
         sqlite3_step
+        sqlite3_stmt_status
         sqlite3_thread_cleanup
         sqlite3_total_changes
         sqlite3_trace
@@ -172,3 +176,7 @@ EXPORTS
         sqlite3_vfs_unregister
         sqlite3_vfs_register
         sqlite3_vmprintf
+#ifdef SQLITE_DEBUG
+        sqlite3_mutex_held
+        sqlite3_mutex_notheld
+#endif

@@ -54,7 +54,7 @@
 
 #include "nsDocShellCID.h"
 
-#include "nsWebShell.h"
+#include "nsDocShell.h"
 #include "nsDefaultURIFixup.h"
 #include "nsWebNavigationInfo.h"
 
@@ -68,6 +68,9 @@
 #include "nsPrefetchService.h"
 #include "nsOfflineCacheUpdate.h"
 #include "nsLocalHandlerApp.h"
+#ifdef MOZ_ENABLE_DBUS
+#include "nsDBusHandlerApp.h"
+#endif 
 
 // session history
 #include "nsSHEntry.h"
@@ -85,7 +88,7 @@ static PRBool gInitialized = PR_FALSE;
 
 // The one time initialization for this module
 // static
-PR_STATIC_CALLBACK(nsresult)
+static nsresult
 Initialize(nsIModule* aSelf)
 {
   NS_PRECONDITION(!gInitialized, "docshell module already initialized");
@@ -105,7 +108,7 @@ Initialize(nsIModule* aSelf)
   return rv;
 }
 
-PR_STATIC_CALLBACK(void)
+static void
 Shutdown(nsIModule* aSelf)
 {
   nsSHEntry::Shutdown();
@@ -113,7 +116,7 @@ Shutdown(nsIModule* aSelf)
 }
 
 // docshell
-NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsWebShell, Init)
+NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsDocShell, Init)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsDefaultURIFixup)
 NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsWebNavigationInfo, Init)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsClassifierCallback)
@@ -128,11 +131,9 @@ NS_GENERIC_FACTORY_SINGLETON_CONSTRUCTOR(nsOfflineCacheUpdateService,
                                          nsOfflineCacheUpdateService::GetInstance)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsOfflineCacheUpdate)
 NS_GENERIC_FACTORY_CONSTRUCTOR(PlatformLocalHandlerApp_t)
-
-#if defined(XP_MAC) || defined(XP_MACOSX)
-#include "nsInternetConfigService.h"
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsInternetConfigService)
-#endif
+#ifdef MOZ_ENABLE_DBUS
+NS_GENERIC_FACTORY_CONSTRUCTOR(nsDBusHandlerApp)
+#endif 
 
 // session history
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsSHEntry)
@@ -142,19 +143,12 @@ NS_GENERIC_FACTORY_CONSTRUCTOR(nsSHistory)
 // download history
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsDownloadHistory)
 
-// Currently no-one is instantiating docshell's directly because
-// nsWebShell is still our main "shell" class. nsWebShell is a subclass
-// of nsDocShell. Once migration is complete, docshells will be the main
-// "shell" class and this module will need to register the docshell as
-// a component
-//NS_GENERIC_FACTORY_CONSTRUCTOR(nsDocShell)
-
 static const nsModuleComponentInfo gDocShellModuleInfo[] = {
   // docshell
-    { "WebShell", 
-      NS_WEB_SHELL_CID,
-      "@mozilla.org/webshell;1",
-      nsWebShellConstructor
+    { "DocShell", 
+      NS_DOCSHELL_CID,
+      "@mozilla.org/docshell;1",
+      nsDocShellConstructor
     },
     { "Default keyword fixup", 
       NS_DEFAULTURIFIXUP_CID,
@@ -221,14 +215,14 @@ static const nsModuleComponentInfo gDocShellModuleInfo[] = {
       NS_ABOUT_MODULE_CONTRACTID_PREFIX "licence",
       nsAboutRedirector::Create
     },
-    { "about:about",
-      NS_ABOUT_REDIRECTOR_MODULE_CID,
-      NS_ABOUT_MODULE_CONTRACTID_PREFIX "about",
-      nsAboutRedirector::Create
-    },
     { "about:neterror",
       NS_ABOUT_REDIRECTOR_MODULE_CID,
       NS_ABOUT_MODULE_CONTRACTID_PREFIX "neterror",
+      nsAboutRedirector::Create
+    },
+    { "about:memory",
+      NS_ABOUT_REDIRECTOR_MODULE_CID,
+      NS_ABOUT_MODULE_CONTRACTID_PREFIX "memory",
       nsAboutRedirector::Create
     },
 
@@ -252,10 +246,9 @@ static const nsModuleComponentInfo gDocShellModuleInfo[] = {
     nsOfflineCacheUpdateConstructor, },
   { "Local Application Handler App", NS_LOCALHANDLERAPP_CID, 
     NS_LOCALHANDLERAPP_CONTRACTID, PlatformLocalHandlerApp_tConstructor, },
-
-#if defined(XP_MAC) || defined(XP_MACOSX)
-  { "Internet Config Service", NS_INTERNETCONFIGSERVICE_CID, NS_INTERNETCONFIGSERVICE_CONTRACTID,
-    nsInternetConfigServiceConstructor, },
+#ifdef MOZ_ENABLE_DBUS
+  { "DBus Handler App", NS_DBUSHANDLERAPP_CID,
+      NS_DBUSHANDLERAPP_CONTRACTID, nsDBusHandlerAppConstructor},
 #endif
         
     // session history

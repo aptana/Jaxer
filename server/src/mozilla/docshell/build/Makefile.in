@@ -52,8 +52,6 @@ EXPORT_LIBRARY = 1
 GRE_MODULE	= 1
 LIBXUL_LIBRARY	= 1
 
-PACKAGE_FILE = docshell.pkg
-
 REQUIRES	= xpcom \
 		  string \
 		  dom \
@@ -137,4 +135,12 @@ endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),gtk2)
 EXTRA_DSO_LDOPTS	+= $(TK_LIBS)
+endif
+
+ifdef MOZ_ENABLE_DBUS
+ EXTRA_DSO_LDOPTS += $(MOZ_DBUS_GLIB_LIBS)
+endif
+
+ifdef MOZ_PLATFORM_MAEMO
+EXTRA_DSO_LDOPTS += $(MOZ_PLATFORM_MAEMO_LIBS)
 endif

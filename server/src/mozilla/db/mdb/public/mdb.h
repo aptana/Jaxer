@@ -1457,7 +1457,7 @@ NS_DEFINE_STATIC_IID_ACCESSOR(nsIMdbStore, NS_IMDBSTORE_IID)
 **| current seed value (which implies the iteration is less than total) in
 **| between to cursor calls that actually access collection content.  By
 **| default, a cursor should assume this attribute is false until specified,
-**| so that iterations quietly try to re-sync when they loose coherence.
+**| so that iterations quietly try to re-sync when they lose coherence.
 |*/
 
 #define NS_IMDBCURSOR_IID_STR "a0c37337-6ebc-474c-90db-e65ea0b850aa"
@@ -1592,7 +1592,7 @@ NS_DEFINE_STATIC_IID_ACCESSOR(nsIMdbPortTableCursor,
 **|
 **|| dropping: when a caller expects a row or table will no longer be used, the
 **| caller can tell the collection to 'drop activity', which means the runtime
-**| object can have it's internal representation purged to save memory or any
+**| object can have its internal representation purged to save memory or any
 **| other resource that is being consumed by the collection's representation.
 **| This has no effect on the collection's persistent content or semantics,
 **| and is only considered a runtime effect.  After a collection drops

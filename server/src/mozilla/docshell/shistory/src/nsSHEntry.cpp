@@ -139,7 +139,7 @@ nsSHEntry::nsSHEntry(const nsSHEntry &other)
 {
 }
 
-PR_STATIC_CALLBACK(PRBool)
+static PRBool
 ClearParentPtr(nsISHEntry* aEntry, void* /* aData */)
 {
   if (aEntry) {
@@ -350,8 +350,10 @@ NS_IMETHODIMP nsSHEntry::GetLayoutHistoryState(nsILayoutHistoryState** aResult)
 
 NS_IMETHODIMP nsSHEntry::SetLayoutHistoryState(nsILayoutHistoryState* aState)
 {
-  NS_ENSURE_STATE(mSaveLayoutState || !aState);
   mLayoutHistoryState = aState;
+  if (mLayoutHistoryState)
+    mLayoutHistoryState->SetScrollPositionOnly(!mSaveLayoutState);
+
   return NS_OK;
 }
 
@@ -425,11 +427,8 @@ NS_IMETHODIMP nsSHEntry::GetSaveLayoutStateFlag(PRBool * aFlag)
 NS_IMETHODIMP nsSHEntry::SetSaveLayoutStateFlag(PRBool  aFlag)
 {
   mSaveLayoutState = aFlag;
-
-  // if we are not allowed to hold layout history state, then make sure
-  // that we are not holding it!
-  if (!mSaveLayoutState)
-    mLayoutHistoryState = nsnull;
+  if (mLayoutHistoryState)
+    mLayoutHistoryState->SetScrollPositionOnly(!aFlag);
 
   return NS_OK;
 }
@@ -536,14 +535,14 @@ nsSHEntry::GetWindowState(nsISupports **aState)
 }
 
 NS_IMETHODIMP
-nsSHEntry::SetViewerBounds(const nsRect &aBounds)
+nsSHEntry::SetViewerBounds(const nsIntRect &aBounds)
 {
   mViewerBounds = aBounds;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-nsSHEntry::GetViewerBounds(nsRect &aBounds)
+nsSHEntry::GetViewerBounds(nsIntRect &aBounds)
 {
   aBounds = mViewerBounds;
   return NS_OK;
@@ -750,6 +749,15 @@ nsSHEntry::CharacterDataChanged(nsIDocument* aDocument,
                                 CharacterDataChangeInfo* aInfo)
 {
   DocumentMutated();
+}
+
+void
+nsSHEntry::AttributeWillChange(nsIDocument* aDocument,
+                               nsIContent* aContent,
+                               PRInt32 aNameSpaceID,
+                               nsIAtom* aAttribute,
+                               PRInt32 aModType)
+{
 }
 
 void

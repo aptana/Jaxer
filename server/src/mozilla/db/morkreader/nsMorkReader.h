@@ -53,7 +53,7 @@
 //  http://www.mozilla.org/mailnews/arch/mork/grammar.txt
 //  http://www.jwz.org/hacks/mork.pl
 
-class nsMorkReader
+class NS_STACK_CLASS nsMorkReader
 {
  public:
   // This string type has built-in storage for the hex string representation
@@ -128,9 +128,9 @@ class nsMorkReader
   // The callback can return PL_DHASH_NEXT to continue enumerating,
   // or PL_DHASH_STOP to stop.
   typedef PLDHashOperator
-  (*PR_CALLBACK RowEnumerator)(const nsCSubstring &rowID, 
-                               const nsTArray<nsCString> *values,
-                               void *userData);
+  (* RowEnumerator)(const nsCSubstring &rowID,
+                    const nsTArray<nsCString> *values,
+                    void *userData);
 
   // Initialize the importer object's data structures
   nsresult Init();

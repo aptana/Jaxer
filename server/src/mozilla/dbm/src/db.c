@@ -33,8 +33,6 @@
 static char sccsid[] = "@(#)db.c	8.4 (Berkeley) 2/21/94";
 #endif /* LIBC_SCCS and not lint */
 
-#include "watcomfx.h"
-
 #ifndef __DBINTERFACE_PRIVATE
 #define __DBINTERFACE_PRIVATE
 #endif
@@ -66,11 +64,7 @@ dbSetOrClearDBLock(DBLockFlagEnum type)
 		all_databases_locked_closed = 0;
 }
 
-#if defined(__WATCOMC__) || defined(__WATCOM_CPLUSPLUS__)
 DB *
-#else
-PR_IMPLEMENT(DB *)
-#endif
 dbopen(const char *fname, int flags,int mode, DBTYPE type, const void *openinfo)
 {
 

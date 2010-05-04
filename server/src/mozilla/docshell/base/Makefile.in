@@ -44,7 +44,7 @@ VPATH		= @srcdir@
 include $(DEPTH)/config/autoconf.mk
 
 MODULE		= docshell
-ifeq ($(OS_ARCH),WINNT)
+ifneq (,$(filter WINNT WINCE,$(OS_ARCH)))
 XPIDL_MODULE	= docshell_base
 endif
 LIBRARY_NAME	= basedocshell_s
@@ -85,6 +85,7 @@ REQUIRES	= xpcom \
 		  windowwatcher \
 		  imglib2 \
 		  jar \
+		  prefetch \
 		  $(NULL)
 
 SDK_XPIDLSRCS = \
@@ -92,7 +93,6 @@ SDK_XPIDLSRCS = \
 		$(NULL)
 
 XPIDLSRCS	= \
-		nsCDocShell.idl			\
 		nsCDefaultURIFixup.idl		\
 		nsIDocShell.idl			\
 		nsIDocShellLoadInfo.idl	\
@@ -115,14 +115,14 @@ XPIDLSRCS	= \
 		nsIWebPageDescriptor.idl	\
 		nsIURIClassifier.idl		\
 		nsIChannelClassifier.idl	\
-		nsIDownloadHistory.idl \
+		nsIDownloadHistory.idl          \
+		nsILoadContext.idl              \
 		$(NULL)
 
 EXPORTS		= nsDocShellLoadTypes.h
 
 CPPSRCS		= \
 		nsDocShell.cpp		\
-		nsWebShell.cpp		\
 		nsDocShellLoadInfo.cpp		\
 		nsDocShellEditorData.cpp	\
 		nsDocShellTransferableHooks.cpp \
