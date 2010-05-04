@@ -48,20 +48,23 @@ include $(DEPTH)/config/autoconf.mk
 # headers, so that we can use it to set up the wrapped system headers.
 VISIBILITY_FLAGS =
 
-ifneq (,$(CROSS_COMPILE)$(filter-out WINNT OS2,$(OS_ARCH)))
-ifneq ($(OS_ARCH), WINCE)
 HOST_PROGRAM	= nsinstall$(HOST_BIN_SUFFIX)
+
+ifeq (WINNT,$(HOST_OS_ARCH))
+HOST_CSRCS	= nsinstall_win.c
+else
 HOST_CSRCS	= nsinstall.c pathsub.c
 endif
-endif
 
-PLSRCS		= nfspwd.pl revdepth.pl
+PLSRCS		= nfspwd.pl
 
 TARGETS		= $(HOST_PROGRAM) $(PLSRCS:.pl=) $(SIMPLE_PROGRAMS)
 
 ifndef CROSS_COMPILE
 ifdef USE_ELF_DYNSTR_GC
 TARGETS		+= elf-dynstr-gc
+# Compiling the above will create dependency files.
+NEED_MDDEPDIR	= 1
 endif
 endif
 
@@ -87,6 +90,8 @@ include $(topsrcdir)/config/config.mk
 NO_INSTALL=1
 
 include $(topsrcdir)/config/rules.mk
+
+HOST_CFLAGS += -DUNICODE -D_UNICODE
 
 ifeq ($(OS_CONFIG),SunOS4.1)
 NSPR_CFLAGS	+= -I$(srcdir)/../nsprpub/pr/include/md
@@ -126,9 +131,8 @@ export::
 		-DMOZ_NATIVE_ZLIB=$(MOZ_NATIVE_ZLIB) \
 		-DMOZ_NATIVE_PNG=$(MOZ_NATIVE_PNG) \
 		-DMOZ_NATIVE_JPEG=$(MOZ_NATIVE_JPEG) \
-		-DMOZ_NATIVE_LCMS=$(MOZ_NATIVE_LCMS) \
 		$(srcdir)/system-headers | $(PERL) $(topsrcdir)/nsprpub/config/make-system-wrappers.pl system_wrappers
-	$(INSTALL) system_wrappers $(DIST)/include
+	$(INSTALL) system_wrappers $(DIST)
 
 GARBAGE_DIRS += system_wrappers
 endif
@@ -141,7 +145,7 @@ GARBAGE += \
 
 ifndef CROSS_COMPILE
 ifdef USE_ELF_DYNSTR_GC
-elf-dynstr-gc: elf-dynstr-gc.c Makefile Makefile.in
+elf-dynstr-gc: elf-dynstr-gc.c $(GLOBAL_DEPS)
 	$(CC) $(COMPILE_CFLAGS) $(GLIB_CFLAGS) -o $@ $< $(LDFLAGS) $(GLIB_LIBS) 
 endif
 endif
@@ -153,10 +157,26 @@ clean clobber realclean clobber_all::
 	cd $(MKDEPEND_DIR); $(MAKE) $@
 endif
 
-PYUNITS := unit-Expression.py unit-Preprocessor.py
+PYUNITS := \
+  unit-Expression.py \
+  unit-Preprocessor.py \
+  unit-nsinstall.py \
+  unit-printprereleasesuffix.py \
+  unit-JarMaker.py \
+  $(NULL)
 
-check::
+check:: check-python-modules check-jar-mn
+
+check-python-modules::
 	@$(EXIT_ON_ERROR) \
 	for test in $(PYUNITS); do \
 	  $(PYTHON) $(srcdir)/tests/$$test ; \
 	done
+
+check-jar-mn::
+	$(MAKE) -C tests/src-simple check-jar
+	$(MAKE) -C tests/src-simple check-flat
+	$(MAKE) -C tests/src-simple check-flat USE_EXTENSION_MANIFEST=1
+ifneq (,$(filter-out WINNT OS2,$(OS_ARCH)))
+	$(MAKE) -C tests/src-simple check-symlink
+endif

@@ -20,6 +20,9 @@ Aliases.h
 all.h
 alloca.h
 alloc.h
+alsa/asoundlib.h
+alsa/pcm.h
+alsa/mixer.h
 ansi_parms.h
 a.out.h
 app/Cursor.h
@@ -59,6 +62,7 @@ be/kernel/image.h
 be/kernel/OS.h
 bfd.h
 Bitmap.h
+blapi.h
 bsd/libc.h
 bsd/syscall.h
 bstring.h
@@ -77,7 +81,6 @@ cairo-atsui.h
 cairo-beos.h
 cairo-ft.h
 cairo-glitz.h
-cairo-nquartz.h
 cairo-os2.h
 cairo-pdf.h
 cairo-ps.h
@@ -85,7 +88,63 @@ cairo-quartz.h
 cairo-win32.h
 cairo-xlib.h
 cairo-xlib-xrender.h
+cairo-directfb.h
+cairo-qpainter.h
 #endif
+dfiff.h
+ffi.h
+fusion/reactor.h
+fusion/property.h
+fusion/conf.h
+fusion/build.h
+fusion/hash.h
+fusion/shm/shm.h
+fusion/shm/shm_internal.h
+fusion/shm/pool.h
+fusion/ref.h
+fusion/fusion_internal.h
+fusion/lock.h
+fusion/types.h
+fusion/vector.h
+fusion/call.h
+fusion/shmalloc.h
+fusion/protocol.h
+fusion/fusion.h
+fusion/arena.h
+fusion/object.h
+directfbgl.h
+directfb_version.h
+directfb.h
+directfb_util.h
+directfb_keynames.h
+dgiff.h
+direct/util.h
+direct/memcpy.h
+direct/interface.h
+direct/conf.h
+direct/tree.h
+direct/signals.h
+direct/build.h
+direct/interface_implementation.h
+direct/utf8.h
+direct/serial.h
+direct/hash.h
+direct/direct.h
+direct/clock.h
+direct/types.h
+direct/mem.h
+direct/thread.h
+direct/debug.h
+direct/stream.h
+direct/messages.h
+direct/trace.h
+direct/modules.h
+direct/log.h
+direct/system.h
+direct/list.h
+dfb_types.h
+directfb_strings.h
+directfb_keyboard.h
 callconv.h
 Carbon/Carbon.h
 CarbonEvents.h
@@ -194,8 +253,10 @@ Finder.h
 FinderRegistry.h
 FixMath.h
 float.h
+fnmatch.h
 Folders.h
 fontconfig/fontconfig.h
+fontconfig/fcfreetype.h
 Font.h
 Fonts.h
 fp.h
@@ -214,16 +275,14 @@ fribidi/fribidi.h
 FSp_fopen.h
 fstream.h
 ft2build.h
+fts.h
 gconf/gconf-client.h
 Gdiplus.h
-gdk/gdkevents.h
 gdk/gdk.h
 gdk/gdkkeysyms.h
-gdk/gdkpango.h
 gdk/gdkprivate.h
-gdk/gdkregion.h
-gdk/gdkwindow.h
 gdk/gdkx.h
+gdk/gdkdirectfb.h
 gdk-pixbuf/gdk-pixbuf.h
 Gestalt.h
 getopt.h
@@ -238,35 +297,10 @@ gssapi_generic.h
 gssapi/gssapi_generic.h
 gssapi/gssapi.h
 gssapi.h
-gtk/gtkbindings.h
-gtk/gtkbutton.h
-gtk/gtkclipboard.h
-gtk/gtkcontainer.h
-gtk/gtkdialog.h
-gtk/gtkentry.h
-gtk/gtkfixed.h
 gtk/gtk.h
-gtk/gtkiconfactory.h
-gtk/gtkimage.h
-gtk/gtkimmulticontext.h
-gtk/gtkinvisible.h
-gtk/gtkmain.h
-gtk/gtkmessagedialog.h
-gtk/gtkobject.h
 gtk/gtkprinter.h
 gtk/gtkprintjob.h
 gtk/gtkprintunixdialog.h
-gtk/gtkprivate.h
-gtk/gtkselection.h
-gtk/gtksignal.h
-gtk/gtksocket.h
-gtk/gtkstock.h
-gtk/gtkstyle.h
-gtk/gtktextview.h
-gtk/gtkvscrollbar.h
-gtk/gtkwidget.h
-gtk/gtkwindow.h
-gtk/gtkversion.h
 HIToolbox/HIToolbox.h
 hlink.h
 htiface.h
@@ -372,6 +406,7 @@ libgnomevfs/gnome-vfs-ops.h
 libgnomevfs/gnome-vfs-standard-callbacks.h
 libIDL/IDL.h
 lib$routines.h
+libnotify/notify.h
 limits
 limits.h
 link.h
@@ -382,7 +417,9 @@ linux/version.h
 list
 List.h
 Lists.h
+#if MOZ_OJI==1
 LiveConnectManagerTests.h
+#endif
 LListBox.h
 LListener.h
 LMenuBar.h
@@ -523,7 +560,6 @@ pango/pango-break.h
 pango/pango-fontmap.h
 pango/pango.h
 pango/pangoxft.h
-pango/pangox.h
 pango/pango-utils.h
 pango-types.h
 pascal.h
@@ -758,6 +794,7 @@ time.h
 Timer.h
 tlhelp32.h
 ToolUtils.h
+tr1/functional
 trace.h
 Traps.h
 typeinfo
@@ -854,6 +891,8 @@ X11/extensions/shape.h
 X11/extensions/XIElib.h
 X11/extensions/XShm.h
 X11/extensions/Xrender.h
+X11/extensions/Xdamage.h
+X11/extensions/Xcomposite.h
 X11/Intrinsic.h
 X11/keysymdef.h
 X11/keysym.h
@@ -936,7 +975,6 @@ prtpool.h
 prtrace.h
 prtypes.h
 prvrsion.h
-prwin16.h
 plbase64.h
 plerror.h
 plgetopt.h
@@ -956,9 +994,6 @@ zlib.h
 #define WRAP_LCMS_HEADERS
 #endif
 #endif
-#if MOZ_NATIVE_LCMS==1
-#define WRAP_LCMS_HEADERS
-#endif
 #ifdef WRAP_LCMS_HEADERS
 icc34.h
 lcms.h
@@ -976,4 +1011,9 @@ hunspell.hxx
 #endif
 #if MOZ_NATIVE_BZ2==1
 bzlib.h
+#endif
+#if MOZ_PLATFORM_MAEMO==5
+hildon-uri.h
+hildon-mime.h
+libosso.h
 #endif

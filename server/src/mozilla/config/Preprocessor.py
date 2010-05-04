@@ -49,8 +49,9 @@ from optparse import OptionParser
 # hack around win32 mangling our line endings
 # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/65443
 if sys.platform == "win32":
-  import os, msvcrt
+  import msvcrt
   msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
+  os.linesep = '\n'
 
 import Expression
 
@@ -147,7 +148,9 @@ class Preprocessor:
         self.writtenLines = ln
     for f in self.filters:
       aLine = f[1](aLine)
-    aLine = aLine.rstrip('\r\n') + self.LE
+    # ensure our line ending. Only need to handle \n, as we're reading
+    # with universal line ending support, at least for files.
+    aLine = re.sub('\n', self.LE, aLine)
     self.out.write(aLine)
   
   def handleCommandLine(self, args, defaultToStdin = False):
@@ -155,17 +158,28 @@ class Preprocessor:
     Parse a commandline into this parser.
     Uses OptionParser internally, no args mean sys.argv[1:].
     """
-    includes = []
-    def handleI(option, opt, value, parser):
-      includes.append(value)
+    p = self.getCommandLineParser()
+    (options, args) = p.parse_args(args=args)
+    includes = options.I
+    if defaultToStdin and len(args) == 0:
+      args = [sys.stdin]
+    includes.extend(args)
+    for f in includes:
+      self.do_include(f)
+    pass
+
+  def getCommandLineParser(self, unescapeDefines = False):
+    escapedValue = re.compile('".*"$')
     def handleE(option, opt, value, parser):
       for k,v in os.environ.iteritems():
         self.context[k] = v
     def handleD(option, opt, value, parser):
-      vals = value.split('=')
-      assert len(vals) < 3
+      vals = value.split('=', 1)
       if len(vals) == 1:
         vals.append(1)
+      elif unescapeDefines and escapedValue.match(vals[1]):
+        # strip escaped string values
+        vals[1] = vals[1][1:-1]
       self.context[vals[0]] = vals[1]
     def handleU(option, opt, value, parser):
       del self.context[value]
@@ -176,7 +190,7 @@ class Preprocessor:
     def handleMarker(option, opt, value, parser):
       self.setMarker(value)
     p = OptionParser()
-    p.add_option('-I', action='callback', callback=handleI, type="string",
+    p.add_option('-I', action='append', type="string", default = [],
                  metavar="FILENAME", help='Include file')
     p.add_option('-E', action='callback', callback=handleE,
                  help='Import the environment into the defined variables')
@@ -185,20 +199,14 @@ class Preprocessor:
     p.add_option('-U', action='callback', callback=handleU, type="string",
                  metavar="VAR", help='Undefine a variable')
     p.add_option('-F', action='callback', callback=handleF, type="string",
-                 metavar="FILTER", help='Enabble the specified filter')
+                 metavar="FILTER", help='Enable the specified filter')
     p.add_option('--line-endings', action='callback', callback=handleLE,
                  type="string", metavar="[cr|lr|crlf]",
                  help='Use the specified line endings [Default: OS dependent]')
     p.add_option('--marker', action='callback', callback=handleMarker,
                  type="string",
                  help='Use the specified marker instead of #')
-    (options, args) = p.parse_args(args=args)
-    if defaultToStdin and len(args) == 0:
-      args = [sys.stdin]
-    includes.extend(args)
-    for f in includes:
-      self.do_include(f)
-    pass
+    return p
 
   def handleLine(self, aLine):
     """
@@ -347,7 +355,7 @@ class Preprocessor:
     lst.append('\n') # add back the newline
     self.write(reduce(lambda x, y: x+y, lst, ''))
   def do_literal(self, args):
-    self.write(args)
+    self.write(args + self.LE)
   def do_filter(self, args):
     filters = [f for f in args.split(' ') if hasattr(self, 'filter_' + f)]
     if len(filters) == 0:
@@ -417,7 +425,7 @@ class Preprocessor:
         args = str(args)
         if not os.path.isabs(args):
           args = os.path.join(self.context['DIRECTORY'], args)
-        args = open(args)
+        args = open(args, 'rU')
       except:
         raise Preprocessor.Error(self, 'FILE_NOT_FOUND', str(args))
     self.checkLineNumbers = bool(re.search('\.js(?:\.in)?$', args.name))

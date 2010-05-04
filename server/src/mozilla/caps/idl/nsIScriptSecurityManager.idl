@@ -41,16 +41,7 @@
 interface nsIURI;
 interface nsIChannel;
 
-/**
- * WARNING!! The JEP needs to call GetSubjectPrincipal()
- * to support JavaScript-to-Java LiveConnect.  So every change to the
- * nsIScriptSecurityManager interface (big enough to change its IID) also
- * breaks JavaScript-to-Java LiveConnect on mac.
- *
- * If you REALLY have to change this interface, please mark your bug as
- * blocking bug 293973.
- */
-[scriptable, uuid(3fffd8e8-3fea-442e-a0ed-2ba81ae197d5)]
+[scriptable, uuid(f8e350b9-9f31-451a-8c8f-d10fea26b780)]
 interface nsIScriptSecurityManager : nsIXPCSecurityManager
 {
     ///////////////// Security Checks //////////////////
@@ -326,6 +317,35 @@ interface nsIScriptSecurityManager : nsIXPCSecurityManager
      * principal.
      */
     [noscript,notxpcom] nsIPrincipal getCxSubjectPrincipal(in JSContextPtr cx);
+    [noscript,notxpcom] nsIPrincipal getCxSubjectPrincipalAndFrame(in JSContextPtr cx,
+                                                                   out JSStackFramePtr fp);
+};
+
+[scriptable, uuid(8229DD23-47C5-4601-A80B-0166D595A21E)]
+interface nsIScriptSecurityManager_1_9_2 : nsIScriptSecurityManager
+{
+    /**
+     * If no scripted code is running "above" (or called from) fp, then
+     * instead of looking at cx->globalObject, we will return |principal|.
+     * This function only affects |cx|. If someone pushes another context onto
+     * the context stack, then it supercedes this call.
+     * NOTE: If |fp| is non-null popContextPrincipal must be called before fp
+     * has finished executing.
+     *
+     * @param cx The context to clamp.
+     * @param fp The frame pointer to clamp at. May be 'null'.
+     * @param principal The principal to clamp to.
+     */
+    [noscript] void pushContextPrincipal(in JSContextPtr cx,
+                                         in JSStackFramePtr fp,
+                                         in nsIPrincipal principal);
+
+    /**
+     * Removes a clamp set by pushContextPrincipal from cx. This must be
+     * called in a stack-like fashion (e.g., given two contexts |a| and |b|,
+     * it is not legal to do: push(a) push(b) pop(a)).
+     */
+    [noscript] void popContextPrincipal(in JSContextPtr cx);
 };
 
 %{C++
