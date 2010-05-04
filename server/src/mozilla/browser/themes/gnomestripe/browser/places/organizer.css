@@ -13,10 +13,10 @@
   list-style-image: url("moz-icon://stock/gtk-go-back-ltr?size=toolbar&state=disabled");
 }
 
-#back-button[chromedir="rtl"] {
+#back-button:-moz-locale-dir(rtl) {
   list-style-image: url("moz-icon://stock/gtk-go-back-rtl?size=toolbar");
 }
-#back-button[disabled="true"][chromedir="rtl"] {
+#back-button[disabled="true"]:-moz-locale-dir(rtl) {
   list-style-image: url("moz-icon://stock/gtk-go-back-rtl?size=toolbar&state=disabled");
 }
 
@@ -29,10 +29,10 @@
   list-style-image: url("moz-icon://stock/gtk-go-forward-ltr?size=toolbar&state=disabled");
 }
 
-#forward-button[chromedir="rtl"] {
+#forward-button:-moz-locale-dir(rtl) {
   list-style-image: url("moz-icon://stock/gtk-go-forward-rtl?size=toolbar");
 }
-#forward-button[disabled="true"][chromedir="rtl"] {
+#forward-button[disabled="true"]:-moz-locale-dir(rtl) {
   list-style-image: url("moz-icon://stock/gtk-go-forward-rtl?size=toolbar&state=disabled");
 }
 
@@ -83,32 +83,7 @@
   padding: 5px;
 }
 
-/* Search Bar */
-#searchbar {
-  margin: 6px -4px 0px 2px;
-}
-
-.textbox-input-closebutton {
-  -moz-appearance: none;
-  margin: 1px 2px 1px 1px;
-  min-width: 0;
-  background-color: transparent;
-  border: none;
-  padding: 0 !important;
-  list-style-image: url("moz-icon://stock/gtk-clear?size=menu");
-  width: 16px;
-  height: 16px;
-  cursor: default;
-}
-
-.textbox-input-closebutton > .button-box {
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
 .small, .small[disabled="true"] {
-  font-size: x-small;
   min-width: 0px;
   padding: 0px 4px 0px 4px;
   margin: 0px;  
@@ -119,14 +94,6 @@
 .small .button-box {
   padding: 0px;
   border: 0px;
-}
-
-#searchFilter {
-  padding: 0px;
-}
-
-#searchFilter .textbox-input-box {
-  padding: 2px 2px 3px 4px;
 }
 
 %ifdef PLACES_QUERY_BUILDER
@@ -214,12 +181,11 @@
   margin: 0 !important;
 }
 
-/**** expanders ****/
-.expander-up,
-.expander-down {
-  min-width: 0;
-}
 %endif
+
+#infoBoxExpanderLabel {
+  -moz-padding-start: 2px;
+}
 
 #searchModifiers {
   padding-right: 3px;

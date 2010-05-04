@@ -51,9 +51,6 @@ PREF_JS_EXPORTS = $(srcdir)/profile/firefox.js \
 		  $(srcdir)/profile/channel-prefs.js \
 		  $(NULL)
 
-ifndef MOZ_BRANDING_DIRECTORY
-PREF_JS_EXPORTS += $(srcdir)/firefox-branding.js
-endif
 
 # hardcode en-US for the moment
 AB_CD = en-US
@@ -72,11 +69,17 @@ GRE_BUILDID = $(shell $(PYTHON) $(topsrcdir)/config/printconfigsetting.py $(LIBX
 
 DEFINES += -DGRE_MILESTONE=$(GRE_MILESTONE) -DGRE_BUILDID=$(GRE_BUILDID)
 
-ifdef MOZ_MEMORY
-ifneq ($(OS_ARCH),WINNT)
-LIBS += -ljemalloc
+SOURCE_STAMP := $(shell cd $(topsrcdir) ; hg identify 2>/dev/null | cut -f1 -d' ')
+ifdef SOURCE_STAMP
+DEFINES += -DMOZ_SOURCE_STAMP="$(SOURCE_STAMP)"
 endif
+
+SOURCE_REPO := $(shell hg -R $(topsrcdir) showconfig paths.default 2>/dev/null | sed -e "s/^ssh:/http:/")
+ifdef SOURCE_REPO
+DEFINES += -DMOZ_SOURCE_REPO="$(SOURCE_REPO)"
 endif
+
+LIBS += $(JEMALLOC_LIBS)
 
 ifdef LIBXUL_SDK
 include $(topsrcdir)/config/rules.mk
@@ -150,6 +153,8 @@ MOZ_WINCONSOLE = 0
 endif
 endif
 
+# This switches $(INSTALL) to copy mode, like $(SYSINSTALL), so things that
+# shouldn't get 755 perms need $(IFLAGS1) for either way of calling nsinstall.
 NSDISTMODE = copy
 
 include $(topsrcdir)/config/config.mk
@@ -157,19 +162,18 @@ include $(topsrcdir)/config/config.mk
 ifdef _MSC_VER
 # Always enter a Windows program through wmain, whether or not we're
 # a console application.
+ifdef WINCE
+WIN32_EXE_LDFLAGS += -ENTRY:mainWCRTStartup
+else
 WIN32_EXE_LDFLAGS += -ENTRY:wmainCRTStartup
 endif
-
-ifndef BUILD_STATIC_LIBS
-
-ifdef NS_TRACE_MALLOC
-# when libxul is enabled, trace-malloc is part of it
-ifndef MOZ_ENABLE_LIBXUL
-EXTRA_DSO_LIBS += tracemalloc
-endif
 endif
 
-else
+ifdef WINCE
+EXTRA_DSO_LDOPTS += $(call EXPAND_LIBNAME,corelibc)
+endif
+
+ifdef BUILD_STATIC_LIBS
 include $(topsrcdir)/config/static-config.mk
 
 EXTRA_DEPS	+= \
@@ -185,10 +189,9 @@ endif
 ifeq ($(OS_ARCH),WINNT)
 OS_LIBS += $(call EXPAND_LIBNAME,comctl32 comdlg32 uuid shell32 ole32 oleaut32 version winspool)
 OS_LIBS += $(call EXPAND_LIBNAME,usp10 msimg32)
-ifdef MOZ_ENABLE_GLITZ
-OS_LIBS += $(call EXPAND_LIBNAME,opengl32)
 endif
 
+ifneq (,$(filter WINNT WINCE,$(OS_ARCH)))
 RCINCLUDE = splash.rc
 ifndef GNU_CC
 RCFLAGS += -DMOZ_PHOENIX -I$(srcdir)
@@ -214,13 +217,12 @@ ifeq ($(OS_ARCH),OS2)
 RESFILE=splashos2.res
 RCFLAGS += -DMOZ_PHOENIX
 ifdef BUILD_STATIC_LIBS
-EXE_DEF_FILE = browser.def
 RCFLAGS += -DMOZ_STATIC_BUILD -i $(DIST)/include/widget
 endif
 ifdef DEBUG
 RCFLAGS += -DDEBUG
 endif
-RCFLAGS += -DFIREFOX_ICO=\"$(DIST)/branding/firefox.ico\" -DDOCUMENT_ICO=\"$(DIST)/branding/document.ico\"
+RCFLAGS += -DFIREFOX_ICO=\"$(DIST)/branding/firefox-os2.ico\" -DDOCUMENT_ICO=\"$(DIST)/branding/document-os2.ico\"
 endif
 
 include $(topsrcdir)/config/rules.mk
@@ -235,14 +237,6 @@ ifdef BUILD_STATIC_LIBS
 include $(topsrcdir)/config/static-rules.mk
 
 DEFINES += -DIMPL_XREAPI
-endif
-
-ifeq ($(MOZ_WIDGET_TOOLKIT),cocoa)
-ifdef BUILD_STATIC_LIBS
-ifdef USE_PREBINDING
-BIN_FLAGS += -Wl,-headerpad -Wl,5a0c
-endif
-endif
 endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),photon)
@@ -267,24 +261,11 @@ endif
 
 $(PROGRAM): $(DEPTH)/toolkit/xre/$(LIB_PREFIX)xulapp_s.$(LIB_SUFFIX)
 
-ifeq ($(OS_ARCH),OS2)
-ifdef BUILD_STATIC_LIBS
-$(EXE_DEF_FILE):
-	rm -f $@
-	@echo NAME mozilla >$(EXE_DEF_FILE)
-	@echo IMPORTS >>$(EXE_DEF_FILE)
-	@echo 	WinQueryProperty		= PMMERGE.5450 >>$(EXE_DEF_FILE)
-	@echo 	WinRemoveProperty		= PMMERGE.5451 >>$(EXE_DEF_FILE)
-	@echo 	WinSetProperty			= PMMERGE.5452 >>$(EXE_DEF_FILE)
+ifneq (,$(filter-out OS2 WINNT WINCE,$(OS_ARCH)))
 
-LDFLAGS += -Zlinker /NOE
-endif
-endif
-
-ifneq (,$(filter-out OS2 WINNT,$(OS_ARCH)))
-
-$(MOZ_APP_NAME):: mozilla.in Makefile.in Makefile $(DEPTH)/config/autoconf.mk
-	cat $< | sed -e "s|%MOZAPPDIR%|$(installdir)|" > $@
+$(MOZ_APP_NAME):: $(topsrcdir)/build/unix/mozilla.in $(GLOBAL_DEPS)
+	cat $< | sed -e "s|%MOZAPPDIR%|$(installdir)|" \
+		-e "s|%MOZ_APP_DISPLAYNAME%|$(MOZ_APP_DISPLAYNAME)|" > $@
 	chmod +x $@
 
 libs:: $(MOZ_APP_NAME)
@@ -300,60 +281,26 @@ endif
 
 endif # LIBXUL_SDK
 
-ifneq (,$(filter gtk2,$(MOZ_WIDGET_TOOLKIT)))
-
-ICON_FILES	= \
-		$(DIST)/branding/mozicon128.png \
-		$(DIST)/branding/mozicon50.xpm \
-		$(DIST)/branding/mozicon16.xpm \
-		$(DIST)/branding/document.png \
-		$(NULL)
-
-libs:: $(ICON_FILES)
-	$(INSTALL) $^ $(DIST)/bin/icons
-
-install::
-	$(SYSINSTALL) $(IFLAGS1) $(ICON_FILES) $(DESTDIR)$(mozappdir)/icons
-endif
-
 ifeq ($(MOZ_WIDGET_TOOLKIT),gtk2)
 libs::
-	$(INSTALL) $(DIST)/branding/default16.png $(DIST)/bin/chrome/icons/default
-	$(INSTALL) $(DIST)/branding/default32.png $(DIST)/bin/chrome/icons/default
-	$(INSTALL) $(DIST)/branding/default48.png $(DIST)/bin/chrome/icons/default
+	$(INSTALL) $(IFLAGS1) $(DIST)/branding/mozicon128.png $(DIST)/bin/icons
+	$(INSTALL) $(IFLAGS1) $(DIST)/branding/document.png   $(DIST)/bin/icons
+	$(INSTALL) $(IFLAGS1) $(DIST)/branding/default16.png  $(DIST)/bin/chrome/icons/default
+	$(INSTALL) $(IFLAGS1) $(DIST)/branding/default32.png  $(DIST)/bin/chrome/icons/default
+	$(INSTALL) $(IFLAGS1) $(DIST)/branding/default48.png  $(DIST)/bin/chrome/icons/default
 endif
 
-export::
-ifndef MOZ_BRANDING_DIRECTORY
-	$(NSINSTALL) -D $(DIST)/branding
-ifeq ($(OS_ARCH),WINNT)
-	cp $(srcdir)/firefox.ico   $(DIST)/branding/firefox.ico
-	cp $(srcdir)/firefox.ico   $(DIST)/branding/app.ico
-	cp $(srcdir)/document.ico  $(DIST)/branding/document.ico
+ifdef MOZ_SPLASHSCREEN
+ifeq ($(MOZ_WIDGET_TOOLKIT),windows)
+libs::
+	$(INSTALL) $(IFLAGS1) $(DIST)/branding/splash.bmp $(DIST)/bin
 endif
-ifneq (,$(filter mac cocoa,$(MOZ_WIDGET_TOOLKIT)))
-	cp $(srcdir)/macbuild/firefox.icns  $(DIST)/branding/firefox.icns
-	cp $(srcdir)/macbuild/document.icns  $(DIST)/branding/document.icns
-	cp $(srcdir)/macbuild/dsstore $(DIST)/branding/dsstore
-	cp $(srcdir)/macbuild/background.png $(DIST)/branding/background.png
-	cp $(srcdir)/macbuild/disk.icns $(DIST)/branding/disk.icns
-	cp $(srcdir)/macbuild/license.r $(DIST)/branding/license.r
 endif
-ifneq (,$(filter gtk2,$(MOZ_WIDGET_TOOLKIT)))
-	cp $(srcdir)/mozicon128.png $(DIST)/branding/mozicon128.png
-	cp $(srcdir)/mozicon16.xpm $(DIST)/branding/mozicon16.xpm
-	cp $(srcdir)/mozicon50.xpm $(DIST)/branding/mozicon50.xpm
-	cp $(srcdir)/document.png $(DIST)/branding/document.png
-endif
-ifeq ($(MOZ_WIDGET_TOOLKIT),gtk2)
-	cp $(srcdir)/default16.png   $(DIST)/branding/default16.png
-	cp $(srcdir)/default32.png   $(DIST)/branding/default32.png
-	cp $(srcdir)/default48.png   $(DIST)/branding/default48.png
-endif
-ifeq ($(OS_ARCH),OS2)
-	cp $(srcdir)/firefox-os2.ico   $(DIST)/branding/firefox.ico
-	cp $(srcdir)/firefox-os2.ico   $(DIST)/branding/app.ico
-	cp $(srcdir)/document-os2.ico  $(DIST)/branding/document.ico
+
+ifdef WINCE
+ifdef MOZ_FASTSTART
+libs::
+	cp -f $(DIST)/bin/faststartstub.exe $(DIST)/bin/$(MOZ_APP_NAME)faststart.exe
 endif
 endif
 
@@ -361,10 +308,10 @@ libs::
 	touch $(DIST)/bin/.autoreg
 
 libs:: $(srcdir)/profile/prefs.js
-	$(INSTALL) $^ $(DIST)/bin/defaults/profile
+	$(INSTALL) $(IFLAGS1) $^ $(DIST)/bin/defaults/profile
 
 libs:: $(srcdir)/blocklist.xml
-	$(INSTALL) $^ $(DIST)/bin
+	$(INSTALL) $(IFLAGS1) $^ $(DIST)/bin
 
 ifneq (,$(filter mac cocoa,$(MOZ_WIDGET_TOOLKIT)))
 
@@ -402,20 +349,17 @@ else
 	rm -f $(DIST)/$(APP_NAME).app/Contents/MacOS/$(PROGRAM)
 	rsync -aL $(PROGRAM) $(DIST)/$(APP_NAME).app/Contents/MacOS
 endif
-	mkdir -p $(DIST)/$(APP_NAME).app/Contents/Plug-Ins
-	rsync -a --copy-unsafe-links $(LIBXUL_DIST)/package/PrintPDE.plugin $(DIST)/$(APP_NAME).app/Contents/Plug-Ins
 	-cp -L $(DIST)/bin/mangle $(DIST)/bin/shlibsign $(DIST)/$(APP_NAME).app/Contents/$(APPFILES)
 	cp -RL $(DIST)/branding/firefox.icns $(DIST)/$(APP_NAME).app/Contents/Resources/firefox.icns
 	cp -RL $(DIST)/branding/document.icns $(DIST)/$(APP_NAME).app/Contents/Resources/document.icns
-	cp -RL $(LIBXUL_DIST)/package/mozillaSuite.rsrc $(DIST)/$(APP_NAME).app/Contents/Resources/firefox-bin.rsrc
-	echo -n APPLMOZB > $(DIST)/$(APP_NAME).app/Contents/PkgInfo
+	printf APPLMOZB > $(DIST)/$(APP_NAME).app/Contents/PkgInfo
 #       remove CVS dirs from packaged app
 	find $(DIST)/$(APP_NAME).app -type d -name "CVS" -prune -exec rm -rf {} \;
 
 else
 ifdef LIBXUL_SDK
 libs::
-	cp $(LIBXUL_DIST)/bin/xulrunner-stub$(BIN_SUFFIX) $(DIST)/bin/firefox$(BIN_SUFFIX)
+	cp $(LIBXUL_DIST)/bin/$(XULRUNNER_STUB_NAME)$(BIN_SUFFIX) $(DIST)/bin/firefox$(BIN_SUFFIX)
 endif
 endif
 
@@ -423,7 +367,7 @@ libs::
 ifeq ($(OS_ARCH),WINNT)
 	$(PERL) -pe 's/(?<!\r)\n/\r\n/g;' < $(topsrcdir)/LICENSE > $(DIST)/bin/LICENSE
 else
-	$(INSTALL) $(topsrcdir)/LICENSE	$(DIST)/bin
+	$(INSTALL) $(IFLAGS1) $(topsrcdir)/LICENSE $(DIST)/bin
 endif
 
 ifdef LIBXUL_SDK

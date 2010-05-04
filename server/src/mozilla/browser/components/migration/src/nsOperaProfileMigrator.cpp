@@ -314,26 +314,26 @@ nsOperaProfileMigrator::GetSourceHomePageURL(nsACString& aResult)
 
 static
 nsOperaProfileMigrator::PrefTransform gTransforms[] = {
-  { "User Prefs", "Download Directory", _OPM(STRING), "browser.download.dir", _OPM(SetFile), PR_FALSE, -1 },
-  { nsnull, "Enable Cookies", _OPM(INT), "network.cookie.cookieBehavior", _OPM(SetCookieBehavior), PR_FALSE, -1 },
-  { nsnull, "Accept Cookies Session Only", _OPM(BOOL), "network.cookie.lifetimePolicy", _OPM(SetCookieLifetime), PR_FALSE, -1 },
-  { nsnull, "Allow script to resize window", _OPM(BOOL), "dom.disable_window_move_resize", _OPM(SetBool), PR_FALSE, -1 },
-  { nsnull, "Allow script to move window", _OPM(BOOL), "dom.disable_window_move_resize", _OPM(SetBool), PR_FALSE, -1 },
-  { nsnull, "Allow script to raise window", _OPM(BOOL), "dom.disable_window_flip", _OPM(SetBool), PR_FALSE, -1 },
-  { nsnull, "Allow script to change status", _OPM(BOOL), "dom.disable_window_status_change", _OPM(SetBool), PR_FALSE, -1 },
-  { nsnull, "Ignore Unrequested Popups", _OPM(BOOL), "dom.disable_open_during_load", _OPM(SetBool), PR_FALSE, -1 },
-  { nsnull, "Load Figures", _OPM(BOOL), "permissions.default.image", _OPM(SetImageBehavior), PR_FALSE, -1 },
+  { "User Prefs", "Download Directory", _OPM(STRING), "browser.download.dir", _OPM(SetFile), PR_FALSE, { -1 } },
+  { nsnull, "Enable Cookies", _OPM(INT), "network.cookie.cookieBehavior", _OPM(SetCookieBehavior), PR_FALSE, { -1 } },
+  { nsnull, "Accept Cookies Session Only", _OPM(BOOL), "network.cookie.lifetimePolicy", _OPM(SetCookieLifetime), PR_FALSE, { -1 } },
+  { nsnull, "Allow script to resize window", _OPM(BOOL), "dom.disable_window_move_resize", _OPM(SetBool), PR_FALSE, { -1 } },
+  { nsnull, "Allow script to move window", _OPM(BOOL), "dom.disable_window_move_resize", _OPM(SetBool), PR_FALSE, { -1 } },
+  { nsnull, "Allow script to raise window", _OPM(BOOL), "dom.disable_window_flip", _OPM(SetBool), PR_FALSE, { -1 } },
+  { nsnull, "Allow script to change status", _OPM(BOOL), "dom.disable_window_status_change", _OPM(SetBool), PR_FALSE, { -1 } },
+  { nsnull, "Ignore Unrequested Popups", _OPM(BOOL), "dom.disable_open_during_load", _OPM(SetBool), PR_FALSE, { -1 } },
+  { nsnull, "Load Figures", _OPM(BOOL), "permissions.default.image", _OPM(SetImageBehavior), PR_FALSE, { -1 } },
 
-  { "Visited link", nsnull, _OPM(COLOR), "browser.visited_color", _OPM(SetString), PR_FALSE, -1 },
-  { "Link", nsnull, _OPM(COLOR), "browser.anchor_color", _OPM(SetString), PR_FALSE, -1 },
-  { nsnull, "Underline", _OPM(BOOL), "browser.underline_anchors", _OPM(SetBool), PR_FALSE, -1 },
-  { nsnull, "Expiry", _OPM(INT), "browser.history_expire_days", _OPM(SetInt), PR_FALSE, -1 },
+  { "Visited link", nsnull, _OPM(COLOR), "browser.visited_color", _OPM(SetString), PR_FALSE, { -1 } },
+  { "Link", nsnull, _OPM(COLOR), "browser.anchor_color", _OPM(SetString), PR_FALSE, { -1 } },
+  { nsnull, "Underline", _OPM(BOOL), "browser.underline_anchors", _OPM(SetBool), PR_FALSE, { -1 } },
+  { nsnull, "Expiry", _OPM(INT), "browser.history_expire_days", _OPM(SetInt), PR_FALSE, { -1 } },
 
-  { "Security Prefs", "Enable SSL v2", _OPM(BOOL), "security.enable_ssl2", _OPM(SetBool), PR_FALSE, -1 },
-  { nsnull, "Enable SSL v3", _OPM(BOOL), "security.enable_ssl3", _OPM(SetBool), PR_FALSE, -1 },
-  { nsnull, "Enable TLS v1.0", _OPM(BOOL), "security.enable_tls", _OPM(SetBool), PR_FALSE, -1 },
+  { "Security Prefs", "Enable SSL v2", _OPM(BOOL), "security.enable_ssl2", _OPM(SetBool), PR_FALSE, { -1 } },
+  { nsnull, "Enable SSL v3", _OPM(BOOL), "security.enable_ssl3", _OPM(SetBool), PR_FALSE, { -1 } },
+  { nsnull, "Enable TLS v1.0", _OPM(BOOL), "security.enable_tls", _OPM(SetBool), PR_FALSE, { -1 } },
 
-  { "Extensions", "Scripting", _OPM(BOOL), "javascript.enabled", _OPM(SetBool), PR_FALSE, -1 }
+  { "Extensions", "Scripting", _OPM(BOOL), "javascript.enabled", _OPM(SetBool), PR_FALSE, { -1 } }
 };
 
 nsresult 
@@ -420,7 +420,7 @@ nsOperaProfileMigrator::CopyPreferences(PRBool aReplace)
   PrefTransform* transform;
   PrefTransform* end = gTransforms + sizeof(gTransforms)/sizeof(PrefTransform);
 
-  char* lastSectionName = nsnull;
+  const char* lastSectionName = nsnull;
   for (transform = gTransforms; transform < end; ++transform) {
     if (transform->sectionName)
       lastSectionName = transform->sectionName;
@@ -430,7 +430,7 @@ nsOperaProfileMigrator::CopyPreferences(PRBool aReplace)
       nsresult rv = ParseColor(parser, lastSectionName, &colorString);
       if (NS_SUCCEEDED(rv)) {
         transform->stringValue = colorString;
-   
+
         transform->prefHasValue = PR_TRUE;
         transform->prefSetterFunc(transform, branch);
       }
@@ -695,7 +695,7 @@ nsOperaCookieMigrator::Migrate()
         mStream->ReadBytes(length, &buf);
         buf = (char*)nsMemory::Realloc(buf, length+1);
         buf[length] = '\0';
-        mDomainStack.AppendElement((void*)buf);
+        mDomainStack.AppendElement(buf);
       }
       break;
     case END_DOMAIN_SEGMENT:
@@ -704,9 +704,9 @@ nsOperaCookieMigrator::Migrate()
           AddCookieOverride(permissionManager);
 
         // Pop the domain stack
-        PRUint32 count = mDomainStack.Count();
+        PRUint32 count = mDomainStack.Length();
         if (count > 0) {
-          char* segment = (char*)mDomainStack.ElementAt(count - 1);
+          char* segment = mDomainStack.ElementAt(count - 1);
           if (segment) 
             nsMemory::Free(segment);
           mDomainStack.RemoveElementAt(count - 1);
@@ -724,7 +724,7 @@ nsOperaCookieMigrator::Migrate()
         mStream->ReadBytes(length, &buf);
         buf = (char*)nsMemory::Realloc(buf, length+1);
         buf[length] = '\0';
-        mPathStack.AppendElement((void*)buf);
+        mPathStack.AppendElement(buf);
       }
       break;
     case END_PATH_SEGMENT:
@@ -737,9 +737,9 @@ nsOperaCookieMigrator::Migrate()
         // i.e. telling us that we are done processing cookies for "/"
 
         // Pop the path stack
-        PRUint32 count = mPathStack.Count();
+        PRUint32 count = mPathStack.Length();
         if (count > 0) {
-          char* segment = (char*)mPathStack.ElementAt(count - 1);
+          char* segment = mPathStack.ElementAt(count - 1);
           if (segment)
             nsMemory::Free(segment);
           mPathStack.RemoveElementAt(count - 1);
@@ -849,17 +849,17 @@ nsOperaCookieMigrator::Migrate()
   // Make sure the path and domain stacks are clear. 
   char* segment = nsnull;
   PRUint32 i;
-  PRUint32 count = mPathStack.Count();
+  PRUint32 count = mPathStack.Length();
   for (i = 0; i < count; ++i) {
-    segment = (char*)mPathStack.ElementAt(i);
+    segment = mPathStack.ElementAt(i);
     if (segment) {
       nsMemory::Free(segment);
       segment = nsnull;
     }
   }
-  count = mDomainStack.Count();
+  count = mDomainStack.Length();
   for (i = 0; i < count; ++i) {
-    segment = (char*)mDomainStack.ElementAt(i);
+    segment = mDomainStack.ElementAt(i);
     if (segment) {
       nsMemory::Free(segment);
       segment = nsnull;
@@ -881,9 +881,10 @@ nsOperaCookieMigrator::AddCookieOverride(nsIPermissionManager* aManager)
     return NS_ERROR_OUT_OF_MEMORY;
   uri->SetHost(domain);
 
-  rv = aManager->Add(uri, "cookie", 
-                     (mCurrHandlingInfo == 1 || mCurrHandlingInfo == 3) ? nsIPermissionManager::ALLOW_ACTION :
-                                                                          nsIPermissionManager::DENY_ACTION);
+  rv = aManager->Add(uri, "cookie",
+                     (mCurrHandlingInfo == 1 || mCurrHandlingInfo == 3)
+                     ? (PRUint32) nsIPermissionManager::ALLOW_ACTION
+                     : (PRUint32) nsIPermissionManager::DENY_ACTION);
 
   mCurrHandlingInfo = 0;
 
@@ -922,10 +923,10 @@ nsOperaCookieMigrator::AddCookie(nsICookieManager2* aManager)
 void
 nsOperaCookieMigrator::SynthesizePath(char** aResult)
 {
-  PRUint32 count = mPathStack.Count();
+  PRUint32 count = mPathStack.Length();
   nsCAutoString synthesizedPath("/");
   for (PRUint32 i = 0; i < count; ++i) {
-    synthesizedPath.Append((char*)mPathStack.ElementAt(i));
+    synthesizedPath.Append(mPathStack.ElementAt(i));
     if (i != count-1)
       synthesizedPath.Append("/");
   }
@@ -938,13 +939,13 @@ nsOperaCookieMigrator::SynthesizePath(char** aResult)
 void
 nsOperaCookieMigrator::SynthesizeDomain(char** aResult)
 {
-  PRUint32 count = mDomainStack.Count();
+  PRUint32 count = mDomainStack.Length();
   if (count == 0)
     return;
 
   nsCAutoString synthesizedDomain;
   for (PRInt32 i = (PRInt32)count - 1; i >= 0; --i) {
-    synthesizedDomain.Append((char*)mDomainStack.ElementAt((PRUint32)i));
+    synthesizedDomain.Append(mDomainStack.ElementAt((PRUint32)i));
     if (i != 0)
       synthesizedDomain.Append(".");
   }
@@ -967,18 +968,58 @@ nsOperaCookieMigrator::ReadHeader()
   return NS_ERROR_FAILURE;
 }
 
-nsresult
-nsOperaProfileMigrator::CopyHistory(PRBool aReplace)
-{
-  nsresult rv;
-  nsCOMPtr<nsINavHistoryService> history = do_GetService(NS_NAVHISTORYSERVICE_CONTRACTID, &rv);
-  NS_ENSURE_SUCCESS(rv, rv);
- 
-  return history->RunInBatchMode(this, nsnull);
-}
- 
 NS_IMETHODIMP
 nsOperaProfileMigrator::RunBatched(nsISupports* aUserData)
+{
+  PRUint8 batchAction;
+  nsCOMPtr<nsISupportsPRUint8> strWrapper(do_QueryInterface(aUserData));
+  NS_ASSERTION(strWrapper, "Unable to create nsISupportsPRUint8 wrapper!");
+  nsresult rv = strWrapper->GetData(&batchAction);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  switch (batchAction) {
+    case BATCH_ACTION_HISTORY:
+      rv = CopyHistoryBatched(PR_FALSE);
+      break;
+    case BATCH_ACTION_HISTORY_REPLACE:
+      rv = CopyHistoryBatched(PR_TRUE);
+      break;
+    case BATCH_ACTION_BOOKMARKS:
+      rv = CopyBookmarksBatched(PR_FALSE);
+      break;
+    case BATCH_ACTION_BOOKMARKS_REPLACE:
+      rv = CopyBookmarksBatched(PR_TRUE);
+      break;
+  }
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  return NS_OK;
+}
+
+nsresult
+nsOperaProfileMigrator::CopyHistory(PRBool aReplace) 
+{
+  nsresult rv;
+  nsCOMPtr<nsINavHistoryService> history =
+    do_GetService(NS_NAVHISTORYSERVICE_CONTRACTID, &rv);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  PRUint8 batchAction = aReplace ? BATCH_ACTION_HISTORY_REPLACE
+                                 : BATCH_ACTION_HISTORY;
+  nsCOMPtr<nsISupportsPRUint8> supports =
+    do_CreateInstance(NS_SUPPORTS_PRUINT8_CONTRACTID);
+  NS_ENSURE_TRUE(supports, NS_ERROR_OUT_OF_MEMORY);
+  rv = supports->SetData(batchAction);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  rv = history->RunInBatchMode(this, supports);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  return NS_OK;
+}
+ 
+nsresult
+nsOperaProfileMigrator::CopyHistoryBatched(PRBool aReplace) 
 {
   nsCOMPtr<nsIBrowserHistory> hist(do_GetService(NS_GLOBALHISTORY2_CONTRACTID));
 
@@ -1042,6 +1083,28 @@ nsOperaProfileMigrator::RunBatched(nsISupports* aUserData)
 nsresult
 nsOperaProfileMigrator::CopyBookmarks(PRBool aReplace)
 {
+  nsresult rv;
+  nsCOMPtr<nsINavBookmarksService> bookmarks =
+    do_GetService(NS_NAVBOOKMARKSSERVICE_CONTRACTID, &rv);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  PRUint8 batchAction = aReplace ? BATCH_ACTION_BOOKMARKS_REPLACE
+                                 : BATCH_ACTION_BOOKMARKS;
+  nsCOMPtr<nsISupportsPRUint8> supports =
+    do_CreateInstance(NS_SUPPORTS_PRUINT8_CONTRACTID);
+  NS_ENSURE_TRUE(supports, NS_ERROR_OUT_OF_MEMORY);
+  rv = supports->SetData(batchAction);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  rv = bookmarks->RunInBatchMode(this, supports);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  return NS_OK;
+}
+
+nsresult
+nsOperaProfileMigrator::CopyBookmarksBatched(PRBool aReplace)
+{
   // Find Opera Bookmarks
   nsCOMPtr<nsIFile> operaBookmarks;
   mOperaProfile->Clone(getter_AddRefs(operaBookmarks));
@@ -1049,34 +1112,44 @@ nsOperaProfileMigrator::CopyBookmarks(PRBool aReplace)
 
   nsCOMPtr<nsIInputStream> fileInputStream;
   NS_NewLocalFileInputStream(getter_AddRefs(fileInputStream), operaBookmarks);
-  if (!fileInputStream) return NS_ERROR_OUT_OF_MEMORY;
+  NS_ENSURE_TRUE(fileInputStream, NS_ERROR_OUT_OF_MEMORY);
 
   nsCOMPtr<nsILineInputStream> lineInputStream(do_QueryInterface(fileInputStream));
 
   nsresult rv;
-  nsCOMPtr<nsINavBookmarksService> bms(do_GetService(NS_NAVBOOKMARKSSERVICE_CONTRACTID, &rv));
+  nsCOMPtr<nsINavBookmarksService> bms =
+    do_GetService(NS_NAVBOOKMARKSSERVICE_CONTRACTID, &rv);
   NS_ENSURE_SUCCESS(rv, rv);
-  PRInt64 root;
-  rv = bms->GetBookmarksMenuFolder(&root);
+  PRInt64 bookmarksMenuFolderId;
+  rv = bms->GetBookmarksMenuFolder(&bookmarksMenuFolderId);
   NS_ENSURE_SUCCESS(rv, rv);
-  PRInt64 parentFolder = root;
+  PRInt64 parentFolder = bookmarksMenuFolderId;
 
-  nsCOMPtr<nsIStringBundleService> bundleService(do_GetService(NS_STRINGBUNDLE_CONTRACTID));
+  nsCOMPtr<nsIStringBundleService> bundleService =
+    do_GetService(NS_STRINGBUNDLE_CONTRACTID, &rv);
+  NS_ENSURE_SUCCESS(rv, rv);
   nsCOMPtr<nsIStringBundle> bundle;
-  bundleService->CreateBundle(MIGRATION_BUNDLE, getter_AddRefs(bundle));
+  rv = bundleService->CreateBundle(MIGRATION_BUNDLE, getter_AddRefs(bundle));
+  NS_ENSURE_SUCCESS(rv, rv);
+
   if (!aReplace) {
     nsString sourceNameOpera;
-    bundle->GetStringFromName(NS_LITERAL_STRING("sourceNameOpera").get(), 
-                              getter_Copies(sourceNameOpera));
+    rv = bundle->GetStringFromName(NS_LITERAL_STRING("sourceNameOpera").get(), 
+                                   getter_Copies(sourceNameOpera));
+    NS_ENSURE_SUCCESS(rv, rv);
 
     const PRUnichar* sourceNameStrings[] = { sourceNameOpera.get() };
     nsString importedOperaHotlistTitle;
-    bundle->FormatStringFromName(NS_LITERAL_STRING("importedBookmarksFolder").get(),
-                                 sourceNameStrings, 1, 
-                                 getter_Copies(importedOperaHotlistTitle));
+    rv = bundle->FormatStringFromName(NS_LITERAL_STRING("importedBookmarksFolder").get(),
+                                      sourceNameStrings, 1, 
+                                      getter_Copies(importedOperaHotlistTitle));
+   NS_ENSURE_SUCCESS(rv, rv);
 
-    bms->CreateFolder(parentFolder, NS_ConvertUTF16toUTF8(importedOperaHotlistTitle),
-                      nsINavBookmarksService::DEFAULT_INDEX, &parentFolder);
+    rv = bms->CreateFolder(parentFolder,
+                           NS_ConvertUTF16toUTF8(importedOperaHotlistTitle),
+                           nsINavBookmarksService::DEFAULT_INDEX,
+                           &parentFolder);
+   NS_ENSURE_SUCCESS(rv, rv);
   }
   else {
     nsCOMPtr<nsIFile> profile;
@@ -1086,32 +1159,24 @@ nsOperaProfileMigrator::CopyBookmarks(PRBool aReplace)
   }
 
 #if defined(XP_WIN) || (defined(XP_UNIX) && !defined(XP_MACOSX))
-  printf("*** about to copy smart keywords\n");
   CopySmartKeywords(bms, bundle, parentFolder);
-  printf("*** done copying smart keywords\n");
 #endif
 
-  PRInt64 toolbar;
-  rv = bms->GetToolbarFolder(&toolbar);
+  PRInt64 bookmarksToolbarFolderId;
+  rv = bms->GetToolbarFolder(&bookmarksToolbarFolderId);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  rv = ParseBookmarksFolder(lineInputStream, parentFolder, toolbar, bms);
+  rv = ParseBookmarksFolder(lineInputStream, parentFolder,
+                            bookmarksToolbarFolderId, bms);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  // after importing the favorites, 
-  // we need to set this pref so that on startup
-  // we don't blow away what we just imported
-  nsCOMPtr<nsIPrefBranch> pref(do_GetService(NS_PREFSERVICE_CONTRACTID));
-  NS_ENSURE_TRUE(pref, NS_ERROR_FAILURE);
-  rv = pref->SetBoolPref("browser.places.importBookmarksHTML", PR_FALSE);
-  NS_ENSURE_SUCCESS(rv, rv);
   return NS_OK;
 }
 
 #if defined(XP_WIN) || (defined(XP_UNIX) && !defined(XP_MACOSX))
 nsresult
 nsOperaProfileMigrator::CopySmartKeywords(nsINavBookmarksService* aBMS, 
-                                          nsIStringBundle* aBundle, 
+                                          nsIStringBundle* aBundle,
                                           PRInt64 aParentFolder)
 {
   nsresult rv;
@@ -1121,27 +1186,27 @@ nsOperaProfileMigrator::CopySmartKeywords(nsINavBookmarksService* aBMS,
   smartKeywords->Append(NS_LITERAL_STRING("search.ini"));
 
   nsCOMPtr<nsILocalFile> lf(do_QueryInterface(smartKeywords));
-  if (!lf)
-    return NS_OK;
-
   nsINIParser parser;
-  rv = parser.Init(lf);
-  if (NS_FAILED(rv))
+  if (!lf || NS_FAILED(parser.Init(lf)))
     return NS_OK;
 
   nsString sourceNameOpera;
-  aBundle->GetStringFromName(NS_LITERAL_STRING("sourceNameOpera").get(), 
-                             getter_Copies(sourceNameOpera));
+  rv = aBundle->GetStringFromName(NS_LITERAL_STRING("sourceNameOpera").get(),
+                                  getter_Copies(sourceNameOpera));
+  NS_ENSURE_SUCCESS(rv, rv);
 
   const PRUnichar* sourceNameStrings[] = { sourceNameOpera.get() };
   nsString importedSearchUrlsTitle;
-  aBundle->FormatStringFromName(NS_LITERAL_STRING("importedSearchURLsFolder").get(),
-                                sourceNameStrings, 1, 
-                                getter_Copies(importedSearchUrlsTitle));
+  rv = aBundle->FormatStringFromName(NS_LITERAL_STRING("importedSearchURLsFolder").get(),
+                                     sourceNameStrings, 1, 
+                                     getter_Copies(importedSearchUrlsTitle));
+  NS_ENSURE_SUCCESS(rv, rv);
 
   PRInt64 keywordsFolder;
-  rv = aBMS->CreateFolder(aParentFolder, NS_ConvertUTF16toUTF8(importedSearchUrlsTitle),
-                          nsINavBookmarksService::DEFAULT_INDEX, &keywordsFolder);
+  rv = aBMS->CreateFolder(aParentFolder,
+                          NS_ConvertUTF16toUTF8(importedSearchUrlsTitle),
+                          nsINavBookmarksService::DEFAULT_INDEX,
+                          &keywordsFolder);
   NS_ENSURE_SUCCESS(rv, rv);
 
   PRInt32 sectionIndex = 1;
@@ -1151,15 +1216,19 @@ nsOperaProfileMigrator::CopySmartKeywords(nsINavBookmarksService* aBMS,
     section.AppendInt(sectionIndex++);
 
     rv = parser.GetString(section.get(), "Name", name);
-    if (NS_FAILED(rv))
+    if (NS_FAILED(rv)) {
+      // No more smart keywords found, stop parsing the file.
       break;
+    }
+    if (name.IsEmpty())
+      continue;
 
     rv = parser.GetString(section.get(), "URL", url);
-    if (NS_FAILED(rv))
+    if (NS_FAILED(rv) || url.IsEmpty())
       continue;
 
     rv = parser.GetString(section.get(), "Key", keyword);
-    if (NS_FAILED(rv))
+    if (NS_FAILED(rv) || keyword.IsEmpty())
       continue;
 
     PRInt32 post;
@@ -1167,14 +1236,11 @@ nsOperaProfileMigrator::CopySmartKeywords(nsINavBookmarksService* aBMS,
     if (NS_SUCCEEDED(rv) && post)
       continue;
 
-    if (url.IsEmpty() || keyword.IsEmpty() || name.IsEmpty())
-      continue;
-
     PRUint32 length = name.Length();
-    PRInt32 index = 0; 
+    PRInt32 index = 0;
     do {
       index = name.FindChar('&', index);
-      if (index >= length - 2)
+      if ((PRUint32)index >= length - 2)
         break;
 
       // Assume "&&" is an escaped ampersand in the search query title. 
@@ -1186,28 +1252,32 @@ nsOperaProfileMigrator::CopySmartKeywords(nsINavBookmarksService* aBMS,
 
       name.Cut(index, 1);
     }
-    while (index < length);
+    while ((PRUint32)index < length);
 
     nsCOMPtr<nsIURI> uri;
-    NS_NewURI(getter_AddRefs(uri), url.get());
-    if (!uri)
-      return NS_ERROR_OUT_OF_MEMORY;
+    if (NS_FAILED(NS_NewURI(getter_AddRefs(uri), url.get())) || !uri)
+      continue;
 
     nsCAutoString hostCStr;
     uri->GetHost(hostCStr);
     NS_ConvertASCIItoUTF16 host(hostCStr);
 
-    const PRUnichar* descStrings[] = { NS_ConvertUTF8toUTF16(keyword).get(), host.get() };
+    const PRUnichar* descStrings[] = { NS_ConvertUTF8toUTF16(keyword).get(),
+                                       host.get() };
     nsString keywordDesc;
-    aBundle->FormatStringFromName(NS_LITERAL_STRING("importedSearchUrlDesc").get(),
-                                  descStrings, 2, getter_Copies(keywordDesc));
+    rv = aBundle->FormatStringFromName(NS_LITERAL_STRING("importedSearchUrlDesc").get(),
+                                       descStrings, 2,
+                                       getter_Copies(keywordDesc));
+    NS_ENSURE_SUCCESS(rv, rv);
 
     PRInt64 newId;
     rv = aBMS->InsertBookmark(keywordsFolder, uri,
                               nsINavBookmarksService::DEFAULT_INDEX,
                               name, &newId);
     NS_ENSURE_SUCCESS(rv, rv);
-    // TODO -- set bookmark keyword to keyword and description to keywordDesc.
+    rv = aBMS->SetKeywordForBookmark(newId, NS_ConvertUTF8toUTF16(keyword));
+    NS_ENSURE_SUCCESS(rv, rv);
+    // TODO Bug 397771: set bookmark description to keywordDesc.
   }
   while (1);
   

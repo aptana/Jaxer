@@ -41,6 +41,7 @@ MOZ_UPDATER=1
 MOZ_PHOENIX=1
 
 MOZ_ENABLE_LIBXUL=1
+MOZ_STATIC_BUILD_UNSUPPORTED=1
 MOZ_PLACES=1
 # always enabled for form history
 MOZ_MORKREADER=1
@@ -49,3 +50,5 @@ MOZ_APP_VERSION=$FIREFOX_VERSION
 MOZ_NO_XPCOM_OBSOLETE=1
 MOZ_EXTENSIONS_DEFAULT=" gnomevfs reporter"
 # MOZ_APP_DISPLAYNAME will be set by branding/configure.sh
+MOZ_BRANDING_DIRECTORY=browser/branding/unofficial
+MOZ_OFFICIAL_BRANDING_DIRECTORY=other-licenses/branding/firefox

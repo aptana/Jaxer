@@ -22,6 +22,7 @@
  * Contributor(s):
  *   Brett Wilson <brettw@gmail.com>
  *   Dietrich Ayala <dietrich@mozilla.com>
+ *   Drew Willcoxon <adw@mozilla.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -95,7 +96,6 @@
 #include "nsParserCIID.h"
 #include "nsStringAPI.h"
 #include "nsUnicharUtils.h"
-#include "plbase64.h"
 #include "nsAppDirectoryServiceDefs.h"
 #include "nsDirectoryServiceUtils.h"
 #include "nsIPrefService.h"
@@ -103,8 +103,9 @@
 #include "nsIHTMLContentSink.h"
 #include "nsIParser.h"
 #include "prprf.h"
-#include "nsVoidArray.h"
 #include "nsIBrowserGlue.h"
+#include "nsIObserverService.h"
+#include "nsISupportsPrimitives.h"
 
 static NS_DEFINE_CID(kParserCID, NS_PARSER_CID);
 
@@ -132,6 +133,14 @@ static NS_DEFINE_CID(kParserCID, NS_PARSER_CID);
 #define STATIC_TITLE_ANNO NS_LITERAL_CSTRING("bookmarks/staticTitle")
 
 #define BOOKMARKS_MENU_ICON_URI "chrome://browser/skin/places/bookmarksMenu.png"
+
+// The RESTORE_*_NSIOBSERVER_TOPIC #defines should match the constants of the
+// same names in toolkit/components/places/src/utils.js
+#define RESTORE_BEGIN_NSIOBSERVER_TOPIC "bookmarks-restore-begin"
+#define RESTORE_SUCCESS_NSIOBSERVER_TOPIC "bookmarks-restore-success"
+#define RESTORE_FAILED_NSIOBSERVER_TOPIC "bookmarks-restore-failed"
+#define RESTORE_NSIOBSERVER_DATA NS_LITERAL_STRING("html")
+#define RESTORE_INITIAL_NSIOBSERVER_DATA NS_LITERAL_STRING("html-initial")
 
 // define to get debugging messages on console about import/export
 //#define DEBUG_IMPORT
@@ -242,62 +251,67 @@ public:
 char *
 nsEscapeHTML(const char * string)
 {
-	/* XXX Hardcoded max entity len. The +1 is for the trailing null. */
-	char *rv = (char *) nsMemory::Alloc(strlen(string) * 6 + 1);
-	char *ptr = rv;
+    /* XXX Hardcoded max entity len. The +1 is for the trailing null. */
+    char *rv = nsnull;
+    PRUint32 len = strlen(string);
+    if (len >= (PR_UINT32_MAX / 6))
+      return nsnull;
 
-	if(rv)
-	  {
-		for(; *string != '\0'; string++)
-		  {
-			if(*string == '<')
-			  {
-				*ptr++ = '&';
-				*ptr++ = 'l';
-				*ptr++ = 't';
-				*ptr++ = ';';
-			  }
-			else if(*string == '>')
-			  {
-				*ptr++ = '&';
-				*ptr++ = 'g';
-				*ptr++ = 't';
-				*ptr++ = ';';
-			  }
-			else if(*string == '&')
-			  {
-				*ptr++ = '&';
-				*ptr++ = 'a';
-				*ptr++ = 'm';
-				*ptr++ = 'p';
-				*ptr++ = ';';
-			  }
-			else if (*string == '"')
-			  {
-				*ptr++ = '&';
-				*ptr++ = 'q';
-				*ptr++ = 'u';
-				*ptr++ = 'o';
-				*ptr++ = 't';
-				*ptr++ = ';';
-			  }			
-			else if (*string == '\'')
-			  {
-				*ptr++ = '&';
-				*ptr++ = '#';
-				*ptr++ = '3';
-				*ptr++ = '9';
-				*ptr++ = ';';
-			  }
-			else
-			  {
-				*ptr++ = *string;
-			  }
-		  }
-		*ptr = '\0';
-	  }
+    rv = (char *) NS_Alloc((len * 6) + 1);
+    char *ptr = rv;
 
-	return(rv);
+    if(rv)
+      {
+        for(; *string != '\0'; string++)
+          {
+            if(*string == '<')
+              {
+                *ptr++ = '&';
+                *ptr++ = 'l';
+                *ptr++ = 't';
+                *ptr++ = ';';
+              }
+            else if(*string == '>')
+              {
+                *ptr++ = '&';
+                *ptr++ = 'g';
+                *ptr++ = 't';
+                *ptr++ = ';';
+              }
+            else if(*string == '&')
+              {
+                *ptr++ = '&';
+                *ptr++ = 'a';
+                *ptr++ = 'm';
+                *ptr++ = 'p';
+                *ptr++ = ';';
+              }
+            else if (*string == '"')
+              {
+                *ptr++ = '&';
+                *ptr++ = 'q';
+                *ptr++ = 'u';
+                *ptr++ = 'o';
+                *ptr++ = 't';
+                *ptr++ = ';';
+              }            
+            else if (*string == '\'')
+              {
+                *ptr++ = '&';
+                *ptr++ = '#';
+                *ptr++ = '3';
+                *ptr++ = '9';
+                *ptr++ = ';';
+              }
+            else
+              {
+                *ptr++ = *string;
+              }
+          }
+        *ptr = '\0';
+      }
+
+    return(rv);
 }
 
 NS_IMPL_ISUPPORTS2(nsPlacesImportExportService, nsIPlacesImportExportService,
@@ -340,9 +354,7 @@ public:
   NS_DECL_ISUPPORTS
 
   // nsIContentSink (superclass of nsIHTMLContentSink)
-  NS_IMETHOD WillTokenize() { return NS_OK; }
-  NS_IMETHOD WillBuildModel() { return NS_OK; }
-  NS_IMETHOD DidBuildModel() { return NS_OK; }
+  NS_IMETHOD WillParse() { return NS_OK; }
   NS_IMETHOD WillInterrupt() { return NS_OK; }
   NS_IMETHOD WillResume() { return NS_OK; }
   NS_IMETHOD SetParser(nsIParser* aParser) { return NS_OK; }
@@ -356,7 +368,6 @@ public:
   NS_IMETHOD EndContext(PRInt32 aPosition) { return NS_OK; }
   NS_IMETHOD IsEnabled(PRInt32 aTag, PRBool* aReturn)
     { *aReturn = PR_TRUE; return NS_OK; }
-  NS_IMETHOD WillProcessTokens() { return NS_OK; }
   NS_IMETHOD DidProcessTokens() { return NS_OK; }
   NS_IMETHOD WillProcessAToken() { return NS_OK; }
   NS_IMETHOD DidProcessAToken() { return NS_OK; }
@@ -424,7 +435,7 @@ protected:
   nsresult PopFrame();
 
   nsresult SetFaviconForURI(nsIURI* aPageURI, nsIURI* aFaviconURI,
-                            const nsCString& aData);
+                            const nsString& aData);
 
   PRInt64 ConvertImportedIdToInternalId(const nsCString& aId);
   PRTime ConvertImportedDateToInternalDate(const nsACString& aDate);
@@ -948,10 +959,21 @@ BookmarkContentSink::HandleLinkBegin(const nsIParserNode& node)
   // save the favicon, ignore errors
   if (!icon.IsEmpty() || !iconUri.IsEmpty()) {
     nsCOMPtr<nsIURI> iconUriObject;
-    NS_NewURI(getter_AddRefs(iconUriObject), iconUri);
-    if (!icon.IsEmpty() || iconUriObject) {
-      rv = SetFaviconForURI(frame.mPreviousLink, iconUriObject,
-                            NS_ConvertUTF16toUTF8(icon));
+    rv = NS_NewURI(getter_AddRefs(iconUriObject), iconUri);
+    if (!icon.IsEmpty() || NS_SUCCEEDED(rv)) {
+      rv = SetFaviconForURI(frame.mPreviousLink, iconUriObject, icon);
+      if (NS_FAILED(rv)) {
+        nsCAutoString warnMsg;
+        warnMsg.Append("Bookmarks Import: unable to set favicon '");
+        warnMsg.Append(NS_ConvertUTF16toUTF8(iconUri));
+        warnMsg.Append("' for page '");
+        nsCAutoString spec;
+        rv = frame.mPreviousLink->GetSpec(spec);
+        if (NS_SUCCEEDED(rv))
+          warnMsg.Append(spec);
+        warnMsg.Append("'");
+        NS_WARNING(warnMsg.get());
+      }
     }
   }
 
@@ -1275,7 +1297,7 @@ BookmarkContentSink::PopFrame()
 
 nsresult
 BookmarkContentSink::SetFaviconForURI(nsIURI* aPageURI, nsIURI* aIconURI,
-                                      const nsCString& aData)
+                                      const nsString& aData)
 {
   nsresult rv;
   static PRUint32 serialNumber = 0; // for made-up favicon URIs
@@ -1311,57 +1333,30 @@ BookmarkContentSink::SetFaviconForURI(nsIURI* aPageURI, nsIURI* aIconURI,
     PR_snprintf(buf, sizeof(buf), "%lld", PR_Now());
     faviconSpec.Append(buf);
     rv = NS_NewURI(getter_AddRefs(faviconURI), faviconSpec);
-    NS_ENSURE_SUCCESS(rv, rv);
+    if (NS_FAILED(rv)) {
+      nsCAutoString warnMsg;
+      warnMsg.Append("Bookmarks Import: Unable to make up new favicon '");
+      warnMsg.Append(faviconSpec);
+      warnMsg.Append("' for page '");
+      nsCAutoString spec;
+      rv = aPageURI->GetSpec(spec);
+      if (NS_SUCCEEDED(rv))
+        warnMsg.Append(spec);
+      warnMsg.Append("'");
+      NS_WARNING(warnMsg.get());
+      return NS_OK;
+    }
     serialNumber++;
   }
 
-  nsCOMPtr<nsIURI> dataURI;
-  rv = NS_NewURI(getter_AddRefs(dataURI), aData);
-  NS_ENSURE_SUCCESS(rv, rv);
+  // save the favicon data
+  // This could fail if the favicon is bigger than defined limit, in such a
+  // case data will not be saved to the db but we will still continue.
+  (void) faviconService->SetFaviconDataFromDataURL(faviconURI, aData, 0);
 
-  // use the data: protocol handler to convert the data
-  nsCOMPtr<nsIIOService> ioService = do_GetIOService(&rv);
-  NS_ENSURE_SUCCESS(rv, rv);
-  nsCOMPtr<nsIProtocolHandler> protocolHandler;
-  rv = ioService->GetProtocolHandler("data", getter_AddRefs(protocolHandler));
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  nsCOMPtr<nsIChannel> channel;
-  rv = protocolHandler->NewChannel(dataURI, getter_AddRefs(channel));
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  // blocking stream is OK for data URIs
-  nsCOMPtr<nsIInputStream> stream;
-  rv = channel->Open(getter_AddRefs(stream));
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  PRUint32 available;
-  rv = stream->Available(&available);
-  NS_ENSURE_SUCCESS(rv, rv);
-  if (available == 0)
-    return NS_ERROR_FAILURE;
-
-  // read all the decoded data
-  PRUint8* buffer = static_cast<PRUint8*>
-                               (nsMemory::Alloc(sizeof(PRUint8) * available));
-  if (!buffer)
-    return NS_ERROR_OUT_OF_MEMORY;
-  PRUint32 numRead;
-  rv = stream->Read(reinterpret_cast<char*>(buffer), available, &numRead);
-  if (NS_FAILED(rv) || numRead != available) {
-    nsMemory::Free(buffer);
-    return rv;
-  }
-
-  nsCAutoString mimeType;
-  rv = channel->GetContentType(mimeType);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  // save in service
-  rv = faviconService->SetFaviconData(faviconURI, buffer, available, mimeType, 0);
-  nsMemory::Free(buffer);
-  NS_ENSURE_SUCCESS(rv, rv);
   rv = faviconService->SetFaviconUrlForPage(aPageURI, faviconURI);
+  NS_ENSURE_SUCCESS(rv, rv);
+
   return NS_OK; 
 }
 
@@ -1496,27 +1491,6 @@ WriteContainerEpilogue(const nsACString& aIndent, nsIOutputStream* aOutput)
 }
 
 
-// DataToDataURI
-
-static nsresult
-DataToDataURI(PRUint8* aData, PRUint32 aDataLen, const nsACString& aMimeType,
-              nsACString& aDataURI)
-{
-  char* encoded = PL_Base64Encode(reinterpret_cast<const char*>(aData),
-                                  aDataLen, nsnull);
-  if (!encoded)
-    return NS_ERROR_OUT_OF_MEMORY;
-
-  aDataURI.AssignLiteral("data:");
-  aDataURI.Append(aMimeType);
-  aDataURI.AppendLiteral(";base64,");
-  aDataURI.Append(encoded);
-
-  nsMemory::Free(encoded);
-  return NS_OK;
-}
-
-
 // WriteFaviconAttribute
 //
 //    This writes the 'ICON="data:asdlfkjas;ldkfja;skdljfasdf"' attribute for
@@ -1529,9 +1503,18 @@ WriteFaviconAttribute(const nsACString& aURI, nsIOutputStream* aOutput)
   nsresult rv;
   PRUint32 dummy;
 
+  // if favicon uri is invalid we skip the attribute silently, to avoid
+  // creating a corrupt file.
   nsCOMPtr<nsIURI> uri;
   rv = NS_NewURI(getter_AddRefs(uri), aURI);
-  NS_ENSURE_SUCCESS(rv, rv);
+  if (NS_FAILED(rv)) {
+    nsCAutoString warnMsg;
+    warnMsg.Append("Bookmarks Export: Found invalid favicon '");
+    warnMsg.Append(aURI);
+    warnMsg.Append("'");
+    NS_WARNING(warnMsg.get());
+    return NS_OK;
+  }
 
   // get favicon
   nsCOMPtr<nsIFaviconService> faviconService = do_GetService(NS_FAVICONSERVICE_CONTRACTID, &rv);
@@ -1560,22 +1543,14 @@ WriteFaviconAttribute(const nsACString& aURI, nsIOutputStream* aOutput)
   if (!faviconScheme.EqualsLiteral("chrome")) {
     // only store data for non-chrome URIs
 
-    // get the data - BE SURE TO FREE
-    nsCAutoString mimeType;
-    PRUint32 dataLen;
-    PRUint8* data;
-    rv = faviconService->GetFaviconData(faviconURI, mimeType, &dataLen, &data);
+    nsAutoString faviconContents;
+    rv = faviconService->GetFaviconDataAsDataURL(faviconURI, faviconContents);
     NS_ENSURE_SUCCESS(rv, rv);
-    if (dataLen > 0) {
-      // convert to URI
-      nsCString faviconContents;
-      rv = DataToDataURI(data, dataLen, mimeType, faviconContents);
-      nsMemory::Free(data);
-      NS_ENSURE_SUCCESS(rv, rv);
-
+    if (faviconContents.Length() > 0) {
       rv = aOutput->Write(kIconAttribute, sizeof(kIconAttribute)-1, &dummy);
       NS_ENSURE_SUCCESS(rv, rv);
-      rv = aOutput->Write(faviconContents.get(), faviconContents.Length(), &dummy);
+      NS_ConvertUTF16toUTF8 utf8Favicon(faviconContents);
+      rv = aOutput->Write(utf8Favicon.get(), utf8Favicon.Length(), &dummy);
       NS_ENSURE_SUCCESS(rv, rv);
       rv = aOutput->Write(kQuoteStr, sizeof(kQuoteStr)-1, &dummy);
       NS_ENSURE_SUCCESS(rv, rv);
@@ -1805,6 +1780,23 @@ nsPlacesImportExportService::WriteItem(nsINavHistoryResultNode* aItem,
   PRUint32 dummy;
   nsresult rv;
 
+  // before doing any attempt to write the item check that uri is valid, if the
+  // item has a bad uri we skip it silently, otherwise we could stop while
+  // exporting, generating a corrupt file.
+  nsCAutoString uri;
+  rv = aItem->GetUri(uri);
+  NS_ENSURE_SUCCESS(rv, rv);
+  nsCOMPtr<nsIURI> pageURI;
+  rv = NS_NewURI(getter_AddRefs(pageURI), uri, nsnull);
+  if (NS_FAILED(rv)) {
+    nsCAutoString warnMsg;
+    warnMsg.Append("Bookmarks Export: Found invalid item uri '");
+    warnMsg.Append(uri);
+    warnMsg.Append("'");
+    NS_WARNING(warnMsg.get());
+    return NS_OK;
+  }
+
   // indent
   if (!aIndent.IsEmpty()) {
     rv = aOutput->Write(PromiseFlatCString(aIndent).get(), aIndent.Length(), &dummy);
@@ -1818,9 +1810,6 @@ nsPlacesImportExportService::WriteItem(nsINavHistoryResultNode* aItem,
   // ' HREF="http://..."' - note that we need to call GetURI on the result
   // node because some nodes (eg queries) generate this lazily.
   rv = aOutput->Write(kHrefAttribute, sizeof(kHrefAttribute)-1, &dummy);
-  NS_ENSURE_SUCCESS(rv, rv);
-  nsCAutoString uri;
-  rv = aItem->GetUri(uri);
   NS_ENSURE_SUCCESS(rv, rv);
   rv = WriteEscapedUrl(uri, aOutput);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -1872,10 +1861,6 @@ nsPlacesImportExportService::WriteItem(nsINavHistoryResultNode* aItem,
   }
 
   // post data
-  nsCOMPtr<nsIURI> pageURI;
-  rv = NS_NewURI(getter_AddRefs(pageURI), uri, nsnull);
-  NS_ENSURE_SUCCESS(rv, rv);
-  
   PRBool hasPostData;
   rv = mAnnotationService->ItemHasAnnotation(itemId, POST_DATA_ANNO,
                                              &hasPostData);
@@ -2188,14 +2173,68 @@ nsPlacesImportExportService::WriteContainerContents(nsINavHistoryResultNode* aFo
   return NS_OK;
 }
 
+// NotifyImportObservers
+//
+//    Notifies bookmarks-restore observers using nsIObserverService.  This
+//    function is void and we simply return on failure because we don't want
+//    the import itself to fail if notifying observers does.
+
+static void
+NotifyImportObservers(const char* aTopic,
+                      PRInt64 aFolderId,
+                      PRBool aIsInitialImport)
+{
+  nsresult rv;
+  nsCOMPtr<nsIObserverService> obs =
+    do_GetService(NS_OBSERVERSERVICE_CONTRACTID, &rv);
+  if (NS_FAILED(rv))
+    return;
+
+  nsCOMPtr<nsISupports> folderIdSupp = nsnull;
+  if (aFolderId > 0) {
+    nsCOMPtr<nsISupportsPRInt64> folderIdInt =
+      do_CreateInstance(NS_SUPPORTS_PRINT64_CONTRACTID, &rv);
+    if (NS_FAILED(rv))
+      return;
+
+    rv = folderIdInt->SetData(aFolderId);
+    if (NS_FAILED(rv))
+      return;
+
+    folderIdSupp = do_QueryInterface(folderIdInt);
+  }
+
+  obs->NotifyObservers(folderIdSupp,
+                       aTopic,
+                       (aIsInitialImport ? RESTORE_INITIAL_NSIOBSERVER_DATA :
+                                           RESTORE_NSIOBSERVER_DATA).get());
+}
 
 // nsIPlacesImportExportService::ImportHTMLFromFile
 //
 NS_IMETHODIMP
 nsPlacesImportExportService::ImportHTMLFromFile(nsILocalFile* aFile, PRBool aIsInitialImport)
 {
+  NotifyImportObservers(RESTORE_BEGIN_NSIOBSERVER_TOPIC, -1, aIsInitialImport);
+
   // this version is exposed on the interface and disallows changing of roots
-  return ImportHTMLFromFileInternal(aFile, PR_FALSE, 0, aIsInitialImport);
+  nsresult rv = ImportHTMLFromFileInternal(aFile,
+                                           PR_FALSE,
+                                           0,
+                                           aIsInitialImport);
+
+  if (NS_FAILED(rv)) {
+    NotifyImportObservers(RESTORE_FAILED_NSIOBSERVER_TOPIC,
+                          -1,
+                          aIsInitialImport);
+  }
+  else {
+    NotifyImportObservers(RESTORE_SUCCESS_NSIOBSERVER_TOPIC,
+                          -1,
+                          aIsInitialImport);
+  }
+
+  return rv;
 }
 
 // nsIPlacesImportExportService::ImportHTMLFromFileToFolder
@@ -2203,8 +2242,28 @@ nsPlacesImportExportService::ImportHTMLFromFile(nsILocalFile* aFile, PRBool aIsI
 NS_IMETHODIMP
 nsPlacesImportExportService::ImportHTMLFromFileToFolder(nsILocalFile* aFile, PRInt64 aFolderId, PRBool aIsInitialImport)
 {
+  NotifyImportObservers(RESTORE_BEGIN_NSIOBSERVER_TOPIC,
+                        aFolderId,
+                        aIsInitialImport);
+
   // this version is exposed on the interface and disallows changing of roots
-  return ImportHTMLFromFileInternal(aFile, PR_FALSE, aFolderId, aIsInitialImport);
+  nsresult rv = ImportHTMLFromFileInternal(aFile,
+                                           PR_FALSE,
+                                           aFolderId,
+                                           aIsInitialImport);
+
+  if (NS_FAILED(rv)) {
+    NotifyImportObservers(RESTORE_FAILED_NSIOBSERVER_TOPIC,
+                          aFolderId,
+                          aIsInitialImport);
+  }
+  else {
+    NotifyImportObservers(RESTORE_SUCCESS_NSIOBSERVER_TOPIC,
+                          aFolderId,
+                          aIsInitialImport);
+  }
+
+  return rv;
 }
 
 nsresult

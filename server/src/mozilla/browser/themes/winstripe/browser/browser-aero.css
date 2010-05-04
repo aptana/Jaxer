@@ -6,52 +6,33 @@
   border-style: none;
 }
 
-#print-preview-toolbar {
+#print-preview-toolbar:not(:-moz-lwtheme) {
   -moz-appearance: -moz-win-browsertabbar-toolbox;
 }
 
 /* ::::: Location Bar AutoComplete Styling ::::: */
 
 .ac-url-text:-moz-system-metric(windows-default-theme) {
-  color: #0055bb;
+  color: -moz-nativehyperlinktext;
 }
 
 /* ::::: Identity Indicator Styling ::::: */
 
-#urlbar[chromedir="ltr"]:-moz-system-metric(windows-default-theme) {
-  -moz-margin-start: 8px;
+#urlbar:-moz-locale-dir(ltr):-moz-system-metric(windows-default-theme) {
+  -moz-margin-start: 9px;
 }
 
-#identity-box[chromedir="ltr"]:-moz-system-metric(windows-default-theme) {
-  -moz-margin-start: -6px;
+#identity-box:-moz-locale-dir(ltr):-moz-system-metric(windows-default-theme) {
+  -moz-margin-start: -7px;
 }
 
-#identity-box[chromedir="ltr"]:-moz-system-metric(windows-default-theme) > hbox {
-  margin: -4px 0;
-  padding: 3px 2px 3px 3px;
-  background-position: 0 3px;
-  -moz-border-radius-topleft: 14px;
-  -moz-border-radius-bottomleft: 14px;
-}
-#identity-box:hover[chromedir="ltr"]:-moz-system-metric(windows-default-theme) > hbox {
-  background-position: 0 -57px;
-}
-#identity-box.verifiedDomain[chromedir="ltr"]:-moz-system-metric(windows-default-theme) > hbox {
-  background-position: 0 -117px;
-}
-#identity-box.verifiedDomain:hover[chromedir="ltr"]:-moz-system-metric(windows-default-theme) > hbox {
-  background-position: 0 -177px;
-}
-#identity-box.verifiedIdentity[chromedir="ltr"]:-moz-system-metric(windows-default-theme) > hbox {
-  background-position: 0 -237px;
-}
-#identity-box.verifiedIdentity:hover[chromedir="ltr"]:-moz-system-metric(windows-default-theme) > hbox {
-  background-position: 0 -297px;
+#identity-box:-moz-locale-dir(ltr):-moz-system-metric(windows-default-theme) {
+  -moz-border-radius: 11px 0 2px 11px / 15px 0 2px 15px;
 }
 
-/* Match #identity-box[chromedir="ltr"]'s -moz-margin-start */
-#identity-popup[chromedir="ltr"]:-moz-system-metric(windows-default-theme) {
-  -moz-margin-start: 6px;
+/* Match #identity-box:-moz-locale-dir(ltr)'s -moz-margin-start */
+#identity-popup:-moz-locale-dir(ltr):-moz-system-metric(windows-default-theme) {
+  -moz-margin-start: 7px;
 }
 
 /* Bug 413060, comment 16: Vista Aero is a special case where we use a
@@ -60,6 +41,13 @@
 #editBookmarkPanel:-moz-system-metric(windows-default-theme) {
   -moz-appearance: tooltip;
   color: InfoText;
+}
+
+/* Make the left and right paddings smaller, to compensate for the horizontal
+   space added by the tooltip appearance, see bug 432529. */
+#identity-popup-container:-moz-system-metric(windows-default-theme) {
+  -moz-padding-start: 6px;
+  -moz-padding-end: 6px;
 }
 
 #sidebar-splitter:-moz-system-metric(windows-default-theme) {
@@ -73,4 +61,38 @@
   -moz-margin-start: -3px;
   position: relative;
   z-index: 10;
+}
+
+#allTabs-panel:-moz-system-metric(windows-compositor),
+#ctrlTab-panel:-moz-system-metric(windows-compositor) {
+  background: transparent;
+  -moz-appearance: -moz-win-glass;
+  -moz-border-radius: 0;
+  border: none;
+  font: normal 1.2em "Segoe UI";
+  color: black;
+  text-shadow: white -1px -1px .5em, white -1px 1px .5em, white 1px 1px .5em, white 1px -1px .5em;
+}
+
+/* ::::: fullscreen window controls ::::: */
+
+#window-controls {
+  -moz-box-align: start;
+}
+
+#minimize-button,
+#restore-button,
+#close-button {
+  -moz-appearance: none;
+  border-style: none;
+  margin: 0;
+}
+#close-button {
+  -moz-image-region: rect(0, 49px, 16px, 32px);
+}
+#close-button:hover {
+  -moz-image-region: rect(16px, 49px, 32px, 32px);
+}
+#close-button:hover:active {
+  -moz-image-region: rect(32px, 49px, 48px, 32px);
 }

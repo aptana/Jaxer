@@ -1,16 +1,4 @@
-/* Unified toolbar */
-
-#places {
-  -moz-binding: url("chrome://global/skin/globalBindings.xml#unifiedWindow");
-}
-
 /* Inactive Window */
-
-#places:not([active="true"]) > #placesToolbox > #placesToolbar {
-  background-image: url("chrome://global/skin/toolbar/toolbar-background-inactive.png");
-  background-color: #cfcfcf;
-  border-bottom: 1px solid rgba(0,0,0,0.35);
-}
 
 #places:not([active="true"]) > #placesToolbox > #placesToolbar > toolbarbutton,
 #places:not([active="true"]) > #placesToolbox > #placesToolbar > #searchFilter {
@@ -36,16 +24,12 @@
 }
 
 #placesList treechildren::-moz-tree-row(selected) {  
-  background-color: #6f81a9;
-  background-image: url("chrome://browser/skin/places/selected-gradient.png");
-  background-repeat: repeat-x;
-  background-position: bottom left;
+  background: -moz-linear-gradient(top, #B5B5B5, #8A8A8A) repeat-x;
   border-top: 1px solid #979797;
 }
 
 #placesList treechildren::-moz-tree-row(selected,focus) {  
-  background-image: url("chrome://browser/skin/places/selected-focused-gradient.png");
-  background-color: #8a8a8a !important;
+  background: -moz-linear-gradient(top, #A2B1D0, #6E81A9) repeat-x;
   border-top: 1px solid #91a0c0;
 }
 
@@ -79,13 +63,7 @@
 }
 
 #placesToolbar {
-  background-color: #999;
-  border-bottom: 1px solid #404040;
-  background-image: url("chrome://global/skin/toolbar/toolbar-background.gif");
-  background-repeat: repeat-x;
-  background-position: 3px 0px;
-  margin-top: -3px;
-  padding: 0 4px;
+  padding: 0 4px 3px;
 }
 
 #placesView {
@@ -114,7 +92,7 @@
   border-right: none;
 }
 
-#back-button[chromedir="rtl"] {
+#back-button:-moz-locale-dir(rtl) {
   -moz-image-region: rect(0px, 67px, 23px, 34px);
 }
 
@@ -122,7 +100,7 @@
  -moz-image-region: rect(23px, 34px, 46px, 0px) !important;
 }
 
-#back-button[disabled="true"][chromedir="rtl"] {
+#back-button[disabled="true"]:-moz-locale-dir(rtl) {
  -moz-image-region: rect(23px, 67px, 46px, 34px) !important;
 }
 
@@ -132,9 +110,9 @@
   -moz-image-region: rect(46px, 34px, 69px, 0px);
 }
 
-#back-button:hover:active[chromedir="rtl"],
-#back-button[buttondown="true"][chromedir="rtl"],
-#back-button[open="true"][chromedir="rtl"] {
+#back-button:hover:active:-moz-locale-dir(rtl),
+#back-button[buttondown="true"]:-moz-locale-dir(rtl),
+#back-button[open="true"]:-moz-locale-dir(rtl) {
   -moz-image-region: rect(46px, 67px, 69px, 34px);
 }
 
@@ -154,7 +132,7 @@
   border-right: none;
 }
 
-#forward-button[chromedir="rtl"] {
+#forward-button:-moz-locale-dir(rtl) {
   -moz-image-region: rect(0px, 34px, 23px, 0px);
 }
 
@@ -162,7 +140,7 @@
   -moz-image-region: rect(23px, 67px, 46px, 34px) !important;
 }
 
-#forward-button[disabled="true"][chromedir="rtl"] {
+#forward-button[disabled="true"]:-moz-locale-dir(rtl) {
   -moz-image-region: rect(23px, 34px, 46px, 0px) !important;
 }
 
@@ -172,9 +150,9 @@
   -moz-image-region: rect(46px, 67px, 69px, 34px);
 }
 
-#forward-button:hover:active[chromedir="rtl"],
-#forward-button[buttondown="true"][chromedir="rtl"],
-#forward-button[open="true"][chromedir="rtl"] {
+#forward-button:hover:active:-moz-locale-dir(rtl),
+#forward-button[buttondown="true"]:-moz-locale-dir(rtl),
+#forward-button[open="true"]:-moz-locale-dir(rtl) {
   -moz-image-region: rect(46px, 34px, 69px, 0px);
 }
 
@@ -187,10 +165,10 @@
   background: url("chrome://browser/skin/places/menubutton-end-pressed.png") right center no-repeat;
 }
 
-#placesToolbar[chromedir="rtl"] > toolbarbutton[type="menu"] {
+#placesToolbar:-moz-locale-dir(rtl) > toolbarbutton[type="menu"] {
   background: url("chrome://browser/skin/places/menubutton-end-rtl.png") left center no-repeat;
 }
-#placesToolbar[chromedir="rtl"] > toolbarbutton[type="menu"][open="true"] {
+#placesToolbar:-moz-locale-dir(rtl) > toolbarbutton[type="menu"][open="true"] {
   background: url("chrome://browser/skin/places/menubutton-end-pressed-rtl.png") left center no-repeat;
 }
 
@@ -210,10 +188,10 @@
   background: url("chrome://browser/skin/places/menubutton-start-pressed.png") left center no-repeat;
 }
 
-#placesToolbar[chromedir="rtl"] > toolbarbutton[type="menu"] > .toolbarbutton-icon {
+#placesToolbar:-moz-locale-dir(rtl) > toolbarbutton[type="menu"] > .toolbarbutton-icon {
   background: url("chrome://browser/skin/places/menubutton-start-rtl.png") right center no-repeat;
 }
-#placesToolbar[chromedir="rtl"] > toolbarbutton[type="menu"][open="true"] > .toolbarbutton-icon {
+#placesToolbar:-moz-locale-dir(rtl) > toolbarbutton[type="menu"][open="true"] > .toolbarbutton-icon {
   background: url("chrome://browser/skin/places/menubutton-start-pressed-rtl.png") right center no-repeat;
 }
 
@@ -300,39 +278,7 @@
   border-color: transparent;
 }
 
-/* Search Bar */
-#searchbar {
-  margin-top: 6px;
-  -moz-margin-start: 2px;
-  -moz-margin-end: -4px;
-}
-
-.textbox-input-closebutton {
-  -moz-appearance: none;
-  margin: -2px 0;
-  -moz-margin-end: -2px;
-  min-width: 0;
-  background-color: transparent;
-  border: none;
-  padding: 0 !important;
-  list-style-image: url("chrome://global/skin/icons/closetab.png");
-  width: 16px;
-  height: 16px;
-  cursor: default;
-}
-
-.textbox-input-closebutton > .button-box {
-  margin: 0;
-  padding: 0;
-  border: none;
-}
-
-.textbox-input-closebutton:hover:active {
-  list-style-image: url("chrome://global/skin/icons/closetab-active.png");
-}
-
 .small {
-  font-size: x-small;
   min-width: 0px;
   padding: 0px 4px 0px 4px;
   margin: 0px;  
@@ -343,31 +289,6 @@
 .small .button-box {
   padding: 0px;
   border: 0px;
-}
-
-#searchFilter {
-  -moz-appearance: none;
-  border: 3px solid;
-  -moz-border-top-colors: #676767 #C5C5C5 -moz-Field;
-  -moz-border-bottom-colors: #C2C2C2 #A4A4A4 -moz-Field;
-  -moz-border-right-colors: #969696 #C5C5C5 -moz-Field;
-  -moz-border-left-colors: #969696 #C5C5C5 -moz-Field;
-  -moz-border-radius: 12px;
-  background: url("chrome://global/skin/icons/search-textbox.png") -moz-Field no-repeat 1px center;
-  -moz-background-clip: border !important;
-  padding: 0;
-  -moz-padding-start: 14px;
-}
-
-#searchFilter[focused="true"] {
-  outline: 2px solid #4F8EC9;
-  -moz-outline-radius: 12px;
-  -moz-outline-offset: -2px;
-}
-
-#searchFilter > .textbox-input-box {
-  padding: 2px;
-  border-left: 2px solid transparent;
 }
 
 .filterList {
@@ -395,22 +316,6 @@
 
 /* Scope Bar */
 
-#scopeBarTitle {
-  color: #6D6D6D;
-  border: 1px solid transparent;
-  -moz-border-radius: 10px;
-  padding-top: 1px;
-}
-
-#organizerScopeBar {
-  background: url("chrome://global/skin/icons/find-bar-background.png") repeat-x top center #D0D0D0;
-  color: #474747;
-  font-size: 105%;
-  font-weight: bold;
-  border-bottom: 1px solid #B1B1B1;
-  padding: 2px 0;
-}
-
 #advancedSearch > hbox, 
 #advancedSearchRows > row {
   background-color: #E8E8E8;
@@ -424,28 +329,51 @@
   -moz-padding-end: 8px;
 }
 
+#organizerScopeBar {
+  padding: 3px;
+  -moz-appearance: none;
+  background: -moz-linear-gradient(top, #E8E8E8, #D0D0D0) repeat-x;
+  border-bottom: 1px solid #B1B1B1;
+}
+
+#scopeBarTitle {
+  font: icon;
+  color: #6D6D6D;
+  font-weight: bold;
+  text-shadow: 0 1px rgba(255, 255, 255, .4);
+  margin: 0 6px 1px;
+}
 
 #organizerScopeBar > toolbarbutton {
-  border: 1px solid transparent;
-  -moz-border-radius: 10px;
-  padding: 0;
-  margin: 0 1px;
+  border: 0;
+  font: icon;
+  font-weight: bold;
+  color: #2D2D2D;
+  -moz-border-radius: 100%;
+  padding: 0 10px 1px;
+  margin: 1px;
+  font-weight: bold;
 }
 
-#organizerScopeBar .toolbarbutton-text {
+#organizerScopeBar > toolbarbutton > .toolbarbutton-text {
    margin: 0 !important;
-   padding: 0 5px !important;
 }
 
-#organizerScopeBar> toolbarbutton:not([disabled="true"]):hover {
-  color: #fff;
-  background: url("chrome://global/skin/20pct_transparent_pixel.png") repeat;
+#organizerScopeBar > toolbarbutton:hover,
+#organizerScopeBar > toolbarbutton[checked="true"] {
+  color: #FFF !important; /* !imp because of [checked="true"] (see toolbarbutton.css) */
+  text-shadow: 0 1px rgba(0, 0, 0, .4);
+  background-color: rgba(0, 0, 0, .32);
 }
 
-#organizerScopeBar > toolbarbutton[checked="true"]  {
-  background: url("chrome://global/skin/icons/white-gray-gradient-active.gif") repeat-x -1px 50%;
-  border-color:   #656565;
-  color: #fff !important;
+#organizerScopeBar > toolbarbutton:active:hover,
+#organizerScopeBar > toolbarbutton[checked="true"] {
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.4), 0 1px rgba(255, 255,
+255, 0.4);
+}
+
+#organizerScopeBar > toolbarbutton:active:hover {
+  background-color: rgba(0, 0, 0, .5);
 }
 
 #organizerScopeBarExpander {
@@ -470,85 +398,40 @@
   list-style-image: url("chrome://browser/skin/places/minus-active.png") !important;
 }
 
-menulist {
-  -moz-appearance: none;
-  margin: 0px 3px 0px 5px !important;
-  padding: 2px 0px 2px 0px;
-  background: url("chrome://global/skin/icons/round-button-leftcap.png") no-repeat center left;
-}
-
-menulist:active,
-menulist[open="true"]  {
- background: url("chrome://global/skin/icons/round-button-active-leftcap.png") no-repeat center left !important;
-}
-  
-.menulist-label-box {
-  -moz-appearance: none;
-  margin: 0px 0px 0px 8px !important;
-  padding: 2px 0 2px 0px;
-  background: url("chrome://global/skin/icons/round-button-dropmarker.png") no-repeat center right;
-  border: none;
-}
-menulist:active > .menulist-label-box,
-menulist[open="true"] > .menulist-label-box {
-  background: url("chrome://global/skin/icons/round-button-active-dropmarker.png") no-repeat center right !important;
-}
-
-.menulist-label {
-  -moz-appearance: none;
-  margin: 0px 14px 0px 0px !important;
-  padding: 2px 0px 2px 0px;
-  background: url("chrome://global/skin/icons/round-button-middle.png") repeat-x center left;
-  border: none;
-}
-menulist:active > .menulist-label-box .menulist-label,
-menulist[open="true"] > .menulist-label-box  .menulist-label {
-  background: url("chrome://global/skin/icons/round-button-active-middle.png") repeat-x center left !important;
-}
-
-#editBMPanel_namePicker {
-  background: none !important;
-  margin: 0px !important;
-  padding:  0px !important;
-}
-#editBMPanel_namePicker[droppable="false"] > .menulist-editable-box {
-  -moz-appearance: textfield;
-  cursor: text;
-  margin: 4px 4px;
-  border: 3px solid;
-  -moz-border-top-colors: transparent #888888 #000000;
-  -moz-border-right-colors: transparent #FFFFFF #000000;
-  -moz-border-bottom-colors: transparent #FFFFFF #000000;
-  -moz-border-left-colors: transparent #888888 #000000;
-  -moz-border-radius-topright: 2px;
-  -moz-border-radius-bottomleft: 2px;
-  padding: 0;
-  background-color: -moz-Field;
-  color: -moz-FieldText;
-}
-
 #saveSearch {
+  margin: 0 4px;
+  padding: 0 10px;
   -moz-appearance: none;
-  margin: 0;
-  padding: 4px 0 3px 0;
-  -moz-padding-start: 7px;
-  background: url("chrome://global/skin/icons/round-button-leftcap.png") no-repeat center left;
-  border: none;
+  border: 1px solid rgba(0, 0, 0, .4);
+  -moz-border-radius: 100%;
+  text-shadow: 0 1px rgba(255, 255, 255, .4);
+  background: -moz-linear-gradient(top, #FFF, #CACACA) repeat-x;
+  -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, .4);
 }
 
-#saveSearch:active {
-  background: url("chrome://global/skin/icons/round-button-active-leftcap.png") no-repeat center left;
-}
-
-#saveSearch .button-text {
+#saveSearch > .button-box > .button-text {
   margin: 0 !important;
-  padding: 2px 8px 2px 1px !important;
-  background: url("chrome://global/skin/icons/round-button-right.png") no-repeat center right;
-  font-size: 12px;
 }
 
-#saveSearch:active .button-text {
-  background: url("chrome://global/skin/icons/round-button-active-right.png") no-repeat center right;
+#saveSearch:focus {
+  -moz-box-shadow: 0 0 1px -moz-mac-focusring inset,
+                   0 0 4px 1px -moz-mac-focusring,
+                   0 0 2px 1px -moz-mac-focusring,
+                   0 1px rgba(255, 255, 255, .4);
+}
+
+#saveSearch:active:hover {
+  background: #CCC;
+  -moz-box-shadow: inset 0 1px 4px rgba(0, 0, 0, .2),
+                   0 1px rgba(255, 255, 255, .4);
+}
+
+#saveSearch:active:hover:focus {
+  -moz-box-shadow: 0 0 1px -moz-mac-focusring inset,
+                   0 0 4px 1px -moz-mac-focusring,
+                   0 0 2px 1px -moz-mac-focusring,
+                   inset 0 1px 4px rgba(0, 0, 0, .2),
+                   0 1px rgba(255, 255, 255, .4);
 }
 
 %ifdef PLACES_QUERY_BUILDER
@@ -669,10 +552,6 @@ menulist[open="true"] > .menulist-label-box  .menulist-label {
   list-style-image: url("chrome://browser/skin/places/expander-open-active.png") !important;
 }
 
-.no-margin-button {
-  min-width:0em;
-}
-
 /**
  * info pane
  */
@@ -687,6 +566,10 @@ menulist[open="true"] > .menulist-label-box  .menulist-label {
   max-width: 0;
 }
 
+#infoBoxExpanderLabel {
+  display: none;
+}
+
 #infoBox[minimal="true"] #infoBoxExpander {
   list-style-image: url("chrome://browser/skin/places/twisty-closed.gif");
 }
@@ -696,6 +579,6 @@ menulist[open="true"] > .menulist-label-box  .menulist-label {
   color: GrayText;
 }
 
-#editBookmarkPanelGrid > rows > row > label {
+.editBMPanel_rowLabel {
   text-align: right !important;
 }

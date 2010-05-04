@@ -49,7 +49,6 @@
 #include "nsNetCID.h"
 #include "nsNetUtil.h"
 #include "nsSeamonkeyProfileMigrator.h"
-#include "nsVoidArray.h"
 #include "nsIProfileMigrator.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -341,10 +340,10 @@ nsSeamonkeyProfileMigrator::FillProfileDataFromSeamonkeyRegistry()
 #define F(a) nsSeamonkeyProfileMigrator::a
 
 #define MAKEPREFTRANSFORM(pref, newpref, getmethod, setmethod) \
-  { pref, newpref, F(Get##getmethod), F(Set##setmethod), PR_FALSE, -1 }
+  { pref, newpref, F(Get##getmethod), F(Set##setmethod), PR_FALSE, { -1 } }
 
 #define MAKESAMETYPEPREFTRANSFORM(pref, method) \
-  { pref, 0, F(Get##method), F(Set##method), PR_FALSE, -1 }
+  { pref, 0, F(Get##method), F(Set##method), PR_FALSE, { -1 } }
 
 
 static 
@@ -371,7 +370,6 @@ nsSeamonkeyProfileMigrator::PrefTransform gTransforms[] = {
   MAKESAMETYPEPREFTRANSFORM("security.OSCP.enabled",                    Int),
   MAKESAMETYPEPREFTRANSFORM("security.OSCP.signingCA",                  String),
   MAKESAMETYPEPREFTRANSFORM("security.OSCP.URL",                        String),
-  MAKESAMETYPEPREFTRANSFORM("security.enable_java",                     Bool),
   MAKESAMETYPEPREFTRANSFORM("javascript.enabled",                       Bool),
   MAKESAMETYPEPREFTRANSFORM("dom.disable_window_move_resize",           Bool),
   MAKESAMETYPEPREFTRANSFORM("dom.disable_window_flip",                  Bool),
@@ -479,10 +477,8 @@ nsSeamonkeyProfileMigrator::TransformPreferences(const nsAString& aSourcePrefFil
   for (transform = gTransforms; transform < end; ++transform)
     transform->prefGetterFunc(transform, branch);
 
-  nsVoidArray* fontPrefs = new nsVoidArray();
-  if (!fontPrefs)
-    return NS_ERROR_OUT_OF_MEMORY;
-  ReadFontsBranch(psvc, fontPrefs);
+  nsTArray<FontPref> fontPrefs;
+  ReadFontsBranch(psvc, &fontPrefs);
 
   // Now that we have all the pref data in memory, load the target pref file,
   // and write it back out
@@ -490,9 +486,7 @@ nsSeamonkeyProfileMigrator::TransformPreferences(const nsAString& aSourcePrefFil
   for (transform = gTransforms; transform < end; ++transform)
     transform->prefSetterFunc(transform, branch);
 
-  WriteFontsBranch(psvc, fontPrefs);
-  delete fontPrefs;
-  fontPrefs = nsnull;
+  WriteFontsBranch(psvc, &fontPrefs);
 
   nsCOMPtr<nsIFile> targetPrefsFile;
   mTargetProfile->Clone(getter_AddRefs(targetPrefsFile));
@@ -505,20 +499,9 @@ nsSeamonkeyProfileMigrator::TransformPreferences(const nsAString& aSourcePrefFil
   return NS_OK;
 }
 
-struct FontPref {
-  char*         prefName;
-  PRInt32       type;
-  union {
-    char*       stringValue;
-    PRInt32     intValue;
-    PRBool      boolValue;
-    PRUnichar*  wstringValue;
-  };
-};
-
 void
 nsSeamonkeyProfileMigrator::ReadFontsBranch(nsIPrefService* aPrefService, 
-                                            nsVoidArray* aPrefs)
+                                            nsTArray<FontPref>* aPrefs)
 {
   // Enumerate the branch
   nsCOMPtr<nsIPrefBranch> branch;
@@ -534,7 +517,7 @@ nsSeamonkeyProfileMigrator::ReadFontsBranch(nsIPrefService* aPrefService,
     char* currPref = prefs[i];
     PRInt32 type;
     branch->GetPrefType(currPref, &type);
-    FontPref* pref = new FontPref;
+    FontPref* pref = aPrefs->AppendElement();
     pref->prefName = currPref;
     pref->type = type;
     switch (type) {
@@ -559,14 +542,14 @@ nsSeamonkeyProfileMigrator::ReadFontsBranch(nsIPrefService* aPrefService,
       break;
     }
 
-    if (NS_SUCCEEDED(rv))
-      aPrefs->AppendElement((void*)pref);
+    if (NS_FAILED(rv))
+      aPrefs->RemoveElementAt(aPrefs->Length()-1);
   }
 }
 
 void
 nsSeamonkeyProfileMigrator::WriteFontsBranch(nsIPrefService* aPrefService,
-                                             nsVoidArray* aPrefs)
+                                             nsTArray<FontPref>* aPrefs)
 {
   nsresult rv;
 
@@ -574,35 +557,32 @@ nsSeamonkeyProfileMigrator::WriteFontsBranch(nsIPrefService* aPrefService,
   nsCOMPtr<nsIPrefBranch> branch;
   aPrefService->GetBranch("font.", getter_AddRefs(branch));
 
-  PRUint32 count = aPrefs->Count();
+  PRUint32 count = aPrefs->Length();
   for (PRUint32 i = 0; i < count; ++i) {
-    FontPref* pref = (FontPref*)aPrefs->ElementAt(i);
-    switch (pref->type) {
+    FontPref &pref = aPrefs->ElementAt(i);
+    switch (pref.type) {
     case nsIPrefBranch::PREF_STRING:
-      rv = branch->SetCharPref(pref->prefName, pref->stringValue);
-      NS_Free(pref->stringValue);
-      pref->stringValue = nsnull;
+      rv = branch->SetCharPref(pref.prefName, pref.stringValue);
+      NS_Free(pref.stringValue);
+      pref.stringValue = nsnull;
       break;
     case nsIPrefBranch::PREF_BOOL:
-      rv = branch->SetBoolPref(pref->prefName, pref->boolValue);
+      rv = branch->SetBoolPref(pref.prefName, pref.boolValue);
       break;
     case nsIPrefBranch::PREF_INT:
-      rv = branch->SetIntPref(pref->prefName, pref->intValue);
+      rv = branch->SetIntPref(pref.prefName, pref.intValue);
       break;
     case nsIPrefBranch::PREF_INVALID:
       nsCOMPtr<nsIPrefLocalizedString> pls(do_CreateInstance("@mozilla.org/pref-localizedstring;1"));
-      pls->SetData(pref->wstringValue);
-      rv = branch->SetComplexValue(pref->prefName, 
+      pls->SetData(pref.wstringValue);
+      rv = branch->SetComplexValue(pref.prefName, 
                                    NS_GET_IID(nsIPrefLocalizedString),
                                    pls);
-      NS_Free(pref->wstringValue);
-      pref->wstringValue = nsnull;
+      NS_Free(pref.wstringValue);
+      pref.wstringValue = nsnull;
       break;
     }
-    NS_Free(pref->prefName);
-    pref->prefName = nsnull;
-    delete pref;
-    pref = nsnull;
+    NS_Free(pref.prefName);
   }
   aPrefs->Clear();
 }
@@ -702,12 +682,12 @@ nsSeamonkeyProfileMigrator::CopyPasswords(PRBool aReplace)
     nsCOMPtr<nsILoginManagerStorage> importer(
         do_CreateInstance("@mozilla.org/login-manager/storage/legacy;1"));
 
-    nsCOMPtr<nsIFile> signonsFile(do_QueryInterface(mSourceProfile));
-    signonsFile->SetLeafName(fileName);
+    nsCOMPtr<nsIFile> signonsFile;
+    mSourceProfile->Clone(getter_AddRefs(signonsFile));
+    signonsFile->Append(fileName);
 
     importer->InitWithFile(signonsFile, nsnull);
 
-    nsresult rv;
     PRUint32 count;
     nsILoginInfo **logins;
 
@@ -733,9 +713,10 @@ nsSeamonkeyProfileMigrator::CopyPasswords(PRBool aReplace)
 nsresult
 nsSeamonkeyProfileMigrator::CopyBookmarks(PRBool aReplace)
 {
+  nsresult rv;
   if (aReplace) {
     // Initialize the default bookmarks
-    nsresult rv = InitializeBookmarks(mTargetProfile);
+    rv = InitializeBookmarks(mTargetProfile);
     NS_ENSURE_SUCCESS(rv, rv);
 
     // Merge in the bookmarks from the source profile
@@ -744,17 +725,13 @@ nsSeamonkeyProfileMigrator::CopyBookmarks(PRBool aReplace)
     sourceFile->Append(FILE_NAME_BOOKMARKS);
     rv = ImportBookmarksHTML(sourceFile, PR_TRUE, PR_FALSE, EmptyString().get());
     NS_ENSURE_SUCCESS(rv, rv);
-
-    // we need to set this pref so that on startup
-    // we don't blow away what we just imported
-    nsCOMPtr<nsIPrefBranch> pref(do_GetService(NS_PREFSERVICE_CONTRACTID, &rv));
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    return pref->SetBoolPref("browser.places.importBookmarksHTML", PR_FALSE);
   }
-
-  return ImportNetscapeBookmarks(FILE_NAME_BOOKMARKS, 
+  else {
+    rv = ImportNetscapeBookmarks(FILE_NAME_BOOKMARKS, 
                                  NS_LITERAL_STRING("sourceNameSeamonkey").get());
+    NS_ENSURE_SUCCESS(rv, rv);
+  }
+  return NS_OK;
 }
 
 nsresult

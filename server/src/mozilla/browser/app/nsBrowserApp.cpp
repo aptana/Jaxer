@@ -54,6 +54,8 @@
 #include "nsStringGlue.h"
 
 #ifdef XP_WIN
+// we want to use the DLL blocklist if possible
+#define XRE_WANT_DLL_BLOCKLIST
 // we want a wmain entry point
 #include "nsWindowsWMain.cpp"
 #endif
@@ -64,11 +66,9 @@ static void Output(const char *fmt, ... )
   va_start(ap, fmt);
 
 #if defined(XP_WIN) && !MOZ_WINCONSOLE
-  char msg[2048];
-
-  _vsnprintf(msg, sizeof(msg), fmt, ap);
-
-  MessageBox(NULL, msg, "XULRunner", MB_OK | MB_ICONERROR);
+  PRUnichar msg[2048];
+  _vsnwprintf(msg, sizeof(msg)/sizeof(msg[0]), NS_ConvertUTF8toUTF16(fmt).get(), ap);
+  MessageBoxW(NULL, msg, L"XULRunner", MB_OK | MB_ICONERROR);
 #else
   vfprintf(stderr, fmt, ap);
 #endif

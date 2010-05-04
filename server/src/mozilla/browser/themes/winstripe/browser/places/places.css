@@ -80,7 +80,7 @@ treechildren::-moz-tree-image(title, query) {
 }
 
 treechildren::-moz-tree-image(title, query, tagContainer),
-treechildren::-moz-tree-image(container, OrganizerQuery_Tags) {
+treechildren::-moz-tree-image(query, OrganizerQuery_Tags) {
   list-style-image: url("chrome://mozapps/skin/places/tagContainerIcon.png");
   -moz-image-region: auto;
 }
@@ -133,7 +133,7 @@ treechildren::-moz-tree-cell-text(date, session-continue) {
   margin-bottom: 2px;
 }
 
-#viewButton > hbox > dropmarker {
+#viewButton > .button-box > .button-menu-dropmarker {
   height: auto;
   width: auto;
   -moz-margin-end: -3px;

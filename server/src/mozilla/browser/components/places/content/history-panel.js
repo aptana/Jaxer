@@ -61,34 +61,14 @@ function HistorySidebarInit()
     document.getElementById("bydayandsite").setAttribute("checked", "true");
   else
     document.getElementById("byday").setAttribute("checked", "true");
-
-  initContextMenu();
   
   searchHistory("");
-}
-
-function initContextMenu() {
-  // Insert "Bookmark This Link" right before the copy item
-  document.getElementById("placesContext")
-          .insertBefore(document.getElementById("addBookmarkContextItem"),
-                        document.getElementById("placesContext_copy"));
 }
 
 function GroupBy(groupingType)
 {
   gHistoryGrouping = groupingType;
-  gSearchBox.value = "";
-  searchHistory("");
-}
-
-function historyAddBookmarks()
-{ 
-  // no need to check gHistoryTree.view.selection.count
-  // node will be null if there is a multiple selection 
-  // or if the selected item is not a URI node
-  var node = gHistoryTree.selectedNode;
-  if (node && PlacesUtils.nodeIsURI(node))
-    PlacesUIUtils.showMinimalAddBookmarkUI(PlacesUtils._uri(node.uri), node.title);
+  searchHistory(gSearchBox.value);
 }
 
 function searchHistory(aInput)
@@ -100,32 +80,33 @@ function searchHistory(aInput)
   var sortingMode;
   var resultType;
 
+  switch (gHistoryGrouping) {
+    case "visited":
+      resultType = NHQO.RESULTS_AS_URI;
+      sortingMode = NHQO.SORT_BY_VISITCOUNT_DESCENDING;
+      break; 
+    case "lastvisited":
+      resultType = NHQO.RESULTS_AS_URI;
+      sortingMode = NHQO.SORT_BY_DATE_DESCENDING;
+      break; 
+    case "dayandsite":
+      resultType = NHQO.RESULTS_AS_DATE_SITE_QUERY;
+      break;
+    case "site":
+      resultType = NHQO.RESULTS_AS_SITE_QUERY;
+      sortingMode = NHQO.SORT_BY_TITLE_ASCENDING;
+      break;
+    case "day":
+    default:
+      resultType = NHQO.RESULTS_AS_DATE_QUERY;
+      break;
+  }
+
   if (aInput) {
     query.searchTerms = aInput;
-    sortingMode = NHQO.SORT_BY_TITLE_ASCENDING;
-    resultType = NHQO.RESULTS_AS_URI;
-  }
-  else {
-    switch (gHistoryGrouping) {
-      case "visited":
-        resultType = NHQO.RESULTS_AS_URI;
-        sortingMode = NHQO.SORT_BY_VISITCOUNT_DESCENDING;
-        break; 
-      case "lastvisited":
-        resultType = NHQO.RESULTS_AS_URI;
-        sortingMode = NHQO.SORT_BY_DATE_DESCENDING;
-        break; 
-      case "dayandsite":
-        resultType = NHQO.RESULTS_AS_DATE_SITE_QUERY;
-        break;
-      case "site":
-        resultType = NHQO.RESULTS_AS_SITE_QUERY;
-        sortingMode = NHQO.SORT_BY_TITLE_ASCENDING;
-        break;
-      case "day":
-      default:
-        resultType = NHQO.RESULTS_AS_DATE_QUERY;
-        break;
+    if (gHistoryGrouping != "visited" && gHistoryGrouping != "lastvisited") {
+      sortingMode = NHQO.SORT_BY_TITLE_ASCENDING;
+      resultType = NHQO.RESULTS_AS_URI;
     }
   }
 

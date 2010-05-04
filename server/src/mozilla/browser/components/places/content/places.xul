@@ -62,8 +62,6 @@
 %placesDTD;
 <!ENTITY % editMenuOverlayDTD SYSTEM "chrome://global/locale/editMenuOverlay.dtd">
 %editMenuOverlayDTD;
-<!ENTITY % globalDTD SYSTEM "chrome://global/locale/global.dtd">
-%globalDTD;
 <!ENTITY % browserDTD SYSTEM "chrome://browser/locale/browser.dtd">
 %browserDTD;
 ]>
@@ -77,6 +75,7 @@
         onunload="PlacesOrganizer.destroy();"
         width="&places.library.width;" height="&places.library.height;"
         screenX="10" screenY="10"
+        toggletoolbar="true"
         persist="width height screenX screenY sizemode">
 
   <script type="application/x-javascript"
@@ -187,26 +186,22 @@
   </popupset>
 
   <toolbox id="placesToolbox">
-    <toolbar class="chromeclass-toolbar" id="placesToolbar" align="center" chromedir="&locale.dir;">
+    <toolbar class="chromeclass-toolbar" id="placesToolbar" align="center">
       <toolbarbutton id="back-button" class="toolbarbutton-1 chromeclass-toolbar-additional"
                      command="OrganizerCommand:Back"
                      tooltiptext="&backButton.tooltip;"
-                     accesskey="&backCmd.accesskey;"
-                     chromedir="&locale.dir;"
                      disabled="true"/>
 
       <toolbarbutton id="forward-button" class="toolbarbutton-1 chromeclass-toolbar-additional"
                      command="OrganizerCommand:Forward"
                      tooltiptext="&forwardButton.tooltip;"
-                     accesskey="&forwardCmd.accesskey;"
-                     chromedir="&locale.dir;"
                      disabled="true"/>
 
 #ifdef XP_MACOSX
         <toolbarbutton type="menu" class="tabbable"
               onpopupshowing="document.getElementById('placeContent').focus()"
 #else
-      <menubar id="placesMenu" chromedir="&locale.dir;">
+      <menubar id="placesMenu">
         <menu accesskey="&organize.accesskey;" class="menu-iconic"
 #endif
               id="organizeButton" label="&organize.label;">
@@ -297,7 +292,7 @@
 <!--
             <menuitem id="viewDetails"
                       type="radio"
-#ifdef MACOSX
+#ifdef XP_MACOSX
                       label="&view.detailsMacOSX.label;"
 #else
                       label="&view.details.label;"
@@ -386,9 +381,11 @@
 
       <spacer flex="1"/>
 
-      <textbox id="searchFilter" style="width: 23em;" timeout="500" clickSelectsAll="true"
+      <textbox id="searchFilter"
+               clickSelectsAll="true"
+               type="search"
+               aria-controls="placeContent"
                oncommand="PlacesSearchBox.search(this.value);"
-               onreset="PlacesOrganizer.onPlaceSelected(false);"
                collection="bookmarks">
       </textbox>
     </toolbar>
@@ -419,22 +416,28 @@
           <vbox id="searchModifiers" hidden="true">
             <toolbar id="organizerScopeBar" class="chromeclass-toolbar" align="center">
               <label id="scopeBarTitle" value="&search.label;"/>
-              <toolbarbutton id="scopeBarFolder" type="radio" group="scopeBar" 
-                             oncommand="PlacesQueryBuilder.onScopeSelected(this);"
-                             label="&search.scopeFolder.label;"/>
               <toolbarbutton id="scopeBarAll" type="radio" group="scopeBar"
                              oncommand="PlacesQueryBuilder.onScopeSelected(this);"
-                             label="&search.scopeAll.label;"
-                             checked="true"/>
+                             label="&search.scopeBookmarks.label;"
+                             accesskey="&search.scopeBookmarks.accesskey;"/>
               <!--
               <toolbarbutton id="scopeBarDownloads" type="radio" group="scopeBar"
                              oncommand="PlacesQueryBuilder.onScopeSelected(this);"
-                             label="&search.scopeDownloads.label;"/>
+                             label="&search.scopeDownloads.label;"
+                             accesskey="&search.scopeDownloads.accesskey;"/>
               -->
               <toolbarbutton id="scopeBarHistory" type="radio" group="scopeBar"
                              oncommand="PlacesQueryBuilder.onScopeSelected(this);"
-                             label="&search.scopeHistory.label;"/>
-              <spacer flex="1"/>
+                             label="&search.scopeHistory.label;"
+                             accesskey="&search.scopeHistory.accesskey;"/>
+              <toolbarbutton id="scopeBarFolder" type="radio" group="scopeBar"
+                             oncommand="PlacesQueryBuilder.onScopeSelected(this);"
+                             accesskey="&search.scopeFolder.accesskey;"
+                             emptytitle="&search.scopeFolder.label;" flex="1"/>
+              <!-- The folder scope button should flex but not take up more room
+                   than its label needs.  The only simple way to do that is to
+                   set a really big flex on the spacer, e.g., 2^31 - 1. -->
+              <spacer flex="2147483647"/>
               <button id="saveSearch" class="small" 
                        label="&saveSearch.label;" accesskey="&saveSearch.accesskey;"
                        command="OrganizerCommand_search:save"/>
@@ -458,7 +461,6 @@
                   flatList="true"
                   enableColumnDrag="true"
                   onkeypress="if (event.keyCode == KeyEvent.DOM_VK_RETURN) PlacesOrganizer.openSelectedNode(event);"
-                  ondblclick="PlacesOrganizer.openSelectedNode(event);"
                   onopenflatcontainer="PlacesOrganizer.openFlatContainer(aContainer);"
                   onselect="PlacesOrganizer.onContentTreeSelect();"
                   onfocus="PlacesOrganizer.onTreeFocus(event);"
@@ -507,16 +509,22 @@
                 <vbox id="infoBox" minimal="true">
                   <vbox id="editBookmarkPanelContent"/>
                   <spacer flex="1"/>
-                  <hbox>
+                  <hbox id="infoBoxExpanderWrapper" align="center">
+
                     <button type="image" id="infoBoxExpander"
-                            lesslabel="&detailsPane.less.label;"
-                            lessaccesskey="&detailsPane.less.accesskey;"
-                            morelabel="&detailsPane.more.label;"
-                            moreaccesskey="&detailsPane.more.accesskey;"
-                            label="&detailsPane.more.label;"
-                            accesskey="&detailsPane.more.accesskey;"
+                            class="expander-down"
                             oncommand="PlacesOrganizer.toggleAdditionalInfoFields();"
                             observes="paneElementsBroadcaster"/>
+
+                    <label id="infoBoxExpanderLabel"
+                           lesslabel="&detailsPane.less.label;"
+                           lessaccesskey="&detailsPane.less.accesskey;"
+                           morelabel="&detailsPane.more.label;"
+                           moreaccesskey="&detailsPane.more.accesskey;"
+                           value="&detailsPane.more.label;"
+                           accesskey="&detailsPane.more.accesskey;"
+                           control="infoBoxExpander"/>
+
                     <spacer flex="1"/>
                   </hbox>
                 </vbox>

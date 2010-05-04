@@ -74,19 +74,18 @@
 #endif
   </keyset>
 
-  <popup id="placesContext">
-    <menuitem id="addBookmarkContextItem"
-              label="&bookmarkLink.label;"
-              accesskey="&bookmarkLink.accesskey;"
-              selection="link"
-              selectiontype="single"
-              oncommand="historyAddBookmarks();"/>
-  </popup>
+  <!-- required to overlay the context menu -->
+  <popup id="placesContext" />
 
-  <hbox align="center">
-    <label value="&find.label;" accesskey="&find.accesskey;" 
+  <!-- Bookmarks and history tooltip -->
+  <tooltip id="bhTooltip"/>
+
+  <hbox id="sidebar-search-container" align="center">
+    <label id="sidebar-search-label"
+           value="&find.label;" accesskey="&find.accesskey;" 
            control="search-box"/>
-    <textbox id="search-box" flex="1" type="timed" timeout="500"
+    <textbox id="search-box" flex="1" type="search" class="compact"
+             aria-controls="historyTree"
              oncommand="searchHistory(this.value);"/>
     <button id="viewButton" style="min-width:0px !important;" type="menu"
             label="&view.label;" accesskey="&view.accesskey;" selectedsort="day"
@@ -127,6 +126,6 @@
     <treecols>
       <treecol id="title" flex="1" primary="true" hideheader="true"/>
     </treecols>
-    <treechildren class="sidebar-placesTreechildren" flex="1"/>
+    <treechildren class="sidebar-placesTreechildren" flex="1" tooltip="bhTooltip"/>
   </tree>
 </page>

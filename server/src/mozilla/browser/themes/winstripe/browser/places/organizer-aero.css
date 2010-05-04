@@ -9,8 +9,21 @@
   color: -moz-win-mediatext;
 }
 
+#placesToolbar:-moz-system-metric(windows-default-theme) {
+  min-height: 36px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  -moz-padding-start: 6px;
+  -moz-padding-end: 8px;
+}
+
 #placesMenu > menu {
   color: -moz-win-mediatext;
+}
+
+#placesMenu > menu > .menubar-text:-moz-system-metric(windows-default-theme) {
+  -moz-padding-end: 15px;
+  background-image: url(chrome://browser/skin/places/dropDown.png);
 }
 
 #placesView > splitter:-moz-system-metric(windows-default-theme) {
@@ -45,4 +58,10 @@
 #placesList:-moz-system-metric(windows-default-theme),
 #placeContent:-moz-system-metric(windows-default-theme) {
   background-color: #EEF3FA;
+}
+
+/**** Vista default theme: Library's search box needs to be vertically centered ****/
+#searchFilter:-moz-system-metric(windows-default-theme) {
+  padding-top: 3px;
+  padding-bottom: 2px;
 }

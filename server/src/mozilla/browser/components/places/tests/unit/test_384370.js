@@ -36,6 +36,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+// The following components need to be initialized to perform tests without
+// asserting in debug builds (Bug 448804).
+Cc["@mozilla.org/browser/livemark-service;2"].getService(Ci.nsILivemarkService);
+Cc["@mozilla.org/feed-processor;1"].createInstance(Ci.nsIFeedProcessor);
+
 const LOAD_IN_SIDEBAR_ANNO = "bookmarkProperties/loadInSidebar";
 const DESCRIPTION_ANNO = "bookmarkProperties/description";
 const POST_DATA_ANNO = "bookmarkProperties/POSTData";
@@ -65,8 +70,8 @@ function run_test() {
   setIntPref("browser.places.smartBookmarksVersion", -1);
 
   // file pointer to legacy bookmarks file
-  //var bookmarksFileOld = do_get_file("browser/components/places/tests/unit/bookmarks.large.html");
-  var bookmarksFileOld = do_get_file("browser/components/places/tests/unit/bookmarks.preplaces.html");
+  //var bookmarksFileOld = do_get_file("bookmarks.large.html");
+  var bookmarksFileOld = do_get_file("bookmarks.preplaces.html");
   // file pointer to a new places-exported json file
   var jsonFile = dirSvc.get("ProfD", Ci.nsILocalFile);
   jsonFile.append("bookmarks.exported.json");

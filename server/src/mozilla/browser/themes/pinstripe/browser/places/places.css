@@ -1,11 +1,6 @@
 /* Sidebars */
 
 .sidebar-placesTree {
-  border-top: none !important;
-}
-
-#sidebar tree,
-#sidebar page {
   background-color: transparent !important;
   -moz-appearance: none !important;
   border: none !important;
@@ -13,15 +8,14 @@
 
 #bookmarksPanel, 
 #history-panel,
-#bookmarksPanel > hbox,
-#history-panel > hbox {
+#sidebar-search-container {
   -moz-appearance: none !important;
   background-color: transparent !important;
   border-top: none !important;
 }
 
-tree.sidebar-placesTree,
-tree.sidebar-placesTree treechildren::-moz-tree-row {
+.sidebar-placesTree,
+.sidebar-placesTreechildren::-moz-tree-row {
   background-color: transparent;
   border-color: transparent;
   padding-bottom: 1px;
@@ -30,34 +24,31 @@ tree.sidebar-placesTree treechildren::-moz-tree-row {
   border: none;
 }
 
-#bookmarks-view treechildren::-moz-tree-row(selected), 
-#historyTree treechildren::-moz-tree-row(selected) {  
-  background-color: #6f81a9;
-  background-image: url("chrome://browser/skin/places/selected-gradient.png");
-  background-repeat: repeat-x;
-  background-position: bottom left;
+.sidebar-placesTreechildren::-moz-tree-row(selected) {
+  background: -moz-linear-gradient(top, #B5B5B5, #8A8A8A) repeat-x;
   border-top: 1px solid #979797;
 }
 
-tree.sidebar-placesTree treechildren::-moz-tree-separator {
+.sidebar-placesTreechildren::-moz-tree-separator {
   border-top: 1px solid #505d6d;
   margin: 0 10px;
 }
 
-#bookmarks-view treechildren::-moz-tree-row(selected,focus),
-#historyTree treechildren::-moz-tree-row(selected,focus) {  
-  background-image: url("chrome://browser/skin/places/selected-focused-gradient.png");
-  background-color: #8a8a8a !important;
+.sidebar-placesTree {
+  border-top: 1px solid #bebebe;
+}
+
+.sidebar-placesTreechildren::-moz-tree-row(selected,focus) {
+  background: -moz-linear-gradient(top, #A2B1D0, #6E81A9) repeat-x;
   border-top: 1px solid #91a0c0;
 }
 
-tree.sidebar-placesTree treechildren::-moz-tree-cell-text(selected) {  
+.sidebar-placesTreechildren::-moz-tree-cell-text(selected) {  
   font-weight: bold !important;
   color: #ffffff !important;
 }
 
-#bookmarksPanel > hbox > label,
-#history-panel > hbox > label {
+#sidebar-search-label {
   display: none;
 }
 
@@ -65,7 +56,7 @@ tree.sidebar-placesTree treechildren::-moz-tree-cell-text(selected) {
   -moz-appearance: none;
   border: 1px solid #7F7F7F;
   -moz-border-radius: 10px;
-  background: url("chrome://global/skin/icons/white-gray-gradient.gif") #A09E9D repeat-x top center;
+  background: -moz-linear-gradient(top, #FFF, #BBB);
   min-width: 0px;
   min-height: 0px;
   -moz-padding-start: 5px;
@@ -75,6 +66,7 @@ tree.sidebar-placesTree treechildren::-moz-tree-cell-text(selected) {
 }
 
 #viewButton .button-menu-dropmarker {
+  display: -moz-box;
   list-style-image: url("chrome://global/skin/icons/menulist-dropmarker.png");
 }
 
@@ -84,8 +76,8 @@ tree.sidebar-placesTree treechildren::-moz-tree-cell-text(selected) {
   -moz-outline-radius: 10px;
 }
 
-page > hbox {
-  margin: 0 4px 6px 4px;
+#sidebar-search-container {
+  margin: 0 4px 6px;
 }
 
 /* Trees */
@@ -145,7 +137,7 @@ treechildren::-moz-tree-image(query) {
 }
 
 treechildren::-moz-tree-image(title, query, tagContainer),
-treechildren::-moz-tree-image(container, OrganizerQuery_Tags) {
+treechildren::-moz-tree-image(query, OrganizerQuery_Tags) {
   list-style-image: url("chrome://mozapps/skin/places/tagContainerIcon.png");
 }
 

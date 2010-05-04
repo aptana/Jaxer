@@ -61,10 +61,14 @@
   <commandset id="editMenuCommands"/>
   <popup id="placesContext"/>
 
-  <hbox align="center">
-    <label value="&search.label;" accesskey="&search.accesskey;" control="search-box"/>
-    <textbox id="search-box" flex="1"
-             type="timed" timeout="500"
+  <!-- Bookmarks and history tooltip -->
+  <tooltip id="bhTooltip"/>
+
+  <hbox id="sidebar-search-container" align="center">
+    <label id="sidebar-search-label"
+           value="&search.label;" accesskey="&search.accesskey;" control="search-box"/>
+    <textbox id="search-box" flex="1" type="search" class="compact"
+             aria-controls="bookmarks-view"
              oncommand="searchBookmarks(this.value);"/>
   </hbox>
 
@@ -79,6 +83,7 @@
     <treecols>
       <treecol id="title" flex="1" primary="true" hideheader="true"/>
     </treecols>
-    <treechildren id="bookmarks-view-children" view="bookmarks-view" class="sidebar-placesTreechildren" flex="1"/>
+    <treechildren id="bookmarks-view-children" view="bookmarks-view"
+                  class="sidebar-placesTreechildren" flex="1" tooltip="bhTooltip"/>
   </tree>
 </page>

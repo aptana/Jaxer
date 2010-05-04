@@ -20,6 +20,7 @@
 # Contributor(s):
 #   Ben Goodger <beng@google.com>
 #   Asaf Romano <mano@mozilla.com>
+#   Michael Kohler <michaelkohler@live.com>
 #
 # Alternatively, the contents of this file may be used under the terms of
 # either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -59,38 +60,61 @@
   <script type="application/x-javascript"
           src="chrome://global/content/nsDragAndDrop.js"/>
 
+  <!-- Bookmarks and history tooltip -->
+  <tooltip id="bhTooltip" noautohide="true"
+           onpopupshowing="return window.top.BookmarksEventHandler.fillInBHTooltip(document, event)">
+    <vbox id="bhTooltipTextBox" flex="1">
+      <label id="bhtTitleText" class="tooltip-label" />
+      <label id="bhtUrlText" crop="center" class="tooltip-label" />
+    </vbox>
+  </tooltip>
+
   <commandset id="placesCommands"
               commandupdater="true"
-              events="focus,sort"
+              events="focus,sort,places"
               oncommandupdate="goUpdatePlacesCommands();">
     <command id="placesCmd_open"
-             oncommand="goDoCommand('placesCmd_open');"/>
+             oncommand="goDoPlacesCommand('placesCmd_open');"/>
     <command id="placesCmd_open:window"
-             oncommand="goDoCommand('placesCmd_open:window');"/>
+             oncommand="goDoPlacesCommand('placesCmd_open:window');"/>
     <command id="placesCmd_open:tab"
-             oncommand="goDoCommand('placesCmd_open:tab');"/>
+             oncommand="goDoPlacesCommand('placesCmd_open:tab');"/>
 
     <command id="placesCmd_new:bookmark"
-             oncommand="goDoCommand('placesCmd_new:bookmark');"/>
+             oncommand="goDoPlacesCommand('placesCmd_new:bookmark');"/>
     <command id="placesCmd_new:livemark"
-             oncommand="goDoCommand('placesCmd_new:livemark');"/>
+             oncommand="goDoPlacesCommand('placesCmd_new:livemark');"/>
     <command id="placesCmd_new:folder"
-             oncommand="goDoCommand('placesCmd_new:folder');"/>
+             oncommand="goDoPlacesCommand('placesCmd_new:folder');"/>
     <command id="placesCmd_new:separator"
-             oncommand="goDoCommand('placesCmd_new:separator');"/>
+             oncommand="goDoPlacesCommand('placesCmd_new:separator');"/>
     <command id="placesCmd_show:info" 
-             oncommand="goDoCommand('placesCmd_show:info');"/>
+             oncommand="goDoPlacesCommand('placesCmd_show:info');"/>
     <command id="placesCmd_rename"
-             oncommand="goDoCommand('placesCmd_show:info');"
+             oncommand="goDoPlacesCommand('placesCmd_show:info');"
              observes="placesCmd_show:info"/>
     <command id="placesCmd_reload"
-             oncommand="goDoCommand('placesCmd_reload');"/>
+             oncommand="goDoPlacesCommand('placesCmd_reload');"/>
     <command id="placesCmd_reloadMicrosummary"
-             oncommand="goDoCommand('placesCmd_reloadMicrosummary');"/>
+             oncommand="goDoPlacesCommand('placesCmd_reloadMicrosummary');"/>
     <command id="placesCmd_sortBy:name"
-             oncommand="goDoCommand('placesCmd_sortBy:name');"/>
+             oncommand="goDoPlacesCommand('placesCmd_sortBy:name');"/>
     <command id="placesCmd_moveBookmarks"
-             oncommand="goDoCommand('placesCmd_moveBookmarks');"/>
+             oncommand="goDoPlacesCommand('placesCmd_moveBookmarks');"/>
+    <command id="placesCmd_deleteDataHost"
+             oncommand="goDoPlacesCommand('placesCmd_deleteDataHost');"/>
+    <command id="placesCmd_createBookmark"
+             oncommand="goDoPlacesCommand('placesCmd_createBookmark');"/>
+
+    <!-- Special versions of cut/copy/paste/delete which check for an open context menu. -->
+    <command id="placesCmd_cut"
+             oncommand="goDoPlacesCommand('placesCmd_cut');"/>
+    <command id="placesCmd_copy"
+             oncommand="goDoPlacesCommand('placesCmd_copy');"/>
+    <command id="placesCmd_paste"
+             oncommand="goDoPlacesCommand('placesCmd_paste');"/>
+    <command id="placesCmd_delete"
+             oncommand="goDoPlacesCommand('placesCmd_delete');"/>
   </commandset>
 
   <popup id="placesContext"
@@ -138,49 +162,70 @@
               label="&cmd.new_bookmark.label;"
               accesskey="&cmd.new_bookmark.accesskey;"
               selection="any"
-              hideifnoinsetionpoint="true"/>
+              hideifnoinsertionpoint="true"/>
     <menuitem id="placesContext_new:folder"
               command="placesCmd_new:folder"
               label="&cmd.new_folder.label;"
               accesskey="&cmd.context_new_folder.accesskey;"
               selection="any"
-              hideifnoinsetionpoint="true"/>
+              hideifnoinsertionpoint="true"/>
     <menuitem id="placesContext_new:separator"
               command="placesCmd_new:separator"
               label="&cmd.new_separator.label;"
               accesskey="&cmd.new_separator.accesskey;"
               closemenu="single"
               selection="any"
-              hideifnoinsetionpoint="true"/>
+              hideifnoinsertionpoint="true"/>
     <menuseparator id="placesContext_newSeparator"/>
+    <menuitem id="placesContext_createBookmark"
+              command="placesCmd_createBookmark"
+              label="&cmd.bookmarkLink.label;"
+              accesskey="&cmd.bookmarkLink.accesskey;"
+              selection="link"
+              forcehideselection="bookmark|tagChild"/>
     <menuitem id="placesContext_cut"
-              command="cmd_cut"
+              command="placesCmd_cut"
               label="&cutCmd.label;"
               accesskey="&cutCmd.accesskey;" 
               closemenu="single"
               selection="bookmark|folder|separator|query"
               forcehideselection="tagChild|livemarkChild"/>
     <menuitem id="placesContext_copy"
-              command="cmd_copy"
+              command="placesCmd_copy"
               label="&copyCmd.label;"
               closemenu="single"
               accesskey="&copyCmd.accesskey;" 
               selection="any"/>
     <menuitem id="placesContext_paste"
-              command="cmd_paste"
+              command="placesCmd_paste"
               label="&pasteCmd.label;"
               closemenu="single"
               accesskey="&pasteCmd.accesskey;"
               selection="any"
-              hideifnoinsetionpoint="true"/>
+              hideifnoinsertionpoint="true"/>
     <menuseparator id="placesContext_editSeparator"/>
     <menuitem id="placesContext_delete"
-              command="cmd_delete"
+              command="placesCmd_delete"
               label="&deleteCmd.label;"
               accesskey="&deleteCmd.accesskey;"
               closemenu="single"
-              selection="any"
-              forcehideselection="livemarkChild"/>
+              selection="bookmark|tagChild|folder|query|dynamiccontainer|separator|host"/>
+    <menuitem id="placesContext_delete_history"
+              command="placesCmd_delete"
+              label="&cmd.delete.label;"
+              accesskey="&cmd.delete.accesskey;"
+              closemenu="single"
+              selection="link"
+              forcehideselection="bookmark"/>
+    <menuitem id="placesContext_deleteHost"
+              command="placesCmd_deleteDataHost"
+              label="&cmd.deleteDomainData.label;"
+              accesskey="&cmd.deleteDomainData.accesskey;"
+              closemenu="single"
+              selection="link|host"
+              selectiontype="single"
+              hideifprivatebrowsing="true"
+              forcehideselection="bookmark"/>
     <menuseparator id="placesContext_deleteSeparator"/>
     <menuitem id="placesContext_reload"
               command="placesCmd_reload"

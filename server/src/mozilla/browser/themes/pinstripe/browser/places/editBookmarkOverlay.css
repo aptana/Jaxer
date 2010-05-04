@@ -57,17 +57,12 @@
 	margin: 0 !important;
 }
 
-/**** folder tree ****/
-
-#editBMPanel_folderTree {
-   margin: 6px 0;
-}
-
 /**** expanders ****/
 
 .expander-up,
 .expander-down {
   -moz-appearance: none;
+  margin: 0;
   margin-left: 8px;
   padding: 0;
   min-width: 0;
@@ -87,6 +82,14 @@
 
 .expander-up:hover:active {
 	list-style-image: url("chrome://browser/skin/places/expander-open-active.png") !important;
+}
+
+#editBookmarkPanelContent {
+  min-width: 23em;
+}
+
+#editBMPanel_folderTree {
+  margin: 6px 4px 0 4px;
 }
 
 /**** name picker ****/
@@ -151,4 +154,31 @@
 
 #editBMPanel_namePicker[droppable="false"] > menupopup {
   display: none;
+}
+
+/* Hide the value column of the tag autocomplete popup
+ * leaving only the comment column visible. This is
+ * so that only the tag being edited is shown in the
+ * popup.
+ */
+#editBMPanel_tagsField #treecolAutoCompleteValue {
+  visibility: collapse;
+}
+
+
+/* ----- BOOKMARK PANEL DROPDOWN MENU ITEMS ----- */	
+
+#editBMPanel_folderMenuList[selectedIndex="0"],
+#editBMPanel_toolbarFolderItem {
+  list-style-image: url("chrome://browser/skin/places/bookmarksToolbar.png") !important;  
+}
+
+#editBMPanel_folderMenuList[selectedIndex="1"],
+#editBMPanel_bmRootItem {
+  list-style-image: url("chrome://browser/skin/places/bookmarksMenu.png") !important;  
+}
+
+#editBMPanel_folderMenuList[selectedIndex="2"],
+#editBMPanel_unfiledRootItem {
+  list-style-image: url("chrome://browser/skin/places/unfiledBookmarks.png") !important;  
 }

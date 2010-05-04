@@ -44,7 +44,7 @@
 #include "nsIObserverService.h"
 #include "nsISupportsArray.h"
 #include "nsStringAPI.h"
-#include "nsVoidArray.h"
+#include "nsTArray.h"
 #include "nsINavHistoryService.h"
 
 class nsICookieManager2;
@@ -74,10 +74,10 @@ public:
   typedef nsresult(*prefConverter)(void*, nsIPrefBranch*);
 
   struct PrefTransform {
-    char*         sectionName;
-    char*         keyName;
+    const char*   sectionName;
+    const char*   keyName;
     PrefType      type;
-    char*         targetPrefName;
+    const char*   targetPrefName;
     prefConverter prefSetterFunc;
     PRBool        prefHasValue;
     union {
@@ -98,17 +98,37 @@ public:
 
 protected:
   nsresult CopyPreferences(PRBool aReplace);
-  nsresult ParseColor(nsINIParser &aParser, const char* aSectionName, char** aResult);
+  nsresult ParseColor(nsINIParser &aParser, const char* aSectionName,
+                      char** aResult);
   nsresult CopyUserContentSheet(nsINIParser &aParser);
   nsresult CopyProxySettings(nsINIParser &aParser, nsIPrefBranch* aBranch);
   nsresult GetInteger(nsINIParser &aParser, const char* aSectionName, 
                       const char* aKeyName, PRInt32* aResult);
 
   nsresult CopyCookies(PRBool aReplace);
+  /**
+   * Migrate history to Places.
+   * This will end up calling CopyHistoryBatched helper, that provides batch
+   * support.  Batching allows for better performances and integrity.
+   *
+   * @param aReplace
+   *        Indicates if we should replace current history or append to it.
+   */
   nsresult CopyHistory(PRBool aReplace);
-
+  nsresult CopyHistoryBatched(PRBool aReplace);
+  /**
+   * Migrate bookmarks to Places.
+   * This will end up calling CopyBookmarksBatched helper, that provides batch
+   * support.  Batching allows for better performances and integrity.
+   *
+   * @param aReplace
+   *        Indicates if we should replace current bookmarks or append to them.
+   *        When appending we will usually default to bookmarks menu.
+   */
   nsresult CopyBookmarks(PRBool aReplace);
-  void     ClearToolbarFolder(nsINavBookmarksService * aBookmarksService, PRInt64 aToolbarFolder);
+  nsresult CopyBookmarksBatched(PRBool aReplace);
+  void     ClearToolbarFolder(nsINavBookmarksService * aBookmarksService,
+                              PRInt64 aToolbarFolder);
   nsresult ParseBookmarksFolder(nsILineInputStream* aStream, 
                                 PRInt64 aFolder,
                                 PRInt64 aToolbar, 
@@ -180,8 +200,8 @@ protected:
 private:
   nsCOMPtr<nsIBinaryInputStream> mStream;
 
-  nsVoidArray mDomainStack;
-  nsVoidArray mPathStack;
+  nsTArray<char*> mDomainStack;
+  nsTArray<char*> mPathStack;
 
   struct Cookie {
     nsCString id;
@@ -197,7 +217,6 @@ private:
   PRBool   mCookieOpen;
   Cookie   mCurrCookie;
   PRUint8  mCurrHandlingInfo;
-
 };
 
 #endif

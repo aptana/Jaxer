@@ -161,17 +161,7 @@ FeedConverter.prototype = {
    * Records if the feed was sniffed
    */
   _sniffed: false,
-  
-  /**
-   * See nsIStreamConverter.idl
-   */
-  canConvert: function FC_canConvert(sourceType, destinationType) {
-    // We only support one conversion.
-    return destinationType == TYPE_ANY && ((sourceType == TYPE_MAYBE_FEED) ||
-                                           (sourceType == TYPE_MAYBE_VIDEO) ||
-                                           (sourceType == TYPE_MAYBE_AUDIO));
-  },
-  
+
   /**
    * See nsIStreamConverter.idl
    */
@@ -283,18 +273,13 @@ FeedConverter.prototype = {
           getService(Ci.nsIIOService);
       var chromeChannel;
 
-      // show the feed page if it wasn't sniffed and we have a document,
-      // or we have a document, title, and link or id
-      if (result.doc && (!this._sniffed ||
-          (result.doc.title && (result.doc.link || result.doc.id)))) {
+      // If there was no automatic handler, or this was a podcast,
+      // photostream or some other kind of application, show the preview page
+      // if the parser returned a document.
+      if (result.doc) {
 
-        // If there was no automatic handler, or this was a podcast,
-        // photostream or some other kind of application, we must always
-        // show the preview page.
-        
         // Store the result in the result service so that the display
         // page can access it.
-
         feedService.addFeedResult(result);
 
         // Now load the actual XUL document.
@@ -362,7 +347,7 @@ FeedConverter.prototype = {
   /**
    * See nsIRequestObserver.idl
    */
-  onStopRequest: function FC_onStopReqeust(request, context, status) {
+  onStopRequest: function FC_onStopRequest(request, context, status) {
     if (this._processor)
       this._processor.onStopRequest(request, context, status);
   },
@@ -392,7 +377,7 @@ var FeedConverterFactory = {
     if (iid.equals(Ci.nsIFactory) ||
         iid.equals(Ci.nsISupports))
       return this;
-    throw Cr.NS_ERROR_NOT_IMPLEMENTED;
+    throw Cr.NS_ERROR_NO_INTERFACE;
   },
 };
 
@@ -447,10 +432,22 @@ var FeedResultService = {
       else
         spec = "feed:" + spec;
 
-      var ss = 
-          Cc["@mozilla.org/browser/shell-service;1"].
-          getService(Ci.nsIShellService);
-      ss.openApplicationWithURI(clientApp, spec);
+      // Retrieving the shell service might fail on some systems, most
+      // notably systems where GNOME is not installed.
+      try {
+        var ss =
+            Cc["@mozilla.org/browser/shell-service;1"].
+            getService(Ci.nsIShellService);
+        ss.openApplicationWithURI(clientApp, spec);
+      } catch(e) {
+        // If we couldn't use the shell service, fallback to using a
+        // nsIProcess instance
+        var p =
+            Cc["@mozilla.org/process/util;1"].
+            createInstance(Ci.nsIProcess);
+        p.init(clientApp);
+        p.run(false, [spec], 1);
+      }
       break;
 
     default:

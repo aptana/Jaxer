@@ -52,6 +52,7 @@
         this.clickSelectsAll = this._prefs.getBoolPref("clickSelectsAll");
         this.doubleClickSelectsAll = this._prefs.getBoolPref("doubleClickSelectsAll");
         this.completeDefaultIndex = this._prefs.getBoolPref("autoFill");
+        this.timeout = this._prefs.getIntPref("delay");
 
         this._urlTooltip = document.getElementById("urlTooltip");
 
@@ -69,6 +70,147 @@
         this.inputField.removeEventListener("mousemove", this, false);
         this.inputField.removeEventListener("mouseout", this, false);
       ]]></destructor>
+
+      <method name="handleRevert">
+        <body><![CDATA[
+          var isScrolling = this.popupOpen;
+
+          gBrowser.userTypedValue = null;
+
+          // don't revert to last valid url unless page is NOT loading
+          // and user is NOT key-scrolling through autocomplete list
+          if (!XULBrowserWindow.isBusy && !isScrolling) {
+            URLBarSetURI();
+
+            // If the value isn't empty and the urlbar has focus, select the value.
+            if (this.value && this.hasAttribute("focused"))
+              this.select();
+          }
+
+          // tell widget to revert to last typed text only if the user
+          // was scrolling when they hit escape
+          return !isScrolling;
+        ]]></body>
+      </method>
+
+      <method name="handleCommand">
+        <parameter name="aTriggeringEvent"/>
+        <body><![CDATA[
+          if (aTriggeringEvent instanceof MouseEvent && aTriggeringEvent.button == 2)
+            return; // Do nothing for right clicks
+
+          var [url, postData] = this._canonizeURL(aTriggeringEvent);
+          if (!url)
+            return;
+
+          this.value = url;
+          gBrowser.userTypedValue = url;
+          try {
+            addToUrlbarHistory(url);
+          } catch (ex) {
+            // Things may go wrong when adding url to session history,
+            // but don't let that interfere with the loading of the url.
+            Cu.reportError(ex);
+          }
+
+          if (aTriggeringEvent instanceof MouseEvent) {
+            // We have a mouse event (from the go button), so use the standard
+            // UI link behaviors
+            openUILink(url, aTriggeringEvent, false, false,
+                       true /* allow third party fixup */, postData);
+            return;
+          }
+
+          if (aTriggeringEvent && aTriggeringEvent.altKey) {
+            this.handleRevert();
+            content.focus();
+            gBrowser.loadOneTab(url, {
+                                postData: postData,
+                                inBackground: false,
+                                allowThirdPartyFixup: true});
+            aTriggeringEvent.preventDefault();
+            aTriggeringEvent.stopPropagation();
+          }
+          else
+            loadURI(url, null, postData, true /* allow third party fixup */);
+
+          gBrowser.selectedBrowser.focus();
+        ]]></body>
+      </method>
+
+      <method name="_canonizeURL">
+        <parameter name="aTriggeringEvent"/>
+        <body><![CDATA[
+          var url = this.value;
+          if (!url)
+            return ["", null];
+
+          // Only add the suffix when the URL bar value isn't already "URL-like",
+          // and only if we get a keyboard event, to match user expectations.
+          if (!/^\s*(www|https?)\b|\/\s*$/i.test(url) &&
+              (aTriggeringEvent instanceof KeyEvent)) {
+#ifdef XP_MACOSX
+            let accel = aTriggeringEvent.metaKey;
+#else
+            let accel = aTriggeringEvent.ctrlKey;
+#endif
+            let shift = aTriggeringEvent.shiftKey;
+
+            let suffix = "";
+
+            switch (true) {
+              case (accel && shift):
+                suffix = ".org/";
+                break;
+              case (shift):
+                suffix = ".net/";
+                break;
+              case (accel):
+                try {
+                  suffix = gPrefService.getCharPref("browser.fixup.alternate.suffix");
+                  if (suffix.charAt(suffix.length - 1) != "/")
+                    suffix += "/";
+                } catch(e) {
+                  suffix = ".com/";
+                }
+                break;
+            }
+
+            if (suffix) {
+              // trim leading/trailing spaces (bug 233205)
+              url = url.trim();
+
+              // Tack www. and suffix on.  If user has appended directories, insert
+              // suffix before them (bug 279035).  Be careful not to get two slashes.
+              // Also, don't add the suffix if it's in the original url (bug 233853).
+      
+              let firstSlash = url.indexOf("/");
+              let existingSuffix = url.indexOf(suffix.substring(0, suffix.length - 1));
+
+              // * Logic for slash and existing suffix (example)
+              // No slash, no suffix: Add suffix (mozilla)
+              // No slash, yes suffix: Add slash (mozilla.com)
+              // Yes slash, no suffix: Insert suffix (mozilla/stuff)
+              // Yes slash, suffix before slash: Do nothing (mozilla.com/stuff)
+              // Yes slash, suffix after slash: Insert suffix (mozilla/?stuff=.com)
+      
+              if (firstSlash >= 0) {
+                if (existingSuffix == -1 || existingSuffix > firstSlash)
+                  url = url.substring(0, firstSlash) + suffix +
+                        url.substring(firstSlash + 1);
+              } else
+                url = url + (existingSuffix == -1 ? suffix : "/");
+
+              url = "http://www." + url;
+            }
+          }
+
+          var postData = {};
+          url = getShortcutOrURI(url, postData);
+
+          return [url, postData.value];
+        ]]></body>
+      </method>
 
       <method name="_initURLTooltip">
         <body><![CDATA[
@@ -98,22 +240,27 @@
       </method>
 
       <method name="onDragOver">
+        <parameter name="aEvent"/>
         <body>
-          return true;
+          var types = aEvent.dataTransfer.types;
+          if (types.contains("application/x-moz-file") ||
+              types.contains("text/x-moz-url") ||
+              types.contains("text/uri-list") ||
+              types.contains("text/unicode"))
+            aEvent.preventDefault();
         </body>
       </method>
 
       <method name="onDrop">
         <parameter name="aEvent"/>
-        <parameter name="aXferData"/>
-        <parameter name="aDragSession"/>
         <body><![CDATA[
-          var url = transferUtils.retrieveURLFromData(aXferData.data, aXferData.flavour.contentType);
+          aEvent.stopPropagation();
+          var url = browserDragAndDrop.getDragURLFromDataTransfer(aEvent.dataTransfer)[0];
 
           // The URL bar automatically handles inputs with newline characters,
-          // so we can get away with treating text/x-moz-url flavours as text/unicode.
+          // so we can get away with treating text/x-moz-url flavours as text/plain.
           if (url) {
-            nsDragAndDrop.dragDropSecurityCheck(aEvent, aDragSession, url);
+            nsDragAndDrop.dragDropSecurityCheck(aEvent, null, url);
 
             this.value = url;
             SetPageProxyState("invalid");
@@ -124,23 +271,33 @@
             } catch (ex) {
               return;
             }
-            handleURLBarCommand();
+            this.handleCommand();
           }
         ]]></body>
       </method>
 
-      <method name="getSupportedFlavours">
+      <method name="_getSelectedValueForClipboard">
         <body><![CDATA[
-          var flavourSet = new FlavourSet();
+          var val = this.value.substring(this.selectionStart, this.selectionEnd);
 
-          // Favor text/x-moz-url since text/unicode coming from Win32 1.8 branch
-          // drops contains URL\ntext.  The previous comment here said that
-          // plain text drops often come with text/x-moz-url flavor, but I
-          // haven't seen that, so hopefully that behavior has changed.
-          flavourSet.appendFlavour("text/x-moz-url");
-          flavourSet.appendFlavour("text/unicode");
-          flavourSet.appendFlavour("application/x-moz-file", "nsIFile");
-          return flavourSet;
+          // If the entire value is selected and it's a valid non-javascript,
+          // non-data URI, encode it.
+          if (val == this.value &&
+              this.getAttribute("pageproxystate") == "valid") {
+            let uri;
+            try {
+              uri = makeURI(val);
+            } catch (e) {}
+
+            if (uri && !uri.schemeIs("javascript") && !uri.schemeIs("data")) {
+              val = uri.spec;
+
+              // Parentheses are known to confuse third-party applications (bug 458565).
+              val = val.replace(/[()]/g, function (c) escape(c));
+            }
+          }
+
+          return val;
         ]]></body>
       </method>
 
@@ -149,39 +306,18 @@
           urlbar: this,
           doCommand: function(aCommand) {
             var urlbar = this.urlbar;
-            var start = urlbar.selectionStart;
-            var end = urlbar.selectionEnd;
-            if (start == end)
+            var val = urlbar._getSelectedValueForClipboard();
+            if (!val)
               return;
-            var val;
-            if (start == 0 && end == urlbar.textLength) {
-              val = urlbar.value;
 
-              // If the entire value is selected and it's a valid non-javascript,
-              // non-data URI, encode it.
-              var uri;
-              if (urlbar.getAttribute("pageproxystate") == "valid") {
-                var ioService = Cc["@mozilla.org/network/io-service;1"]
-                                  .getService(Ci.nsIIOService);
-                try {
-                  uri = ioService.newURI(val, null, null);
-                } catch (e) {}
-              }
-              if (uri && !uri.schemeIs("javascript") && !uri.schemeIs("data"))
-                 val = uri.spec;
-
-              if (aCommand == "cmd_cut" && this.isCommandEnabled(aCommand)) {
-                urlbar.value = "";
-                SetPageProxyState("invalid");
-              }
-            } else {
-              val = urlbar.value.substring(start, end);
-              if (aCommand == "cmd_cut" && this.isCommandEnabled(aCommand)) {
-                urlbar.value = urlbar.value.substring(0, start) + urlbar.value.substring(end);
-                urlbar.selectionStart = urlbar.selectionEnd = start;
-                SetPageProxyState("invalid");
-              }
+            if (aCommand == "cmd_cut" && this.isCommandEnabled(aCommand)) {
+              let start = urlbar.selectionStart;
+              let end = urlbar.selectionEnd;
+              urlbar.value = urlbar.value.substring(0, start) + urlbar.value.substring(end);
+              urlbar.selectionStart = urlbar.selectionEnd = start;
+              SetPageProxyState("invalid");
             }
+
             Cc["@mozilla.org/widget/clipboardhelper;1"]
               .getService(Ci.nsIClipboardHelper)
               .copyString(val);
@@ -217,6 +353,9 @@
               case "autoFill":
                 this.completeDefaultIndex = this._prefs.getBoolPref(aData);
                 break;
+              case "delay":
+                this.timeout = this._prefs.getIntPref(aData);
+                break;
             }
           }
         ]]></body>
@@ -248,10 +387,7 @@
         <setter>
           <![CDATA[
           try {
-            let uri = Cc["@mozilla.org/network/io-service;1"].
-                      getService(Ci.nsIIOService).
-                      newURI(val, null, null);
-            val = losslessDecodeURI(uri);
+            val = losslessDecodeURI(makeURI(val));
           } catch (ex) { }
           this.value = val;
 
@@ -270,9 +406,52 @@
     </implementation>
 
     <handlers>
+      <handler event="draggesture" phase="capturing"><![CDATA[
+        // TODO: This should use dragstart but editor code is still using
+        //       the old drag & drop APIs, so we have to handle draggesture.
+        //       This can be changed once editor code is updated to the new API.
+        //       See bug 499008 for details.
+
+        // Drag only if the gesture starts from the input field.
+        if (event.originalTarget != this.inputField)
+          return;
+
+        // Drag only if the entire value is selected and it's a valid URI.
+        var isFullSelection = this.selectionStart == 0 &&
+                              this.selectionEnd == this.textLength;
+        if (!isFullSelection ||
+            this.getAttribute("pageproxystate") != "valid")
+          return;
+
+        var urlString = content.location.href;
+        var title = content.document.title || urlString;
+        var htmlString = "<a href=\"" + urlString + "\">" + urlString + "</a>";
+
+        var dt = event.dataTransfer;
+        dt.setData("text/x-moz-url", urlString + "\n" + title);
+        dt.setData("text/unicode", urlString);
+        dt.setData("text/html", htmlString);
+
+        dt.effectAllowed = "copyLink";
+        event.stopPropagation();
+      ]]></handler>
       <handler event="focus" phase="capturing" action="this._hideURLTooltip();"/>
-      <handler event="dragover" phase="capturing" action="nsDragAndDrop.dragOver(event, this);"/>
-      <handler event="dragdrop" phase="capturing" action="nsDragAndDrop.drop(event, this);"/>
+      <handler event="dragover" phase="capturing" action="this.onDragOver(event, this);"/>
+      <handler event="drop" phase="capturing" action="this.onDrop(event, this);"/>
+      <handler event="select"><![CDATA[
+        if (!Cc["@mozilla.org/widget/clipboard;1"]
+               .getService(Ci.nsIClipboard)
+               .supportsSelectionClipboard())
+          return;
+
+        var val = this._getSelectedValueForClipboard();
+        if (!val)
+          return;
+
+        Cc["@mozilla.org/widget/clipboardhelper;1"]
+          .getService(Ci.nsIClipboardHelper)
+          .copyStringToClipboard(val, Ci.nsIClipboard.kSelectionClipboard);
+      ]]></handler>
     </handlers>
 
   </binding>

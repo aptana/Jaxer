@@ -116,7 +116,7 @@
       <separator class="thin"/>
       <hbox align="center">
         <label value="&location.label;" accesskey="&location.accesskey;" control="browserHomePage"/>
-        <textbox id="browserHomePage" class="padded" flex="1"
+        <textbox id="browserHomePage" class="padded uri-element" flex="1"
                  type="autocomplete" autocompletesearch="history"
                  preference="browser.startup.homepage"/>
       </hbox>
@@ -163,6 +163,7 @@
           <filefield id="downloadFolder" flex="1"
                      preference="browser.download.folderList"
                      preference-editable="true"
+                     aria-labelledby="saveTo"
                      onsyncfrompreference="return gMainPane.displayDownloadDirPref();"
                      onsynctopreference="return gMainPane.getFolderListPref()"/>
           <button id="chooseFolder" oncommand="gMainPane.chooseFolder();"

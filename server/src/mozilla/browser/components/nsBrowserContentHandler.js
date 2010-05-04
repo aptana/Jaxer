@@ -64,7 +64,7 @@ const nsIWebNavigationInfo   = Components.interfaces.nsIWebNavigationInfo;
 const nsIBrowserSearchService = Components.interfaces.nsIBrowserSearchService;
 const nsICommandLineValidator = Components.interfaces.nsICommandLineValidator;
 
-const NS_BINDING_ABORTED = 0x804b0002;
+const NS_BINDING_ABORTED = Components.results.NS_BINDING_ABORTED;
 const NS_ERROR_WONT_HANDLE_CONTENT = 0x805d0001;
 const NS_ERROR_ABORT = Components.results.NS_ERROR_ABORT;
 
@@ -135,6 +135,13 @@ function needHomepageOverride(prefb) {
                          .getService(nsIHttpProtocolHandler).misc;
 
   if (mstone != savedmstone) {
+    // Bug 462254. Previous releases had a default pref to suppress the EULA
+    // agreement if the platform's installer had already shown one. Now with
+    // about:rights we've removed the EULA stuff and default pref, but we need
+    // a way to make existing profiles retain the default that we removed.
+    if (savedmstone)
+      prefb.setBoolPref("browser.rights.3.shown", true);
+    
     prefb.setCharPref("browser.startup.homepage_override.mstone", mstone);
     return (savedmstone ? OVERRIDE_NEW_MSTONE : OVERRIDE_NEW_PROFILE);
   }
@@ -143,7 +150,7 @@ function needHomepageOverride(prefb) {
 }
 
 // Copies a pref override file into the user's profile pref-override folder,
-// and then tells the pref service to reload it's default prefs.
+// and then tells the pref service to reload its default prefs.
 function copyPrefOverride() {
   try {
     var fileLocator = Components.classes["@mozilla.org/file/directory_service;1"]
@@ -176,17 +183,60 @@ function copyPrefOverride() {
   }
 }
 
-function openWindow(parent, url, target, features, args) {
+// Flag used to indicate that the arguments to openWindow can be passed directly.
+const NO_EXTERNAL_URIS = 1;
+
+function openWindow(parent, url, target, features, args, noExternalArgs) {
   var wwatch = Components.classes["@mozilla.org/embedcomp/window-watcher;1"]
                          .getService(nsIWindowWatcher);
 
-  var argstring;
-  if (args) {
-    argstring = Components.classes["@mozilla.org/supports-string;1"]
+  if (noExternalArgs == NO_EXTERNAL_URIS) {
+    // Just pass in the defaultArgs directly
+    var argstring;
+    if (args) {
+      argstring = Components.classes["@mozilla.org/supports-string;1"]
                             .createInstance(nsISupportsString);
-    argstring.data = args;
+      argstring.data = args;
+    }
+
+    return wwatch.openWindow(parent, url, target, features, argstring);
   }
-  return wwatch.openWindow(parent, url, target, features, argstring);
+  
+  // Pass an array to avoid the browser "|"-splitting behavior.
+  var argArray = Components.classes["@mozilla.org/supports-array;1"]
+                    .createInstance(Components.interfaces.nsISupportsArray);
+
+  // add args to the arguments array
+  var stringArgs = null;
+  if (args instanceof Array) // array
+    stringArgs = args;
+  else if (args) // string
+    stringArgs = [args];
+
+  if (stringArgs) {
+    // put the URIs into argArray
+    var uriArray = Components.classes["@mozilla.org/supports-array;1"]
+                       .createInstance(Components.interfaces.nsISupportsArray);
+    stringArgs.forEach(function (uri) {
+      var sstring = Components.classes["@mozilla.org/supports-string;1"]
+                              .createInstance(nsISupportsString);
+      sstring.data = uri;
+      uriArray.AppendElement(sstring);
+    });
+    argArray.AppendElement(uriArray);
+  } else {
+    argArray.AppendElement(null);
+  }
+
+  // Pass these as null to ensure that we always trigger the "single URL"
+  // behavior in browser.js's BrowserStartup (which handles the window
+  // arguments)
+  argArray.AppendElement(null); // charset
+  argArray.AppendElement(null); // referer
+  argArray.AppendElement(null); // postData
+  argArray.AppendElement(null); // allowThirdPartyFixup
+
+  return wwatch.openWindow(parent, url, target, features, argArray);
 }
 
 function openPreferences() {
@@ -207,48 +257,11 @@ function getMostRecentWindow(aType) {
   return wm.getMostRecentWindow(aType);
 }
 
-#ifdef XP_UNIX
-#ifndef XP_MACOSX
-#define BROKEN_WM_Z_ORDER
-#endif
-#endif
-#ifdef XP_OS2
-#define BROKEN_WM_Z_ORDER
-#endif
-
 // this returns the most recent non-popup browser window
 function getMostRecentBrowserWindow() {
-  var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-                     .getService(Components.interfaces.nsIWindowMediator);
-
-#ifdef BROKEN_WM_Z_ORDER
-  var win = wm.getMostRecentWindow("navigator:browser", true);
-
-  // if we're lucky, this isn't a popup, and we can just return this
-  if (win && win.document.documentElement.getAttribute("chromehidden")) {
-    var windowList = wm.getEnumerator("navigator:browser", true);
-    // this is oldest to newest, so this gets a bit ugly
-    while (windowList.hasMoreElements()) {
-      var nextWin = windowList.getNext();
-      if (!nextWin.document.documentElement.getAttribute("chromehidden"))
-        win = nextWin;
-    }
-  }
-#else
-  var windowList = wm.getZOrderDOMWindowEnumerator("navigator:browser", true);
-  if (!windowList.hasMoreElements())
-    return null;
-
-  var win = windowList.getNext();
-  while (win.document.documentElement.getAttribute("chromehidden")) {
-    if (!windowList.hasMoreElements()) 
-      return null;
-
-    win = windowList.getNext();
-  }
-#endif
-
-  return win;
+  var browserGlue = Components.classes["@mozilla.org/browser/browserglue;1"]
+                              .getService(Components.interfaces.nsIBrowserGlue);
+  return browserGlue.getMostRecentBrowserWindow();
 }
 
 function doSearch(searchTerm, cmdLine) {
@@ -316,9 +329,10 @@ var nsBrowserContentHandler = {
   /* nsICommandLineHandler */
   handle : function bch_handle(cmdLine) {
     if (cmdLine.handleFlag("browser", false)) {
+      // Passing defaultArgs, so use NO_EXTERNAL_URIS
       openWindow(null, this.chromeURL, "_blank",
                  "chrome,dialog=no,all" + this.getFeatures(cmdLine),
-                 this.defaultArgs);
+                 this.defaultArgs, NO_EXTERNAL_URIS);
       cmdLine.preventDefault = true;
     }
 
@@ -379,9 +393,10 @@ var nsBrowserContentHandler = {
           if (remoteParams[0].toLowerCase() != "openbrowser")
             throw NS_ERROR_ABORT;
 
+          // Passing defaultArgs, so use NO_EXTERNAL_URIS
           openWindow(null, this.chromeURL, "_blank",
                      "chrome,dialog=no,all" + this.getFeatures(cmdLine),
-                     this.defaultArgs);
+                     this.defaultArgs, NO_EXTERNAL_URIS);
           break;
 
         default:
@@ -442,7 +457,7 @@ var nsBrowserContentHandler = {
         var netutil = Components.classes["@mozilla.org/network/util;1"]
                                 .getService(nsINetUtil);
         if (!netutil.URIChainHasFlags(uri, URI_INHERITS_SECURITY_CONTEXT)) {
-          openWindow(null, uri.spec, "_blank", features, "");
+          openWindow(null, uri.spec, "_blank", features);
           cmdLine.preventDefault = true;
         }
       }
@@ -460,6 +475,18 @@ var nsBrowserContentHandler = {
     var searchParam = cmdLine.handleFlagWithParam("search", false);
     if (searchParam) {
       doSearch(searchParam, cmdLine);
+      cmdLine.preventDefault = true;
+    }
+
+    var fileParam = cmdLine.handleFlagWithParam("file", false);
+    if (fileParam) {
+      var file = cmdLine.resolveFile(fileParam);
+      var ios = Components.classes["@mozilla.org/network/io-service;1"]
+                          .getService(Components.interfaces.nsIIOService);
+      var uri = ios.newFileURI(file);
+      openWindow(null, this.chromeURL, "_blank", 
+                 "chrome,dialog=no,all" + this.getFeatures(cmdLine),
+                 uri.spec);
       cmdLine.preventDefault = true;
     }
 
@@ -774,23 +801,19 @@ var nsDefaultCommandLineHandler = {
         }
       }
 
-      var speclist = [];
-      for (uri in urilist) {
-        if (shouldLoadURI(urilist[uri]))
-          speclist.push(urilist[uri].spec);
-      }
-
-      if (speclist.length) {
+      var URLlist = urilist.filter(shouldLoadURI).map(function (u) u.spec);
+      if (URLlist.length) {
         openWindow(null, nsBrowserContentHandler.chromeURL, "_blank",
                    "chrome,dialog=no,all" + nsBrowserContentHandler.getFeatures(cmdLine),
-                   speclist.join("|"));
+                   URLlist);
       }
 
     }
     else if (!cmdLine.preventDefault) {
+      // Passing defaultArgs, so use NO_EXTERNAL_URIS
       openWindow(null, nsBrowserContentHandler.chromeURL, "_blank",
                  "chrome,dialog=no,all" + nsBrowserContentHandler.getFeatures(cmdLine),
-                 nsBrowserContentHandler.defaultArgs);
+                 nsBrowserContentHandler.defaultArgs, NO_EXTERNAL_URIS);
     }
   },
 
@@ -886,7 +909,6 @@ var Module = {
     registerType("image/bmp");
     registerType("image/x-icon");
     registerType("image/vnd.microsoft.icon");
-    registerType("image/x-xbitmap");
     registerType("application/http-index-format");
 
     var catMan = Components.classes["@mozilla.org/categorymanager;1"]
