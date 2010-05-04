@@ -58,11 +58,9 @@ NS_NewXMLProcessingInstruction(nsIContent** aInstancePtrResult,
   *aInstancePtrResult = nsnull;
 
   nsCOMPtr<nsINodeInfo> ni;
-  nsresult rv =
-    aNodeInfoManager->GetNodeInfo(nsGkAtoms::processingInstructionTagName,
-                                  nsnull, kNameSpaceID_None,
-                                  getter_AddRefs(ni));
-  NS_ENSURE_SUCCESS(rv, rv);
+  ni = aNodeInfoManager->GetNodeInfo(nsGkAtoms::processingInstructionTagName,
+                                     nsnull, kNameSpaceID_None);
+  NS_ENSURE_TRUE(ni, NS_ERROR_OUT_OF_MEMORY);
 
   nsXMLProcessingInstruction *instance =
     new nsXMLProcessingInstruction(ni, aTarget, aData);
@@ -92,9 +90,13 @@ nsXMLProcessingInstruction::~nsXMLProcessingInstruction()
 
 
 // QueryInterface implementation for nsXMLProcessingInstruction
-NS_INTERFACE_MAP_BEGIN(nsXMLProcessingInstruction)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMNode)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMProcessingInstruction)
+NS_INTERFACE_TABLE_HEAD(nsXMLProcessingInstruction)
+  NS_NODE_OFFSET_AND_INTERFACE_TABLE_BEGIN(nsXMLProcessingInstruction)
+    NS_INTERFACE_TABLE_ENTRY(nsXMLProcessingInstruction, nsIDOMNode)
+    NS_INTERFACE_TABLE_ENTRY(nsXMLProcessingInstruction,
+                             nsIDOMProcessingInstruction)
+  NS_OFFSET_AND_INTERFACE_TABLE_END
+  NS_OFFSET_AND_INTERFACE_TABLE_TO_MAP_SEGUE
   NS_INTERFACE_MAP_ENTRY_CONTENT_CLASSINFO(ProcessingInstruction)
 NS_INTERFACE_MAP_END_INHERITING(nsGenericDOMDataNode)
 

@@ -67,27 +67,26 @@ public:
   
   // nsIPrivateCompositionEvent interface
   NS_IMETHOD GetCompositionReply(nsTextEventReply** aReply);
-  NS_IMETHOD GetReconversionReply(nsReconversionEventReply** aReply);
-  NS_IMETHOD GetQueryCaretRectReply(nsQueryCaretRectEventReply** aReply);
   
   // Forward to nsDOMEvent
   NS_FORWARD_TO_NSDOMEVENT
 
+  NS_FORWARD_NSIDOMNSEVENT(nsDOMEvent::)
 protected:
 
   // Internal helper functions
-  nsPoint GetClientPoint();
-  nsPoint GetScreenPoint();
-  nsPoint GetLayerPoint();
-  nsPoint GetPagePoint();
+  nsIntPoint GetClientPoint();
+  nsIntPoint GetScreenPoint();
+  nsIntPoint GetLayerPoint();
+  nsIntPoint GetPagePoint();
   
 protected:
   nsCOMPtr<nsIDOMAbstractView> mView;
   PRInt32 mDetail;
-  nsPoint mClientPoint;
+  nsIntPoint mClientPoint;
   // Screenpoint is mEvent->refPoint.
-  nsPoint mLayerPoint;
-  nsPoint mPagePoint;
+  nsIntPoint mLayerPoint;
+  nsIntPoint mPagePoint;
 };
 
 #define NS_FORWARD_TO_NSDOMUIEVENT \

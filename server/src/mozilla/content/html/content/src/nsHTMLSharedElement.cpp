@@ -47,7 +47,6 @@
 #include "nsPresContext.h"
 #include "nsRuleData.h"
 #include "nsMappedAttributes.h"
-#include "nsStyleContext.h"
 
 // XXX nav4 has type= start= (same as OL/UL)
 extern nsAttrValue::EnumTable kListTypeTable[];
@@ -128,10 +127,13 @@ NS_IMPL_RELEASE_INHERITED(nsHTMLSharedElement, nsGenericElement)
 
 
 // QueryInterface implementation for nsHTMLSharedElement
-NS_HTML_CONTENT_INTERFACE_TABLE_AMBIGOUS_HEAD(nsHTMLSharedElement,
-                                              nsGenericHTMLElement,
-                                              nsIDOMHTMLParamElement)
-  NS_INTERFACE_TABLE_TO_MAP_SEGUE
+NS_INTERFACE_TABLE_HEAD(nsHTMLSharedElement)
+  NS_HTML_CONTENT_INTERFACE_TABLE_AMBIGUOUS_BEGIN(nsHTMLSharedElement,
+                                                  nsIDOMHTMLParamElement)
+  NS_OFFSET_AND_INTERFACE_TABLE_END
+  NS_HTML_CONTENT_INTERFACE_TABLE_TO_MAP_SEGUE_AMBIGUOUS(nsHTMLSharedElement,
+                                                         nsGenericHTMLElement,
+                                                         nsIDOMHTMLParamElement)
   NS_INTERFACE_MAP_ENTRY_IF_TAG(nsIDOMHTMLParamElement, param)
   NS_INTERFACE_MAP_ENTRY_IF_TAG(nsIDOMHTMLIsIndexElement, isindex)
   NS_INTERFACE_MAP_ENTRY_IF_TAG(nsIDOMHTMLBaseElement, base)
@@ -239,77 +241,84 @@ SpacerMapAttributesIntoRule(const nsMappedAttributes* aAttributes,
   nsGenericHTMLElement::MapImageMarginAttributeInto(aAttributes, aData);
   nsGenericHTMLElement::MapImageSizeAttributesInto(aAttributes, aData);
 
-  if (aData->mSIDs & NS_STYLE_INHERIT_BIT(Position)) {
-    const nsStyleDisplay* display = aData->mStyleContext->GetStyleDisplay();
-
-    PRBool typeIsBlock = (display->mDisplay == NS_STYLE_DISPLAY_BLOCK);
-
-    if (typeIsBlock) {
-      // width: value
-      if (aData->mPositionData->mWidth.GetUnit() == eCSSUnit_Null) {
-        const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::width);
-        if (value && value->Type() == nsAttrValue::eInteger) {
-          aData->mPositionData->
-            mWidth.SetFloatValue((float)value->GetIntegerValue(),
-                                 eCSSUnit_Pixel);
-        } else if (value && value->Type() == nsAttrValue::ePercent) {
-          aData->mPositionData->
-            mWidth.SetPercentValue(value->GetPercentValue());
-        }
-      }
-
-      // height: value
-      if (aData->mPositionData->mHeight.GetUnit() == eCSSUnit_Null) {
-        const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::height);
-        if (value && value->Type() == nsAttrValue::eInteger) {
-          aData->mPositionData->
-            mHeight.SetFloatValue((float)value->GetIntegerValue(),
-                                  eCSSUnit_Pixel);
-        } else if (value && value->Type() == nsAttrValue::ePercent) {
-          aData->mPositionData->
-            mHeight.SetPercentValue(value->GetPercentValue());
-        }
-      }
-    } else {
-      // size: value
-      if (aData->mPositionData->mWidth.GetUnit() == eCSSUnit_Null) {
-        const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::size);
-        if (value && value->Type() == nsAttrValue::eInteger)
-          aData->mPositionData->
-            mWidth.SetFloatValue((float)value->GetIntegerValue(),
-                                 eCSSUnit_Pixel);
-      }
-    }
-  }
-  if (aData->mSIDs & NS_STYLE_INHERIT_BIT(Display)) {
-    const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::align);
-    if (value && value->Type() == nsAttrValue::eEnum) {
-      PRInt32 align = value->GetEnumValue();
-      if (aData->mDisplayData->mFloat.GetUnit() == eCSSUnit_Null) {
-        if (align == NS_STYLE_TEXT_ALIGN_LEFT)
-          aData->mDisplayData->mFloat.SetIntValue(NS_STYLE_FLOAT_LEFT,
-                                                  eCSSUnit_Enumerated);
-        else if (align == NS_STYLE_TEXT_ALIGN_RIGHT)
-          aData->mDisplayData->mFloat.SetIntValue(NS_STYLE_FLOAT_RIGHT,
-                                                  eCSSUnit_Enumerated);
+  if (aData->mSIDs & (NS_STYLE_INHERIT_BIT(Position) |
+                      NS_STYLE_INHERIT_BIT(Display))) {
+    PRBool typeIsBlock = PR_FALSE;
+    const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::type);
+    if (value && value->Type() == nsAttrValue::eString) {
+      const nsString& tmp(value->GetStringValue());
+      if (tmp.LowerCaseEqualsLiteral("line") ||
+          tmp.LowerCaseEqualsLiteral("vert") ||
+          tmp.LowerCaseEqualsLiteral("vertical") ||
+          tmp.LowerCaseEqualsLiteral("block")) {
+        // This is not strictly 100% compatible: if the spacer is given
+        // a width of zero then it is basically ignored.
+        typeIsBlock = PR_TRUE;
       }
     }
 
-    if (aData->mDisplayData->mDisplay.GetUnit() == eCSSUnit_Null) {
-      const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::type);
-      if (value && value->Type() == nsAttrValue::eString) {
-        nsAutoString tmp(value->GetStringValue());
-        if (tmp.LowerCaseEqualsLiteral("line") ||
-            tmp.LowerCaseEqualsLiteral("vert") ||
-            tmp.LowerCaseEqualsLiteral("vertical") ||
-            tmp.LowerCaseEqualsLiteral("block")) {
-          // This is not strictly 100% compatible: if the spacer is given
-          // a width of zero then it is basically ignored.
+    if (aData->mSIDs & NS_STYLE_INHERIT_BIT(Position)) {
+      if (typeIsBlock) {
+        // width: value
+        if (aData->mPositionData->mWidth.GetUnit() == eCSSUnit_Null) {
+          const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::width);
+          if (value && value->Type() == nsAttrValue::eInteger) {
+            aData->mPositionData->
+              mWidth.SetFloatValue((float)value->GetIntegerValue(),
+                                   eCSSUnit_Pixel);
+          } else if (value && value->Type() == nsAttrValue::ePercent) {
+            aData->mPositionData->
+              mWidth.SetPercentValue(value->GetPercentValue());
+          }
+        }
+
+        // height: value
+        if (aData->mPositionData->mHeight.GetUnit() == eCSSUnit_Null) {
+          const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::height);
+          if (value && value->Type() == nsAttrValue::eInteger) {
+            aData->mPositionData->
+              mHeight.SetFloatValue((float)value->GetIntegerValue(),
+                                    eCSSUnit_Pixel);
+          } else if (value && value->Type() == nsAttrValue::ePercent) {
+            aData->mPositionData->
+              mHeight.SetPercentValue(value->GetPercentValue());
+          }
+        }
+      } else {
+        // size: value
+        if (aData->mPositionData->mWidth.GetUnit() == eCSSUnit_Null) {
+          const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::size);
+          if (value && value->Type() == nsAttrValue::eInteger)
+            aData->mPositionData->
+              mWidth.SetFloatValue((float)value->GetIntegerValue(),
+                                   eCSSUnit_Pixel);
+        }
+      }
+    }
+
+    if (aData->mSIDs & NS_STYLE_INHERIT_BIT(Display)) {
+      const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::align);
+      if (value && value->Type() == nsAttrValue::eEnum) {
+        PRInt32 align = value->GetEnumValue();
+        if (aData->mDisplayData->mFloat.GetUnit() == eCSSUnit_Null) {
+          if (align == NS_STYLE_TEXT_ALIGN_LEFT)
+            aData->mDisplayData->mFloat.SetIntValue(NS_STYLE_FLOAT_LEFT,
+                                                    eCSSUnit_Enumerated);
+          else if (align == NS_STYLE_TEXT_ALIGN_RIGHT)
+            aData->mDisplayData->mFloat.SetIntValue(NS_STYLE_FLOAT_RIGHT,
+                                                    eCSSUnit_Enumerated);
+        }
+      }
+
+      if (typeIsBlock) {
+        if (aData->mDisplayData->mDisplay.GetUnit() == eCSSUnit_Null) {
           aData->mDisplayData->mDisplay.SetIntValue(NS_STYLE_DISPLAY_BLOCK,
                                                     eCSSUnit_Enumerated);
         }
       }
     }
+    // Any new structs that don't need typeIsBlock should go outside
+    // the code that calculates it.
   }
 
   nsGenericHTMLElement::MapCommonAttributesInto(aAttributes, aData);

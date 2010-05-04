@@ -53,6 +53,9 @@
 #ifdef MOZ_XUL
 #include "nsXULElement.h"
 #endif
+#include "nsBindingManager.h"
+#include "nsGenericHTMLElement.h"
+#include "nsHTMLMediaElement.h"
 
 // This macro expects the ownerDocument of content_ to be in scope as
 // |nsIDocument* doc|
@@ -94,6 +97,18 @@ nsNodeUtils::CharacterDataChanged(nsIContent* aContent,
   nsIDocument* doc = aContent->GetOwnerDoc();
   IMPL_MUTATION_NOTIFICATION(CharacterDataChanged, aContent,
                              (doc, aContent, aInfo));
+}
+
+void
+nsNodeUtils::AttributeWillChange(nsIContent* aContent,
+                                 PRInt32 aNameSpaceID,
+                                 nsIAtom* aAttribute,
+                                 PRInt32 aModType)
+{
+  nsIDocument* doc = aContent->GetOwnerDoc();
+  IMPL_MUTATION_NOTIFICATION(AttributeWillChange, aContent,
+                             (doc, aContent, aNameSpaceID, aAttribute,
+                              aModType));
 }
 
 void
@@ -208,12 +223,23 @@ nsNodeUtils::LastRelease(nsINode* aNode)
     // the properties may want to use the owner document of the nsINode.
     static_cast<nsIDocument*>(aNode)->PropertyTable()->DeleteAllProperties();
   }
-  else if (aNode->HasProperties()) {
-    // Strong reference to the document so that deleting properties can't
-    // delete the document.
-    nsCOMPtr<nsIDocument> document = aNode->GetOwnerDoc();
-    if (document) {
-      document->PropertyTable()->DeleteAllPropertiesFor(aNode);
+  else {
+    if (aNode->HasProperties()) {
+      // Strong reference to the document so that deleting properties can't
+      // delete the document.
+      nsCOMPtr<nsIDocument> document = aNode->GetOwnerDoc();
+      if (document) {
+        document->PropertyTable()->DeleteAllPropertiesFor(aNode);
+      }
+    }
+
+    // I wonder whether it's faster to do the HasFlag check first....
+    if (aNode->IsNodeOfType(nsINode::eHTML_FORM_CONTROL) &&
+        aNode->HasFlag(ADDED_TO_FORM)) {
+      // Tell the form (if any) this node is going away.  Don't
+      // notify, since we're being destroyed in any case.
+      static_cast<nsGenericHTMLFormElement*>(aNode)->ClearForm(PR_TRUE,
+                                                               PR_FALSE);
     }
   }
   aNode->UnsetFlags(NODE_HAS_PROPERTIES);
@@ -221,9 +247,8 @@ nsNodeUtils::LastRelease(nsINode* aNode)
   if (aNode->HasFlag(NODE_HAS_LISTENERMANAGER)) {
 #ifdef DEBUG
     if (nsContentUtils::IsInitialized()) {
-      nsCOMPtr<nsIEventListenerManager> manager;
-      nsContentUtils::GetListenerManager(aNode, PR_FALSE,
-                                         getter_AddRefs(manager));
+      nsIEventListenerManager* manager =
+        nsContentUtils::GetListenerManager(aNode, PR_FALSE);
       if (!manager) {
         NS_ERROR("Huh, our bit says we have a listener manager list, "
                  "but there's nothing in the hash!?!!");
@@ -241,6 +266,8 @@ nsNodeUtils::LastRelease(nsINode* aNode)
       ownerDoc->ClearBoxObjectFor(static_cast<nsIContent*>(aNode));
     }
   }
+
+  nsContentUtils::ReleaseWrapper(aNode, aNode);
 
   delete aNode;
 }
@@ -323,10 +350,11 @@ nsNodeUtils::GetUserData(nsINode *aNode, const nsAString &aKey,
   return NS_OK;
 }
 
-struct nsHandlerData
+struct NS_STACK_CLASS nsHandlerData
 {
   PRUint16 mOperation;
-  nsCOMPtr<nsIDOMNode> mSource, mDest;
+  nsCOMPtr<nsIDOMNode> mSource;
+  nsCOMPtr<nsIDOMNode> mDest;
 };
 
 static void
@@ -456,7 +484,7 @@ public:
   nsCOMArray<nsINode> &mNodesWithProperties;
 };
 
-PLDHashOperator PR_CALLBACK
+PLDHashOperator
 AdoptFunc(nsAttrHashKey::KeyType aKey, nsIDOMNode *aData, void* aUserArg)
 {
   nsCOMPtr<nsIAttribute> attr = do_QueryInterface(aData);
@@ -514,11 +542,25 @@ nsNodeUtils::CloneAndAdopt(nsINode *aNode, PRBool aClone, PRBool aDeep,
   nsINodeInfo *nodeInfo = aNode->mNodeInfo;
   nsCOMPtr<nsINodeInfo> newNodeInfo;
   if (nodeInfoManager) {
-    rv = nodeInfoManager->GetNodeInfo(nodeInfo->NameAtom(),
-                                      nodeInfo->GetPrefixAtom(),
-                                      nodeInfo->NamespaceID(),
-                                      getter_AddRefs(newNodeInfo));
-    NS_ENSURE_SUCCESS(rv, rv);
+
+    // Don't allow importing/adopting nodes from non-privileged "scriptable"
+    // documents to "non-scriptable" documents.
+    nsIDocument* newDoc = nodeInfoManager->GetDocument();
+    NS_ENSURE_STATE(newDoc);
+    PRBool hasHadScriptHandlingObject = PR_FALSE;
+    if (!newDoc->GetScriptHandlingObject(hasHadScriptHandlingObject) &&
+        !hasHadScriptHandlingObject) {
+      nsIDocument* currentDoc = aNode->GetOwnerDoc();
+      NS_ENSURE_STATE(currentDoc &&
+                      (nsContentUtils::IsChromeDoc(currentDoc) ||
+                       (!currentDoc->GetScriptHandlingObject(hasHadScriptHandlingObject) &&
+                        !hasHadScriptHandlingObject)));
+    }
+
+    newNodeInfo = nodeInfoManager->GetNodeInfo(nodeInfo->NameAtom(),
+                                               nodeInfo->GetPrefixAtom(),
+                                               nodeInfo->NamespaceID());
+    NS_ENSURE_TRUE(newNodeInfo, NS_ERROR_OUT_OF_MEMORY);
 
     nodeInfo = newNodeInfo;
   }
@@ -549,35 +591,45 @@ nsNodeUtils::CloneAndAdopt(nsINode *aNode, PRBool aClone, PRBool aDeep,
     }
   }
   else if (nodeInfoManager) {
-    nsCOMPtr<nsISupports> oldRef;
     nsIDocument* oldDoc = aNode->GetOwnerDoc();
-    if (oldDoc) {
-      if (aNode->IsNodeOfType(nsINode::eELEMENT)) {
-        oldDoc->ClearBoxObjectFor(static_cast<nsIContent*>(aNode));
-      }
-      oldRef = oldDoc->GetReference(aNode);
-      if (oldRef) {
-        oldDoc->RemoveReference(aNode);
-      }
+    PRBool wasRegistered = PR_FALSE;
+    if (oldDoc && aNode->IsNodeOfType(nsINode::eELEMENT)) {
+      nsIContent* content = static_cast<nsIContent*>(aNode);
+      oldDoc->ClearBoxObjectFor(content);
+      wasRegistered = oldDoc->UnregisterFreezableElement(content);
     }
 
     aNode->mNodeInfo.swap(newNodeInfo);
 
     nsIDocument* newDoc = aNode->GetOwnerDoc();
     if (newDoc) {
-      if (oldRef) {
-        newDoc->AddReference(aNode, oldRef);
+      // XXX what if oldDoc is null, we don't know if this should be
+      // registered or not! Can that really happen?
+      if (wasRegistered) {
+        newDoc->RegisterFreezableElement(static_cast<nsIContent*>(aNode));
       }
 
       nsPIDOMWindow* window = newDoc->GetInnerWindow();
       if (window) {
-        nsCOMPtr<nsIEventListenerManager> elm;
-        aNode->GetListenerManager(PR_FALSE, getter_AddRefs(elm));
+        nsIEventListenerManager* elm = aNode->GetListenerManager(PR_FALSE);
         if (elm) {
           window->SetMutationListeners(elm->MutationListenerBits());
+          if (elm->MayHavePaintEventListener()) {
+            window->SetHasPaintEventListeners();
+          }
         }
       }
     }
+
+#ifdef MOZ_MEDIA
+    if (wasRegistered && oldDoc != newDoc) {
+      nsCOMPtr<nsIDOMHTMLMediaElement> domMediaElem(do_QueryInterface(aNode));
+      if (domMediaElem) {
+        nsHTMLMediaElement* mediaElem = static_cast<nsHTMLMediaElement*>(aNode);
+        mediaElem->NotifyOwnerDocumentActivityChanged();
+      }
+    }
+#endif
 
     if (elem) {
       elem->RecompileScriptEventListeners();

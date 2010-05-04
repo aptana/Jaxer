@@ -195,6 +195,10 @@
 #define NS_XMLCONTENTSERIALIZER_CID \
 { 0x4aef38b7, 0x6364, 0x4e23, { 0xa5, 0xe7, 0x12, 0xf8, 0x37, 0xfb, 0xbd, 0x9c } }
 
+// {e7c2aaf5-c11a-4954-9dbf-e28edec1fd91}
+#define NS_XHTMLCONTENTSERIALIZER_CID \
+{ 0xe7c2aaf5, 0xc11a, 0x4954, { 0x9d, 0xbf, 0xe2, 0x8e, 0xde, 0xc1, 0xfd, 0x91 } }
+
 // {9d3f70da-86e9-11d4-95ec-00b0d03e37b7}
 #define NS_HTMLCONTENTSERIALIZER_CID \
 { 0x9d3f70da, 0x86e9, 0x11d4, { 0x95, 0xec, 0x00, 0xb0, 0xd0, 0x3e, 0x37, 0xb7 } }
@@ -281,12 +285,28 @@
 
 #endif // MOZ_SVG
 
+#ifdef MOZ_MEDIA
+
+// {d899a152-9412-46b2-b651-2e71c5c2f05f}
+#define NS_VIDEODOCUMENT_CID   \
+{ 0xd899a152, 0x9412, 0x46b2,  \
+  { 0xb6, 0x51, 0x2e, 0x71, 0xc5, 0xc2, 0xf0, 0x5f } }
+
+#endif
+
 #define NS_SYNCLOADDOMSERVICE_CID                   \
  { /* 0e4e7d00-f71a-439f-9178-1a71ff11b55f */       \
   0x0e4e7d00, 0xf71a, 0x439f,                       \
  {0x91, 0x78, 0x1a, 0x71, 0xff, 0x11, 0xb5, 0x5f} }
 #define NS_SYNCLOADDOMSERVICE_CONTRACTID            \
 "@mozilla.org/content/syncload-dom-service;1"
+
+#define NS_EVENTLISTENERSERVICE_CID                 \
+ { /* baa34652-f1f1-4185-b224-244ee82a413a */       \
+   0xbaa34652, 0xf1f1, 0x4185,                      \
+  {0xb2, 0x24, 0x24, 0x4e, 0xe8, 0x2a, 0x41, 0x3a } }
+#define NS_EVENTLISTENERSERVICE_CONTRACTID \
+  "@mozilla.org/eventlistenerservice;1"
 
 // {f96f5ec9-755b-447e-b1f3-717d1a84bb41}
 #define NS_PLUGINDOCUMENT_CID \

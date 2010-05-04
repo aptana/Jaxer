@@ -65,8 +65,7 @@ class mozSanitizingHTMLSerializer : public nsIContentSerializer,
 public:
   mozSanitizingHTMLSerializer();
   virtual ~mozSanitizingHTMLSerializer();
-  static PRBool PR_CALLBACK ReleaseProperties(nsHashKey* key, void* data,
-                                              void* closure);
+  static PRBool ReleaseProperties(nsHashKey* key, void* data, void* closure);
 
   NS_DECL_ISUPPORTS
 
@@ -100,9 +99,7 @@ public:
                                  nsAString& aStr);
 
   // nsIContentSink
-  NS_IMETHOD WillTokenize(void) { return NS_OK; }
-  NS_IMETHOD WillBuildModel(void) { return NS_OK; }
-  NS_IMETHOD DidBuildModel(void) { return NS_OK; }
+  NS_IMETHOD WillParse(void) { return NS_OK; }
   NS_IMETHOD WillInterrupt(void) { return NS_OK; }
   NS_IMETHOD WillResume(void) { return NS_OK; }
   NS_IMETHOD SetParser(nsIParser* aParser) { return NS_OK; }
@@ -124,7 +121,6 @@ public:
   NS_IMETHOD_(PRBool) IsFormOnStack() { return PR_FALSE; }
   NS_IMETHOD BeginContext(PRInt32 aPosition) { return NS_OK; }
   NS_IMETHOD EndContext(PRInt32 aPosition) { return NS_OK; }
-  NS_IMETHOD WillProcessTokens(void) { return NS_OK; }
   NS_IMETHOD DidProcessTokens(void) { return NS_OK; }
   NS_IMETHOD WillProcessAToken(void) { return NS_OK; }
   NS_IMETHOD DidProcessAToken(void) { return NS_OK; }

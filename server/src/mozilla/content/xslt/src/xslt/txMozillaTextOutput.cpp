@@ -169,17 +169,19 @@ txMozillaTextOutput::createResultDocument(nsIDOMDocument* aSourceDocument,
         // Create the document
         rv = NS_NewXMLDocument(getter_AddRefs(mDocument));
         NS_ENSURE_SUCCESS(rv, rv);
+        nsCOMPtr<nsIDocument> source = do_QueryInterface(aSourceDocument);
+        NS_ENSURE_STATE(source);
+        PRBool hasHadScriptObject = PR_FALSE;
+        nsIScriptGlobalObject* sgo =
+          source->GetScriptHandlingObject(hasHadScriptObject);
+        NS_ENSURE_STATE(sgo || !hasHadScriptObject);
+        mDocument->SetScriptHandlingObject(sgo);
     }
     else {
         mDocument = do_QueryInterface(aResultDocument);
     }
 
     NS_ASSERTION(mDocument, "Need document");
-
-    nsCOMPtr<nsIDOMNSDocument> nsDoc = do_QueryInterface(mDocument);
-    if (nsDoc) {
-        nsDoc->SetTitle(EmptyString());
-    }
 
     // Reset and set up document
     URIUtils::ResetWithSource(mDocument, aSourceDocument);
@@ -286,9 +288,9 @@ txMozillaTextOutput::createXHTMLElement(nsIAtom* aName,
     *aResult = nsnull;
 
     nsCOMPtr<nsINodeInfo> ni;
-    nsresult rv = mDocument->NodeInfoManager()->
-        GetNodeInfo(aName, nsnull, kNameSpaceID_XHTML, getter_AddRefs(ni));
-    NS_ENSURE_SUCCESS(rv, rv);
+    ni = mDocument->NodeInfoManager()->
+        GetNodeInfo(aName, nsnull, kNameSpaceID_XHTML);
+    NS_ENSURE_TRUE(ni, NS_ERROR_OUT_OF_MEMORY);
 
     return NS_NewHTMLElement(aResult, ni, PR_FALSE);
 }

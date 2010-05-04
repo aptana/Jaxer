@@ -107,6 +107,9 @@ public:
   // nsIDOMNSHTMLImageElement
   NS_DECL_NSIDOMNSHTMLIMAGEELEMENT
 
+  // override from nsGenericHTMLElement
+  NS_IMETHOD GetDraggable(PRBool* aDraggable);
+
   // nsIJSNativeInitializer
   NS_IMETHOD Initialize(nsISupports* aOwner, JSContext* aContext,
                         JSObject* aObj, PRUint32 argc, jsval* argv);
@@ -135,9 +138,8 @@ public:
   virtual nsresult SetAttr(PRInt32 aNameSpaceID, nsIAtom* aName,
                            nsIAtom* aPrefix, const nsAString& aValue,
                            PRBool aNotify);
-
-  // XXXbz What about UnsetAttr?  We don't seem to unload images when
-  // that happens...
+  virtual nsresult UnsetAttr(PRInt32 aNameSpaceID, nsIAtom* aAttribute,
+                             PRBool aNotify);
 
   virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
                               nsIContent* aBindingParent,
@@ -146,6 +148,7 @@ public:
   virtual PRInt32 IntrinsicState() const;
   virtual nsresult Clone(nsINodeInfo *aNodeInfo, nsINode **aResult) const;
 
+  void MaybeLoadImage();
 protected:
   nsPoint GetXY();
   nsSize GetWidthHeight();
@@ -159,17 +162,15 @@ NS_NewHTMLImageElement(nsINodeInfo *aNodeInfo, PRBool aFromParser)
    * if someone says "var img = new Image();" in JavaScript, in a case like
    * that we request the nsINodeInfo from the document's nodeinfo list.
    */
-  nsresult rv;
   nsCOMPtr<nsINodeInfo> nodeInfo(aNodeInfo);
   if (!nodeInfo) {
     nsCOMPtr<nsIDocument> doc =
       do_QueryInterface(nsContentUtils::GetDocumentFromCaller());
     NS_ENSURE_TRUE(doc, nsnull);
 
-    rv = doc->NodeInfoManager()->GetNodeInfo(nsGkAtoms::img, nsnull,
-                                             kNameSpaceID_None,
-                                             getter_AddRefs(nodeInfo));
-    NS_ENSURE_SUCCESS(rv, nsnull);
+    nodeInfo = doc->NodeInfoManager()->GetNodeInfo(nsGkAtoms::img, nsnull,
+                                                   kNameSpaceID_XHTML);
+    NS_ENSURE_TRUE(nodeInfo, nsnull);
   }
 
   return new nsHTMLImageElement(nodeInfo);
@@ -191,14 +192,16 @@ NS_IMPL_RELEASE_INHERITED(nsHTMLImageElement, nsGenericElement)
 
 
 // QueryInterface implementation for nsHTMLImageElement
-NS_HTML_CONTENT_INTERFACE_TABLE_HEAD(nsHTMLImageElement, nsGenericHTMLElement)
-  NS_INTERFACE_TABLE_INHERITED6(nsHTMLImageElement,
-                                nsIDOMHTMLImageElement,
-                                nsIDOMNSHTMLImageElement,
-                                nsIJSNativeInitializer,
-                                imgIDecoderObserver,
-                                nsIImageLoadingContent,
-                                imgIContainerObserver)
+NS_INTERFACE_TABLE_HEAD(nsHTMLImageElement)
+  NS_HTML_CONTENT_INTERFACE_TABLE6(nsHTMLImageElement,
+                                   nsIDOMHTMLImageElement,
+                                   nsIDOMNSHTMLImageElement,
+                                   nsIJSNativeInitializer,
+                                   imgIDecoderObserver,
+                                   nsIImageLoadingContent,
+                                   imgIContainerObserver)
+  NS_HTML_CONTENT_INTERFACE_TABLE_TO_MAP_SEGUE(nsHTMLImageElement,
+                                               nsGenericHTMLElement)
 NS_HTML_CONTENT_INTERFACE_TABLE_TAIL_CLASSINFO(HTMLImageElement)
 
 
@@ -216,6 +219,15 @@ NS_IMPL_STRING_ATTR(nsHTMLImageElement, Lowsrc, lowsrc)
 NS_IMPL_URI_ATTR(nsHTMLImageElement, Src, src)
 NS_IMPL_STRING_ATTR(nsHTMLImageElement, UseMap, usemap)
 NS_IMPL_INT_ATTR(nsHTMLImageElement, Vspace, vspace)
+
+NS_IMETHODIMP
+nsHTMLImageElement::GetDraggable(PRBool* aDraggable)
+{
+  // images may be dragged unless the draggable attribute is false
+  *aDraggable = !AttrValueIs(kNameSpaceID_None, nsGkAtoms::draggable,
+                             nsGkAtoms::_false, eIgnoreCase);
+  return NS_OK;
+}
 
 NS_IMETHODIMP
 nsHTMLImageElement::GetComplete(PRBool* aComplete)
@@ -519,6 +531,17 @@ nsHTMLImageElement::SetAttr(PRInt32 aNameSpaceID, nsIAtom* aName,
 }
 
 nsresult
+nsHTMLImageElement::UnsetAttr(PRInt32 aNameSpaceID, nsIAtom* aAttribute,
+                              PRBool aNotify)
+{
+  if (aNameSpaceID == kNameSpaceID_None && aAttribute == nsGkAtoms::src) {
+    CancelImageRequests(aNotify);
+  }
+
+  return nsGenericHTMLElement::UnsetAttr(aNameSpaceID, aAttribute, aNotify);
+}
+
+nsresult
 nsHTMLImageElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
                                nsIContent* aBindingParent,
                                PRBool aCompileEventHandlers)
@@ -528,16 +551,33 @@ nsHTMLImageElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
                                                  aCompileEventHandlers);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  // Our base URI may have changed; claim that our URI changed, and the
-  // nsImageLoadingContent will decide whether a new image load is warranted.
-  nsAutoString uri;
-  if (GetAttr(kNameSpaceID_None, nsGkAtoms::src, uri)) {
-    // Note: no need to notify here; since we're just now being bound
-    // we don't have any frames or anything yet.
-    LoadImage(uri, PR_FALSE, PR_FALSE);
+  if (HasAttr(kNameSpaceID_None, nsGkAtoms::src)) {
+    ClearBrokenState();
+    // If loading is temporarily disabled, don't even launch MaybeLoadImage.
+    // Otherwise MaybeLoadImage may run later when someone has reenabled
+    // loading.
+    if (LoadingEnabled()) {
+      nsContentUtils::AddScriptRunner(
+        new nsRunnableMethod<nsHTMLImageElement>(this,
+                                                 &nsHTMLImageElement::MaybeLoadImage));
+    }
   }
 
   return rv;
+}
+
+void
+nsHTMLImageElement::MaybeLoadImage()
+{
+  // Our base URI may have changed; claim that our URI changed, and the
+  // nsImageLoadingContent will decide whether a new image load is warranted.
+  // Note, check LoadingEnabled() after LoadImage call.
+  nsAutoString uri;
+  if (GetAttr(kNameSpaceID_None, nsGkAtoms::src, uri) &&
+      (NS_FAILED(LoadImage(uri, PR_FALSE, PR_TRUE)) ||
+       !LoadingEnabled())) {
+    CancelImageRequests(PR_TRUE);
+  }
 }
 
 PRInt32

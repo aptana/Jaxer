@@ -43,6 +43,7 @@
 #include "nsIDOMSVGLocatable.h"
 #include "nsIDOMSVGTransformable.h"
 #include "nsIDOMSVGAnimTransformList.h"
+#include "gfxMatrix.h"
 
 typedef nsSVGStylableElement nsSVGGraphicElementBase;
 
@@ -61,8 +62,7 @@ public:
   // nsIContent interface
   NS_IMETHOD_(PRBool) IsAttributeMapped(const nsIAtom* aAttribute) const;
 
-  // Used by frames to get consolidation matrix of transform list
-  already_AddRefed<nsIDOMSVGMatrix> GetLocalTransformMatrix();
+  virtual gfxMatrix PrependLocalTransformTo(const gfxMatrix &aMatrix);
 
 protected:
   // nsSVGElement overrides
@@ -75,8 +75,6 @@ protected:
 
   // helper
   nsresult CreateTransformList();
-  nsresult AppendLocalTransform(nsIDOMSVGMatrix *aCTM,
-                                nsIDOMSVGMatrix **_retval);
 };
 
 #endif // __NS_SVGGRAPHICELEMENT_H__

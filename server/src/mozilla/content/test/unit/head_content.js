@@ -66,7 +66,7 @@ var __testsDirectory = null;
 function ParseFile(file) {
   if (typeof(file) == "string") {
     if (!__testsDirectory) {
-      __testsDirectory = do_get_file("content/test/unit/");
+      __testsDirectory = do_get_cwd();
     }
     var fileObj = __testsDirectory.clone();
     fileObj.append(file);
@@ -75,8 +75,8 @@ function ParseFile(file) {
 
   do_check_eq(file instanceof nsILocalFile, true);
 
-  fileStr = C["@mozilla.org/network/file-input-stream;1"]
-             .createInstance(nsIFileInputStream);
+  var fileStr = C["@mozilla.org/network/file-input-stream;1"]
+                 .createInstance(nsIFileInputStream);
   // Init for readonly reading
   fileStr.init(file,  0x01, 0400, nsIFileInputStream.CLOSE_ON_EOF);
   return ParseXML(fileStr);

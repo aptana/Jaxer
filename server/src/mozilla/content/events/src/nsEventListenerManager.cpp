@@ -39,7 +39,7 @@
 #include "nsGUIEvent.h"
 #include "nsDOMEvent.h"
 #include "nsEventListenerManager.h"
-#include "nsICaret.h"
+#include "nsCaret.h"
 #include "nsIDOMNSEvent.h"
 #include "nsIDOMEventListener.h"
 #include "nsIDOMMouseListener.h"
@@ -49,15 +49,11 @@
 #include "nsIDOMFocusListener.h"
 #include "nsIDOMFormListener.h"
 #include "nsIDOMLoadListener.h"
-#include "nsIDOMDragListener.h"
 #include "nsIDOMTextListener.h"
 #include "nsIDOMCompositionListener.h"
-#include "nsIDOMXULListener.h"
 #include "nsIDOMUIListener.h"
 #include "nsITextControlFrame.h"
 #ifdef MOZ_SVG
-#include "nsIDOMSVGListener.h"
-#include "nsIDOMSVGZoomListener.h"
 #include "nsGkAtoms.h"
 #endif // MOZ_SVG
 #include "nsIEventStateManager.h"
@@ -68,15 +64,6 @@
 #include "nsIScriptGlobalObject.h"
 #include "nsIScriptRuntime.h"
 #include "nsLayoutUtils.h"
-#ifdef MOZ_XUL
-// XXXbz the fact that this is ifdef MOZ_XUL is good indication that
-// it doesn't belong here...
-#include "nsITreeBoxObject.h"
-#include "nsITreeColumns.h"
-#include "nsIDOMXULMultSelectCntrlEl.h"
-#include "nsIDOMXULSelectCntrlItemEl.h"
-#include "nsIDOMXULMenuListElement.h"
-#endif
 #include "nsINameSpaceManager.h"
 #include "nsIContent.h"
 #include "nsIFrame.h"
@@ -94,11 +81,9 @@
 #include "nsIXPConnect.h"
 #include "nsDOMCID.h"
 #include "nsIScriptObjectOwner.h" // for nsIScriptEventHandlerOwner
-#include "nsIFocusController.h"
+#include "nsFocusManager.h"
 #include "nsIDOMElement.h"
-#include "nsIBoxObject.h"
 #include "nsIDOMNSDocument.h"
-#include "nsIWidget.h"
 #include "nsContentUtils.h"
 #include "nsJSUtils.h"
 #include "nsIDOMEventGroup.h"
@@ -107,6 +92,9 @@
 #include "nsDOMJSUtils.h"
 #include "nsDOMScriptObjectHolder.h"
 #include "nsDataHashtable.h"
+#include "nsCOMArray.h"
+#include "nsEventListenerService.h"
+#include "nsDOMEvent.h"
 
 #define EVENT_TYPE_EQUALS( ls, type, userType ) \
   (ls->mEventType && ls->mEventType == type && \
@@ -225,11 +213,7 @@ static const EventDispatchData sCompositionEvents[] = {
   { NS_COMPOSITION_END,
     HANDLER(&nsIDOMCompositionListener::HandleEndComposition)    },
   { NS_COMPOSITION_QUERY,
-    HANDLER(&nsIDOMCompositionListener::HandleQueryComposition)  },
-  { NS_RECONVERSION_QUERY,
-    HANDLER(&nsIDOMCompositionListener::HandleQueryReconversion) },
-  { NS_QUERYCARETRECT,
-    HANDLER(&nsIDOMCompositionListener::HandleQueryCaretRect)    }
+    HANDLER(&nsIDOMCompositionListener::HandleQueryComposition)  }
 };
 
 static const EventDispatchData sTextEvents[] = {
@@ -262,47 +246,11 @@ static const EventDispatchData sLoadEvents[] = {
   { NS_BEFORE_PAGE_UNLOAD, HANDLER(&nsIDOMLoadListener::BeforeUnload) }
 };
 
-static const EventDispatchData sDragEvents[] = {
-  { NS_DRAGDROP_ENTER,       HANDLER(&nsIDOMDragListener::DragEnter)   },
-  { NS_DRAGDROP_OVER_SYNTH,  HANDLER(&nsIDOMDragListener::DragOver)    },
-  { NS_DRAGDROP_EXIT_SYNTH,  HANDLER(&nsIDOMDragListener::DragExit)    },
-  { NS_DRAGDROP_DROP,        HANDLER(&nsIDOMDragListener::DragDrop)    },
-  { NS_DRAGDROP_GESTURE,     HANDLER(&nsIDOMDragListener::DragGesture) },
-  { NS_DRAGDROP_DRAG,        HANDLER(&nsIDOMDragListener::Drag)        },
-  { NS_DRAGDROP_END,         HANDLER(&nsIDOMDragListener::DragEnd)     }
-};
-
-static const EventDispatchData sXULEvents[] = {
-  { NS_XUL_POPUP_SHOWING,  HANDLER(&nsIDOMXULListener::PopupShowing)  },
-  { NS_XUL_POPUP_SHOWN,    HANDLER(&nsIDOMXULListener::PopupShown)    },
-  { NS_XUL_POPUP_HIDING,   HANDLER(&nsIDOMXULListener::PopupHiding)   },
-  { NS_XUL_POPUP_HIDDEN,   HANDLER(&nsIDOMXULListener::PopupHidden)   },
-  { NS_XUL_CLOSE,          HANDLER(&nsIDOMXULListener::Close)         },
-  { NS_XUL_COMMAND,        HANDLER(&nsIDOMXULListener::Command)       },
-  { NS_XUL_BROADCAST,      HANDLER(&nsIDOMXULListener::Broadcast)     },
-  { NS_XUL_COMMAND_UPDATE, HANDLER(&nsIDOMXULListener::CommandUpdate) }
-};
-
 static const EventDispatchData sUIEvents[] = {
   { NS_UI_ACTIVATE, HANDLER(&nsIDOMUIListener::Activate) },
   { NS_UI_FOCUSIN,  HANDLER(&nsIDOMUIListener::FocusIn)  },
   { NS_UI_FOCUSOUT, HANDLER(&nsIDOMUIListener::FocusOut) }
 };
-
-#ifdef MOZ_SVG
-static const EventDispatchData sSVGEvents[] = {
-  { NS_SVG_LOAD,   HANDLER(&nsIDOMSVGListener::Load)   },
-  { NS_SVG_UNLOAD, HANDLER(&nsIDOMSVGListener::Unload) },
-  { NS_SVG_ABORT,  HANDLER(&nsIDOMSVGListener::Abort)  },
-  { NS_SVG_ERROR,  HANDLER(&nsIDOMSVGListener::Error)  },
-  { NS_SVG_RESIZE, HANDLER(&nsIDOMSVGListener::Resize) },
-  { NS_SVG_SCROLL, HANDLER(&nsIDOMSVGListener::Scroll) }
-};
-
-static const EventDispatchData sSVGZoomEvents[] = {
-  { NS_SVG_ZOOM, HANDLER(&nsIDOMSVGZoomListener::Zoom) }
-};
-#endif // MOZ_SVG
 
 #define IMPL_EVENTTYPEDATA(type) \
 { \
@@ -321,32 +269,23 @@ static const EventTypeData sEventTypes[] = {
   IMPL_EVENTTYPEDATA(Load),
   IMPL_EVENTTYPEDATA(Focus),
   IMPL_EVENTTYPEDATA(Form),
-  IMPL_EVENTTYPEDATA(Drag),
   IMPL_EVENTTYPEDATA(Text),
   IMPL_EVENTTYPEDATA(Composition),
-  IMPL_EVENTTYPEDATA(XUL),
   IMPL_EVENTTYPEDATA(UI)
-#ifdef MOZ_SVG
- ,
-  IMPL_EVENTTYPEDATA(SVG),
-  IMPL_EVENTTYPEDATA(SVGZoom)
-#endif // MOZ_SVG
 };
 
 // Strong references to event groups
 nsIDOMEventGroup* gSystemEventGroup = nsnull;
 nsIDOMEventGroup* gDOM2EventGroup = nsnull;
 
-nsDataHashtable<nsISupportsHashKey, PRUint32>* gEventIdTable = nsnull;
-
 PRUint32 nsEventListenerManager::mInstanceCount = 0;
+PRUint32 nsEventListenerManager::sCreatedCount = 0;
 
 nsEventListenerManager::nsEventListenerManager() :
-  mTarget(nsnull),
-  mMayHaveMutationListeners(PR_FALSE),
-  mNoListenerForEvent(NS_EVENT_TYPE_NULL)
+  mTarget(nsnull)
 {
   ++mInstanceCount;
+  ++sCreatedCount;
 }
 
 nsEventListenerManager::~nsEventListenerManager() 
@@ -358,8 +297,6 @@ nsEventListenerManager::~nsEventListenerManager()
   if(mInstanceCount == 0) {
     NS_IF_RELEASE(gSystemEventGroup);
     NS_IF_RELEASE(gDOM2EventGroup);
-    delete gEventIdTable;
-    gEventIdTable = nsnull;
   }
 }
 
@@ -392,6 +329,7 @@ NS_IMPL_CYCLE_COLLECTING_RELEASE_AMBIGUOUS(nsEventListenerManager, nsIEventListe
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN(nsEventListenerManager)
   PRUint32 count = tmp->mListeners.Length();
   for (PRUint32 i = 0; i < count; i++) {
+    NS_CYCLE_COLLECTION_NOTE_EDGE_NAME(cb, "mListeners[i] mListener");
     cb.NoteXPCOMChild(tmp->mListeners.ElementAt(i).mListener.get());
   }  
 NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
@@ -425,6 +363,27 @@ nsEventListenerManager::GetTypeDataForEventName(nsIAtom* aName)
       }
     }
   }
+  return nsnull;
+}
+
+nsPIDOMWindow*
+nsEventListenerManager::GetInnerWindowForTarget()
+{
+  nsCOMPtr<nsINode> node = do_QueryInterface(mTarget);
+  if (node) {
+    // XXX sXBL/XBL2 issue -- do we really want the owner here?  What
+    // if that's the XBL document?
+    nsIDocument* document = node->GetOwnerDoc();
+    if (document)
+      return document->GetInnerWindow();
+  }
+
+  nsCOMPtr<nsPIDOMWindow> window = do_QueryInterface(mTarget);
+  if (window) {
+    NS_ASSERTION(window->IsInnerWindow(), "Target should not be an outer window");
+    return window;
+  }
+
   return nsnull;
 }
 
@@ -495,35 +454,29 @@ nsEventListenerManager::AddEventListener(nsIDOMEventListener *aListener,
   ls->mHandlerIsString = PR_FALSE;
   ls->mTypeData = aTypeData;
 
-  // For mutation listeners, we need to update the global bit on the DOM window.
-  // Otherwise we won't actually fire the mutation event.
-  if (aType >= NS_MUTATION_START && aType <= NS_MUTATION_END) {
+  if (aType == NS_AFTERPAINT) {
+    mMayHavePaintEventListener = PR_TRUE;
+    nsPIDOMWindow* window = GetInnerWindowForTarget();
+    if (window) {
+      window->SetHasPaintEventListeners();
+    }
+  } else if (aType >= NS_MUTATION_START && aType <= NS_MUTATION_END) {
+    // For mutation listeners, we need to update the global bit on the DOM window.
+    // Otherwise we won't actually fire the mutation event.
     mMayHaveMutationListeners = PR_TRUE;
     // Go from our target to the nearest enclosing DOM window.
-    nsCOMPtr<nsPIDOMWindow> window;
-    nsCOMPtr<nsIDocument> document;
-    nsCOMPtr<nsINode> node(do_QueryInterface(mTarget));
-    if (node) {
-      // XXX sXBL/XBL2 issue -- do we really want the owner here?  What
-      // if that's the XBL document?
-      document = node->GetOwnerDoc();
-      if (document) {
-        window = document->GetInnerWindow();
-      }
-    }
-
-    if (!window) {
-      window = do_QueryInterface(mTarget);
-    }
+    nsPIDOMWindow* window = GetInnerWindowForTarget();
     if (window) {
-      NS_ASSERTION(window->IsInnerWindow(),
-                   "Setting mutation listener bits on outer window?");
       // If aType is NS_MUTATION_SUBTREEMODIFIED, we need to listen all
       // mutations. nsContentUtils::HasMutationListeners relies on this.
       window->SetMutationListeners((aType == NS_MUTATION_SUBTREEMODIFIED) ?
                                    kAllMutationBits :
                                    MutationBitForEventType(aType));
     }
+  } else if (aTypeAtom == nsGkAtoms::onMozOrientation) {
+    nsPIDOMWindow* window = GetInnerWindowForTarget();
+    if (window)
+      window->SetHasOrientationEventListener();
   }
 
   return NS_OK;
@@ -564,6 +517,7 @@ nsEventListenerManager::RemoveEventListener(nsIDOMEventListener *aListener,
         (EVENT_TYPE_EQUALS(ls, aType, aUserType) ||
          (!(ls->mEventType) &&
           EVENT_TYPE_DATA_EQUALS(ls->mTypeData, aTypeData)))) {
+      nsRefPtr<nsEventListenerManager> kungFuDeathGrip = this;
       mListeners.RemoveElementAt(i);
       mNoListenerForEvent = NS_EVENT_TYPE_NULL;
       mNoListenerForEventAtom = nsnull;
@@ -806,6 +760,11 @@ nsEventListenerManager::AddScriptEventListener(nsISupports *aObject,
         nsContentUtils::GetEventArgNames(nameSpace, aName, &argCount,
                                          &argNames);
 
+        nsCxPusher pusher;
+        if (!pusher.Push((JSContext*)context->GetNativeContext())) {
+          return NS_ERROR_FAILURE;
+        }
+
         rv = context->CompileEventHandler(aName, argCount, argNames,
                                           aBody,
                                           url.get(), lineNo,
@@ -813,7 +772,6 @@ nsEventListenerManager::AddScriptEventListener(nsISupports *aObject,
                                           handler);
         if (rv == NS_ERROR_ILLEGAL_VALUE) {
           NS_WARNING("Probably a syntax error in the event handler!");
-          context->ReportPendingException();
           return NS_SUCCESS_LOSS_OF_INSIGNIFICANT_DATA;
         }
         NS_ENSURE_SUCCESS(rv, rv);
@@ -1007,6 +965,12 @@ nsEventListenerManager::CompileEventHandlerInternal(nsIScriptContext *aContext,
         }
       }
 
+      nsCxPusher pusher;
+      if (!pusher.Push((JSContext*)aContext->GetNativeContext())) {
+        return NS_ERROR_FAILURE;
+      }
+
+
       if (handlerOwner) {
         // Always let the handler owner compile the event
         // handler, as it may want to use a special
@@ -1048,7 +1012,7 @@ nsresult
 nsEventListenerManager::HandleEventSubType(nsListenerStruct* aListenerStruct,
                                            nsIDOMEventListener* aListener,
                                            nsIDOMEvent* aDOMEvent,
-                                           nsISupports* aCurrentTarget,
+                                           nsPIDOMEventTarget* aCurrentTarget,
                                            PRUint32 aPhaseFlags)
 {
   nsresult result = NS_OK;
@@ -1072,10 +1036,7 @@ nsEventListenerManager::HandleEventSubType(nsListenerStruct* aListenerStruct,
     }
   }
 
-  // nsCxPusher will push and pop (automatically) the current cx onto the
-  // context stack
-  nsCxPusher pusher;
-  if (NS_SUCCEEDED(result) && pusher.Push(aCurrentTarget)) {
+  if (NS_SUCCEEDED(result)) {
     // nsIDOMEvent::currentTarget is set in nsEventDispatcher.
     result = aListener->HandleEvent(aDOMEvent);
   }
@@ -1095,7 +1056,7 @@ static const EventDispatchData* sLatestEventDispData = nsnull;
 nsresult
 nsEventListenerManager::HandleEvent(nsPresContext* aPresContext,
                                     nsEvent* aEvent, nsIDOMEvent** aDOMEvent,
-                                    nsISupports* aCurrentTarget,
+                                    nsPIDOMEventTarget* aCurrentTarget,
                                     PRUint32 aFlags,
                                     nsEventStatus* aEventStatus)
 {
@@ -1115,14 +1076,6 @@ nsEventListenerManager::HandleEvent(nsPresContext* aPresContext,
     aEvent->flags |= NS_EVENT_FLAG_NO_DEFAULT;
   }
   PRUint16 currentGroup = aFlags & NS_EVENT_FLAG_SYSTEM_EVENT;
-
-  // Beware! This may flush notifications via synchronous
-  // ScrollSelectionIntoView.
-  if (aEvent->message == NS_CONTEXTMENU &&
-      NS_FAILED(FixContextMenuEvent(aPresContext, aCurrentTarget, aEvent,
-                                    aDOMEvent))) {
-    NS_WARNING("failed to fix context menu event target");
-  }
 
   const EventTypeData* typeData = nsnull;
   const EventDispatchData* dispData = nsnull;
@@ -1155,6 +1108,7 @@ found:
   nsAutoTObserverArray<nsListenerStruct, 2>::EndLimitedIterator iter(mListeners);
   nsAutoPopupStatePusher popupStatePusher(nsDOMEvent::GetEventPopupControlState(aEvent));
   PRBool hasListener = PR_FALSE;
+  nsCxPusher pusher;
   while (iter.HasMore()) {
     nsListenerStruct* ls = &iter.GetNext();
     PRBool useTypeInterface =
@@ -1176,10 +1130,19 @@ found:
                                            EmptyString(), aDOMEvent);
           }
           if (*aDOMEvent) {
+            if (!aEvent->currentTarget) {
+              aEvent->currentTarget = aCurrentTarget->GetTargetForDOMEvent();
+              if (!aEvent->currentTarget) {
+                break;
+              }
+            }
+            nsRefPtr<nsIDOMEventListener> kungFuDeathGrip = ls->mListener;
             if (useTypeInterface) {
+              pusher.Pop();
               DispatchToInterface(*aDOMEvent, ls->mListener,
                                   dispData->method, *typeData->iid);
-            } else if (useGenericInterface) {
+            } else if (useGenericInterface &&
+                       pusher.RePush(aCurrentTarget)) {
               HandleEventSubType(ls, ls->mListener, *aDOMEvent,
                                  aCurrentTarget, aFlags);
             }
@@ -1188,6 +1151,8 @@ found:
       }
     }
   }
+
+  aEvent->currentTarget = nsnull;
 
   if (!hasListener) {
     mNoListenerForEvent = aEvent->message;
@@ -1281,15 +1246,15 @@ nsEventListenerManager::RemoveEventListener(const nsAString& aType,
 NS_IMETHODIMP
 nsEventListenerManager::DispatchEvent(nsIDOMEvent* aEvent, PRBool *_retval)
 {
-  nsCOMPtr<nsIContent> targetContent(do_QueryInterface(mTarget));
-  if (!targetContent) {
+  nsCOMPtr<nsINode> targetNode(do_QueryInterface(mTarget));
+  if (!targetNode) {
     // nothing to dispatch on -- bad!
     return NS_ERROR_FAILURE;
   }
   
   // XXX sXBL/XBL2 issue -- do we really want the owner here?  What
   // if that's the XBL document?  Would we want its presshell?  Or what?
-  nsCOMPtr<nsIDocument> document = targetContent->GetOwnerDoc();
+  nsCOMPtr<nsIDocument> document = targetNode->GetOwnerDoc();
 
   // Do nothing if the element does not belong to a document
   if (!document) {
@@ -1305,7 +1270,7 @@ nsEventListenerManager::DispatchEvent(nsIDOMEvent* aEvent, PRBool *_retval)
 
   nsEventStatus status = nsEventStatus_eIgnore;
   nsresult rv =
-    nsEventDispatcher::DispatchDOMEvent(targetContent, nsnull, aEvent,
+    nsEventDispatcher::DispatchDOMEvent(targetNode, nsnull, aEvent,
                                         context, &status);
   *_retval = (status != nsEventStatus_eConsumeNoDefault);
   return rv;
@@ -1344,337 +1309,6 @@ NS_IMETHODIMP
 nsEventListenerManager::IsRegisteredHere(const nsAString & type, PRBool *_retval)
 {
   return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-nsresult
-nsEventListenerManager::FixContextMenuEvent(nsPresContext* aPresContext,
-                                            nsISupports* aCurrentTarget,
-                                            nsEvent* aEvent,
-                                            nsIDOMEvent** aDOMEvent)
-{
-  nsIPresShell* shell = aPresContext ? aPresContext->GetPresShell() : nsnull;
-  if (!shell) {
-    // Nothing to do.
-    return NS_OK;
-  }
-
-  nsresult ret = NS_OK;
-
-  PRBool contextMenuKey =
-    static_cast<nsMouseEvent*>(aEvent)->context == nsMouseEvent::eContextMenuKey;
-  if (nsnull == *aDOMEvent) {
-    // If we're here because of the key-equiv for showing context menus, we
-    // have to twiddle with the NS event to make sure the context menu comes
-    // up in the upper left of the relevant content area before we create
-    // the DOM event. Since we never call InitMouseEvent() on the event, 
-    // the client X/Y will be 0,0. We can make use of that if the widget is null.
-    if (contextMenuKey) {
-      aPresContext->GetViewManager()->GetWidget(getter_AddRefs(((nsGUIEvent*)aEvent)->widget));
-      aEvent->refPoint.x = 0;
-      aEvent->refPoint.y = 0;
-    }
-    ret = NS_NewDOMMouseEvent(aDOMEvent, aPresContext, static_cast<nsInputEvent*>(aEvent));
-    NS_ENSURE_SUCCESS(ret, ret);
-  }
-
-  // see if we should use the caret position for the popup
-  if (contextMenuKey) {
-    nsPoint caretPoint;
-    // Beware! This may flush notifications via synchronous
-    // ScrollSelectionIntoView.
-    if (PrepareToUseCaretPosition(((nsGUIEvent*)aEvent)->widget,
-                                  shell, caretPoint)) {
-      // caret position is good
-      aEvent->refPoint.x = caretPoint.x;
-      aEvent->refPoint.y = caretPoint.y;
-      return NS_OK;
-    }
-  }
-
-  // If we're here because of the key-equiv for showing context menus, we
-  // have to reset the event target to the currently focused element. Get it
-  // from the focus controller.
-  nsCOMPtr<nsIDOMEventTarget> currentTarget = do_QueryInterface(aCurrentTarget);
-  nsCOMPtr<nsIDOMElement> currentFocus;
-
-  if (contextMenuKey) {
-    nsIDocument *doc = shell->GetDocument();
-    if (doc) {
-      nsPIDOMWindow* privWindow = doc->GetWindow();
-      if (privWindow) {
-        nsIFocusController *focusController =
-          privWindow->GetRootFocusController();
-        if (focusController)
-          focusController->GetFocusedElement(getter_AddRefs(currentFocus));
-      }
-    }
-  }
-
-  if (currentFocus) {
-    // Reset event coordinates relative to focused frame in view
-    nsPoint targetPt;
-    GetCoordinatesFor(currentFocus, aPresContext, shell, targetPt);
-    aEvent->refPoint.x = targetPt.x;
-    aEvent->refPoint.y = targetPt.y;
-
-    currentTarget = do_QueryInterface(currentFocus);
-    nsCOMPtr<nsIPrivateDOMEvent> pEvent(do_QueryInterface(*aDOMEvent));
-    pEvent->SetTarget(currentTarget);
-  }
-
-  return ret;
-}
-
-// nsEventListenerManager::PrepareToUseCaretPosition
-//
-//    This checks to see if we should use the caret position for popup context
-//    menus. Returns true if the caret position should be used, and the
-//    coordinates of that position is returned in aTargetPt. This function
-//    will also scroll the window as needed to make the caret visible.
-//
-//    The event widget should be the widget that generated the event, and
-//    whose coordinate system the resulting event's refPoint should be
-//    relative to.  The returned point is in device pixels realtive to the
-//    widget passed in.
-
-PRBool
-nsEventListenerManager::PrepareToUseCaretPosition(nsIWidget* aEventWidget,
-                                                  nsIPresShell* aShell,
-                                                  nsPoint& aTargetPt)
-{
-  nsresult rv;
-
-  // check caret visibility
-  nsCOMPtr<nsICaret> caret;
-  rv = aShell->GetCaret(getter_AddRefs(caret));
-  NS_ENSURE_SUCCESS(rv, PR_FALSE);
-  NS_ENSURE_TRUE(caret, PR_FALSE);
-
-  PRBool caretVisible = PR_FALSE;
-  rv = caret->GetCaretVisible(&caretVisible);
-  if (NS_FAILED(rv) || ! caretVisible)
-    return PR_FALSE;
-
-  // caret selection, watch out: GetCaretDOMSelection can return null but NS_OK
-  nsCOMPtr<nsISelection> domSelection;
-  rv = caret->GetCaretDOMSelection(getter_AddRefs(domSelection));
-  NS_ENSURE_SUCCESS(rv, PR_FALSE);
-  NS_ENSURE_TRUE(domSelection, PR_FALSE);
-
-  // since the match could be an anonymous textnode inside a
-  // <textarea> or text <input>, we need to get the outer frame
-  // note: frames are not refcounted
-  nsIFrame* frame = nsnull; // may be NULL
-  nsCOMPtr<nsIDOMNode> node;
-  rv = domSelection->GetFocusNode(getter_AddRefs(node));
-  NS_ENSURE_SUCCESS(rv, PR_FALSE);
-  NS_ENSURE_TRUE(node, PR_FALSE);
-  nsCOMPtr<nsIContent> content(do_QueryInterface(node));
-  if (content) {
-    nsIContent* nonNative = content->FindFirstNonNativeAnonymous();
-    content = nonNative;
-  }
-
-  if (content) {
-    // It seems like selCon->ScrollSelectionIntoView should be enough, but it's
-    // not. The problem is that scrolling the selection into view when it is
-    // below the current viewport will align the top line of the frame exactly
-    // with the bottom of the window. This is fine, BUT, the popup event causes
-    // the control to be re-focused which does this exact call to
-    // ScrollContentIntoView, which has a one-pixel disagreement of whether the
-    // frame is actually in view. The result is that the frame is aligned with
-    // the top of the window, but the menu is still at the bottom.
-    //
-    // Doing this call first forces the frame to be in view, eliminating the
-    // problem. The only difference in the result is that if your cursor is in
-    // an edit box below the current view, you'll get the edit box aligned with
-    // the top of the window. This is arguably better behavior anyway.
-    rv = aShell->ScrollContentIntoView(content,
-                                       NS_PRESSHELL_SCROLL_IF_NOT_VISIBLE,
-                                       NS_PRESSHELL_SCROLL_IF_NOT_VISIBLE);
-    NS_ENSURE_SUCCESS(rv, PR_FALSE);
-    frame = aShell->GetPrimaryFrameFor(content);
-    NS_WARN_IF_FALSE(frame, "No frame for focused content?");
-  }
-
-  // Actually scroll the selection (ie caret) into view. Note that this must
-  // be synchronous since we will be checking the caret position on the screen.
-  //
-  // Be easy about errors, and just don't scroll in those cases. Better to have
-  // the correct menu at a weird place than the wrong menu.
-  nsCOMPtr<nsISelectionController> selCon;
-  if (frame)
-    frame->GetSelectionController(aShell->GetPresContext(),
-                                  getter_AddRefs(selCon));
-  else
-    selCon = do_QueryInterface(aShell);
-  if (selCon) {
-    // After ScrollSelectionIntoView(), the pending notifications might be
-    // flushed and PresShell/PresContext/Frames may be dead. See bug 418470.
-    rv = selCon->ScrollSelectionIntoView(nsISelectionController::SELECTION_NORMAL,
-        nsISelectionController::SELECTION_FOCUS_REGION, PR_TRUE);
-    NS_ENSURE_SUCCESS(rv, PR_FALSE);
-  }
-
-  // get caret position relative to some view (normally the same as the
-  // event widget view, but this is not guaranteed)
-  PRBool isCollapsed;
-  nsIView* view;
-  nsRect caretCoords;
-  rv = caret->GetCaretCoordinates(nsICaret::eRenderingViewCoordinates,
-                                  domSelection, &caretCoords, &isCollapsed,
-                                  &view);
-  NS_ENSURE_SUCCESS(rv, PR_FALSE);
-
-  // in case the view used for caret coordinates was something else, we need
-  // to bring those coordinates into the space of the widget view
-  nsIView* widgetView = nsIView::GetViewFor(aEventWidget);
-  NS_ENSURE_TRUE(widgetView, PR_FALSE);
-  nsPoint viewToWidget;
-  widgetView->GetNearestWidget(&viewToWidget);
-  nsPoint viewDelta = view->GetOffsetTo(widgetView) + viewToWidget;
-
-  // caret coordinates are in twips, convert to pixels
-  nsPresContext* presContext = aShell->GetPresContext();
-  aTargetPt.x = presContext->AppUnitsToDevPixels(viewDelta.x + caretCoords.x + caretCoords.width);
-  aTargetPt.y = presContext->AppUnitsToDevPixels(viewDelta.y + caretCoords.y + caretCoords.height);
-
-  return PR_TRUE;
-}
-
-// Get coordinates in device pixels relative to root view for element, 
-// first ensuring the element is onscreen
-void
-nsEventListenerManager::GetCoordinatesFor(nsIDOMElement *aCurrentEl, 
-                                          nsPresContext *aPresContext,
-                                          nsIPresShell *aPresShell, 
-                                          nsPoint& aTargetPt)
-{
-  nsCOMPtr<nsIContent> focusedContent(do_QueryInterface(aCurrentEl));
-  aPresShell->ScrollContentIntoView(focusedContent,
-                                    NS_PRESSHELL_SCROLL_ANYWHERE,
-                                    NS_PRESSHELL_SCROLL_ANYWHERE);
-
-  PRBool istree = PR_FALSE, checkLineHeight = PR_TRUE;
-  PRInt32 extraPixelsY = 0, extraTreeY = 0;
-
-#ifdef MOZ_XUL
-  // Set the position to just underneath the current item for multi-select
-  // lists or just underneath the selected item for single-select lists. If
-  // the element is not a list, or there is no selection, leave the position
-  // as is.
-  nsCOMPtr<nsIDOMXULSelectControlItemElement> item;
-  nsCOMPtr<nsIDOMXULMultiSelectControlElement> multiSelect =
-    do_QueryInterface(aCurrentEl);
-  if (multiSelect) {
-    checkLineHeight = PR_FALSE;
-    
-    PRInt32 currentIndex;
-    multiSelect->GetCurrentIndex(&currentIndex);
-    if (currentIndex >= 0) {
-      nsCOMPtr<nsIDOMXULElement> xulElement(do_QueryInterface(aCurrentEl));
-      if (xulElement) {
-        nsCOMPtr<nsIBoxObject> box;
-        xulElement->GetBoxObject(getter_AddRefs(box));
-        nsCOMPtr<nsITreeBoxObject> treeBox(do_QueryInterface(box));
-        // Tree view special case (tree items have no frames)
-        // Get the focused row and add its coordinates, which are already in pixels
-        // XXX Boris, should we create a new interface so that event listener manager doesn't
-        // need to know about trees? Something like nsINodelessChildCreator which
-        // could provide the current focus coordinates?
-        if (treeBox) {
-          treeBox->EnsureRowIsVisible(currentIndex);
-          PRInt32 firstVisibleRow, rowHeight;
-          treeBox->GetFirstVisibleRow(&firstVisibleRow);
-          treeBox->GetRowHeight(&rowHeight);
-
-          extraPixelsY = (currentIndex - firstVisibleRow + 1) * rowHeight;
-          istree = PR_TRUE;
-
-          nsCOMPtr<nsITreeColumns> cols;
-          treeBox->GetColumns(getter_AddRefs(cols));
-          if (cols) {
-            nsCOMPtr<nsITreeColumn> col;
-            cols->GetFirstColumn(getter_AddRefs(col));
-            if (col) {
-              nsCOMPtr<nsIDOMElement> colElement;
-              col->GetElement(getter_AddRefs(colElement));
-              nsCOMPtr<nsIContent> colContent(do_QueryInterface(colElement));
-              if (colContent) {
-                nsIFrame* frame = aPresShell->GetPrimaryFrameFor(colContent);
-                if (frame) {
-                  extraTreeY = frame->GetSize().height;
-                }
-              }
-            }
-          }
-        }
-        else {
-          multiSelect->GetCurrentItem(getter_AddRefs(item));
-        }
-      }
-    }
-  }
-  else {
-    // don't check menulists as the selected item will be inside a popup.
-    nsCOMPtr<nsIDOMXULMenuListElement> menulist = do_QueryInterface(aCurrentEl);
-    if (!menulist) {
-      checkLineHeight = PR_FALSE;
-      nsCOMPtr<nsIDOMXULSelectControlElement> select =
-        do_QueryInterface(aCurrentEl);
-      if (select)
-        select->GetSelectedItem(getter_AddRefs(item));
-    }
-  }
-
-  if (item)
-    focusedContent = do_QueryInterface(item);
-#endif
-
-  nsIFrame *frame = aPresShell->GetPrimaryFrameFor(focusedContent);
-  if (frame) {
-    nsPoint frameOrigin(0, 0);
-
-    // Get the frame's origin within its view
-    nsIView *view = frame->GetClosestView(&frameOrigin);
-    NS_ASSERTION(view, "No view for frame");
-
-    nsIViewManager* vm = aPresShell->GetViewManager();
-    nsIView *rootView = nsnull;
-    vm->GetRootView(rootView);
-    NS_ASSERTION(rootView, "No root view in pres shell");
-
-    // View's origin within its root view
-    frameOrigin += view->GetOffsetTo(rootView);
-
-    // Start context menu down and to the right from top left of frame
-    // use the lineheight. This is a good distance to move the context
-    // menu away from the top left corner of the frame. If we always 
-    // used the frame height, the context menu could end up far away,
-    // for example when we're focused on linked images.
-    // On the other hand, we want to use the frame height if it's less
-    // than the current line height, so that the context menu appears
-    // associated with the correct frame.
-    nscoord extra = 0;
-    if (!istree) {
-      extra = frame->GetSize().height;
-      if (checkLineHeight) {
-        nsIScrollableView *scrollView =
-          nsLayoutUtils::GetNearestScrollingView(view, nsLayoutUtils::eEither);
-        if (scrollView) {
-          nscoord scrollViewLineHeight;
-          scrollView->GetLineHeight(&scrollViewLineHeight);
-          if (extra > scrollViewLineHeight) {
-            extra = scrollViewLineHeight; 
-          }
-        }
-      }
-    }
-
-    aTargetPt.x = aPresContext->AppUnitsToDevPixels(frameOrigin.x);
-    aTargetPt.y = aPresContext->AppUnitsToDevPixels(
-                    frameOrigin.y + extra + extraTreeY) + extraPixelsY;
-  }
 }
 
 NS_IMETHODIMP
@@ -1748,6 +1382,80 @@ found:
     }
   }
   return PR_FALSE;
+}
+
+PRBool
+nsEventListenerManager::HasListeners()
+{
+  return !mListeners.IsEmpty();
+}
+
+nsresult
+nsEventListenerManager::GetListenerInfo(nsCOMArray<nsIEventListenerInfo>* aList)
+{
+  nsCOMPtr<nsPIDOMEventTarget> target = do_QueryInterface(mTarget);
+  NS_ENSURE_STATE(target);
+  aList->Clear();
+  PRUint32 count = mListeners.Length();
+  for (PRUint32 i = 0; i < count; ++i) {
+    const nsListenerStruct& ls = mListeners.ElementAt(i);
+    PRBool capturing = !!(ls.mFlags & NS_EVENT_FLAG_CAPTURE);
+    PRBool systemGroup = !!(ls.mGroupFlags & NS_EVENT_FLAG_SYSTEM_EVENT);
+    PRBool allowsUntrusted = !!(ls.mFlags & NS_PRIV_EVENT_UNTRUSTED_PERMITTED);
+    // If this is a script handler and we haven't yet
+    // compiled the event handler itself
+    if ((ls.mFlags & NS_PRIV_EVENT_FLAG_SCRIPT) && ls.mHandlerIsString) {
+      nsCOMPtr<nsIJSEventListener> jslistener = do_QueryInterface(ls.mListener);
+      if (jslistener) {
+        CompileEventHandlerInternal(jslistener->GetEventContext(),
+                                    jslistener->GetEventScope(),
+                                    jslistener->GetEventTarget(),
+                                    ls.mTypeAtom,
+                                    const_cast<nsListenerStruct*>(&ls),
+                                    mTarget);
+      }
+    }
+    if (ls.mTypeData) {
+      // Handle special event listener interfaces, like nsIDOMFocusListener.
+      for (PRInt32 j = 0; j < ls.mTypeData->numEvents; ++j) {
+        const EventDispatchData* dispData = &(ls.mTypeData->events[j]);
+        const char* eventName = nsDOMEvent::GetEventName(dispData->message);
+        if (eventName) {
+          NS_ConvertASCIItoUTF16 eventType(eventName);
+          nsRefPtr<nsEventListenerInfo> info =
+            new nsEventListenerInfo(eventType, ls.mListener, capturing,
+                                    allowsUntrusted, systemGroup);
+          NS_ENSURE_TRUE(info, NS_ERROR_OUT_OF_MEMORY);
+          aList->AppendObject(info);
+        }
+      }
+    } else if (ls.mEventType == NS_USER_DEFINED_EVENT) {
+      // Handle user defined event types.
+      if (ls.mTypeAtom) {
+        nsAutoString atomName;
+        ls.mTypeAtom->ToString(atomName);
+        const nsDependentSubstring& eventType =
+          Substring(atomName, 2, atomName.Length() - 2);
+        nsRefPtr<nsEventListenerInfo> info =
+          new nsEventListenerInfo(eventType, ls.mListener, capturing,
+                                  allowsUntrusted, systemGroup);
+        NS_ENSURE_TRUE(info, NS_ERROR_OUT_OF_MEMORY);
+        aList->AppendObject(info);
+      }
+    } else {
+      // Handle normal events.
+      const char* eventName = nsDOMEvent::GetEventName(ls.mEventType);
+      if (eventName) {
+        NS_ConvertASCIItoUTF16 eventType(eventName);
+        nsRefPtr<nsEventListenerInfo> info =
+          new nsEventListenerInfo(eventType, ls.mListener, capturing,
+                                  allowsUntrusted, systemGroup);
+        NS_ENSURE_TRUE(info, NS_ERROR_OUT_OF_MEMORY);
+        aList->AppendObject(info);
+      }
+    }
+  }
+  return NS_OK;
 }
 
 PRBool

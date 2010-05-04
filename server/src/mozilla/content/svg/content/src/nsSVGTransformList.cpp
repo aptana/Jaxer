@@ -49,6 +49,15 @@
 #include "nsContentUtils.h"
 #include "nsIDOMClassInfo.h"
 
+#define NS_ENSURE_NATIVE_TRANSFORM(obj, retval)                    \
+  {                                                                \
+    nsresult rv;                                                   \
+    if (retval)                                                    \
+      *retval = nsnull;                                            \
+    nsCOMPtr<nsISVGValue> transform = do_QueryInterface(obj, &rv); \
+    NS_ENSURE_SUCCESS(rv, NS_ERROR_DOM_SVG_WRONG_TYPE_ERR);        \
+  }
+
 nsresult
 nsSVGTransformList::Create(nsIDOMSVGTransformList** aResult)
 {
@@ -71,12 +80,11 @@ nsSVGTransformList::~nsSVGTransformList()
 void
 nsSVGTransformList::ReleaseTransforms()
 {
-  PRInt32 count = mTransforms.Count();
-  for (PRInt32 i = 0; i < count; ++i) {
+  PRUint32 count = mTransforms.Length();
+  for (PRUint32 i = 0; i < count; ++i) {
     nsIDOMSVGTransform* transform = ElementAt(i);
     nsCOMPtr<nsISVGValue> val = do_QueryInterface(transform);
-    if (val)
-      val->RemoveObserver(this);
+    val->RemoveObserver(this);
     NS_RELEASE(transform);
   }
   mTransforms.Clear();
@@ -85,21 +93,20 @@ nsSVGTransformList::ReleaseTransforms()
 nsIDOMSVGTransform*
 nsSVGTransformList::ElementAt(PRInt32 index)
 {
-  return (nsIDOMSVGTransform*)mTransforms.ElementAt(index);
+  return mTransforms.ElementAt(index);
 }
 
 PRBool
 nsSVGTransformList::AppendElement(nsIDOMSVGTransform* aElement)
 {
-  PRBool rv = mTransforms.AppendElement((void*)aElement);
-  if (rv) {
+  if (mTransforms.AppendElement(aElement)) {
     NS_ADDREF(aElement);
     nsCOMPtr<nsISVGValue> val = do_QueryInterface(aElement);
-    if (val)
-      val->AddObserver(this);
+    val->AddObserver(this);
+    return PR_TRUE;
   }
 
-  return rv;
+  return PR_FALSE;
 }
 
 already_AddRefed<nsIDOMSVGMatrix>
@@ -138,12 +145,6 @@ nsSVGTransformList::GetConsolidationMatrix(nsIDOMSVGTransformList *transforms)
   conmatrix.swap(_retval);
   return _retval;
 }
-
-//----------------------------------------------------------------------
-// XPConnect interface list
-NS_CLASSINFO_MAP_BEGIN(SVGTransformList)
-  NS_CLASSINFO_MAP_ENTRY(nsIDOMSVGTransformList)
-NS_CLASSINFO_MAP_END
 
 //----------------------------------------------------------------------
 // nsISupports methods:
@@ -198,11 +199,11 @@ nsSVGTransformList::GetValueString(nsAString& aValue)
 {
   aValue.Truncate();
 
-  PRInt32 count = mTransforms.Count();
+  PRUint32 count = mTransforms.Length();
 
-  if (count<=0) return NS_OK;
+  if (count == 0) return NS_OK;
 
-  PRInt32 i = 0;
+  PRUint32 i = 0;
   
   while (1) {
     nsIDOMSVGTransform* transform = ElementAt(i);
@@ -227,7 +228,7 @@ nsSVGTransformList::GetValueString(nsAString& aValue)
 /* readonly attribute unsigned long numberOfItems; */
 NS_IMETHODIMP nsSVGTransformList::GetNumberOfItems(PRUint32 *aNumberOfItems)
 {
-  *aNumberOfItems = mTransforms.Count();
+  *aNumberOfItems = mTransforms.Length();
   return NS_OK;
 }
 
@@ -244,18 +245,16 @@ NS_IMETHODIMP nsSVGTransformList::Clear()
 NS_IMETHODIMP nsSVGTransformList::Initialize(nsIDOMSVGTransform *newItem,
                                              nsIDOMSVGTransform **_retval)
 {
-  *_retval = newItem;
-  if (!newItem)
-    return NS_ERROR_DOM_SVG_WRONG_TYPE_ERR;
+  NS_ENSURE_NATIVE_TRANSFORM(newItem, _retval);
 
   nsSVGValueAutoNotifier autonotifier(this);
 
   ReleaseTransforms();
   if (!AppendElement(newItem)) {
-    *_retval = nsnull;
     return NS_ERROR_OUT_OF_MEMORY;
   }
 
+  *_retval = newItem;
   NS_ADDREF(*_retval);
   return NS_OK;
 }
@@ -263,7 +262,7 @@ NS_IMETHODIMP nsSVGTransformList::Initialize(nsIDOMSVGTransform *newItem,
 /* nsIDOMSVGTransform getItem (in unsigned long index); */
 NS_IMETHODIMP nsSVGTransformList::GetItem(PRUint32 index, nsIDOMSVGTransform **_retval)
 {
-  if (index >= static_cast<PRUint32>(mTransforms.Count())) {
+  if (index >= mTransforms.Length()) {
     *_retval = nsnull;
     return NS_ERROR_DOM_INDEX_SIZE_ERR;
   }
@@ -278,24 +277,21 @@ NS_IMETHODIMP nsSVGTransformList::InsertItemBefore(nsIDOMSVGTransform *newItem,
                                                    PRUint32 index,
                                                    nsIDOMSVGTransform **_retval)
 {
-  *_retval = newItem;
-  if (!newItem)
-    return NS_ERROR_DOM_SVG_WRONG_TYPE_ERR;
+  NS_ENSURE_NATIVE_TRANSFORM(newItem, _retval);
 
   nsSVGValueAutoNotifier autonotifier(this);
 
-  PRUint32 count = mTransforms.Count();
+  PRUint32 count = mTransforms.Length();
 
-  if (!mTransforms.InsertElementAt((void*)newItem, (index < count)? index: count)) {
-    *_retval = nsnull;
+  if (!mTransforms.InsertElementAt((index < count)? index: count, newItem)) {
     return NS_ERROR_OUT_OF_MEMORY;
   }
 
   NS_ADDREF(newItem);
   nsCOMPtr<nsISVGValue> val = do_QueryInterface(newItem);
-  if (val)
-    val->AddObserver(this);
+  val->AddObserver(this);
 
+  *_retval = newItem;
   NS_ADDREF(*_retval);
   return NS_OK;
 }
@@ -305,30 +301,22 @@ NS_IMETHODIMP nsSVGTransformList::ReplaceItem(nsIDOMSVGTransform *newItem,
                                               PRUint32 index,
                                               nsIDOMSVGTransform **_retval)
 {
-  if (!newItem)
-    return NS_ERROR_DOM_SVG_WRONG_TYPE_ERR;
-
-  *_retval = nsnull;
+  NS_ENSURE_NATIVE_TRANSFORM(newItem, _retval);
 
   nsSVGValueAutoNotifier autonotifier(this);
 
-  if (index >= PRUint32(mTransforms.Count()))
+  if (index >= mTransforms.Length())
     return NS_ERROR_DOM_INDEX_SIZE_ERR;
 
   nsIDOMSVGTransform* oldItem = ElementAt(index);
 
-  if (!mTransforms.ReplaceElementAt((void*)newItem, index)) {
-    NS_NOTREACHED("removal of element failed");
-    return NS_ERROR_UNEXPECTED;
-  }
+  mTransforms.ElementAt(index) = newItem;
 
   nsCOMPtr<nsISVGValue> val = do_QueryInterface(oldItem);
-  if (val)
-    val->RemoveObserver(this);
+  val->RemoveObserver(this);
   NS_RELEASE(oldItem);
   val = do_QueryInterface(newItem);
-  if (val)
-    val->AddObserver(this);
+  val->AddObserver(this);
   NS_ADDREF(newItem);
 
   *_retval = newItem;
@@ -341,22 +329,17 @@ NS_IMETHODIMP nsSVGTransformList::RemoveItem(PRUint32 index, nsIDOMSVGTransform 
 {
   nsSVGValueAutoNotifier autonotifier(this);
 
-  if (index >= static_cast<PRUint32>(mTransforms.Count())) {
+  if (index >= mTransforms.Length()) {
     *_retval = nsnull;
     return NS_ERROR_DOM_INDEX_SIZE_ERR;
   }
 
   *_retval = ElementAt(index);
 
-  if (!mTransforms.RemoveElementAt(index)) {
-    NS_NOTREACHED("removal of element failed");
-    *_retval = nsnull;
-    return NS_ERROR_UNEXPECTED;
-  }
+  mTransforms.RemoveElementAt(index);
 
   nsCOMPtr<nsISVGValue> val = do_QueryInterface(*_retval);
-  if (val)
-    val->RemoveObserver(this);
+  val->RemoveObserver(this);
 
   // don't NS_ADDREF(*_retval)
   return NS_OK;
@@ -366,17 +349,15 @@ NS_IMETHODIMP nsSVGTransformList::RemoveItem(PRUint32 index, nsIDOMSVGTransform 
 NS_IMETHODIMP nsSVGTransformList::AppendItem(nsIDOMSVGTransform *newItem,
                                              nsIDOMSVGTransform **_retval)
 {
-  *_retval = newItem;
-  if (!newItem)
-    return NS_ERROR_DOM_SVG_WRONG_TYPE_ERR;
+  NS_ENSURE_NATIVE_TRANSFORM(newItem, _retval);
 
   nsSVGValueAutoNotifier autonotifier(this);
 
   if (!AppendElement(newItem)) {
-    *_retval = nsnull;
     return NS_ERROR_OUT_OF_MEMORY;
   }
 
+  *_retval = newItem;
   NS_ADDREF(*_retval);
   return NS_OK;
 }
@@ -386,8 +367,7 @@ NS_IMETHODIMP
 nsSVGTransformList::CreateSVGTransformFromMatrix(nsIDOMSVGMatrix *matrix,
                                                  nsIDOMSVGTransform **_retval)
 {
-  if (!matrix)
-    return NS_ERROR_DOM_SVG_WRONG_TYPE_ERR;
+  NS_ENSURE_NATIVE_MATRIX(matrix, _retval);
 
   nsresult rv = NS_NewSVGTransform(_retval);
   if (NS_FAILED(rv))
@@ -404,7 +384,7 @@ NS_IMETHODIMP nsSVGTransformList::Consolidate(nsIDOMSVGTransform **_retval)
 
   *_retval = nsnull;
 
-  PRInt32 count = mTransforms.Count();
+  PRUint32 count = mTransforms.Length();
   if (count==0) return NS_OK;
   if (count==1) {
     *_retval = ElementAt(0);

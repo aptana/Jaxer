@@ -21,6 +21,7 @@
 #
 # Contributor(s):
 #   Alex Fritze <alex.fritze@crocodile-clips.com>
+#   Chris Double  <chris.double@double.co.nz>
 #
 # Alternatively, the contents of this file may be used under the terms of
 # either of the GNU General Public License Version 2 or later (the "GPL"),
@@ -54,6 +55,7 @@ REQUIRES	= xpcom \
 		  dom \
 		  js \
 		  locale \
+		  view \
 		  pref \
 		  necko \
 		  xpconnect \
@@ -71,13 +73,9 @@ CPPSRCS		= \
 		nsSVGAngle.cpp \
 		nsSVGAnimatedLengthList.cpp \
 		nsSVGAnimatedNumberList.cpp \
-		nsSVGAnimatedRect.cpp \
-		nsSVGAnimatedPreserveAspectRatio.cpp \
-		nsSVGAnimatedString.cpp \
 		nsSVGAnimatedTransformList.cpp \
 		nsSVGBoolean.cpp \
 		nsSVGCircleElement.cpp \
-		nsSVGClassValue.cpp \
 		nsSVGClipPathElement.cpp \
 		nsSVGDataParser.cpp \
 		nsSVGDefsElement.cpp \
@@ -89,6 +87,7 @@ CPPSRCS		= \
 		nsSVGFeatures.cpp \
 		nsSVGFilterElement.cpp \
 		nsSVGFilters.cpp \
+		nsSVGForeignObjectElement.cpp \
 		nsSVGGElement.cpp \
 		nsSVGGradientElement.cpp \
 		nsSVGGraphicElement.cpp \
@@ -118,6 +117,7 @@ CPPSRCS		= \
 		nsSVGPolylineElement.cpp \
 		nsSVGPreserveAspectRatio.cpp \
 		nsSVGScriptElement.cpp \
+		nsSVGString.cpp \
 		nsSVGStringProxyValue.cpp \
 		nsSVGStylableElement.cpp \
 		nsSVGRect.cpp \
@@ -128,6 +128,7 @@ CPPSRCS		= \
 		nsSVGSwitchElement.cpp \
 		nsSVGSymbolElement.cpp \
 		nsSVGTSpanElement.cpp \
+		nsSVGTextContentElement.cpp \
 		nsSVGTextElement.cpp \
 		nsSVGTextPathElement.cpp \
 		nsSVGTitleElement.cpp \
@@ -136,10 +137,17 @@ CPPSRCS		= \
 		nsSVGTransformListParser.cpp \
 		nsSVGUseElement.cpp \
 		nsSVGValue.cpp \
+		nsSVGViewBox.cpp \
 		$(NULL)
 
-ifdef MOZ_SVG_FOREIGNOBJECT
-CPPSRCS += nsSVGForeignObjectElement.cpp
+ifdef MOZ_SMIL
+CPPSRCS += nsSVGAnimateElement.cpp \
+           nsSVGAnimateTransformElement.cpp \
+           nsSVGAnimationElement.cpp \
+           nsSVGSetElement.cpp \
+           nsSVGTransformSMILType.cpp \
+           nsSVGTransformSMILAttr.cpp \
+           $(NULL)
 endif
 
 include $(topsrcdir)/config/config.mk
@@ -148,18 +156,15 @@ include $(topsrcdir)/config/config.mk
 FORCE_STATIC_LIB = 1
 
 EXPORTS =  			\
-	nsIDOMSVGListener.h \
-	nsIDOMSVGZoomListener.h \
-	nsISVGTextContentMetrics.h \
 	nsISVGValue.h              \
 	nsISVGValueObserver.h      \
 	nsISVGValueUtils.h         \
+	nsSVGFeatures.h            \
 	nsSVGNumber.h              \
 	nsSVGRect.h                \
 	nsSVGPoint.h               \
 	nsSVGMatrix.h              \
 	$(NULL)
-
 
 include $(topsrcdir)/config/rules.mk
 
@@ -169,11 +174,19 @@ INCLUDES += 	\
 		-I$(srcdir)/../../../xml/content/src \
 		-I$(srcdir)/../../../../dom \
 		-I$(srcdir)/../../../base/src \
+		-I$(srcdir)/../../../../layout/generic \
+		-I$(srcdir)/../../../../layout/xul/base/src \
 		-I$(srcdir)/../../../../layout/svg/base/src \
 		-I$(srcdir)/../../../../layout/style \
 		-I$(srcdir)/../../../events/src \
 		-I$(srcdir)/../../../html/content/src \
 		-I$(topsrcdir)/content/xbl/src \
 		$(NULL)
+
+ifdef MOZ_SMIL
+INCLUDES += 	\
+		-I$(srcdir)/../../../smil \
+		$(NULL)
+endif
 
 DEFINES += -D_IMPL_NS_LAYOUT

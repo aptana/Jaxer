@@ -54,6 +54,11 @@
 #include "nsWeakReference.h"
 #include "nsICSSStyleRule.h"
 
+#ifdef MOZ_SMIL
+#include "nsISMILAttr.h"
+#include "nsSMILAnimationController.h"
+#endif
+
 class nsSVGSVGElement;
 class nsSVGLength2;
 class nsSVGNumber2;
@@ -62,6 +67,9 @@ class nsSVGAngle;
 class nsSVGBoolean;
 class nsSVGEnum;
 struct nsSVGEnumMapping;
+class nsSVGViewBox;
+class nsSVGPreserveAspectRatio;
+class nsSVGString;
 
 typedef nsStyledElement nsSVGElementBase;
 
@@ -85,6 +93,9 @@ public:
 
   virtual nsresult UnsetAttr(PRInt32 aNameSpaceID, nsIAtom* aAttribute,
                              PRBool aNotify);
+
+  virtual nsChangeHint GetAttributeChangeHint(const nsIAtom* aAttribute,
+                                              PRInt32 aModType) const;
 
   virtual PRBool IsNodeOfType(PRUint32 aFlags) const;
 
@@ -128,26 +139,47 @@ public:
   // nsnull for outer <svg> or SVG without an <svg> parent (invalid SVG).
   nsSVGSVGElement* GetCtx();
 
+  /**
+   * Returns aMatrix post-multiplied by the transform from the userspace
+   * established by this element to the userspace established by its parent.
+   */
+  virtual gfxMatrix PrependLocalTransformTo(const gfxMatrix &aMatrix);
+
   virtual void DidChangeLength(PRUint8 aAttrEnum, PRBool aDoSetAttr);
   virtual void DidChangeNumber(PRUint8 aAttrEnum, PRBool aDoSetAttr);
   virtual void DidChangeInteger(PRUint8 aAttrEnum, PRBool aDoSetAttr);
   virtual void DidChangeAngle(PRUint8 aAttrEnum, PRBool aDoSetAttr);
   virtual void DidChangeBoolean(PRUint8 aAttrEnum, PRBool aDoSetAttr);
   virtual void DidChangeEnum(PRUint8 aAttrEnum, PRBool aDoSetAttr);
+  virtual void DidChangeViewBox(PRBool aDoSetAttr);
+  virtual void DidChangePreserveAspectRatio(PRBool aDoSetAttr);
+  virtual void DidChangeString(PRUint8 aAttrEnum) {}
+
+  void DidAnimateLength(PRUint8 aAttrEnum);
 
   void GetAnimatedLengthValues(float *aFirst, ...);
   void GetAnimatedNumberValues(float *aFirst, ...);
   void GetAnimatedIntegerValues(PRInt32 *aFirst, ...);
 
+#ifdef MOZ_SMIL
+  virtual nsISMILAttr* GetAnimatedAttr(const nsIAtom* aName);
+  void AnimationNeedsResample();
+  void FlushAnimations();
+#endif
+
   virtual void RecompileScriptEventListeners();
 
+  void GetStringBaseValue(PRUint8 aAttrEnum, nsAString& aResult) const;
+  void SetStringBaseValue(PRUint8 aAttrEnum, const nsAString& aValue);
+
 protected:
-  virtual nsresult BeforeSetAttr(PRInt32 aNamespaceID, nsIAtom* aName,
-                                 const nsAString* aValue, PRBool aNotify);
   virtual nsresult AfterSetAttr(PRInt32 aNamespaceID, nsIAtom* aName,
                                 const nsAString* aValue, PRBool aNotify);
   virtual PRBool ParseAttribute(PRInt32 aNamespaceID, nsIAtom* aAttribute,
                                 const nsAString& aValue, nsAttrValue& aResult);
+  static nsresult ReportAttributeParseFailure(nsIDocument* aDocument,
+                                              nsIAtom* aAttribute,
+                                              const nsAString& aValue);
 
   // Hooks for subclasses
   virtual PRBool IsEventName(nsIAtom* aName);
@@ -279,32 +311,50 @@ protected:
     void Reset(PRUint8 aAttrEnum);
   };
 
+  struct StringInfo {
+    nsIAtom**    mName;
+    PRInt32      mNamespaceID;
+  };
+
+  struct StringAttributesInfo {
+    nsSVGString*  mStrings;
+    StringInfo*   mStringInfo;
+    PRUint32      mStringCount;
+
+    StringAttributesInfo(nsSVGString *aStrings,
+                         StringInfo *aStringInfo,
+                         PRUint32 aStringCount) :
+      mStrings(aStrings), mStringInfo(aStringInfo), mStringCount(aStringCount)
+      {}
+
+    void Reset(PRUint8 aAttrEnum);
+  };
+
   virtual LengthAttributesInfo GetLengthInfo();
   virtual NumberAttributesInfo GetNumberInfo();
   virtual IntegerAttributesInfo GetIntegerInfo();
   virtual AngleAttributesInfo GetAngleInfo();
   virtual BooleanAttributesInfo GetBooleanInfo();
   virtual EnumAttributesInfo GetEnumInfo();
+  // We assume all viewboxes and preserveAspectRatios are alike
+  // so we don't need to wrap the class
+  virtual nsSVGViewBox *GetViewBox();
+  virtual nsSVGPreserveAspectRatio *GetPreserveAspectRatio();
+  virtual StringAttributesInfo GetStringInfo();
 
   static nsSVGEnumMapping sSVGUnitTypesMap[];
 
+private:
   /* read <number-optional-number> */
-  PRBool
-  ParseNumberOptionalNumber(nsIAtom* aAttribute, const nsAString& aValue,
-                            PRUint32 aIndex1, PRUint32 aIndex2,
-                            nsAttrValue& aResult);
+  nsresult
+  ParseNumberOptionalNumber(const nsAString& aValue,
+                            PRUint32 aIndex1, PRUint32 aIndex2);
 
   /* read <integer-optional-integer> */
-  PRBool
-  ParseIntegerOptionalInteger(nsIAtom* aAttribute, const nsAString& aValue,
-                              PRUint32 aIndex1, PRUint32 aIndex2,
-                              nsAttrValue& aResult);
+  nsresult
+  ParseIntegerOptionalInteger(const nsAString& aValue,
+                              PRUint32 aIndex1, PRUint32 aIndex2);
 
-  static nsresult ReportAttributeParseFailure(nsIDocument* aDocument,
-                                              nsIAtom* aAttribute,
-                                              const nsAString& aValue);
-
-private:
   void ResetOldStyleBaseType(nsISVGValue *svg_value);
 
   nsCOMPtr<nsICSSStyleRule> mContentStyleRule;
@@ -339,5 +389,15 @@ NS_NewSVG##_elementName##Element(nsIContent **aResult,                       \
                                                                              \
   return rv;                                                                 \
 }
+
+// No unlinking, we'd need to null out the value pointer (the object it
+// points to is held by the element) and null-check it everywhere.
+#define NS_SVG_VAL_IMPL_CYCLE_COLLECTION(_val, _element)                     \
+NS_IMPL_CYCLE_COLLECTION_CLASS(_val)                                         \
+NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN(_val)                                \
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE_NSCOMPTR_AMBIGUOUS(_element, nsIContent) \
+NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END                                        \
+NS_IMPL_CYCLE_COLLECTION_UNLINK_0(_val)
+
 
 #endif // __NS_SVGELEMENT_H__

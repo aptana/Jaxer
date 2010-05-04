@@ -47,12 +47,14 @@
 #include "nsISupports.h"
 #include "nsCOMArray.h"
 #include "nsString.h"
-#include "nsIDOMHTMLCollection.h"
+#include "nsIHTMLCollection.h"
 #include "nsIDOMNodeList.h"
+#include "nsINodeList.h"
 #include "nsStubMutationObserver.h"
 #include "nsIAtom.h"
 #include "nsINameSpaceManager.h"
 #include "nsCycleCollectionParticipant.h"
+#include "nsWrapperCache.h"
 
 // Magic namespace id that means "match all namespaces".  This is
 // negative so it won't collide with actual namespace constants.
@@ -73,22 +75,44 @@ class nsIDocument;
 class nsIDOMHTMLFormElement;
 
 
-class nsBaseContentList : public nsIDOMNodeList
+class nsBaseContentList : public nsINodeList
 {
 public:
-  nsBaseContentList();
   virtual ~nsBaseContentList();
 
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
 
   // nsIDOMNodeList
   NS_DECL_NSIDOMNODELIST
-  NS_DECL_CYCLE_COLLECTION_CLASS(nsBaseContentList)
+
+  // nsINodeList
+  virtual nsIContent* GetNodeAt(PRUint32 aIndex);
+  virtual PRInt32 IndexOf(nsIContent* aContent);
+  
+  PRUint32 Length() const { 
+    return mElements.Count();
+  }
+
+  NS_DECL_CYCLE_COLLECTION_CLASS_AMBIGUOUS(nsBaseContentList, nsINodeList)
 
   void AppendElement(nsIContent *aContent);
-  void RemoveElement(nsIContent *aContent);
+
+  /**
+   * Insert the element at a given index, shifting the objects at
+   * the given index and later to make space.
+   * @param aContent Element to insert, must not be null
+   * @param aIndex Index to insert the element at.
+   */
+  void InsertElementAt(nsIContent* aContent, PRInt32 aIndex);
+
+  void RemoveElement(nsIContent *aContent); 
+
+  void Reset() {
+    mElements.Clear();
+  }
+
+
   virtual PRInt32 IndexOf(nsIContent *aContent, PRBool aDoFlush);
-  void Reset();
 
   static void Shutdown();
 
@@ -172,13 +196,14 @@ protected:
 #define LIST_LAZY 2
 
 /**
- * Class that implements a live NodeList that matches nodes in the
- * tree based on some criterion
+ * Class that implements a live NodeList that matches Elements in the
+ * tree based on some criterion.
  */
 class nsContentList : public nsBaseContentList,
                       protected nsContentListKey,
-                      public nsIDOMHTMLCollection,
-                      public nsStubMutationObserver
+                      public nsIHTMLCollection,
+                      public nsStubMutationObserver,
+                      public nsWrapperCache
 {
 public:
   NS_DECL_ISUPPORTS_INHERITED
@@ -206,7 +231,11 @@ public:
 
   /**
    * @param aRootNode The node under which to limit our search.
-   * @param aFunc the function to be called to determine whether we match
+   * @param aFunc the function to be called to determine whether we match.
+   *              This function MUST NOT ever cause mutation of the DOM.
+   *              The nsContentList implementation guarantees that everything
+   *              passed to the function will be
+   *              IsNodeOfType(nsINode::eELEMENT).
    * @param aDestroyFunc the function that will be called to destroy aData
    * @param aData closure data that will need to be passed back to aFunc
    * @param aDeep If false, then look only at children of the root, nothing
@@ -232,6 +261,12 @@ public:
 
   // nsBaseContentList overrides
   virtual PRInt32 IndexOf(nsIContent *aContent, PRBool aDoFlush);
+  virtual nsIContent* GetNodeAt(PRUint32 aIndex);
+  virtual PRInt32 IndexOf(nsIContent* aContent);
+
+  // nsIHTMLCollection
+  virtual nsISupports* GetNodeAt(PRUint32 aIndex, nsresult* aResult);
+  virtual nsISupports* GetNamedItem(const nsAString& aName, nsresult* aResult);
 
   // nsContentList public methods
   NS_HIDDEN_(nsISupports*) GetParentObject();
@@ -252,6 +287,22 @@ public:
   NS_DECL_NSIMUTATIONOBSERVER_NODEWILLBEDESTROYED
   
   static void OnDocumentDestroy(nsIDocument *aDocument);
+
+  static nsContentList* FromSupports(nsISupports* aSupports)
+  {
+    nsINodeList* list = static_cast<nsINodeList*>(aSupports);
+#ifdef DEBUG
+    {
+      nsCOMPtr<nsINodeList> list_qi = do_QueryInterface(aSupports);
+
+      // If this assertion fires the QI implementation for the object in
+      // question doesn't use the nsINodeList pointer as the nsISupports
+      // pointer. That must be fixed, or we'll crash...
+      NS_ASSERTION(list_qi == list, "Uh, fix QI!");
+    }
+#endif
+    return static_cast<nsContentList*>(list);
+  }
 
 protected:
   /**
@@ -278,12 +329,14 @@ protected:
    *
    * @param aContent the root of the subtree we want to traverse. This node
    *                 is always included in the traversal and is thus the
-   *                 first node tested.
+   *                 first node tested.  This must be
+   *                 IsNodeOfType(nsINode::eELEMENT).
    * @param aElementsToAppend how many elements to append to the list
    *        before stopping
    */
+  void NS_FASTCALL PopulateWith(nsIContent *aContent,
+                                PRUint32 & aElementsToAppend);
 
-  void PopulateWith(nsIContent *aContent, PRUint32 & aElementsToAppend);
   /**
    * Populate our list starting at the child of aStartRoot that comes
    * after aStartChild (if such exists) and continuing in document

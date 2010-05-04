@@ -64,7 +64,7 @@ class nsMappedAttributeElement;
     ((1 << ATTRCHILD_ARRAY_ATTR_SLOTS_BITS) - 1)
 
 #define ATTRCHILD_ARRAY_MAX_CHILD_COUNT \
-    (~PtrBits(0) >> ATTRCHILD_ARRAY_ATTR_SLOTS_BITS)
+    (~PRUint32(0) >> ATTRCHILD_ARRAY_ATTR_SLOTS_BITS)
 
 #define ATTRCHILD_ARRAY_ATTR_SLOTS_COUNT_MASK \
     ((1 << ATTRCHILD_ARRAY_ATTR_SLOTS_BITS) - 1)
@@ -88,6 +88,7 @@ public:
     return reinterpret_cast<nsIContent*>(mImpl->mBuffer[AttrSlotsSize() + aPos]);
   }
   nsIContent* GetSafeChildAt(PRUint32 aPos) const;
+  nsIContent * const * GetChildArray(PRUint32* aChildCount) const;
   nsresult AppendChild(nsIContent* aChild)
   {
     return InsertChildAt(aChild, ChildCount());

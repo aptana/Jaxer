@@ -40,12 +40,15 @@
 
 #include "nsSVGEnum.h"
 #include "nsSVGLength2.h"
+#include "nsSVGString.h"
+#include "nsSVGTextContentElement.h"
 
 typedef nsSVGStylableElement nsSVGTextPathElementBase;
 
 class nsSVGTextPathElement : public nsSVGTextPathElementBase,
                              public nsIDOMSVGTextPathElement,
-                             public nsIDOMSVGURIReference
+                             public nsIDOMSVGURIReference,
+                             public nsSVGTextContentElement // = nsIDOMSVGTextContentElement
 {
 friend class nsSVGTextPathFrame;
 
@@ -53,14 +56,12 @@ protected:
   friend nsresult NS_NewSVGTextPathElement(nsIContent **aResult,
                                         nsINodeInfo *aNodeInfo);
   nsSVGTextPathElement(nsINodeInfo* aNodeInfo);
-  nsresult Init();
   
 public:
   // interfaces:
   
   NS_DECL_ISUPPORTS_INHERITED
   NS_DECL_NSIDOMSVGTEXTPATHELEMENT
-  NS_DECL_NSIDOMSVGTEXTCONTENTELEMENT
   NS_DECL_NSIDOMSVGURIREFERENCE
 
   // xxx If xpcom allowed virtual inheritance we wouldn't need to
@@ -68,6 +69,7 @@ public:
   NS_FORWARD_NSIDOMNODE(nsSVGTextPathElementBase::)
   NS_FORWARD_NSIDOMELEMENT(nsSVGTextPathElementBase::)
   NS_FORWARD_NSIDOMSVGELEMENT(nsSVGTextPathElementBase::)
+  NS_FORWARD_NSIDOMSVGTEXTCONTENTELEMENT(nsSVGTextContentElement::)
 
   // nsIContent interface
   NS_IMETHOD_(PRBool) IsAttributeMapped(const nsIAtom* aAttribute) const;
@@ -76,12 +78,15 @@ public:
 
 protected:
 
+  virtual nsSVGTextContainerFrame* GetTextContainerFrame() {
+    return do_QueryFrame(GetPrimaryFrame(Flush_Layout));
+  }
+
   virtual LengthAttributesInfo GetLengthInfo();
   virtual EnumAttributesInfo GetEnumInfo();
+  virtual StringAttributesInfo GetStringInfo();
 
   virtual PRBool IsEventName(nsIAtom* aName);
-
-  already_AddRefed<nsISVGTextContentMetrics> GetTextContentMetrics();
 
   enum { STARTOFFSET };
   nsSVGLength2 mLengthAttributes[1];
@@ -93,7 +98,9 @@ protected:
   static nsSVGEnumMapping sSpacingMap[];
   static EnumInfo sEnumInfo[2];
 
-  nsCOMPtr<nsIDOMSVGAnimatedString> mHref;
+  enum { HREF };
+  nsSVGString mStringAttributes[1];
+  static StringInfo sStringInfo[1];
 };
 
 #endif

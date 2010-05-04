@@ -63,20 +63,49 @@ REQUIRES	= \
 		xpconnect \
 		caps \
 		imglib2 \
-		cairo \
 		thebes \
+		view \
+		qcms \
 		$(NULL)
 
-# XXX some platforms can't handle building
-# an empty .a/lib.  Remove this dummy.cpp
-# whenever w have a rendering context
-# that doesn't depend on any non-default
-# libraries.
-CPPSRCS		= dummy.cpp \
-		$(NULL)
 
-ifdef MOZ_ENABLE_CANVAS
-CPPSRCS		+= nsCanvasRenderingContext2D.cpp
+CPPSRCS	= \
+	CanvasUtils.cpp \
+	nsCanvasRenderingContext2D.cpp \
+	$(NULL)
+
+# Canvas 3D Pieces
+
+ifdef MOZ_ENABLE_CANVAS3D
+
+CPPSRCS += \
+	nsCanvasRenderingContextGL.cpp \
+	nsCanvasRenderingContextGLWeb20.cpp \
+	glwrap.cpp \
+	nsGLPbuffer.cpp \
+	nsGLPbufferOSMesa.cpp \
+	$(NULL)
+
+ifdef MOZ_X11
+ifdef MOZ_PLATFORM_MAEMO
+  WEBGL_PLATFORM = EGL
+  DEFINES += -DUSE_GLES2
+else
+  WEBGL_PLATFORM = GLX
+  EXTRA_DSO_LIBS += X11
+endif
+endif
+
+ifeq ($(MOZ_WIDGET_TOOLKIT),windows)
+CPPSRCS += nsGLPbufferWGL.cpp
+DEFINES += -DUSE_WGL
+endif
+
+ifneq (,$(filter $(MOZ_WIDGET_TOOLKIT),mac cocoa))
+CPPSRCS += nsGLPbufferCGL.cpp
+DEFINES += -DUSE_CGL
+endif
+
 endif
 
 # we don't want the shared lib, but we want to force the creation of a static lib.
@@ -85,5 +114,13 @@ FORCE_STATIC_LIB = 1
 include $(topsrcdir)/config/rules.mk
 
 CXXFLAGS	+= $(MOZ_CAIRO_CFLAGS) $(TK_CFLAGS)
+
+INCLUDES	+= \
+		-I$(srcdir)/../../../layout/xul/base/src \
+		-I$(srcdir)/../../../layout/style \
+		-I$(srcdir)/../../../layout/generic \
+		-I$(srcdir)/../../base/src \
+		-I$(srcdir)/../../html/content/src \
+		$(NULL)
 
 DEFINES += -D_IMPL_NS_LAYOUT

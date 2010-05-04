@@ -59,6 +59,7 @@ nsIMutationObserver.h \
 nsINameSpaceManager.h \
 nsINode.h \
 nsINodeInfo.h \
+nsINodeList.h \
 nsIRange.h \
 nsIRangeUtils.h \
 nsIScriptElement.h \
@@ -72,10 +73,11 @@ nsCaseTreatment.h \
 nsContentCID.h \
 nsCopySupport.h \
 nsContentCreatorFunctions.h \
-nsLineBreaker.h \
-nsXMLNameSpaceMap.h \
-nsPresShellIterator.h \
 nsDOMFile.h \
+nsLineBreaker.h \
+nsPresShellIterator.h \
+nsReferencedElement.h \
+nsXMLNameSpaceMap.h \
 $(NULL)
 
 ifndef DISABLE_XFORMS_HOOKS
@@ -91,8 +93,11 @@ XPIDLSRCS	= \
 		nsIContentPolicy.idl        \
 		nsIDocumentEncoder.idl      \
 		nsIDOMFile.idl \
+		nsIDOMFileReader.idl \
+		nsIDOMFileInternal.idl \
 		nsIDOMFileList.idl \
 		nsIDOMFileException.idl \
+		nsIDOMFileError.idl \
 		nsIDOMParser.idl \
 		nsIDOMSerializer.idl \
 		nsISelection2.idl \

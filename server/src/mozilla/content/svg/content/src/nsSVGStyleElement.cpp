@@ -99,8 +99,8 @@ protected:
   }
 
   // nsStyleLinkElement overrides
-  void GetStyleSheetURL(PRBool* aIsInline,
-                        nsIURI** aURI);
+  already_AddRefed<nsIURI> GetStyleSheetURL(PRBool* aIsInline);
+
   void GetStyleSheetInfo(nsAString& aTitle,
                          nsAString& aType,
                          nsAString& aMedia,
@@ -123,14 +123,11 @@ NS_IMPL_NS_NEW_SVG_ELEMENT(Style)
 NS_IMPL_ADDREF_INHERITED(nsSVGStyleElement,nsSVGStyleElementBase)
 NS_IMPL_RELEASE_INHERITED(nsSVGStyleElement,nsSVGStyleElementBase)
 
-NS_INTERFACE_MAP_BEGIN(nsSVGStyleElement)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMNode)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMElement)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMSVGElement)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMSVGStyleElement)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMLinkStyle)
-  NS_INTERFACE_MAP_ENTRY(nsIStyleSheetLinkingElement)
-  NS_INTERFACE_MAP_ENTRY(nsIMutationObserver)
+NS_INTERFACE_TABLE_HEAD(nsSVGStyleElement)
+  NS_NODE_INTERFACE_TABLE7(nsSVGStyleElement, nsIDOMNode, nsIDOMElement,
+                           nsIDOMSVGElement, nsIDOMSVGStyleElement,
+                           nsIDOMLinkStyle, nsIStyleSheetLinkingElement,
+                           nsIMutationObserver)
   NS_INTERFACE_MAP_ENTRY_CONTENT_CLASSINFO(SVGStyleElement)
 NS_INTERFACE_MAP_END_INHERITING(nsSVGStyleElementBase)
 
@@ -164,7 +161,9 @@ nsSVGStyleElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
                                                   aCompileEventHandlers);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  UpdateStyleSheetInternal(nsnull);
+  nsContentUtils::AddScriptRunner(
+    new nsRunnableMethod<nsSVGStyleElement>(this,
+                                            &nsSVGStyleElement::UpdateStyleSheetInternal));
 
   return rv;  
 }
@@ -312,14 +311,11 @@ NS_IMETHODIMP nsSVGStyleElement::SetTitle(const nsAString & aTitle)
 //----------------------------------------------------------------------
 // nsStyleLinkElement methods
 
-void
-nsSVGStyleElement::GetStyleSheetURL(PRBool* aIsInline,
-                                    nsIURI** aURI)
+already_AddRefed<nsIURI>
+nsSVGStyleElement::GetStyleSheetURL(PRBool* aIsInline)
 {
-  *aURI = nsnull;
   *aIsInline = PR_TRUE;
-
-  return;
+  return nsnull;
 }
 
 void

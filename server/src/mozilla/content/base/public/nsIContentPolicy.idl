@@ -51,7 +51,7 @@ interface nsIDOMNode;
  * by launching a dialog to prompt the user for something).
  */
 
-[scriptable,uuid(58cf9dca-40b3-6211-a508-7351f437a53e)]
+[scriptable,uuid(344f9cb0-9a17-44c5-ab96-ee707884266c)]
 interface nsIContentPolicy : nsISupports
 {
   const unsigned long TYPE_OTHER       = 1;
@@ -112,7 +112,7 @@ interface nsIContentPolicy : nsISupports
   const unsigned long TYPE_PING        = 10;
 
   /**
-   * Indicates an XMLHttpRequest.
+   * Indicates an XMLHttpRequest. Also used for document.load.
    */
   const unsigned long TYPE_XMLHTTPREQUEST = 11;
 
@@ -125,6 +125,16 @@ interface nsIContentPolicy : nsISupports
    * Indicates a DTD loaded by an XML document.
    */
   const unsigned long TYPE_DTD = 13;
+
+  /**
+   * Indicates a font loaded via @font-face rule.
+   */
+  const unsigned long TYPE_FONT = 14;
+
+  /**
+   * Indicates a video or audio load.
+   */
+  const unsigned long TYPE_MEDIA = 15;  
 
   //////////////////////////////////////////////////////////////////////
 

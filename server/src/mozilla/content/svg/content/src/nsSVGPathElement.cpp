@@ -60,12 +60,10 @@ NS_IMPL_NS_NEW_SVG_ELEMENT(Path)
 NS_IMPL_ADDREF_INHERITED(nsSVGPathElement,nsSVGPathElementBase)
 NS_IMPL_RELEASE_INHERITED(nsSVGPathElement,nsSVGPathElementBase)
 
-NS_INTERFACE_MAP_BEGIN(nsSVGPathElement)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMNode)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMElement)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMSVGElement)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMSVGPathElement)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMSVGAnimatedPathData)
+NS_INTERFACE_TABLE_HEAD(nsSVGPathElement)
+  NS_NODE_INTERFACE_TABLE5(nsSVGPathElement, nsIDOMNode, nsIDOMElement,
+                           nsIDOMSVGElement, nsIDOMSVGPathElement,
+                           nsIDOMSVGAnimatedPathData)
   NS_INTERFACE_MAP_ENTRY_CONTENT_CLASSINFO(SVGPathElement)
 NS_INTERFACE_MAP_END_INHERITING(nsSVGPathElementBase)
 
@@ -104,7 +102,7 @@ nsSVGPathElement::GetTotalLength(float *_retval)
 {
   *_retval = 0;
 
-  nsRefPtr<gfxFlattenedPath> flat = GetFlattenedPath(nsnull);
+  nsRefPtr<gfxFlattenedPath> flat = GetFlattenedPath(gfxMatrix());
 
   if (!flat)
     return NS_ERROR_FAILURE;
@@ -120,7 +118,7 @@ nsSVGPathElement::GetPointAtLength(float distance, nsIDOMSVGPoint **_retval)
 {
   NS_ENSURE_FINITE(distance, NS_ERROR_ILLEGAL_VALUE);
 
-  nsRefPtr<gfxFlattenedPath> flat = GetFlattenedPath(nsnull);
+  nsRefPtr<gfxFlattenedPath> flat = GetFlattenedPath(gfxMatrix());
   if (!flat)
     return NS_ERROR_FAILURE;
 
@@ -496,16 +494,12 @@ nsSVGPathElement::DidModifySVGObservable(nsISVGValue* observable,
 }
 
 already_AddRefed<gfxFlattenedPath>
-nsSVGPathElement::GetFlattenedPath(nsIDOMSVGMatrix *aMatrix)
+nsSVGPathElement::GetFlattenedPath(const gfxMatrix &aMatrix)
 {
   gfxContext ctx(nsSVGUtils::GetThebesComputationalSurface());
 
-  if (aMatrix) {
-    ctx.SetMatrix(nsSVGUtils::ConvertSVGMatrixToThebes(aMatrix));
-  }
-
+  ctx.SetMatrix(aMatrix);
   mPathData.Playback(&ctx);
-
   ctx.IdentityMatrix();
 
   return ctx.GetFlattenedPath();
@@ -515,7 +509,7 @@ nsSVGPathElement::GetFlattenedPath(nsIDOMSVGMatrix *aMatrix)
 // nsSVGPathGeometryElement methods
 
 PRBool
-nsSVGPathElement::IsDependentAttribute(nsIAtom *aName)
+nsSVGPathElement::AttributeDefinesGeometry(const nsIAtom *aName)
 {
   if (aName == nsGkAtoms::d)
     return PR_TRUE;

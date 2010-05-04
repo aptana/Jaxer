@@ -43,6 +43,7 @@
 #include "nsIXMLContentSink.h"
 #include "nsILoadSaveContentSink.h"
 #include "nsCOMPtr.h"
+#include "nsIDTD.h"
 
 /**
  * This class implements the core of the DOMBuilder for DOM3
@@ -69,8 +70,8 @@ public:
   NS_DECL_NSIEXPATSINK
 
   // nsILoadSaveContentSink
-  NS_IMETHOD WillBuildModel(void);
-  NS_IMETHOD DidBuildModel(void);
+  NS_IMETHOD WillBuildModel(nsDTDMode aDTDMode);
+  NS_IMETHOD DidBuildModel(PRBool aTerminated);
   NS_IMETHOD WillInterrupt(void);
   NS_IMETHOD WillResume(void);
   NS_IMETHOD SetParser(nsIParser* aParser);  

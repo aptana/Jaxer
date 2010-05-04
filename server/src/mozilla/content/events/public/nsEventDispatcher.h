@@ -39,15 +39,17 @@
 #ifndef nsEventDispatcher_h___
 #define nsEventDispatcher_h___
 
-#include "nsGUIEvent.h"
+#include "nsCOMPtr.h"
+#include "nsEvent.h"
 
 class nsIContent;
 class nsIDocument;
 class nsPresContext;
+class nsIDOMEvent;
 class nsPIDOMEventTarget;
 class nsIScriptGlobalObject;
 class nsEventTargetChainItem;
-
+template<class E> class nsCOMArray;
 
 /**
  * About event dispatching:
@@ -129,16 +131,20 @@ public:
   nsEventChainPreVisitor(nsPresContext* aPresContext,
                          nsEvent* aEvent,
                          nsIDOMEvent* aDOMEvent,
-                         nsEventStatus aEventStatus = nsEventStatus_eIgnore)
+                         nsEventStatus aEventStatus,
+                         PRBool aIsInAnon)
   : nsEventChainVisitor(aPresContext, aEvent, aDOMEvent, aEventStatus),
     mCanHandle(PR_TRUE), mForceContentDispatch(PR_FALSE),
-    mRelatedTargetIsInAnon(PR_FALSE) {}
+    mRelatedTargetIsInAnon(PR_FALSE), mOriginalTargetIsInAnon(aIsInAnon),
+    mWantsWillHandleEvent(PR_FALSE), mParentTarget(nsnull),
+    mEventTargetAtParent(nsnull) {}
 
   void Reset() {
     mItemFlags = 0;
     mItemData = nsnull;
     mCanHandle = PR_TRUE;
     mForceContentDispatch = PR_FALSE;
+    mWantsWillHandleEvent = PR_FALSE;
     mParentTarget = nsnull;
     mEventTargetAtParent = nsnull;
   }
@@ -165,15 +171,27 @@ public:
   PRPackedBool          mRelatedTargetIsInAnon;
 
   /**
+   * PR_TRUE if the original target of the event is inside anonymous content.
+   * This is set before calling PreHandleEvent on event targets.
+   */
+  PRPackedBool          mOriginalTargetIsInAnon;
+
+  /**
+   * Whether or not nsPIDOMEventTarget::WillHandleEvent will be
+   * called. Default is PR_FALSE;
+   */
+  PRPackedBool          mWantsWillHandleEvent;
+
+  /**
    * Parent item in the event target chain.
    */
-  nsCOMPtr<nsISupports> mParentTarget;
+  nsPIDOMEventTarget*   mParentTarget;
 
   /**
    * If the event needs to be retargeted, this is the event target,
    * which should be used when the event is handled at mParentTarget.
    */
-  nsCOMPtr<nsISupports> mEventTargetAtParent;
+  nsPIDOMEventTarget*   mEventTargetAtParent;
 };
 
 class nsEventChainPostVisitor : public nsEventChainVisitor {
@@ -190,7 +208,7 @@ public:
  * before handling the system event group.
  * This is used in nsPresShell.
  */
-class nsDispatchingCallback {
+class NS_STACK_CLASS nsDispatchingCallback {
 public:
   virtual void HandleEvent(nsEventChainPostVisitor& aVisitor) = 0;
 };
@@ -212,6 +230,10 @@ public:
    * In other words, aEvent->target is only a property of the event and it has
    * nothing to do with the construction of the event target chain.
    * Neither aTarget nor aEvent is allowed to be nsnull.
+   *
+   * If aTargets is non-null, event target chain will be created, but
+   * event won't be handled. In this case aEvent->message should be
+   * NS_EVENT_TYPE_NULL.
    * @note Use this method when dispatching an nsEvent.
    */
   static nsresult Dispatch(nsISupports* aTarget,
@@ -219,7 +241,8 @@ public:
                            nsEvent* aEvent,
                            nsIDOMEvent* aDOMEvent = nsnull,
                            nsEventStatus* aEventStatus = nsnull,
-                           nsDispatchingCallback* aCallback = nsnull);
+                           nsDispatchingCallback* aCallback = nsnull,
+                           nsCOMArray<nsPIDOMEventTarget>* aTargets = nsnull);
 
   /**
    * Dispatches an event.

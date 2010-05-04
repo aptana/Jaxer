@@ -21,6 +21,7 @@
  *
  * Contributor(s):
  *   Peter Van der Beken <peterv@propagandism.org>
+ *   Merle Sterling <msterlin@us.ibm.com>
  *
  *
  * Alternatively, the contents of this file may be used under the terms of
@@ -49,6 +50,9 @@
 #include "txNodeSetAdaptor.h"
 #include "txXPathTreeWalker.h"
 #include "xptcall.h"
+#include "txXPathObjectAdaptor.h"
+
+NS_IMPL_ISUPPORTS1(txXPathObjectAdaptor, txIXPathObject)
 
 class txFunctionEvaluationContext : public txIFunctionEvaluationContext
 {
@@ -119,6 +123,7 @@ enum txArgumentType {
     eSTRING = nsXPTType::T_DOMSTRING,
     eNODESET,
     eCONTEXT,
+    eOBJECT,
     eUNKNOWN
 };
 
@@ -307,6 +312,9 @@ txXPCOMExtensionFunctionCall::GetParamType(const nsXPTParamInfo &aParam,
             if (iid.Equals(NS_GET_IID(txIFunctionEvaluationContext))) {
                 return eCONTEXT;
             }
+            if (iid.Equals(NS_GET_IID(txIXPathObject))) {
+                return eOBJECT;
+            }
         }
         default:
         {
@@ -471,7 +479,11 @@ txXPCOMExtensionFunctionCall::evaluate(txIEvalContext* aContext,
             }
             case eNUMBER:
             {
-                invokeParam.val.d = evaluateToNumber(expr, aContext);
+                double dbl;
+                rv = evaluateToNumber(mParams[0], aContext, &dbl);
+                NS_ENSURE_SUCCESS(rv, rv);
+
+                invokeParam.val.d = dbl;
                 break;
             }
             case eSTRING:
@@ -487,6 +499,22 @@ txXPCOMExtensionFunctionCall::evaluate(txIEvalContext* aContext,
                 invokeParam.SetValIsDOMString();
                 invokeParam.val.p = value;
                 break;
+            }
+            case eOBJECT:
+            {
+              nsRefPtr<txAExprResult> exprRes;
+              rv = expr->evaluate(aContext, getter_AddRefs(exprRes));
+              NS_ENSURE_SUCCESS(rv, rv);
+
+              nsCOMPtr<txIXPathObject> adaptor =
+                new txXPathObjectAdaptor(exprRes);
+              if (!adaptor) {
+                  return NS_ERROR_OUT_OF_MEMORY;
+              }
+
+              invokeParam.SetValIsInterface();
+              adaptor.swap((txIXPathObject*&)invokeParam.val.p);
+              break;
             }
             case eCONTEXT:
             case eUNKNOWN:
@@ -532,10 +560,11 @@ txXPCOMExtensionFunctionCall::evaluate(txIEvalContext* aContext,
     switch (returnType) {
         case eNODESET:
         {
-            txINodeSet *nodeSet = static_cast<txINodeSet*>
-                                             (returnParam.val.p);
+            txINodeSet* nodeSet = static_cast<txINodeSet*>(returnParam.val.p);
+            nsCOMPtr<txIXPathObject> object = do_QueryInterface(nodeSet, &rv);
+            NS_ENSURE_SUCCESS(rv, rv);
 
-            NS_ADDREF(*aResult = nodeSet->GetTxNodeSet());
+            NS_ADDREF(*aResult = object->GetResult());
 
             return NS_OK;
         }
@@ -555,6 +584,15 @@ txXPCOMExtensionFunctionCall::evaluate(txIEvalContext* aContext,
             nsString *returned = static_cast<nsString*>
                                             (returnParam.val.p);
             return aContext->recycler()->getStringResult(*returned, aResult);
+        }
+        case eOBJECT:
+        {
+            txIXPathObject *object =
+                 static_cast<txIXPathObject*>(returnParam.val.p);
+
+            NS_ADDREF(*aResult = object->GetResult());
+
+            return NS_OK;
         }
         default:
         {

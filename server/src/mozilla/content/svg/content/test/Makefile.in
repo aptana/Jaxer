@@ -45,10 +45,26 @@ include $(DEPTH)/config/autoconf.mk
 include $(topsrcdir)/config/rules.mk
 
 _TEST_FILES = \
+		test_bbox.xhtml \
+		bbox-helper.svg \
+		bounds-helper.svg \
+		test_dataTypes.html \
+		dataTypes-helper.svg \
+		getCTM-helper.svg \
+		test_getCTM.html \
 		test_getSubStringLength.xhtml \
 		getSubStringLength-helper.svg \
+		test_pathSeg.xhtml \
+		test_pointer-events.xhtml \
+		test_scientific.html \
+		scientific-helper.svg \
+		test_switch.xhtml \
+		switch-helper.svg \
 		test_text.html \
 		text-helper.svg \
+		test_valueLeaks.xhtml \
+		viewport-helper.svg \
+		test_viewport.html \
 		$(NULL)
 
 libs:: $(_TEST_FILES)

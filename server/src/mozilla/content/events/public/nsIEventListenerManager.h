@@ -47,19 +47,26 @@ class nsIScriptContext;
 class nsIDOMEventTarget;
 class nsIDOMEventGroup;
 class nsIAtom;
+class nsPIDOMEventTarget;
+class nsIEventListenerInfo;
+template<class E> class nsCOMArray;
 
 /*
  * Event listener manager interface.
  */
 #define NS_IEVENTLISTENERMANAGER_IID \
-{ 0x6ee5eeeb, 0x1bf3, 0x4865, \
-  { 0xa9, 0x52, 0x3b, 0x3e, 0x97, 0x9b, 0x4a, 0xb3 } }
-
+{ 0xac49ce4e, 0xaecf, 0x45db, \
+  { 0xa1, 0xe0, 0xea, 0x1d, 0x38, 0x73, 0x39, 0xa3 } }
 
 class nsIEventListenerManager : public nsISupports {
 
 public:
   NS_DECLARE_STATIC_IID_ACCESSOR(NS_IEVENTLISTENERMANAGER_IID)
+
+  nsIEventListenerManager() : mMayHavePaintEventListener(PR_FALSE),
+    mMayHaveMutationListeners(PR_FALSE),
+    mNoListenerForEvent(0)
+  {}
 
   /**
   * Sets events listeners of all types.
@@ -138,7 +145,7 @@ public:
   NS_IMETHOD HandleEvent(nsPresContext* aPresContext,
                          nsEvent* aEvent,
                          nsIDOMEvent** aDOMEvent,
-                         nsISupports* aCurrentTarget,
+                         nsPIDOMEventTarget* aCurrentTarget,
                          PRUint32 aFlags,
                          nsEventStatus* aEventStatus) = 0;
 
@@ -185,9 +192,35 @@ public:
   virtual PRUint32 MutationListenerBits() = 0;
 
   /**
+   * Sets aList to the list of nsIEventListenerInfo objects representing the
+   * listeners managed by this listener manager.
+   */
+  virtual nsresult GetListenerInfo(nsCOMArray<nsIEventListenerInfo>* aList) = 0;
+
+  /**
    * Returns PR_TRUE if there is at least one event listener for aEventName.
    */
   virtual PRBool HasListenersFor(const nsAString& aEventName) = 0;
+
+  /**
+   * Returns PR_TRUE if there is at least one event listener.
+   */
+  virtual PRBool HasListeners() = 0;
+
+
+  /**
+   * Returns PR_TRUE if there may be a paint event listener registered,
+   * PR_FALSE if there definitely isn't.
+   */
+  PRBool MayHavePaintEventListener() { return mMayHavePaintEventListener; }
+
+protected:
+  PRUint32 mMayHavePaintEventListener : 1;
+  PRUint32 mMayHaveMutationListeners : 1;
+  // These two member variables are used to cache the information
+  // about the last event which was handled but for which event listener manager
+  // didn't have event listeners.
+  PRUint32 mNoListenerForEvent : 30;
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsIEventListenerManager,

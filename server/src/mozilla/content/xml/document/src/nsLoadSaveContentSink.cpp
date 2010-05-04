@@ -93,15 +93,15 @@ NS_INTERFACE_MAP_END
 
 // nsIContentSink
 NS_IMETHODIMP
-nsLoadSaveContentSink::WillBuildModel(void)
+nsLoadSaveContentSink::WillBuildModel(nsDTDMode aDTDMode)
 {
-  return mBaseSink->WillBuildModel();
+  return mBaseSink->WillBuildModel(aDTDMode);
 }
 
 NS_IMETHODIMP
-nsLoadSaveContentSink::DidBuildModel(void)
+nsLoadSaveContentSink::DidBuildModel(PRBool aTerminated)
 {
-  return mBaseSink->DidBuildModel();
+  return mBaseSink->DidBuildModel(aTerminated);
 }
 
 NS_IMETHODIMP

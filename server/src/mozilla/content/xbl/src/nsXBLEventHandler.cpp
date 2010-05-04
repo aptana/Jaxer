@@ -103,7 +103,7 @@ PRBool
 nsXBLMouseEventHandler::EventMatched(nsIDOMEvent* aEvent)
 {
   nsCOMPtr<nsIDOMMouseEvent> mouse(do_QueryInterface(aEvent));
-  return mProtoHandler->MouseEventMatched(mouse);
+  return mouse && mProtoHandler->MouseEventMatched(mouse);
 }
 
 nsXBLKeyEventHandler::nsXBLKeyEventHandler(nsIAtom* aEventType, PRUint8 aPhase,
@@ -136,9 +136,8 @@ nsXBLKeyEventHandler::ExecuteMatchedHandlers(nsIDOMKeyEvent* aKeyEvent,
   nsCOMPtr<nsPIDOMEventTarget> piTarget = do_QueryInterface(target);
 
   PRBool executed = PR_FALSE;
-  for (PRUint32 i = 0; i < mProtoHandlers.Count(); ++i) {
-    nsXBLPrototypeHandler* handler = static_cast<nsXBLPrototypeHandler*>
-                                                (mProtoHandlers[i]);
+  for (PRUint32 i = 0; i < mProtoHandlers.Length(); ++i) {
+    nsXBLPrototypeHandler* handler = mProtoHandlers[i];
     PRBool hasAllowUntrustedAttr = handler->HasAllowUntrustedAttr();
     if ((trustedEvent ||
         (hasAllowUntrustedAttr && handler->AllowUntrustedEvents()) ||
@@ -154,7 +153,7 @@ nsXBLKeyEventHandler::ExecuteMatchedHandlers(nsIDOMKeyEvent* aKeyEvent,
 NS_IMETHODIMP
 nsXBLKeyEventHandler::HandleEvent(nsIDOMEvent* aEvent)
 {
-  PRUint32 count = mProtoHandlers.Count();
+  PRUint32 count = mProtoHandlers.Length();
   if (count == 0)
     return NS_ERROR_FAILURE;
 
@@ -166,9 +165,11 @@ nsXBLKeyEventHandler::HandleEvent(nsIDOMEvent* aEvent)
   }
 
   nsCOMPtr<nsIDOMKeyEvent> key(do_QueryInterface(aEvent));
+  if (!key)
+    return NS_OK;
 
   nsAutoTArray<nsShortcutCandidate, 10> accessKeys;
-  nsContentUtils::GetAccelKeyCandidates(aEvent, accessKeys);
+  nsContentUtils::GetAccelKeyCandidates(key, accessKeys);
 
   if (accessKeys.IsEmpty()) {
     ExecuteMatchedHandlers(key, 0, PR_FALSE);

@@ -5,7 +5,7 @@
 https://bugzilla.mozilla.org/show_bug.cgi?id=403852
 -->
   <title>Test for Bug 403852</title>
-  <script type="text/javascript" src="/MochiKit/MochiKit.js"></script>
+  <script type="text/javascript" src="/MochiKit/packed.js"></script>
   <script type="text/javascript" src="/tests/SimpleTest/SimpleTest.js"></script>
   <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
 </head>
@@ -33,7 +33,7 @@ fileList.value = testFile.path;
 // Make sure the file is accessible with indexed notation
 var domFile = fileList.files[0];
 
-is(domFile.fileName, "prefs.js", "fileName should be prefs.js");
+is(domFile.name, "prefs.js", "fileName should be prefs.js");
 
 </script>
 </pre>

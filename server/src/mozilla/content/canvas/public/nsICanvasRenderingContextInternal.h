@@ -41,10 +41,12 @@
 #include "nsISupports.h"
 #include "nsICanvasElement.h"
 #include "nsIInputStream.h"
+#include "nsIDocShell.h"
+#include "gfxPattern.h"
 
-// {eab854fd-aa5e-44bb-8cc5-8d02f84b0216}
+// {ed741c16-4039-469b-91da-dca742c51a9f}
 #define NS_ICANVASRENDERINGCONTEXTINTERNAL_IID \
-  { 0xeab854fd, 0xaa5e, 0x44bb, { 0x8c, 0xc5, 0x8d, 0x02, 0xf8, 0x4b, 0x02, 0x16 } }
+  { 0xed741c16, 0x4039, 0x469b, { 0x91, 0xda, 0xdc, 0xa7, 0x42, 0xc5, 0x1a, 0x9f } }
 
 class gfxContext;
 class gfxASurface;
@@ -61,8 +63,10 @@ public:
   // whenever the size of the element changes.
   NS_IMETHOD SetDimensions(PRInt32 width, PRInt32 height) = 0;
 
+  NS_IMETHOD InitializeWithSurface(nsIDocShell *docShell, gfxASurface *surface, PRInt32 width, PRInt32 height) = 0;
+
   // Render the canvas at the origin of the given gfxContext
-  NS_IMETHOD Render(gfxContext *ctx) = 0;
+  NS_IMETHOD Render(gfxContext *ctx, gfxPattern::GraphicsFilter aFilter) = 0;
 
   // Gives you a stream containing the image represented by this context.
   // The format is given in aMimeTime, for example "image/png".
@@ -77,6 +81,12 @@ public:
   // If this canvas context can be represented with a simple Thebes surface,
   // return the surface.  Otherwise returns an error.
   NS_IMETHOD GetThebesSurface(gfxASurface **surface) = 0;
+
+  // If this context is opaque, the backing store of the canvas should
+  // be created as opaque; all compositing operators should assume the
+  // dst alpha is always 1.0.  If this is never called, the context
+  // defaults to false (not opaque).
+  NS_IMETHOD SetIsOpaque(PRBool isOpaque) = 0;
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsICanvasRenderingContextInternal,

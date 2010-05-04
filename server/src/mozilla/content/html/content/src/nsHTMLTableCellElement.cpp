@@ -45,6 +45,7 @@
 #include "nsPresContext.h"
 #include "nsRuleData.h"
 #include "nsIDocument.h"
+#include "celldata.h"
 
 class nsHTMLTableCellElement : public nsGenericHTMLElement,
                                public nsIDOMHTMLTableCellElement
@@ -104,10 +105,11 @@ NS_IMPL_RELEASE_INHERITED(nsHTMLTableCellElement, nsGenericElement)
 
 
 // QueryInterface implementation for nsHTMLTableCellElement
-NS_HTML_CONTENT_INTERFACE_TABLE_HEAD(nsHTMLTableCellElement,
-                                     nsGenericHTMLElement)
-  NS_INTERFACE_TABLE_INHERITED1(nsHTMLTableCellElement,
-                                nsIDOMHTMLTableCellElement)
+NS_INTERFACE_TABLE_HEAD(nsHTMLTableCellElement)
+  NS_HTML_CONTENT_INTERFACE_TABLE1(nsHTMLTableCellElement,
+                                   nsIDOMHTMLTableCellElement)
+  NS_HTML_CONTENT_INTERFACE_TABLE_TO_MAP_SEGUE(nsHTMLTableCellElement,
+                                               nsGenericHTMLElement)
 NS_HTML_CONTENT_INTERFACE_TABLE_TAIL_CLASSINFO(HTMLTableCellElement)
 
 
@@ -261,9 +263,6 @@ static const nsAttrValue::EnumTable kCellScopeTable[] = {
   { 0 }
 };
 
-#define MAX_ROWSPAN 8190 // celldata.h can not handle more
-#define MAX_COLSPAN 1000 // limit as IE and opera do
-
 PRBool
 nsHTMLTableCellElement::ParseAttribute(PRInt32 aNamespaceID,
                                        nsIAtom* aAttribute,
@@ -372,11 +371,15 @@ void MapAttributesIntoRule(const nsMappedAttributes* aAttributes,
     if (aData->mTextData->mWhiteSpace.GetUnit() == eCSSUnit_Null) {
       // nowrap: enum
       if (aAttributes->GetAttr(nsGkAtoms::nowrap)) {
-        // See if our width is not a integer width.
+        // See if our width is not a nonzero integer width.
         const nsAttrValue* value = aAttributes->GetAttr(nsGkAtoms::width);
         nsCompatibility mode = aData->mPresContext->CompatibilityMode();
-        if (!value || value->Type() != nsAttrValue::eInteger || eCompatibility_NavQuirks != mode)
+        if (!value || value->Type() != nsAttrValue::eInteger ||
+            value->GetIntegerValue() == 0 ||
+            eCompatibility_NavQuirks != mode) {
           aData->mTextData->mWhiteSpace.SetIntValue(NS_STYLE_WHITESPACE_NOWRAP, eCSSUnit_Enumerated);
+        }
+        
       }
     }
   }

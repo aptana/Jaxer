@@ -75,18 +75,24 @@ REQUIRES	= xpcom \
 		  editor \
 		  plugin \
 		  txtsvc \
+		  uriloader \
+		  html5 \
 		  $(NULL)
 
 CPPSRCS		= \
 		nsHTMLContentSink.cpp \
 		nsHTMLFragmentContentSink.cpp \
 		nsHTMLDocument.cpp \
+		nsImageDocument.cpp \
 		nsMediaDocument.cpp \
 		nsPluginDocument.cpp \
-		nsImageDocument.cpp \
 		nsWyciwygChannel.cpp \
 		nsWyciwygProtocolHandler.cpp \
 		$(NULL)
+
+ifdef MOZ_MEDIA
+CPPSRCS += nsVideoDocument.cpp
+endif
 
 EXPORTS		= \
 		nsIHTMLDocument.h \
@@ -102,7 +108,7 @@ INCLUDES	+= \
 		-I$(srcdir)/../../../events/src \
 		-I$(srcdir)/../../content/src \
 		-I$(srcdir)/../../../../layout/style \
-		-I$(srcdir)/../../../../dom/src/base \
+		-I$(srcdir)/../../../../dom/base \
 		$(NULL)
 
 DEFINES += -D_IMPL_NS_LAYOUT

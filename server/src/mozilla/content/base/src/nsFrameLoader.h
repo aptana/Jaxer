@@ -54,19 +54,23 @@ class nsIURI;
 
 class nsFrameLoader : public nsIFrameLoader
 {
-public:
+protected:
   nsFrameLoader(nsIContent *aOwner) :
     mOwnerContent(aOwner),
     mDepthTooGreat(PR_FALSE),
     mIsTopLevelContent(PR_FALSE),
     mDestroyCalled(PR_FALSE),
-    mInDestructor(PR_FALSE)
+    mNeedsAsyncDestroy(PR_FALSE),
+    mInSwap(PR_FALSE)
   {}
 
+public:
   ~nsFrameLoader() {
-    mInDestructor = PR_TRUE;
+    mNeedsAsyncDestroy = PR_TRUE;
     nsFrameLoader::Destroy();
   }
+
+  static nsFrameLoader* Create(nsIContent* aOwner);
 
   NS_DECL_CYCLE_COLLECTING_ISUPPORTS
   NS_DECL_CYCLE_COLLECTION_CLASS(nsFrameLoader)
@@ -75,6 +79,13 @@ public:
   nsresult ReallyStartLoading();
   void Finalize();
   nsIDocShell* GetExistingDocShell() { return mDocShell; }
+
+  // The guts of an nsIFrameLoaderOwner::SwapFrameLoader implementation.  A
+  // frame loader owner needs to call this, and pass in the two references to
+  // nsRefPtrs for frame loaders that need to be swapped.
+  nsresult SwapWithOtherLoader(nsFrameLoader* aOther,
+                               nsRefPtr<nsFrameLoader>& aFirstToSwap,
+                               nsRefPtr<nsFrameLoader>& aSecondToSwap);
 private:
 
   NS_HIDDEN_(nsresult) EnsureDocShell();
@@ -84,10 +95,11 @@ private:
   nsCOMPtr<nsIDocShell> mDocShell;
   nsCOMPtr<nsIURI> mURIToLoad;
   nsIContent *mOwnerContent; // WEAK
-  PRPackedBool mDepthTooGreat;
-  PRPackedBool mIsTopLevelContent;
-  PRPackedBool mDestroyCalled;
-  PRPackedBool mInDestructor;
+  PRPackedBool mDepthTooGreat : 1;
+  PRPackedBool mIsTopLevelContent : 1;
+  PRPackedBool mDestroyCalled : 1;
+  PRPackedBool mNeedsAsyncDestroy : 1;
+  PRPackedBool mInSwap : 1;
 };
 
 #endif

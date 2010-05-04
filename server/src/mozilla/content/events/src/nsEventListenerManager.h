@@ -49,7 +49,10 @@
 
 class nsIDOMEvent;
 class nsIAtom;
+class nsIWidget;
+struct nsPoint;
 struct EventTypeData;
+class nsEventTargetChainItem;
 
 typedef struct {
   nsRefPtr<nsIDOMEventListener> mListener;
@@ -111,7 +114,7 @@ public:
   NS_IMETHOD HandleEvent(nsPresContext* aPresContext, 
                          nsEvent* aEvent, 
                          nsIDOMEvent** aDOMEvent,
-                         nsISupports* aCurrentTarget,
+                         nsPIDOMEventTarget* aCurrentTarget,
                          PRUint32 aFlags,
                          nsEventStatus* aEventStatus);
 
@@ -128,6 +131,10 @@ public:
   virtual PRUint32 MutationListenerBits();
 
   virtual PRBool HasListenersFor(const nsAString& aEventName);
+
+  virtual PRBool HasListeners();
+
+  virtual nsresult GetListenerInfo(nsCOMArray<nsIEventListenerInfo>* aList);
 
   static PRUint32 GetIdentifierForEvent(nsIAtom* aEvent);
 
@@ -146,7 +153,7 @@ protected:
   nsresult HandleEventSubType(nsListenerStruct* aListenerStruct,
                               nsIDOMEventListener* aListener,
                               nsIDOMEvent* aDOMEvent,
-                              nsISupports* aCurrentTarget,
+                              nsPIDOMEventTarget* aCurrentTarget,
                               PRUint32 aPhaseFlags);
   nsresult CompileEventHandlerInternal(nsIScriptContext *aContext,
                                        void *aScopeObject,
@@ -175,29 +182,19 @@ protected:
   nsresult RemoveAllListeners();
   const EventTypeData* GetTypeDataForIID(const nsIID& aIID);
   const EventTypeData* GetTypeDataForEventName(nsIAtom* aName);
-  nsresult FixContextMenuEvent(nsPresContext* aPresContext,
-                               nsISupports* aCurrentTarget,
-                               nsEvent* aEvent,
-                               nsIDOMEvent** aDOMEvent);
-  PRBool PrepareToUseCaretPosition(nsIWidget* aEventWidget,
-                                   nsIPresShell* aShell,
-                                   nsPoint& aTargetPt);
-  void GetCoordinatesFor(nsIDOMElement *aCurrentEl, nsPresContext *aPresContext,
-                         nsIPresShell *aPresShell, nsPoint& aTargetPt);
   nsresult GetDOM2EventGroup(nsIDOMEventGroup** aGroup);
   PRBool ListenerCanHandle(nsListenerStruct* aLs, nsEvent* aEvent);
+  nsPIDOMWindow* GetInnerWindowForTarget();
 
   nsAutoTObserverArray<nsListenerStruct, 2> mListeners;
   nsISupports*                              mTarget;  //WEAK
-  PRUint32                                  mMayHaveMutationListeners : 1;
-  // These two member variables are used to cache the information
-  // about the last event which was handled but for which event listener manager
-  // didn't have event listeners.
-  PRUint32                                  mNoListenerForEvent : 31;
   nsCOMPtr<nsIAtom>                         mNoListenerForEventAtom;
 
   static PRUint32                           mInstanceCount;
   static jsval                              sAddListenerID;
+
+  friend class nsEventTargetChainItem;
+  static PRUint32                           sCreatedCount;
 };
 
 #endif // nsEventListenerManager_h__

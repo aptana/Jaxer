@@ -103,8 +103,7 @@ public:
   NS_DECL_NSIMUTATIONOBSERVER_CONTENTREMOVED
 
 protected:
-  void GetStyleSheetURL(PRBool* aIsInline,
-                        nsIURI** aURI);
+  already_AddRefed<nsIURI> GetStyleSheetURL(PRBool* aIsInline);
   void GetStyleSheetInfo(nsAString& aTitle,
                          nsAString& aType,
                          nsAString& aMedia,
@@ -137,12 +136,14 @@ NS_IMPL_RELEASE_INHERITED(nsHTMLStyleElement, nsGenericElement)
 
 
 // QueryInterface implementation for nsHTMLStyleElement
-NS_HTML_CONTENT_INTERFACE_TABLE_HEAD(nsHTMLStyleElement, nsGenericHTMLElement)
-  NS_INTERFACE_TABLE_INHERITED4(nsHTMLStyleElement,
-                                nsIDOMHTMLStyleElement,
-                                nsIDOMLinkStyle,
-                                nsIStyleSheetLinkingElement,
-                                nsIMutationObserver)
+NS_INTERFACE_TABLE_HEAD(nsHTMLStyleElement)
+  NS_HTML_CONTENT_INTERFACE_TABLE4(nsHTMLStyleElement,
+                                   nsIDOMHTMLStyleElement,
+                                   nsIDOMLinkStyle,
+                                   nsIStyleSheetLinkingElement,
+                                   nsIMutationObserver)
+  NS_HTML_CONTENT_INTERFACE_TABLE_TO_MAP_SEGUE(nsHTMLStyleElement,
+                                               nsGenericHTMLElement)
 NS_HTML_CONTENT_INTERFACE_TABLE_TAIL_CLASSINFO(HTMLStyleElement)
 
 
@@ -154,8 +155,8 @@ nsHTMLStyleElement::GetDisabled(PRBool* aDisabled)
 {
   nsresult result = NS_OK;
   
-  if (mStyleSheet) {
-    nsCOMPtr<nsIDOMStyleSheet> ss(do_QueryInterface(mStyleSheet));
+  if (GetStyleSheet()) {
+    nsCOMPtr<nsIDOMStyleSheet> ss(do_QueryInterface(GetStyleSheet()));
 
     if (ss) {
       result = ss->GetDisabled(aDisabled);
@@ -173,8 +174,8 @@ nsHTMLStyleElement::SetDisabled(PRBool aDisabled)
 {
   nsresult result = NS_OK;
   
-  if (mStyleSheet) {
-    nsCOMPtr<nsIDOMStyleSheet> ss(do_QueryInterface(mStyleSheet));
+  if (GetStyleSheet()) {
+    nsCOMPtr<nsIDOMStyleSheet> ss(do_QueryInterface(GetStyleSheet()));
 
     if (ss) {
       result = ss->SetDisabled(aDisabled);
@@ -239,7 +240,9 @@ nsHTMLStyleElement::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
                                                  aCompileEventHandlers);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  UpdateStyleSheetInternal(nsnull);
+  nsContentUtils::AddScriptRunner(
+    new nsRunnableMethod<nsHTMLStyleElement>(this,
+                                             &nsHTMLStyleElement::UpdateStyleSheetInternal));
 
   return rv;  
 }
@@ -308,24 +311,11 @@ nsHTMLStyleElement::SetInnerHTML(const nsAString& aInnerHTML)
   return rv;
 }
 
-void
-nsHTMLStyleElement::GetStyleSheetURL(PRBool* aIsInline,
-                                     nsIURI** aURI)
+already_AddRefed<nsIURI>
+nsHTMLStyleElement::GetStyleSheetURL(PRBool* aIsInline)
 {
-  *aURI = nsnull;
-  *aIsInline = !HasAttr(kNameSpaceID_None, nsGkAtoms::src);
-  if (*aIsInline) {
-    return;
-  }
-  if (mNodeInfo->NamespaceEquals(kNameSpaceID_XHTML)) {
-    // We stopped supporting <style src="..."> for XHTML as it is
-    // non-standard.
-    *aIsInline = PR_TRUE;
-    return;
-  }
-
-  GetHrefURIForAnchors(aURI);
-  return;
+  *aIsInline = PR_TRUE;
+  return nsnull;
 }
 
 void

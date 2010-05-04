@@ -46,9 +46,11 @@
 #define nsImageLoadingContent_h__
 
 #include "nsIImageLoadingContent.h"
+#include "nsINode.h"
 #include "imgIRequest.h"
 #include "prtypes.h"
 #include "nsCOMPtr.h"
+#include "nsContentUtils.h"
 #include "nsString.h"
 
 class nsIURI;
@@ -149,6 +151,9 @@ protected:
    */
   void DestroyImageLoadingContent();
 
+  void ClearBrokenState() { mBroken = PR_FALSE; }
+
+  PRBool LoadingEnabled() { return mLoadingEnabled; }
 private:
   /**
    * Struct used to manage the image observers.
@@ -163,7 +168,7 @@ private:
     ~ImageObserver()
     {
       MOZ_COUNT_DTOR(ImageObserver);
-      delete mNext;
+      NS_CONTENT_DELETE_LIST_MEMBER(ImageObserver, this, mNext);
     }
 
     nsCOMPtr<imgIDecoderObserver> mObserver;
@@ -255,9 +260,20 @@ private:
    */
   ImageObserver mObserverList;
 
+  /**
+   * When mIsImageStateForced is true, this holds the ImageState that we'll
+   * return in ImageState().
+   */
+  PRInt32 mForcedImageState;
+
   PRInt16 mImageBlockingStatus;
   PRPackedBool mLoadingEnabled : 1;
   PRPackedBool mStartingLoad : 1;
+
+  /**
+   * When true, we return mForcedImageState from ImageState().
+   */
+  PRPackedBool mIsImageStateForced : 1;
 
   /**
    * The state we had the last time we checked whether we needed to notify the

@@ -40,6 +40,7 @@
 #include "nsSVGGraphicElement.h"
 #include "nsTArray.h"
 #include "gfxPath.h"
+#include "gfxMatrix.h"
 
 struct nsSVGMark {
   float x, y, angle;
@@ -47,7 +48,6 @@ struct nsSVGMark {
     x(aX), y(aY), angle(aAngle) {}
 };
 
-class nsIDOMSVGMatrix;
 class gfxContext;
 
 typedef nsSVGGraphicElement nsSVGPathGeometryElementBase;
@@ -57,11 +57,11 @@ class nsSVGPathGeometryElement : public nsSVGPathGeometryElementBase
 public:
   nsSVGPathGeometryElement(nsINodeInfo *aNodeInfo);
 
-  virtual PRBool IsDependentAttribute(nsIAtom *aName);
+  virtual PRBool AttributeDefinesGeometry(const nsIAtom *aName);
   virtual PRBool IsMarkable();
   virtual void GetMarkPoints(nsTArray<nsSVGMark> *aMarks);
   virtual void ConstructPath(gfxContext *aCtx) = 0;
-  virtual already_AddRefed<gfxFlattenedPath> GetFlattenedPath(nsIDOMSVGMatrix *aMatrix);
+  virtual already_AddRefed<gfxFlattenedPath> GetFlattenedPath(const gfxMatrix &aMatrix);
 };
 
 #endif

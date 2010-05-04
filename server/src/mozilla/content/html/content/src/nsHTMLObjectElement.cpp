@@ -42,15 +42,21 @@
 #include "nsDOMError.h"
 #include "nsIDocument.h"
 #include "nsIDOMDocument.h"
+#ifdef MOZ_SVG
+#include "nsIDOMSVGDocument.h"
+#include "nsIDOMGetSVGDocument.h"
+#endif
 #include "nsIDOMHTMLObjectElement.h"
 #include "nsIFormSubmission.h"
 #include "nsIObjectFrame.h"
 #include "nsIPluginInstance.h"
-#include "nsIPluginInstanceInternal.h"
 
 class nsHTMLObjectElement : public nsGenericHTMLFormElement,
                             public nsObjectLoadingContent,
                             public nsIDOMHTMLObjectElement
+#ifdef MOZ_SVG
+                            , public nsIDOMGetSVGDocument
+#endif
 {
 public:
   nsHTMLObjectElement(nsINodeInfo *aNodeInfo, PRBool aFromParser = PR_FALSE);
@@ -71,6 +77,11 @@ public:
   // nsIDOMHTMLObjectElement
   NS_DECL_NSIDOMHTMLOBJECTELEMENT
 
+#ifdef MOZ_SVG
+  // nsIDOMGetSVGDocument
+  NS_DECL_NSIDOMGETSVGDOCUMENT
+#endif
+
   virtual nsresult BindToTree(nsIDocument *aDocument, nsIContent *aParent,
                               nsIContent *aBindingParent,
                               PRBool aCompileEventHandlers);
@@ -79,6 +90,8 @@ public:
   virtual nsresult SetAttr(PRInt32 aNameSpaceID, nsIAtom *aName,
                            nsIAtom *aPrefix, const nsAString &aValue,
                            PRBool aNotify);
+  virtual nsresult UnsetAttr(PRInt32 aNameSpaceID, nsIAtom* aAttribute,
+                             PRBool aNotify);
 
   virtual PRBool IsHTMLFocusable(PRBool *aIsFocusable, PRInt32 *aTabIndex);
   virtual PRUint32 GetDesiredIMEState();
@@ -110,8 +123,10 @@ public:
 
   virtual nsresult Clone(nsINodeInfo *aNodeInfo, nsINode **aResult) const;
 
+  void StartObjectLoad() { StartObjectLoad(PR_TRUE); }
+
   NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED_NO_UNLINK(nsHTMLObjectElement,
-                                                     nsGenericHTMLElement)
+                                                     nsGenericHTMLFormElement)
 
 private:
   /**
@@ -131,10 +146,12 @@ nsHTMLObjectElement::nsHTMLObjectElement(nsINodeInfo *aNodeInfo,
   : nsGenericHTMLFormElement(aNodeInfo),
     mIsDoneAddingChildren(!aFromParser)
 {
+  RegisterFreezableElement();
 }
 
 nsHTMLObjectElement::~nsHTMLObjectElement()
 {
+  UnregisterFreezableElement();
   DestroyImageLoadingContent();
 }
 
@@ -166,19 +183,25 @@ NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
 NS_IMPL_ADDREF_INHERITED(nsHTMLObjectElement, nsGenericElement) 
 NS_IMPL_RELEASE_INHERITED(nsHTMLObjectElement, nsGenericElement) 
 
-NS_HTML_CONTENT_CC_INTERFACE_TABLE_HEAD(nsHTMLObjectElement,
-                                        nsGenericHTMLFormElement)
-  NS_INTERFACE_TABLE_INHERITED10(nsHTMLObjectElement,
-                                 nsIDOMHTMLObjectElement,
-                                 imgIDecoderObserver,
-                                 nsIRequestObserver,
-                                 nsIStreamListener,
-                                 nsIFrameLoaderOwner,
-                                 nsIObjectLoadingContent,
-                                 nsIImageLoadingContent,
-                                 imgIContainerObserver,
-                                 nsIInterfaceRequestor,
-                                 nsIChannelEventSink)
+NS_INTERFACE_TABLE_HEAD_CYCLE_COLLECTION_INHERITED(nsHTMLObjectElement)
+  NS_HTML_CONTENT_INTERFACE_TABLE_BEGIN(nsHTMLObjectElement)
+    NS_INTERFACE_TABLE_ENTRY(nsHTMLObjectElement, nsIDOMHTMLObjectElement)
+    NS_INTERFACE_TABLE_ENTRY(nsHTMLObjectElement, imgIDecoderObserver)
+    NS_INTERFACE_TABLE_ENTRY(nsHTMLObjectElement, nsIRequestObserver)
+    NS_INTERFACE_TABLE_ENTRY(nsHTMLObjectElement, nsIStreamListener)
+    NS_INTERFACE_TABLE_ENTRY(nsHTMLObjectElement, nsIFrameLoaderOwner)
+    NS_INTERFACE_TABLE_ENTRY(nsHTMLObjectElement, nsIObjectLoadingContent)
+    NS_INTERFACE_TABLE_ENTRY(nsHTMLObjectElement, nsIObjectLoadingContent_MOZILLA_1_9_2_BRANCH)
+    NS_INTERFACE_TABLE_ENTRY(nsHTMLObjectElement, nsIImageLoadingContent)
+    NS_INTERFACE_TABLE_ENTRY(nsHTMLObjectElement, imgIContainerObserver)
+    NS_INTERFACE_TABLE_ENTRY(nsHTMLObjectElement, nsIInterfaceRequestor)
+    NS_INTERFACE_TABLE_ENTRY(nsHTMLObjectElement, nsIChannelEventSink)
+#ifdef MOZ_SVG
+    NS_INTERFACE_TABLE_ENTRY(nsHTMLObjectElement, nsIDOMGetSVGDocument)
+#endif
+  NS_OFFSET_AND_INTERFACE_TABLE_END
+  NS_HTML_CONTENT_INTERFACE_TABLE_TO_MAP_SEGUE(nsHTMLObjectElement,
+                                               nsGenericHTMLFormElement)
 NS_HTML_CONTENT_INTERFACE_TABLE_TAIL_CLASSINFO(HTMLObjectElement)
 
 NS_IMPL_ELEMENT_CLONE(nsHTMLObjectElement)
@@ -203,9 +226,9 @@ nsHTMLObjectElement::BindToTree(nsIDocument *aDocument,
 
   // If we already have all the children, start the load.
   if (mIsDoneAddingChildren) {
-    // Don't need to notify: We have no frames yet, since we weren't in a
-    // document
-    StartObjectLoad(PR_FALSE);
+    nsContentUtils::AddScriptRunner(
+      new nsRunnableMethod<nsHTMLObjectElement>(this,
+                                                &nsHTMLObjectElement::StartObjectLoad));
   }
 
   return NS_OK;
@@ -246,6 +269,17 @@ nsHTMLObjectElement::SetAttr(PRInt32 aNameSpaceID, nsIAtom *aName,
                                            aValue, aNotify);
 }
 
+nsresult
+nsHTMLObjectElement::UnsetAttr(PRInt32 aNameSpaceID, nsIAtom* aAttribute,
+                               PRBool aNotify)
+{
+  if (aNameSpaceID == kNameSpaceID_None && aAttribute == nsGkAtoms::data) {
+    Fallback(aNotify);
+  }
+
+  return nsGenericHTMLFormElement::UnsetAttr(aNameSpaceID, aAttribute, aNotify);
+}
+
 PRBool
 nsHTMLObjectElement::IsHTMLFocusable(PRBool *aIsFocusable, PRInt32 *aTabIndex)
 {
@@ -268,7 +302,7 @@ PRUint32
 nsHTMLObjectElement::GetDesiredIMEState()
 {
   if (Type() == eType_Plugin) {
-    return nsIContent::IME_STATUS_ENABLE;
+    return nsIContent::IME_STATUS_PLUGIN;
   }
    
   return nsGenericHTMLFormElement::GetDesiredIMEState();
@@ -293,11 +327,7 @@ nsHTMLObjectElement::SubmitNamesValues(nsIFormSubmission *aFormSubmission,
 
   nsIFrame* frame = GetPrimaryFrame();
 
-  nsIObjectFrame *objFrame = nsnull;
-  if (frame) {
-    CallQueryInterface(frame, &objFrame);
-  }
-
+  nsIObjectFrame *objFrame = do_QueryFrame(frame);
   if (!objFrame) {
     // No frame, nothing to submit.
 
@@ -306,17 +336,11 @@ nsHTMLObjectElement::SubmitNamesValues(nsIFormSubmission *aFormSubmission,
 
   nsCOMPtr<nsIPluginInstance> pi;
   objFrame->GetPluginInstance(*getter_AddRefs(pi));
-
-  nsCOMPtr<nsIPluginInstanceInternal> pi_internal(do_QueryInterface(pi));
-
-  if (!pi_internal) {
-    // No plugin, nothing to submit.
-
+  if (!pi)
     return NS_OK;
-  }
 
   nsAutoString value;
-  nsresult rv = pi_internal->GetFormValue(value);
+  nsresult rv = pi->GetFormValue(value);
   NS_ENSURE_SUCCESS(rv, rv);
 
   return aFormSubmission->AddNameValuePair(this, name, value);
@@ -359,6 +383,14 @@ nsHTMLObjectElement::GetContentDocument(nsIDOMDocument **aContentDocument)
 
   return CallQueryInterface(sub_doc, aContentDocument);
 }
+
+#ifdef MOZ_SVG
+NS_IMETHODIMP
+nsHTMLObjectElement::GetSVGDocument(nsIDOMDocument **aResult)
+{
+  return GetContentDocument(aResult);
+}
+#endif
 
 PRBool
 nsHTMLObjectElement::ParseAttribute(PRInt32 aNamespaceID,

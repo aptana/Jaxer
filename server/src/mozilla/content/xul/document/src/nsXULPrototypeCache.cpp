@@ -71,7 +71,7 @@ static const char kDisableXULCachePref[] = "nglayout.debug.disable_xul_cache";
 
 //----------------------------------------------------------------------
 
-PR_STATIC_CALLBACK(int)
+static int
 DisableXULCacheChangedCallback(const char* aPref, void* aClosure)
 {
     gDisableXULCache =
@@ -270,7 +270,7 @@ nsXULPrototypeCache::GetScript(nsIURI* aURI, PRUint32 *aLangID)
 
 
 /* static */
-PR_STATIC_CALLBACK(PLDHashOperator)
+static PLDHashOperator
 ReleaseScriptObjectCallback(nsIURI* aKey, CacheScriptEntry &aData, void* aClosure)
 {
     nsCOMPtr<nsIScriptRuntime> rt;
@@ -328,7 +328,7 @@ nsXULPrototypeCache::PutXBLDocumentInfo(nsIXBLDocumentInfo* aDocumentInfo)
     return NS_OK;
 }
 
-PR_STATIC_CALLBACK(PLDHashOperator)
+static PLDHashOperator
 FlushSkinXBL(nsIURI* aKey, nsCOMPtr<nsIXBLDocumentInfo>& aDocInfo, void* aClosure)
 {
   nsCAutoString str;
@@ -343,7 +343,7 @@ FlushSkinXBL(nsIURI* aKey, nsCOMPtr<nsIXBLDocumentInfo>& aDocInfo, void* aClosur
   return ret;
 }
 
-PR_STATIC_CALLBACK(PLDHashOperator)
+static PLDHashOperator
 FlushSkinSheets(nsIURI* aKey, nsCOMPtr<nsICSSStyleSheet>& aSheet, void* aClosure)
 {
   nsCOMPtr<nsIURI> uri;
@@ -360,7 +360,7 @@ FlushSkinSheets(nsIURI* aKey, nsCOMPtr<nsICSSStyleSheet>& aSheet, void* aClosure
   return ret;
 }
 
-PR_STATIC_CALLBACK(PLDHashOperator)
+static PLDHashOperator
 FlushScopedSkinStylesheets(nsIURI* aKey, nsCOMPtr<nsIXBLDocumentInfo> &aDocInfo, void* aClosure)
 {
   aDocInfo->FlushSkinStylesheets();
@@ -581,7 +581,7 @@ nsXULPrototypeCache::StartFastLoadingURI(nsIURI* aURI, PRInt32 aDirectionFlags)
     return gFastLoadService->StartMuxedDocument(aURI, urlspec.get(), aDirectionFlags);
 }
 
-PR_STATIC_CALLBACK(int)
+static int
 FastLoadPrefChangedCallback(const char* aPref, void* aClosure)
 {
     PRBool wasEnabled = !gDisableXULFastLoad;
@@ -775,29 +775,6 @@ nsXULPrototypeCache::StartFastLoad(nsIURI* aURI)
         rv = fastLoadService->NewInputStream(input, getter_AddRefs(objectInput));
 
         if (NS_SUCCEEDED(rv)) {
-            if (gChecksumXULFastLoadFile) {
-                nsCOMPtr<nsIFastLoadReadControl>
-                    readControl(do_QueryInterface(objectInput));
-                if (readControl) {
-                    // Verify checksum, using the fastLoadService's checksum
-                    // cache to avoid computing more than once per session.
-                    PRUint32 checksum;
-                    rv = readControl->GetChecksum(&checksum);
-                    if (NS_SUCCEEDED(rv)) {
-                        PRUint32 verified;
-                        rv = fastLoadService->ComputeChecksum(file,
-                                                               readControl,
-                                                               &verified);
-                        if (NS_SUCCEEDED(rv) && verified != checksum) {
-#ifdef DEBUG
-                            printf("bad FastLoad file checksum\n");
-#endif
-                            rv = NS_ERROR_FAILURE;
-                        }
-                    }
-                }
-            }
-
             if (NS_SUCCEEDED(rv)) {
                 // Get the XUL fastload file version number, which should be
                 // decremented whenever the XUL-specific file format changes

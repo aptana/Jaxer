@@ -56,7 +56,6 @@
 #include "nsIXULTemplateBuilder.h"
 
 #include "nsFixedSizeAllocator.h"
-#include "nsVoidArray.h"
 #include "nsCOMArray.h"
 #include "nsTArray.h"
 #include "nsDataHashtable.h"
@@ -151,6 +150,8 @@ public:
 
     virtual nsresult
     RebuildAll() = 0; // must be implemented by subclasses
+
+    void RunnableRebuild() { Rebuild(); }
 
     /**
      * Find the <template> tag that applies for this builder

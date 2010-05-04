@@ -42,7 +42,7 @@ nsSVGPathGeometryElement::nsSVGPathGeometryElement(nsINodeInfo *aNodeInfo)
 }
 
 PRBool
-nsSVGPathGeometryElement::IsDependentAttribute(nsIAtom *aName)
+nsSVGPathGeometryElement::AttributeDefinesGeometry(const nsIAtom *aName)
 {
   // Check for nsSVGLength2 attribute
   LengthAttributesInfo info = GetLengthInfo();
@@ -67,7 +67,7 @@ nsSVGPathGeometryElement::GetMarkPoints(nsTArray<nsSVGMark> *aMarks)
 }
 
 already_AddRefed<gfxFlattenedPath>
-nsSVGPathGeometryElement::GetFlattenedPath(nsIDOMSVGMatrix *aMatrix)
+nsSVGPathGeometryElement::GetFlattenedPath(const gfxMatrix &aMatrix)
 {
   return nsnull;
 }

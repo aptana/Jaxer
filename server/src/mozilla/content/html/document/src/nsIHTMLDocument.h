@@ -55,10 +55,10 @@ class nsIDOMHTMLBodyElement;
 class nsIScriptElement;
 class nsIEditor;
 
-// 19d63a6c-cc94-499c-892a-955add772e10
+// 56ff0e81-191c-421c-b75c-1727e13091c0
 #define NS_IHTMLDOCUMENT_IID \
-{ 0x19d63a6c, 0xcc94, 0x499c, \
-  { 0x89, 0x2a, 0x95, 0x5a, 0xdd, 0x77, 0x2e, 0x10 } }
+{ 0x56ff0e81, 0x191c, 0x421c, \
+  { 0xb7, 0x5c, 0x17, 0x27, 0xe1, 0x30, 0x91, 0xc0 } }
 
 
 /**
@@ -181,6 +181,11 @@ public:
                                         nsISupports** aResult) = 0;
 
   /**
+   * Disables getting and setting cookies
+   */
+  virtual void DisableCookieAccess() = 0;
+
+  /**
    * Get the first <body> child of the root <html>, but don't do
    * anything <frameset>-related (like nsIDOMHTMLDocument::GetBody).
    */
@@ -190,6 +195,10 @@ public:
    * Called when this nsIHTMLDocument's editor is destroyed.
    */
   virtual void TearingDownEditor(nsIEditor *aEditor) = 0;
+
+  virtual void SetIsXHTML(PRBool aXHTML) = 0;
+
+  virtual void SetDocWriteDisabled(PRBool aDisabled) = 0;
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsIHTMLDocument, NS_IHTMLDOCUMENT_IID)

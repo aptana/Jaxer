@@ -70,7 +70,6 @@
 #include "nsIXULTemplateBuilder.h"
 #include "nsIBoxObject.h"
 #include "nsIXBLService.h"
-#include "nsICSSOMFactory.h"
 #include "nsLayoutCID.h"
 #include "nsAttrAndChildArray.h"
 #include "nsGkAtoms.h"
@@ -87,6 +86,8 @@ class nsICSSStyleRule;
 class nsIObjectInputStream;
 class nsIObjectOutputStream;
 class nsIScriptGlobalObjectOwner;
+class nsXULPrototypeNode;
+typedef nsTArray<nsRefPtr<nsXULPrototypeNode> > nsPrototypeArray;
 
 static NS_DEFINE_CID(kCSSParserCID, NS_CSSPARSER_CID);
 
@@ -226,13 +227,13 @@ public:
      * those prototypes no longer remember their children to allow them
      * to be constructed.
      */
-    virtual void ReleaseSubtree() { Release(); }
+    virtual void ReleaseSubtree() { }
 
     NS_DECL_CYCLE_COLLECTION_SCRIPT_HOLDER_NATIVE_CLASS(nsXULPrototypeNode)
 
 protected:
     nsXULPrototypeNode(Type aType)
-        : mType(aType), mRefCnt(1) {}
+        : mType(aType) {}
 };
 
 class nsXULPrototypeElement : public nsXULPrototypeNode
@@ -240,8 +241,6 @@ class nsXULPrototypeElement : public nsXULPrototypeNode
 public:
     nsXULPrototypeElement()
         : nsXULPrototypeNode(eType_Element),
-          mNumChildren(0),
-          mChildren(nsnull),
           mNumAttributes(0),
           mAttributes(nsnull),
           mHasIdAttribute(PR_FALSE),
@@ -250,15 +249,12 @@ public:
           mHoldsScriptObject(PR_FALSE),
           mScriptTypeID(nsIProgrammingLanguage::UNKNOWN)
     {
-        NS_LOG_ADDREF(this, 1, ClassName(), ClassSize());
     }
 
     virtual ~nsXULPrototypeElement()
     {
         UnlinkJSObjects();
         Unlink();
-        NS_ASSERTION(!mChildren && mNumChildren == 0,
-                     "ReleaseSubtree not called");
     }
 
 #ifdef NS_BUILD_REFCNT_LOGGING
@@ -268,17 +264,12 @@ public:
 
     virtual void ReleaseSubtree()
     {
-      if (mChildren) {
-        for (PRInt32 i = mNumChildren-1; i >= 0; i--) {
-          if (mChildren[i])
-            mChildren[i]->ReleaseSubtree();
+        for (PRInt32 i = mChildren.Length() - 1; i >= 0; i--) {
+            if (mChildren[i].get())
+                mChildren[i]->ReleaseSubtree();
         }
-        mNumChildren = 0;
-        delete[] mChildren;
-        mChildren = nsnull;
-      }
-
-      nsXULPrototypeNode::ReleaseSubtree();
+        mChildren.Clear();
+        nsXULPrototypeNode::ReleaseSubtree();
     }
 
     virtual nsresult Serialize(nsIObjectOutputStream* aStream,
@@ -294,8 +285,7 @@ public:
     void UnlinkJSObjects();
     void Unlink();
 
-    PRUint32                 mNumChildren;
-    nsXULPrototypeNode**     mChildren;           // [OWNER]
+    nsPrototypeArray         mChildren;
 
     nsCOMPtr<nsINodeInfo>    mNodeInfo;           // [OWNER]
 
@@ -416,7 +406,6 @@ public:
     nsXULPrototypeText()
         : nsXULPrototypeNode(eType_Text)
     {
-        NS_LOG_ADDREF(this, 1, ClassName(), ClassSize());
     }
 
     virtual ~nsXULPrototypeText()
@@ -445,7 +434,6 @@ public:
     nsXULPrototypePI()
         : nsXULPrototypeNode(eType_PI)
     {
-        NS_LOG_ADDREF(this, 1, ClassName(), ClassSize());
     }
 
     virtual ~nsXULPrototypePI()
@@ -477,34 +465,13 @@ public:
 
  */
 
-#define XUL_ELEMENT_LAZY_STATE_OFFSET NODE_TYPE_SPECIFIC_BITS_OFFSET
+#define XUL_ELEMENT_TEMPLATE_GENERATED 1 << NODE_TYPE_SPECIFIC_BITS_OFFSET
 
 class nsScriptEventHandlerOwnerTearoff;
 
 class nsXULElement : public nsGenericElement, public nsIDOMXULElement
 {
 public:
-    /**
-     * These flags are used to maintain bookkeeping information for partially-
-     * constructed content.
-     *
-     *   eChildrenMustBeRebuilt
-     *     The element's children are invalid or unconstructed, and should
-     *     be reconstructed.
-     *
-     *   eTemplateContentsBuilt
-     *     Child content that is built from a XUL template has been
-     *     constructed. 
-     *
-     *   eContainerContentsBuilt
-     *     Child content that is built by following the ``containment''
-     *     property in a XUL template has been built.
-     */
-    enum LazyState {
-        eChildrenMustBeRebuilt  = 0x1,
-        eTemplateContentsBuilt  = 0x2,
-        eContainerContentsBuilt = 0x4
-    };
 
     /** Typesafe, non-refcounting cast from nsIContent.  Cheaper than QI. **/
     static nsXULElement* FromContent(nsIContent *aContent)
@@ -522,13 +489,11 @@ public:
     }
     static void ReleaseGlobals() {
         NS_IF_RELEASE(gXBLService);
-        NS_IF_RELEASE(gCSSOMFactory);
     }
 
 protected:
     // pseudo-constants
     static nsIXBLService*       gXBLService;
-    static nsICSSOMFactory*     gCSSOMFactory;
 
 public:
     static nsresult
@@ -541,19 +506,14 @@ public:
                                                        nsGenericElement)
 
     // nsINode
-    virtual PRUint32 GetChildCount() const;
-    virtual nsIContent *GetChildAt(PRUint32 aIndex) const;
-    virtual PRInt32 IndexOf(nsINode* aPossibleChild) const;
     virtual nsresult PreHandleEvent(nsEventChainPreVisitor& aVisitor);
-    virtual nsresult InsertChildAt(nsIContent* aKid, PRUint32 aIndex,
-                                   PRBool aNotify);
 
     // nsIContent
     virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
                                 nsIContent* aBindingParent,
                                 PRBool aCompileEventHandlers);
     virtual void UnbindFromTree(PRBool aDeep, PRBool aNullParent);
-    virtual nsresult RemoveChildAt(PRUint32 aIndex, PRBool aNotify);
+    virtual nsresult RemoveChildAt(PRUint32 aIndex, PRBool aNotify, PRBool aMutationEvent = PR_TRUE);
     virtual nsIAtom *GetIDAttributeName() const;
     virtual nsIAtom *GetClassAttributeName() const;
     virtual PRBool GetAttr(PRInt32 aNameSpaceID, nsIAtom* aName,
@@ -582,8 +542,6 @@ public:
     }
 #endif
 
-    virtual void SetFocus(nsPresContext* aPresContext);
-    virtual void RemoveFocus(nsPresContext* aPresContext);
     virtual void PerformAccesskey(PRBool aKeyCausesActivation,
                                   PRBool aIsTrustedEvent);
 
@@ -591,7 +549,7 @@ public:
     virtual PRBool IsNodeOfType(PRUint32 aFlags) const;
     virtual PRBool IsFocusable(PRInt32 *aTabIndex = nsnull);
     virtual nsIAtom* GetID() const;
-    virtual const nsAttrValue* GetClasses() const;
+    virtual const nsAttrValue* DoGetClasses() const;
 
     NS_IMETHOD WalkContentStyleRules(nsRuleWalker* aRuleWalker);
     virtual nsICSSStyleRule* GetInlineStyleRule();
@@ -601,14 +559,13 @@ public:
     NS_IMETHOD_(PRBool) IsAttributeMapped(const nsIAtom* aAttribute) const;
 
     // XUL element methods
-    PRUint32 PeekChildCount() const
-    { return mAttrsAndChildren.ChildCount(); }
-    void SetLazyState(LazyState aFlags)
-    { SetFlags(aFlags << XUL_ELEMENT_LAZY_STATE_OFFSET); }
-    void ClearLazyState(LazyState aFlags)
-    { UnsetFlags(aFlags << XUL_ELEMENT_LAZY_STATE_OFFSET); }
-    PRBool GetLazyState(LazyState aFlag)
-    { return !!(GetFlags() & (aFlag << XUL_ELEMENT_LAZY_STATE_OFFSET)); }
+    /**
+     * The template-generated flag is used to indicate that a
+     * template-generated element has already had its children generated.
+     */
+    void SetTemplateGenerated() { SetFlags(XUL_ELEMENT_TEMPLATE_GENERATED); }
+    void ClearTemplateGenerated() { UnsetFlags(XUL_ELEMENT_TEMPLATE_GENERATED); }
+    PRBool GetTemplateGenerated() { return HasFlag(XUL_ELEMENT_TEMPLATE_GENERATED); }
 
     // nsIDOMNode
     NS_FORWARD_NSIDOMNODE(nsGenericElement::)
@@ -624,8 +581,8 @@ public:
 
     nsresult GetStyle(nsIDOMCSSStyleDeclaration** aStyle);
 
-    
     nsresult GetFrameLoader(nsIFrameLoader** aFrameLoader);
+    nsresult SwapFrameLoaders(nsIFrameLoaderOwner* aOtherOwner);
 
     virtual void RecompileScriptEventListeners();
 
@@ -641,6 +598,9 @@ protected:
     // XXX This can be removed when nsNodeUtils::CloneAndAdopt doesn't need
     //     access to mPrototype anymore.
     friend class nsNodeUtils;
+
+    // This can be removed if EnsureContentsGenerated dies.
+    friend class nsNSElementTearoff;
 
     nsXULElement(nsINodeInfo* aNodeInfo);
 
@@ -663,7 +623,7 @@ protected:
        nsXULSlots(PtrBits aFlags);
        virtual ~nsXULSlots();
 
-       nsCOMPtr<nsIFrameLoader> mFrameLoader;
+       nsRefPtr<nsFrameLoader> mFrameLoader;
     };
 
     virtual nsINode::nsSlots* CreateSlots();

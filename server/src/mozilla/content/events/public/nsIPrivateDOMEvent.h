@@ -40,20 +40,16 @@
 
 #include "nsISupports.h"
 
-class nsPresContext;
-
-/*
- * Event listener manager interface.
- */
 #define NS_IPRIVATEDOMEVENT_IID \
-{ /* 25e6626c-8e54-409b-87b5-2beceaac399e */ \
-0x25e6626c, 0x8e54, 0x409b, \
-{0x87, 0xb5, 0x2b, 0xec, 0xea, 0xac, 0x39, 0x9e} }
+{ 0x1da4c501, 0xe87e, 0x49b4, \
+  { 0xb0, 0x49, 0xdf, 0x9f, 0xc3, 0x6b, 0x56, 0xd4 } }
 
 class nsIDOMEventTarget;
 class nsIDOMEvent;
 class nsEvent;
 class nsCommandEvent;
+class nsPresContext;
+class nsInvalidateRequestList;
 
 class nsIPrivateDOMEvent : public nsISupports
 {
@@ -62,12 +58,9 @@ public:
 
   NS_IMETHOD DuplicatePrivateData() = 0;
   NS_IMETHOD SetTarget(nsIDOMEventTarget* aTarget) = 0;
-  NS_IMETHOD SetCurrentTarget(nsIDOMEventTarget* aTarget) = 0;
-  NS_IMETHOD SetOriginalTarget(nsIDOMEventTarget* aTarget) = 0;
-  NS_IMETHOD IsDispatchStopped(PRBool* aIsDispatchPrevented) = 0;
-  NS_IMETHOD GetInternalNSEvent(nsEvent** aNSEvent) = 0;
-  NS_IMETHOD HasOriginalTarget(PRBool* aResult)=0;
-  NS_IMETHOD SetTrusted(PRBool aTrusted)=0;
+  NS_IMETHOD_(PRBool) IsDispatchStopped() = 0;
+  NS_IMETHOD_(nsEvent*) GetInternalNSEvent() = 0;
+  NS_IMETHOD SetTrusted(PRBool aTrusted) = 0;
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsIPrivateDOMEvent, NS_IPRIVATEDOMEVENT_IID)
@@ -81,17 +74,23 @@ NS_NewDOMUIEvent(nsIDOMEvent** aInstancePtrResult, nsPresContext* aPresContext, 
 nsresult
 NS_NewDOMMouseEvent(nsIDOMEvent** aInstancePtrResult, nsPresContext* aPresContext, class nsInputEvent *aEvent);
 nsresult
+NS_NewDOMMouseScrollEvent(nsIDOMEvent** aInstancePtrResult, nsPresContext* aPresContext, class nsInputEvent *aEvent);
+nsresult
+NS_NewDOMDragEvent(nsIDOMEvent** aInstancePtrResult, nsPresContext* aPresContext, class nsDragEvent *aEvent);
+nsresult
 NS_NewDOMKeyboardEvent(nsIDOMEvent** aInstancePtrResult, nsPresContext* aPresContext, class nsKeyEvent *aEvent);
 nsresult
-NS_NewDOMMutationEvent(nsIDOMEvent** aResult, nsPresContext* aPresContext, class nsMutationEvent* aEvent);
+NS_NewDOMMutationEvent(nsIDOMEvent** aResult NS_OUTPARAM, nsPresContext* aPresContext, class nsMutationEvent* aEvent);
 nsresult
-NS_NewDOMPopupBlockedEvent(nsIDOMEvent** aResult, nsPresContext* aPresContext, class nsPopupBlockedEvent* aEvent);
+NS_NewDOMPopupBlockedEvent(nsIDOMEvent** aResult, nsPresContext* aPresContext, nsEvent* aEvent);
+nsresult
+NS_NewDOMOrientationEvent(nsIDOMEvent** aResult, nsPresContext* aPresContext, nsEvent* aEvent);
 nsresult
 NS_NewDOMTextEvent(nsIDOMEvent** aResult, nsPresContext* aPresContext, class nsTextEvent* aEvent);
 nsresult
-NS_NewDOMBeforeUnloadEvent(nsIDOMEvent** aResult, nsPresContext* aPresContext, class nsBeforePageUnloadEvent* aEvent);
+NS_NewDOMBeforeUnloadEvent(nsIDOMEvent** aResult, nsPresContext* aPresContext, nsEvent* aEvent);
 nsresult
-NS_NewDOMPageTransitionEvent(nsIDOMEvent** aResult, nsPresContext* aPresContext, class nsPageTransitionEvent* aEvent);
+NS_NewDOMPageTransitionEvent(nsIDOMEvent** aResult, nsPresContext* aPresContext, nsEvent* aEvent);
 #ifdef MOZ_SVG
 nsresult
 NS_NewDOMSVGEvent(nsIDOMEvent** aResult, nsPresContext* aPresContext, class nsEvent* aEvent);
@@ -99,10 +98,21 @@ nsresult
 NS_NewDOMSVGZoomEvent(nsIDOMEvent** aResult, nsPresContext* aPresContext, class nsGUIEvent* aEvent);
 #endif // MOZ_SVG
 nsresult
-NS_NewDOMXULCommandEvent(nsIDOMEvent** aResult, nsPresContext* aPresContext, class nsXULCommandEvent* aEvent);
+NS_NewDOMXULCommandEvent(nsIDOMEvent** aResult, nsPresContext* aPresContext, class nsInputEvent* aEvent);
 nsresult
 NS_NewDOMCommandEvent(nsIDOMEvent** aInstancePtrResult, nsPresContext* aPresContext, nsCommandEvent* aEvent);
 nsresult
 NS_NewDOMMessageEvent(nsIDOMEvent** aInstancePtrResult, nsPresContext* aPresContext, class nsEvent* aEvent);
-
+nsresult
+NS_NewDOMProgressEvent(nsIDOMEvent** aInstancePtrResult, nsPresContext* aPresContext, class nsEvent* aEvent);
+// This empties aInvalidateRequests.
+nsresult
+NS_NewDOMNotifyPaintEvent(nsIDOMEvent** aResult, nsPresContext* aPresContext,
+                          nsEvent* aEvent,
+                          PRUint32 aEventType = 0,
+                          nsInvalidateRequestList* aInvalidateRequests = nsnull);
+nsresult
+NS_NewDOMSimpleGestureEvent(nsIDOMEvent** aInstancePtrResult, nsPresContext* aPresContext, class nsSimpleGestureEvent* aEvent);
+nsresult
+NS_NewDOMScrollAreaEvent(nsIDOMEvent** aInstancePtrResult, nsPresContext* aPresContext, class nsScrollAreaEvent* aEvent);
 #endif // nsIPrivateDOMEvent_h__

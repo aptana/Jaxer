@@ -36,6 +36,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "nsIDOMCDATASection.h"
+#include "nsIDOM3Text.h"
 #include "nsGenericDOMDataNode.h"
 #include "nsGkAtoms.h"
 #include "nsIDocument.h"
@@ -81,10 +82,9 @@ NS_NewXMLCDATASection(nsIContent** aInstancePtrResult,
   *aInstancePtrResult = nsnull;
 
   nsCOMPtr<nsINodeInfo> ni;
-  nsresult rv = aNodeInfoManager->GetNodeInfo(nsGkAtoms::cdataTagName,
-                                              nsnull, kNameSpaceID_None,
-                                              getter_AddRefs(ni));
-  NS_ENSURE_SUCCESS(rv, rv);
+  ni = aNodeInfoManager->GetNodeInfo(nsGkAtoms::cdataTagName,
+                                     nsnull, kNameSpaceID_None);
+  NS_ENSURE_TRUE(ni, NS_ERROR_OUT_OF_MEMORY);
 
   nsXMLCDATASection *instance = new nsXMLCDATASection(ni);
   if (!instance) {
@@ -107,11 +107,10 @@ nsXMLCDATASection::~nsXMLCDATASection()
 
 
 // QueryInterface implementation for nsXMLCDATASection
-NS_INTERFACE_MAP_BEGIN(nsXMLCDATASection)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMNode)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMCharacterData)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMText)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMCDATASection)
+NS_INTERFACE_TABLE_HEAD(nsXMLCDATASection)
+  NS_NODE_INTERFACE_TABLE4(nsXMLCDATASection, nsIDOMNode, nsIDOMCharacterData,
+                           nsIDOMText, nsIDOMCDATASection)
+  NS_INTERFACE_MAP_ENTRY_TEAROFF(nsIDOM3Text, new nsText3Tearoff(this))
   NS_INTERFACE_MAP_ENTRY_CONTENT_CLASSINFO(CDATASection)
 NS_INTERFACE_MAP_END_INHERITING(nsGenericDOMDataNode)
 

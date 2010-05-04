@@ -144,8 +144,8 @@ nsXULTemplateResultSetStorage::FillColumnValues(nsCOMArray<nsIVariant>& aArray)
         mStatement->GetTypeOfIndex(c, &type);
 
         if (type == mStatement->VALUE_TYPE_INTEGER) {
-            PRInt32 val = mStatement->AsInt32(c);
-            value->SetAsInt32(val);
+            PRInt64 val = mStatement->AsInt64(c);
+            value->SetAsInt64(val);
         }
         else if (type == mStatement->VALUE_TYPE_FLOAT) {
             double val = mStatement->AsDouble(c);
@@ -330,10 +330,8 @@ nsXULTemplateQueryProcessorStorage::CompileQuery(nsIXULTemplateBuilder* aBuilder
             nsAutoString name, indexValue;
 
             if (child->GetAttr(kNameSpaceID_None, nsGkAtoms::name, name)) {
-                nsAutoString fullName;
-                fullName.AssignLiteral(":");
-                fullName.Append(name);
-                rv = statement->GetParameterIndex(NS_ConvertUTF16toUTF8(fullName) , &index);
+                rv = statement->GetParameterIndex(NS_ConvertUTF16toUTF8(name),
+                                                  &index);
                 NS_ENSURE_SUCCESS(rv, rv);
                 parameterCount++;
             }
@@ -470,10 +468,10 @@ nsXULTemplateQueryProcessorStorage::CompareResults(nsIXULTemplateResult* aLeft,
             vRightValue->GetDataType(&vtypeR);
 
             if (vtypeL == vtypeR) {
-                if (vtypeL == nsIDataType::VTYPE_INT32) {
-                    PRInt32 leftValue, rightValue;
-                    rv1 = vLeftValue->GetAsInt32(&leftValue);
-                    rv2 = vRightValue->GetAsInt32(&rightValue);
+                if (vtypeL == nsIDataType::VTYPE_INT64) {
+                    PRInt64 leftValue, rightValue;
+                    rv1 = vLeftValue->GetAsInt64(&leftValue);
+                    rv2 = vRightValue->GetAsInt64(&rightValue);
                     if (NS_SUCCEEDED(rv1) && NS_SUCCEEDED(rv2)) {
                         if (leftValue > rightValue)
                             *aResult = 1;

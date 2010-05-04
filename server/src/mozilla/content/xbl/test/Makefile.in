@@ -53,6 +53,7 @@ _TEST_FILES =	\
 		test_bug366770.html \
 		test_bug371724.xhtml \
 		test_bug372769.xhtml \
+		test_bug378518.xul \
 		test_bug378866.xhtml \
 		test_bug397934.xhtml \
 		test_bug389322.xhtml \
@@ -65,6 +66,11 @@ _TEST_FILES =	\
 		file_bug379959_data.html \
 		file_bug379959_cross.html \
 		file_bug379959_xbl.xml \
+		test_bug468210.xhtml \
+		test_bug481558.html \
+		file_bug481558css.sjs \
+		file_bug481558.xbl \
+		test_bug526178.xhtml \
 		$(NULL)
 
 libs:: $(_TEST_FILES)

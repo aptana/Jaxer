@@ -72,6 +72,7 @@ REQUIRES	= xpcom \
 		  js \
 		  webshell \
 		  necko \
+		  nkcache \
 		  mimetype \
 		  exthandler \
 		  chardet \
@@ -96,6 +97,7 @@ REQUIRES	= xpcom \
 		  shistory \
 		  editor \
 		  windowwatcher \
+		  html5 \
 		  $(NULL)
 ifdef JAXER
 REQUIRES	+= aptana
@@ -135,21 +137,23 @@ CPPSRCS		= \
 		nsContentSink.cpp \
 		nsContentUtils.cpp \
 		nsCopySupport.cpp \
+		nsCrossSiteListenerProxy.cpp \
 		nsDataDocumentContentPolicy.cpp \
 		nsDOMAttribute.cpp \
 		nsDOMAttributeMap.cpp \
 		nsDOMDocumentType.cpp \
 		nsDOMFile.cpp \
+		nsDOMFileReader.cpp \
 		nsDOMLists.cpp \
 		nsDOMParser.cpp \
 		nsDOMSerializer.cpp \
+		nsDOMTokenList.cpp \
 		nsDocument.cpp \
 		nsDocumentEncoder.cpp \
 		nsDocumentFragment.cpp \
 		nsFrameLoader.cpp \
 		nsGenConImageContent.cpp \
 		nsGenericDOMDataNode.cpp \
-		nsGenericDOMNodeList.cpp \
 		nsGenericElement.cpp \
 		nsGkAtoms.cpp \
 		nsHTMLContentSerializer.cpp \
@@ -162,12 +166,14 @@ CPPSRCS		= \
 		nsNoDataProtocolContentPolicy.cpp \
 		nsNodeInfo.cpp \
 		nsNodeInfoManager.cpp \
+		nsNodeIterator.cpp \
 		nsNodeUtils.cpp \
 		nsObjectLoadingContent.cpp \
 		nsParserUtils.cpp \
 		nsPlainTextSerializer.cpp \
 		nsPropertyTable.cpp \
 		nsRange.cpp \
+		nsReferencedElement.cpp \
 		nsScriptElement.cpp \
 		nsScriptEventManager.cpp \
 		nsScriptLoader.cpp \
@@ -179,7 +185,9 @@ CPPSRCS		= \
 		nsSyncLoadService.cpp \
 		nsTextFragment.cpp \
 		nsTextNode.cpp \
+		nsTraversal.cpp \
 		nsTreeWalker.cpp \
+		nsXHTMLContentSerializer.cpp \
 		nsXMLContentSerializer.cpp \
 		nsXMLHttpRequest.cpp \
 		nsXMLNameSpaceMap.cpp \
@@ -207,7 +215,7 @@ INCLUDES	+= \
 		-I$(srcdir)/../../xbl/src \
 		-I$(srcdir)/../../../layout/generic \
 		-I$(srcdir)/../../../layout/style \
-		-I$(srcdir)/../../../dom/src/base \
+		-I$(srcdir)/../../../dom/base \
 		-I$(srcdir)/../../xml/document/src \
 		-I$(topsrcdir)/xpcom/io \
 		$(NULL)

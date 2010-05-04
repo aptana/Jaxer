@@ -39,8 +39,8 @@
  * Implementation of DOM Core's nsIDOMText node.
  */
 
-#include "nsGenericDOMDataNode.h"
-#include "nsIDOMText.h"
+#include "nsTextNode.h"
+#include "nsIDOM3Text.h"
 #include "nsContentUtils.h"
 #include "nsIDOMEventListener.h"
 #include "nsIDOMEventTarget.h"
@@ -49,35 +49,6 @@
 #include "nsIDocument.h"
 #include "nsThreadUtils.h"
 
-/**
- * Class used to implement DOM text nodes
- */
-class nsTextNode : public nsGenericDOMDataNode,
-                   public nsIDOMText
-{
-public:
-  nsTextNode(nsINodeInfo *aNodeInfo);
-  virtual ~nsTextNode();
-
-  // nsISupports
-  NS_DECL_ISUPPORTS_INHERITED
-
-  // nsIDOMNode
-  NS_IMPL_NSIDOMNODE_USING_GENERIC_DOM_DATA
-
-  // nsIDOMCharacterData
-  NS_FORWARD_NSIDOMCHARACTERDATA(nsGenericDOMDataNode::)
-
-  // nsIDOMText
-  NS_FORWARD_NSIDOMTEXT(nsGenericDOMDataNode::)
-
-  // nsIContent
-  virtual PRBool IsNodeOfType(PRUint32 aFlags) const;
-#ifdef DEBUG
-  virtual void List(FILE* out, PRInt32 aIndent) const;
-  virtual void DumpContent(FILE* out, PRInt32 aIndent, PRBool aDumpAll) const;
-#endif
-};
 
 /**
  * class used to implement attr() generated content
@@ -92,6 +63,7 @@ public:
                       PRInt32 aNameSpaceID,
                       nsIAtom* aAttrName) :
     nsTextNode(aNodeInfo),
+    mGrandparent(nsnull),
     mNameSpaceID(aNameSpaceID),
     mAttrName(aAttrName)
   {
@@ -100,7 +72,7 @@ public:
   }
 
   virtual ~nsAttributeTextNode() {
-    DetachListener();
+    NS_ASSERTION(!mGrandparent, "We were not unbound!");
   }
 
   virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
@@ -110,6 +82,7 @@ public:
                               PRBool aNullParent = PR_TRUE);
 
   NS_DECL_NSIMUTATIONOBSERVER_ATTRIBUTECHANGED
+  NS_DECL_NSIMUTATIONOBSERVER_NODEWILLBEDESTROYED
 
   virtual nsGenericDOMDataNode *CloneDataNode(nsINodeInfo *aNodeInfo,
                                               PRBool aCloneText) const
@@ -133,9 +106,11 @@ private:
   // Update our text to our parent's current attr value
   void UpdateText(PRBool aNotify);
 
-  // Detach ourselves as an attribute listener.
-  void DetachListener();
-
+  // This doesn't need to be a strong pointer because it's only non-null
+  // while we're bound to the document tree, and it points to an ancestor
+  // so the ancestor must be bound to the document tree the whole time
+  // and can't be deleted.
+  nsIContent* mGrandparent;
   // What attribute we're showing
   PRInt32 mNameSpaceID;
   nsCOMPtr<nsIAtom> mAttrName;
@@ -178,10 +153,11 @@ NS_IMPL_RELEASE_INHERITED(nsTextNode, nsGenericDOMDataNode)
 
 
 // QueryInterface implementation for nsTextNode
-NS_INTERFACE_MAP_BEGIN(nsTextNode)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMNode)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMText)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMCharacterData)
+NS_INTERFACE_TABLE_HEAD(nsTextNode)
+  NS_NODE_INTERFACE_TABLE3(nsTextNode, nsIDOMNode, nsIDOMText,
+                           nsIDOMCharacterData)
+  NS_INTERFACE_MAP_ENTRY_TEAROFF(nsIDOM3Text, new nsText3Tearoff(this))
+  NS_INTERFACE_MAP_ENTRIES_CYCLE_COLLECTION(nsTextNode)
   NS_INTERFACE_MAP_ENTRY_CONTENT_CLASSINFO(Text)
 NS_INTERFACE_MAP_END_INHERITING(nsGenericDOMDataNode)
 
@@ -226,6 +202,28 @@ nsTextNode::CloneDataNode(nsINodeInfo *aNodeInfo, PRBool aCloneText) const
   }
 
   return it;
+}
+
+nsresult
+nsTextNode::BindToAttribute(nsIAttribute* aAttr)
+{
+  NS_ASSERTION(!IsInDoc(), "Unbind before binding!");
+  NS_ASSERTION(!GetNodeParent(), "Unbind before binding!");
+  NS_ASSERTION(HasSameOwnerDoc(aAttr), "Wrong owner document!");
+
+  mParentPtrBits = reinterpret_cast<PtrBits>(aAttr);
+  return NS_OK;
+}
+
+nsresult
+nsTextNode::UnbindFromAttribute()
+{
+  NS_ASSERTION(GetNodeParent(), "Bind before unbinging!");
+  NS_ASSERTION(GetNodeParent() &&
+               GetNodeParent()->IsNodeOfType(nsINode::eATTRIBUTE),
+               "Use this method only to unbind from an attribute!");
+  mParentPtrBits = 0;
+  return NS_OK;
 }
 
 #ifdef DEBUG
@@ -299,16 +297,16 @@ nsAttributeTextNode::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
                                 nsIContent* aBindingParent,
                                 PRBool aCompileEventHandlers)
 {
-  NS_PRECONDITION(aParent, "This node can't be a child of the document");
+  NS_PRECONDITION(aParent && aParent->GetParent(),
+                  "This node can't be a child of the document or of the document root");
 
   nsresult rv = nsTextNode::BindToTree(aDocument, aParent,
                                        aBindingParent, aCompileEventHandlers);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  nsINode* parent = GetNodeParent();
-  NS_ENSURE_TRUE(parent, NS_ERROR_UNEXPECTED);
-
-  parent->AddMutationObserver(this);
+  NS_ASSERTION(!mGrandparent, "We were already bound!");
+  mGrandparent = aParent->GetParent();
+  mGrandparent->AddMutationObserver(this);
 
   // Note that there is no need to notify here, since we have no
   // frame yet at this point.
@@ -320,9 +318,13 @@ nsAttributeTextNode::BindToTree(nsIDocument* aDocument, nsIContent* aParent,
 void
 nsAttributeTextNode::UnbindFromTree(PRBool aDeep, PRBool aNullParent)
 {
-  // Detach as listener while we know who our parent is!
-  if (aNullParent) {
-    DetachListener();
+  // UnbindFromTree can be called anytime so we have to be safe.
+  if (mGrandparent) {
+    // aNullParent might not be true here, but we want to remove the
+    // mutation observer anyway since we only need it while we're
+    // in the document.
+    mGrandparent->RemoveMutationObserver(this);
+    mGrandparent = nsnull;
   }
   nsTextNode::UnbindFromTree(aDeep, aNullParent);
 }
@@ -336,10 +338,10 @@ nsAttributeTextNode::AttributeChanged(nsIDocument* aDocument,
                                       PRUint32 aStateMask)
 {
   if (aNameSpaceID == mNameSpaceID && aAttribute == mAttrName &&
-      aContent == GetNodeParent()) {
+      aContent == mGrandparent) {
     // Since UpdateText notifies, do it asynchronously.  Note that if we get
-    // unbound while the event is up that's ok -- we'll just have no parent
-    // when it fires, and will do nothing.    
+    // unbound while the event is up that's ok -- we'll just have no
+    // grandparent when it fires, and will do nothing.    
     // XXXbz ideally we'd either process this on layout flushes or do it right
     // after nsIMutationObserver notifications are over or something, instead
     // of doing it fully async.
@@ -350,21 +352,18 @@ nsAttributeTextNode::AttributeChanged(nsIDocument* aDocument,
 }
 
 void
-nsAttributeTextNode::UpdateText(PRBool aNotify)
+nsAttributeTextNode::NodeWillBeDestroyed(const nsINode* aNode)
 {
-  nsIContent* parent = GetParent();
-  if (parent) {
-    nsAutoString attrValue;
-    parent->GetAttr(mNameSpaceID, mAttrName, attrValue);
-    SetText(attrValue, aNotify);
-  }  
+  NS_ASSERTION(aNode == static_cast<nsINode*>(mGrandparent), "Wrong node!");
+  mGrandparent = nsnull;
 }
 
 void
-nsAttributeTextNode::DetachListener()
+nsAttributeTextNode::UpdateText(PRBool aNotify)
 {
-  nsINode* parent = GetNodeParent();
-  if (parent) {
-    parent->RemoveMutationObserver(this);
-  }
+  if (mGrandparent) {
+    nsAutoString attrValue;
+    mGrandparent->GetAttr(mNameSpaceID, mAttrName, attrValue);
+    SetText(attrValue, aNotify);
+  }  
 }

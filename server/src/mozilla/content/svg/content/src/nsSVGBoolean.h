@@ -45,7 +45,7 @@ class nsSVGBoolean
 {
 
 public:
-    void Init(PRUint8 aAttrEnum = 0xff, PRBool aValue = PR_FALSE) {
+  void Init(PRUint8 aAttrEnum = 0xff, PRBool aValue = PR_FALSE) {
     mAnimVal = mBaseVal = aValue;
     mAttrEnum = aAttrEnum;
   }
@@ -72,7 +72,8 @@ private:
 
   struct DOMAnimatedBoolean : public nsIDOMSVGAnimatedBoolean
   {
-    NS_DECL_ISUPPORTS
+    NS_DECL_CYCLE_COLLECTING_ISUPPORTS
+    NS_DECL_CYCLE_COLLECTION_CLASS(DOMAnimatedBoolean)
 
     DOMAnimatedBoolean(nsSVGBoolean* aVal, nsSVGElement *aSVGElement)
       : mVal(aVal), mSVGElement(aSVGElement) {}

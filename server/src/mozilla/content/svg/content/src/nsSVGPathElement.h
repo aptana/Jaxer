@@ -92,19 +92,19 @@ public:
   NS_FORWARD_NSIDOMSVGELEMENT(nsSVGPathElementBase::)
 
   // nsIContent interface
-  NS_IMETHODIMP_(PRBool) IsAttributeMapped(const nsIAtom* name) const;
+  NS_IMETHOD_(PRBool) IsAttributeMapped(const nsIAtom* name) const;
 
   // nsISVGValueObserver
   NS_IMETHOD DidModifySVGObservable (nsISVGValue* observable,
                                      nsISVGValue::modificationType aModType);
 
   // nsSVGPathGeometryElement methods:
-  virtual PRBool IsDependentAttribute(nsIAtom *aName);
+  virtual PRBool AttributeDefinesGeometry(const nsIAtom *aName);
   virtual PRBool IsMarkable();
   virtual void GetMarkPoints(nsTArray<nsSVGMark> *aMarks);
   virtual void ConstructPath(gfxContext *aCtx);
 
-  virtual already_AddRefed<gfxFlattenedPath> GetFlattenedPath(nsIDOMSVGMatrix *aMatrix);
+  virtual already_AddRefed<gfxFlattenedPath> GetFlattenedPath(const gfxMatrix &aMatrix);
 
   // nsIContent interface
   virtual nsresult Clone(nsINodeInfo *aNodeInfo, nsINode **aResult) const;

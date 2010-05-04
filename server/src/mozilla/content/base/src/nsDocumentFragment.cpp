@@ -165,11 +165,9 @@ NS_NewDocumentFragment(nsIDOMDocumentFragment** aInstancePtrResult,
   NS_ENSURE_ARG(aNodeInfoManager);
 
   nsCOMPtr<nsINodeInfo> nodeInfo;
-  nsresult rv =
-    aNodeInfoManager->GetNodeInfo(nsGkAtoms::documentFragmentNodeName,
-                                  nsnull, kNameSpaceID_None,
-                                  getter_AddRefs(nodeInfo));
-  NS_ENSURE_SUCCESS(rv, rv);
+  nodeInfo = aNodeInfoManager->GetNodeInfo(nsGkAtoms::documentFragmentNodeName,
+                                           nsnull, kNameSpaceID_None);
+  NS_ENSURE_TRUE(nodeInfo, NS_ERROR_OUT_OF_MEMORY);
 
   nsDocumentFragment *it = new nsDocumentFragment(nodeInfo);
   if (!it) {
@@ -197,10 +195,9 @@ nsDocumentFragment::IsNodeOfType(PRUint32 aFlags) const
 }
 
 // QueryInterface implementation for nsDocumentFragment
-NS_INTERFACE_MAP_BEGIN(nsDocumentFragment)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMDocumentFragment)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMNode)
-  NS_INTERFACE_MAP_ENTRY_TEAROFF(nsIDOM3Node, new nsNode3Tearoff(this))
+NS_INTERFACE_TABLE_HEAD(nsDocumentFragment)
+  NS_NODE_INTERFACE_TABLE2(nsDocumentFragment, nsIDOMNode,
+                           nsIDOMDocumentFragment)
   NS_INTERFACE_MAP_ENTRY_CONTENT_CLASSINFO(DocumentFragment)
 NS_INTERFACE_MAP_END_INHERITING(nsGenericElement)
 

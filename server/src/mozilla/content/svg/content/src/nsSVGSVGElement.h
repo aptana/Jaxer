@@ -46,14 +46,67 @@
 #include "nsIDOMSVGLocatable.h"
 #include "nsIDOMSVGZoomAndPan.h"
 #include "nsIDOMSVGMatrix.h"
+#include "nsIDOMSVGPoint.h"
 #include "nsSVGLength2.h"
 #include "nsSVGEnum.h"
+#include "nsSVGViewBox.h"
+#include "nsSVGPreserveAspectRatio.h"
+
+#ifdef MOZ_SMIL
+class nsSMILTimeContainer;
+#endif // MOZ_SMIL
 
 #define QI_AND_CAST_TO_NSSVGSVGELEMENT(base)                                  \
   (nsCOMPtr<nsIDOMSVGSVGElement>(do_QueryInterface(base)) ?                   \
    static_cast<nsSVGSVGElement*>(base.get()) : nsnull)
 
 typedef nsSVGStylableElement nsSVGSVGElementBase;
+
+class nsSVGSVGElement;
+
+class nsSVGTranslatePoint {
+public:
+  nsSVGTranslatePoint(float aX, float aY) :
+    mX(aX), mY(aY) {}
+
+  void SetX(float aX)
+    { mX = aX; }
+  void SetY(float aY)
+    { mY = aY; }
+  float GetX() const
+    { return mX; }
+  float GetY() const
+    { return mY; }
+
+  nsresult ToDOMVal(nsSVGSVGElement *aElement, nsIDOMSVGPoint **aResult);
+
+private:
+
+  struct DOMVal : public nsIDOMSVGPoint {
+    NS_DECL_CYCLE_COLLECTING_ISUPPORTS
+    NS_DECL_CYCLE_COLLECTION_CLASS(DOMVal)
+
+    DOMVal(nsSVGTranslatePoint* aVal, nsSVGSVGElement *aElement)
+      : mVal(aVal), mElement(aElement) {}
+
+    NS_IMETHOD GetX(float *aValue)
+      { *aValue = mVal->GetX(); return NS_OK; }
+    NS_IMETHOD GetY(float *aValue)
+      { *aValue = mVal->GetY(); return NS_OK; }
+
+    NS_IMETHOD SetX(float aValue);
+    NS_IMETHOD SetY(float aValue);
+
+    NS_IMETHOD MatrixTransform(nsIDOMSVGMatrix *matrix,
+                               nsIDOMSVGPoint **_retval);
+
+    nsSVGTranslatePoint *mVal; // kept alive because it belongs to mElement
+    nsRefPtr<nsSVGSVGElement> mElement;
+  };
+
+  float mX;
+  float mY;
+};
 
 class svgFloatSize {
 public:
@@ -79,10 +132,9 @@ class nsSVGSVGElement : public nsSVGSVGElementBase,
 
 protected:
   friend nsresult NS_NewSVGSVGElement(nsIContent **aResult,
-                                      nsINodeInfo *aNodeInfo);
-  nsSVGSVGElement(nsINodeInfo* aNodeInfo);
-  virtual ~nsSVGSVGElement();
-  nsresult Init();
+                                      nsINodeInfo *aNodeInfo,
+                                      PRBool aFromParser);
+  nsSVGSVGElement(nsINodeInfo* aNodeInfo, PRBool aFromParser);
   
 public:
 
@@ -97,9 +149,6 @@ public:
   NS_FORWARD_NSIDOMNODE(nsSVGSVGElementBase::)
   NS_FORWARD_NSIDOMELEMENT(nsSVGSVGElementBase::)
   NS_FORWARD_NSIDOMSVGELEMENT(nsSVGSVGElementBase::)
-
-  // helper methods for implementing SVGZoomEvent:
-  NS_IMETHOD GetCurrentScaleNumber(nsIDOMSVGNumber **aResult);
 
   /**
    * For use by zoom controls to allow currentScale, currentTranslate.x and
@@ -116,52 +165,49 @@ public:
   NS_IMETHOD SetCurrentTranslate(float x, float y);
 
   /**
-   * Record the current values of currentScale, currentTranslate.x and
-   * currentTranslate.y prior to changing the value of one of them.
+   * Retrieve the value of currentScale and currentTranslate.
    */
-  NS_IMETHOD_(void) RecordCurrentScaleTranslate();
+  const nsSVGTranslatePoint& GetCurrentTranslate() { return mCurrentTranslate; }
+  float GetCurrentScale() { return mCurrentScale; }
 
   /**
    * Retrieve the value of currentScale, currentTranslate.x or
    * currentTranslate.y prior to the last change made to any one of them.
    */
-  NS_IMETHOD_(float) GetPreviousTranslate_x();
-  NS_IMETHOD_(float) GetPreviousTranslate_y();
-  NS_IMETHOD_(float) GetPreviousScale();
+  const nsSVGTranslatePoint& GetPreviousTranslate() { return mPreviousTranslate; }
+  float GetPreviousScale() { return mPreviousScale; }
+
+#ifdef MOZ_SMIL
+  nsSMILTimeContainer* GetTimedDocumentRoot();
+#endif // MOZ_SMIL
 
   // nsIContent interface
   NS_IMETHOD_(PRBool) IsAttributeMapped(const nsIAtom* aAttribute) const;
-
-  virtual nsresult AfterSetAttr(PRInt32 aNameSpaceID, nsIAtom* aName,
-                                const nsAString* aValue, PRBool aNotify);
-  virtual nsresult UnsetAttr(PRInt32 aNameSpaceID, nsIAtom* aAttribute,
-                             PRBool aNotify);
-
-  // nsISVGValueObserver
-  NS_IMETHOD WillModifySVGObservable(nsISVGValue* observable,
-                                     nsISVGValue::modificationType aModType);
-  NS_IMETHOD DidModifySVGObservable (nsISVGValue* observable,
-                                     nsISVGValue::modificationType aModType);
+#ifdef MOZ_SMIL
+  virtual nsresult PreHandleEvent(nsEventChainPreVisitor& aVisitor);
+#endif // MOZ_SMIL
 
   // nsSVGElement specializations:
+  virtual gfxMatrix PrependLocalTransformTo(const gfxMatrix &aMatrix);
   virtual void DidChangeLength(PRUint8 aAttrEnum, PRBool aDoSetAttr);
   virtual void DidChangeEnum(PRUint8 aAttrEnum, PRBool aDoSetAttr);
+  virtual void DidChangeViewBox(PRBool aDoSetAttr);
+  virtual void DidChangePreserveAspectRatio(PRBool aDoSetAttr);
 
   // nsSVGSVGElement methods:
   float GetLength(PRUint8 mCtxType);
   float GetMMPerPx(PRUint8 mCtxType = 0);
-  already_AddRefed<nsIDOMSVGRect> GetCtxRect();
 
   // public helpers:
-  nsresult GetViewboxToViewportTransform(nsIDOMSVGMatrix **_retval);
+  gfxMatrix GetViewBoxTransform();
 
   virtual nsresult Clone(nsINodeInfo *aNodeInfo, nsINode **aResult) const;
 
-  svgFloatSize GetViewportSize() {
+  svgFloatSize GetViewportSize() const {
     return svgFloatSize(mViewportWidth, mViewportHeight);
   }
 
-  void SetViewportSize(svgFloatSize& aSize) {
+  void SetViewportSize(const svgFloatSize& aSize) {
     mViewportWidth  = aSize.width;
     mViewportHeight = aSize.height;
   }
@@ -170,14 +216,35 @@ protected:
   // nsSVGElement overrides
   PRBool IsEventName(nsIAtom* aName);
 
+#ifdef MOZ_SMIL
+  virtual nsresult BindToTree(nsIDocument* aDocument, nsIContent* aParent,
+                              nsIContent* aBindingParent,
+                              PRBool aCompileEventHandlers);
+  virtual void UnbindFromTree(PRBool aDeep, PRBool aNullParent);
+#endif // MOZ_SMIL   
+
   // implementation helpers:
-  void GetOffsetToAncestor(nsIContent* ancestor, float &x, float &y);
+
   PRBool IsRoot() {
     NS_ASSERTION((IsInDoc() && !GetParent()) ==
                  (GetOwnerDoc() && (GetOwnerDoc()->GetRootContent() == this)),
                  "Can't determine if we're root");
     return IsInDoc() && !GetParent();
   }
+
+#ifdef MOZ_SMIL
+  /* 
+   * While binding to the tree we need to determine if we will be the outermost
+   * <svg> element _before_ the children are bound (as they want to know what
+   * timed document root to register with) and therefore _before_ our parent is
+   * set (both actions are performed by nsGenericElement::BindToTree) so we
+   * can't use GetOwnerSVGElement() as it relies on GetParent(). This code is
+   * basically a simplified version of GetOwnerSVGElement that uses the parent
+   * parameters passed in instead.
+   */
+  PRBool WillBeOutermostSVG(nsIContent* aParent,
+                            nsIContent* aBindingParent) const;
+#endif // MOZ_SMIL
 
   // invalidate viewbox -> viewport xform & inform frames
   void InvalidateTransformNotifyFrame();
@@ -195,9 +262,13 @@ protected:
   static nsSVGEnumMapping sZoomAndPanMap[];
   static EnumInfo sEnumInfo[1];
 
+  virtual nsSVGViewBox *GetViewBox();
+  virtual nsSVGPreserveAspectRatio *GetPreserveAspectRatio();
+
+  nsSVGViewBox             mViewBox;
+  nsSVGPreserveAspectRatio mPreserveAspectRatio;
+
   nsSVGSVGElement                  *mCoordCtx;
-  nsCOMPtr<nsIDOMSVGAnimatedRect>   mViewBox;
-  nsCOMPtr<nsIDOMSVGAnimatedPreserveAspectRatio> mPreserveAspectRatio;
 
   // The size of the rectangular SVG viewport into which we render. This is
   // not (necessarily) the same as the content area. See:
@@ -211,16 +282,28 @@ protected:
 
   float mCoordCtxMmPerPx;
 
+#ifdef MOZ_SMIL
+  // The time container for animations within this SVG document fragment. Set
+  // for all outermost <svg> elements (not nested <svg> elements).
+  nsAutoPtr<nsSMILTimeContainer> mTimedDocumentRoot;
+#endif // MOZ_SMIL
+
   // zoom and pan
-  // IMPORTANT: only RecordCurrentScaleTranslate should change the "mPreviousX"
-  // members below - see the comment in RecordCurrentScaleTranslate
-  nsCOMPtr<nsIDOMSVGPoint>          mCurrentTranslate;
-  nsCOMPtr<nsIDOMSVGNumber>         mCurrentScale;
-  float                             mPreviousTranslate_x;
-  float                             mPreviousTranslate_y;
+  // IMPORTANT: see the comment in RecordCurrentScaleTranslate before writing
+  // code to change any of these!
+  nsSVGTranslatePoint               mCurrentTranslate;
+  float                             mCurrentScale;
+  nsSVGTranslatePoint               mPreviousTranslate;
   float                             mPreviousScale;
   PRInt32                           mRedrawSuspendCount;
-  PRPackedBool                      mDispatchEvent;
+
+#ifdef MOZ_SMIL
+  // For outermost <svg> elements created from parsing, animation is started by
+  // the onload event in accordance with the SVG spec, but for <svg> elements
+  // created by script or promoted from inner <svg> to outermost <svg> we need
+  // to manually kick off animation when they are bound to the tree.
+  PRPackedBool                      mStartAnimationOnBindToTree;
+#endif // MOZ_SMIL
 };
 
 #endif

@@ -50,10 +50,11 @@
 #include "nsColor.h"
 #include "nsCaseTreatment.h"
 
-typedef unsigned long PtrBits;
+typedef PRUptrdiff PtrBits;
 class nsAString;
 class nsIAtom;
 class nsICSSStyleRule;
+class nsIURI;
 class nsISVGValue;
 class nsIDocument;
 template<class E> class nsCOMArray;
@@ -71,8 +72,10 @@ template<class E> class nsTPtrArray;
 #define NS_ATTRVALUE_INTEGERTYPE_MINVALUE (-NS_ATTRVALUE_INTEGERTYPE_MAXVALUE - 1)
 
 #define NS_ATTRVALUE_ENUMTABLEINDEX_BITS (32 - 16 - NS_ATTRVALUE_INTEGERTYPE_BITS)
-#define NS_ATTRVALUE_ENUMTABLEINDEX_MAXVALUE ((1 << NS_ATTRVALUE_ENUMTABLEINDEX_BITS) - 1)
-#define NS_ATTRVALUE_ENUMTABLEINDEX_MASK (PtrBits((1 << NS_ATTRVALUE_ENUMTABLEINDEX_BITS) - 1))
+#define NS_ATTRVALUE_ENUMTABLE_VALUE_NEEDS_TO_UPPER (1 << (NS_ATTRVALUE_ENUMTABLEINDEX_BITS - 1))
+#define NS_ATTRVALUE_ENUMTABLEINDEX_MAXVALUE (NS_ATTRVALUE_ENUMTABLE_VALUE_NEEDS_TO_UPPER - 1)
+#define NS_ATTRVALUE_ENUMTABLEINDEX_MASK \
+  (PtrBits((((1 << NS_ATTRVALUE_ENUMTABLEINDEX_BITS) - 1) &~ NS_ATTRVALUE_ENUMTABLE_VALUE_NEEDS_TO_UPPER)))
 
 /**
  * A class used to construct a nsString from a nsStringBuffer (we might
@@ -110,13 +113,15 @@ public:
     eColor =        0x07, // 0111
     eEnum =         0x0B, // 1011  This should eventually die
     ePercent =      0x0F, // 1111
-    // Values below here won't matter, they'll be stored in the 'misc' struct
-    // anyway
+    // Values below here won't matter, they'll be always stored in the 'misc'
+    // struct.
     eCSSStyleRule = 0x10,
     eAtomArray =    0x11 
 #ifdef MOZ_SVG
     ,eSVGValue =    0x12
 #endif
+    ,eFloatValue  = 0x13
+    ,eLazyURIValue = 0x14
   };
 
   ValueType Type() const;
@@ -149,6 +154,11 @@ public:
 #ifdef MOZ_SVG
   inline nsISVGValue* GetSVGValue() const;
 #endif
+  inline float GetFloatValue() const;
+  inline nsIURI* GetURIValue() const;
+  const nsCheapString GetURIStringValue() const;
+  void CacheURIValue(nsIURI* aURI);
+  void DropCachedURI();
 
   // Methods to get access to atoms we may have
   // Returns the number of atoms we have; 0 if we have none.  It's OK
@@ -222,8 +232,7 @@ public:
    * @return whether the value could be parsed
    */
   PRBool ParseIntValue(const nsAString& aString) {
-    return ParseIntWithBounds(aString, NS_ATTRVALUE_INTEGERTYPE_MINVALUE,
-                              NS_ATTRVALUE_INTEGERTYPE_MAXVALUE);
+    return ParseIntWithBounds(aString, PR_INT32_MIN, PR_INT32_MAX);
   }
 
   /**
@@ -235,7 +244,7 @@ public:
    * @return whether the value could be parsed
    */
   PRBool ParseIntWithBounds(const nsAString& aString, PRInt32 aMin,
-                            PRInt32 aMax = NS_ATTRVALUE_INTEGERTYPE_MAXVALUE);
+                            PRInt32 aMax = PR_INT32_MAX);
 
   /**
    * Parse a string into a color.
@@ -245,6 +254,20 @@ public:
    * @return whether the value could be parsed
    */
   PRBool ParseColor(const nsAString& aString, nsIDocument* aDocument);
+
+  /**
+   * Parse a string value into a float.
+   *
+   * @param aString the string to parse
+   * @return whether the value could be parsed
+   */
+  PRBool ParseFloatValue(const nsAString& aString);
+
+  /**
+   * Parse a lazy URI.  This just sets up the storage for the URI; it
+   * doesn't actually allocate it.
+   */
+  PRBool ParseLazyURIValue(const nsAString& aString);
 
 private:
   // These have to be the same as in ValueType
@@ -258,20 +281,33 @@ private:
   struct MiscContainer
   {
     ValueType mType;
+    // mStringBits points to either nsIAtom* or nsStringBuffer* and is used when
+    // mType isn't mCSSStyleRule or eSVGValue.
+    // Note eStringBase and eAtomBase is used also to handle the type of
+    // mStringBits.
+    PtrBits mStringBits;
     union {
+      PRInt32 mInteger;
       nscolor mColor;
+      PRUint32 mEnumValue;
+      PRInt32 mPercent;
       nsICSSStyleRule* mCSSStyleRule;
       nsCOMArray<nsIAtom>* mAtomArray;
 #ifdef MOZ_SVG
       nsISVGValue* mSVGValue;
 #endif
+      float mFloatValue;
+      nsIURI* mURI;
     };
   };
 
   inline ValueBaseType BaseType() const;
 
   inline void SetPtrValueAndType(void* aValue, ValueBaseType aType);
-  inline void SetIntValueAndType(PRInt32 aValue, ValueType aType);
+  void SetIntValueAndType(PRInt32 aValue, ValueType aType,
+                          const nsAString* aStringValue);
+  void SetMiscAtomOrString(const nsAString* aValue);
+  void ResetMiscAtomOrString();
   inline void ResetIfSet();
 
   inline void* GetPtr() const;
@@ -280,6 +316,14 @@ private:
 
   PRBool EnsureEmptyMiscContainer();
   PRBool EnsureEmptyAtomArray();
+  nsStringBuffer* GetStringBuffer(const nsAString& aValue) const;
+  // aStrict is set PR_TRUE if stringifying the return value equals with
+  // aValue.
+  PRInt32 StringToInteger(const nsAString& aValue,
+                          PRBool* aStrict,
+                          PRInt32* aErrorCode,
+                          PRBool aCanBePercent = PR_FALSE,
+                          PRBool* aIsPercent = nsnull) const;
 
   static nsTPtrArray<const EnumTable>* sEnumTableArray;
 
@@ -301,7 +345,9 @@ inline PRInt32
 nsAttrValue::GetIntegerValue() const
 {
   NS_PRECONDITION(Type() == eInteger, "wrong type");
-  return GetIntInternal();
+  return (BaseType() == eIntegerBase)
+         ? GetIntInternal()
+         : GetMiscContainer()->mInteger;
 }
 
 inline PRInt16
@@ -310,16 +356,21 @@ nsAttrValue::GetEnumValue() const
   NS_PRECONDITION(Type() == eEnum, "wrong type");
   // We don't need to worry about sign extension here since we're
   // returning an PRInt16 which will cut away the top bits.
-  return static_cast<PRInt16>
-                    (GetIntInternal() >> NS_ATTRVALUE_ENUMTABLEINDEX_BITS);
+  return static_cast<PRInt16>((
+    (BaseType() == eIntegerBase)
+    ? static_cast<PRUint32>(GetIntInternal())
+    : GetMiscContainer()->mEnumValue)
+      >> NS_ATTRVALUE_ENUMTABLEINDEX_BITS);
 }
 
 inline float
 nsAttrValue::GetPercentValue() const
 {
   NS_PRECONDITION(Type() == ePercent, "wrong type");
-  return static_cast<float>(GetIntInternal()) /
-         100.0f;
+  return ((BaseType() == eIntegerBase)
+          ? GetIntInternal()
+          : GetMiscContainer()->mPercent)
+            / 100.0f;
 }
 
 inline nsCOMArray<nsIAtom>*
@@ -345,6 +396,20 @@ nsAttrValue::GetSVGValue() const
 }
 #endif
 
+inline float
+nsAttrValue::GetFloatValue() const
+{
+  NS_PRECONDITION(Type() == eFloatValue, "wrong type");
+  return GetMiscContainer()->mFloatValue;
+}
+
+inline nsIURI*
+nsAttrValue::GetURIValue() const
+{
+  NS_PRECONDITION(Type() == eLazyURIValue, "wrong type");
+  return GetMiscContainer()->mURI;
+}
+
 inline nsAttrValue::ValueBaseType
 nsAttrValue::BaseType() const
 {
@@ -357,19 +422,6 @@ nsAttrValue::SetPtrValueAndType(void* aValue, ValueBaseType aType)
   NS_ASSERTION(!(NS_PTR_TO_INT32(aValue) & ~NS_ATTRVALUE_POINTERVALUE_MASK),
                "pointer not properly aligned, this will crash");
   mBits = reinterpret_cast<PtrBits>(aValue) | aType;
-}
-
-inline void
-nsAttrValue::SetIntValueAndType(PRInt32 aValue, ValueType aType)
-{
-#ifdef DEBUG
-  {
-    PRInt32 tmp = aValue * NS_ATTRVALUE_INTEGERTYPE_MULTIPLIER;
-    NS_ASSERTION(tmp / NS_ATTRVALUE_INTEGERTYPE_MULTIPLIER == aValue,
-                 "Integer too big to fit");
-  }
-#endif
-  mBits = (aValue * NS_ATTRVALUE_INTEGERTYPE_MULTIPLIER) | aType;
 }
 
 inline void

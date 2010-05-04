@@ -59,6 +59,7 @@
 #include "nsAutoPtr.h"
 #include "nsLoadListenerProxy.h"
 #include "nsStreamUtils.h"
+#include "nsCrossSiteListenerProxy.h"
 
 /**
  * This class manages loading a single XML document
@@ -70,6 +71,7 @@ class nsSyncLoader : public nsIDOMLoadListener,
                      public nsSupportsWeakReference
 {
 public:
+    nsSyncLoader() : mLoading(PR_FALSE), mLoadSuccess(PR_FALSE) {}
     virtual ~nsSyncLoader();
 
     NS_DECL_ISUPPORTS
@@ -219,12 +221,10 @@ nsSyncLoader::LoadDocument(nsIChannel* aChannel,
     }
 
     if (aLoaderPrincipal) {
-      nsCOMPtr<nsIURI> docURI;
-      rv = aChannel->GetOriginalURI(getter_AddRefs(docURI));
-      NS_ENSURE_SUCCESS(rv, rv);
-
-      rv = aLoaderPrincipal->CheckMayLoad(docURI, PR_TRUE);
-      NS_ENSURE_SUCCESS(rv, rv);
+        listener = new nsCrossSiteListenerProxy(listener, aLoaderPrincipal,
+                                                mChannel, PR_FALSE, &rv);
+        NS_ENSURE_TRUE(listener, NS_ERROR_OUT_OF_MEMORY);
+        NS_ENSURE_SUCCESS(rv, rv);
     }
 
     // Register as a load listener on the document
@@ -370,18 +370,6 @@ nsSyncLoader::OnChannelRedirect(nsIChannel *aOldChannel,
 
     mChannel = aNewChannel;
 
-    nsCOMPtr<nsIURI> oldURI;
-    nsresult rv = aOldChannel->GetURI(getter_AddRefs(oldURI));
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    nsCOMPtr<nsIURI> newURI;
-    rv = aNewChannel->GetURI(getter_AddRefs(newURI));
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    rv = nsContentUtils::GetSecurityManager()->
-        CheckSameOriginURI(oldURI, newURI, PR_TRUE);
-    NS_ENSURE_SUCCESS(rv, rv);
-
     return NS_OK;
 }
 
@@ -471,8 +459,15 @@ nsSyncLoadService::PushSyncStreamToListener(nsIInputStream* aIn,
     nsresult rv;
     nsCOMPtr<nsIInputStream> bufferedStream;
     if (!NS_InputStreamIsBuffered(aIn)) {
+        PRInt32 chunkSize;
+        rv = aChannel->GetContentLength(&chunkSize);
+        if (NS_FAILED(rv)) {
+            chunkSize = 4096;
+        }
+        chunkSize = PR_MIN(PR_UINT16_MAX, chunkSize);
+
         rv = NS_NewBufferedInputStream(getter_AddRefs(bufferedStream), aIn,
-                                       4096);
+                                       chunkSize);
         NS_ENSURE_SUCCESS(rv, rv);
 
         aIn = bufferedStream;

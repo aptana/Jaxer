@@ -58,6 +58,8 @@
 #include "nsXBLPrototypeBinding.h"
 #include "nsCSSRuleProcessor.h"
 #include "nsContentUtils.h"
+#include "nsStyleSet.h"
+#include "nsIScriptSecurityManager.h"
 
 NS_IMPL_CYCLE_COLLECTION_CLASS(nsXBLResourceLoader)
 NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(nsXBLResourceLoader)
@@ -147,18 +149,23 @@ nsXBLResourceLoader::LoadResources(PRBool* aResult)
       nsresult rv;
       if (NS_SUCCEEDED(url->SchemeIs("chrome", &chrome)) && chrome)
       {
-        nsCOMPtr<nsICSSStyleSheet> sheet;
-        rv = cssLoader->LoadSheetSync(url, getter_AddRefs(sheet));
-        NS_ASSERTION(NS_SUCCEEDED(rv), "Load failed!!!");
-        if (NS_SUCCEEDED(rv))
-        {
-          rv = StyleSheetLoaded(sheet, PR_FALSE, NS_OK);
-          NS_ASSERTION(NS_SUCCEEDED(rv), "Processing the style sheet failed!!!");
+        rv = nsContentUtils::GetSecurityManager()->
+          CheckLoadURIWithPrincipal(docPrincipal, url,
+                                    nsIScriptSecurityManager::ALLOW_CHROME);
+        if (NS_SUCCEEDED(rv)) {
+          nsCOMPtr<nsICSSStyleSheet> sheet;
+          rv = cssLoader->LoadSheetSync(url, getter_AddRefs(sheet));
+          NS_ASSERTION(NS_SUCCEEDED(rv), "Load failed!!!");
+          if (NS_SUCCEEDED(rv))
+          {
+            rv = StyleSheetLoaded(sheet, PR_FALSE, NS_OK);
+            NS_ASSERTION(NS_SUCCEEDED(rv), "Processing the style sheet failed!!!");
+          }
         }
       }
       else
       {
-        rv = cssLoader->LoadSheet(url, docPrincipal, this);
+        rv = cssLoader->LoadSheet(url, docPrincipal, EmptyCString(), this);
         if (NS_SUCCEEDED(rv))
           ++mPendingSheets;
       }
@@ -192,7 +199,8 @@ nsXBLResourceLoader::StyleSheetLoaded(nsICSSStyleSheet* aSheet,
   if (mPendingSheets == 0) {
     // All stylesheets are loaded.  
     mResources->mRuleProcessor =
-      new nsCSSRuleProcessor(mResources->mStyleSheetList);
+      new nsCSSRuleProcessor(mResources->mStyleSheetList, 
+                             nsStyleSet::eDocSheet);
 
     // XXX Check for mPendingScripts when scripts also come online.
     if (!mInLoadResourcesFunc)

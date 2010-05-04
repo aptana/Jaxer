@@ -36,33 +36,46 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#include "nsISVGLength.h"
 #include "nsSVGLength2.h"
 #include "prdtoa.h"
 #include "nsTextFormatter.h"
 #include "nsSVGSVGElement.h"
+#include "nsIFrame.h"
+#include "nsSVGIntegrationUtils.h"
+#ifdef MOZ_SMIL
+#include "nsSMILValue.h"
+#include "nsSMILFloatType.h"
+#endif // MOZ_SMIL
 
-NS_IMPL_ADDREF(nsSVGLength2::DOMBaseVal)
-NS_IMPL_RELEASE(nsSVGLength2::DOMBaseVal)
+NS_SVG_VAL_IMPL_CYCLE_COLLECTION(nsSVGLength2::DOMBaseVal, mSVGElement)
 
-NS_IMPL_ADDREF(nsSVGLength2::DOMAnimVal)
-NS_IMPL_RELEASE(nsSVGLength2::DOMAnimVal)
+NS_SVG_VAL_IMPL_CYCLE_COLLECTION(nsSVGLength2::DOMAnimVal, mSVGElement)
 
-NS_IMPL_ADDREF(nsSVGLength2::DOMAnimatedLength)
-NS_IMPL_RELEASE(nsSVGLength2::DOMAnimatedLength)
+NS_SVG_VAL_IMPL_CYCLE_COLLECTION(nsSVGLength2::DOMAnimatedLength, mSVGElement)
 
-NS_INTERFACE_MAP_BEGIN(nsSVGLength2::DOMBaseVal)
+NS_IMPL_CYCLE_COLLECTING_ADDREF(nsSVGLength2::DOMBaseVal)
+NS_IMPL_CYCLE_COLLECTING_RELEASE(nsSVGLength2::DOMBaseVal)
+
+NS_IMPL_CYCLE_COLLECTING_ADDREF(nsSVGLength2::DOMAnimVal)
+NS_IMPL_CYCLE_COLLECTING_RELEASE(nsSVGLength2::DOMAnimVal)
+
+NS_IMPL_CYCLE_COLLECTING_ADDREF(nsSVGLength2::DOMAnimatedLength)
+NS_IMPL_CYCLE_COLLECTING_RELEASE(nsSVGLength2::DOMAnimatedLength)
+
+NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(nsSVGLength2::DOMBaseVal)
   NS_INTERFACE_MAP_ENTRY(nsIDOMSVGLength)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
   NS_INTERFACE_MAP_ENTRY_CONTENT_CLASSINFO(SVGLength)
 NS_INTERFACE_MAP_END
 
-NS_INTERFACE_MAP_BEGIN(nsSVGLength2::DOMAnimVal)
+NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(nsSVGLength2::DOMAnimVal)
   NS_INTERFACE_MAP_ENTRY(nsIDOMSVGLength)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
   NS_INTERFACE_MAP_ENTRY_CONTENT_CLASSINFO(SVGLength)
 NS_INTERFACE_MAP_END
 
-NS_INTERFACE_MAP_BEGIN(nsSVGLength2::DOMAnimatedLength)
+NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(nsSVGLength2::DOMAnimatedLength)
   NS_INTERFACE_MAP_ENTRY(nsIDOMSVGAnimatedLength)
   NS_INTERFACE_MAP_ENTRY(nsISupports)
   NS_INTERFACE_MAP_ENTRY_CONTENT_CLASSINFO(SVGAnimatedLength)
@@ -153,7 +166,7 @@ GetValueFromString(const nsAString &aValueAsString,
   
   char *rest;
   *aValue = float(PR_strtod(str, &rest));
-  if (rest != str) {
+  if (rest != str && NS_FloatIsFinite(*aValue)) {
     *aUnitType = GetUnitTypeForString(rest);
     if (IsValidUnitType(*aUnitType)) {
       return NS_OK;
@@ -179,26 +192,58 @@ nsSVGLength2::GetMMPerPixel(nsSVGSVGElement *aCtx) const
   return mmPerPx;
 }
 
+/*static*/ float
+nsSVGLength2::GetMMPerPixel(nsIFrame *aNonSVGFrame)
+{
+  nsPresContext* presContext = aNonSVGFrame->PresContext();
+  float pixelsPerInch =
+    presContext->AppUnitsToFloatCSSPixels(presContext->AppUnitsPerInch());
+  return 25.4f/pixelsPerInch;
+}
+
+static float
+FixAxisLength(float aLength)
+{
+  if (aLength == 0.0f) {
+    NS_WARNING("zero axis length");
+    return 1e-20f;
+  }
+  return aLength;
+}
+
 float
 nsSVGLength2::GetAxisLength(nsSVGSVGElement *aCtx) const
 {
   if (!aCtx)
     return 1;
 
-  float d = aCtx->GetLength(mCtxType);
-
-  if (d == 0.0f) {
-    NS_WARNING("zero axis length");
-    d = 1e-20f;
-  }
-
-  return d;
+  return FixAxisLength(aCtx->GetLength(mCtxType));
 }
 
 float
-nsSVGLength2::GetUnitScaleFactor(nsSVGElement *aSVGElement) const
+nsSVGLength2::GetAxisLength(nsIFrame *aNonSVGFrame) const
 {
-  switch (mSpecifiedUnitType) {
+  gfxRect rect = nsSVGIntegrationUtils::GetSVGRectForNonSVGFrame(aNonSVGFrame);
+  float length;
+  switch (mCtxType) {
+  case nsSVGUtils::X: length = rect.Width(); break;
+  case nsSVGUtils::Y: length = rect.Height(); break;
+  case nsSVGUtils::XY:
+    length = nsSVGUtils::ComputeNormalizedHypotenuse(rect.Width(), rect.Height());
+    break;
+  default:
+    NS_NOTREACHED("Unknown axis type");
+    length = 1;
+    break;
+  }
+  return FixAxisLength(length);
+}
+
+float
+nsSVGLength2::GetUnitScaleFactor(nsSVGElement *aSVGElement,
+                                 PRUint8 aUnitType) const
+{
+  switch (aUnitType) {
   case nsIDOMSVGLength::SVG_LENGTHTYPE_NUMBER:
   case nsIDOMSVGLength::SVG_LENGTHTYPE_PX:
     return 1;
@@ -208,13 +253,13 @@ nsSVGLength2::GetUnitScaleFactor(nsSVGElement *aSVGElement) const
     return 1 / GetExLength(aSVGElement);
   }
 
-  return GetUnitScaleFactor(aSVGElement->GetCtx());
+  return GetUnitScaleFactor(aSVGElement->GetCtx(), aUnitType);
 }
 
 float
-nsSVGLength2::GetUnitScaleFactor(nsSVGSVGElement *aCtx) const
+nsSVGLength2::GetUnitScaleFactor(nsSVGSVGElement *aCtx, PRUint8 aUnitType) const
 {
-  switch (mSpecifiedUnitType) {
+  switch (aUnitType) {
   case nsIDOMSVGLength::SVG_LENGTHTYPE_NUMBER:
   case nsIDOMSVGLength::SVG_LENGTHTYPE_PX:
     return 1;
@@ -240,12 +285,51 @@ nsSVGLength2::GetUnitScaleFactor(nsSVGSVGElement *aCtx) const
   }
 }
 
+float
+nsSVGLength2::GetUnitScaleFactor(nsIFrame *aFrame, PRUint8 aUnitType) const
+{
+  nsIContent* content = aFrame->GetContent();
+  if (content->IsNodeOfType(nsINode::eSVG))
+    return GetUnitScaleFactor(static_cast<nsSVGElement*>(content), aUnitType);
+
+  switch (aUnitType) {
+  case nsIDOMSVGLength::SVG_LENGTHTYPE_NUMBER:
+  case nsIDOMSVGLength::SVG_LENGTHTYPE_PX:
+    return 1;
+  case nsIDOMSVGLength::SVG_LENGTHTYPE_MM:
+    return GetMMPerPixel(aFrame);
+  case nsIDOMSVGLength::SVG_LENGTHTYPE_CM:
+    return GetMMPerPixel(aFrame) / 10.0f;
+  case nsIDOMSVGLength::SVG_LENGTHTYPE_IN:
+    return GetMMPerPixel(aFrame) / 25.4f;
+  case nsIDOMSVGLength::SVG_LENGTHTYPE_PT:
+    return GetMMPerPixel(aFrame) * POINTS_PER_INCH_FLOAT / 25.4f;
+  case nsIDOMSVGLength::SVG_LENGTHTYPE_PC:
+    return GetMMPerPixel(aFrame) * POINTS_PER_INCH_FLOAT / 24.4f / 12.0f;
+  case nsIDOMSVGLength::SVG_LENGTHTYPE_PERCENTAGE:
+    return 100.0f / GetAxisLength(aFrame);
+  case nsIDOMSVGLength::SVG_LENGTHTYPE_EMS:
+    return 1 / GetEmLength(aFrame);
+  case nsIDOMSVGLength::SVG_LENGTHTYPE_EXS:
+    return 1 / GetExLength(aFrame);
+  default:
+    NS_NOTREACHED("Unknown unit type");
+    return 0;
+  }
+}
+
 void
 nsSVGLength2::SetBaseValueInSpecifiedUnits(float aValue,
                                            nsSVGElement *aSVGElement)
 {
   mBaseVal = aValue;
   aSVGElement->DidChangeLength(mAttrEnum, PR_TRUE);
+
+#ifdef MOZ_SMIL
+  if (mIsAnimated) {
+    aSVGElement->AnimationNeedsResample();
+  }
+#endif
 }
 
 void
@@ -255,7 +339,8 @@ nsSVGLength2::ConvertToSpecifiedUnits(PRUint16 unitType,
   if (!IsValidUnitType(unitType))
     return;
 
-  float valueInUserUnits = mBaseVal / GetUnitScaleFactor(aSVGElement);
+  float valueInUserUnits = 
+    mBaseVal / GetUnitScaleFactor(aSVGElement, mSpecifiedUnitType);
   mSpecifiedUnitType = PRUint8(unitType);
   SetBaseValue(valueInUserUnits, aSVGElement);
 }
@@ -271,6 +356,12 @@ nsSVGLength2::NewValueSpecifiedUnits(PRUint16 unitType,
   mBaseVal = mAnimVal = valueInSpecifiedUnits;
   mSpecifiedUnitType = PRUint8(unitType);
   aSVGElement->DidChangeLength(mAttrEnum, PR_TRUE);
+
+#ifdef MOZ_SMIL
+  if (mIsAnimated) {
+    aSVGElement->AnimationNeedsResample();
+  }
+#endif
 }
 
 nsresult
@@ -314,6 +405,12 @@ nsSVGLength2::SetBaseValueString(const nsAString &aValueAsString,
   mSpecifiedUnitType = PRUint8(unitType);
   aSVGElement->DidChangeLength(mAttrEnum, aDoSetAttr);
 
+#ifdef MOZ_SMIL
+  if (mIsAnimated) {
+    aSVGElement->AnimationNeedsResample();
+  }
+#endif
+
   return NS_OK;
 }
 
@@ -332,8 +429,22 @@ nsSVGLength2::GetAnimValueString(nsAString & aValueAsString)
 void
 nsSVGLength2::SetBaseValue(float aValue, nsSVGElement *aSVGElement)
 {
-  mAnimVal = mBaseVal = aValue * GetUnitScaleFactor(aSVGElement);
+  mAnimVal = mBaseVal = 
+    aValue * GetUnitScaleFactor(aSVGElement, mSpecifiedUnitType);
   aSVGElement->DidChangeLength(mAttrEnum, PR_TRUE);
+#ifdef MOZ_SMIL
+  if (mIsAnimated) {
+    aSVGElement->AnimationNeedsResample();
+  }
+#endif
+}
+
+void
+nsSVGLength2::SetAnimValue(float aValue, nsSVGElement *aSVGElement)
+{
+  mAnimVal = aValue * GetUnitScaleFactor(aSVGElement, mSpecifiedUnitType);
+  mIsAnimated = PR_TRUE;
+  aSVGElement->DidAnimateLength(mAttrEnum);
 }
 
 nsresult
@@ -347,3 +458,59 @@ nsSVGLength2::ToDOMAnimatedLength(nsIDOMSVGAnimatedLength **aResult,
   NS_ADDREF(*aResult);
   return NS_OK;
 }
+
+#ifdef MOZ_SMIL
+nsISMILAttr*
+nsSVGLength2::ToSMILAttr(nsSVGElement *aSVGElement)
+{
+  return new SMILLength(this, aSVGElement);
+}
+
+nsresult
+nsSVGLength2::SMILLength::ValueFromString(const nsAString& aStr,
+                                 const nsISMILAnimationElement* /*aSrcElement*/,
+                                 nsSMILValue& aValue) const
+{
+  float value;
+  PRUint16 unitType;
+  
+  nsresult rv = GetValueFromString(aStr, &value, &unitType);
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
+
+  nsSMILValue val(&nsSMILFloatType::sSingleton);
+  val.mU.mDouble = value / mVal->GetUnitScaleFactor(mSVGElement, unitType);
+  aValue = val;
+  
+  return NS_OK;
+}
+
+nsSMILValue
+nsSVGLength2::SMILLength::GetBaseValue() const
+{
+  nsSMILValue val(&nsSMILFloatType::sSingleton);
+  val.mU.mDouble = mVal->GetBaseValue(mSVGElement);
+  return val;
+}
+
+void
+nsSVGLength2::SMILLength::ClearAnimValue()
+{
+  if (mVal->mIsAnimated) {
+    mVal->SetAnimValue(mVal->mBaseVal, mSVGElement);
+    mVal->mIsAnimated = PR_FALSE;
+  }  
+}
+
+nsresult
+nsSVGLength2::SMILLength::SetAnimValue(const nsSMILValue& aValue)
+{
+  NS_ASSERTION(aValue.mType == &nsSMILFloatType::sSingleton,
+    "Unexpected type to assign animated value");
+  if (aValue.mType == &nsSMILFloatType::sSingleton) {
+    mVal->SetAnimValue(float(aValue.mU.mDouble), mSVGElement);
+  }
+  return NS_OK;
+}
+#endif // MOZ_SMIL

@@ -48,11 +48,12 @@ class nsEventChainPostVisitor;
 class nsIEventListenerManager;
 class nsIDOMEventListener;
 class nsIDOMEventGroup;
+class nsIScriptContext;
 
-// f35ffc3b-c8c0-43fd-b0b0-f339e95f574a
+// e6579895-a23c-4afc-872a-d53da71def5d
 #define NS_PIDOMEVENTTARGET_IID \
-  { 0xf35ffc3b, 0xc8c0, 0x43fd, \
-    { 0xb0, 0xb0, 0xf3, 0x39, 0xe9, 0x5f, 0x57, 0x4a } }
+  { 0xe6579895, 0xa23c, 0x4afc, \
+    { 0x87, 0x2a, 0xd5, 0x3d, 0xa7, 0x1d, 0xef, 0x5d } }
 
 class nsPIDOMEventTarget : public nsISupports
 {
@@ -93,7 +94,8 @@ public:
   virtual nsresult PreHandleEvent(nsEventChainPreVisitor& aVisitor) = 0;
 
   /**
-   * Called just before possible event handlers on this object will be called.
+   * If nsEventChainPreVisitor.mWantsWillHandleEvent is set PR_TRUE,
+   * called just before possible event handlers on this object will be called.
    */
   virtual nsresult WillHandleEvent(nsEventChainPostVisitor& aVisitor)
   {
@@ -135,12 +137,10 @@ public:
   /**
    * Get the event listener manager, the guy you talk to to register for events
    * on this node.
-   * @param aCreateIfNotFound If PR_FALSE, returns a listener manager only if
-   *                          one already exists. [IN]
-   * @param aResult           The event listener manager [OUT]
+   * @param aMayCreate If PR_FALSE, returns a listener manager only if
+   *                   one already exists.
    */
-  virtual nsresult GetListenerManager(PRBool aCreateIfNotFound,
-                                      nsIEventListenerManager** aResult) = 0;
+  virtual nsIEventListenerManager* GetListenerManager(PRBool aMayCreate) = 0;
 
   /**
    * Add an event listener for nsIID.
@@ -157,6 +157,13 @@ public:
    * Get the system event group.
    */
   virtual nsresult GetSystemEventGroup(nsIDOMEventGroup** aGroup) = 0;
+
+  /**
+   * Get the script context in which the event handlers should be run.
+   * May return null.
+   * @note Caller *must* check the value of aRv.
+   */
+  virtual nsIScriptContext* GetContextForEventHandlers(nsresult* aRv) = 0;
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsPIDOMEventTarget, NS_PIDOMEVENTTARGET_IID)

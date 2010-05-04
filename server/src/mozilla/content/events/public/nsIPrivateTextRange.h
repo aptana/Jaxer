@@ -40,14 +40,20 @@
 
 #include "nsISupports.h"
 #include "nsString.h"
+#include "nsCOMPtr.h"
+#include "nsGUIEvent.h"
 
+// {B13C4BD8-CB9F-4763-A020-E99ABC9C2803}
 #define NS_IPRIVATETEXTRANGE_IID \
-{0xb471ab41, 0x2a79, 0x11d3, \
-{ 0x9e, 0xa4, 0x0, 0x60, 0x8, 0x9f, 0xe5, 0x9b } } 
+{ 0xb13c4bd8, 0xcb9f, 0x4763, \
+{ 0xa0, 0x20, 0xe9, 0x9a, 0xbc, 0x9c, 0x28, 0x3 } }
 
 class nsIPrivateTextRange : public nsISupports {
 public:
   NS_DECLARE_STATIC_IID_ACCESSOR(NS_IPRIVATETEXTRANGE_IID)
+
+  // Note that the range array may not specify a caret position; in that
+  // case there will be no range of type TEXTRANGE_CARETPOSITION in the array.
   enum {
     TEXTRANGE_CARETPOSITION = 1,
     TEXTRANGE_RAWINPUT = 2,
@@ -64,20 +70,22 @@ public:
 
   NS_IMETHOD    GetRangeType(PRUint16* aRangeType)=0;
   NS_IMETHOD    SetRangeType(PRUint16 aRangeType)=0;
+
+  NS_IMETHOD    GetRangeStyle(nsTextRangeStyle* aTextRangeStyle)=0;
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsIPrivateTextRange, NS_IPRIVATETEXTRANGE_IID)
 
 #define NS_IPRIVATETEXTRANGELIST_IID \
-{ 0x1ee9d531, 0x2a79, 0x11d3, \
-{ 0x9e, 0xa4, 0x0, 0x60, 0x8, 0x9f, 0xe5, 0x9b} } 
+{0xb5a04b19, 0xed33, 0x4cd0, \
+{0x82, 0xa8, 0xb7, 0x00, 0x83, 0xef, 0xc4, 0x91}}
 
 class nsIPrivateTextRangeList : public nsISupports {
 public:
   NS_DECLARE_STATIC_IID_ACCESSOR(NS_IPRIVATETEXTRANGELIST_IID)
 
-  NS_IMETHOD    GetLength(PRUint16* aLength)=0;
-  NS_IMETHOD    Item(PRUint16 aIndex, nsIPrivateTextRange** aReturn)=0;
+  NS_IMETHOD_(PRUint16) GetLength()=0;
+  NS_IMETHOD_(already_AddRefed<nsIPrivateTextRange>) Item(PRUint16 aIndex)=0;
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsIPrivateTextRangeList,

@@ -181,17 +181,82 @@ public:
   void ProcessPendingRequests();
 
   /**
+   * Check whether it's OK to load a script from aURI in
+   * aDocument.
+   */
+  static nsresult ShouldLoadScript(nsIDocument* aDocument,
+                                   nsISupports* aContext,
+                                   nsIURI* aURI,
+                                   const nsAString &aType);
+
+  /**
    * Check whether it's OK to execute a script loaded via aChannel in
    * aDocument.
    */
   static PRBool ShouldExecuteScript(nsIDocument* aDocument,
                                     nsIChannel* aChannel);
 
+  /**
+   * Starts deferring deferred scripts and puts them in the mDeferredRequests
+   * queue instead.
+   */
+  void BeginDeferringScripts()
+  {
+    mDeferEnabled = PR_TRUE;
+    if (mDocument) {
+      mDocument->BlockOnload();
+    }
+  }
+
+  /**
+   * Notifies the script loader that parsing is done.  If aTerminated is true,
+   * this will drop any pending scripts that haven't run yet.  Otherwise, it
+   * will stops deferring scripts and immediately processes the
+   * mDeferredRequests queue.
+   *
+   * WARNING: This function will synchronously execute content scripts, so be
+   * prepared that the world might change around you.
+   */
+  void ParsingComplete(PRBool aTerminated);
+
+  /**
+   * Returns the number of pending scripts, deferred or not.
+   */
+  PRUint32 HasPendingOrCurrentScripts()
+  {
+    return mCurrentScript || GetFirstPendingRequest();
+  }
+
+  /**
+   * Adds aURI to the preload list and starts loading it.
+   *
+   * @param aURI The URI of the external script.
+   * @param aCharset The charset parameter for the script.
+   * @param aType The type parameter for the script.
+   */
+  virtual void PreloadURI(nsIURI *aURI, const nsAString &aCharset,
+                          const nsAString &aType);
+
 protected:
   /**
-   * Process any pending requests asyncronously (i.e. off an event) if there
+   * Helper function to check the content policy for a given request.
+   */
+  static nsresult CheckContentPolicy(nsIDocument* aDocument,
+                                     nsISupports *aContext,
+                                     nsIURI *aURI,
+                                     const nsAString &aType);
+
+  /**
+   * Start a load for aRequest's URI.
+   */
+  nsresult StartLoad(nsScriptLoadRequest *aRequest, const nsAString &aType);
+
+  /**
+   * Process any pending requests asynchronously (i.e. off an event) if there
    * are any. Note that this is a no-op if there aren't any currently pending
    * requests.
+   *
+   * This function is virtual to allow cross-library calls to SetEnabled()
    */
   virtual void ProcessPendingRequestsAsync();
 
@@ -229,14 +294,39 @@ protected:
                                 PRUint32 aStringLen,
                                 const PRUint8* aString);
 
+  // Returns the first pending (non deferred) request
+  nsScriptLoadRequest* GetFirstPendingRequest();
+
   nsIDocument* mDocument;                   // [WEAK]
   nsCOMArray<nsIScriptLoaderObserver> mObservers;
-  nsCOMArray<nsScriptLoadRequest> mPendingRequests;
+  nsCOMArray<nsScriptLoadRequest> mRequests;
+  nsCOMArray<nsScriptLoadRequest> mAsyncRequests;
+
+  // In mRequests, the additional information here is stored by the element.
+  struct PreloadInfo {
+    nsRefPtr<nsScriptLoadRequest> mRequest;
+    nsString mCharset;
+  };
+
+  struct PreloadRequestComparator {
+    PRBool Equals(const PreloadInfo &aPi, nsScriptLoadRequest * const &aRequest)
+        const
+    {
+      return aRequest == aPi.mRequest;
+    }
+  };
+  struct PreloadURIComparator {
+    PRBool Equals(const PreloadInfo &aPi, nsIURI * const &aURI) const;
+  };
+  nsTArray<PreloadInfo> mPreloads;
+
   nsCOMPtr<nsIScriptElement> mCurrentScript;
   // XXXbz do we want to cycle-collect these or something?  Not sure.
   nsTArray< nsRefPtr<nsScriptLoader> > mPendingChildLoaders;
   PRUint32 mBlockerCount;
   PRPackedBool mEnabled;
+  PRPackedBool mDeferEnabled;
+  PRPackedBool mUnblockOnloadWhenDoneProcessing;
 };
 
 #endif //__nsScriptLoader_h__

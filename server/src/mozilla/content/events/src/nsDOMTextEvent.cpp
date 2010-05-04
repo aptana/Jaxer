@@ -73,9 +73,7 @@ nsDOMTextEvent::nsDOMTextEvent(nsPresContext* aPresContext,
 
     for(i = 0; i < te->rangeCount; i++) {
       nsRefPtr<nsPrivateTextRange> tempPrivateTextRange = new
-        nsPrivateTextRange(te->rangeArray[i].mStartOffset,
-                           te->rangeArray[i].mEndOffset,
-                           te->rangeArray[i].mRangeType);
+        nsPrivateTextRange(te->rangeArray[i]);
 
       if (tempPrivateTextRange) {
         mTextRange->AppendTextRange(tempPrivateTextRange);
@@ -97,27 +95,23 @@ NS_METHOD nsDOMTextEvent::GetText(nsString& aText)
   return NS_OK;
 }
 
-NS_METHOD nsDOMTextEvent::GetInputRange(nsIPrivateTextRangeList** aInputRange)
+NS_METHOD_(already_AddRefed<nsIPrivateTextRangeList>) nsDOMTextEvent::GetInputRange()
 {
-  if (mEvent->message == NS_TEXT_TEXT)
-  {
-    *aInputRange = mTextRange;
-    NS_IF_ADDREF(*aInputRange);
-    return NS_OK;
+  if (mEvent->message == NS_TEXT_TEXT) {
+    nsRefPtr<nsPrivateTextRangeList> textRange = mTextRange;
+    nsPrivateTextRangeList *textRangePtr = nsnull;
+    textRange.swap(textRangePtr);
+    return textRangePtr;
   }
-  *aInputRange = nsnull;
-  return NS_ERROR_FAILURE;
+  return nsnull;
 }
 
-NS_METHOD nsDOMTextEvent::GetEventReply(nsTextEventReply** aReply)
+NS_METHOD_(nsTextEventReply*) nsDOMTextEvent::GetEventReply()
 {
-  if (mEvent->message == NS_TEXT_TEXT)
-  {
-     *aReply = &(static_cast<nsTextEvent*>(mEvent)->theReply);
-     return NS_OK;
+  if (mEvent->message == NS_TEXT_TEXT) {
+     return &(static_cast<nsTextEvent*>(mEvent)->theReply);
   }
-  aReply = 0;
-  return NS_ERROR_FAILURE;
+  return nsnull;
 }
 
 nsresult NS_NewDOMTextEvent(nsIDOMEvent** aInstancePtrResult,

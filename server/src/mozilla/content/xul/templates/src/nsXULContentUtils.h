@@ -64,14 +64,13 @@ class nsICollation;
 class nsXULContentUtils
 {
 protected:
-    static nsrefcnt gRefCnt;
     static nsIRDFService* gRDF;
     static nsIDateTimeFormat* gFormat;
     static nsICollation *gCollation;
 
     static PRBool gDisableXULCache;
 
-    static int PR_CALLBACK
+    static int
     DisableXULCacheChangedCallback(const char* aPrefName, void* aClosure);
 
 public:

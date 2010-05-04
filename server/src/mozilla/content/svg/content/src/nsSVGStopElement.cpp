@@ -90,11 +90,9 @@ NS_IMPL_NS_NEW_SVG_ELEMENT(Stop)
 NS_IMPL_ADDREF_INHERITED(nsSVGStopElement,nsSVGStopElementBase)
 NS_IMPL_RELEASE_INHERITED(nsSVGStopElement,nsSVGStopElementBase)
 
-NS_INTERFACE_MAP_BEGIN(nsSVGStopElement)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMNode)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMElement)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMSVGElement)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMSVGStopElement)
+NS_INTERFACE_TABLE_HEAD(nsSVGStopElement)
+  NS_NODE_INTERFACE_TABLE4(nsSVGStopElement, nsIDOMNode, nsIDOMElement,
+                           nsIDOMSVGElement, nsIDOMSVGStopElement)
   NS_INTERFACE_MAP_ENTRY_CONTENT_CLASSINFO(SVGStopElement)
 NS_INTERFACE_MAP_END_INHERITING(nsSVGStopElementBase)
 
@@ -142,8 +140,8 @@ nsSVGStopElement::ParseAttribute(PRInt32 aNamespaceID,
       const char *str = value.get();
 
       char *rest;
-      float offset = static_cast<float>(PR_strtod(str, &rest));
-      if (str != rest) {
+      float offset = float(PR_strtod(str, &rest));
+      if (str != rest && NS_FloatIsFinite(offset)) {
         if (*rest == '%') {
           offset /= 100;
           ++rest;

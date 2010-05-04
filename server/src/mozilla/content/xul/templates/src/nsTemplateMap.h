@@ -79,25 +79,9 @@ public:
 
     void
     Remove(nsIContent* aContent) {
-        NS_ASSERTION(PL_DHASH_ENTRY_IS_BUSY(PL_DHashTableOperate(&mTable, aContent, PL_DHASH_LOOKUP)),
-                     "aContent not in map");
-
         PL_DHashTableOperate(&mTable, aContent, PL_DHASH_REMOVE);
 
-        PRUint32 count;
-
-        // If possible, use the special nsXULElement interface to
-        // "peek" at the child count without accidentally creating
-        // children as a side effect, since we're about to rip 'em
-        // outta the map anyway.
-        nsXULElement *xulcontent = nsXULElement::FromContent(aContent);
-        if (xulcontent) {
-            count = xulcontent->PeekChildCount();
-        }
-        else {
-            count = aContent->GetChildCount();
-        }
-
+        PRUint32 count = aContent->GetChildCount();
         for (PRUint32 i = 0; i < count; ++i) {
             Remove(aContent->GetChildAt(i));
         }

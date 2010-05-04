@@ -235,21 +235,21 @@ nsPlainTextSerializer::Init(PRUint32 aFlags, PRUint32 aWrapColumn,
 }
 
 PRBool
-nsPlainTextSerializer::GetLastBool(const nsVoidArray& aStack)
+nsPlainTextSerializer::GetLastBool(const nsTArray<PRPackedBool>& aStack)
 {
-  PRUint32 size = aStack.Count();
+  PRUint32 size = aStack.Length();
   if (size == 0) {
     return PR_FALSE;
   }
-  return (aStack.ElementAt(size-1) != reinterpret_cast<void*>(PR_FALSE));
+  return aStack.ElementAt(size-1);
 }
 
 void
-nsPlainTextSerializer::SetLastBool(nsVoidArray& aStack, PRBool aValue)
+nsPlainTextSerializer::SetLastBool(nsTArray<PRPackedBool>& aStack, PRBool aValue)
 {
-  PRUint32 size = aStack.Count();
+  PRUint32 size = aStack.Length();
   if (size > 0) {
-    aStack.ReplaceElementAt(reinterpret_cast<void*>(aValue), size-1);
+    aStack.ElementAt(size-1) = aValue;
   }
   else {
     NS_ERROR("There is no \"Last\" value");
@@ -257,18 +257,18 @@ nsPlainTextSerializer::SetLastBool(nsVoidArray& aStack, PRBool aValue)
 }
 
 void
-nsPlainTextSerializer::PushBool(nsVoidArray& aStack, PRBool aValue)
+nsPlainTextSerializer::PushBool(nsTArray<PRPackedBool>& aStack, PRBool aValue)
 {
-    aStack.AppendElement(reinterpret_cast<void*>(aValue));
+    aStack.AppendElement(PRPackedBool(aValue));
 }
 
 PRBool
-nsPlainTextSerializer::PopBool(nsVoidArray& aStack)
+nsPlainTextSerializer::PopBool(nsTArray<PRPackedBool>& aStack)
 {
   PRBool returnValue = PR_FALSE;
-  PRUint32 size = aStack.Count();
+  PRUint32 size = aStack.Length();
   if (size > 0) {
-    returnValue = (aStack.ElementAt(size-1) != reinterpret_cast<void*>(PR_FALSE));
+    returnValue = aStack.ElementAt(size-1);
     aStack.RemoveElementAt(size-1);
   }
   return returnValue;
@@ -609,7 +609,7 @@ nsPlainTextSerializer::DoOpenContainer(const nsIParserNode* aNode, PRInt32 aTag)
 
       if (kNotFound != style.Find("pre-wrap", PR_TRUE, whitespace)) {
 #ifdef DEBUG_preformatted
-        printf("Set mPreFormatted based on style moz-pre-wrap\n");
+        printf("Set mPreFormatted based on style pre-wrap\n");
 #endif
         mPreFormatted = PR_TRUE;
         PRInt32 widthOffset = style.Find("width:");
@@ -681,7 +681,7 @@ nsPlainTextSerializer::DoOpenContainer(const nsIParserNode* aNode, PRInt32 aTag)
       AddToLine(NS_LITERAL_STRING("\t").get(), 1);
       mInWhitespace = PR_TRUE;
     }
-    else if (mHasWrittenCellsForRow.Count() == 0) {
+    else if (mHasWrittenCellsForRow.IsEmpty()) {
       // We don't always see a <tr> (nor a <table>) before the <td> if we're
       // copying part of a table
       PushBool(mHasWrittenCellsForRow, PR_TRUE); // will never be popped
@@ -1386,8 +1386,9 @@ nsPlainTextSerializer::AddToLine(const PRUnichar * aLineFragment,
         // try to find another place to break
         goodSpace=(prefixwidth>mWrapColumn+1)?1:mWrapColumn-prefixwidth+1;
         if (mLineBreaker) {
-          goodSpace = mLineBreaker->Next(mCurrentLine.get(), 
-                                      mCurrentLine.Length(), goodSpace);
+          if (goodSpace < mCurrentLine.Length())
+            goodSpace = mLineBreaker->Next(mCurrentLine.get(), 
+                                           mCurrentLine.Length(), goodSpace);
           if (goodSpace == NS_LINEBREAKER_NEED_MORE_TEXT)
             goodSpace = mCurrentLine.Length();
         }

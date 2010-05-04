@@ -56,6 +56,7 @@
 #include "nsIDOMNodeList.h"
 #include "nsGkAtoms.h"
 #include "nsContentUtils.h"
+#include "nsGenericDOMDataNode.h"
 
 nsresult NS_NewContentIterator(nsIContentIterator** aInstancePtrResult);
 nsresult NS_NewContentSubtreeIterator(nsIContentIterator** aInstancePtrResult);
@@ -88,7 +89,7 @@ nsresult NS_NewContentSubtreeIterator(nsIContentIterator** aInstancePtrResult);
 
 // static
 nsresult
-nsRange::CompareNodeToRange(nsIContent* aNode, nsIDOMRange* aRange,
+nsRange::CompareNodeToRange(nsINode* aNode, nsIDOMRange* aRange,
                             PRBool *outNodeBefore, PRBool *outNodeAfter)
 {
   nsresult rv;
@@ -100,7 +101,7 @@ nsRange::CompareNodeToRange(nsIContent* aNode, nsIDOMRange* aRange,
 
 // static
 nsresult
-nsRange::CompareNodeToRange(nsIContent* aNode, nsIRange* aRange,
+nsRange::CompareNodeToRange(nsINode* aNode, nsIRange* aRange,
                             PRBool *outNodeBefore, PRBool *outNodeAfter)
 {
   NS_ENSURE_STATE(aNode);
@@ -111,11 +112,7 @@ nsRange::CompareNodeToRange(nsIContent* aNode, nsIRange* aRange,
   // if (RANGE(start) <= NODE(start))  and (RANGE(end) => NODE(end))
   // then the Node is contained (completely) by the Range.
   
-  nsresult rv;
-  nsCOMPtr<nsIRange> range = do_QueryInterface(aRange, &rv);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  if (!range->IsPositioned()) 
+  if (!aRange || !aRange->IsPositioned()) 
     return NS_ERROR_UNEXPECTED; 
   
   // gather up the dom point info
@@ -123,24 +120,21 @@ nsRange::CompareNodeToRange(nsIContent* aNode, nsIRange* aRange,
   nsINode* parent = aNode->GetNodeParent();
   if (!parent) {
     // can't make a parent/offset pair to represent start or 
-    // end of the root node, becasue it has no parent.
+    // end of the root node, because it has no parent.
     // so instead represent it by (node,0) and (node,numChildren)
     parent = aNode;
     nodeStart = 0;
     nodeEnd = aNode->GetChildCount();
-    if (!nodeEnd) {
-      return NS_ERROR_FAILURE;
-    }
   }
   else {
     nodeStart = parent->IndexOf(aNode);
     nodeEnd = nodeStart + 1;
   }
 
-  nsINode* rangeStartParent = range->GetStartParent();
-  nsINode* rangeEndParent = range->GetEndParent();
-  PRInt32 rangeStartOffset = range->StartOffset();
-  PRInt32 rangeEndOffset = range->EndOffset();
+  nsINode* rangeStartParent = aRange->GetStartParent();
+  nsINode* rangeEndParent = aRange->GetEndParent();
+  PRInt32 rangeStartOffset = aRange->StartOffset();
+  PRInt32 rangeEndOffset = aRange->EndOffset();
 
   // is RANGE(start) <= NODE(start) ?
   PRBool disconnected = PR_FALSE;
@@ -236,8 +230,13 @@ nsRange::~nsRange()
  * nsISupports
  ******************************************************/
 
+NS_IMPL_CYCLE_COLLECTION_CLASS(nsRange)
+
+NS_IMPL_CYCLE_COLLECTING_ADDREF(nsRange)
+NS_IMPL_CYCLE_COLLECTING_RELEASE(nsRange)
+
 // QueryInterface implementation for nsRange
-NS_INTERFACE_MAP_BEGIN(nsRange)
+NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(nsRange)
   NS_INTERFACE_MAP_ENTRY(nsIDOMRange)
   NS_INTERFACE_MAP_ENTRY(nsIRange)
   NS_INTERFACE_MAP_ENTRY(nsIDOMNSRange)
@@ -246,8 +245,15 @@ NS_INTERFACE_MAP_BEGIN(nsRange)
   NS_INTERFACE_MAP_ENTRY_CONTENT_CLASSINFO(Range)
 NS_INTERFACE_MAP_END
 
-NS_IMPL_ADDREF(nsRange)
-NS_IMPL_RELEASE(nsRange)
+NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN(nsRange)
+  tmp->Reset();
+NS_IMPL_CYCLE_COLLECTION_UNLINK_END
+
+NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN(nsRange)
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE_NSCOMPTR(mStartParent)
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE_NSCOMPTR(mEndParent)
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE_NSCOMPTR(mRoot)
+NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
 
 /******************************************************
  * nsIMutationObserver implementation
@@ -311,8 +317,10 @@ nsRange::ContentRemoved(nsIDocument* aDocument,
   nsINode* container = NODE_FROM(aContainer, aDocument);
 
   // Adjust position if a sibling was removed...
-  if (container == mStartParent && aIndexInContainer < mStartOffset) {
-    --mStartOffset;
+  if (container == mStartParent) {
+    if (aIndexInContainer < mStartOffset) {
+      --mStartOffset;
+    }
   }
   // ...or gravitate if an ancestor was removed.
   else if (nsContentUtils::ContentIsDescendantOf(mStartParent, aChild)) {
@@ -321,24 +329,15 @@ nsRange::ContentRemoved(nsIDocument* aDocument,
   }
 
   // Do same thing for end boundry.
-  if (container == mEndParent && aIndexInContainer < mEndOffset) {
-    --mEndOffset;
+  if (container == mEndParent) {
+    if (aIndexInContainer < mEndOffset) {
+      --mEndOffset;
+    }
   }
   else if (nsContentUtils::ContentIsDescendantOf(mEndParent, aChild)) {
     mEndParent = container;
     mEndOffset = aIndexInContainer;
   }
-}
-
-void
-nsRange::NodeWillBeDestroyed(const nsINode* aNode)
-{
-  NS_ASSERTION(mIsPositioned, "shouldn't be notified if not positioned");
-
-  // No need to detach, but reset positions so that the endpoints don't
-  // end up disconnected from each other.
-  // An alternative solution would be to make mRoot a strong pointer.
-  DoSetRange(nsnull, 0, nsnull, 0, nsnull);
 }
 
 void
@@ -412,7 +411,7 @@ nsRange::ComparePoint(nsIDOMNode* aParent, PRInt32 aOffset, PRInt16* aResult)
  ******************************************************/
 
 // Get the length of aNode
-static PRInt32 GetNodeLength(nsINode *aNode)
+static PRUint32 GetNodeLength(nsINode *aNode)
 {
   if(aNode->IsNodeOfType(nsINode::eDATA_NODE)) {
     return static_cast<nsIContent*>(aNode)->TextLength();
@@ -493,7 +492,7 @@ IndexOf(nsIDOMNode* aChildNode)
  ******************************************************/
 
 nsINode*
-nsRange::GetCommonAncestor()
+nsRange::GetCommonAncestor() const
 {
   return mIsPositioned ?
     nsContentUtils::GetCommonAncestor(mStartParent, mEndParent) :
@@ -626,24 +625,29 @@ nsresult nsRange::SetStart(nsIDOMNode* aParent, PRInt32 aOffset)
   VALIDATE_ACCESS(aParent);
 
   nsCOMPtr<nsINode> parent = do_QueryInterface(aParent);
-  nsINode* newRoot = IsValidBoundary(parent);
+  return SetStart(parent, aOffset);
+}
+
+nsresult nsRange::SetStart(nsINode* aParent, PRInt32 aOffset)
+{
+  nsINode* newRoot = IsValidBoundary(aParent);
   NS_ENSURE_TRUE(newRoot, NS_ERROR_DOM_RANGE_INVALID_NODE_TYPE_ERR);
 
-  PRInt32 len = GetNodeLength(parent);
+  PRInt32 len = GetNodeLength(aParent);
   if (aOffset < 0 || aOffset > len)
     return NS_ERROR_DOM_INDEX_SIZE_ERR;
 
   // Collapse if not positioned yet, if positioned in another doc or
   // if the new start is after end.
   if (!mIsPositioned || newRoot != mRoot ||
-      nsContentUtils::ComparePoints(parent, aOffset,
+      nsContentUtils::ComparePoints(aParent, aOffset,
                                     mEndParent, mEndOffset) == 1) {
-    DoSetRange(parent, aOffset, parent, aOffset, newRoot);
+    DoSetRange(aParent, aOffset, aParent, aOffset, newRoot);
 
     return NS_OK;
   }
 
-  DoSetRange(parent, aOffset, mEndParent, mEndOffset, mRoot);
+  DoSetRange(aParent, aOffset, mEndParent, mEndOffset, mRoot);
   
   return NS_OK;
 }
@@ -679,10 +683,16 @@ nsresult nsRange::SetEnd(nsIDOMNode* aParent, PRInt32 aOffset)
   VALIDATE_ACCESS(aParent);
 
   nsCOMPtr<nsINode> parent = do_QueryInterface(aParent);
-  nsINode* newRoot = IsValidBoundary(parent);
+  return SetEnd(parent, aOffset);
+}
+
+
+nsresult nsRange::SetEnd(nsINode* aParent, PRInt32 aOffset)
+{
+  nsINode* newRoot = IsValidBoundary(aParent);
   NS_ENSURE_TRUE(newRoot, NS_ERROR_DOM_RANGE_INVALID_NODE_TYPE_ERR);
 
-  PRInt32 len = GetNodeLength(parent);
+  PRInt32 len = GetNodeLength(aParent);
   if (aOffset < 0 || aOffset > len) {
     return NS_ERROR_DOM_INDEX_SIZE_ERR;
   }
@@ -691,13 +701,13 @@ nsresult nsRange::SetEnd(nsIDOMNode* aParent, PRInt32 aOffset)
   // if the new end is before start.
   if (!mIsPositioned || newRoot != mRoot ||
       nsContentUtils::ComparePoints(mStartParent, mStartOffset,
-                                    parent, aOffset) == 1) {
-    DoSetRange(parent, aOffset, parent, aOffset, newRoot);
+                                    aParent, aOffset) == 1) {
+    DoSetRange(aParent, aOffset, aParent, aOffset, newRoot);
 
     return NS_OK;
   }
 
-  DoSetRange(mStartParent, mStartOffset, parent, aOffset, mRoot);
+  DoSetRange(mStartParent, mStartOffset, aParent, aOffset, mRoot);
 
   return NS_OK;
 }
@@ -779,7 +789,8 @@ nsresult nsRange::SelectNodeContents(nsIDOMNode* aN)
 
 // The Subtree Content Iterator only returns subtrees that are
 // completely within a given range. It doesn't return a CharacterData
-// node that contains either the start or end point of the range.
+// node that contains either the start or end point of the range.,
+// nor does it return element nodes when nothing in the element is selected.
 // We need an iterator that will also include these start/end points
 // so that our methods/algorithms aren't cluttered with special
 // case code that tries to include these points while iterating.
@@ -789,20 +800,20 @@ nsresult nsRange::SelectNodeContents(nsIDOMNode* aN)
 // start/end points in the future, we can switchover relatively
 // easy.
 
-class RangeSubtreeIterator
+class NS_STACK_CLASS RangeSubtreeIterator
 {
 private:
 
   enum RangeSubtreeIterState { eDone=0,
-                               eUseStartCData,
+                               eUseStart,
                                eUseIterator,
-                               eUseEndCData };
+                               eUseEnd };
 
   nsCOMPtr<nsIContentIterator>  mIter;
   RangeSubtreeIterState         mIterState;
 
-  nsCOMPtr<nsIDOMCharacterData> mStartCData;
-  nsCOMPtr<nsIDOMCharacterData> mEndCData;
+  nsCOMPtr<nsIDOMNode> mStart;
+  nsCOMPtr<nsIDOMNode> mEnd;
 
 public:
 
@@ -831,6 +842,11 @@ nsresult
 RangeSubtreeIterator::Init(nsIDOMRange *aRange)
 {
   mIterState = eDone;
+  PRBool collapsed;
+  aRange->GetCollapsed(&collapsed);
+  if (collapsed) {
+    return NS_OK;
+  }
 
   nsCOMPtr<nsIDOMNode> node;
 
@@ -841,7 +857,18 @@ RangeSubtreeIterator::Init(nsIDOMRange *aRange)
   nsresult res = aRange->GetStartContainer(getter_AddRefs(node));
   if (!node) return NS_ERROR_FAILURE;
 
-  mStartCData = do_QueryInterface(node);
+  nsCOMPtr<nsIDOMCharacterData> startData = do_QueryInterface(node);
+  if (startData) {
+    mStart = node;
+  } else {
+    PRInt32 startIndex;
+    aRange->GetStartOffset(&startIndex);
+    nsCOMPtr<nsINode> iNode = do_QueryInterface(node);
+    if (iNode->IsNodeOfType(nsINode::eELEMENT) && 
+        PRInt32(iNode->GetChildCount()) == startIndex) {
+      mStart = node;
+    }
+  }
 
   // Grab the end point of the range and QI it to
   // a CharacterData pointer. If it is CharacterData store
@@ -850,15 +877,25 @@ RangeSubtreeIterator::Init(nsIDOMRange *aRange)
   res = aRange->GetEndContainer(getter_AddRefs(node));
   if (!node) return NS_ERROR_FAILURE;
 
-  mEndCData = do_QueryInterface(node);
+  nsCOMPtr<nsIDOMCharacterData> endData = do_QueryInterface(node);
+  if (endData) {
+    mEnd = node;
+  } else {
+    PRInt32 endIndex;
+    aRange->GetEndOffset(&endIndex);
+    nsCOMPtr<nsINode> iNode = do_QueryInterface(node);
+    if (iNode->IsNodeOfType(nsINode::eELEMENT) && endIndex == 0) {
+      mEnd = node;
+    }
+  }
 
-  if (mStartCData && mStartCData == mEndCData)
+  if (mStart && mStart == mEnd)
   {
     // The range starts and stops in the same CharacterData
     // node. Null out the end pointer so we only visit the
     // node once!
 
-    mEndCData = nsnull;
+    mEnd = nsnull;
   }
   else
   {
@@ -894,16 +931,16 @@ RangeSubtreeIterator::GetCurrentNode()
 {
   nsIDOMNode *node = nsnull;
 
-  if (mIterState == eUseStartCData && mStartCData) {
-    NS_ADDREF(node = mStartCData);
-  } else if (mIterState == eUseEndCData && mEndCData)
-    NS_ADDREF(node = mEndCData);
+  if (mIterState == eUseStart && mStart) {
+    NS_ADDREF(node = mStart);
+  } else if (mIterState == eUseEnd && mEnd)
+    NS_ADDREF(node = mEnd);
   else if (mIterState == eUseIterator && mIter)
   {
-    nsIContent *content = mIter->GetCurrentNode();
+    nsINode* n = mIter->GetCurrentNode();
 
-    if (content) {
-      CallQueryInterface(content, &node);
+    if (n) {
+      CallQueryInterface(n, &node);
     }
   }
 
@@ -913,16 +950,16 @@ RangeSubtreeIterator::GetCurrentNode()
 void
 RangeSubtreeIterator::First()
 {
-  if (mStartCData)
-    mIterState = eUseStartCData;
+  if (mStart)
+    mIterState = eUseStart;
   else if (mIter)
   {
     mIter->First();
 
     mIterState = eUseIterator;
   }
-  else if (mEndCData)
-    mIterState = eUseEndCData;
+  else if (mEnd)
+    mIterState = eUseEnd;
   else
     mIterState = eDone;
 }
@@ -930,16 +967,16 @@ RangeSubtreeIterator::First()
 void
 RangeSubtreeIterator::Last()
 {
-  if (mEndCData)
-    mIterState = eUseEndCData;
+  if (mEnd)
+    mIterState = eUseEnd;
   else if (mIter)
   {
     mIter->Last();
 
     mIterState = eUseIterator;
   }
-  else if (mStartCData)
-    mIterState = eUseStartCData;
+  else if (mStart)
+    mIterState = eUseStart;
   else
     mIterState = eDone;
 }
@@ -947,7 +984,7 @@ RangeSubtreeIterator::Last()
 void
 RangeSubtreeIterator::Next()
 {
-  if (mIterState == eUseStartCData)
+  if (mIterState == eUseStart)
   {
     if (mIter)
     {
@@ -955,8 +992,8 @@ RangeSubtreeIterator::Next()
 
       mIterState = eUseIterator;
     }
-    else if (mEndCData)
-      mIterState = eUseEndCData;
+    else if (mEnd)
+      mIterState = eUseEnd;
     else
       mIterState = eDone;
   }
@@ -966,8 +1003,8 @@ RangeSubtreeIterator::Next()
 
     if (mIter->IsDone())
     {
-      if (mEndCData)
-        mIterState = eUseEndCData;
+      if (mEnd)
+        mIterState = eUseEnd;
       else
         mIterState = eDone;
     }
@@ -979,7 +1016,7 @@ RangeSubtreeIterator::Next()
 void
 RangeSubtreeIterator::Prev()
 {
-  if (mIterState == eUseEndCData)
+  if (mIterState == eUseEnd)
   {
     if (mIter)
     {
@@ -987,8 +1024,8 @@ RangeSubtreeIterator::Prev()
 
       mIterState = eUseIterator;
     }
-    else if (mStartCData)
-      mIterState = eUseStartCData;
+    else if (mStart)
+      mIterState = eUseStart;
     else
       mIterState = eDone;
   }
@@ -998,8 +1035,8 @@ RangeSubtreeIterator::Prev()
 
     if (mIter->IsDone())
     {
-      if (mStartCData)
-        mIterState = eUseStartCData;
+      if (mStart)
+        mIterState = eUseStart;
       else
         mIterState = eDone;
     }
@@ -1098,10 +1135,79 @@ CollapseRangeAfterDelete(nsIDOMRange *aRange)
   return aRange->Collapse(PR_FALSE);
 }
 
-nsresult nsRange::DeleteContents()
+/**
+ * Remove a node from the DOM entirely.
+ *
+ * @param aNode The node to remove.
+ */
+static nsresult
+RemoveNode(nsIDOMNode* aNode)
+{
+  nsCOMPtr<nsINode> node = do_QueryInterface(aNode);
+  nsCOMPtr<nsINode> parent = node->GetNodeParent();
+  return parent ? parent->RemoveChildAt(parent->IndexOf(node), PR_TRUE) : NS_OK;
+}
+
+/**
+ * Split a data node into two parts.
+ *
+ * @param aStartNode          The original node we are trying to split.
+ * @param aStartIndex         The index at which to split.
+ * @param aEndNode            The second node.
+ * @param aCloneAfterOriginal Set PR_FALSE if the original node should be the
+ *                            latter one after split.
+ */
+static nsresult SplitDataNode(nsIDOMCharacterData* aStartNode,
+                              PRUint32 aStartIndex,
+                              nsIDOMCharacterData** aEndNode,
+                              PRBool aCloneAfterOriginal = PR_TRUE)
+{
+  nsresult rv;
+  nsCOMPtr<nsINode> node = do_QueryInterface(aStartNode);
+  NS_ENSURE_STATE(node && node->IsNodeOfType(nsINode::eDATA_NODE));
+  nsGenericDOMDataNode* dataNode = static_cast<nsGenericDOMDataNode*>(node.get());
+
+  nsCOMPtr<nsIContent> newData;
+  rv = dataNode->SplitData(aStartIndex, getter_AddRefs(newData),
+                           aCloneAfterOriginal);
+  NS_ENSURE_SUCCESS(rv, rv);
+  return CallQueryInterface(newData, aEndNode);
+}
+
+nsresult PrependChild(nsIDOMNode* aParent, nsIDOMNode* aChild)
+{
+  nsCOMPtr<nsIDOMNode> first, tmpNode;
+  aParent->GetFirstChild(getter_AddRefs(first));
+  return aParent->InsertBefore(aChild, first, getter_AddRefs(tmpNode));
+}
+
+nsresult nsRange::CutContents(nsIDOMDocumentFragment** aFragment)
 { 
-  if(IsDetached())
+  if (aFragment) {
+    *aFragment = nsnull;
+  }
+
+  if (IsDetached())
     return NS_ERROR_DOM_INVALID_STATE_ERR;
+
+  nsresult rv;
+
+  nsCOMPtr<nsIDocument> doc =
+    do_QueryInterface(mStartParent->GetOwnerDoc());
+  if (!doc) return NS_ERROR_UNEXPECTED;
+
+  nsCOMPtr<nsIDOMNode> commonAncestor;
+  rv = GetCommonAncestorContainer(getter_AddRefs(commonAncestor));
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  // If aFragment isn't null, create a temporary fragment to hold our return.
+  nsCOMPtr<nsIDOMDocumentFragment> retval;
+  if (aFragment) {
+    rv = NS_NewDocumentFragment(getter_AddRefs(retval),
+                                doc->NodeInfoManager());
+    NS_ENSURE_SUCCESS(rv, rv);
+  }
+  nsCOMPtr<nsIDOMNode> commonCloneAncestor(do_QueryInterface(retval));
 
   // Batch possible DOMSubtreeModified events.
   mozAutoSubtreeModified subtree(mRoot ? mRoot->GetOwnerDoc(): nsnull, nsnull);
@@ -1119,13 +1225,17 @@ nsresult nsRange::DeleteContents()
 
   RangeSubtreeIterator iter;
 
-  nsresult res = iter.Init(this);
-  if (NS_FAILED(res)) return res;
+  rv = iter.Init(this);
+  if (NS_FAILED(rv)) return rv;
 
   if (iter.IsDone())
   {
     // There's nothing for us to delete.
-    return CollapseRangeAfterDelete(this);
+    rv = CollapseRangeAfterDelete(this);
+    if (NS_SUCCEEDED(rv) && aFragment) {
+      NS_ADDREF(*aFragment = retval);
+    }
+    return rv;
   }
 
   // We delete backwards to avoid iterator problems!
@@ -1140,6 +1250,7 @@ nsresult nsRange::DeleteContents()
 
   while (!iter.IsDone())
   {
+    nsCOMPtr<nsIDOMNode> nodeToResult;
     nsCOMPtr<nsIDOMNode> node(iter.GetCurrentNode());
 
     // Before we delete anything, advance the iterator to the
@@ -1166,27 +1277,41 @@ nsresult nsRange::DeleteContents()
         if (node == endContainer)
         {
           // This range is completely contained within a single text node.
-          // Delete the data between startOffset and endOffset.
+          // Delete or extract the data between startOffset and endOffset.
 
           if (endOffset > startOffset)
           {
-            res = charData->DeleteData(startOffset, endOffset - startOffset);
-            if (NS_FAILED(res)) return res;
+            if (retval) {
+              nsAutoString cutValue;
+              rv = charData->SubstringData(startOffset, endOffset - startOffset,
+                                           cutValue);
+              NS_ENSURE_SUCCESS(rv, rv);
+              nsCOMPtr<nsIDOMNode> clone;
+              rv = charData->CloneNode(PR_FALSE, getter_AddRefs(clone));
+              NS_ENSURE_SUCCESS(rv, rv);
+              clone->SetNodeValue(cutValue);
+              nodeToResult = clone;
+            }
+
+            rv = charData->DeleteData(startOffset, endOffset - startOffset);
+            NS_ENSURE_SUCCESS(rv, rv);
           }
 
           handled = PR_TRUE;
         }
         else
         {
-          // Delete everything after startOffset.
+          // Delete or extract everything after startOffset.
 
-          res = charData->GetLength(&dataLength);
-          if (NS_FAILED(res)) return res;
+          rv = charData->GetLength(&dataLength);
+          NS_ENSURE_SUCCESS(rv, rv);
 
-          if (dataLength > (PRUint32)startOffset)
+          if (dataLength >= (PRUint32)startOffset)
           {
-            res = charData->DeleteData(startOffset, dataLength - startOffset);
-            if (NS_FAILED(res)) return res;
+            nsCOMPtr<nsIDOMCharacterData> cutNode;
+            rv = SplitDataNode(charData, startOffset, getter_AddRefs(cutNode));
+            NS_ENSURE_SUCCESS(rv, rv);
+            nodeToResult = cutNode;
           }
 
           handled = PR_TRUE;
@@ -1194,31 +1319,106 @@ nsresult nsRange::DeleteContents()
       }
       else if (node == endContainer)
       {
-        // Delete the data between 0 and endOffset.
+        // Delete or extract everything before endOffset.
 
-        if (endOffset > 0)
+        if (endOffset >= 0)
         {
-          res = charData->DeleteData(0, endOffset);
-          if (NS_FAILED(res)) return res;
+          nsCOMPtr<nsIDOMCharacterData> cutNode;
+          /* The Range spec clearly states clones get cut and original nodes
+             remain behind, so use PR_FALSE as the last parameter.
+          */
+          rv = SplitDataNode(charData, endOffset, getter_AddRefs(cutNode),
+                             PR_FALSE);
+          NS_ENSURE_SUCCESS(rv, rv);
+          nodeToResult = cutNode;
         }
 
         handled = PR_TRUE;
       }       
     }
 
+    if (!handled && (node == endContainer || node == startContainer))
+    {
+      nsCOMPtr<nsINode> iNode = do_QueryInterface(node);
+      if (iNode && iNode->IsNodeOfType(nsINode::eELEMENT) &&
+          ((node == endContainer && endOffset == 0) ||
+           (node == startContainer &&
+            PRInt32(iNode->GetChildCount()) == startOffset)))
+      {
+        if (retval) {
+          nsCOMPtr<nsIDOMNode> clone;
+          rv = node->CloneNode(PR_FALSE, getter_AddRefs(clone));
+          NS_ENSURE_SUCCESS(rv, rv);
+          nodeToResult = clone;
+        }
+        handled = PR_TRUE;
+      }
+    }
+
     if (!handled)
     {
       // node was not handled above, so it must be completely contained
       // within the range. Just remove it from the tree!
+      nodeToResult = node;
+    }
 
-      nsCOMPtr<nsIDOMNode> parent, tmpNode;
+    PRUint32 parentCount = 0;
+    nsCOMPtr<nsIDOMNode> tmpNode;
+    // Set the result to document fragment if we have 'retval'.
+    if (retval) {
+      nsCOMPtr<nsIDOMNode> oldCommonAncestor = commonAncestor;
+      if (!iter.IsDone()) {
+        // Setup the parameters for the next iteration of the loop.
+        nsCOMPtr<nsIDOMNode> prevNode(iter.GetCurrentNode());
+        NS_ENSURE_STATE(prevNode);
 
-      node->GetParentNode(getter_AddRefs(parent));
+        // Get node's and prevNode's common parent. Do this before moving
+        // nodes from original DOM to result fragment.
+        nsContentUtils::GetCommonAncestor(node, prevNode,
+                                          getter_AddRefs(commonAncestor));
+        NS_ENSURE_STATE(commonAncestor);
 
-      if (parent) {
-        res = parent->RemoveChild(node, getter_AddRefs(tmpNode));
-        if (NS_FAILED(res)) return res;
+        nsCOMPtr<nsIDOMNode> parentCounterNode = node;
+        while (parentCounterNode && parentCounterNode != commonAncestor)
+        {
+          ++parentCount;
+          tmpNode = parentCounterNode;
+          tmpNode->GetParentNode(getter_AddRefs(parentCounterNode));
+          NS_ENSURE_STATE(parentCounterNode);
+        }
       }
+
+      // Clone the parent hierarchy between commonAncestor and node.
+      nsCOMPtr<nsIDOMNode> closestAncestor, farthestAncestor;
+      rv = CloneParentsBetween(oldCommonAncestor, node,
+                               getter_AddRefs(closestAncestor),
+                               getter_AddRefs(farthestAncestor));
+      NS_ENSURE_SUCCESS(rv, rv);
+
+      if (farthestAncestor)
+      {
+        rv = PrependChild(commonCloneAncestor, farthestAncestor);
+        NS_ENSURE_SUCCESS(rv, rv);
+      }
+
+      rv = closestAncestor ? PrependChild(closestAncestor, nodeToResult)
+                           : PrependChild(commonCloneAncestor, nodeToResult);
+      NS_ENSURE_SUCCESS(rv, rv);
+    } else if (nodeToResult) {
+      rv = RemoveNode(nodeToResult);
+      NS_ENSURE_SUCCESS(rv, rv);
+    }
+
+    if (!iter.IsDone() && retval) {
+      // Find the equivalent of commonAncestor in the cloned tree.
+      nsCOMPtr<nsIDOMNode> newCloneAncestor = nodeToResult;
+      for (PRUint32 i = parentCount; i; --i)
+      {
+        tmpNode = newCloneAncestor;
+        tmpNode->GetParentNode(getter_AddRefs(newCloneAncestor));
+        NS_ENSURE_STATE(newCloneAncestor);
+      }
+      commonCloneAncestor = newCloneAncestor;
     }
   }
 
@@ -1232,8 +1432,24 @@ nsresult nsRange::DeleteContents()
   // XXX_kin: range but under the common parent. Need to verify
   // XXX_kin: with the range commitee members that this was the
   // XXX_kin: desired behavior. For now we don't merge anything!
+  // XXX ajvincent Filed as https://bugzilla.mozilla.org/show_bug.cgi?id=401276
 
-  return CollapseRangeAfterDelete(this);
+  rv = CollapseRangeAfterDelete(this);
+  if (NS_SUCCEEDED(rv) && aFragment) {
+    NS_ADDREF(*aFragment = retval);
+  }
+  return rv;
+}
+
+nsresult nsRange::DeleteContents()
+{
+  return CutContents(nsnull);
+}
+
+nsresult nsRange::ExtractContents(nsIDOMDocumentFragment** aReturn)
+{
+  NS_ENSURE_ARG_POINTER(aReturn);
+  return CutContents(aReturn);
 }
 
 NS_IMETHODIMP
@@ -1290,32 +1506,11 @@ nsRange::CompareBoundaryPoints(PRUint16 aHow, nsIDOMRange* aOtherRange,
   return NS_OK;
 }
 
-nsresult nsRange::ExtractContents(nsIDOMDocumentFragment** aReturn)
-{ 
-  if(mIsDetached)
-    return NS_ERROR_DOM_INVALID_STATE_ERR;
-
-  // Batch possible DOMSubtreeModified events.
-  mozAutoSubtreeModified subtree(mRoot ? mRoot->GetOwnerDoc(): nsnull, nsnull);
-
-  // XXX_kin: The spec says that nodes that are completely in the
-  // XXX_kin: range should be moved into the document fragment, not
-  // XXX_kin: copied. This method will have to be rewritten using
-  // XXX_kin: DeleteContents() as a template, with the charData cloning
-  // XXX_kin: code from CloneContents() merged in.
-
-  nsresult res = CloneContents(aReturn);
-  if (NS_FAILED(res))
-    return res;
-  res = DeleteContents();
-  return res; 
-}
-
-static nsresult
-CloneParentsBetween(nsIDOMNode *aAncestor,
-                    nsIDOMNode *aNode,
-                    nsIDOMNode **aClosestAncestor,
-                    nsIDOMNode **aFarthestAncestor)
+nsresult
+nsRange::CloneParentsBetween(nsIDOMNode *aAncestor,
+                             nsIDOMNode *aNode,
+                             nsIDOMNode **aClosestAncestor,
+                             nsIDOMNode **aFarthestAncestor)
 {
   NS_ENSURE_ARG_POINTER((aAncestor && aNode && aClosestAncestor && aFarthestAncestor));
 
@@ -1411,8 +1606,9 @@ nsresult nsRange::CloneContents(nsIDOMDocumentFragment** aReturn)
   iter.First();
 
   // With the exception of text nodes that contain one of the range
-  // end points, the subtree iterator should only give us back subtrees
-  // that are completely contained between the range's end points.
+  // end points and elements which don't have any content selected the subtree
+  // iterator should only give us back subtrees that are completely contained
+  // between the range's end points.
   //
   // Unfortunately these subtrees don't contain the parent hierarchy/context
   // that the Range spec requires us to return. This loop clones the
@@ -1423,10 +1619,15 @@ nsresult nsRange::CloneContents(nsIDOMDocumentFragment** aReturn)
   {
     nsCOMPtr<nsIDOMNode> node(iter.GetCurrentNode());
     nsCOMPtr<nsINode> iNode = do_QueryInterface(node);
+    PRBool deepClone = !(iNode->IsNodeOfType(nsINode::eELEMENT)) ||
+                       (!(iNode == mEndParent && mEndOffset == 0) &&
+                        !(iNode == mStartParent &&
+                          mStartOffset == PRInt32(iNode->GetChildCount())));
+
     // Clone the current subtree!
 
     nsCOMPtr<nsIDOMNode> clone;
-    res = node->CloneNode(PR_TRUE, getter_AddRefs(clone));
+    res = node->CloneNode(deepClone, getter_AddRefs(clone));
     if (NS_FAILED(res)) return res;
 
     // If it's CharacterData, make sure we only clone what
@@ -1549,7 +1750,7 @@ nsresult nsRange::CloneContents(nsIDOMDocumentFragment** aReturn)
   return NS_OK;
 }
 
-nsresult nsRange::CloneRange(nsIDOMRange** aReturn)
+nsresult nsRange::DoCloneRange(nsIRange** aReturn) const
 {
   if(mIsDetached)
     return NS_ERROR_DOM_INVALID_STATE_ERR;
@@ -1557,16 +1758,31 @@ nsresult nsRange::CloneRange(nsIDOMRange** aReturn)
   if (aReturn == 0)
     return NS_ERROR_NULL_POINTER;
 
-  nsRange* range = new nsRange();
+  nsRefPtr<nsRange> range = new nsRange();
   NS_ENSURE_TRUE(range, NS_ERROR_OUT_OF_MEMORY);
 
-  NS_ADDREF(*aReturn = range);
-  
   range->SetMaySpanAnonymousSubtrees(mMaySpanAnonymousSubtrees);
 
   range->DoSetRange(mStartParent, mStartOffset, mEndParent, mEndOffset, mRoot);
 
+  *aReturn = range.forget().get();
+
   return NS_OK;
+}
+
+NS_IMETHODIMP nsRange::CloneRange(nsIDOMRange** aReturn)
+{
+  nsIRange* clone;
+  nsresult rv = DoCloneRange(&clone);
+  if (NS_SUCCEEDED(rv)) {
+    *aReturn = clone;
+  }
+  return rv;
+}
+
+nsresult nsRange::CloneRange(nsIRange** aReturn) const
+{
+  return DoCloneRange(aReturn);
 }
 
 nsresult nsRange::InsertNode(nsIDOMNode* aN)
@@ -1630,7 +1846,27 @@ nsresult nsRange::InsertNode(nsIDOMNode* aN)
 nsresult nsRange::SurroundContents(nsIDOMNode* aNewParent)
 {
   VALIDATE_ACCESS(aNewParent);
-  
+
+  NS_ENSURE_TRUE(mRoot, NS_ERROR_DOM_INVALID_STATE_ERR);
+  // BAD_BOUNDARYPOINTS_ERR: Raised if the Range partially selects a non-text
+  // node.
+  if (mStartParent != mEndParent) {
+    PRBool startIsText = mStartParent->IsNodeOfType(nsINode::eTEXT);
+    PRBool endIsText = mEndParent->IsNodeOfType(nsINode::eTEXT);
+    nsINode* startGrandParent = mStartParent->GetNodeParent();
+    nsINode* endGrandParent = mEndParent->GetNodeParent();
+    NS_ENSURE_TRUE((startIsText && endIsText &&
+                    startGrandParent &&
+                    startGrandParent == endGrandParent) ||
+                   (startIsText &&
+                    startGrandParent &&
+                    startGrandParent == mEndParent) ||
+                   (endIsText &&
+                    endGrandParent &&
+                    endGrandParent == mStartParent),
+                   NS_ERROR_DOM_RANGE_BAD_BOUNDARYPOINTS_ERR);
+  }
+
   // Extract the contents within the range.
 
   nsCOMPtr<nsIDOMDocumentFragment> docFrag;
@@ -1725,8 +1961,9 @@ nsresult nsRange::ToString(nsAString& aReturn)
   */
 
   nsCOMPtr<nsIContentIterator> iter;
-  NS_NewContentIterator(getter_AddRefs(iter));
-  nsresult rv = iter->Init(this);
+  nsresult rv = NS_NewContentIterator(getter_AddRefs(iter));
+  NS_ENSURE_SUCCESS(rv, rv);
+  rv = iter->Init(static_cast<nsIRange*>(this));
   NS_ENSURE_SUCCESS(rv, rv);
   
   nsString tempString;
@@ -1735,23 +1972,23 @@ nsresult nsRange::ToString(nsAString& aReturn)
   // close tag order, and grab the text from any text node
   while (!iter->IsDone())
   {
-    nsIContent *cN = iter->GetCurrentNode();
+    nsINode *n = iter->GetCurrentNode();
 
 #ifdef DEBUG_range
     // If debug, dump it:
-    cN->List(stdout);
+    n->List(stdout);
 #endif /* DEBUG */
-    nsCOMPtr<nsIDOMText> textNode( do_QueryInterface(cN) );
+    nsCOMPtr<nsIDOMText> textNode(do_QueryInterface(n));
     if (textNode) // if it's a text node, get the text
     {
-      if (cN == mStartParent) // only include text past start offset
+      if (n == mStartParent) // only include text past start offset
       {
         PRUint32 strLength;
         textNode->GetLength(&strLength);
         textNode->SubstringData(mStartOffset,strLength-mStartOffset,tempString);
         aReturn += tempString;
       }
-      else if (cN == mEndParent)  // only include text before end offset
+      else if (n == mEndParent)  // only include text before end offset
       {
         textNode->SubstringData(0,mEndOffset,tempString);
         aReturn += tempString;

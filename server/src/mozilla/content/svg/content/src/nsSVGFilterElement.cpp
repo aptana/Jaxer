@@ -35,9 +35,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "nsGkAtoms.h"
-#include "nsSVGLength.h"
 #include "nsCOMPtr.h"
-#include "nsSVGAnimatedString.h"
 #include "nsSVGFilterElement.h"
 
 nsSVGElement::LengthInfo nsSVGFilterElement::sLengthInfo[4] =
@@ -66,6 +64,11 @@ nsSVGElement::EnumInfo nsSVGFilterElement::sEnumInfo[2] =
   }
 };
 
+nsSVGElement::StringInfo nsSVGFilterElement::sStringInfo[1] =
+{
+  { &nsGkAtoms::href, kNameSpaceID_XLink }
+};
+
 NS_IMPL_NS_NEW_SVG_ELEMENT(Filter)
 
 //----------------------------------------------------------------------
@@ -74,12 +77,10 @@ NS_IMPL_NS_NEW_SVG_ELEMENT(Filter)
 NS_IMPL_ADDREF_INHERITED(nsSVGFilterElement,nsSVGFilterElementBase)
 NS_IMPL_RELEASE_INHERITED(nsSVGFilterElement,nsSVGFilterElementBase)
 
-NS_INTERFACE_MAP_BEGIN(nsSVGFilterElement)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMNode)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMElement)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMSVGElement)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMSVGFilterElement)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMSVGURIReference)
+NS_INTERFACE_TABLE_HEAD(nsSVGFilterElement)
+  NS_NODE_INTERFACE_TABLE5(nsSVGFilterElement, nsIDOMNode, nsIDOMElement,
+                           nsIDOMSVGElement, nsIDOMSVGFilterElement,
+                           nsIDOMSVGURIReference)
   NS_INTERFACE_MAP_ENTRY_CONTENT_CLASSINFO(SVGFilterElement)
 NS_INTERFACE_MAP_END_INHERITING(nsSVGFilterElementBase)
 
@@ -89,28 +90,6 @@ NS_INTERFACE_MAP_END_INHERITING(nsSVGFilterElementBase)
 nsSVGFilterElement::nsSVGFilterElement(nsINodeInfo *aNodeInfo)
   : nsSVGFilterElementBase(aNodeInfo)
 {
-}
-
-nsresult
-nsSVGFilterElement::Init()
-{
-  nsresult rv = nsSVGFilterElementBase::Init();
-  NS_ENSURE_SUCCESS(rv,rv);
-
-  // Create mapped properties:
-
-  // nsIDOMSVGURIReference properties
-
-  // DOM property: href , #REQUIRED attrib: xlink:href
-  // XXX: enforce requiredness
-  {
-    rv = NS_NewSVGAnimatedString(getter_AddRefs(mHref));
-    NS_ENSURE_SUCCESS(rv,rv);
-    rv = AddMappedSVGValue(nsGkAtoms::href, mHref, kNameSpaceID_XLink);
-    NS_ENSURE_SUCCESS(rv,rv);
-  }
-
-  return rv;
 }
 
 //----------------------------------------------------------------------
@@ -188,27 +167,11 @@ nsSVGFilterElement::SetFilterRes(PRUint32 filterResX, PRUint32 filterResY)
 NS_IMETHODIMP 
 nsSVGFilterElement::GetHref(nsIDOMSVGAnimatedString * *aHref)
 {
-  *aHref = mHref;
-  NS_IF_ADDREF(*aHref);
-  return NS_OK;
+  return mStringAttributes[HREF].ToDOMAnimatedString(aHref, this);
 }
 
 //----------------------------------------------------------------------
 // nsIContent methods
-
-PRBool
-nsSVGFilterElement::ParseAttribute(PRInt32 aNameSpaceID, nsIAtom* aName,
-                                   const nsAString& aValue,
-                                   nsAttrValue& aResult)
-{
-  if (aName == nsGkAtoms::filterRes && aNameSpaceID == kNameSpaceID_None) {
-    return ParseIntegerOptionalInteger(aName, aValue,
-                                       FILTERRES_X, FILTERRES_Y,
-                                       aResult);
-  }
-  return nsSVGFilterElementBase::ParseAttribute(aNameSpaceID, aName,
-                                                aValue, aResult);
-}
 
 NS_IMETHODIMP_(PRBool)
 nsSVGFilterElement::IsAttributeMapped(const nsIAtom* name) const
@@ -265,4 +228,11 @@ nsSVGFilterElement::GetEnumInfo()
 {
   return EnumAttributesInfo(mEnumAttributes, sEnumInfo,
                             NS_ARRAY_LENGTH(sEnumInfo));
+}
+
+nsSVGElement::StringAttributesInfo
+nsSVGFilterElement::GetStringInfo()
+{
+  return StringAttributesInfo(mStringAttributes, sStringInfo,
+                              NS_ARRAY_LENGTH(sStringInfo));
 }

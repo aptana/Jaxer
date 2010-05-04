@@ -54,8 +54,7 @@
 #include "nsIAtom.h"
 #include "nsIHTMLToTextSink.h"
 #include "nsIDocumentEncoder.h"
-#include "nsVoidArray.h"
-
+#include "nsTArray.h"
 
 class nsPlainTextSerializer : public nsIContentSerializer,
                               public nsIHTMLContentSink,
@@ -96,9 +95,7 @@ public:
                                  nsAString& aStr);
 
   // nsIContentSink
-  NS_IMETHOD WillTokenize(void) { return NS_OK; }
-  NS_IMETHOD WillBuildModel(void) { return NS_OK; }
-  NS_IMETHOD DidBuildModel(void) { return NS_OK; }
+  NS_IMETHOD WillParse(void) { return NS_OK; }
   NS_IMETHOD WillInterrupt(void) { return NS_OK; }
   NS_IMETHOD WillResume(void) { return NS_OK; }
   NS_IMETHOD SetParser(nsIParser* aParser) { return NS_OK; }
@@ -164,10 +161,10 @@ protected:
   }
 
   // Stack handling functions
-  PRBool GetLastBool(const nsVoidArray& aStack);
-  void SetLastBool(nsVoidArray& aStack, PRBool aValue);
-  void PushBool(nsVoidArray& aStack, PRBool aValue);
-  PRBool PopBool(nsVoidArray& aStack);
+  PRBool GetLastBool(const nsTArray<PRPackedBool>& aStack);
+  void SetLastBool(nsTArray<PRPackedBool>& aStack, PRBool aValue);
+  void PushBool(nsTArray<PRPackedBool>& aStack, PRBool aValue);
+  PRBool PopBool(nsTArray<PRPackedBool>& aStack);
   
 protected:
   nsString         mCurrentLine;
@@ -241,11 +238,11 @@ protected:
   nsCOMPtr<nsIContent> mContent;
 
   // For handling table rows
-  nsAutoVoidArray mHasWrittenCellsForRow; // really an array of bools
+  nsAutoTArray<PRPackedBool, 8> mHasWrittenCellsForRow;
   
   // Values gotten in OpenContainer that is (also) needed in CloseContainer
-  nsAutoVoidArray     mCurrentNodeIsConverted; // really an array of bools
-  nsAutoVoidArray     mIsInCiteBlockquote; // really an array of bools
+  nsAutoTArray<PRPackedBool, 8> mCurrentNodeIsConverted;
+  nsAutoTArray<PRPackedBool, 8> mIsInCiteBlockquote;
 
   // The output data
   nsAString*            mOutputString;

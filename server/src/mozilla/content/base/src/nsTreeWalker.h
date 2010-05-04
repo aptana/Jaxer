@@ -45,16 +45,16 @@
 #define nsTreeWalker_h___
 
 #include "nsIDOMTreeWalker.h"
+#include "nsTraversal.h"
 #include "nsCOMPtr.h"
-#include "nsVoidArray.h"
-#include "nsJSUtils.h"
+#include "nsTArray.h"
 #include "nsCycleCollectionParticipant.h"
 
 class nsINode;
 class nsIDOMNode;
 class nsIDOMNodeFilter;
 
-class nsTreeWalker : public nsIDOMTreeWalker
+class nsTreeWalker : public nsIDOMTreeWalker, public nsTraversal
 {
 public:
     NS_DECL_CYCLE_COLLECTING_ISUPPORTS
@@ -69,18 +69,13 @@ public:
     NS_DECL_CYCLE_COLLECTION_CLASS(nsTreeWalker)
 
 private:
-    nsCOMPtr<nsINode> mRoot;
-    PRUint32 mWhatToShow;
-    nsCOMPtr<nsIDOMNodeFilter> mFilter;
-    PRBool mExpandEntityReferences;
     nsCOMPtr<nsINode> mCurrentNode;
     
     /*
      * Array with all child indexes up the tree. This should only be
      * considered a hint and the value could be wrong.
-     * The array contains casted PRInt32's
      */
-    nsAutoVoidArray mPossibleIndexes;
+    nsAutoTArray<PRInt32, 8> mPossibleIndexes;
     
     /*
      * Position of mCurrentNode in mPossibleIndexes
@@ -151,16 +146,7 @@ private:
                      nsINode** _retval);
 
     /*
-     * Tests if and how a node should be filtered. Uses mWhatToShow and
-     * mFilter to test the node.
-     * @param aNode     Node to test
-     * @param _filtered Returned filtervalue. See nsIDOMNodeFilter.idl
-     * @returns         Errorcode
-     */
-    nsresult TestNode(nsINode* aNode, PRInt16* _filtered);
-    
-    /*
-     * Gets the child index of a node within it's parent. Gets a possible index
+     * Gets the child index of a node within its parent. Gets a possible index
      * from mPossibleIndexes to gain speed. If the value in mPossibleIndexes
      * isn't correct it'll get the index the usual way.
      * @param aParent   in which to get the index
@@ -181,18 +167,12 @@ private:
      */
     void SetChildIndex(PRInt32 aIndexPos, PRInt32 aChildIndex)
     {
-        if (aIndexPos != -1)
-            mPossibleIndexes.ReplaceElementAt(NS_INT32_TO_PTR(aChildIndex),
-                                              aIndexPos);
+        if (aIndexPos >= 0 &&
+            mPossibleIndexes.EnsureLengthAtLeast(aIndexPos+1)) {
+            mPossibleIndexes.ElementAt(aIndexPos) = aChildIndex;
+        }
     }
 };
-
-// Make a new nsIDOMTreeWalker object
-nsresult NS_NewTreeWalker(nsIDOMNode *aRoot,
-                          PRUint32 aWhatToShow,
-                          nsIDOMNodeFilter *aFilter,
-                          PRBool aEntityReferenceExpansion,
-                          nsIDOMTreeWalker **aInstancePtrResult);
 
 #endif
 
