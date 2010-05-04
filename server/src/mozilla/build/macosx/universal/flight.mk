@@ -105,8 +105,26 @@ postflight_all:
 	ln -s $(DIST_UNI) $(DIST_X86)/universal
 	rm -rf $(DIST_UNI)/$(MOZ_PKG_APPNAME)/$(APPNAME)
 	$(TOPSRCDIR)/build/macosx/universal/unify \
+          --unify-with-sort "\.manifest$$" \
+          --unify-with-sort "components\.list$$" \
 	  $(DIST_PPC)/$(MOZ_PKG_APPNAME)/$(APPNAME) \
 	  $(DIST_X86)/$(MOZ_PKG_APPNAME)/$(APPNAME) \
 	  $(DIST_UNI)/$(MOZ_PKG_APPNAME)/$(APPNAME)
 # A universal .dmg can now be produced by making in either architecture's
 # INSTALLER_DIR.
+# Now, repeat the process for the test package.
+	$(MAKE) -C $(OBJDIR_PPC) UNIVERSAL_BINARY= package-tests
+	$(MAKE) -C $(OBJDIR_X86) UNIVERSAL_BINARY= package-tests
+	rm -rf $(DIST_UNI)/test-package-stage
+# automation.py differs because it hardcodes a path to
+# dist/bin. It doesn't matter which one we use.
+	if test -d $(DIST_PPC)/test-package-stage -a                 \
+                -d $(DIST_X86)/test-package-stage; then              \
+           cp $(DIST_PPC)/test-package-stage/mochitest/automation.py \
+             $(DIST_X86)/test-package-stage/mochitest/;              \
+           cp $(DIST_PPC)/test-package-stage/reftest/automation.py   \
+             $(DIST_X86)/test-package-stage/reftest/;                \
+           $(TOPSRCDIR)/build/macosx/universal/unify                 \
+             $(DIST_PPC)/test-package-stage                          \
+             $(DIST_X86)/test-package-stage                          \
+             $(DIST_UNI)/test-package-stage; fi

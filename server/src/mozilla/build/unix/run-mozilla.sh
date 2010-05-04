@@ -110,12 +110,12 @@ moz_get_debugger()
 	done="no"
 	for d in $debuggers
 	do
-		moz_test_binary /bin/type
+		moz_test_binary /bin/which
 		if [ $? -eq 1 ]
 		then
-			dpath=`type ${d} | awk '{print $3;}' | sed -e 's/\.$//'`	
-		else 	
 			dpath=`which ${d}`	
+		else 	
+			dpath=`LC_MESSAGES=C type ${d} | awk '{print $3;}' | sed -e 's/\.$//'`	
 		fi
 		if [ -x "$dpath" ]
 		then
@@ -138,63 +138,10 @@ moz_run_program()
 		moz_bail "Cannot execute $prog."
 	fi
 	##
-	## Use md5sum to crc a core file.  If md5sum is not found on the system,
-	## then don't debug core files.
-	##
-	moz_test_binary /bin/type
-	if [ $? -eq 1 ]
-	then
-		crc_prog=`type md5sum 2>/dev/null | awk '{print $3;}' 2>/dev/null | sed -e 's/\.$//'`
-	else
-		crc_prog=`which md5sum 2>/dev/null`
-	fi
-	if [ -x "$crc_prog" ]
-	then
-		DEBUG_CORE_FILES=1
-	fi
-	if [ "$DEBUG_CORE_FILES" ]
-	then
-		crc_old=
-		if [ -f core ]
-		then
-			crc_old=`$crc_prog core | awk '{print $1;}' `
-		fi
-	fi
-	##
 	## Run the program
 	##
 	"$prog" ${1+"$@"}
 	exitcode=$?
-	if [ "$DEBUG_CORE_FILES" ]
-	then
-		if [ -f core ]
-		then
-			crc_new=`$crc_prog core | awk '{print $1;}' `
-		fi
-	fi
-	if [ "$crc_old" != "$crc_new" ]
-	then
-		printf "\n\nOh no!  %s just dumped a core file.\n\n" $prog
-		printf "Do you want to debug this ? "
-		printf "You need a lot of memory for this, so watch out ? [y/n] "
-		read ans
-		if [ "$ans" = "y" ]
-		then
-			debugger=`moz_get_debugger`
-			if [ -x "$debugger" ]
-			then
-				echo "$debugger $prog core"
-
-				# See http://www.mozilla.org/unix/debugging-faq.html
-				# For why LD_BIND_NOW is needed
-				LD_BIND_NOW=1; export LD_BIND_NOW
-
-				$debugger "$prog" core
-			else
-				echo "Could not find a debugger on your system."
-			fi
-		fi
-	fi
 }
 ##########################################################################
 moz_debug_program()
@@ -209,12 +156,12 @@ moz_debug_program()
 	fi
 	if [ -n "$moz_debugger" ]
 	then
-		moz_test_binary /bin/type
+		moz_test_binary /bin/which
 		if [ $? -eq 1 ]
 		then	
-			debugger=`type $moz_debugger | awk '{print $3;}' | sed -e 's/\.$//'` 
-		else
 			debugger=`which $moz_debugger` 
+		else
+			debugger=`LC_MESSAGES=C type $moz_debugger | awk '{print $3;}' | sed -e 's/\.$//'` 
 		fi	
 	else
 		debugger=`moz_get_debugger`
@@ -340,18 +287,28 @@ fi
 ##
 ## When a shared library is a symbolic link, $ORIGIN will be replaced with
 ## the real path (i.e., what the symbolic link points to) by the runtime
-## linker.  For example, if dist/bin/libmozjs.so is a symbolic link to
-## js/src/libmozjs.so, $ORIGIN will be "js/src" instead of "dist/bin".
-## So the runtime linker will use "js/src" NOT "dist/bin" to locate the
-## other shared libraries that libmozjs.so depends on.  This only happens
+## linker.  For example, if dist/bin/libxul.so is a symbolic link to
+## toolkit/library/libxul.so, $ORIGIN will be "toolkit/library" instead of "dist/bin".
+## So the runtime linker will use "toolkit/library" NOT "dist/bin" to locate the
+## other shared libraries that libxul.so depends on.  This only happens
 ## when a user (developer) tries to start firefox, thunderbird, or seamonkey
 ## under dist/bin. To solve the problem, we should rely on LD_LIBRARY_PATH
 ## to locate shared libraries.
 ##
 ## Note: 
-##  We choose libmozjs.so as a representative shared library. If it is 
-##  a symbolic link, all other shared libraries are symbolic links also.
-if [ `uname -s` != "SunOS" -o -h "$MOZ_DIST_BIN/libmozjs.so" ]
+##  We test $MOZ_DIST_BIN/*.so. If any of them is a symbolic link,
+##  we need to set LD_LIBRARY_PATH.
+##########################################################################
+moz_should_set_ld_library_path()
+{
+	[ `uname -s` != "SunOS" ] && return 0
+	for sharedlib in $MOZ_DIST_BIN/*.so
+	do
+		[ -h $sharedlib ] && return 0
+	done
+	return 1
+}
+if moz_should_set_ld_library_path
 then
 	LD_LIBRARY_PATH=${MOZ_DIST_BIN}:${MOZ_DIST_BIN}/plugins:${MRE_HOME}${LD_LIBRARY_PATH+":$LD_LIBRARY_PATH"}
 fi 
