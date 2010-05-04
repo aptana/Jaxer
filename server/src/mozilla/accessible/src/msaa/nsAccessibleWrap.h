@@ -70,6 +70,13 @@ Class::QueryInterface(REFIID iid, void** ppv)                                 \
   if (SUCCEEDED(hr))                                                          \
     return hr;                                                                \
 
+#define IMPL_IUNKNOWN_QUERY_ENTRY_COND(Class, Cond)                           \
+  if (Cond) {                                                                 \
+    hr = Class::QueryInterface(iid, ppv);                                     \
+    if (SUCCEEDED(hr))                                                        \
+      return hr;                                                              \
+  }                                                                           \
+
 #define IMPL_IUNKNOWN_INHERITED0(Class, Super)                                \
   IMPL_IUNKNOWN_QUERY_HEAD(Class)                                             \
   IMPL_IUNKNOWN_QUERY_ENTRY(Super)                                            \
@@ -261,7 +268,11 @@ class nsAccessibleWrap : public nsAccessible,
     virtual /* [propget] */ HRESULT STDMETHODCALLTYPE get_attributes(
         /* [retval][out] */ BSTR *attributes);
 
-  public:   // IEnumVariantMethods
+  public: // IEnumVariant
+    // If there are two clients using this at the same time, and they are
+    // each using a different mEnumVariant position it would be bad, because
+    // we have only 1 object and can only keep of mEnumVARIANT position once.
+
     virtual /* [local] */ HRESULT STDMETHODCALLTYPE Next( 
         /* [in] */ ULONG celt,
         /* [length_is][size_is][out] */ VARIANT __RPC_FAR *rgVar,
@@ -286,12 +297,14 @@ class nsAccessibleWrap : public nsAccessible,
         LCID lcid, WORD wFlags, DISPPARAMS *pDispParams,
         VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT *puArgErr);
 
-  // nsPIAccessible
-  NS_IMETHOD FireAccessibleEvent(nsIAccessibleEvent *aEvent);
+  // nsAccessible
+  virtual nsresult FireAccessibleEvent(nsIAccessibleEvent *aEvent);
 
   // Helper methods
   static PRInt32 GetChildIDFor(nsIAccessible* aAccessible);
   static HWND GetHWNDFor(nsIAccessible *aAccessible);
+  static HRESULT ConvertToIA2Attributes(nsIPersistentProperties *aAttributes,
+                                        BSTR *aIA2Attributes);
 
   /**
    * System caret support: update the Windows caret position. 
@@ -312,11 +325,20 @@ class nsAccessibleWrap : public nsAccessible,
 
   static IDispatch *NativeAccessible(nsIAccessible *aXPAccessible);
 
+  /**
+   * Drops the IEnumVariant current position so that navigation methods
+   * Next() and Skip() doesn't work until Reset() method is called. The method
+   * is used when children of the accessible are changed.
+   */
+  void UnattachIEnumVariant();
+
 protected:
+  virtual nsresult FirePlatformEvent(nsIAccessibleEvent *aEvent);
+
   // mEnumVARIANTPosition not the current accessible's position, but a "cursor" of 
   // where we are in the current list of children, with respect to
   // nsIEnumVariant::Reset(), Skip() and Next().
-  PRUint16 mEnumVARIANTPosition;
+  PRInt32 mEnumVARIANTPosition;
 
   enum navRelations {
     NAVRELATION_CONTROLLED_BY = 0x1000,

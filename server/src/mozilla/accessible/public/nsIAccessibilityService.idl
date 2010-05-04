@@ -46,35 +46,35 @@ interface nsObjectFrame;
 interface nsIContent;
 interface nsITimer;
 
-[uuid(27386cf1-f27e-4d2d-9bf4-c4621d50d299)]
+[uuid(6a58f7e8-587c-40dd-b684-dc3e54f1342a)]
 interface nsIAccessibilityService : nsIAccessibleRetrieval
 {
   nsIAccessible createOuterDocAccessible(in nsIDOMNode aNode);
   nsIAccessible createRootAccessible(in nsIPresShell aShell, in nsIDocument aDocument);
 
-  nsIAccessible createHTML4ButtonAccessible(in nsISupports aFrame);
-  nsIAccessible createHyperTextAccessible(in nsISupports aFrame);
-  nsIAccessible createHTMLBRAccessible(in nsISupports aFrame);
-  nsIAccessible createHTMLButtonAccessible(in nsISupports aFrame);
+  nsIAccessible createHTML4ButtonAccessible(in nsIFrame aFrame);
+  nsIAccessible createHyperTextAccessible(in nsIFrame aFrame);
+  nsIAccessible createHTMLBRAccessible(in nsIFrame aFrame);
+  nsIAccessible createHTMLButtonAccessible(in nsIFrame aFrame);
   nsIAccessible createHTMLAccessibleByMarkup(in nsIFrame aFrame, in nsIWeakReference aWeakShell, in nsIDOMNode aDOMNode);
-  nsIAccessible createHTMLLIAccessible(in nsISupports aFrame, in nsISupports aBulletFrame, in AString aBulletText);
-  nsIAccessible createHTMLCheckboxAccessible(in nsISupports aFrame);
+  nsIAccessible createHTMLLIAccessible(in nsIFrame aFrame, in nsIFrame aBulletFrame, in AString aBulletText);
+  nsIAccessible createHTMLCheckboxAccessible(in nsIFrame aFrame);
   nsIAccessible createHTMLComboboxAccessible(in nsIDOMNode aNode, in nsIWeakReference aPresShell);
-  nsIAccessible createHTMLGenericAccessible(in nsISupports aFrame);
-  nsIAccessible createHTMLGroupboxAccessible(in nsISupports aFrame);
-  nsIAccessible createHTMLHRAccessible(in nsISupports aFrame);
-  nsIAccessible createHTMLImageAccessible(in nsISupports aFrame);
-  nsIAccessible createHTMLLabelAccessible(in nsISupports aFrame);
+  nsIAccessible createHTMLGenericAccessible(in nsIFrame aFrame);
+  nsIAccessible createHTMLGroupboxAccessible(in nsIFrame aFrame);
+  nsIAccessible createHTMLHRAccessible(in nsIFrame aFrame);
+  nsIAccessible createHTMLImageAccessible(in nsIFrame aFrame);
+  nsIAccessible createHTMLLabelAccessible(in nsIFrame aFrame);
   nsIAccessible createHTMLListboxAccessible(in nsIDOMNode aNode, in nsIWeakReference aPresShell);
+  nsIAccessible createHTMLMediaAccessible(in nsIFrame aFrame);
   nsIAccessible createHTMLObjectFrameAccessible(in nsObjectFrame aFrame);
-  nsIAccessible createHTMLRadioButtonAccessible(in nsISupports aFrame);
+  nsIAccessible createHTMLRadioButtonAccessible(in nsIFrame aFrame);
   nsIAccessible createHTMLSelectOptionAccessible(in nsIDOMNode aNode, in nsIAccessible aAccParent, in nsIWeakReference aPresShell);
-  nsIAccessible createHTMLTableAccessible(in nsISupports aFrame);
-  nsIAccessible createHTMLTableCellAccessible(in nsISupports aFrame);
-  nsIAccessible createHTMLTableHeadAccessible(in nsIDOMNode aDOMNode);
-  nsIAccessible createHTMLTextAccessible(in nsISupports aFrame);
-  nsIAccessible createHTMLTextFieldAccessible(in nsISupports aFrame);
-  nsIAccessible createHTMLCaptionAccessible(in nsISupports aFrame);
+  nsIAccessible createHTMLTableAccessible(in nsIFrame aFrame);
+  nsIAccessible createHTMLTableCellAccessible(in nsIFrame aFrame);
+  nsIAccessible createHTMLTextAccessible(in nsIFrame aFrame);
+  nsIAccessible createHTMLTextFieldAccessible(in nsIFrame aFrame);
+  nsIAccessible createHTMLCaptionAccessible(in nsIFrame aFrame);
 
   nsIAccessible getAccessible(in nsIDOMNode aNode, in nsIPresShell aPresShell,                          
                               in nsIWeakReference aWeakShell, 
@@ -86,7 +86,7 @@ interface nsIAccessibilityService : nsIAccessibleRetrieval
 
   /**
    * Invalidate the accessibility cache associated with aPresShell, for accessibles
-   * that were generated for aContainerContent and it's subtree.
+   * that were generated for aContainerContent and its subtree.
    * The container content node for the change is passed in, rather than the
    * changed presentation for the content node itself.
    * @param aPresShell         The presShell where changes occured
@@ -112,6 +112,13 @@ interface nsIAccessibilityService : nsIAccessibleRetrieval
    */
   void processDocLoadEvent(in nsITimer aTimer, in voidPtr aClosure, in PRUint32 aEventType);
 
+  /**
+   * Fire accessible event of the given type for the given target.
+   *
+   * @param aEvent   [in] accessible event type
+   * @param aTarget  [in] target of accessible event
+   */
+  void fireAccessibleEvent(in unsigned long aEvent, in nsIAccessible aTarget);
 };
 
 

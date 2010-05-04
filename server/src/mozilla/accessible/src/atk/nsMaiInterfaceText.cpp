@@ -40,9 +40,12 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "nsMaiInterfaceText.h"
-#include "nsString.h"
 
-AtkAttributeSet * GetAttributeSet(nsIAccessible* aAccessible);
+#include "nsRoleMap.h"
+#include "nsString.h"
+#include "nsIPersistentProperties2.h"
+
+AtkAttributeSet* ConvertToAtkAttributeSet(nsIPersistentProperties* aAttributes);
 
 void
 textInterfaceInitCB(AtkTextIface *aIface)
@@ -77,9 +80,10 @@ textInterfaceInitCB(AtkTextIface *aIface)
 void ConvertTexttoAsterisks(nsAccessibleWrap* accWrap, nsAString& aString)
 {
     // convert each char to "*" when it's "password text" 
-    PRUint32 accRole;
-    accWrap->GetRole(&accRole);
-    if (static_cast<AtkRole>(accRole) == ATK_ROLE_PASSWORD_TEXT) {
+    PRUint32 accRole = 0;
+    accWrap->GetRoleInternal(&accRole);
+    PRUint32 atkRole = atkRoleMap[accRole];
+    if (atkRole == ATK_ROLE_PASSWORD_TEXT) {
         for (PRUint32 i = 0; i < aString.Length(); i++)
             aString.Replace(i, 1, NS_LITERAL_STRING("*"));
     }
@@ -186,10 +190,10 @@ getCharacterAtOffsetCB(AtkText *aText, gint aOffset)
 
     // convert char to "*" when it's "password text" 
     PRUint32 accRole;
-    accWrap->GetRole(&accRole);
-    if (static_cast<AtkRole>(accRole) == ATK_ROLE_PASSWORD_TEXT) {
+    accWrap->GetRoleInternal(&accRole);
+    PRUint32 atkRole = atkRoleMap[accRole];
+    if (atkRole == ATK_ROLE_PASSWORD_TEXT)
         uniChar = '*';
-    }
 
     return (NS_FAILED(rv)) ? 0 : static_cast<gunichar>(uniChar);
 }
@@ -245,6 +249,9 @@ getRunAttributesCB(AtkText *aText, gint aOffset,
                    gint *aStartOffset,
                    gint *aEndOffset)
 {
+    *aStartOffset = -1;
+    *aEndOffset = -1;
+
     nsAccessibleWrap *accWrap = GetAccessibleWrap(ATK_OBJECT(aText));
     if (!accWrap)
         return nsnull;
@@ -254,24 +261,37 @@ getRunAttributesCB(AtkText *aText, gint aOffset,
                             getter_AddRefs(accText));
     NS_ENSURE_TRUE(accText, nsnull);
 
-    nsCOMPtr<nsIAccessible> accessibleWithAttrs;
+    nsCOMPtr<nsIPersistentProperties> attributes;
     PRInt32 startOffset = 0, endOffset = 0;
-    nsresult rv =
-        accText->GetAttributeRange(aOffset, &startOffset, &endOffset,
-                                   getter_AddRefs(accessibleWithAttrs));
+    nsresult rv = accText->GetTextAttributes(PR_FALSE, aOffset,
+                                             &startOffset, &endOffset,
+                                             getter_AddRefs(attributes));
+    NS_ENSURE_SUCCESS(rv, nsnull);
+
     *aStartOffset = startOffset;
     *aEndOffset = endOffset;
-    if (NS_FAILED(rv))
-        return nsnull;
 
-    return GetAttributeSet(accessibleWithAttrs);
+    return ConvertToAtkAttributeSet(attributes);
 }
 
 AtkAttributeSet *
 getDefaultAttributesCB(AtkText *aText)
 {
-    /* not supported ??? */
-    return nsnull;
+    nsAccessibleWrap *accWrap = GetAccessibleWrap(ATK_OBJECT(aText));
+    if (!accWrap)
+        return nsnull;
+
+    nsCOMPtr<nsIAccessibleText> accText;
+    accWrap->QueryInterface(NS_GET_IID(nsIAccessibleText),
+                            getter_AddRefs(accText));
+    NS_ENSURE_TRUE(accText, nsnull);
+
+    nsCOMPtr<nsIPersistentProperties> attributes;
+    nsresult rv = accText->GetDefaultTextAttributes(getter_AddRefs(attributes));
+    if (NS_FAILED(rv))
+        return nsnull;
+
+    return ConvertToAtkAttributeSet(attributes);
 }
 
 void

@@ -41,6 +41,7 @@
 #include "nsAccessibilityAtoms.h"
 #include "nsHTMLFormControlAccessible.h"
 #include "nsIDOMDocument.h"
+#include "nsIDOMNSHTMLInputElement.h"
 #include "nsIDOMHTMLInputElement.h"
 #include "nsIDOMNSHTMLElement.h"
 #include "nsIDOMNSEditableElement.h"
@@ -64,9 +65,10 @@ nsFormControlAccessible(aNode, aShell)
 { 
 }
 
-NS_IMETHODIMP nsHTMLCheckboxAccessible::GetRole(PRUint32 *_retval)
+nsresult
+nsHTMLCheckboxAccessible::GetRoleInternal(PRUint32 *aRole)
 {
-  *_retval = nsIAccessibleRole::ROLE_CHECKBUTTON;
+  *aRole = nsIAccessibleRole::ROLE_CHECKBUTTON;
   return NS_OK;
 }
 
@@ -79,12 +81,15 @@ NS_IMETHODIMP nsHTMLCheckboxAccessible::GetNumActions(PRUint8 *_retval)
 NS_IMETHODIMP nsHTMLCheckboxAccessible::GetActionName(PRUint8 aIndex, nsAString& aName)
 {
   if (aIndex == eAction_Click) {    // 0 is the magic value for default action
-    // check or uncheck
+    // cycle, check or uncheck
     PRUint32 state;
-    GetState(&state, nsnull);
+    nsresult rv = GetStateInternal(&state, nsnull);
+    NS_ENSURE_SUCCESS(rv, rv);
 
     if (state & nsIAccessibleStates::STATE_CHECKED)
       aName.AssignLiteral("uncheck"); 
+    else if (state & nsIAccessibleStates::STATE_MIXED)
+      aName.AssignLiteral("cycle"); 
     else
       aName.AssignLiteral("check"); 
 
@@ -101,24 +106,37 @@ NS_IMETHODIMP nsHTMLCheckboxAccessible::DoAction(PRUint8 index)
   return NS_ERROR_INVALID_ARG;
 }
 
-NS_IMETHODIMP
-nsHTMLCheckboxAccessible::GetState(PRUint32 *aState, PRUint32 *aExtraState)
+nsresult
+nsHTMLCheckboxAccessible::GetStateInternal(PRUint32 *aState,
+                                           PRUint32 *aExtraState)
 {
-  nsresult rv = nsFormControlAccessible::GetState(aState, aExtraState);
-  NS_ENSURE_SUCCESS(rv, rv);
-  if (!mDOMNode)
-    return NS_OK;
+  nsresult rv = nsFormControlAccessible::GetStateInternal(aState, aExtraState);
+  NS_ENSURE_A11Y_SUCCESS(rv, rv);
 
   *aState |= nsIAccessibleStates::STATE_CHECKABLE;
 
   PRBool checked = PR_FALSE;   // Radio buttons and check boxes can be checked
+  PRBool mixed = PR_FALSE;     // or mixed.
 
+  nsCOMPtr<nsIDOMNSHTMLInputElement>
+           html5CheckboxElement(do_QueryInterface(mDOMNode));
+           
+  if (html5CheckboxElement) {
+    html5CheckboxElement->GetIndeterminate(&mixed);
+
+    if (mixed) {
+      *aState |= nsIAccessibleStates::STATE_MIXED;
+      return NS_OK;  // indeterminate can't be checked at the same time.
+    }
+  }
+  
   nsCOMPtr<nsIDOMHTMLInputElement> htmlCheckboxElement(do_QueryInterface(mDOMNode));
-  if (htmlCheckboxElement)
+  if (htmlCheckboxElement) {
     htmlCheckboxElement->GetChecked(&checked);
-
-  if (checked)
-    *aState |= nsIAccessibleStates::STATE_CHECKED;
+  
+    if (checked)
+      *aState |= nsIAccessibleStates::STATE_CHECKED;
+  }
 
   return NS_OK;
 }
@@ -130,13 +148,12 @@ nsRadioButtonAccessible(aNode, aShell)
 { 
 }
 
-NS_IMETHODIMP
-nsHTMLRadioButtonAccessible::GetState(PRUint32 *aState, PRUint32 *aExtraState)
+nsresult
+nsHTMLRadioButtonAccessible::GetStateInternal(PRUint32 *aState,
+                                              PRUint32 *aExtraState)
 {
-  nsresult rv = nsAccessibleWrap::GetState(aState, aExtraState);
-  NS_ENSURE_SUCCESS(rv, rv);
-  if (!mDOMNode)
-    return NS_OK;
+  nsresult rv = nsAccessibleWrap::GetStateInternal(aState, aExtraState);
+  NS_ENSURE_A11Y_SUCCESS(rv, rv);
 
   *aState |= nsIAccessibleStates::STATE_CHECKABLE;
   
@@ -250,13 +267,13 @@ NS_IMETHODIMP nsHTMLButtonAccessible::DoAction(PRUint8 index)
   return NS_ERROR_INVALID_ARG;
 }
 
-NS_IMETHODIMP
-nsHTMLButtonAccessible::GetState(PRUint32 *aState, PRUint32 *aExtraState)
+nsresult
+nsHTMLButtonAccessible::GetStateInternal(PRUint32 *aState,
+                                         PRUint32 *aExtraState)
 {
-  nsresult rv = nsHyperTextAccessibleWrap::GetState(aState, aExtraState);
-  NS_ENSURE_SUCCESS(rv, rv);
-  if (!mDOMNode)
-    return NS_OK;
+  nsresult rv = nsHyperTextAccessibleWrap::GetStateInternal(aState,
+                                                            aExtraState);
+  NS_ENSURE_A11Y_SUCCESS(rv, rv);
 
   nsCOMPtr<nsIDOMElement> element(do_QueryInterface(mDOMNode));
   NS_ENSURE_TRUE(element, NS_ERROR_FAILURE);
@@ -269,45 +286,41 @@ nsHTMLButtonAccessible::GetState(PRUint32 *aState, PRUint32 *aExtraState)
   return NS_OK;
 }
 
-NS_IMETHODIMP nsHTMLButtonAccessible::GetRole(PRUint32 *_retval)
+nsresult
+nsHTMLButtonAccessible::GetRoleInternal(PRUint32 *aRole)
 {
-  *_retval = nsIAccessibleRole::ROLE_PUSHBUTTON;
+  *aRole = nsIAccessibleRole::ROLE_PUSHBUTTON;
   return NS_OK;
 }
 
-NS_IMETHODIMP nsHTMLButtonAccessible::GetName(nsAString& aName)
+nsresult
+nsHTMLButtonAccessible::GetNameInternal(nsAString& aName)
 {
-  nsCOMPtr<nsIContent> content(do_QueryInterface(mDOMNode));
-  if (!content) {
-    return NS_ERROR_FAILURE; // Node shut down
-  }
+  nsAccessible::GetNameInternal(aName);
+  if (!aName.IsEmpty())
+    return NS_OK;
 
+  nsCOMPtr<nsIContent> content(do_QueryInterface(mDOMNode));
+
+  // No name from HTML or ARIA
   nsAutoString name;
   if (!content->GetAttr(kNameSpaceID_None, nsAccessibilityAtoms::value,
                         name) &&
       !content->GetAttr(kNameSpaceID_None, nsAccessibilityAtoms::alt,
                         name)) {
-    if (mRoleMapEntry) {
-      // Use HTML label or DHTML accessibility's labelledby attribute for name
-      GetHTMLName(name, PR_FALSE);
+    // Use the button's (default) label if nothing else works
+    nsIFrame* frame = GetFrame();
+    if (frame) {
+      nsIFormControlFrame* fcFrame = do_QueryFrame(frame);
+      if (fcFrame)
+        fcFrame->GetFormProperty(nsAccessibilityAtoms::defaultLabel, name);
     }
-    if (name.IsEmpty()) {
-      // Use the button's (default) label if nothing else works
-      nsIFrame* frame = GetFrame();
-      if (frame) {
-        nsIFormControlFrame* fcFrame;
-        CallQueryInterface(frame, &fcFrame);
-        if (fcFrame)
-          fcFrame->GetFormProperty(nsAccessibilityAtoms::defaultLabel, name);
-      }
-    }
-    if (name.IsEmpty() &&
-        !content->GetAttr(kNameSpaceID_None, nsAccessibilityAtoms::title,
-                          name) &&
-        !content->GetAttr(kNameSpaceID_None, nsAccessibilityAtoms::src,
-                          name)) {
-      content->GetAttr(kNameSpaceID_None, nsAccessibilityAtoms::data, name);
-    }
+  }
+
+  if (name.IsEmpty() &&
+      !content->GetAttr(kNameSpaceID_None, nsAccessibilityAtoms::src,
+                        name)) {
+    content->GetAttr(kNameSpaceID_None, nsAccessibilityAtoms::data, name);
   }
 
   name.CompressWhitespace();
@@ -347,19 +360,20 @@ NS_IMETHODIMP nsHTML4ButtonAccessible::DoAction(PRUint8 index)
   return NS_ERROR_INVALID_ARG;
 }
 
-NS_IMETHODIMP nsHTML4ButtonAccessible::GetRole(PRUint32 *_retval)
+nsresult
+nsHTML4ButtonAccessible::GetRoleInternal(PRUint32 *aRole)
 {
-  *_retval = nsIAccessibleRole::ROLE_PUSHBUTTON;
+  *aRole = nsIAccessibleRole::ROLE_PUSHBUTTON;
   return NS_OK;
 }
 
-NS_IMETHODIMP
-nsHTML4ButtonAccessible::GetState(PRUint32 *aState, PRUint32 *aExtraState)
+nsresult
+nsHTML4ButtonAccessible::GetStateInternal(PRUint32 *aState,
+                                          PRUint32 *aExtraState)
 {
-  nsresult rv = nsHyperTextAccessibleWrap::GetState(aState, aExtraState);
-  NS_ENSURE_SUCCESS(rv, rv);
-  if (!mDOMNode)
-    return NS_OK;
+  nsresult rv = nsHyperTextAccessibleWrap::GetStateInternal(aState,
+                                                            aExtraState);
+  NS_ENSURE_A11Y_SUCCESS(rv, rv);
 
   nsCOMPtr<nsIDOMElement> element(do_QueryInterface(mDOMNode));
   NS_ASSERTION(element, "No element for button's dom node!");
@@ -383,7 +397,8 @@ nsHyperTextAccessibleWrap(aNode, aShell)
 
 NS_IMPL_ISUPPORTS_INHERITED3(nsHTMLTextFieldAccessible, nsAccessible, nsHyperTextAccessible, nsIAccessibleText, nsIAccessibleEditableText)
 
-NS_IMETHODIMP nsHTMLTextFieldAccessible::GetRole(PRUint32 *aRole)
+nsresult
+nsHTMLTextFieldAccessible::GetRoleInternal(PRUint32 *aRole)
 {
   *aRole = nsIAccessibleRole::ROLE_ENTRY;
   nsCOMPtr<nsIContent> content(do_QueryInterface(mDOMNode));
@@ -395,17 +410,20 @@ NS_IMETHODIMP nsHTMLTextFieldAccessible::GetRole(PRUint32 *aRole)
   return NS_OK;
 }
 
-NS_IMETHODIMP nsHTMLTextFieldAccessible::GetName(nsAString& aName)
+nsresult
+nsHTMLTextFieldAccessible::GetNameInternal(nsAString& aName)
 {
-  nsCOMPtr<nsIContent> content = do_QueryInterface(mDOMNode);
-  if (!content) {
-    return NS_ERROR_FAILURE;
-  }
-  nsresult rv = GetHTMLName(aName, PR_FALSE);
-  if (NS_FAILED(rv) || !aName.IsEmpty() || !content->GetBindingParent()) {
-    return rv;
-  }
+  nsresult rv = nsAccessible::GetNameInternal(aName);
+  NS_ENSURE_SUCCESS(rv, rv);
 
+  if (!aName.IsEmpty())
+    return NS_OK;
+
+  nsCOMPtr<nsIContent> content = do_QueryInterface(mDOMNode);
+  if (!content->GetBindingParent())
+    return NS_OK;
+
+  // XXX: bug 459640
   // There's a binding parent.
   // This means we're part of another control, so use parent accessible for name.
   // This ensures that a textbox inside of a XUL widget gets
@@ -418,7 +436,9 @@ NS_IMETHODIMP nsHTMLTextFieldAccessible::GetName(nsAString& aName)
 NS_IMETHODIMP nsHTMLTextFieldAccessible::GetValue(nsAString& _retval)
 {
   PRUint32 state;
-  GetState(&state, nsnull);
+  nsresult rv = GetStateInternal(&state, nsnull);
+  NS_ENSURE_SUCCESS(rv, rv);
+
   if (state & nsIAccessibleStates::STATE_PROTECTED)    // Don't return password text!
     return NS_ERROR_FAILURE;
 
@@ -435,13 +455,13 @@ NS_IMETHODIMP nsHTMLTextFieldAccessible::GetValue(nsAString& _retval)
   return NS_ERROR_FAILURE;
 }
 
-NS_IMETHODIMP
-nsHTMLTextFieldAccessible::GetState(PRUint32 *aState, PRUint32 *aExtraState)
+nsresult
+nsHTMLTextFieldAccessible::GetStateInternal(PRUint32 *aState,
+                                            PRUint32 *aExtraState)
 {
-  nsresult rv = nsHyperTextAccessibleWrap::GetState(aState, aExtraState);
-  NS_ENSURE_SUCCESS(rv, rv);
-  if (!mDOMNode)
-    return NS_OK;
+  nsresult rv = nsHyperTextAccessibleWrap::GetStateInternal(aState,
+                                                            aExtraState);
+  NS_ENSURE_A11Y_SUCCESS(rv, rv);
 
   // can be focusable, focused, protected. readonly, unavailable, selected
   nsCOMPtr<nsIContent> content(do_QueryInterface(mDOMNode));
@@ -454,16 +474,15 @@ nsHTMLTextFieldAccessible::GetState(PRUint32 *aState, PRUint32 *aExtraState)
   else {
     nsCOMPtr<nsIAccessible> parent;
     GetParent(getter_AddRefs(parent));
-    if (parent && Role(parent) == nsIAccessibleRole::ROLE_AUTOCOMPLETE) {
+    if (nsAccUtils::Role(parent) == nsIAccessibleRole::ROLE_AUTOCOMPLETE)
       *aState |= nsIAccessibleStates::STATE_HASPOPUP;
-    }
   }
 
   if (content->HasAttr(kNameSpaceID_None, nsAccessibilityAtoms::readonly)) {
     *aState |= nsIAccessibleStates::STATE_READONLY;
   }
 
-  if (!aExtraState || !(*aExtraState & nsIAccessibleStates::EXT_STATE_EDITABLE))
+  if (!aExtraState)
     return NS_OK;
 
   nsCOMPtr<nsIDOMHTMLInputElement> htmlInput(do_QueryInterface(mDOMNode));
@@ -474,6 +493,9 @@ nsHTMLTextFieldAccessible::GetState(PRUint32 *aState, PRUint32 *aExtraState)
   else {
     *aExtraState |= nsIAccessibleStates::EXT_STATE_MULTI_LINE;
   }
+
+  if (!(*aExtraState & nsIAccessibleStates::EXT_STATE_EDITABLE))
+    return NS_OK;
 
   nsCOMPtr<nsIContent> bindingContent = content->GetBindingParent();
   if (bindingContent &&
@@ -576,9 +598,10 @@ nsHyperTextAccessibleWrap(aNode, aShell)
 { 
 }
 
-NS_IMETHODIMP nsHTMLGroupboxAccessible::GetRole(PRUint32 *_retval)
+nsresult
+nsHTMLGroupboxAccessible::GetRoleInternal(PRUint32 *aRole)
 {
-  *_retval = nsIAccessibleRole::ROLE_GROUPING;
+  *aRole = nsIAccessibleRole::ROLE_GROUPING;
   return NS_OK;
 }
 
@@ -600,54 +623,43 @@ nsIContent* nsHTMLGroupboxAccessible::GetLegend()
   return nsnull;
 }
 
-NS_IMETHODIMP nsHTMLGroupboxAccessible::GetName(nsAString& aName)
+nsresult
+nsHTMLGroupboxAccessible::GetNameInternal(nsAString& aName)
 {
-  if (!mDOMNode) {
-    return NS_ERROR_FAILURE;
-  }
-  aName.Truncate();
-  if (mRoleMapEntry) {
-    nsAccessible::GetName(aName);
-    if (!aName.IsEmpty()) {
-      return NS_OK;
-    }
-  }
+  nsresult rv = nsAccessible::GetNameInternal(aName);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  if (!aName.IsEmpty())
+    return NS_OK;
 
   nsIContent *legendContent = GetLegend();
   if (legendContent) {
-    return AppendFlatStringFromSubtree(legendContent, &aName);
+    return nsTextEquivUtils::
+      AppendTextEquivFromContent(this, legendContent, &aName);
   }
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
-nsHTMLGroupboxAccessible::GetAccessibleRelated(PRUint32 aRelationType,
-                                               nsIAccessible **aRelated)
+nsHTMLGroupboxAccessible::GetRelationByType(PRUint32 aRelationType,
+                                            nsIAccessibleRelation **aRelation)
 {
-  if (!mDOMNode) {
-    return NS_ERROR_FAILURE;
-  }
-  NS_ENSURE_ARG_POINTER(aRelated);
-
-  *aRelated = nsnull;
-
-  nsresult rv = nsHyperTextAccessibleWrap::GetAccessibleRelated(aRelationType, aRelated);
-  if (NS_FAILED(rv) || *aRelated) {
-    // Either the node is shut down, or another relation mechanism has been used
-    return rv;
-  }
+  nsresult rv = nsHyperTextAccessibleWrap::GetRelationByType(aRelationType,
+                                                             aRelation);
+  NS_ENSURE_SUCCESS(rv, rv);
 
   if (aRelationType == nsIAccessibleRelation::RELATION_LABELLED_BY) {
     // No override for label, so use <legend> for this <fieldset>
-    nsCOMPtr<nsIDOMNode> legendNode = do_QueryInterface(GetLegend());
-    if (legendNode) {
-      GetAccService()->GetAccessibleInWeakShell(legendNode, mWeakShell, aRelated);
-    }
+    return nsRelUtils::
+      AddTargetFromContent(aRelationType, aRelation, GetLegend());
   }
 
   return NS_OK;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// nsHTMLLegendAccessible
 
 nsHTMLLegendAccessible::nsHTMLLegendAccessible(nsIDOMNode* aNode, nsIWeakReference* aShell):
 nsHyperTextAccessibleWrap(aNode, aShell)
@@ -655,35 +667,38 @@ nsHyperTextAccessibleWrap(aNode, aShell)
 }
 
 NS_IMETHODIMP
-nsHTMLLegendAccessible::GetAccessibleRelated(PRUint32 aRelationType,
-                                             nsIAccessible **aRelated)
+nsHTMLLegendAccessible::GetRelationByType(PRUint32 aRelationType,
+                                          nsIAccessibleRelation **aRelation)
 {
-  *aRelated = nsnull;
-
-  nsresult rv = nsHyperTextAccessibleWrap::GetAccessibleRelated(aRelationType, aRelated);
-  if (NS_FAILED(rv) || *aRelated) {
-    // Either the node is shut down, or another relation mechanism has been used
-    return rv;
-  }
+  nsresult rv = nsHyperTextAccessibleWrap::
+    GetRelationByType(aRelationType, aRelation);
+  NS_ENSURE_SUCCESS(rv, rv);
 
   if (aRelationType == nsIAccessibleRelation::RELATION_LABEL_FOR) {
     // Look for groupbox parent
-    nsCOMPtr<nsIContent> content = do_QueryInterface(mDOMNode);
-    if (!content) {
-      return NS_ERROR_FAILURE;  // Node already shut down
-    }
     nsCOMPtr<nsIAccessible> groupboxAccessible = GetParent();
-    if (groupboxAccessible &&
-        Role(groupboxAccessible) == nsIAccessibleRole::ROLE_GROUPING) {
-      nsCOMPtr<nsIAccessible> testLabelAccessible;
-      groupboxAccessible->GetAccessibleRelated(nsIAccessibleRelation::RELATION_LABELLED_BY,
-                                               getter_AddRefs(testLabelAccessible));
+    if (nsAccUtils::Role(groupboxAccessible) == nsIAccessibleRole::ROLE_GROUPING) {
+      // XXX: if group box exposes more than one relation of the given type
+      // then we fail.
+      nsCOMPtr<nsIAccessible> testLabelAccessible =
+        nsRelUtils::GetRelatedAccessible(groupboxAccessible,
+                                         nsIAccessibleRelation::RELATION_LABELLED_BY);
+
       if (testLabelAccessible == this) {
-        // We're the first child of the parent groupbox
-        NS_ADDREF(*aRelated = groupboxAccessible);
+        // We're the first child of the parent groupbox, see
+        // nsHTMLGroupboxAccessible::GetRelationByType().
+        return nsRelUtils::
+          AddTarget(aRelationType, aRelation, groupboxAccessible);
       }
     }
   }
 
+  return NS_OK;
+}
+
+nsresult
+nsHTMLLegendAccessible::GetRoleInternal(PRUint32 *aRole)
+{
+  *aRole = nsIAccessibleRole::ROLE_LABEL;
   return NS_OK;
 }

@@ -84,17 +84,26 @@ public:
    */
   static nsresult GetAccessibilityService(nsIAccessibilityService** aResult);
 
+  /**
+   * Return cached accessibility service.
+   */
+  static nsIAccessibilityService* GetAccessibilityService();
+
+  /**
+   * Indicates whether accessibility service was shutdown.
+   */
+  static PRBool gIsShutdown;
+
 private:
   /**
    * Return presentation shell, DOM node for the given frame.
    *
    * @param aFrame - the given frame
-   * @param aRealFrame [out] - the given frame casted to nsIFrame
    * @param aShell [out] - presentation shell for DOM node associated with the
    *                 given frame
    * @param aContent [out] - DOM node associated with the given frame
    */
-  nsresult GetInfo(nsISupports *aFrame, nsIFrame **aRealFrame,
+  nsresult GetInfo(nsIFrame *aFrame,
                    nsIWeakReference **aShell,
                    nsIDOMNode **aContent);
 
@@ -127,6 +136,15 @@ private:
   nsresult GetAccessibleForDeckChildren(nsIDOMNode *aNode,
                                         nsIAccessible **aAccessible);
 
+#ifdef MOZ_XUL
+  /**
+   * Create accessible for XUL tree element.
+   */
+  nsresult GetAccessibleForXULTree(nsIDOMNode *aNode,
+                                   nsIWeakReference *aWeakShell,
+                                   nsIAccessible **aAccessible);
+#endif
+  
   static nsAccessibilityService *gAccessibilityService;
 
   /**
@@ -270,7 +288,8 @@ static const char kRoleNames[][20] = {
   "listbox option",      //ROLE_OPTION
   "listbox rich option", //ROLE_RICH_OPTION
   "listbox",             //ROLE_LISTBOX
-  "flat equation"        //ROLE_FLAT_EQUATION  
+  "flat equation",       //ROLE_FLAT_EQUATION  
+  "gridcell"             //ROLE_GRID_CELL
 };
 
 /**

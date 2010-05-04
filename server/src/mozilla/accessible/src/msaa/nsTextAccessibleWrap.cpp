@@ -45,7 +45,6 @@
 #include "nsPresContext.h"
 #include "nsIPresShell.h"
 #include "nsIRenderingContext.h"
-#include "nsIWidget.h"
 #include "nsIComponentManager.h"
 
 // --------------------------------------------------------
@@ -127,9 +126,9 @@ __try {
 
   accessible->GetBounds(&docX, &docY, &docWidth, &docHeight);
 
-  nsRect unclippedRect(x, y, width, height);
-  nsRect docRect(docX, docY, docWidth, docHeight);
-  nsRect clippedRect;
+  nsIntRect unclippedRect(x, y, width, height);
+  nsIntRect docRect(docX, docY, docWidth, docHeight);
+  nsIntRect clippedRect;
 
   clippedRect.IntersectRect(unclippedRect, docRect);
 
@@ -172,9 +171,10 @@ STDMETHODIMP nsTextAccessibleWrap::scrollToSubstring(
     /* [in] */ unsigned int aEndIndex)
 {
 __try {
-  nsresult rv = nsAccUtils::ScrollSubstringTo(GetFrame(), mDOMNode, aStartIndex,
-                                              mDOMNode, aEndIndex,
-                                              nsIAccessibleScrollType::SCROLL_TYPE_ANYWHERE);
+  nsresult rv =
+    nsCoreUtils::ScrollSubstringTo(GetFrame(), mDOMNode, aStartIndex,
+                                   mDOMNode, aEndIndex,
+                                   nsIAccessibleScrollType::SCROLL_TYPE_ANYWHERE);
   if (NS_FAILED(rv))
     return E_FAIL;
 } __except(FilterA11yExceptions(::GetExceptionCode(), GetExceptionInformation())) { }
@@ -211,9 +211,6 @@ nsresult nsTextAccessibleWrap::GetCharacterExtents(PRInt32 aStartOffset, PRInt32
   nsIFrame *frame = GetFrame();
   NS_ENSURE_TRUE(frame, NS_ERROR_FAILURE);
 
-  nsIWidget *widget = frame->GetWindow();
-  NS_ENSURE_TRUE(widget, NS_ERROR_FAILURE);
-  
   nsPoint startPoint, endPoint;
   nsIFrame *startFrame = GetPointFromOffset(frame, aStartOffset, PR_TRUE, startPoint);
   nsIFrame *endFrame = GetPointFromOffset(frame, aEndOffset, PR_FALSE, endPoint);
@@ -221,11 +218,11 @@ nsresult nsTextAccessibleWrap::GetCharacterExtents(PRInt32 aStartOffset, PRInt32
     return E_FAIL;
   }
   
-  nsRect sum(0, 0, 0, 0);
+  nsIntRect sum(0, 0, 0, 0);
   nsIFrame *iter = startFrame;
   nsIFrame *stopLoopFrame = endFrame->GetNextContinuation();
   for (; iter != stopLoopFrame; iter = iter->GetNextContinuation()) {
-    nsRect rect = iter->GetScreenRectExternal();
+    nsIntRect rect = iter->GetScreenRectExternal();
     nscoord start = (iter == startFrame) ? presContext->AppUnitsToDevPixels(startPoint.x) : 0;
     nscoord end = (iter == endFrame) ? presContext->AppUnitsToDevPixels(endPoint.x) :
                                        rect.width;
@@ -250,7 +247,7 @@ __try {
 
   nsIFrame *frame = GetFrame();
   nsCOMPtr<nsIPresShell> presShell = GetPresShell();
-  if (!frame || !presShell) {
+  if (!frame || !presShell || !presShell->GetPresContext()) {
     return E_FAIL;
   }
 
@@ -264,7 +261,8 @@ __try {
 
   const nsStyleVisibility *visibility = frame->GetStyleVisibility();
 
-  if (NS_FAILED(rc->SetFont(font->mFont, visibility->mLangGroup))) {
+  if (NS_FAILED(rc->SetFont(font->mFont, visibility->mLangGroup,
+                            presShell->GetPresContext()->GetUserFontSet()))) {
     return E_FAIL;
   }
 
@@ -274,8 +272,8 @@ __try {
     return E_FAIL;
   }
 
-  nsIFontMetrics *fm;
-  rc->GetFontMetrics(fm);
+  nsCOMPtr<nsIFontMetrics> fm;
+  rc->GetFontMetrics(*getter_AddRefs(fm));
   if (!fm) {
     return E_FAIL;
   }

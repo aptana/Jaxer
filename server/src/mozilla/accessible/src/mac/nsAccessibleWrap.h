@@ -75,10 +75,10 @@ class nsAccessibleWrap : public nsAccessible
     void GetNativeWindow (void **aOutNativeWindow);
     
     virtual nsresult Shutdown ();
-    virtual nsresult InvalidateChildren ();
+    virtual void InvalidateChildren();
 
-    NS_IMETHOD FireAccessibleEvent(nsIAccessibleEvent *aEvent);
-    
+    virtual nsresult FireAccessibleEvent(nsIAccessibleEvent *aEvent);
+
     // ignored means that the accessible might still have children, but is not displayed
     // to the user. it also has no native accessible object represented for it.
     PRBool IsIgnored();
@@ -87,7 +87,7 @@ class nsAccessibleWrap : public nsAccessible
     
     PRBool HasPopup () {
       PRUint32 state = 0;
-      GetState(&state, nsnull);
+      GetStateInternal(&state, nsnull);
       return (state & nsIAccessibleStates::STATE_HASPOPUP);
     }
     
@@ -96,7 +96,9 @@ class nsAccessibleWrap : public nsAccessible
     virtual already_AddRefed<nsIAccessible> GetUnignoredParent();
     
   protected:
-    
+
+    virtual nsresult FirePlatformEvent(nsIAccessibleEvent *aEvent);
+
     PRBool AncestorIsFlat() {
       // we don't create a native object if we're child of a "flat" accessible; for example, on OS X buttons 
       // shouldn't have any children, because that makes the OS confused. 
@@ -106,8 +108,9 @@ class nsAccessibleWrap : public nsAccessible
       
       nsCOMPtr<nsIAccessible> curParent = GetParent();
       while (curParent) {
-        if (MustPrune(curParent))
+        if (nsAccUtils::MustPrune(curParent))
           return PR_TRUE;
+
         nsCOMPtr<nsIAccessible> newParent;
         curParent->GetParent(getter_AddRefs(newParent));
         curParent.swap(newParent);

@@ -53,36 +53,50 @@ nsOuterDocAccessible::nsOuterDocAccessible(nsIDOMNode* aNode,
 }
 
 /* unsigned long getRole (); */
-NS_IMETHODIMP nsOuterDocAccessible::GetRole(PRUint32 *aRole)
+nsresult
+nsOuterDocAccessible::GetRoleInternal(PRUint32 *aRole)
 {
   *aRole = nsIAccessibleRole::ROLE_INTERNAL_FRAME;
   return NS_OK;
 }
 
-NS_IMETHODIMP
-nsOuterDocAccessible::GetState(PRUint32 *aState, PRUint32 *aExtraState)
+nsresult
+nsOuterDocAccessible::GetStateInternal(PRUint32 *aState, PRUint32 *aExtraState)
 {
-  nsAccessible::GetState(aState, aExtraState);
+  nsresult rv = nsAccessible::GetStateInternal(aState, aExtraState);
+  NS_ENSURE_A11Y_SUCCESS(rv, rv);
+
   *aState &= ~nsIAccessibleStates::STATE_FOCUSABLE;
   return NS_OK;
 }
 
-NS_IMETHODIMP
+// nsAccessible::GetChildAtPoint()
+nsresult
 nsOuterDocAccessible::GetChildAtPoint(PRInt32 aX, PRInt32 aY,
-                                      nsIAccessible **aAccessible)
+                                      PRBool aDeepestChild,
+                                      nsIAccessible **aChild)
 {
-  NS_ENSURE_ARG_POINTER(aAccessible);
-  *aAccessible = nsnull;
-  if (!mDOMNode) {
-    return NS_ERROR_FAILURE;
-  }
-  PRInt32 docX, docY, docWidth, docHeight;
-  GetBounds(&docX, &docY, &docWidth, &docHeight);
-  if (aX < docX || aX >= docX + docWidth || aY < docY || aY >= docY + docHeight) {
-    return NS_ERROR_FAILURE;
-  }
+  PRInt32 docX = 0, docY = 0, docWidth = 0, docHeight = 0;
+  nsresult rv = GetBounds(&docX, &docY, &docWidth, &docHeight);
+  NS_ENSURE_SUCCESS(rv, rv);
 
-  return GetFirstChild(aAccessible);  // Always return the inner doc unless bounds outside of it
+  if (aX < docX || aX >= docX + docWidth || aY < docY || aY >= docY + docHeight)
+    return NS_OK;
+
+  // Always return the inner doc as direct child accessible unless bounds
+  // outside of it.
+  nsCOMPtr<nsIAccessible> childAcc;
+  rv = GetFirstChild(getter_AddRefs(childAcc));
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  if (!childAcc)
+    return NS_OK;
+
+  if (aDeepestChild)
+    return childAcc->GetDeepestChildAtPoint(aX, aY, aChild);
+
+  NS_ADDREF(*aChild = childAcc);
+  return NS_OK;
 }
 
 void nsOuterDocAccessible::CacheChildren()
@@ -123,17 +137,15 @@ void nsOuterDocAccessible::CacheChildren()
   nsCOMPtr<nsIAccessibilityService> accService = 
     do_GetService("@mozilla.org/accessibilityService;1");
   accService->GetAccessibleFor(innerNode, getter_AddRefs(innerAccessible));
-  nsCOMPtr<nsPIAccessible> privateInnerAccessible = 
-    do_QueryInterface(innerAccessible);
-  if (!privateInnerAccessible) {
+  nsRefPtr<nsAccessible> innerAcc(nsAccUtils::QueryAccessible(innerAccessible));
+  if (!innerAcc)
     return;
-  }
 
   // Success getting inner document as first child -- now we cache it.
   mAccChildCount = 1;
   SetFirstChild(innerAccessible); // weak ref
-  privateInnerAccessible->SetParent(this);
-  privateInnerAccessible->SetNextSibling(nsnull);
+  innerAcc->SetParent(this);
+  innerAcc->SetNextSibling(nsnull);
 }
 
 nsresult
@@ -147,4 +159,36 @@ nsOuterDocAccessible::GetAttributesInternal(nsIPersistentProperties *aAttributes
     return NS_OK;
   }
   return nsAccessible::GetAttributesInternal(aAttributes);
+}
+
+// Internal frame, which is the doc's parent, should not have a click action
+NS_IMETHODIMP
+nsOuterDocAccessible::GetNumActions(PRUint8 *aNumActions)
+{
+  NS_ENSURE_ARG_POINTER(aNumActions);
+  *aNumActions = 0;
+
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+nsOuterDocAccessible::GetActionName(PRUint8 aIndex, nsAString& aName)
+{
+  aName.Truncate();
+
+  return NS_ERROR_INVALID_ARG;
+}
+
+NS_IMETHODIMP
+nsOuterDocAccessible::GetActionDescription(PRUint8 aIndex, nsAString& aDescription)
+{
+  aDescription.Truncate();
+
+  return NS_ERROR_INVALID_ARG;
+}
+
+NS_IMETHODIMP
+nsOuterDocAccessible::DoAction(PRUint8 aIndex)
+{
+  return NS_ERROR_INVALID_ARG;
 }

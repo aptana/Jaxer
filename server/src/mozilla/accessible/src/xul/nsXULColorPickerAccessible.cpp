@@ -56,23 +56,23 @@ nsFormControlAccessible(aNode, aShell)
 /**
   * We are a pushbutton
   */
-NS_IMETHODIMP nsXULColorPickerTileAccessible::GetRole(PRUint32 *_retval)
+nsresult
+nsXULColorPickerTileAccessible::GetRoleInternal(PRUint32 *aRole)
 {
-  *_retval = nsIAccessibleRole::ROLE_PUSHBUTTON;
+  *aRole = nsIAccessibleRole::ROLE_PUSHBUTTON;
   return NS_OK;
 }
 
 /**
   * Possible states: focused, focusable, selected
   */
-NS_IMETHODIMP
-nsXULColorPickerTileAccessible::GetState(PRUint32 *aState, PRUint32 *aExtraState)
+nsresult
+nsXULColorPickerTileAccessible::GetStateInternal(PRUint32 *aState,
+                                                 PRUint32 *aExtraState)
 {
   // get focus and disable status from base class
-  nsresult rv = nsFormControlAccessible::GetState(aState, aExtraState);
-  NS_ENSURE_SUCCESS(rv, rv);
-  if (!mDOMNode)
-    return NS_OK;
+  nsresult rv = nsFormControlAccessible::GetStateInternal(aState, aExtraState);
+  NS_ENSURE_A11Y_SUCCESS(rv, rv);
 
   *aState |= nsIAccessibleStates::STATE_FOCUSABLE;
 
@@ -90,11 +90,6 @@ nsXULColorPickerTileAccessible::GetState(PRUint32 *aState, PRUint32 *aExtraState
     *aState |= nsIAccessibleStates::STATE_SELECTED;
 
   return NS_OK;
-}
-
-NS_IMETHODIMP nsXULColorPickerTileAccessible::GetName(nsAString& _retval)
-{
-  return GetXULName(_retval);
 }
 
 NS_IMETHODIMP nsXULColorPickerTileAccessible::GetValue(nsAString& _retval)
@@ -122,14 +117,13 @@ nsXULColorPickerTileAccessible(aNode, aShell)
 /**
   * Possible states: focused, focusable, unavailable(disabled)
   */
-NS_IMETHODIMP
-nsXULColorPickerAccessible::GetState(PRUint32 *aState, PRUint32 *aExtraState)
+nsresult
+nsXULColorPickerAccessible::GetStateInternal(PRUint32 *aState,
+                                             PRUint32 *aExtraState)
 {
   // get focus and disable status from base class
-  nsresult rv = nsFormControlAccessible::GetState(aState, aExtraState);
-  NS_ENSURE_SUCCESS(rv, rv);
-  if (!mDOMNode)
-    return NS_OK;
+  nsresult rv = nsFormControlAccessible::GetStateInternal(aState, aExtraState);
+  NS_ENSURE_A11Y_SUCCESS(rv, rv);
 
   *aState |= nsIAccessibleStates::STATE_FOCUSABLE |
              nsIAccessibleStates::STATE_HASPOPUP;
@@ -137,9 +131,10 @@ nsXULColorPickerAccessible::GetState(PRUint32 *aState, PRUint32 *aExtraState)
   return NS_OK;
 }
 
-NS_IMETHODIMP nsXULColorPickerAccessible::GetRole(PRUint32 *_retval)
+nsresult
+nsXULColorPickerAccessible::GetRoleInternal(PRUint32 *aRole)
 {
-  *_retval = nsIAccessibleRole::ROLE_BUTTONDROPDOWNGRID;
+  *aRole = nsIAccessibleRole::ROLE_BUTTONDROPDOWNGRID;
   return NS_OK;
 }
 

@@ -41,7 +41,7 @@
 
 // NOTE: alphabetically ordered
 #include "nsBaseWidgetAccessible.h"
-#include "nsXULSelectAccessible.h"
+#include "nsXULMenuAccessible.h"
 
 /**
  * An individual tab, xul:tab element
@@ -54,16 +54,16 @@ public:
   nsXULTabAccessible(nsIDOMNode* aNode, nsIWeakReference* aShell);
 
   // nsIAccessible
-  NS_IMETHOD GetRole(PRUint32 *_retval); 
-  NS_IMETHOD GetState(PRUint32 *aState, PRUint32 *aExtraState);
   NS_IMETHOD GetNumActions(PRUint8 *_retval);
   NS_IMETHOD GetActionName(PRUint8 aIndex, nsAString& aName);
   NS_IMETHOD DoAction(PRUint8 index);
-  NS_IMETHOD GetAccessibleRelated(PRUint32 aRelationType,
-                                  nsIAccessible **aRelatedAccessible);
+  NS_IMETHOD GetRelationByType(PRUint32 aRelationType,
+                               nsIAccessibleRelation **aRelation);
 
   // nsAccessible
   virtual nsresult GetAttributesInternal(nsIPersistentProperties *aAttributes);
+  virtual nsresult GetRoleInternal(PRUint32 *aRole);
+  virtual nsresult GetStateInternal(PRUint32 *aState, PRUint32 *aExtraState);
 };
 
 /** 
@@ -75,7 +75,9 @@ class nsXULTabBoxAccessible : public nsAccessibleWrap
 {
 public:
   nsXULTabBoxAccessible(nsIDOMNode* aNode, nsIWeakReference* aShell);
-  NS_IMETHOD GetRole(PRUint32 *_retval); 
+
+  // nsAccessible
+  virtual nsresult GetRoleInternal(PRUint32 *aRole);
 };
 
 /**
@@ -85,10 +87,14 @@ class nsXULTabsAccessible : public nsXULSelectableAccessible
 {
 public:
   nsXULTabsAccessible(nsIDOMNode* aNode, nsIWeakReference* aShell);
-  NS_IMETHOD GetRole(PRUint32 *_retval);
+
+  // nsIAccessible
   NS_IMETHOD GetNumActions(PRUint8 *_retval);
   NS_IMETHOD GetValue(nsAString& _retval);
-  NS_IMETHOD GetName(nsAString& _retval);
+
+  // nsAccessible
+  virtual nsresult GetNameInternal(nsAString& aName);
+  virtual nsresult GetRoleInternal(PRUint32 *aRole);
 };
 
 /**
@@ -103,9 +109,11 @@ public:
   nsXULTabpanelAccessible(nsIDOMNode *aNode, nsIWeakReference *aShell);
 
   // nsIAccessible
-  NS_IMETHOD GetRole(PRUint32 *aRole);
-  NS_IMETHOD GetAccessibleRelated(PRUint32 aRelationType,
-                                  nsIAccessible **aRelatedAccessible);
+  NS_IMETHOD GetRelationByType(PRUint32 aRelationType,
+                               nsIAccessibleRelation **aRelation);
+
+  // nsAccessible
+  virtual nsresult GetRoleInternal(PRUint32 *aRole);
 };
 
 #endif

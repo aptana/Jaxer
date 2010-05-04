@@ -38,14 +38,19 @@
 #ifndef _nsRootAccessible_H_
 #define _nsRootAccessible_H_
 
+#include "nsCaretAccessible.h"
 #include "nsDocAccessibleWrap.h"
-#include "nsHashtable.h"
+
 #include "nsIAccessibleDocument.h"
+#ifdef MOZ_XUL
+#include "nsXULTreeAccessible.h"
+#endif
+
+#include "nsHashtable.h"
 #include "nsCaretAccessible.h"
 #include "nsIDocument.h"
 #include "nsIDOMFocusListener.h"
 #include "nsIDOMFormListener.h"
-#include "nsIDOMXULListener.h"
 #include "nsITimer.h"
 
 #define NS_ROOTACCESSIBLE_IMPL_CID                      \
@@ -63,31 +68,32 @@ class nsRootAccessible : public nsDocAccessibleWrap,
 {
   NS_DECL_ISUPPORTS_INHERITED
 
-  public:
-    nsRootAccessible(nsIDOMNode *aDOMNode, nsIWeakReference* aShell);
-    virtual ~nsRootAccessible();
+public:
+  nsRootAccessible(nsIDOMNode *aDOMNode, nsIWeakReference* aShell);
+  virtual ~nsRootAccessible();
 
-    // nsIAccessible
-    NS_IMETHOD GetName(nsAString& aName);
-    NS_IMETHOD GetParent(nsIAccessible * *aParent);
-    NS_IMETHOD GetRole(PRUint32 *aRole);
-    NS_IMETHOD GetState(PRUint32 *aState, PRUint32 *aExtraState);
-    NS_IMETHOD GetAccessibleRelated(PRUint32 aRelationType,
-                                    nsIAccessible **aRelated);
+  // nsIAccessible
+  NS_IMETHOD GetName(nsAString& aName);
+  NS_IMETHOD GetParent(nsIAccessible * *aParent);
+  NS_IMETHOD GetRelationByType(PRUint32 aRelationType,
+                               nsIAccessibleRelation **aRelation);
 
-    // ----- nsPIAccessibleDocument -----------------------
-    NS_IMETHOD FireDocLoadEvents(PRUint32 aEventType);
+  // nsIDOMEventListener
+  NS_IMETHOD HandleEvent(nsIDOMEvent* aEvent);
 
-    // ----- nsIDOMEventListener --------------------------
-    NS_IMETHOD HandleEvent(nsIDOMEvent* aEvent);
+  // nsAccessNode
+  virtual nsresult Init();
+  virtual nsresult Shutdown();
 
-    // nsIAccessNode
-    NS_IMETHOD Init();
-    NS_IMETHOD Shutdown();
+  // nsAccessible
+  virtual nsresult GetRoleInternal(PRUint32 *aRole);
+  virtual nsresult GetStateInternal(PRUint32 *aState, PRUint32 *aExtraState);
 
-    void ShutdownAll();
-    
-    NS_DECLARE_STATIC_IID_ACCESSOR(NS_ROOTACCESSIBLE_IMPL_CID)
+  // nsDocAccessible
+  virtual void FireDocLoadEvents(PRUint32 aEventType);
+
+  // nsRootAccessible
+  NS_DECLARE_STATIC_IID_ACCESSOR(NS_ROOTACCESSIBLE_IMPL_CID)
 
     /**
       * Fire an accessible focus event for the current focusAccssible
@@ -103,6 +109,11 @@ class nsRootAccessible : public nsDocAccessibleWrap,
                                     nsIDOMEvent *aFocusEvent,
                                     PRBool aForceEvent = PR_FALSE,
                                     PRBool aIsAsynch = PR_FALSE);
+    /**
+      * Fire an accessible focus event for the current focused node,
+      * if there is a focus.
+      */
+    void FireCurrentFocusEvent();
 
     nsCaretAccessible *GetCaretAccessible();
 
@@ -117,24 +128,21 @@ class nsRootAccessible : public nsDocAccessibleWrap,
                                    nsIDOMNode* aTargetNode);
     static void GetTargetNode(nsIDOMEvent *aEvent, nsIDOMNode **aTargetNode);
     void TryFireEarlyLoadEvent(nsIDOMNode *aDocNode);
-    void FireCurrentFocusEvent();
     void GetChromeEventHandler(nsIDOMEventTarget **aChromeTarget);
 
     /**
-     * Handles 'TreeRowCountChanged' event. Used in HandleEventWithTarget().
+     * Used in HandleEventWithTarget().
      */
-    nsresult HandleTreeRowCountChangedEvent(nsIDOMEvent *aEvent,
-                                            nsIAccessible *aAccessible,
-                                            const nsAString& aTargetName);
-
-    /**
-     * Handles 'TreeInvalidated' event. Used in HandleEventWithTarget().
-     */
-    nsresult HandleTreeInvalidatedEvent(nsIDOMEvent *aEvent,
-                                        nsIAccessible *aAccessible,
-                                        const nsAString& aTargetName);
+    nsresult HandlePopupShownEvent(nsIAccessible *aAccessible);
+    nsresult HandlePopupHidingEvent(nsIDOMNode *aNode,
+                                    nsIAccessible *aAccessible);
 
 #ifdef MOZ_XUL
+    nsresult HandleTreeRowCountChangedEvent(nsIDOMEvent *aEvent,
+                                            nsXULTreeAccessible *aAccessible);
+    nsresult HandleTreeInvalidatedEvent(nsIDOMEvent *aEvent,
+                                        nsXULTreeAccessible *aAccessible);
+
     PRUint32 GetChromeFlags();
 #endif
     already_AddRefed<nsIDocShellTreeItem>

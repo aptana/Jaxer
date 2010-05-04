@@ -50,12 +50,49 @@ nsApplicationAccessible::nsApplicationAccessible():
 {
 }
 
+////////////////////////////////////////////////////////////////////////////////
 // nsISupports
-NS_IMPL_ISUPPORTS_INHERITED0(nsApplicationAccessible,
-                             nsAccessible)
 
+NS_IMPL_CYCLE_COLLECTION_CLASS(nsApplicationAccessible)
+
+NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN_INHERITED(nsApplicationAccessible,
+                                                  nsAccessible)
+
+  nsCOMPtr<nsISimpleEnumerator> enumerator;
+  tmp->mChildren->Enumerate(getter_AddRefs(enumerator));
+
+  nsCOMPtr<nsIWeakReference> childWeakRef;
+  nsCOMPtr<nsIAccessible> accessible;
+
+  PRBool hasMoreElements;
+  while(NS_SUCCEEDED(enumerator->HasMoreElements(&hasMoreElements))
+        && hasMoreElements) {
+
+    enumerator->GetNext(getter_AddRefs(childWeakRef));
+    accessible = do_QueryReferent(childWeakRef);
+    if (accessible) {
+      NS_CYCLE_COLLECTION_NOTE_EDGE_NAME(cb, "nsApplicationAccessible child");
+      cb.NoteXPCOMChild(accessible);
+    }
+  }
+  
+NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
+
+NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN_INHERITED(nsApplicationAccessible,
+                                                nsAccessible)
+  tmp->mChildren->Clear();
+NS_IMPL_CYCLE_COLLECTION_UNLINK_END
+
+NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION_INHERITED(nsApplicationAccessible)
+NS_INTERFACE_MAP_END_INHERITING(nsAccessible)
+
+NS_IMPL_ADDREF_INHERITED(nsApplicationAccessible, nsAccessible)
+NS_IMPL_RELEASE_INHERITED(nsApplicationAccessible, nsAccessible)
+
+////////////////////////////////////////////////////////////////////////////////
 // nsIAccessNode
-NS_IMETHODIMP
+
+nsresult
 nsApplicationAccessible::Init()
 {
   nsresult rv;
@@ -68,6 +105,8 @@ nsApplicationAccessible::Init()
 NS_IMETHODIMP
 nsApplicationAccessible::GetName(nsAString& aName)
 {
+  aName.Truncate();
+
   nsCOMPtr<nsIStringBundleService> bundleService =
     do_GetService(NS_STRINGBUNDLE_CONTRACTID);
 
@@ -75,37 +114,38 @@ nsApplicationAccessible::GetName(nsAString& aName)
   NS_ENSURE_STATE(bundleService);
 
   nsCOMPtr<nsIStringBundle> bundle;
-  bundleService->CreateBundle("chrome://branding/locale/brand.properties",
-                              getter_AddRefs(bundle));
+  nsresult rv = bundleService->CreateBundle("chrome://branding/locale/brand.properties",
+                                            getter_AddRefs(bundle));
+  NS_ENSURE_SUCCESS(rv, rv);
 
   nsXPIDLString appName;
-  if (bundle) {
-    bundle->GetStringFromName(NS_LITERAL_STRING("brandShortName").get(),
-                              getter_Copies(appName));
-  } else {
-    NS_WARNING("brand.properties not present, using default app name");
-    appName.AssignLiteral("Mozilla");
+  rv = bundle->GetStringFromName(NS_LITERAL_STRING("brandShortName").get(),
+                                 getter_Copies(appName));
+  if (NS_FAILED(rv) || appName.IsEmpty()) {
+    NS_WARNING("brandShortName not found, using default app name");
+    appName.AssignLiteral("Gecko based application");
   }
 
   aName.Assign(appName);
   return NS_OK;
 }
 
-NS_IMETHODIMP
-nsApplicationAccessible::GetRole(PRUint32 *aRole)
+nsresult
+nsApplicationAccessible::GetRoleInternal(PRUint32 *aRole)
 {
   *aRole = nsIAccessibleRole::ROLE_APP_ROOT;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-nsApplicationAccessible::GetFinalRole(PRUint32 *aFinalRole)
+nsApplicationAccessible::GetRole(PRUint32 *aRole)
 {
-  return GetRole(aFinalRole);
+  return GetRoleInternal(aRole);
 }
 
-NS_IMETHODIMP
-nsApplicationAccessible::GetState(PRUint32 *aState, PRUint32 *aExtraState)
+nsresult
+nsApplicationAccessible::GetStateInternal(PRUint32 *aState,
+                                          PRUint32 *aExtraState)
 {
   *aState = 0;
   if (aExtraState)
@@ -196,20 +236,21 @@ nsApplicationAccessible::CacheChildren()
 
     nsCOMPtr<nsIWeakReference> childWeakRef;
     nsCOMPtr<nsIAccessible> accessible;
-    nsCOMPtr<nsPIAccessible> previousAccessible;
+    nsRefPtr<nsAccessible> prevAcc;
     PRBool hasMoreElements;
-    while(NS_SUCCEEDED(enumerator->HasMoreElements(&hasMoreElements))
-          && hasMoreElements) {
+
+    while(NS_SUCCEEDED(enumerator->HasMoreElements(&hasMoreElements)) &&
+          hasMoreElements) {
       enumerator->GetNext(getter_AddRefs(childWeakRef));
       accessible = do_QueryReferent(childWeakRef);
       if (accessible) {
-        if (previousAccessible)
-          previousAccessible->SetNextSibling(accessible);
+        if (prevAcc)
+          prevAcc->SetNextSibling(accessible);
         else
           SetFirstChild(accessible);
 
-        previousAccessible = do_QueryInterface(accessible);
-        previousAccessible->SetParent(this);
+        prevAcc = nsAccUtils::QueryAccessible(accessible);
+        prevAcc->SetParent(this);
       }
     }
 

@@ -72,26 +72,26 @@ class nsXFormsAccessible : public nsHyperTextAccessibleWrap,
 public:
   nsXFormsAccessible(nsIDOMNode* aNode, nsIWeakReference* aShell);
 
+  // nsIAccessible
+
   // Returns value of instance node that xforms element is bound to.
   NS_IMETHOD GetValue(nsAString& aValue);
-
-  // Returns state of xforms element taking into account state of instance node
-  // that it is bound to.
-  NS_IMETHOD GetState(PRUint32 *aState, PRUint32 *aExtraState);
-
-  // Returns value of child xforms 'label' element.
-  NS_IMETHOD GetName(nsAString& aName);
 
   // Returns value of child xforms 'hint' element.
   NS_IMETHOD GetDescription(nsAString& aDescription);
 
-  // Appends ARIA 'datatype' property based on datatype of instance node that
-  // element is bound to.
-  virtual nsresult GetAttributesInternal(nsIPersistentProperties *aAttributes);
+  // nsAccessible
+
+  // Returns value of child xforms 'label' element.
+  virtual nsresult GetNameInternal(nsAString& aName);
+
+  // Returns state of xforms element taking into account state of instance node
+  // that it is bound to.
+  virtual nsresult GetStateInternal(PRUint32 *aState, PRUint32 *aExtraState);
 
   // Denies accessible nodes in anonymous content of xforms element by
   // always returning PR_FALSE value.
-  NS_IMETHOD GetAllowsAnonChildAccessibles(PRBool *aAllowsAnonChildren);
+  virtual PRBool GetAllowsAnonChildAccessibles();
 
 protected:
   // Returns value of first child xforms element by tagname that is bound to
@@ -127,12 +127,12 @@ class nsXFormsContainerAccessible : public nsXFormsAccessible
 public:
   nsXFormsContainerAccessible(nsIDOMNode* aNode, nsIWeakReference* aShell);
 
-  // Returns ROLE_GROUP.
-  NS_IMETHOD GetRole(PRUint32 *aRole);
+  // nsAccessible
+  virtual nsresult GetRoleInternal(PRUint32 *aRole);
 
   // Allows accessible nodes in anonymous content of xforms element by
   // always returning PR_TRUE value.
-  NS_IMETHOD GetAllowsAnonChildAccessibles(PRBool *aAllowsAnonChildren);
+  virtual PRBool GetAllowsAnonChildAccessibles();
 };
 
 
@@ -145,10 +145,11 @@ class nsXFormsEditableAccessible : public nsXFormsAccessible
 public:
   nsXFormsEditableAccessible(nsIDOMNode *aNode, nsIWeakReference *aShell);
 
-  NS_IMETHOD GetState(PRUint32 *aState, PRUint32 *aExtraState);
-
   // nsIAccessibleEditableText
   NS_IMETHOD GetAssociatedEditor(nsIEditor **aEditor);
+
+  // nsAccessible
+  virtual nsresult GetStateInternal(PRUint32 *aState, PRUint32 *aExtraState);
 };
 
 

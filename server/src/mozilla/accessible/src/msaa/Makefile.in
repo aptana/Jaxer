@@ -74,13 +74,16 @@ CPPSRCS = \
   nsDocAccessibleWrap.cpp \
   nsRootAccessibleWrap.cpp \
   nsHTMLWin32ObjectAccessible.cpp \
+  nsARIAGridAccessibleWrap.cpp \
   nsXULMenuAccessibleWrap.cpp \
-  nsXULTreeAccessibleWrap.cpp \
+  nsXULListboxAccessibleWrap.cpp \
+  nsXULTreeGridAccessibleWrap.cpp \
   nsHyperTextAccessibleWrap.cpp \
   nsHTMLImageAccessibleWrap.cpp \
   nsHTMLTableAccessibleWrap.cpp \
   nsAccessibleRelationWrap.cpp \
   nsApplicationAccessibleWrap.cpp \
+  nsWinUtils.cpp \
   CAccessibleAction.cpp \
   CAccessibleImage.cpp \
   CAccessibleComponent.cpp \
@@ -89,6 +92,7 @@ CPPSRCS = \
   CAccessibleHyperlink.cpp \
   CAccessibleHypertext.cpp \
   CAccessibleTable.cpp \
+  CAccessibleTableCell.cpp \
   CAccessibleValue.cpp \
   $(NULL)
 
@@ -99,8 +103,10 @@ EXPORTS = \
   nsDocAccessibleWrap.h \
   nsRootAccessibleWrap.h \
   nsHTMLWin32ObjectAccessible.h \
+  nsARIAGridAccessibleWrap.h \
   nsXULMenuAccessibleWrap.h \
-  nsXULTreeAccessibleWrap.h \
+  nsXULListboxAccessibleWrap.h \
+  nsXULTreeGridAccessibleWrap.h \
   nsHyperTextAccessibleWrap.h \
   nsHTMLImageAccessibleWrap.h \
   nsHTMLTableAccessibleWrap.h \
@@ -114,6 +120,7 @@ EXPORTS = \
   CAccessibleHyperlink.h \
   CAccessibleHypertext.h \
   CAccessibleTable.h \
+  CAccessibleTableCell.h \
   CAccessibleValue.h \
   $(NULL)
 

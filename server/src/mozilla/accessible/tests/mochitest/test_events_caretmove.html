@@ -1,0 +1,227 @@
+<html>
+
+<head>
+  <title>Accessible caret move events testing</title>
+
+  <link rel="stylesheet" type="text/css"
+        href="chrome://mochikit/content/tests/SimpleTest/test.css" />
+
+  <script type="application/javascript"
+          src="chrome://mochikit/content/MochiKit/packed.js"></script>
+  <script type="application/javascript"
+          src="chrome://mochikit/content/tests/SimpleTest/SimpleTest.js"></script>
+  <script type="application/javascript"
+          src="chrome://mochikit/content/tests/SimpleTest/EventUtils.js"></script>
+
+  <script type="application/javascript"
+          src="chrome://mochikit/content/a11y/accessible/common.js"></script>
+  <script type="application/javascript"
+          src="chrome://mochikit/content/a11y/accessible/events.js"></script>
+
+  <script type="application/javascript">
+    /**
+     * Invoker base class.
+     */
+    function synthAction(aNodeOrID, aCaretOffset)
+    {
+      this.DOMNode = getNode(aNodeOrID);
+
+      this.check = function synthAction_check(aEvent)
+      {
+        is(aEvent.QueryInterface(nsIAccessibleCaretMoveEvent).caretOffset,
+           this.caretOffset,
+           "Wrong caret offset for " + aNodeOrID);
+      }
+
+      this.getID = function synthAction_getID() { return aNodeOrID + " action"; }
+
+      this.caretOffset = aCaretOffset;
+    }
+
+    /**
+     * Click invoker.
+     */
+    function synthClick(aNodeOrID, aCaretOffset,
+                        aExtraNodeOrID, aExtraCaretOffset)
+    {
+      this.__proto__ = new synthAction(aNodeOrID, aCaretOffset);
+
+      this.extraNode = getNode(aExtraNodeOrID);
+      this.extraCaretOffset = aExtraCaretOffset;
+
+      this.invoke = function synthClick_invoke()
+      {
+        // Scroll the node into view, otherwise synth click may fail.
+        this.DOMNode.scrollIntoView(true);
+
+        synthesizeMouse(this.DOMNode, 1, 1, {});
+      }
+
+      this.check = function synthFocus_check(aEvent)
+      {
+        this.__proto__.check(aEvent);
+
+        if (this.extraNode) {
+          var acc = getAccessible(this.extraNode, [nsIAccessibleText]);
+          is(acc.caretOffset, this.extraCaretOffset,
+             "Wrong caret offset for " + aExtraNodeOrID);
+        }
+      }
+
+      this.getID = function synthFocus_getID() { return aNodeOrID + " click"; }
+    }
+
+    /**
+     * Key press invokers.
+     */
+    function synthKey(aNodeOrID, aCaretOffset, aKey, aArgs)
+    {
+      this.__proto__ = new synthAction(aNodeOrID, aCaretOffset);
+  
+      this.invoke = function synthKey_invoke()
+      {
+        synthesizeKey(this.mKey, this.mArgs);
+      }
+
+      this.mKey = aKey;
+      this.mArgs = aArgs ? aArgs : {};
+    }
+
+    function synthTabTest(aNodeOrID, aCaretOffset, aBackTab)
+    {
+      this.__proto__ = new synthKey(aNodeOrID, aCaretOffset,
+                                    "VK_TAB", {shiftKey: aBackTab});
+
+      this.getID = function synthTabTest_getID() { return aNodeOrID + " tab"; }
+    }
+
+    function synthDownKey(aNodeOrID, aCaretOffset)
+    {
+      this.__proto__ = new synthKey(aNodeOrID, aCaretOffset, "VK_DOWN");
+
+      this.getID = function synthDownKey_getID()
+      {
+        return aNodeOrID + " key down";
+      }
+    }
+
+    function synthRightKey(aNodeOrID, aCaretOffset)
+    {
+      this.__proto__ = new synthKey(aNodeOrID, aCaretOffset, "VK_RIGHT");
+
+      this.getID = function synthRightKey_getID()
+      {
+        return aNodeOrID + " key right";
+      }
+    }
+
+    /**
+     * Focus invoker.
+     */
+    function synthFocus(aNodeOrID, aCaretOffset)
+    {
+      this.__proto__ = new synthAction(aNodeOrID, aCaretOffset);
+
+      this.invoke = function synthFocus_invoke()
+      {
+        this.DOMNode.focus();
+      }
+
+      this.getID = function synthFocus_getID() { return aNodeOrID + " focus"; }
+    }
+
+    /**
+     * Select all invoker.
+     */
+    function synthSelectAll(aNodeOrID, aCaretOffset)
+    {
+      this.__proto__ = new synthAction(aNodeOrID, aCaretOffset);
+
+      this.invoke = function synthSelectAll_invoke()
+      {
+        if (this.DOMNode instanceof Components.interfaces.nsIDOMHTMLInputElement)
+          this.DOMNode.select();
+        else
+          window.getSelection().selectAllChildren(this.DOMNode);
+      }
+
+      this.getID = function synthSelectAll_getID()
+      {
+        return aNodeOrID + " selectall";
+      }
+    }
+
+    /**
+     * Do tests.
+     */
+    var gQueue = null;
+
+    function testCaretOffset(aAccOrElmOrID, aCaretOffset)
+    {
+      var acc = getAccessible(aAccOrElmOrID, [nsIAccessibleText]);
+      is(acc.caretOffset, aCaretOffset,
+         "Wrong caret offset for " + aAccOrElmOrID);
+    }
+
+    function doTests()
+    {
+      // XXX Bug 510128
+      if (!MAC) {
+        // test no focused accessibles
+        testCaretOffset("textbox", -1);
+        testCaretOffset("textarea", -1);
+        testCaretOffset("p", -1);
+      }
+
+      // test caret move events and caret offsets
+      gQueue = new eventQueue(nsIAccessibleEvent.EVENT_TEXT_CARET_MOVED);
+
+      var id = "textbox";
+      gQueue.push(new synthFocus(id, 5));
+      gQueue.push(new synthSelectAll(id, 5));
+      gQueue.push(new synthClick(id, 0));
+      gQueue.push(new synthRightKey(id, 1));
+
+      id = "textarea";
+      gQueue.push(new synthClick(id, 0));
+      gQueue.push(new synthRightKey(id, 1));
+      gQueue.push(new synthDownKey(id, 12));
+
+      id = "p";
+      gQueue.push(new synthClick(id, 0));
+      gQueue.push(new synthRightKey(id, 1));
+      gQueue.push(new synthDownKey(id, 6));
+
+      gQueue.push(new synthClick("p1_in_div", 0, "p2_in_div", -1));
+
+      gQueue.push(new synthTabTest("p", 0, true));
+      gQueue.push(new synthTabTest("textarea", 12, true));
+      gQueue.push(new synthTabTest("p", 0, false));
+
+      gQueue.invoke(); // Will call SimpleTest.finish();
+    }
+
+    SimpleTest.waitForExplicitFinish();
+    addLoadEvent(doTests);
+  </script>
+</head>
+
+<body>
+
+  <a target="_blank"
+     href="https://bugzilla.mozilla.org/show_bug.cgi?id=454377"
+     title="Accessible caret move events testing">
+    Mozilla Bug 454377
+  </a>
+  <p id="display"></p>
+  <div id="content" style="display: none"></div>
+  <pre id="test">
+  </pre>
+
+  <input id="textbox" value="hello"/>
+  <textarea id="textarea">text<br>text</textarea>
+  <p id="p" contentEditable="true"><span>text</span><br/>text</p>
+  <div id="div" contentEditable="true"><p id="p1_in_div">text</p><p id="p2_in_div">text</p></div>
+
+</body>
+</html>

@@ -66,8 +66,14 @@ LPFNNOTIFYWINEVENT nsAccessNodeWrap::gmNotifyWinEvent = nsnull;
 LPFNGETGUITHREADINFO nsAccessNodeWrap::gmGetGUIThreadInfo = nsnull;
 
 PRBool nsAccessNodeWrap::gIsEnumVariantSupportDisabled = 0;
+// Used to determine whether an IAccessible2 compatible screen reader is loaded.
+PRBool nsAccessNodeWrap::gIsIA2Disabled = PR_FALSE;
 
 nsIAccessibleTextChangeEvent *nsAccessNodeWrap::gTextEvent = nsnull;
+
+// Pref to disallow CtrlTab preview functionality if JAWS or Window-Eyes are
+// running.
+#define CTRLTAB_DISALLOW_FOR_SCREEN_READERS_PREF "browser.ctrlTab.disallowForScreenReaders"
 
 
 /* For documentation of the accessibility architecture, 
@@ -131,6 +137,13 @@ STDMETHODIMP nsAccessNodeWrap::QueryInterface(REFIID iid, void** ppv)
 STDMETHODIMP
 nsAccessNodeWrap::QueryService(REFGUID guidService, REFIID iid, void** ppv)
 {
+  static const GUID IID_SimpleDOMDeprecated = {0x0c539790,0x12e4,0x11cf,0xb6,0x61,0x00,0xaa,0x00,0x4c,0xd6,0xd8};
+  if (guidService != IID_ISimpleDOMNode &&
+      guidService != IID_SimpleDOMDeprecated &&
+      guidService != IID_IAccessible &&  guidService != IID_IAccessible2 &&
+      guidService != IID_IAccessibleApplication)
+    return E_INVALIDARG;
+
   // Can get to IAccessibleApplication from any node via QS
   if (iid == IID_IAccessibleApplication) {
     nsRefPtr<nsApplicationAccessibleWrap> app =
@@ -304,13 +317,14 @@ STDMETHODIMP nsAccessNodeWrap::get_computedStyle(
     /* [out] */ unsigned short __RPC_FAR *aNumStyleProperties)
 {
 __try{
-  nsCOMPtr<nsIDOMElement> domElement(do_QueryInterface(mDOMNode));
-  if (!domElement)
-    return E_FAIL;
-  
   *aNumStyleProperties = 0;
+
+  if (IsDefunct())
+    return E_FAIL;
+
   nsCOMPtr<nsIDOMCSSStyleDeclaration> cssDecl;
-  GetComputedStyleDeclaration(EmptyString(), domElement, getter_AddRefs(cssDecl));
+  nsCoreUtils::GetComputedStyleDeclaration(EmptyString(), mDOMNode,
+                                           getter_AddRefs(cssDecl));
   NS_ENSURE_TRUE(cssDecl, E_FAIL);
 
   PRUint32 length;
@@ -341,12 +355,12 @@ STDMETHODIMP nsAccessNodeWrap::get_computedStyleForProperties(
     /* [length_is][size_is][out] */ BSTR __RPC_FAR *aStyleValues)
 {
 __try {
-  nsCOMPtr<nsIDOMElement> domElement(do_QueryInterface(mDOMNode));
-  if (!domElement)
+  if (IsDefunct())
     return E_FAIL;
  
   nsCOMPtr<nsIDOMCSSStyleDeclaration> cssDecl;
-  GetComputedStyleDeclaration(EmptyString(), domElement, getter_AddRefs(cssDecl));
+  nsCoreUtils::GetComputedStyleDeclaration(EmptyString(), mDOMNode,
+                                           getter_AddRefs(cssDecl));
   NS_ENSURE_TRUE(cssDecl, E_FAIL);
 
   PRUint32 index;
@@ -579,9 +593,8 @@ __try {
  
 void nsAccessNodeWrap::InitAccessibility()
 {
-  if (gIsAccessibilityActive) {
-    return;
-  }
+  NS_ASSERTION(!gIsAccessibilityActive,
+               "Accessibility was initialized already!");
 
   nsCOMPtr<nsIPrefBranch> prefBranch(do_GetService(NS_PREFSERVICE_CONTRACTID));
   if (prefBranch) {
@@ -589,7 +602,7 @@ void nsAccessNodeWrap::InitAccessibility()
   }
 
   if (!gmUserLib) {
-    gmUserLib =::LoadLibrary("USER32.DLL");
+    gmUserLib =::LoadLibraryW(L"USER32.DLL");
   }
 
   if (gmUserLib) {
@@ -599,6 +612,8 @@ void nsAccessNodeWrap::InitAccessibility()
       gmGetGUIThreadInfo = (LPFNGETGUITHREADINFO)GetProcAddress(gmUserLib,"GetGUIThreadInfo");
   }
 
+  DoATSpecificProcessing();
+  
   nsAccessNode::InitXPAccessibility();
 }
 
@@ -607,9 +622,7 @@ void nsAccessNodeWrap::ShutdownAccessibility()
   NS_IF_RELEASE(gTextEvent);
   ::DestroyCaret();
 
-  if (!gIsAccessibilityActive) {
-    return;
-  }
+  NS_ASSERTION(gIsAccessibilityActive, "Accessibility was shutdown already!");
 
   nsAccessNode::ShutdownXPAccessibility();
 }
@@ -655,3 +668,75 @@ GetHRESULT(nsresult aResult)
   }
 }
 
+PRBool nsAccessNodeWrap::IsOnlyMsaaCompatibleJawsPresent()
+{
+  HMODULE jhookhandle = ::GetModuleHandleW(L"jhook");
+  if (!jhookhandle)
+    return PR_FALSE;  // No JAWS, or some other screen reader, use IA2
+
+  PRUnichar fileName[MAX_PATH];
+  ::GetModuleFileNameW(jhookhandle, fileName, MAX_PATH);
+
+  DWORD dummy;
+  DWORD length = ::GetFileVersionInfoSizeW(fileName, &dummy);
+
+  LPBYTE versionInfo = new BYTE[length];
+  ::GetFileVersionInfoW(fileName, 0, length, versionInfo);
+
+  UINT uLen;
+  VS_FIXEDFILEINFO *fixedFileInfo;
+  ::VerQueryValueW(versionInfo, L"\\", (LPVOID*)&fixedFileInfo, &uLen);
+  DWORD dwFileVersionMS = fixedFileInfo->dwFileVersionMS;
+  DWORD dwFileVersionLS = fixedFileInfo->dwFileVersionLS;
+  delete [] versionInfo;
+
+  DWORD dwLeftMost = HIWORD(dwFileVersionMS);
+//  DWORD dwSecondLeft = LOWORD(dwFileVersionMS);
+  DWORD dwSecondRight = HIWORD(dwFileVersionLS);
+//  DWORD dwRightMost = LOWORD(dwFileVersionLS);
+
+  return (dwLeftMost < 8
+          || (dwLeftMost == 8 && dwSecondRight < 2173));
+}
+
+void nsAccessNodeWrap::TurnOffNewTabSwitchingForJawsAndWE()
+{
+  HMODULE srHandle = ::GetModuleHandleW(L"jhook");
+  if (!srHandle) {
+    // No JAWS, try Window-Eyes
+    srHandle = ::GetModuleHandleW(L"gwm32inc");
+    if (!srHandle) {
+      // no screen reader we're interested in. Bail out.
+      return;
+    }
+  }
+
+  // Check to see if the pref for disallowing CtrlTab is already set.
+  // If so, bail out.
+  // If not, set it.
+  nsCOMPtr<nsIPrefBranch> prefs (do_GetService(NS_PREFSERVICE_CONTRACTID));
+  if (prefs) {
+    PRBool hasDisallowNewCtrlTabPref = PR_FALSE;
+    nsresult rv = prefs->PrefHasUserValue(CTRLTAB_DISALLOW_FOR_SCREEN_READERS_PREF,
+             &hasDisallowNewCtrlTabPref);
+    if (NS_SUCCEEDED(rv) && hasDisallowNewCtrlTabPref) {
+      // This pref has been set before. There is no default for it.
+      // Do nothing further, respect the setting that's there.
+      // That way, if noone touches it, it'll stay on after toggled once.
+      // If someone decided to turn it off, we respect that, too.
+      return;
+    }
+    
+    // Value has never been set, set it.
+    prefs->SetBoolPref(CTRLTAB_DISALLOW_FOR_SCREEN_READERS_PREF, PR_TRUE);
+  }
+}
+
+void nsAccessNodeWrap::DoATSpecificProcessing()
+{
+  if (IsOnlyMsaaCompatibleJawsPresent())
+    // All versions below 8.0.2173 are not compatible
+    gIsIA2Disabled  = PR_TRUE;
+
+  TurnOffNewTabSwitchingForJawsAndWE();
+}

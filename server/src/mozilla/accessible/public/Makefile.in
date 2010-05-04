@@ -58,13 +58,10 @@ XPIDLSRCS = \
       nsIAccessibleRelation.idl \
       nsIAccessibleRole.idl \
       nsIAccessibleStates.idl \
-      nsPIAccessible.idl \
       nsIAccessibleDocument.idl \
-      nsPIAccessibleDocument.idl \
       nsIAccessibleProvider.idl \
       nsIAccessibleSelectable.idl \
       nsIAccessNode.idl \
-      nsPIAccessNode.idl \
       nsIAccessibleEvent.idl \
       nsIAccessibleEditableText.idl \
       nsIAccessibleHyperLink.idl \
@@ -73,13 +70,8 @@ XPIDLSRCS = \
       nsIAccessibleText.idl \
       nsIAccessibleValue.idl \
       nsIAccessibleImage.idl \
+      nsIXBLAccessible.idl \
       $(NULL)
-
-ifdef MOZ_XUL
-XPIDLSRCS += \
-      nsIAccessibleTreeCache.idl \
-      $(NULL)
-endif
 
 include $(topsrcdir)/config/rules.mk
 

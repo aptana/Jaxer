@@ -88,7 +88,9 @@ public:
     nsAccessibleWrap(nsIDOMNode*, nsIWeakReference *aShell);
     virtual ~nsAccessibleWrap();
     void ShutdownAtkObject();
-    NS_IMETHOD Shutdown();
+
+    // nsAccessNode
+    virtual nsresult Shutdown();
 
 #ifdef MAI_LOGGING
     virtual void DumpnsAccessibleWrapInfo(int aDepth) {}
@@ -116,6 +118,8 @@ public:
     }
 
 protected:
+    virtual nsresult FirePlatformEvent(nsIAccessibleEvent *aEvent);
+
     nsresult FireAtkStateChangeEvent(nsIAccessibleEvent *aEvent,
                                      AtkObject *aObject);
     nsresult FireAtkTextChangedEvent(nsIAccessibleEvent *aEvent,

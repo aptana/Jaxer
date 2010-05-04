@@ -57,34 +57,19 @@ NS_IMPL_ISUPPORTS_INHERITED1(nsHTMLLinkAccessible, nsHyperTextAccessibleWrap,
 ////////////////////////////////////////////////////////////////////////////////
 // nsIAccessible
 
-NS_IMETHODIMP
-nsHTMLLinkAccessible::GetName(nsAString& aName)
-{ 
-  aName.Truncate();
-
-  if (IsDefunct())
-    return NS_ERROR_FAILURE;
-
-  nsCOMPtr<nsIContent> content(do_QueryInterface(mDOMNode));
-  return AppendFlatStringFromSubtree(content, &aName);
-}
-
-NS_IMETHODIMP
-nsHTMLLinkAccessible::GetRole(PRUint32 *aRole)
+nsresult
+nsHTMLLinkAccessible::GetRoleInternal(PRUint32 *aRole)
 {
-  NS_ENSURE_ARG_POINTER(aRole);
-
   *aRole = nsIAccessibleRole::ROLE_LINK;
   return NS_OK;
 }
 
-NS_IMETHODIMP
-nsHTMLLinkAccessible::GetState(PRUint32 *aState, PRUint32 *aExtraState)
+nsresult
+nsHTMLLinkAccessible::GetStateInternal(PRUint32 *aState, PRUint32 *aExtraState)
 {
-  nsresult rv = nsHyperTextAccessibleWrap::GetState(aState, aExtraState);
-  NS_ENSURE_SUCCESS(rv, rv);
-  if (!mDOMNode)
-    return NS_OK;
+  nsresult rv = nsHyperTextAccessibleWrap::GetStateInternal(aState,
+                                                            aExtraState);
+  NS_ENSURE_A11Y_SUCCESS(rv, rv);
 
   *aState  &= ~nsIAccessibleStates::STATE_READONLY;
 
@@ -97,14 +82,15 @@ nsHTMLLinkAccessible::GetState(PRUint32 *aState, PRUint32 *aExtraState)
     *aState |= nsIAccessibleStates::STATE_SELECTABLE;
   }
 
-  nsCOMPtr<nsILink> link = do_QueryInterface(mDOMNode);
-  NS_ENSURE_STATE(link);
-
-  nsLinkState linkState;
-  link->GetLinkState(linkState);
-  if (linkState == eLinkState_NotLink) {
-    // This is a named anchor, not a link with also a name attribute. bail out.
-    return NS_OK;
+  nsLinkState linkState = content->GetLinkState();
+  if (linkState == eLinkState_NotLink || linkState == eLinkState_Unknown) {
+    // This is a either named anchor (a link with also a name attribute) or
+    // it doesn't have any attributes. Check if 'click' event handler is
+    // registered, otherwise bail out.
+    PRBool isOnclick = nsCoreUtils::HasListener(content,
+                                                NS_LITERAL_STRING("click"));
+    if (!isOnclick)
+      return NS_OK;
   }
 
   *aState |= nsIAccessibleStates::STATE_LINKED;
@@ -138,6 +124,9 @@ nsHTMLLinkAccessible::GetNumActions(PRUint8 *aNumActions)
 {
   NS_ENSURE_ARG_POINTER(aNumActions);
 
+  if (!IsLinked())
+    return nsHyperTextAccessible::GetNumActions(aNumActions);
+
   *aNumActions = 1;
   return NS_OK;
 }
@@ -145,8 +134,12 @@ nsHTMLLinkAccessible::GetNumActions(PRUint8 *aNumActions)
 NS_IMETHODIMP
 nsHTMLLinkAccessible::GetActionName(PRUint8 aIndex, nsAString& aName)
 {
-  // Action 0 (default action): Jump to link
   aName.Truncate();
+
+  if (!IsLinked())
+    return nsHyperTextAccessible::GetActionName(aIndex, aName);
+
+  // Action 0 (default action): Jump to link
   if (aIndex != eAction_Jump)
     return NS_ERROR_INVALID_ARG;
 
@@ -157,6 +150,9 @@ nsHTMLLinkAccessible::GetActionName(PRUint8 aIndex, nsAString& aName)
 NS_IMETHODIMP
 nsHTMLLinkAccessible::DoAction(PRUint8 aIndex)
 {
+  if (!IsLinked())
+    return nsHyperTextAccessible::DoAction(aIndex);
+
   // Action 0 (default action): Jump to link
   if (aIndex != eAction_Jump)
     return NS_ERROR_INVALID_ARG;
@@ -180,8 +176,24 @@ nsHTMLLinkAccessible::GetURI(PRInt32 aIndex, nsIURI **aURI)
   if (aIndex != 0)
     return NS_ERROR_INVALID_ARG;
 
-  nsCOMPtr<nsILink> link(do_QueryInterface(mDOMNode));
+  nsCOMPtr<nsIContent> link(do_QueryInterface(mDOMNode));
   NS_ENSURE_STATE(link);
 
-  return link->GetHrefURI(aURI);
+  *aURI = link->GetHrefURI().get();
+  return NS_OK;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Protected members
+
+PRBool
+nsHTMLLinkAccessible::IsLinked()
+{
+  nsCOMPtr<nsIContent> link(do_QueryInterface(mDOMNode));
+  if (!link)
+    return PR_FALSE;
+
+  nsLinkState linkState = link->GetLinkState();
+
+  return linkState != eLinkState_NotLink && linkState != eLinkState_Unknown;
 }

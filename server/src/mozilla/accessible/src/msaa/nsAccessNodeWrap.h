@@ -64,7 +64,6 @@
 #ifndef WINABLEAPI
 #include <winable.h>
 #endif
-#undef ERROR /// Otherwise we can't include nsIDOMNSEvent.h if we include this
 #ifdef MOZ_CRASHREPORTER
 #include "nsICrashReporter.h"
 #endif
@@ -158,11 +157,22 @@ class nsAccessNodeWrap :  public nsAccessNode,
 
     static int FilterA11yExceptions(unsigned int aCode, EXCEPTION_POINTERS *aExceptionInfo);
 
+    static PRBool IsOnlyMsaaCompatibleJawsPresent();
+
+    static void TurnOffNewTabSwitchingForJawsAndWE();
+
+    static void DoATSpecificProcessing();
   protected:
     void GetAccessibleFor(nsIDOMNode *node, nsIAccessible **newAcc);
     ISimpleDOMNode* MakeAccessNode(nsIDOMNode *node);
 
     static PRBool gIsEnumVariantSupportDisabled;
+
+    /**
+     * Used to determine whether an IAccessible2 compatible screen reader is
+     * loaded. Currently used for JAWS versions older than 8.0.2173.
+     */
+     static PRBool gIsIA2Disabled;
 
     /**
      * It is used in nsHyperTextAccessibleWrap for IA2::newText/oldText

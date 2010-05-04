@@ -58,26 +58,17 @@ nsHTMLAreaAccessible::
 ////////////////////////////////////////////////////////////////////////////////
 // nsIAccessible
 
-NS_IMETHODIMP
-nsHTMLAreaAccessible::GetName(nsAString & aName)
+nsresult
+nsHTMLAreaAccessible::GetNameInternal(nsAString & aName)
 {
-  aName.Truncate();
+  nsresult rv = nsAccessible::GetNameInternal(aName);
+  NS_ENSURE_SUCCESS(rv, rv);
 
-  if (IsDefunct())
-    return NS_ERROR_FAILURE;
-  
-  if (mRoleMapEntry) {
-    nsresult rv = nsAccessible::GetName(aName);
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    if (!aName.IsEmpty()) 
-      return NS_OK;
-  }
+  if (!aName.IsEmpty())
+    return NS_OK;
 
   nsCOMPtr<nsIContent> content(do_QueryInterface(mDOMNode));
   if (!content->GetAttr(kNameSpaceID_None, nsAccessibilityAtoms::alt,
-                        aName) &&  
-      !content->GetAttr(kNameSpaceID_None, nsAccessibilityAtoms::title,
                         aName)) {
     return GetValue(aName);
   }
@@ -129,6 +120,8 @@ NS_IMETHODIMP
 nsHTMLAreaAccessible::GetBounds(PRInt32 *x, PRInt32 *y,
                                 PRInt32 *width, PRInt32 *height)
 {
+  nsresult rv;
+
   // Essentially this uses GetRect on mAreas of nsImageMap from nsImageFrame
 
   *x = *y = *width = *height = 0;
@@ -141,15 +134,14 @@ nsHTMLAreaAccessible::GetBounds(PRInt32 *x, PRInt32 *y,
 
   nsIFrame *frame = GetFrame();
   NS_ENSURE_TRUE(frame, NS_ERROR_FAILURE);
-  nsIImageFrame *imageFrame;
-  nsresult rv = frame->QueryInterface(NS_GET_IID(nsIImageFrame), (void**)&imageFrame);
-  NS_ENSURE_SUCCESS(rv, rv);
+  nsIImageFrame *imageFrame = do_QueryFrame(frame);
 
   nsCOMPtr<nsIImageMap> map;
   imageFrame->GetImageMap(presContext, getter_AddRefs(map));
   NS_ENSURE_TRUE(map, NS_ERROR_FAILURE);
 
-  nsRect rect, orgRectPixels;
+  nsRect rect;
+  nsIntRect orgRectPixels;
   rv = map->GetBoundsForAreaContent(ourContent, presContext, rect);
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -169,3 +161,13 @@ nsHTMLAreaAccessible::GetBounds(PRInt32 *x, PRInt32 *y,
   return NS_OK;
 }
 
+// nsAccessible::GetChildAtPoint()
+nsresult
+nsHTMLAreaAccessible::GetChildAtPoint(PRInt32 aX, PRInt32 aY,
+                                      PRBool aDeepestChild,
+                                      nsIAccessible **aChild)
+{
+  // Don't walk into area accessibles.
+  NS_ADDREF(*aChild = this);
+  return NS_OK;
+}

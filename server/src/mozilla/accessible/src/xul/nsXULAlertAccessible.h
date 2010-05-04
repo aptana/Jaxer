@@ -47,10 +47,15 @@ class nsXULAlertAccessible : public nsAccessibleWrap
 {
 public:
   nsXULAlertAccessible(nsIDOMNode* aNode, nsIWeakReference* aShell);
+
   NS_DECL_ISUPPORTS_INHERITED
-  NS_IMETHOD GetRole(PRUint32 *aRole);
-  NS_IMETHOD GetState(PRUint32 *aState, PRUint32 *aExtraState);
+
+  // nsIAccessible
   NS_IMETHOD GetName(nsAString& aName);
+
+  // nsAccessible
+  virtual nsresult GetRoleInternal(PRUint32 *aRole);
+  virtual nsresult GetStateInternal(PRUint32 *aState, PRUint32 *aExtraState);
 };
 
 #endif  

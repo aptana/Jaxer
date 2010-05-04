@@ -47,6 +47,7 @@
 #include "nsIPrefBranch.h"
 #include "nsIServiceManager.h"
 #include "nsAutoPtr.h"
+#include "nsAccessibilityService.h"
 
 #include <gtk/gtk.h>
 #include <atk/atk.h>
@@ -435,16 +436,20 @@ mai_util_remove_key_event_listener (guint remove_listener)
 AtkObject *
 mai_util_get_root(void)
 {
+    if (nsAccessibilityService::gIsShutdown) {
+        // We've shutdown, try to use gail instead
+        // (to avoid assert in spi_atk_tidy_windows())
+        if (gail_get_root)
+            return gail_get_root();
+
+        return nsnull;
+    }
+
     nsRefPtr<nsApplicationAccessibleWrap> root =
         nsAccessNode::GetApplicationAccessible();
 
     if (root)
         return root->GetAtkObject();
-
-    // We've shutdown, try to use gail instead
-    // (to avoid assert in spi_atk_tidy_windows())
-    if (gail_get_root)
-        return gail_get_root();
 
     return nsnull;
 }
@@ -526,7 +531,7 @@ nsApplicationAccessibleWrap::~nsApplicationAccessibleWrap()
     nsAccessibleWrap::ShutdownAtkObject();
 }
 
-NS_IMETHODIMP
+nsresult
 nsApplicationAccessibleWrap::Init()
 {
     // XXX following code is copied from widget/src/gtk2/nsWindow.cpp
@@ -562,6 +567,9 @@ nsApplicationAccessibleWrap::Init()
         // Initialize the MAI Utility class
         // it will overwrite gail_util
         g_type_class_unref(g_type_class_ref(MAI_TYPE_UTIL));
+
+        // Init atk-bridge now
+        PR_SetEnv("NO_AT_BRIDGE=0");
 
         // load and initialize atk-bridge library
         rv = LoadGtkModule(sAtkBridge);
@@ -721,7 +729,11 @@ LoadGtkModule(GnomeAccessibilityModule& aModule)
         //try to load the module with "gtk-2.0/modules" appended
         char *curLibPath = PR_GetLibraryPath();
         nsCAutoString libPath(curLibPath);
+#if defined(LINUX) && defined(__x86_64__)
+        libPath.Append(":/usr/lib64:/usr/lib");
+#else
         libPath.Append(":/usr/lib");
+#endif
         MAI_LOG_DEBUG(("Current Lib path=%s\n", libPath.get()));
         PR_FreeLibraryName(curLibPath);
 

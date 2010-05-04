@@ -45,9 +45,7 @@ include $(DEPTH)/config/autoconf.mk
 
 MODULE	= test_accessibility
 
-ifdef MOZ_MOCHITEST
-DIRS		+= mochitest
-endif
+DIRS	= mochitest
 
 include $(topsrcdir)/config/rules.mk
 
