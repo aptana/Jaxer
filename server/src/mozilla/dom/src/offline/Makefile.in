@@ -59,6 +59,7 @@ REQUIRES       = xpcom         \
 		 nkcache       \
 		 pref          \
 		 prefetch      \
+		 docshell      \
 		 widget        \
 		 xpconnect     \
 		 $(NULL)
@@ -71,7 +72,8 @@ CPPSRCS =                              \
 FORCE_STATIC_LIB = 1
 
 LOCAL_INCLUDES = \
-		-I$(srcdir)/../base \
+		-I$(topsrcdir)/dom/base \
+		-I$(topsrcdir)/content/base/src \
 		-I$(topsrcdir)/content/events/src
 
 DEFINES += -D_IMPL_NS_LAYOUT

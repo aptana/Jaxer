@@ -75,7 +75,7 @@ EXPORTS		= $(srcdir)/nsJSProtocolHandler.h
 
 LOCAL_INCLUDES += \
 		-I$(srcdir) \
-		-I$(srcdir)/../base \
+		-I$(topsrcdir)/dom/base \
 
 EXTRA_DSO_LDOPTS = \
 		$(MOZ_COMPONENT_LIBS) \
@@ -87,7 +87,7 @@ DEFINES		+= -DDEBUG_GC
 endif
 
 DIRS            = $(NULL)
-ifdef MOZ_MOCHITEST
+ifdef ENABLE_TESTS
 DIRS            += test
 endif
 

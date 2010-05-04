@@ -1,40 +1,16 @@
+/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* ***** BEGIN LICENSE BLOCK *****
- *  Version: GPL 3
- * 
- *  This program is licensed under the GNU General Public license, version 3 (GPL).
- *  It is derived from Mozilla software and modified by Aptana, Inc.
- *  Aptana, Inc. has elected to use and license the Mozilla software 
- *  under the terms of the GPL, and licenses this file to you under the terms
- *  of the GPL.
- *  
- *  Contributor(s): Aptana, Inc.
- *  The portions modified by Aptana are Copyright (C) 2007-2008 Aptana, Inc.
- *  All Rights Reserved.
- * 
- *  This program is distributed in the hope that it will be useful, but
- *  AS-IS and WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE, TITLE, or
- *  NONINFRINGEMENT. Redistribution, except as permitted by the GPL,
- *  is prohibited.
- * 
- *  You can redistribute and/or modify this program under the terms of the GPL, 
- *  as published by the Free Software Foundation.  You should
- *  have received a copy of the GNU General Public License, Version 3 along
- *  with this program; if not, write to the Free Software Foundation, Inc., 51
- *  Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- *  
- *  Aptana provides a special exception to allow redistribution of this file
- *  with certain other code and certain additional terms
- *  pursuant to Section 7 of the GPL. You may view the exception and these
- *  terms on the web at http://www.aptana.com/legal/gpl/.
- *  
- *  You may view the GPL, and Aptana's exception and additional terms in the file
- *  titled license-jaxer.html in the main distribution folder of this program.
- *  
- *  Any modifications to this file must keep this entire header intact.
- * 
- * ***** END LICENSE BLOCK ***** */
-/* ***** BEGIN ORIGINAL ATTRIBUTION BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
  *
  * The Original Code is mozilla.org code.
  *
@@ -47,10 +23,23 @@
  *   Dave Camp <dcamp@mozilla.com>
  *   Robert Sayre <sayrer@gmail.com>
  *
- * ***** END ORIGINAL ATTRIBUTION BLOCK ***** */
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
 
 #include "jsapi.h"
 #include "jsdtoa.h"
+#include "jsprvtd.h"
 #include "jsnum.h"
 #include "jsbool.h"
 #include "jsarena.h"
@@ -73,6 +62,8 @@
 #include "nsAutoPtr.h"
 
 static const char kXPConnectServiceCID[] = "@mozilla.org/js/xpc/XPConnect;1";
+
+#define JSON_STREAM_BUFSIZE 1024
 
 NS_INTERFACE_MAP_BEGIN(nsJSON)
   NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsIJSON)
@@ -99,22 +90,19 @@ nsJSON::Encode(nsAString &aJSON)
   // This function should only be called from JS.
   nsresult rv;
 
-  nsAutoPtr<nsJSONWriter> writer(new nsJSONWriter());
-  if (!writer)
-    return NS_ERROR_OUT_OF_MEMORY;
-  
-  rv = EncodeInternal(writer);
+  nsJSONWriter writer;
+  rv = EncodeInternal(&writer);
 
   // FIXME: bug 408838. Get exception types sorted out
   if (NS_SUCCEEDED(rv) || rv == NS_ERROR_INVALID_ARG) {
     rv = NS_OK;
     // if we didn't consume anything, it's not JSON, so return null
-    if (!writer->DidWrite()) {
+    if (!writer.DidWrite()) {
       aJSON.Truncate();
       aJSON.SetIsVoid(PR_TRUE);
     } else {
-      writer->FlushBuffer();
-      aJSON.Append(writer->mOutputString);
+      writer.FlushBuffer();
+      aJSON.Append(writer.mOutputString);
     }
   }
 
@@ -184,18 +172,27 @@ nsJSON::EncodeToStream(nsIOutputStream *aStream,
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
-  nsAutoPtr<nsJSONWriter> writer(new nsJSONWriter(bufferedStream));
-  if (!writer)
-    return NS_ERROR_OUT_OF_MEMORY;
-  rv = writer->SetCharset(aCharset);
+  nsJSONWriter writer(bufferedStream);
+  rv = writer.SetCharset(aCharset);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  rv = EncodeInternal(writer);
+  rv = EncodeInternal(&writer);
   NS_ENSURE_SUCCESS(rv, rv);
 
   rv = bufferedStream->Flush();
 
   return rv;
+}
+
+static JSBool
+WriteCallback(const jschar *buf, uint32 len, void *data)
+{
+  nsJSONWriter *writer = static_cast<nsJSONWriter*>(data);
+  nsresult rv =  writer->Write((const PRUnichar*)buf, (PRUint32)len);
+  if (NS_FAILED(rv))
+    return JS_FALSE;
+
+  return JS_TRUE;
 }
 
 nsresult
@@ -232,35 +229,14 @@ nsJSON::EncodeInternal(nsJSONWriter *writer)
   NS_ENSURE_SUCCESS(rv, rv);
 
   if (argc <= firstArg ||
-#ifdef JAXER
-	  PR_FALSE) {
-#else
       !(JSVAL_IS_OBJECT(argv[firstArg]) &&
         (inputObj = JSVAL_TO_OBJECT(argv[firstArg])))) {
-#endif /* JAXER */
     // return if it's not something we can deal with
     return NS_ERROR_INVALID_ARG;
   }
 
-  JSObject *whitelist = nsnull;
-
-  // If there's a second argument here, it should be an array.
-  if (argc >= firstArg + 2 &&
-      !(JSVAL_IS_OBJECT(argv[firstArg + 1]) &&
-        (whitelist = JSVAL_TO_OBJECT(argv[firstArg + 1])) &&
-        JS_IsArrayObject(cx, whitelist))) {
-     whitelist = nsnull; // bogus whitelists are ignored
-  }
-
   jsval *vp = &argv[firstArg];
-
-#ifdef JAXER
-  if (JSVAL_IS_PRIMITIVE(*vp)) {
-	return EncodePrimitive(cx, *vp, writer);
-  }
-#endif /* JAXER */
-
-  JSBool ok = ToJSON(cx, vp);
+  JSBool ok = JS_TryJSON(cx, vp);
   JSType type;
   if (!(ok && !JSVAL_IS_PRIMITIVE(*vp) &&
         (type = JS_TypeOfValue(cx, *vp)) != JSTYPE_FUNCTION &&
@@ -268,238 +244,13 @@ nsJSON::EncodeInternal(nsJSONWriter *writer)
     return NS_ERROR_INVALID_ARG;
   }
 
-  return EncodeObject(cx, vp, writer, whitelist, 0);
-}
-
-// N.B: vp must be rooted.
-nsresult
-nsJSON::EncodeObject(JSContext *cx, jsval *vp, nsJSONWriter *writer,
-                     JSObject *whitelist, PRUint32 depth)
-{
-  NS_ENSURE_ARG(vp);
-  NS_ENSURE_ARG(writer);
-
-  if (depth > JSON_MAX_DEPTH) {
-#ifdef JAXER
-    return NS_ERROR_JSON_MAX_RECURSION_EXCEEDED;
-#else
-    return NS_ERROR_FAILURE;
-#endif /* JAXER */
-  }
-
-  nsresult rv;
-  JSObject *obj = JSVAL_TO_OBJECT(*vp);
-  JSBool isArray = JS_IsArrayObject(cx, obj);
-  PRUnichar output = PRUnichar(isArray ? '[' : '{');
-  rv = writer->Write(&output, 1);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  JSBool ok = JS_TRUE;
-
-  ok = js_ValueToIterator(cx, JSITER_ENUMERATE, vp);
+  ok = JS_Stringify(cx, vp, NULL, JSVAL_NULL, WriteCallback, writer);
   if (!ok)
     return NS_ERROR_FAILURE;
-
-  JSObject *iterObj = JSVAL_TO_OBJECT(*vp);
-
-  jsval outputValue = JSVAL_VOID;
-  JSAutoTempValueRooter tvr(cx, 1, &outputValue);
-
-  jsval key;
-  PRBool memberWritten = PR_FALSE;
-  do {
-    outputValue = JSVAL_VOID;
-    ok = js_CallIteratorNext(cx, iterObj, &key);
-
-    if (!ok)
-      break;
-
-    if (key == JSVAL_HOLE)
-      break;
-
-    JSString *ks;
-    if (JSVAL_IS_STRING(key)) {
-      ks = JSVAL_TO_STRING(key);
-    } else {
-      ks = JS_ValueToString(cx, key);
-      if (!ks) {
-        ok = JS_FALSE;
-        break;
-      }
-    }
-
-    ok = JS_GetUCProperty(cx, obj, JS_GetStringChars(ks),
-                          JS_GetStringLength(ks), &outputValue);
-    if (!ok)
-      break;
-
-    // if this is an array, holes are transmitted as null
-    if (isArray && outputValue == JSVAL_VOID) {
-      outputValue = JSVAL_NULL;
-    } else if (JSVAL_IS_OBJECT(outputValue)) {
-      ok = ToJSON(cx, &outputValue);
-      if (!ok)
-        break;
-    }
     
-    // elide undefined values
-    if (outputValue == JSVAL_VOID)
-      continue;
-
-    // output a comma unless this is the first member to write
-    if (memberWritten) {
-      output = PRUnichar(',');
-      rv = writer->Write(&output, 1);
-    }
-    memberWritten = PR_TRUE;
-    
-    JSType type = JS_TypeOfValue(cx, outputValue);
-
-    // Can't encode these types, so drop them
-    if (type == JSTYPE_FUNCTION || type == JSTYPE_XML)
-      break;
- 
-    // Be careful below, this string is weakly rooted.
-    JSString *s;
- 
-    // If this isn't an array, we need to output a key
-    if (!isArray) {
-      nsAutoString keyOutput;
-      s = JS_ValueToString(cx, key);
-      if (!s) {
-        ok = JS_FALSE;
-        break;
-      }
-
-      rv = writer->WriteString((PRUnichar*)JS_GetStringChars(s),
-                               JS_GetStringLength(s));
-      if (NS_FAILED(rv))
-        break;
-      output = PRUnichar(':');
-      rv = writer->Write(&output, 1);
-      if (NS_FAILED(rv))
-        break;
-    }
-
-    if (!JSVAL_IS_PRIMITIVE(outputValue)) {
-      // recurse
-      rv = EncodeObject(cx, &outputValue, writer, whitelist, depth + 1);
-      if (NS_FAILED(rv))
-        break;
-    } else {
-      nsAutoString valueOutput;
-      s = JS_ValueToString(cx, outputValue);
-      if (!s) {
-        ok = JS_FALSE;
-        break;
-      }
-#ifdef JAXER
-	  rv = EncodePrimitive(cx, outputValue, writer);
-#else
-
-      if (type == JSTYPE_STRING) {
-        rv = writer->WriteString((PRUnichar*)JS_GetStringChars(s),
-                                 JS_GetStringLength(s));
-        continue;
-      }
-
-      if (type == JSTYPE_NUMBER) {
-        if (JSVAL_IS_DOUBLE(outputValue)) {
-          jsdouble d = *JSVAL_TO_DOUBLE(outputValue);
-          if (!JSDOUBLE_IS_FINITE(d))
-            valueOutput.Append(NS_LITERAL_STRING("null"));
-          else
-            valueOutput.Append((PRUnichar*)JS_GetStringChars(s));
-        } else {
-          valueOutput.Append((PRUnichar*)JS_GetStringChars(s));
-        }
-      } else if (type == JSTYPE_BOOLEAN) {
-        valueOutput.Append((PRUnichar*)JS_GetStringChars(s));
-      } else if (JSVAL_IS_NULL(outputValue)) {
-        valueOutput.Append(NS_LITERAL_STRING("null"));
-      } else {
-        rv = NS_ERROR_FAILURE; // encoding error
-        break;
-      }
-
-      rv = writer->Write(valueOutput.get(), valueOutput.Length());
-#endif /* JAXER */
-    }
-
-  } while (NS_SUCCEEDED(rv));
-
-  // Always close the iterator, but make sure not to stomp on OK
-  ok &= js_CloseIterator(cx, *vp);
-
-  if (!ok)
-    rv = NS_ERROR_FAILURE; // encoding error or propagate? FIXME: Bug 408838.
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  output = PRUnichar(isArray ? ']' : '}');
-  rv = writer->Write(&output, 1);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  return rv;
+  return NS_OK;
 }
 
-#ifdef JAXER
-nsresult
-nsJSON::EncodePrimitive(JSContext *cx, jsval val, nsJSONWriter *writer)
-{
-  NS_ENSURE_ARG(writer);
-
-  nsAutoString valueOutput;
-  JSString *s = JS_ValueToString(cx, val);
-  if (!s) {
-	return NS_ERROR_FAILURE;
-  }
-  
-  JSType type = JS_TypeOfValue(cx, val);
-  if (type == JSTYPE_STRING) {
-    return writer->WriteString((PRUnichar*)JS_GetStringChars(s),
-                             JS_GetStringLength(s));
-  }
-
-  if (type == JSTYPE_NUMBER) {
-    if (JSVAL_IS_DOUBLE(val)) {
-      jsdouble d = *JSVAL_TO_DOUBLE(val);
-      if (!JSDOUBLE_IS_FINITE(d))
-        valueOutput.Append(NS_LITERAL_STRING("null"));
-      else
-        valueOutput.Append((PRUnichar*)JS_GetStringChars(s));
-    } else {
-      valueOutput.Append((PRUnichar*)JS_GetStringChars(s));
-    }
-  } else if (type == JSTYPE_BOOLEAN) {
-    valueOutput.Append((PRUnichar*)JS_GetStringChars(s));
-  } else if (JSVAL_IS_NULL(val)) {
-    valueOutput.Append(NS_LITERAL_STRING("null"));
-  } else {
-    return NS_ERROR_FAILURE; // encoding error
-  }
-
-  return writer->Write(valueOutput.get(), valueOutput.Length());
-}
-#endif /* JAXER */
-
-JSBool
-nsJSON::ToJSON(JSContext *cx, jsval *vp)
-{
-  // Now we check to see whether the return value implements toJSON()
-  JSBool ok = JS_TRUE;
-  const char *toJSON = "toJSON";
-
-  if (!JSVAL_IS_PRIMITIVE(*vp)) {
-    JSObject *obj = JSVAL_TO_OBJECT(*vp);
-    jsval toJSONVal = nsnull;
-    ok = JS_GetProperty(cx, obj, toJSON, &toJSONVal);
-    if (ok && JS_TypeOfValue(cx, toJSONVal) == JSTYPE_FUNCTION) {
-      ok = JS_CallFunctionValue(cx, obj, toJSONVal, 0, nsnull, vp);
-    }
-  }
-
-  return ok;
-}
 
 nsJSONWriter::nsJSONWriter() : mStream(nsnull),
                                mBuffer(nsnull),
@@ -540,54 +291,6 @@ nsJSONWriter::SetCharset(const char* aCharset)
   return rv;
 }
 
-static const PRUnichar quote = PRUnichar('"');
-static const PRUnichar backslash = PRUnichar('\\');
-static const PRUnichar unicodeEscape[] = {'\\', 'u', '0', '0', '\0'};
-
-nsresult
-nsJSONWriter::WriteString(const PRUnichar *aBuffer, PRUint32 aLength)
-{
-  nsresult rv;
-  rv = Write(&quote, 1);
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  PRUint32 mark = 0;
-  PRUint32 i;
-  for (i = 0; i < aLength; ++i) {
-    if (aBuffer[i] == quote || aBuffer[i] == backslash) {
-      rv = Write(&aBuffer[mark], i - mark);
-      NS_ENSURE_SUCCESS(rv, rv);
-      rv = Write(&backslash, 1);
-      NS_ENSURE_SUCCESS(rv, rv);
-      rv = Write(&aBuffer[i], 1);
-      NS_ENSURE_SUCCESS(rv, rv);
-      mark = i + 1;
-    } else if (aBuffer[i] <= 31 || aBuffer[i] == 127) {
-      rv = Write(&aBuffer[mark], i - mark);
-      NS_ENSURE_SUCCESS(rv, rv);
-      nsAutoString unicode;
-      unicode.Append(unicodeEscape);
-      nsAutoString charCode;
-      charCode.AppendInt(aBuffer[i], 16);
-      if (charCode.Length() == 1)
-        unicode.Append('0');
-      unicode.Append(charCode);
-      rv = Write(unicode.get(), unicode.Length());
-      NS_ENSURE_SUCCESS(rv, rv);
-      mark = i + 1;
-    }
-  }
-
-  if (mark < aLength) {
-    rv = Write(&aBuffer[mark], aLength - mark);
-    NS_ENSURE_SUCCESS(rv, rv);
-  }
-
-  rv = Write(&quote, 1);
-  NS_ENSURE_SUCCESS(rv, rv);
-  return rv;
-}
-
 nsresult
 nsJSONWriter::Write(const PRUnichar *aBuffer, PRUint32 aLength)
 {
@@ -596,18 +299,18 @@ nsJSONWriter::Write(const PRUnichar *aBuffer, PRUint32 aLength)
   }
 
   if (!mDidWrite) {
-    mBuffer = new PRUnichar[JSON_PARSER_BUFSIZE];
+    mBuffer = new PRUnichar[JSON_STREAM_BUFSIZE];
     if (!mBuffer)
       return NS_ERROR_OUT_OF_MEMORY;
     mDidWrite = PR_TRUE;
   }
 
-  if (JSON_PARSER_BUFSIZE <= aLength + mBufferCount) {
+  if (JSON_STREAM_BUFSIZE <= aLength + mBufferCount) {
     mOutputString.Append(mBuffer, mBufferCount);
     mBufferCount = 0;
   }
 
-  if (JSON_PARSER_BUFSIZE <= aLength) {
+  if (JSON_STREAM_BUFSIZE <= aLength) {
     // we know mBufferCount is 0 because we know we hit the if above
     mOutputString.Append(aBuffer, aLength);
   } else {
@@ -780,35 +483,18 @@ NS_NewJSON(nsISupports* aOuter, REFNSIID aIID, void** aResult)
   return NS_OK;
 }
 
-
-JS_STATIC_DLL_CALLBACK(void)
-trace_json_stack(JSTracer *trc, JSTempValueRooter *tvr)
-{
-  nsJSONObjectStack *tmp = static_cast<nsJSONObjectStack *>(tvr);
-
-  for (PRUint32 i = 0; i < tmp->Length(); ++i) {
-    JS_CALL_OBJECT_TRACER(trc, tmp->ElementAt(i),
-                          "JSON decoder stack member");
-  }
-}
-
 nsJSONListener::nsJSONListener(JSContext *cx, jsval *rootVal,
                                PRBool needsConverter)
-  : mHexChar(0),
-    mNumHex(0),
+  : mNeedsConverter(needsConverter), 
+    mJSONParser(nsnull),
     mCx(cx),
-    mRootVal(rootVal),
-    mNeedsConverter(needsConverter),
-    mStatep(mStateStack)
+    mRootVal(rootVal)
 {
-  NS_ASSERTION(mCx, "Must have a JSContext");
-  *mStatep = JSON_PARSE_STATE_INIT;
-  JS_PUSH_TEMP_ROOT_TRACE(cx, trace_json_stack, &mObjectStack);
 }
 
 nsJSONListener::~nsJSONListener()
 {
-  JS_POP_TEMP_ROOT(mCx, &mObjectStack);
+  Cleanup();
 }
 
 NS_INTERFACE_MAP_BEGIN(nsJSONListener)
@@ -823,10 +509,12 @@ NS_IMPL_RELEASE(nsJSONListener)
 NS_IMETHODIMP
 nsJSONListener::OnStartRequest(nsIRequest *aRequest, nsISupports *aContext)
 {
-  mHexChar = 0;
-  mNumHex = 0;
   mSniffBuffer.Truncate();
   mDecoder = nsnull;
+  mJSONParser = JS_BeginJSONParse(mCx, mRootVal);
+  if (!mJSONParser)
+    return NS_ERROR_FAILURE;
+
   return NS_OK;
 }
 
@@ -841,15 +529,11 @@ nsJSONListener::OnStopRequest(nsIRequest *aRequest, nsISupports *aContext,
     rv = ProcessBytes(mSniffBuffer.get(), mSniffBuffer.Length());
     NS_ENSURE_SUCCESS(rv, rv);
   }
-#if JAXER
-  if (*mStatep == JSON_PARSE_STATE_NUMBER
-	  || *mStatep == JSON_PARSE_STATE_KEYWORD) {
-    rv = Consume(NS_LITERAL_STRING("\r").get(), 1);
-    NS_ENSURE_SUCCESS(rv, rv);
-  }
-#endif /* JAXER */
 
-  if (!mObjectStack.IsEmpty() || *mStatep != JSON_PARSE_STATE_FINISHED)
+  JSBool ok = JS_FinishJSONParse(mCx, mJSONParser, JSVAL_NULL);
+  mJSONParser = nsnull;
+
+  if (!ok)
     return NS_ERROR_FAILURE;
 
   return NS_OK;
@@ -873,7 +557,7 @@ nsJSONListener::OnDataAvailable(nsIRequest *aRequest, nsISupports *aContext,
       return NS_OK;
   }
   
-  char buffer[JSON_PARSER_BUFSIZE];
+  char buffer[JSON_STREAM_BUFSIZE];
   unsigned long bytesRemaining = aLength - mSniffBuffer.Length();
   while (bytesRemaining) {
     unsigned int bytesRead;
@@ -965,484 +649,23 @@ nsJSONListener::ConsumeConverted(const char* aBuffer, PRUint32 aByteLength)
   return rv;
 }
 
-nsresult
-nsJSONListener::PopState()
+void nsJSONListener::Cleanup()
 {
-  mStatep--;
-  if (mStatep < mStateStack) {
-    mStatep = mStateStack;
-    return NS_ERROR_FAILURE;
-  } else if (*mStatep == JSON_PARSE_STATE_INIT) {
-    *mStatep = JSON_PARSE_STATE_FINISHED;
-  }
-
-  return NS_OK;
+  if (mJSONParser)
+    JS_FinishJSONParse(mCx, mJSONParser, JSVAL_NULL);
+  mJSONParser = nsnull;
 }
 
 nsresult
-nsJSONListener::PushState(JSONParserState state)
+nsJSONListener::Consume(const PRUnichar* aBuffer, PRUint32 aByteLength)
 {
-  if (*mStatep == JSON_PARSE_STATE_FINISHED)
-    return NS_ERROR_FAILURE; // extra input
-
-  mStatep++;
-  if ((uint32)(mStatep - mStateStack) >= JS_ARRAY_LENGTH(mStateStack))
-    return NS_ERROR_FAILURE; // too deep
-
-  *mStatep = state;
-
-  return NS_OK;
-}
-
-nsresult
-nsJSONListener::Consume(const PRUnichar *data, PRUint32 len)
-{
-  nsresult rv;
-  PRUint32 i;
-
-  // we'll try to avoid string munging during parsing
-  PRUnichar buf[JSON_PARSER_BUFSIZE + 1];
-  PRUint32 bufIndex = 0;
-
-#define PUSHCHAR(_c)                         \
-if (bufIndex == JSON_PARSER_BUFSIZE) {       \
-  mStringBuffer.Append(buf, bufIndex);       \
-  bufIndex = 0;                              \
-}                                            \
-buf[bufIndex] = _c;                          \
-bufIndex++;
-
-  if (*mStatep == JSON_PARSE_STATE_INIT) {
-#ifdef JAXER
-    PushState(JSON_PARSE_STATE_VALUE);
-#else
-    PushState(JSON_PARSE_STATE_OBJECT_VALUE);
-#endif /* JAXER */
-  }
-
-  for (i = 0; i < len; i++) {
-    PRUnichar c = data[i];
-
-    switch (*mStatep) {
-      case JSON_PARSE_STATE_VALUE :
-        if (c == ']') {
-          // empty array
-          rv = PopState();
-          NS_ENSURE_SUCCESS(rv, rv);
-          if (*mStatep != JSON_PARSE_STATE_ARRAY) {
-            return NS_ERROR_FAILURE; // unexpected char
-          }
-          rv = this->CloseArray();
-          NS_ENSURE_SUCCESS(rv, rv);
-          rv = PopState();
-          NS_ENSURE_SUCCESS(rv, rv);
-          break;
-        } else if (c == '}') {
-          // we should only find these in OBJECT_KEY state
-          return NS_ERROR_FAILURE; // unexpected failure
-        } else if (c == '"') {
-          *mStatep = JSON_PARSE_STATE_STRING;
-          break;
-        } else if (IsNumChar(c)) {
-          *mStatep = JSON_PARSE_STATE_NUMBER;
-          PUSHCHAR(c);
-          break;
-        } else if (NS_IsAsciiAlpha(c)) {
-          *mStatep = JSON_PARSE_STATE_KEYWORD;
-          PUSHCHAR(c);
-          break;
-        } 
-        // fall through in case the value is an object or array
-      case JSON_PARSE_STATE_OBJECT_VALUE :
-        if (c == '{') {
-          *mStatep = JSON_PARSE_STATE_OBJECT;
-          rv = this->OpenObject();
-          NS_ENSURE_SUCCESS(rv, rv);
-          rv = PushState(JSON_PARSE_STATE_OBJECT_PAIR);
-          NS_ENSURE_SUCCESS(rv, rv);
-        } else if (c == '[') {
-          *mStatep = JSON_PARSE_STATE_ARRAY;
-          rv = this->OpenArray();
-          NS_ENSURE_SUCCESS(rv, rv);
-          rv = PushState(JSON_PARSE_STATE_VALUE);
-          NS_ENSURE_SUCCESS(rv, rv);
-        } else if (!NS_IsAsciiWhitespace(c)) {
-          return NS_ERROR_FAILURE; // unexpected
-        }
-        break;
-      case JSON_PARSE_STATE_OBJECT :
-        if (c == '}') {
-          rv = this->CloseObject();
-          NS_ENSURE_SUCCESS(rv, rv);
-          rv = PopState();
-          NS_ENSURE_SUCCESS(rv, rv);
-        } else if (c == ',') {
-          rv = PushState(JSON_PARSE_STATE_OBJECT_PAIR);
-          NS_ENSURE_SUCCESS(rv, rv);
-        } else if (c == ']') {
-          return NS_ERROR_FAILURE; // unexpected
-        } else if (!NS_IsAsciiWhitespace(c)) {
-          return NS_ERROR_FAILURE; // unexpected
-        }
-        break;
-      case JSON_PARSE_STATE_ARRAY :
-        if (c == ']') {
-          rv = this->CloseArray();
-          NS_ENSURE_SUCCESS(rv, rv);
-          rv = PopState();
-          NS_ENSURE_SUCCESS(rv, rv);
-        } else if (c == ',') {
-          rv = PushState(JSON_PARSE_STATE_VALUE);
-          NS_ENSURE_SUCCESS(rv, rv);
-        } else if (!NS_IsAsciiWhitespace(c)) {
-          return NS_ERROR_FAILURE; // unexpected
-        }
-        break;
-      case JSON_PARSE_STATE_OBJECT_PAIR :
-        if (c == '"') {
-          // we want to be waiting for a : when the string has been read
-          *mStatep = JSON_PARSE_STATE_OBJECT_IN_PAIR;
-          PushState(JSON_PARSE_STATE_STRING);
-        } else if (c == '}') {
-          rv = this->CloseObject();
-          NS_ENSURE_SUCCESS(rv, rv);
-          // pop off the object_pair state
-          rv = PopState();
-          NS_ENSURE_SUCCESS(rv, rv);
-          // pop off the object state
-          rv = PopState();
-          NS_ENSURE_SUCCESS(rv, rv);
-        } else if (c == ']' || !NS_IsAsciiWhitespace(c)) {
-          return NS_ERROR_FAILURE; // unexpected
-        }
-        break;
-      case JSON_PARSE_STATE_OBJECT_IN_PAIR:
-        if (c == ':') {
-          *mStatep = JSON_PARSE_STATE_VALUE;
-        } else if (!NS_IsAsciiWhitespace(c)) {
-          return NS_ERROR_FAILURE; // unexpected
-        }
-        break;
-      case JSON_PARSE_STATE_STRING:
-        if (c == '"') {
-          rv = PopState();
-          NS_ENSURE_SUCCESS(rv, rv);
-          buf[bufIndex] = nsnull;
-          if (*mStatep == JSON_PARSE_STATE_OBJECT_IN_PAIR) {
-            rv = HandleData(JSON_DATA_KEYSTRING, buf, bufIndex);
-          } else {
-            rv = HandleData(JSON_DATA_STRING, buf, bufIndex);
-          }
-          bufIndex = 0;
-          NS_ENSURE_SUCCESS(rv, rv);
-        } else if (c == '\\') {
-          *mStatep = JSON_PARSE_STATE_STRING_ESCAPE;
-        } else {
-          PUSHCHAR(c);
-        }
-        break;
-      case JSON_PARSE_STATE_STRING_ESCAPE:
-        switch(c) {
-          case '"':
-          case '\\':
-          case '/':
-            break;
-          case 'b' : c = '\b'; break;
-          case 'f' : c = '\f'; break;
-          case 'n' : c = '\n'; break;
-          case 'r' : c = '\r'; break;
-          case 't' : c = '\t'; break;
-          default :
-            if (c == 'u') {
-              mNumHex = 0;
-              mHexChar = 0;
-              *mStatep = JSON_PARSE_STATE_STRING_HEX;
-              continue;
-            } else {
-              return NS_ERROR_FAILURE; // unexpected
-            }
-        }
-
-        PUSHCHAR(c);
-        *mStatep = JSON_PARSE_STATE_STRING;
-        break;
-      case JSON_PARSE_STATE_STRING_HEX:
-        if (('0' <= c) && (c <= '9')) {
-          mHexChar = (mHexChar << 4) | (c - '0');
-        } else if (('a' <= c) && (c <= 'f')) {
-          mHexChar = (mHexChar << 4) | (c - 'a' + 0x0a);
-        } else if (('A' <= c) && (c <= 'F')) {
-          mHexChar = (mHexChar << 4) | (c - 'A' + 0x0a);
-        } else {
-          return NS_ERROR_FAILURE; // unexpected
-        }
-
-        if (++(mNumHex) == 4) {
-          PUSHCHAR(mHexChar);
-          mHexChar = 0;
-          mNumHex = 0;
-          *mStatep = JSON_PARSE_STATE_STRING;
-        }
-        break;
-      case JSON_PARSE_STATE_KEYWORD:
-        if (NS_IsAsciiAlpha(c)) {
-          PUSHCHAR(c);
-        } else {
-          // this character isn't part of the keyword, process it again
-          i--;
-          rv = PopState();
-          NS_ENSURE_SUCCESS(rv, rv);
-          buf[bufIndex] = nsnull;
-          rv = HandleData(JSON_DATA_KEYWORD, buf, bufIndex);
-          bufIndex = 0;
-          NS_ENSURE_SUCCESS(rv, rv);
-        }
-        break;
-      case JSON_PARSE_STATE_NUMBER:
-        if (IsNumChar(c)) {
-          PUSHCHAR(c);
-        } else {
-          // this character isn't part of the number, process it again
-          i--;
-          rv = PopState();
-          NS_ENSURE_SUCCESS(rv, rv);
-          buf[bufIndex] = nsnull;
-          rv = HandleData(JSON_DATA_NUMBER, buf, bufIndex);
-          bufIndex = 0;
-          NS_ENSURE_SUCCESS(rv, rv);
-        }
-        break;
-      case JSON_PARSE_STATE_FINISHED:
-        if (!NS_IsAsciiWhitespace(c)) {
-          return NS_ERROR_FAILURE; // extra input
-        }
-        break;
-      default:
-        NS_NOTREACHED("Invalid JSON parser state");
-      }
-    }
-
-#undef PUSH_CHAR
-
-    // Preserve partially consumed data for the next call to Consume
-    // This can happen when a primitive spans a stream buffer
-    if (bufIndex != 0) {
-      mStringBuffer.Append(buf, bufIndex);
-    }
-
-    return NS_OK;
-}
-
-nsresult
-nsJSONListener::PushValue(JSObject *aParent, jsval aValue)
-{
-  JSAutoTempValueRooter tvr(mCx, 1, &aValue);
-  
-  JSBool ok;
-#ifdef JAXER
-  if (!aParent) {
-	// Check if this is the root object
-	if (mObjectStack.IsEmpty()) {
-		*mRootVal = aValue;
-		ok = PR_TRUE;
-	} else {
-		ok = PR_FALSE;
-	}
-  } else
-#endif /* JAXER */
-  if (JS_IsArrayObject(mCx, aParent)) {
-    jsuint len;
-    ok = JS_GetArrayLength(mCx, aParent, &len);
-    if (ok) {
-      ok = JS_SetElement(mCx, aParent, len, &aValue);
-    }
-  } else {
-    ok = JS_DefineUCProperty(mCx, aParent, (jschar *) mObjectKey.get(),
-                             mObjectKey.Length(), aValue,
-                             NULL, NULL, JSPROP_ENUMERATE);
-  }
-
-  return ok ? NS_OK : NS_ERROR_FAILURE;
-}
-
-nsresult
-nsJSONListener::PushObject(JSObject *aObj)
-{
-  if (mObjectStack.Length() >= JSON_MAX_DEPTH)
-    return NS_ERROR_FAILURE; // decoding error
-
-  // Check if this is the root object
-  if (mObjectStack.IsEmpty()) {
-    *mRootVal = OBJECT_TO_JSVAL(aObj);
-    if (!mObjectStack.AppendElement(aObj))
-      return NS_ERROR_OUT_OF_MEMORY;
-    return NS_OK;
-  }
-
-  nsresult rv;
-  JSObject *parent = mObjectStack.ElementAt(mObjectStack.Length() - 1);
-  rv = PushValue(parent, OBJECT_TO_JSVAL(aObj));
-  NS_ENSURE_SUCCESS(rv, rv);
-
-  if (!mObjectStack.AppendElement(aObj))
-    return NS_ERROR_OUT_OF_MEMORY;
-
-  return rv;
-}
-
-nsresult
-nsJSONListener::OpenObject()
-{
-  JSObject *obj = JS_NewObject(mCx, NULL, NULL, NULL);
-  if (!obj)
-    return NS_ERROR_OUT_OF_MEMORY;
-
-  return PushObject(obj);
-}
-
-nsresult
-nsJSONListener::OpenArray()
-{
-  // Add an array to an existing array or object
-  JSObject *arr = JS_NewArrayObject(mCx, 0, NULL);
-  if (!arr)
-    return NS_ERROR_OUT_OF_MEMORY;
-
-  return PushObject(arr);
-}
-
-nsresult
-nsJSONListener::CloseObject()
-{
-  if (!mObjectStack.SetLength(mObjectStack.Length() - 1))
+  if (!mJSONParser)
     return NS_ERROR_FAILURE;
 
-  return NS_OK;
-}
-
-nsresult
-nsJSONListener::CloseArray()
-{
-  return this->CloseObject();
-}
-
-nsresult
-nsJSONListener::HandleData(JSONDataType aType, const PRUnichar *aBuf,
-                           PRUint32 aLength)
-{
-  nsresult rv = NS_OK;
-  PRUint32 len;
-  const PRUnichar *buf;
-  PRBool needsTruncate = PR_FALSE;
-
-  if (mStringBuffer.IsEmpty()) {
-    buf = aBuf;
-    len = aLength;
-  } else {
-    needsTruncate = PR_TRUE;
-    mStringBuffer.Append(aBuf, aLength);
-    buf = mStringBuffer.get();
-    len = mStringBuffer.Length();
-  }
-
-  switch (aType) {
-    case JSON_DATA_STRING:
-      rv = HandleString(buf, len);
-      break;
-
-    case JSON_DATA_KEYSTRING:
-      mObjectKey = nsDependentString(buf, len);
-      rv = NS_OK;
-      break;
-
-    case JSON_DATA_NUMBER:
-      rv = HandleNumber(buf, len);
-      break;
-
-    case JSON_DATA_KEYWORD:
-      rv = HandleKeyword(buf, len);
-      break;
-
-    default:
-      NS_NOTREACHED("Should have a JSON data type");
-  }
-
-  if (needsTruncate)
-    mStringBuffer.Truncate();
-
-  return rv;
-}
-
-nsresult
-nsJSONListener::HandleString(const PRUnichar *aBuf, PRUint32 aLength)
-{
-#ifdef JAXER
-  JSObject *obj = mObjectStack.Length() > 0 ? mObjectStack.ElementAt(mObjectStack.Length() - 1) : nsnull;
-#else
-  JSObject *obj = mObjectStack.ElementAt(mObjectStack.Length() - 1);
-#endif /* JAXER */
-  JSString *str = JS_NewUCStringCopyN(mCx, 
-                                      reinterpret_cast<const jschar*> (aBuf),
-                                      aLength);
-  if (!str)
-    return NS_ERROR_OUT_OF_MEMORY;
-
-  return PushValue(obj, STRING_TO_JSVAL(str));
-}
-
-nsresult
-nsJSONListener::HandleNumber(const PRUnichar *aBuf, PRUint32 aLength)
-{
-  nsresult rv;
-#ifdef JAXER
-  JSObject *obj = mObjectStack.Length() > 0 ? mObjectStack.ElementAt(mObjectStack.Length() - 1) : nsnull;
-#else
-  JSObject *obj = mObjectStack.ElementAt(mObjectStack.Length() - 1);
-#endif /* JAXER */
-
-  char *estr;
-  int err;
-  double val =
-    JS_strtod(NS_ConvertUTF16toUTF8(nsDependentString(aBuf, aLength)).get(),
-              &estr, &err);
-  if (err == JS_DTOA_ENOMEM) {
-    rv = NS_ERROR_OUT_OF_MEMORY;
-  } else if (err || *estr) {
-    rv = NS_ERROR_FAILURE; // decode error
-  } else {
-    // ok
-    jsval numVal;
-    if (JS_NewNumberValue(mCx, val, &numVal)) {
-      rv = PushValue(obj, numVal);
-    } else {
-      rv = NS_ERROR_FAILURE; // decode error
-    }
-  }
-
-  return rv;
-}
-
-nsresult
-nsJSONListener::HandleKeyword(const PRUnichar *aBuf, PRUint32 aLength)
-{
-  nsAutoString buf;
-  buf.Append(aBuf, aLength);
-
-#ifdef JAXER
-  JSObject *obj = mObjectStack.Length() > 0 ? mObjectStack.ElementAt(mObjectStack.Length() - 1) : nsnull;
-#else
-  JSObject *obj = mObjectStack.ElementAt(mObjectStack.Length() - 1);
-#endif /* JAXER */
-  jsval keyword;
-  if (buf.Equals(NS_LITERAL_STRING("null"))) {
-    keyword = JSVAL_NULL;
-  } else if (buf.Equals(NS_LITERAL_STRING("true"))) {
-    keyword = JSVAL_TRUE;
-  } else if (buf.Equals(NS_LITERAL_STRING("false"))) {
-    keyword = JSVAL_FALSE;
-  } else {
+  if (!JS_ConsumeJSONText(mCx, mJSONParser, (jschar*) aBuffer, aByteLength)) {
+    Cleanup();
     return NS_ERROR_FAILURE;
   }
 
-  return PushValue(obj, keyword);
+  return NS_OK;
 }
