@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Media test: Audio Constructor Test 1</title>
+  <script type="text/javascript" src="/MochiKit/MochiKit.js"></script>
+  <script type="text/javascript" src="/tests/SimpleTest/SimpleTest.js"></script>
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+  <script type="text/javascript" src="manifest.js"></script>
+</head>
+<body>
+<pre id="test">
+<script class="testbody" type="text/javascript">
+for (var i = 0; i < gAudioTests.length; ++i) {
+  var test = gAudioTests[i];
+  var a1 = new Audio();
+  if (!a1.canPlayType(test.type))
+    continue;
+
+  is(a1.getAttribute("autobuffer"), "autobuffer", "Autobuffer automatically set");
+  is(a1.src, "", "Src set?");
+}
+</script>
+</pre>
+</body>
+</html>
