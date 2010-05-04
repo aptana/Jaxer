@@ -1,0 +1,945 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+  <title>Test for Cross Site XMLHttpRequest</title>
+  <script type="text/javascript" src="/MochiKit/packed.js"></script>
+  <script type="text/javascript" src="/tests/SimpleTest/SimpleTest.js"></script>        
+  <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
+</head>
+<body onload="gen.next()">
+<p id="display">
+<iframe id=loader></iframe>
+</p>
+<div id="content" style="display: none">
+  
+</div>
+<pre id="test">
+<script class="testbody" type="application/javascript;version=1.8">
+
+const runOriginTests = 1;
+const runPreflightTests = 1;
+const runCookieTests = 1;
+const runRedirectTests = 1;
+
+SimpleTest.waitForExplicitFinish();
+
+var origins =
+  [{ server: 'http://example.org' },
+   { server: 'http://example.org:80',
+     origin: 'http://example.org'
+   },
+   { server: 'http://sub1.test1.example.org' },
+   { server: 'http://test2.example.org:8000' },
+   { server: 'http://sub1.\xe4lt.example.org:8000',
+     origin: 'http://sub1.xn--lt-uia.example.org:8000'
+   },
+   { server: 'http://sub2.\xe4lt.example.org',
+     origin: 'http://sub2.xn--lt-uia.example.org'
+   },
+   { server: 'http://ex\xe4mple.test',
+     origin: 'http://xn--exmple-cua.test'
+   },
+   { server: 'http://xn--exmple-cua.test' },
+   { server: 'http://\u03c0\u03b1\u03c1\u03ac\u03b4\u03b5\u03b9\u03b3\u03bc\u03b1.\u03b4\u03bf\u03ba\u03b9\u03bc\u03ae',
+     origin: 'http://xn--hxajbheg2az3al.xn--jxalpdlp'
+   },
+   { origin: 'http://example.org',
+     file: 'jar:http://example.org/tests/content/base/test/file_CrossSiteXHR_inner.jar!/file_CrossSiteXHR_inner.html'
+   },
+   { origin: 'null',
+     file: 'http://example.org/tests/content/base/test/file_CrossSiteXHR_inner_data.sjs'
+   },
+   ];
+
+   //['https://example.com:443'],
+   //['https://sub1.test1.example.com:443'],
+
+window.addEventListener("message", function(e) {
+  gen.send(e.data);
+}, false);
+
+gen = runTest();
+
+function runTest() {
+  var loader = document.getElementById('loader');
+  var loaderWindow = loader.contentWindow;
+  loader.onload = function () { gen.next() };
+
+  // Test preflight-less requests
+  basePath = "/tests/content/base/test/file_CrossSiteXHR_server.sjs?"
+  baseURL = "http://localhost:8888" + basePath;
+
+  if (!runOriginTests) {
+    origins = [];
+  }
+
+  for each(originEntry in origins) {
+    origin = originEntry.origin || originEntry.server;
+
+    loader.src = originEntry.file ||
+                 (originEntry.server + "/tests/content/base/test/file_CrossSiteXHR_inner.html");
+    yield;
+
+    var isNullOrigin = origin == "null";
+
+    port = /:\d+/;
+    passTests = [
+      origin,
+      "*",
+      " \t " + origin + "\t \t",
+      "\t \t* \t ",
+    ];
+    failTests = [
+      "",
+      " ",
+      port.test(origin) ? origin.replace(port, "")
+                        : origin + ":1234",
+      port.test(origin) ? origin.replace(port, ":")
+                        : origin + ":",
+      origin + ".",
+      origin + "/",
+      origin + "#",
+      origin + "?",
+      origin + "\\",
+      origin + "%",
+      origin + "@",
+      origin + "/hello",
+      "foo:bar@" + origin,
+      "* " + origin,
+      origin + " " + origin,
+      "allow <" + origin + ">",
+      "<" + origin + ">",
+      "<*>",
+      origin.substr(0, 5) == "https" ? origin.replace("https", "http")
+                                     : origin.replace("http", "https"),
+      origin.replace("://", "://www."),
+      origin.replace("://", ":// "),
+      origin.replace(/\/[^.]+\./, "/"),
+    ];
+
+    if (isNullOrigin) {
+      passTests = ["*", "\t \t* \t "];
+      failTests = failTests.filter(function(v) { return v != origin });
+      failTests.push("null");
+    }
+    
+    for each(allowOrigin in passTests) {
+      req = {
+        url: baseURL +
+             "allowOrigin=" + escape(allowOrigin) +
+             "&origin=" + escape(origin),
+        method: "GET",
+      };
+      loaderWindow.postMessage(req.toSource(), isNullOrigin ? "*" : origin);
+
+      res = eval(yield);
+      is(res.didFail, false, "shouldn't have failed");
+      is(res.status, 200, "wrong status");
+      is(res.responseXML,
+         "<res>hello pass</res>",
+         "wrong responseXML in test for " + allowOrigin);
+      is(res.responseText, "<res>hello pass</res>\n",
+         "wrong responseText in test for " + allowOrigin);
+      is(res.events.join(","),
+         "opening,rs1,sending,rs1,loadstart,rs2,rs3,rs4,load",
+         "wrong responseText in test for " + allowOrigin);
+    }
+
+    for each(allowOrigin in failTests) {
+      req = {
+        url: baseURL + "allowOrigin=" + escape(allowOrigin),
+        method: "GET",
+      };
+      loaderWindow.postMessage(req.toSource(), isNullOrigin ? "*" : origin);
+
+      res = eval(yield);
+      is(res.didFail, true, "should have failed for " + allowOrigin);
+      is(res.responseText, "", "should have no text for " + allowOrigin);
+      is(res.status, 0, "should have no status for " + allowOrigin);
+      is(res.responseXML, null, "should have no XML for " + allowOrigin);
+      is(res.events.join(","),
+         "opening,rs1,sending,rs1,loadstart,rs2,rs4,error",
+         "wrong events in test for " + allowOrigin);
+      is(res.progressEvents, 0,
+         "wrong events in test for " + allowOrigin);
+    }
+  }
+
+  // Test preflighted requests
+  loader.src = "http://example.org/tests/content/base/test/file_CrossSiteXHR_inner.html";
+  origin = "http://example.org";
+  yield;
+
+  passTests = [{ method: "GET",
+                 noAllowPreflight: 1,
+               },
+               { method: "GET",
+                 headers: { "Content-Type": "baz/bin",
+                            "Accept": "foo/bar",
+                            "Accept-Language": "sv-SE" },
+                 noAllowPreflight: 1,
+               },
+               { method: "GET",
+                 headers: { "x-my-header": "myValue" },
+                 allowHeaders: "x-my-header",
+               },
+               { method: "GET",
+                 headers: { "x-my-header": "myValue",
+                            "second-header": "secondValue",
+                            "third-header": "thirdValue" },
+                 allowHeaders: "x-my-header, second-header, third-header",
+               },
+               { method: "GET",
+                 headers: { "x-my-header": "myValue",
+                            "second-header": "secondValue",
+                            "third-header": "thirdValue" },
+                 allowHeaders: "x-my-header,second-header,third-header",
+               },
+               { method: "GET",
+                 headers: { "x-my-header": "myValue",
+                            "second-header": "secondValue",
+                            "third-header": "thirdValue" },
+                 allowHeaders: "x-my-header ,second-header ,third-header",
+               },
+               { method: "GET",
+                 headers: { "x-my-header": "myValue",
+                            "second-header": "secondValue",
+                            "third-header": "thirdValue" },
+                 allowHeaders: "x-my-header , second-header , third-header",
+               },
+               { method: "GET",
+                 headers: { "x-my-header": "myValue",
+                            "second-header": "secondValue" },
+                 allowHeaders: ",  x-my-header, , ,, second-header, ,   ",
+               },
+               { method: "GET",
+                 headers: { "x-my-header": "myValue",
+                            "second-header": "secondValue" },
+                 allowHeaders: "x-my-header, second-header, unused-header",
+               },
+               { method: "GET",
+                 headers: { "x-my-header": "myValue" },
+                 allowHeaders: "X-My-Header",
+               },
+               { method: "GET",
+                 headers: { "x-my-header": "myValue",
+                            "long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header": "secondValue" },
+                 allowHeaders: "x-my-header, long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header-long-header",
+               },
+               { method: "GET",
+                 headers: { "x-my%-header": "myValue" },
+                 allowHeaders: "x-my%-header",
+               },
+               { method: "HEAD",
+                 noAllowPreflight: 1,
+               },
+               { method: "HEAD",
+                 headers: { "Content-Type": "baz/bin",
+                            "Accept": "foo/bar",
+                            "Accept-Language": "sv-SE" },
+                 noAllowPreflight: 1,
+               },
+               { method: "POST",
+                 body: "hi there",
+                 noAllowPreflight: 1,
+               },
+               { method: "POST",
+               },
+               { method: "POST",
+                 body: "hi there",
+                 headers: { "Content-Type": "text/plain" },
+                 noAllowPreflight: 1,
+               },
+               { method: "POST",
+                 body: "hi there",
+                 headers: { "Content-Type": "foo/bar" },
+               },
+               { method: "POST",
+                 body: "hi there",
+                 headers: { "Content-Type": "text/plain",
+                            "Accept": "foo/bar",
+                            "Accept-Language": "sv-SE" },
+                 noAllowPreflight: 1,
+               },
+               { method: "POST",
+                 body: "hi there",
+                 headers: { "Accept": "foo/bar",
+                            "Accept-Language": "sv-SE",
+                            "x-my-header": "myValue" },
+                 allowHeaders: "x-my-header",
+               },
+               { method: "POST",
+                 headers: { "Content-Type": "text/plain",
+                            "x-my-header": "myValue" },
+                 allowHeaders: "x-my-header",
+               },
+               { method: "POST",
+                 body: "hi there",
+                 headers: { "Content-Type": "foo/bar",
+                            "x-my-header": "myValue" },
+                 allowHeaders: "x-my-header",
+               },
+               { method: "POST",
+                 headers: { "x-my-header": "myValue" },
+                 allowHeaders: "x-my-header",
+               },
+               { method: "POST",
+                 body: "hi there",
+                 headers: { "x-my-header": "myValue" },
+                 allowHeaders: "x-my-header, $_%",
+               },
+               { method: "DELETE",
+                 allowMethods: "DELETE",
+               },
+               { method: "DELETE",
+                 allowMethods: "POST, PUT, DELETE",
+               },
+               { method: "DELETE",
+                 allowMethods: "POST, DELETE, PUT",
+               },
+               { method: "DELETE",
+                 allowMethods: "DELETE, POST, PUT",
+               },
+               { method: "DELETE",
+                 allowMethods: "POST ,PUT ,DELETE",
+               },
+               { method: "DELETE",
+                 allowMethods: "POST,PUT,DELETE",
+               },
+               { method: "DELETE",
+                 allowMethods: "POST , PUT , DELETE",
+               },
+               { method: "DELETE",
+                 allowMethods: "  ,,  PUT ,,  ,    , DELETE  ,  ,",
+               },
+               { method: "POST",
+                 body: "hi there",
+                 headers: { "Content-Type": "text/plain" },
+                 uploadProgress: "uploadprogress",
+               },
+               { method: "POST",
+                 body: "hi there",
+                 headers: { "Content-Type": "text/plain" },
+                 uploadProgress: "progress",
+               },
+               ];
+  failTests = [{ method: "GET",
+                 headers: { "x-my-header": "myValue" },
+               },
+               { method: "GET",
+                 headers: { "x-my-header": "myValue" },
+                 allowHeaders: "",
+               },
+               { method: "GET",
+                 headers: { "x-my-header": "myValue" },
+                 allowHeaders: "y-my-header",
+               },
+               { method: "GET",
+                 headers: { "x-my-header": "myValue" },
+                 allowHeaders: "x-my-header y-my-header",
+               },
+               { method: "GET",
+                 headers: { "x-my-header": "myValue" },
+                 allowHeaders: "x-my-header, y-my-header z",
+               },
+               { method: "GET",
+                 headers: { "x-my-header": "myValue" },
+                 allowHeaders: "x-my-header, y-my-he(ader",
+               },
+               { method: "GET",
+                 headers: { "x-my-header": "myValue",
+                            "y-my-header": "secondValue" },
+                 allowHeaders: "x-my-header",
+               },
+               { method: "GET",
+                 headers: { "x-my-header": "" },
+               },
+               { method: "GET",
+                 headers: { "x-my-header": "",
+                            "y-my-header": "" },
+                 allowHeaders: "x-my-header",
+               },
+               { method: "GET",
+                 headers: { "myheader": "" },
+                 allowMethods: "myheader",
+               },
+               { method: "HEAD",
+                 headers: { "x-my-header": "myValue" },
+               },
+               { method: "HEAD",
+                 headers: { "x-my-header": "myValue" },
+                 allowHeaders: "",
+               },
+               { method: "HEAD",
+                 headers: { "x-my-header": "myValue" },
+                 allowHeaders: "y-my-header",
+               },
+               { method: "HEAD",
+                 headers: { "x-my-header": "myValue" },
+                 allowHeaders: "x-my-header y-my-header",
+               },
+               { method: "DELETE",
+                 allowHeaders: "DELETE",
+               },
+               { method: "POST",
+                 noAllowPreflight: 1,
+               },
+               { method: "POST",
+                 body: "hi there",
+                 headers: { "Content-Type": "foo/bar" },
+                 noAllowPreflight: 1,
+               },
+               { method: "DELETE",
+               },
+               { method: "DELETE",
+                 allowMethods: "",
+               },
+               { method: "DELETE",
+                 allowMethods: "PUT",
+               },
+               { method: "DELETE",
+                 allowMethods: "DELETEZ",
+               },
+               { method: "DELETE",
+                 allowMethods: "DELETE PUT",
+               },
+               { method: "DELETE",
+                 allowMethods: "DELETE, PUT Z",
+               },
+               { method: "DELETE",
+                 allowMethods: "DELETE, PU(T",
+               },
+               { method: "DELETE",
+                 allowMethods: "PUT DELETE",
+               },
+               { method: "DELETE",
+                 allowMethods: "PUT Z, DELETE",
+               },
+               { method: "DELETE",
+                 allowMethods: "PU(T, DELETE",
+               },
+               { method: "MYMETHOD",
+                 allowMethods: "myMethod",
+               },
+               { method: "PUT",
+                 allowMethods: "put",
+               },
+               { method: "POST",
+                 body: "hi there",
+                 headers: { "Content-Type": "text/plain" },
+                 noAllowPreflight: 1,
+                 uploadProgress: "uploadprogress",
+               },
+               { method: "POST",
+                 body: "hi there",
+                 headers: { "Content-Type": "text/plain" },
+                 noAllowPreflight: 1,
+                 uploadProgress: "progress",
+               },
+               ];
+
+  if (!runPreflightTests) {
+    passTests = failTests = [];
+  }
+
+  for each(test in passTests) {
+    req = {
+      url: baseURL + "&allowOrigin=" + escape(origin) +
+           "&origin=" + escape(origin) +
+           "&requestMethod=" + test.method,
+      method: test.method,
+      headers: test.headers,
+      uploadProgress: test.uploadProgress,
+      body: test.body,
+    };
+
+    if (test.noAllowPreflight)
+      req.url += "&noAllowPreflight";
+
+    if ("headers" in test) {
+      req.url += "&headers=" + escape(test.headers.toSource());
+      reqHeaders =
+        escape([name for (name in test.headers)].map(String.toLowerCase).filter(function(name)
+          name != "content-type" &&
+          name != "accept" &&
+          name != "accept-language").sort().join(","));
+      req.url += reqHeaders ? "&requestHeaders=" + reqHeaders : "";
+    }
+    if ("allowHeaders" in test)
+      req.url += "&allowHeaders=" + escape(test.allowHeaders);
+    if ("allowMethods" in test)
+      req.url += "&allowMethods=" + escape(test.allowMethods);
+    if (test.body)
+      req.url += "&body=" + escape(test.body);
+
+
+    loaderWindow.postMessage(req.toSource(), origin);
+
+    res = eval(yield);
+    is(res.didFail, false,
+      "shouldn't have failed in test for " + test.toSource());
+    is(res.status, 200, "wrong status in test for " + test.toSource());
+    if (test.method !== "HEAD") {
+      is(res.responseXML, "<res>hello pass</res>",
+         "wrong responseXML in test for " + test.toSource());
+      is(res.responseText, "<res>hello pass</res>\n",
+         "wrong responseText in test for " + test.toSource());
+      is(res.events.join(","),
+         "opening,rs1,sending,rs1,loadstart,rs2,rs3,rs4,load",
+         "wrong responseText in test for " + test.toSource());
+    }
+    else {
+      is(res.responseXML, null,
+         "wrong responseXML in test for " + test.toSource());
+      is(res.responseText, "",
+         "wrong responseText in test for " + test.toSource());
+      is(res.events.join(","),
+         "opening,rs1,sending,rs1,loadstart,rs2,rs4,load",
+         "wrong responseText in test for " + test.toSource());
+    }
+  }
+
+  for each(test in failTests) {
+    req = {
+      url: baseURL + "allowOrigin=" + escape(origin),
+      method: test.method,
+      headers: test.headers,
+      uploadProgress: test.uploadProgress,
+      body: test.body,
+    };
+
+    if (test.noAllowPreflight)
+      req.url += "&noAllowPreflight";
+
+    if ("allowHeaders" in test)
+      req.url += "&allowHeaders=" + escape(test.allowHeaders);
+    if ("allowMethods" in test)
+      req.url += "&allowMethods=" + escape(test.allowMethods);
+
+    loaderWindow.postMessage(req.toSource(), origin);
+
+    res = eval(yield);
+    is(res.didFail, true,
+      "should have failed in test for " + test.toSource());
+    is(res.status, 0, "wrong status in test for " + test.toSource());
+    is(res.responseXML, null,
+       "wrong responseXML in test for " + test.toSource());
+    is(res.responseText, "",
+       "wrong responseText in test for " + test.toSource());
+    is(res.events.join(","),
+       "opening,rs1,sending,rs1,loadstart,rs2,rs4,error",
+       "wrong events in test for " + test.toSource());
+    is(res.progressEvents, 0,
+       "wrong events in test for " + test.toSource());
+  }
+
+
+  // Test cookie behavior
+  tests = [{ pass: 1,
+             method: "GET",
+             withCred: 1,
+             allowCred: 1,
+           },
+           { pass: 0,
+             method: "GET",
+             withCred: 1,
+             allowCred: 0,
+           },
+           { pass: 0,
+             method: "GET",
+             withCred: 1,
+             allowCred: 1,
+             origin: "*",
+           },
+           { pass: 1,
+             method: "GET",
+             withCred: 0,
+             allowCred: 1,
+             origin: "*",
+           },
+           { pass: 1,
+             method: "GET",
+             setCookie: "a=1",
+             withCred: 1,
+             allowCred: 1,
+           },
+           { pass: 1,
+             method: "GET",
+             cookie: "a=1",
+             withCred: 1,
+             allowCred: 1,
+           },
+           { pass: 1,
+             method: "GET",
+             noCookie: 1,
+             withCred: 0,
+             allowCred: 1,
+           },
+           { pass: 0,
+             method: "GET",
+             noCookie: 1,
+             withCred: 1,
+             allowCred: 1,
+           },
+           { pass: 1,
+             method: "GET",
+             setCookie: "a=2",
+             withCred: 0,
+             allowCred: 1,
+           },
+           { pass: 1,
+             method: "GET",
+             cookie: "a=1",
+             withCred: 1,
+             allowCred: 1,
+           },
+           { pass: 1,
+             method: "GET",
+             setCookie: "a=2",
+             withCred: 1,
+             allowCred: 1,
+           },
+           { pass: 1,
+             method: "GET",
+             cookie: "a=2",
+             withCred: 1,
+             allowCred: 1,
+           },
+           ];
+
+  if (!runCookieTests) {
+    tests = [];
+  }
+
+  for each(test in tests) {
+    req = {
+      url: baseURL + "allowOrigin=" + escape(test.origin || origin),
+      method: test.method,
+      headers: test.headers,
+      withCred: test.withCred,
+    };
+
+    if (test.allowCred)
+      req.url += "&allowCred";
+
+    if (test.setCookie)
+      req.url += "&setCookie=" + escape(test.setCookie);
+    if (test.cookie)
+      req.url += "&cookie=" + escape(test.cookie);
+    if (test.noCookie)
+      req.url += "&noCookie";
+
+    if ("allowHeaders" in test)
+      req.url += "&allowHeaders=" + escape(test.allowHeaders);
+    if ("allowMethods" in test)
+      req.url += "&allowMethods=" + escape(test.allowMethods);
+
+    loaderWindow.postMessage(req.toSource(), origin);
+
+    res = eval(yield);
+    if (test.pass) {
+      is(res.didFail, false,
+        "shouldn't have failed in test for " + test.toSource());
+      is(res.status, 200, "wrong status in test for " + test.toSource());
+      is(res.responseXML, "<res>hello pass</res>",
+         "wrong responseXML in test for " + test.toSource());
+      is(res.responseText, "<res>hello pass</res>\n",
+         "wrong responseText in test for " + test.toSource());
+      is(res.events.join(","),
+         "opening,rs1,sending,rs1,loadstart,rs2,rs3,rs4,load",
+         "wrong responseText in test for " + test.toSource());
+    }
+    else {
+      is(res.didFail, true,
+        "should have failed in test for " + test.toSource());
+      is(res.status, 0, "wrong status in test for " + test.toSource());
+      is(res.responseXML, null,
+         "wrong responseXML in test for " + test.toSource());
+      is(res.responseText, "",
+         "wrong responseText in test for " + test.toSource());
+      is(res.events.join(","),
+         "opening,rs1,sending,rs1,loadstart,rs2,rs4,error",
+         "wrong events in test for " + test.toSource());
+      is(res.progressEvents, 0,
+         "wrong events in test for " + test.toSource());
+    }
+  }
+
+  // Test redirects
+  is(loader.src, "http://example.org/tests/content/base/test/file_CrossSiteXHR_inner.html");
+  is(origin, "http://example.org");
+
+  tests = [{ pass: 1,
+             method: "GET",
+             hops: [{ server: "http://example.com",
+                      allowOrigin: origin
+                    },
+                    ],
+           },
+           { pass: 1,
+             method: "GET",
+             hops: [{ server: "http://example.com",
+                      allowOrigin: origin
+                    },
+                    { server: "http://example.org",
+                      allowOrigin: origin
+                    },
+                    ],
+           },
+           { pass: 0,
+             method: "GET",
+             hops: [{ server: "http://example.com",
+                      allowOrigin: origin
+                    },
+                    { server: "http://example.org",
+                    },
+                    ],
+           },
+           { pass: 1,
+             method: "GET",
+             hops: [{ server: "http://example.org",
+                    },
+                    { server: "http://example.org",
+                    },
+                    { server: "http://example.com",
+                      allowOrigin: origin
+                    },
+                    ],
+           },
+           { pass: 0,
+             method: "GET",
+             hops: [{ server: "http://example.org",
+                    },
+                    { server: "http://example.org",
+                    },
+                    { server: "http://example.com",
+                      allowOrigin: origin
+                    },
+                    { server: "http://example.org",
+                    },
+                    ],
+           },
+           { pass: 1,
+             method: "GET",
+             hops: [{ server: "http://example.com",
+                      allowOrigin: origin
+                    },
+                    { server: "http://test2.example.org:8000",
+                      allowOrigin: origin
+                    },
+                    { server: "http://sub2.xn--lt-uia.example.org",
+                      allowOrigin: origin
+                    },
+                    { server: "http://sub1.test1.example.org",
+                      allowOrigin: origin
+                    },
+                    ],
+           },
+           { pass: 0,
+             method: "GET",
+             hops: [{ server: "http://example.com",
+                      allowOrigin: origin
+                    },
+                    { server: "http://test2.example.org:8000",
+                      allowOrigin: origin
+                    },
+                    { server: "http://sub2.xn--lt-uia.example.org",
+                      allowOrigin: "x"
+                    },
+                    { server: "http://sub1.test1.example.org",
+                      allowOrigin: origin
+                    },
+                    ],
+           },
+           { pass: 1,
+             method: "GET",
+             hops: [{ server: "http://example.com",
+                      allowOrigin: origin
+                    },
+                    { server: "http://test2.example.org:8000",
+                      allowOrigin: origin
+                    },
+                    { server: "http://sub2.xn--lt-uia.example.org",
+                      allowOrigin: "*"
+                    },
+                    { server: "http://sub1.test1.example.org",
+                      allowOrigin: origin
+                    },
+                    ],
+           },
+           { pass: 0,
+             method: "GET",
+             hops: [{ server: "http://example.com",
+                      allowOrigin: origin
+                    },
+                    { server: "http://test2.example.org:8000",
+                      allowOrigin: origin
+                    },
+                    { server: "http://sub2.xn--lt-uia.example.org",
+                      allowOrigin: "*"
+                    },
+                    { server: "http://sub1.test1.example.org",
+                    },
+                    ],
+           },
+           { pass: 1,
+             method: "POST",
+             body: "hi there",
+             headers: { "Content-Type": "text/plain" },
+             hops: [{ server: "http://example.org",
+                    },
+                    { server: "http://example.com",
+                      allowOrigin: origin,
+                    },
+                    ],
+           },
+           { pass: 0,
+             method: "POST",
+             body: "hi there",
+             headers: { "Content-Type": "text/plain",
+                        "my-header": "myValue",
+                      },
+             hops: [{ server: "http://example.org",
+                    },
+                    { server: "http://example.com",
+                      allowOrigin: origin,
+                      allowHeaders: "my-header",
+                    },
+                    ],
+           },
+           { pass: 0,
+             method: "DELETE",
+             hops: [{ server: "http://example.org",
+                    },
+                    { server: "http://example.com",
+                      allowOrigin: origin,
+                    },
+                    ],
+           },
+           { pass: 0,
+             method: "POST",
+             body: "hi there",
+             headers: { "Content-Type": "text/plain",
+                        "my-header": "myValue",
+                      },
+             hops: [{ server: "http://example.com",
+                      allowOrigin: origin,
+                    },
+                    { server: "http://sub1.test1.example.org",
+                      allowOrigin: origin,
+                    },
+                    ],
+           },
+           { pass: 0,
+             method: "DELETE",
+             hops: [{ server: "http://example.com",
+                      allowOrigin: origin,
+                    },
+                    { server: "http://sub1.test1.example.org",
+                      allowOrigin: origin,
+                    },
+                    ],
+           },
+           { pass: 0,
+             method: "POST",
+             body: "hi there",
+             headers: { "Content-Type": "text/plain",
+                        "my-header": "myValue",
+                      },
+             hops: [{ server: "http://example.com",
+                    },
+                    { server: "http://sub1.test1.example.org",
+                      allowOrigin: origin,
+                      allowHeaders: "my-header",
+                    },
+                    ],
+           },
+           { pass: 1,
+             method: "POST",
+             body: "hi there",
+             headers: { "Content-Type": "text/plain" },
+             hops: [{ server: "http://example.org",
+                    },
+                    { server: "http://example.com",
+                      allowOrigin: origin,
+                    },
+                    ],
+           },
+           { pass: 0,
+             method: "POST",
+             body: "hi there",
+             headers: { "Content-Type": "text/plain",
+                        "my-header": "myValue",
+                      },
+             hops: [{ server: "http://example.com",
+                      allowOrigin: origin,
+                      allowHeaders: "my-header",
+                    },
+                    { server: "http://example.org",
+                      allowOrigin: origin,
+                      allowHeaders: "my-header",
+                    },
+                    ],
+           },
+           ];
+
+  if (!runRedirectTests) {
+    tests = [];
+  }
+
+  for each(test in tests) {
+    req = {
+      url: test.hops[0].server + basePath + "hop=1&hops=" +
+           escape(test.hops.toSource()),
+      method: test.method,
+      headers: test.headers,
+      body: test.body,
+    };
+
+    if (test.pass) {
+      if (test.body)
+        req.url += "&body=" + escape(test.body);
+    }
+
+    loaderWindow.postMessage(req.toSource(), origin);
+
+    res = eval(yield);
+    if (test.pass) {
+      is(res.didFail, false,
+        "shouldn't have failed in test for " + test.toSource());
+      is(res.status, 200, "wrong status in test for " + test.toSource());
+      is(res.responseXML, "<res>hello pass</res>",
+         "wrong responseXML in test for " + test.toSource());
+      is(res.responseText, "<res>hello pass</res>\n",
+         "wrong responseText in test for " + test.toSource());
+      is(res.events.join(","),
+         "opening,rs1,sending,rs1,loadstart,rs2,rs3,rs4,load",
+         "wrong responseText in test for " + test.toSource());
+    }
+    else {
+      is(res.didFail, true,
+        "should have failed in test for " + test.toSource());
+      is(res.status, 0, "wrong status in test for " + test.toSource());
+      is(res.responseXML, null,
+         "wrong responseXML in test for " + test.toSource());
+      is(res.responseText, "",
+         "wrong responseText in test for " + test.toSource());
+      is(res.events.join(","),
+         "opening,rs1,sending,rs1,loadstart,rs2,rs4,error",
+         "wrong events in test for " + test.toSource());
+      is(res.progressEvents, 0,
+         "wrong progressevents in test for " + test.toSource());
+    }
+  }
+
+
+  SimpleTest.finish();
+
+  yield;
+}
+
+</script>
+</pre>
+</body>
+</html>
