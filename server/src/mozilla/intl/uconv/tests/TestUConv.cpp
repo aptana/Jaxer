@@ -40,7 +40,7 @@
 #include "nsUCSupport.h"
 #include "nsString.h"
 #include "nsIStringEnumerator.h"
-#include "nsVoidArray.h"
+#include "nsTArray.h"
 
 //----------------------------------------------------------------------------
 // Global functions and data [declaration]
@@ -76,10 +76,10 @@ private:
 
 public:
 
-  void AddTrace(char * aTrace);
-  void DelTrace(char * aTrace);
-  void PrintError(char * aCall, int aError);
-  void PrintError(char * aCall, char * aMessage);
+  void AddTrace(const char * aTrace);
+  void DelTrace(const char * aTrace);
+  void PrintError(const char * aCall, const int aError);
+  void PrintError(const char * aCall, const char * aMessage);
 };
   
 //----------------------------------------------------------------------------
@@ -178,24 +178,24 @@ int main(int argc, char ** argv)
 
 const char * nsTestLog::kTraceDelimiter = ".";
 
-void nsTestLog::AddTrace(char * aTrace)
+void nsTestLog::AddTrace(const char * aTrace)
 {
   mTrace.Append(aTrace);
   mTrace.Append(kTraceDelimiter);
 }
 
-void nsTestLog::DelTrace(char * aTrace)
+void nsTestLog::DelTrace(const char * aTrace)
 {
   mTrace.Truncate(mTrace.Length() - strlen(aTrace) - strlen(kTraceDelimiter));
 }
 
-void nsTestLog::PrintError(char * aCall, int aError)
+void nsTestLog::PrintError(const char * aCall, const int aError)
 {
   const char * trace = mTrace.get();
   printf("ERROR at %s%s code=0x%x.\n", trace, aCall, aError);
 }
 
-void nsTestLog::PrintError(char * aCall, char * aMessage)
+void nsTestLog::PrintError(const char * aCall, const char * aMessage)
 {
   const char * trace = mTrace.get();
   printf("ERROR at %s%s reason: %s.\n", trace, aCall, aMessage);
@@ -206,7 +206,7 @@ void nsTestLog::PrintError(char * aCall, char * aMessage)
 
 nsresult nsTestUConv::TestEncoders()
 {
-  char * trace = "TestEncoders";
+  const char * trace = "TestEncoders";
   mLog.AddTrace(trace);
   nsresult res = NS_OK;
 
@@ -217,8 +217,6 @@ nsresult nsTestUConv::TestEncoders()
   nsCOMPtr<nsIUTF8StringEnumerator> encoders;
   res = ccMan->GetEncoderList(getter_AddRefs(encoders));
   if (NS_FAILED(res)) return res;
-
-  PRUint32 encoderCount=0;
 
   PRBool hasMore;
   encoders->HasMore(&hasMore);
@@ -236,7 +234,7 @@ nsresult nsTestUConv::TestEncoders()
 
 nsresult nsTestUConv::TestDecoders()
 {
-  char * trace = "TestDecoders";
+  const char * trace = "TestDecoders";
   mLog.AddTrace(trace);
   nsresult res = NS_OK;
 
@@ -248,7 +246,7 @@ nsresult nsTestUConv::TestDecoders()
 
 nsresult nsTestUConv::TestCharsetManager()
 {
-  char * trace = "TestCharsetManager";
+  const char * trace = "TestCharsetManager";
   mLog.AddTrace(trace);
   nsresult res = NS_OK;
   nsAutoString name;
@@ -267,7 +265,7 @@ nsresult nsTestUConv::TestCharsetManager()
 
 nsresult nsTestUConv::DisplayDetectors()
 {
-  char * trace = "DisplayDetectors";
+  const char * trace = "DisplayDetectors";
   mLog.AddTrace(trace);
   nsresult res = NS_OK;
 
@@ -316,7 +314,7 @@ nsresult nsTestUConv::DisplayDetectors()
 
 nsresult nsTestUConv::DisplayCharsets()
 {
-  char * trace = "DisplayCharsets";
+  const char * trace = "DisplayCharsets";
   mLog.AddTrace(trace);
   nsresult res = NS_OK;
 
@@ -348,7 +346,7 @@ nsresult nsTestUConv::DisplayCharsets()
   PRUint32 encCount = 0, decCount = 0;
   PRUint32 basicEncCount = 0, basicDecCount = 0;
 
-  nsCStringArray allCharsets;
+  nsTArray<nsCString> allCharsets;
   
   nsCAutoString charset;
   PRBool hasMore;
@@ -356,22 +354,22 @@ nsresult nsTestUConv::DisplayCharsets()
   while (hasMore) {
     res = encoders->GetNext(charset);
     if (NS_SUCCEEDED(res))
-      allCharsets.AppendCString(charset);
+      allCharsets.AppendElement(charset);
 
     encoders->HasMore(&hasMore);
   }
 
   nsAutoString prop, str;
-  PRUint32 count = allCharsets.Count();
+  PRUint32 count = allCharsets.Length();
   for (PRUint32 i = 0; i < count; i++) {
 
-    const nsCString* charset = allCharsets[i];
-    printf("%s", charset->get());
-    PrintSpaces(24 - charset->Length());  // align to hard coded column number
+    const nsCString& charset = allCharsets[i];
+    printf("%s", charset.get());
+    PrintSpaces(24 - charset.Length());  // align to hard coded column number
 
 
     nsCOMPtr<nsIUnicodeDecoder> dec = NULL;
-    res = ccMan->GetUnicodeDecoder(charset->get(), getter_AddRefs(dec));
+    res = ccMan->GetUnicodeDecoder(charset.get(), getter_AddRefs(dec));
     if (NS_FAILED(res)) printf (" "); 
     else {
       printf("D");
@@ -391,7 +389,7 @@ nsresult nsTestUConv::DisplayCharsets()
 #endif
 
     nsCOMPtr<nsIUnicodeEncoder> enc = NULL;
-    res = ccMan->GetUnicodeEncoder(charset->get(), getter_AddRefs(enc));
+    res = ccMan->GetUnicodeEncoder(charset.get(), getter_AddRefs(enc));
     if (NS_FAILED(res)) printf (" "); 
     else {
       printf("E");
@@ -413,27 +411,27 @@ nsresult nsTestUConv::DisplayCharsets()
     printf(" ");
 
     prop.AssignLiteral(".notForBrowser");
-    res = ccMan->GetCharsetData(charset->get(), prop.get(), str);
+    res = ccMan->GetCharsetData(charset.get(), prop.get(), str);
     if ((dec != NULL) && (NS_FAILED(res))) printf ("B"); 
     else printf("X");
 
     prop.AssignLiteral(".notForComposer");
-    res = ccMan->GetCharsetData(charset->get(), prop.get(), str);
+    res = ccMan->GetCharsetData(charset.get(), prop.get(), str);
     if ((enc != NULL) && (NS_FAILED(res))) printf ("C"); 
     else printf("X");
 
     prop.AssignLiteral(".notForMailView");
-    res = ccMan->GetCharsetData(charset->get(), prop.get(), str);
+    res = ccMan->GetCharsetData(charset.get(), prop.get(), str);
     if ((dec != NULL) && (NS_FAILED(res))) printf ("V"); 
     else printf("X");
 
     prop.AssignLiteral(".notForMailEdit");
-    res = ccMan->GetCharsetData(charset->get(), prop.get(), str);
+    res = ccMan->GetCharsetData(charset.get(), prop.get(), str);
     if ((enc != NULL) && (NS_FAILED(res))) printf ("E"); 
     else printf("X");
 
     printf("(%3d, %3d) ", encCount, decCount);
-    res = ccMan->GetCharsetTitle(charset->get(), str);
+    res = ccMan->GetCharsetTitle(charset.get(), str);
     if (NS_FAILED(res)) str.SetLength(0);
     NS_LossyConvertUTF16toASCII buff2(str);
     printf(" \"%s\"\n", buff2.get());
@@ -450,7 +448,7 @@ nsresult nsTestUConv::DisplayCharsets()
 
 nsresult nsTestUConv::TestTempBug()
 {
-  char * trace = "TestTempBug";
+  const char * trace = "TestTempBug";
   mLog.AddTrace(trace);
   nsresult res = NS_OK;
 
@@ -473,7 +471,7 @@ nsresult nsTestUConv::Encode(PRUnichar ** aSrc, PRUnichar * aSrcEnd,
                              char ** aDest, char * aDestEnd, 
                              const nsAFlatCString& aCharset)
 {
-  char * trace = "Encode";
+  const char * trace = "Encode";
   mLog.AddTrace(trace);
   nsresult res = NS_OK;
 
@@ -542,7 +540,7 @@ void nsTestUConv::PrintSpaces(int aCount)
 
 nsresult nsTestUConv::Main(int aArgC, char ** aArgV)
 {
-  char * trace = "Main";
+  const char * trace = "Main";
   mLog.AddTrace(trace);
   nsresult res = NS_OK;
 

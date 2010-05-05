@@ -82,12 +82,15 @@ static NS_DEFINE_CID(kPersistentPropertiesCID, NS_IPERSISTENTPROPERTIES_CID);
 
 nsStringBundle::~nsStringBundle()
 {
+  if (mMonitor)
+    PR_DestroyMonitor(mMonitor);
 }
 
 nsStringBundle::nsStringBundle(const char* aURLSpec,
                                nsIStringBundleOverride* aOverrideStrings) :
   mPropertiesURL(aURLSpec),
   mOverrideStrings(aOverrideStrings),
+  mMonitor(0),
   mAttemptedLoad(PR_FALSE),
   mLoaded(PR_FALSE)
 {
@@ -110,6 +113,10 @@ nsStringBundle::LoadProperties()
   mAttemptedLoad = PR_TRUE;
 
   nsresult rv;
+
+  mMonitor = nsAutoMonitor::NewMonitor("StringBundle monitor");
+  if (!mMonitor)
+    return NS_ERROR_OUT_OF_MEMORY;
 
   // do it synchronously
   nsCOMPtr<nsIURI> uri;
@@ -148,7 +155,7 @@ nsStringBundle::LoadProperties()
 nsresult
 nsStringBundle::GetStringFromID(PRInt32 aID, nsAString& aResult)
 {  
-  nsAutoCMonitor(this);
+  nsAutoMonitor automon(mMonitor);
   nsCAutoString name;
   name.AppendInt(aID, 10);
 
@@ -269,7 +276,7 @@ nsStringBundle::GetStringFromName(const PRUnichar *aName, PRUnichar **aResult)
   rv = LoadProperties();
   if (NS_FAILED(rv)) return rv;
 
-  nsAutoCMonitor(this);
+  nsAutoMonitor automon(mMonitor);
   *aResult = nsnull;
   nsAutoString tmpstr;
   rv = GetStringFromName(nsDependentString(aName), tmpstr);
@@ -469,37 +476,30 @@ nsExtensibleStringBundle::~nsExtensibleStringBundle()
 nsresult nsExtensibleStringBundle::GetStringFromID(PRInt32 aID, PRUnichar ** aResult)
 {
   nsresult rv;
-  
-  PRUint32 size, i;
-
-  size = mBundles.Count();
-
-  for (i = 0; i < size; i++) {
+  const PRUint32 size = mBundles.Count();
+  for (PRUint32 i = 0; i < size; ++i) {
     nsIStringBundle *bundle = mBundles[i];
     if (bundle) {
-        rv = bundle->GetStringFromID(aID, aResult);
-        if (NS_SUCCEEDED(rv))
-            return NS_OK;
+      rv = bundle->GetStringFromID(aID, aResult);
+      if (NS_SUCCEEDED(rv))
+        return NS_OK;
     }
   }
 
   return NS_ERROR_FAILURE;
 }
 
-nsresult nsExtensibleStringBundle::GetStringFromName(const PRUnichar *aName, 
+nsresult nsExtensibleStringBundle::GetStringFromName(const PRUnichar *aName,
                                                      PRUnichar ** aResult)
 {
-  nsresult res = NS_OK;
-  PRUint32 size, i;
-
-  size = mBundles.Count();
-
-  for (i = 0; i < size; i++) {
+  nsresult rv;
+  const PRUint32 size = mBundles.Count();
+  for (PRUint32 i = 0; i < size; ++i) {
     nsIStringBundle* bundle = mBundles[i];
     if (bundle) {
-        res = bundle->GetStringFromName(aName, aResult);
-        if (NS_SUCCEEDED(res))
-            return NS_OK;
+      rv = bundle->GetStringFromName(aName, aResult);
+      if (NS_SUCCEEDED(rv))
+        return NS_OK;
     }
   }
 
@@ -524,7 +524,10 @@ nsExtensibleStringBundle::FormatStringFromName(const PRUnichar *aName,
                                                PRUnichar ** aResult)
 {
   nsXPIDLString formatStr;
-  GetStringFromName(aName, getter_Copies(formatStr));
+  nsresult rv;
+  rv = GetStringFromName(aName, getter_Copies(formatStr));
+  if (NS_FAILED(rv))
+    return rv;
 
   return nsStringBundle::FormatString(formatStr, aParams, aLength, aResult);
 }
@@ -747,14 +750,14 @@ nsStringBundleService::CreateBundle(const char* aURLSpec,
 
   return getStringBundle(aURLSpec,aResult);
 }
-  
+
 NS_IMETHODIMP
-nsStringBundleService::CreateExtensibleBundle(const char* aCategory, 
+nsStringBundleService::CreateExtensibleBundle(const char* aCategory,
                                               nsIStringBundle** aResult)
 {
   if (aResult == NULL) return NS_ERROR_NULL_POINTER;
 
-  nsresult res = NS_OK;
+  nsresult res;
 
   nsExtensibleStringBundle * bundle = new nsExtensibleStringBundle();
   if (!bundle) return NS_ERROR_OUT_OF_MEMORY;

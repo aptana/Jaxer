@@ -37,7 +37,7 @@
 
 #include "nsIFactory.h"
 #include "nsString.h"
-#include "nsVoidArray.h"
+#include "nsTArray.h"
 #include "nsICharsetConverterManager.h"
 #include "nsISaveAsCharset.h"
 
@@ -45,7 +45,6 @@
 #define MASK_FALLBACK(a) (nsISaveAsCharset::mask_Fallback & (a))
 #define MASK_ENTITY(a) (nsISaveAsCharset::mask_Entity & (a))
 #define MASK_CHARSET_FALLBACK(a) (nsISaveAsCharset::mask_CharsetFallback & (a))
-#define MASK_IGNORABLE_FALLBACK(a) (nsISaveAsCharset::mask_IgnorableFallback & (a))
 #define ATTR_NO_FALLBACK(a) (nsISaveAsCharset::attr_FallbackNone == MASK_FALLBACK(a) && \
                              nsISaveAsCharset::attr_EntityAfterCharsetConv != MASK_ENTITY(a))
 
@@ -97,7 +96,7 @@ protected:
   PRUint32 mEntityVersion;                // see nsIEntityConverter
   nsCOMPtr<nsIUnicodeEncoder> mEncoder;   // encoder (convert from unicode)
   nsCOMPtr<nsIEntityConverter> mEntityConverter;
-  nsCStringArray mCharsetList;
+  nsTArray<nsCString> mCharsetList;
   PRInt32        mCharsetListIndex;
 };
 

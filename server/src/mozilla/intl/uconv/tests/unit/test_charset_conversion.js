@@ -31,7 +31,7 @@ function run_test()
                                "nsIConverterInputStream",
                                "init");
 
-  dataDir = do_get_file("intl/uconv/tests/unit/data/");
+  dataDir = do_get_file("data/");
 
   test_utf8_1();
   test_utf16_1();
@@ -136,6 +136,7 @@ function test_cross_conversion()
     var ss = StorageStream();
 
     var bos = new BOS(ss.getOutputStream(0));
+    var av;
     while ((av = fin.available()) > 0)
     {
       var data = fin.readByteArray(av);
@@ -199,6 +200,7 @@ function equal(stream, codePoints)
   }
 
   do_throw("not reached");
+  return false;
 }
 
 function equalUnicharStreams(s1, s2)

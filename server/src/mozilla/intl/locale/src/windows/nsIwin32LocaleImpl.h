@@ -42,7 +42,6 @@
 #include "nsISupports.h"
 #include "nscore.h"
 #include "nsString.h"
-#include "nsILocale.h"
 #include "nsIWin32Locale.h"
 #include <windows.h>
 
@@ -59,9 +58,15 @@ public:
 	NS_IMETHOD GetPlatformLocale(const nsAString& locale, LCID* winLCID);
 	NS_IMETHOD GetXPLocale(LCID winLCID, nsAString& locale);
 
-protected:
-	inline PRBool	ParseLocaleString(const char* locale_string, char* language, char* country, char* region);
+	typedef LCID (WINAPI*LocaleNameToLCIDPtr)(LPCWSTR lpName, DWORD dwFlags);
+	typedef int (WINAPI*LCIDToLocaleNamePtr)(LCID Locale, LPWSTR lpName,
+	                                         int cchName, DWORD dwFlags);
 
+	static LocaleNameToLCIDPtr localeNameToLCID;
+	static LCIDToLocaleNamePtr lcidToLocaleName;
+
+private:
+	static HMODULE sKernelDLL;
 };
 
 #endif

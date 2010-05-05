@@ -23,6 +23,7 @@
  *   Maha Abou El Rous <mahar@eg.ibm.com>
  *   Lina Kemmel <lkemmel@il.ibm.com>
  *   Simon Montagu <smontagu@netscape.com>
+ *   Ehsan Akhgari <ehsan.akhgari@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either of the GNU General Public License Version 2 or later (the "GPL"),
@@ -156,6 +157,19 @@ typedef enum nsCharType nsCharType;
   nsresult Conv_06_FE_WithReverse(const nsString& aSrc, nsString& aDst, PRUint32 aDir);
 
   /**
+   * Inspects a Unichar, converting numbers to Arabic or Hindi forms and returning them
+   * @param aChar is the character
+   * @param aPrevCharArabic is true if the previous character in the string is an Arabic char
+   * @param aNumFlag specifies the conversion to perform:
+   *        IBMBIDI_NUMERAL_NOMINAL:      don't do any conversion
+   *        IBMBIDI_NUMERAL_HINDI:        convert to Hindi forms (Unicode 0660-0669)
+   *        IBMBIDI_NUMERAL_ARABIC:       convert to Arabic forms (Unicode 0030-0039)
+   *        IBMBIDI_NUMERAL_HINDICONTEXT: convert numbers in Arabic text to Hindi, otherwise to Arabic
+   * @return the converted Unichar
+   */
+  PRUnichar HandleNumberInChar(PRUnichar aChar, PRBool aPrevCharArabic, PRUint32 aNumFlag);
+
+  /**
    * Scan a Unichar string, converting numbers to Arabic or Hindi forms in place
    * @param aBuffer is the string
    * @param aSize is the size of aBuffer
@@ -166,13 +180,6 @@ typedef enum nsCharType nsCharType;
    *        IBMBIDI_NUMERAL_HINDICONTEXT: convert numbers in Arabic text to Hindi, otherwise to Arabic
    */
   nsresult HandleNumbers(PRUnichar* aBuffer, PRUint32 aSize, PRUint32  aNumFlag);
-
-  /**
-   * Scan an nsString, converting numerals to Arabic or Hindi forms
-   * @param aSrc is the input string
-   * @param aDst is the output string
-   */
-  nsresult HandleNumbers(const nsString& aSrc, nsString& aDst);
 
   /**
    * Give a Unicode character, return the symmetric equivalent
@@ -207,7 +214,7 @@ typedef enum nsCharType nsCharType;
    * Give an nsString.
    * @return PR_TRUE if the string contains right-to-left characters
    */
-  PRBool HasRTLChars(nsAString& aString);
+  PRBool HasRTLChars(const nsAString& aString);
 
 // --------------------------------------------------
 // IBMBIDI 
@@ -263,6 +270,8 @@ typedef enum nsCharType nsCharType;
 #define IBMBIDI_NUMERAL_HINDICONTEXT  2 //  2 = hindicontextnumeralBidi
 #define IBMBIDI_NUMERAL_ARABIC        3 //  3 = arabicnumeralBidi
 #define IBMBIDI_NUMERAL_HINDI         4 //  4 = hindinumeralBidi
+#define IBMBIDI_NUMERAL_PERSIANCONTEXT 5 // 5 = persiancontextnumeralBidi
+#define IBMBIDI_NUMERAL_PERSIAN       6 //  6 = persiannumeralBidi
 //  ------------------
 //  Support Mode
 //  ------------------
@@ -310,7 +319,18 @@ typedef enum nsCharType nsCharType;
 #define IS_HINDI_DIGIT(u)   ( ( (u) >= START_HINDI_DIGITS )  && ( (u) <= END_HINDI_DIGITS ) )
 #define IS_ARABIC_DIGIT(u)  ( ( (u) >= START_ARABIC_DIGITS ) && ( (u) <= END_ARABIC_DIGITS ) )
 #define IS_FARSI_DIGIT(u)  ( ( (u) >= START_FARSI_DIGITS ) && ( (u) <= END_FARSI_DIGITS ) )
-#define IS_ARABIC_SEPARATOR(u) ( ( (u) == 0x066A ) || ( (u) == 0x066B ) || ( (u) == 0x066C ) )
+/**
+ * Arabic numeric separator and numeric formatting characters:
+ *  U+0600;ARABIC NUMBER SIGN
+ *  U+0601;ARABIC SIGN SANAH
+ *  U+0602;ARABIC FOOTNOTE MARKER
+ *  U+0603;ARABIC SIGN SAFHA
+ *  U+066A;ARABIC PERCENT SIGN
+ *  U+066B;ARABIC DECIMAL SEPARATOR
+ *  U+066C;ARABIC THOUSANDS SEPARATOR
+ *  U+06DD;ARABIC END OF AYAH
+ */
+#define IS_ARABIC_SEPARATOR(u) ( ( (u) == 0x0600 ) || ( (u) == 0x0601 ) || ( (u) == 0x0602 ) || ( (u) == 0x0603 ) || ( (u) == 0x066A ) || ( (u) == 0x066B ) || ( (u) == 0x066C ) || ( (u) == 0x06DD ) )
 
 #define IS_BIDI_DIACRITIC(u) ( \
   ( (u) >= 0x0591 && (u) <= 0x05A1) || ( (u) >= 0x05A3 && (u) <= 0x05B9) \
@@ -327,7 +347,7 @@ typedef enum nsCharType nsCharType;
 #define IS_ARABIC_CHAR(c) ((0x0600 <= (c)) && ((c)<= 0x06FF))
 #define IS_ARABIC_ALPHABETIC(c) (IS_ARABIC_CHAR(c) && \
                                 !(IS_HINDI_DIGIT(c) || IS_FARSI_DIGIT(c) || IS_ARABIC_SEPARATOR(c)))
-#define IS_BIDI_CONTROL_CHAR(c) ((0x202a <= (c)) && ((c)<= 0x202e) \
+#define IS_BIDI_CONTROL_CHAR(c) (((0x202a <= (c)) && ((c)<= 0x202e)) \
                                 || ((c) == 0x200e) || ((c) == 0x200f))
 
 /**

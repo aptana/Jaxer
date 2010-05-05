@@ -56,7 +56,7 @@
 
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsSemanticUnitScanner)
 
-static nsModuleComponentInfo components[] =
+static const nsModuleComponentInfo components[] =
 {
  // lwbrk
   { "Line Breaker", NS_LBRK_CID, 
@@ -146,11 +146,7 @@ static nsModuleComponentInfo components[] =
   { "Collation",
     NS_COLLATION_CID,
     NS_COLLATION_CONTRACTID,
-#ifdef USE_UCCOLLATIONKEY
     nsCollationMacUCConstructor },
-#else
-    nsCollationMacConstructor },
-#endif
   { "Date/Time formatter",
     NS_DATETIMEFORMAT_CID,
     NS_DATETIMEFORMAT_CONTRACTID,

@@ -517,7 +517,6 @@ printCCMap(PRUint16* aCCMap)
 {
   PRUint32 page = CCMAP_BEGIN_AT_START_OF_MAP;
   while (NextNonEmptyCCMapPage(aCCMap, &page)) {
-    //FONT_SCAN_PRINTF(("page starting at 0x%04x has chars", page));
     int i;
     PRUint32 pagechar = page;
   
@@ -572,8 +571,9 @@ MapToCCMapExt(PRUint32* aBmpPlaneMap, PRUint32** aOtherPlaneMaps, PRUint32 aOthe
   for (i = 0; i < aOtherPlaneNum; i++) {
     if (aOtherPlaneMaps[i]) {
       otherPlaneObj[i] = new nsCompressedCharMap();
-      NS_ASSERTION(otherPlaneObj, "unable to create new nsCompressedCharMap");
-      if(otherPlaneObj) {
+      NS_ASSERTION(otherPlaneObj[i],
+                   "unable to create new nsCompressedCharMap");
+      if(otherPlaneObj[i]) {
         otherPlaneObj[i]->SetChars(aOtherPlaneMaps[i]);
         totalSize += otherPlaneObj[i]->GetSize();
       }

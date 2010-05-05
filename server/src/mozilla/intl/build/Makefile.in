@@ -49,9 +49,6 @@ MODULE_NAME	= nsI18nModule
 GRE_MODULE	= 1
 LIBXUL_LIBRARY = 1
 
-PACKAGE_FILE = intl.pkg
-PACKAGE_VARS = MOZ_MATHML
-
 REQUIRES	= xpcom \
 		  string \
 		  unicharutil \
@@ -112,5 +109,7 @@ EXTRA_DSO_LDOPTS += \
 endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),windows)
+ifndef WINCE
 OS_LIBS += $(call EXPAND_LIBNAME,usp10)
+endif
 endif
