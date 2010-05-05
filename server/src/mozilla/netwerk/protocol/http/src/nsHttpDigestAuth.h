@@ -61,11 +61,13 @@
 // nsHttpDigestAuth
 //-----------------------------------------------------------------------------
 
-class nsHttpDigestAuth : public nsIHttpAuthenticator
+class nsHttpDigestAuth : public nsIHttpAuthenticator,
+                         public nsIHttpAuthenticator_1_9_2
 {
   public:
     NS_DECL_ISUPPORTS
     NS_DECL_NSIHTTPAUTHENTICATOR
+    NS_DECL_NSIHTTPAUTHENTICATOR_1_9_2
 
     nsHttpDigestAuth();
     ~nsHttpDigestAuth();

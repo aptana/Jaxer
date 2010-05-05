@@ -42,7 +42,7 @@
 
 #include "nsString.h"
 #include "nsIIOService2.h"
-#include "nsVoidArray.h"
+#include "nsTArray.h"
 #include "nsPISocketTransportService.h" 
 #include "nsPIDNSService.h" 
 #include "nsIProtocolProxyService2.h"
@@ -50,7 +50,6 @@
 #include "nsURLHelper.h"
 #include "nsWeakPtr.h"
 #include "nsIURLParser.h"
-#include "nsSupportsArray.h"
 #include "nsIObserver.h"
 #include "nsWeakReference.h"
 #include "nsINetUtil.h"
@@ -107,6 +106,7 @@ public:
     }
 
     PRBool IsOffline() { return mOffline; }
+    PRBool IsLinkUp();
 
 private:
     // These shouldn't be called directly:
@@ -133,6 +133,14 @@ private:
     PRPackedBool                         mOffline;
     PRPackedBool                         mOfflineForProfileChange;
     PRPackedBool                         mManageOfflineStatus;
+
+    // Used to handle SetOffline() reentrancy.  See the comment in
+    // SetOffline() for more details.
+    PRPackedBool                         mSettingOffline;
+    PRPackedBool                         mSetOfflineValue;
+
+    PRPackedBool                         mShutdown;
+
     nsCOMPtr<nsPISocketTransportService> mSocketTransportService;
     nsCOMPtr<nsPIDNSService>             mDNSService;
     nsCOMPtr<nsIProtocolProxyService2>   mProxyService;
@@ -145,7 +153,7 @@ private:
     nsCategoryCache<nsIChannelEventSink> mChannelEventSinks;
     nsCategoryCache<nsIContentSniffer>   mContentSniffers;
 
-    nsVoidArray                          mRestrictedPortList;
+    nsTArray<PRInt32>                    mRestrictedPortList;
 
 public:
     // Necko buffer cache. Used for all default buffer sizes that necko

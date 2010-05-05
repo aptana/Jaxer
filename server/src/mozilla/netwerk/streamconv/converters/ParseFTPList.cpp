@@ -39,10 +39,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "plstr.h"
+#include "nsDebug.h"
 
 #include "ParseFTPList.h"
 
 /* ==================================================================== */
+
+static inline int ParsingFailed(struct list_state *state)
+{
+  if (state->parsed_one || state->lstyle) /* junk if we fail to parse */
+    return '?';      /* this time but had previously parsed successfully */
+  return '"';        /* its part of a comment or error message */
+}
 
 int ParseFTPList(const char *line, struct list_state *state,
                  struct list_result *result )
@@ -121,6 +130,9 @@ int ParseFTPList(const char *line, struct list_state *state,
         }
       }
     }    
+
+    if (!numtoks)
+      return ParsingFailed(state);
 
     linelen_sans_wsp = &(tokens[numtoks-1][toklen[numtoks-1]]) - tokens[0];
     if (numtoks == (sizeof(tokens)/sizeof(tokens[0])) )
@@ -355,11 +367,16 @@ int ParseFTPList(const char *line, struct list_state *state,
               pos++;
               p++;
             }
-            if (lstyle && pos < (toklen[0]-1) && *p == ']')
+            if (lstyle && pos < (toklen[0]-1))
             {
+              /* ']' was found and there is at least one character after it */
+              NS_ASSERTION(*p == ']', "unexpected state");
               pos++;
               p++;
               tokmarker = pos; /* length of leading "[DIR1.DIR2.etc]" */
+            } else {
+              /* not a CMU style listing */
+              lstyle = 0;
             }
           }
           while (lstyle && pos < toklen[0] && *p != ';')
@@ -386,7 +403,7 @@ int ParseFTPList(const char *line, struct list_state *state,
           pos -= tokmarker;      /* => fnlength sans "[DIR1.DIR2.etc]" */
           p = &(tokens[0][tokmarker]); /* offset of basename */
 
-          if (!lstyle || pos > 80) /* VMS filenames can't be longer than that */
+          if (!lstyle || pos == 0 || pos > 80) /* VMS filenames can't be longer than that */
           {
             lstyle = 0;
           }
@@ -783,7 +800,7 @@ int ParseFTPList(const char *line, struct list_state *state,
         state->parsed_one = 1;
         state->lstyle = lstyle;
 
-        p = &(line[linelen_sans_wsp]); /* line end sans wsp */
+        p = &(line[linelen]); /* line end */
         result->fe_cinfs = 1;
         result->fe_fname = tokens[3];
         result->fe_fnlen = p - tokens[3];
@@ -791,6 +808,12 @@ int ParseFTPList(const char *line, struct list_state *state,
 
         if (*tokens[2] != '<') /* not <DIR> or <JUNCTION> */
         {
+          // try to handle correctly spaces at the beginning of the filename
+          // filesize (token[2]) must end at offset 38
+          if (tokens[2] + toklen[2] - line == 38) {
+            result->fe_fname = &(line[39]);
+            result->fe_fnlen = p - result->fe_fname;
+          }
           result->fe_type = 'f';
           pos = toklen[2];
           while (pos > (sizeof(result->fe_size)-1))
@@ -798,37 +821,53 @@ int ParseFTPList(const char *line, struct list_state *state,
           memcpy( result->fe_size, tokens[2], pos );
           result->fe_size[pos] = '\0';
         }
-        else if ((tokens[2][1]) != 'D') /* not <DIR> */
-        {
-          result->fe_type = '?'; /* unknown until junc for sure */
-          if (result->fe_fnlen > 4)
+        else {
+          // try to handle correctly spaces at the beginning of the filename
+          // token[2] must begin at offset 24, the length is 5 or 10
+          // token[3] must begin at offset 39 or higher
+          if (tokens[2] - line == 24 && (toklen[2] == 5 || toklen[2] == 10) &&
+              tokens[3] - line >= 39) {
+            result->fe_fname = &(line[39]);
+            result->fe_fnlen = p - result->fe_fname;
+          }
+
+          if ((tokens[2][1]) != 'D') /* not <DIR> */
           {
-            p = result->fe_fname;
-            for (pos = result->fe_fnlen - 4; pos > 0; pos--)
+            result->fe_type = '?'; /* unknown until junc for sure */
+            if (result->fe_fnlen > 4)
             {
-              if (p[0] == ' ' && p[3] == ' ' && p[2] == '>' &&
-                  (p[1] == '=' || p[1] == '-'))
+              p = result->fe_fname;
+              for (pos = result->fe_fnlen - 4; pos > 0; pos--)
               {
-                result->fe_type = 'l';
-                result->fe_fnlen = p - result->fe_fname;
-                result->fe_lname = p + 4;
-                result->fe_lnlen = &(line[linelen_sans_wsp]) 
-                                   - result->fe_lname;
-                break;
+                if (p[0] == ' ' && p[3] == ' ' && p[2] == '>' &&
+                    (p[1] == '=' || p[1] == '-'))
+                {
+                  result->fe_type = 'l';
+                  result->fe_fnlen = p - result->fe_fname;
+                  result->fe_lname = p + 4;
+                  result->fe_lnlen = &(line[linelen]) 
+                                     - result->fe_lname;
+                  break;
+                }
+                p++;
               }
-              p++;
-            }    
+            }
           }
         }
-      
+
         result->fe_time.tm_month = atoi(tokens[0]+0);
         if (result->fe_time.tm_month != 0)
         {
           result->fe_time.tm_month--;
           result->fe_time.tm_mday = atoi(tokens[0]+3);
           result->fe_time.tm_year = atoi(tokens[0]+6);
+          /* if year has only two digits then assume that
+               00-79 is 2000-2079
+               80-99 is 1980-1999 */
           if (result->fe_time.tm_year < 80)
-            result->fe_time.tm_year += 100;
+            result->fe_time.tm_year += 2000;
+          else if (result->fe_time.tm_year < 100)
+            result->fe_time.tm_year += 1900;
         }
 
         result->fe_time.tm_hour = atoi(tokens[1]+0);
@@ -983,6 +1022,8 @@ int ParseFTPList(const char *line, struct list_state *state,
        * "drwxr-xr-x  2 0  0  512 May 28 22:17 etc"
       */
     
+      PRBool is_old_Hellsoft = PR_FALSE;
+    
       if (numtoks >= 6)
       {
         /* there are two perm formats (Hellsoft/NetWare and *IX strmode(3)).
@@ -1008,6 +1049,8 @@ int ParseFTPList(const char *line, struct list_state *state,
             {
               /* rest is FMA[S] or AFM[S] */
               lstyle = 'U'; /* very likely one of the NetWare servers */
+              if (toklen[0] == 10)
+                is_old_Hellsoft = PR_TRUE;
             }
           }
         }
@@ -1156,24 +1199,49 @@ int ParseFTPList(const char *line, struct list_state *state,
        
         } /* time/year */
         
-        result->fe_fname = tokens[tokmarker+4];
-        result->fe_fnlen = (&(line[linelen_sans_wsp]))
+        // there is exacly 1 space between filename and previous token in all
+        // outputs except old Hellsoft
+        if (!is_old_Hellsoft)
+          result->fe_fname = tokens[tokmarker+3] + toklen[tokmarker+3] + 1;
+        else
+          result->fe_fname = tokens[tokmarker+4];
+
+        result->fe_fnlen = (&(line[linelen]))
                            - (result->fe_fname);
 
         if (result->fe_type == 'l' && result->fe_fnlen > 4)
         {
-          p = result->fe_fname + 1;
-          for (pos = 1; pos < (result->fe_fnlen - 4); pos++)
+          /* First try to use result->fe_size to find " -> " sequence.
+             This can give proper result for cases like "aaa -> bbb -> ccc". */
+          PRUint32 fe_size = atoi(result->fe_size);
+
+          if (result->fe_fnlen > (fe_size + 4) &&
+              PL_strncmp(result->fe_fname + result->fe_fnlen - fe_size - 4 , " -> ", 4) == 0)
           {
-            if (*p == ' ' && p[1] == '-' && p[2] == '>' && p[3] == ' ')
+            result->fe_lname = result->fe_fname + (result->fe_fnlen - fe_size);
+            result->fe_lnlen = (&(line[linelen])) - (result->fe_lname);
+            result->fe_fnlen -= fe_size + 4;
+          }
+          else
+          {
+            /* Search for sequence " -> " from the end for case when there are
+               more occurrences. F.e. if ftpd returns "a -> b -> c" assume
+               "a -> b" as a name. Powerusers can remove unnecessary parts
+               manually but there is no way to follow the link when some
+               essential part is missing. */
+            p = result->fe_fname + (result->fe_fnlen - 5);
+            for (pos = (result->fe_fnlen - 5); pos > 0; pos--)
             {
-              result->fe_lname = p + 4;
-              result->fe_lnlen = (&(line[linelen_sans_wsp]))
-                               - (result->fe_lname);
-              result->fe_fnlen = pos;
-              break;
+              if (PL_strncmp(p, " -> ", 4) == 0)
+              {
+                result->fe_lname = p + 4;
+                result->fe_lnlen = (&(line[linelen]))
+                                 - (result->fe_lname);
+                result->fe_fnlen = pos;
+                break;
+              }
+              p--;
             }
-            p++;
           }
         }
 
@@ -1632,9 +1700,7 @@ int ParseFTPList(const char *line, struct list_state *state,
 
   } /* if (linelen > 0) */
 
-  if (state->parsed_one || state->lstyle) /* junk if we fail to parse */
-    return '?';      /* this time but had previously parsed successfully */
-  return '"';        /* its part of a comment or error message */
+  return ParsingFailed(state);
 }
 
 /* ==================================================================== */
@@ -1653,7 +1719,7 @@ static int do_it(FILE *outfile,
   char *p;
   int rc;
 
-  rc = ParseFTPLIST( line, state, &result );
+  rc = ParseFTPList( line, state, &result );
 
   if (!outfile)
   {

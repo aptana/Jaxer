@@ -104,6 +104,14 @@ typedef PRUint8 nsHttpVersion;
 // preventing it from being reclaimed, even after the transaction completes.
 #define NS_HTTP_STICKY_CONNECTION    (1<<2)
 
+// a transaction with this caps flag will, upon opening a new connection,
+// bypass the local DNS cache
+#define NS_HTTP_REFRESH_DNS          (1<<3)
+
+// a transaction with this caps flag will not pass SSL client-certificates
+// to the server (see bug #466080), but is may also be used for other things
+#define NS_HTTP_LOAD_ANONYMOUS       (1<<4)
+
 //-----------------------------------------------------------------------------
 // some default values
 //-----------------------------------------------------------------------------

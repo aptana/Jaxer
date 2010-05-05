@@ -49,11 +49,13 @@ class nsIURI;
 // (optional)password pair, BASE64("user:pass").
 //-----------------------------------------------------------------------------
 
-class nsHttpBasicAuth : public nsIHttpAuthenticator
+class nsHttpBasicAuth : public nsIHttpAuthenticator,
+                        public nsIHttpAuthenticator_1_9_2
 {
 public:
     NS_DECL_ISUPPORTS
     NS_DECL_NSIHTTPAUTHENTICATOR
+    NS_DECL_NSIHTTPAUTHENTICATOR_1_9_2
 
 	nsHttpBasicAuth();
 	virtual ~nsHttpBasicAuth();

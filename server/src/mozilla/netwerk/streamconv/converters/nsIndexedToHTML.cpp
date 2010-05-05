@@ -23,6 +23,7 @@
  *   Bradley Baetz <bbaetz@cs.mcgill.ca>
  *   Christopher A. Aillon <christopher@aillon.com>
  *   Dão Gottwald <dao@design-noir.de>
+ *   Ehsan Akhgari <ehsan.akhgari@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -117,6 +118,8 @@ nsIndexedToHTML::Init(nsIStreamListener* aListener) {
     mListener = aListener;
 
     mDateTime = do_CreateInstance(NS_DATETIMEFORMAT_CONTRACTID, &rv);
+    if (NS_FAILED(rv))
+      return rv;
 
     nsCOMPtr<nsIStringBundleService> sbs =
         do_GetService(NS_STRINGBUNDLE_CONTRACTID, &rv);
@@ -154,7 +157,7 @@ nsIndexedToHTML::OnStartRequest(nsIRequest* request, nsISupports *aContext) {
     rv = channel->GetURI(getter_AddRefs(uri));
     if (NS_FAILED(rv)) return rv;
 
-    channel->SetContentType(NS_LITERAL_CSTRING("text/html"));
+    channel->SetContentType(NS_LITERAL_CSTRING("application/xhtml+xml"));
 
     mParser = do_CreateInstance("@mozilla.org/dirIndexParser;1",&rv);
     if (NS_FAILED(rv)) return rv;
@@ -228,7 +231,7 @@ nsIndexedToHTML::OnStartRequest(nsIRequest* request, nsISupports *aContext) {
         rv = file->GetParent(getter_AddRefs(parent));
         
         if (parent && NS_SUCCEEDED(rv)) {
-            net_GetURLSpecFromFile(parent, url);
+            net_GetURLSpecFromDir(parent, url);
             if (NS_FAILED(rv)) return rv;
             parentStr.Assign(url);
         }
@@ -273,9 +276,7 @@ nsIndexedToHTML::OnStartRequest(nsIRequest* request, nsISupports *aContext) {
     }
 
     nsString buffer;
-    buffer.AppendLiteral("<!DOCTYPE html>\n"
-                         "<html>\n<head>\n"
-                         "<meta http-equiv=\"content-type\" content=\"text/html; charset=");
+    buffer.AppendLiteral("<?xml version=\"1.0\" encoding=\"");
     
     // Get the encoding from the parser
     // XXX - this won't work for any encoding set via a 301: line in the
@@ -287,8 +288,13 @@ nsIndexedToHTML::OnStartRequest(nsIRequest* request, nsISupports *aContext) {
     if (NS_FAILED(rv)) return rv;
 
     AppendASCIItoUTF16(encoding, buffer);
-    buffer.AppendLiteral("\">\n"
-                         "<style type=\"text/css\">\n"
+    buffer.AppendLiteral("\"?>\n"
+                         "<!DOCTYPE html ["
+                         " <!ENTITY % globalDTD SYSTEM \"chrome://global/locale/global.dtd\">\n"
+                         " %globalDTD;\n"
+                         "]>\n"
+                         "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n"
+                         "<style type=\"text/css\"><![CDATA[\n"
                          ":root {\n"
                          "  font-family: sans-serif;\n"
                          "}\n"
@@ -296,7 +302,7 @@ nsIndexedToHTML::OnStartRequest(nsIRequest* request, nsISupports *aContext) {
                          "  border: 0;\n"
                          "}\n"
                          "th {\n"
-                         "  text-align: left;\n"
+                         "  text-align: start;\n"
                          "  white-space: nowrap;\n"
                          "}\n"
                          "th > a {\n"
@@ -309,7 +315,7 @@ nsIndexedToHTML::OnStartRequest(nsIRequest* request, nsISupports *aContext) {
                          "  display: none;\n"
                          "  width: .8em;\n"
                          "  -moz-margin-end: -.8em;\n"
-                         "  text-align: right;\n"
+                         "  text-align: end;\n"
                          "}\n"
                          "table[order=\"asc\"] > thead > tr > th::after {\n"
                          "  content: \"\\2193\"; /* DOWNWARDS ARROW (U+2193) */\n"
@@ -342,7 +348,7 @@ nsIndexedToHTML::OnStartRequest(nsIRequest* request, nsISupports *aContext) {
                          "  -moz-padding-end: 1em;\n"
                          "}\n"
                          "td:first-child + td {\n"
-                         "  text-align: right;\n"
+                         "  text-align: end;\n"
                          "  -moz-padding-end: 1em;\n"
                          "  white-space: nowrap;\n"
                          "}\n"
@@ -362,6 +368,9 @@ nsIndexedToHTML::OnStartRequest(nsIRequest* request, nsISupports *aContext) {
                          "    white-space: pre !important;\n"
                          "    font-family: monospace;\n"
                          "  }\n"
+                         "  table {\n"
+                         "    direction: ltr;\n"
+                         "  }\n"
                          "}\n"
                          ".symlink {\n"
                          "  font-style: italic;\n"
@@ -380,12 +389,12 @@ nsIndexedToHTML::OnStartRequest(nsIRequest* request, nsISupports *aContext) {
                          ".dir::before {\n"
                          "  content: url(resource://gre/res/html/folder.png);\n"
                          "}\n"
-                         "</style>\n"
+                         "]]></style>\n"
                          "<link rel=\"stylesheet\" media=\"screen, projection\" type=\"text/css\""
-                         " href=\"chrome://global/skin/dirListing/dirListing.css\">\n");
+                         " href=\"chrome://global/skin/dirListing/dirListing.css\" />\n");
 
     if (!isSchemeGopher) {
-        buffer.AppendLiteral("<script type=\"application/javascript\">\n"
+        buffer.AppendLiteral("<script type=\"application/javascript\"><![CDATA[\n"
                              "var gTable, gOrderBy, gTBody, gRows, gUI_showHidden;\n"
                              "document.addEventListener(\"DOMContentLoaded\", function() {\n"
                              "  gTable = document.getElementsByTagName(\"table\")[0];\n"
@@ -463,7 +472,7 @@ nsIndexedToHTML::OnStartRequest(nsIRequest* request, nsISupports *aContext) {
                              "                     \"\" :\n"
                              "                     \"remove-hidden\";\n"
                              "}\n"
-                             "</script>\n");
+                             "]]></script>\n");
     }
     buffer.AppendLiteral("<link rel=\"icon\" type=\"image/png\" href=\"");
     nsCOMPtr<nsIURI> innerUri = NS_GetInnermostURI(uri);
@@ -514,7 +523,7 @@ nsIndexedToHTML::OnStartRequest(nsIRequest* request, nsISupports *aContext) {
                              "BYWFOWicuqppoNTnStHzPFCPQhBEBOyGAX4JMADFetubi4BS"
                              "YAAAAABJRU5ErkJggg%3D%3D");
     }
-    buffer.AppendLiteral("\">\n<title>");
+    buffer.AppendLiteral("\" />\n<title>");
 
     // Anything but a gopher url needs to end in a /,
     // otherwise we end up linking to file:///foo/dirfile
@@ -583,14 +592,14 @@ nsIndexedToHTML::OnStartRequest(nsIRequest* request, nsISupports *aContext) {
         nsString htmlEscapedUri;
         htmlEscapedUri.Adopt(nsEscapeHTML2(utf16BaseURI.get(), utf16BaseURI.Length()));
         buffer.Append(htmlEscapedUri);
-        buffer.AppendLiteral("\">\n");
+        buffer.AppendLiteral("\" />\n");
     }
     else
     {
         NS_ERROR("broken protocol handler didn't escape double-quote.");
     }
 
-    buffer.AppendLiteral("</head>\n<body>\n<h1>");
+    buffer.AppendLiteral("</head>\n<body dir=\"&locale.dir;\">\n<h1>");
     
     const PRUnichar* formatHeading[] = {
         htmlEscSpec.get()
@@ -628,7 +637,7 @@ nsIndexedToHTML::OnStartRequest(nsIRequest* request, nsISupports *aContext) {
                                         getter_Copies(showHiddenText));
         if (NS_FAILED(rv)) return rv;
 
-        buffer.AppendLiteral("<p id=\"UI_showHidden\" style=\"display:none\"><label><input type=\"checkbox\" checked onchange=\"updateHidden()\">");
+        buffer.AppendLiteral("<p id=\"UI_showHidden\" style=\"display:none\"><label><input type=\"checkbox\" checked=\"checked\" onchange=\"updateHidden()\" />");
         AppendNonAsciiToNCR(showHiddenText, buffer);
         buffer.AppendLiteral("</label></p>\n");
     }
@@ -909,6 +918,10 @@ nsIndexedToHTML::OnIndexAvailable(nsIRequest *aRequest,
         escFlags = esc_Forced | esc_OnlyASCII | esc_AlwaysCopy | esc_FileBaseName | esc_Colon | esc_Directory;
     }
     NS_EscapeURL(utf8UnEscapeSpec.get(), utf8UnEscapeSpec.Length(), escFlags, escapeBuf);
+    // esc_Directory does not escape the semicolons, so if a filename
+    // contains semicolons we need to manually escape them.
+    // This replacement should be removed in bug #473280
+    escapeBuf.ReplaceSubstring(";", "%3b");
     NS_ConvertUTF8toUTF16 utf16URI(escapeBuf);
     nsString htmlEscapedURL;
     htmlEscapedURL.Adopt(nsEscapeHTML2(utf16URI.get(), utf16URI.Length()));
@@ -932,7 +945,7 @@ nsIndexedToHTML::OnIndexAvailable(nsIRequest *aRequest,
                                         getter_Copies(altText));
         if (NS_FAILED(rv)) return rv;
         AppendNonAsciiToNCR(altText, pushBuffer);
-        pushBuffer.AppendLiteral("\">");
+        pushBuffer.AppendLiteral("\" />");
     }
 
     pushBuffer.Append(escapedShort);

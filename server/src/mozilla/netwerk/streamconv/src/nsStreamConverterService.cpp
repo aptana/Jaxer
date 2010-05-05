@@ -85,7 +85,7 @@ nsStreamConverterService::~nsStreamConverterService() {
 }
 
 // Delete all the entries in the adjacency list
-static PRBool PR_CALLBACK DeleteAdjacencyEntry(nsHashKey *aKey, void *aData, void* closure) {
+static PRBool DeleteAdjacencyEntry(nsHashKey *aKey, void *aData, void* closure) {
     SCTableData *entry = (SCTableData*)aData;
     NS_ASSERTION(entry->key && entry->data.edges, "malformed adjacency list entry");
     delete entry->key;
@@ -259,7 +259,7 @@ nsStreamConverterService::ParseFromTo(const char *aContractID, nsCString &aFromR
 // nsObjectHashtable enumerator functions.
 
 // Initializes the BFS state table.
-static PRBool PR_CALLBACK InitBFSTable(nsHashKey *aKey, void *aData, void* closure) {
+static PRBool InitBFSTable(nsHashKey *aKey, void *aData, void* closure) {
     NS_ASSERTION((SCTableData*)aData, "no data in the table enumeration");
     
     nsHashtable *BFSTable = (nsHashtable*)closure;
@@ -284,7 +284,7 @@ static PRBool PR_CALLBACK InitBFSTable(nsHashKey *aKey, void *aData, void* closu
 }
 
 // cleans up the BFS state table
-static PRBool PR_CALLBACK DeleteBFSEntry(nsHashKey *aKey, void *aData, void *closure) {
+static PRBool DeleteBFSEntry(nsHashKey *aKey, void *aData, void *closure) {
     SCTableData *data = (SCTableData*)aData;
     BFSState *state = data->data.state;
     delete state;
@@ -308,7 +308,7 @@ public:
 // CONTRACTID should be made prior to calling this method in an attempt to find a direct
 // converter rather than walking the graph.
 nsresult
-nsStreamConverterService::FindConverter(const char *aContractID, nsCStringArray **aEdgeList) {
+nsStreamConverterService::FindConverter(const char *aContractID, nsTArray<nsCString> **aEdgeList) {
     nsresult rv;
     if (!aEdgeList) return NS_ERROR_NULL_POINTER;
     *aEdgeList = nsnull;
@@ -420,7 +420,7 @@ nsStreamConverterService::FindConverter(const char *aContractID, nsCStringArray 
 
     // get the root CONTRACTID
     nsCAutoString ContractIDPrefix(NS_ISTREAMCONVERTER_KEY);
-    nsCStringArray *shortestPath = new nsCStringArray();
+    nsTArray<nsCString> *shortestPath = new nsTArray<nsCString>();
     if (!shortestPath) return NS_ERROR_OUT_OF_MEMORY;
 
     nsCStringKey toMIMEType(toStr);
@@ -461,7 +461,7 @@ nsStreamConverterService::FindConverter(const char *aContractID, nsCStringArray 
         newContractID.Append(key->GetString());
     
         // Add this CONTRACTID to the chain.
-        rv = shortestPath->AppendCString(newContractID) ? NS_OK : NS_ERROR_FAILURE;  // XXX this method incorrectly returns a bool
+        rv = shortestPath->AppendElement(newContractID) ? NS_OK : NS_ERROR_FAILURE;  // XXX this method incorrectly returns a bool
         NS_ASSERTION(NS_SUCCEEDED(rv), "AppendElement failed");
 
         // move up the tree.
@@ -501,7 +501,7 @@ nsStreamConverterService::CanConvert(const char* aFromType,
     if (NS_FAILED(rv))
         return rv;
 
-    nsCStringArray *converterChain = nsnull;
+    nsTArray<nsCString> *converterChain = nsnull;
     rv = FindConverter(contractID.get(), &converterChain);
     *_retval = NS_SUCCEEDED(rv);
 
@@ -533,7 +533,7 @@ nsStreamConverterService::Convert(nsIInputStream *aFromStream,
         rv = BuildGraph();
         if (NS_FAILED(rv)) return rv;
 
-        nsCStringArray *converterChain = nsnull;
+        nsTArray<nsCString> *converterChain = nsnull;
 
         rv = FindConverter(cContractID, &converterChain);
         if (NS_FAILED(rv)) {
@@ -542,7 +542,7 @@ nsStreamConverterService::Convert(nsIInputStream *aFromStream,
             return NS_ERROR_FAILURE;
         }
 
-        PRInt32 edgeCount = converterChain->Count();
+        PRInt32 edgeCount = PRInt32(converterChain->Length());
         NS_ASSERTION(edgeCount > 0, "findConverter should have failed");
 
 
@@ -552,12 +552,7 @@ nsStreamConverterService::Convert(nsIInputStream *aFromStream,
         nsCOMPtr<nsIInputStream> convertedData;
 
         for (PRInt32 i = edgeCount-1; i >= 0; i--) {
-            nsCString *contractIDStr = converterChain->CStringAt(i);
-            if (!contractIDStr) {
-                delete converterChain;
-                return NS_ERROR_FAILURE;
-            }
-            const char *lContractID = contractIDStr->get();
+            const char *lContractID = converterChain->ElementAt(i).get();
 
             converter = do_CreateInstance(lContractID, &rv);
 
@@ -619,7 +614,7 @@ nsStreamConverterService::AsyncConvertData(const char *aFromType,
         rv = BuildGraph();
         if (NS_FAILED(rv)) return rv;
 
-        nsCStringArray *converterChain = nsnull;
+        nsTArray<nsCString> *converterChain = nsnull;
 
         rv = FindConverter(cContractID, &converterChain);
         if (NS_FAILED(rv)) {
@@ -636,19 +631,14 @@ nsStreamConverterService::AsyncConvertData(const char *aFromType,
 
         // convert the stream using each edge of the graph as a step.
         // this is our stream conversion traversal.
-        PRInt32 edgeCount = converterChain->Count();
+        PRInt32 edgeCount = PRInt32(converterChain->Length());
         NS_ASSERTION(edgeCount > 0, "findConverter should have failed");
         for (int i = 0; i < edgeCount; i++) {
-            nsCString *contractIDStr = converterChain->CStringAt(i);
-            if (!contractIDStr) {
-                delete converterChain;
-                return NS_ERROR_FAILURE;
-            }
-            const char *lContractID = contractIDStr->get();
+            const char *lContractID = converterChain->ElementAt(i).get();
 
             // create the converter for this from/to pair
-            nsCOMPtr<nsIStreamConverter> converter(do_CreateInstance(lContractID, &rv));
-            NS_ASSERTION(NS_SUCCEEDED(rv), "graph construction problem, built a contractid that wasn't registered");
+            nsCOMPtr<nsIStreamConverter> converter(do_CreateInstance(lContractID));
+            NS_ASSERTION(converter, "graph construction problem, built a contractid that wasn't registered");
 
             nsCAutoString fromStr, toStr;
             rv = ParseFromTo(lContractID, fromStr, toStr);

@@ -63,7 +63,8 @@ nsHttpBasicAuth::~nsHttpBasicAuth()
 // nsHttpBasicAuth::nsISupports
 //-----------------------------------------------------------------------------
 
-NS_IMPL_ISUPPORTS1(nsHttpBasicAuth, nsIHttpAuthenticator)
+NS_IMPL_ISUPPORTS2(nsHttpBasicAuth, nsIHttpAuthenticator,
+                                    nsIHttpAuthenticator_1_9_2)
 
 //-----------------------------------------------------------------------------
 // nsHttpBasicAuth::nsIHttpAuthenticator
@@ -93,11 +94,39 @@ nsHttpBasicAuth::GenerateCredentials(nsIHttpChannel *httpChannel,
                                      nsISupports **sessionState,
                                      nsISupports **continuationState,
                                      char **creds)
-
 {
     LOG(("nsHttpBasicAuth::GenerateCredentials [challenge=%s]\n", challenge));
 
+    PRUint32 unused;
+    return GenerateCredentials_1_9_2(httpChannel,
+                                     challenge,
+                                     isProxyAuth,
+                                     domain,
+                                     user,
+                                     password,
+                                     sessionState,
+                                     continuationState,
+                                     &unused,
+                                     creds);
+}
+
+NS_IMETHODIMP
+nsHttpBasicAuth::GenerateCredentials_1_9_2(nsIHttpChannel *httpChannel,
+                                     const char *challenge,
+                                     PRBool isProxyAuth,
+                                     const PRUnichar *domain,
+                                     const PRUnichar *user,
+                                     const PRUnichar *password,
+                                     nsISupports **sessionState,
+                                     nsISupports **continuationState,
+                                     PRUint32 *flags,
+                                     char **creds)
+{
+    LOG(("nsHttpBasicAuth::GenerateCredentials_1_9_2 [challenge=%s]\n", challenge));
+
     NS_ENSURE_ARG_POINTER(creds);
+
+    *flags = 0;
 
     // we only know how to deal with Basic auth for http.
     PRBool isBasicAuth = !PL_strncasecmp(challenge, "basic", 5);

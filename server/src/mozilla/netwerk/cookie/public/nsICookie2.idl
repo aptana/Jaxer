@@ -44,7 +44,7 @@
  * access of cookie objects
  */
 
-[scriptable, uuid(736619fe-8d09-4e59-8223-32f176c22977)]
+[scriptable, uuid(05c420e5-03d0-4c7b-a605-df7ebe5ca326)]
 
 interface nsICookie2 : nsICookie
 {
@@ -78,5 +78,19 @@ interface nsICookie2 : nsICookie
      */
     readonly attribute boolean isHttpOnly;
 
+    /**
+     * the creation time of the cookie, in microseconds
+     * since midnight (00:00:00), January 1, 1970 UTC.
+     */
+    readonly attribute PRInt64 creationTime;
+
+    /**
+     * the last time the cookie was accessed (i.e. created,
+     * modified, or read by the server), in microseconds
+     * since midnight (00:00:00), January 1, 1970 UTC.
+     *
+     * note that this time may be approximate.
+     */
+    readonly attribute PRInt64 lastAccessed;
 
 };

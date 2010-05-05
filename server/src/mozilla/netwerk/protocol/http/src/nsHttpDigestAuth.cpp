@@ -71,7 +71,8 @@ nsHttpDigestAuth::~nsHttpDigestAuth()
 // nsHttpDigestAuth::nsISupports
 //-----------------------------------------------------------------------------
 
-NS_IMPL_ISUPPORTS1(nsHttpDigestAuth, nsIHttpAuthenticator)
+NS_IMPL_ISUPPORTS2(nsHttpDigestAuth, nsIHttpAuthenticator,
+                                     nsIHttpAuthenticator_1_9_2)
 
 //-----------------------------------------------------------------------------
 // nsHttpDigestAuth <protected>
@@ -210,7 +211,36 @@ nsHttpDigestAuth::GenerateCredentials(nsIHttpChannel *httpChannel,
 {
   LOG(("nsHttpDigestAuth::GenerateCredentials [challenge=%s]\n", challenge));
 
+  PRUint32 unused;
+  return GenerateCredentials_1_9_2(httpChannel,
+                                   challenge,
+                                   isProxyAuth,
+                                   userdomain,
+                                   username,
+                                   password,
+                                   sessionState,
+                                   continuationState,
+                                   &unused,
+                                   creds);
+}
+
+NS_IMETHODIMP
+nsHttpDigestAuth::GenerateCredentials_1_9_2(nsIHttpChannel *httpChannel,
+                                            const char *challenge,
+                                            PRBool isProxyAuth,
+                                            const PRUnichar *userdomain,
+                                            const PRUnichar *username,
+                                            const PRUnichar *password,
+                                            nsISupports **sessionState,
+                                            nsISupports **continuationState,
+                                            PRUint32 *flags,
+                                            char **creds)
+{
+  LOG(("nsHttpDigestAuth::GenerateCredentials_1_9_2 [challenge=%s]\n", challenge));
+
   NS_ENSURE_ARG_POINTER(creds);
+
+  *flags = 0;
 
   PRBool isDigestAuth = !PL_strncasecmp(challenge, "digest ", 7);
   NS_ENSURE_TRUE(isDigestAuth, NS_ERROR_UNEXPECTED);
@@ -304,7 +334,7 @@ nsHttpDigestAuth::GenerateCredentials(nsIHttpChannel *httpChannel,
   }
   else {
     nsCOMPtr<nsISupportsPRUint32> v(
-            do_CreateInstance(NS_SUPPORTS_PRUINT32_CONTRACTID, &rv));
+            do_CreateInstance(NS_SUPPORTS_PRUINT32_CONTRACTID));
     if (v) {        
       v->SetData(1);
       NS_ADDREF(*sessionState = v);

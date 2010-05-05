@@ -39,7 +39,7 @@
 
 #include "nsIProxiedProtocolHandler.idl"
 
-[scriptable, uuid(122c91c0-2485-40ba-89c9-b895934921bc)]
+[scriptable, uuid(415D4087-79D3-40FE-B194-0ADA8471F895)]
 interface nsIHttpProtocolHandler : nsIProxiedProtocolHandler
 {
     /**
@@ -117,6 +117,15 @@ interface nsIHttpProtocolHandler : nsIProxiedProtocolHandler
      * Get/Set the application comment misc portion.
      */
     attribute ACString misc;
+
+    /**
+     * Get the current device type.
+     *
+     * @return The device type this application is running on.  Maybe
+     * be null.
+     */
+    readonly attribute ACString deviceType;
+
 };
 
 %{C++
@@ -157,6 +166,13 @@ interface nsIHttpProtocolHandler : nsIProxiedProtocolHandler
  * things, the Content-Type header will be set correctly.
  */
 #define NS_HTTP_ON_EXAMINE_MERGED_RESPONSE_TOPIC "http-on-examine-merged-response"
+
+/**
+ * The observer of this topic is notified before data is read from the cache.
+ * The notification is sent if and only if there is no network communication
+ * at all.
+ */
+#define NS_HTTP_ON_EXAMINE_CACHED_RESPONSE_TOPIC "http-on-examine-cached-response"
 
 
 %}

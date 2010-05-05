@@ -107,7 +107,7 @@ nsMemoryCacheDevice::Shutdown()
     for (int i = kQueueCount - 1; i >= 0; --i) {
         entry = (nsCacheEntry *)PR_LIST_HEAD(&mEvictionList[i]);
         while (entry != &mEvictionList[i]) {
-            NS_ASSERTION(entry->IsInUse() == PR_FALSE, "### shutting down with active entries.\n");
+            NS_ASSERTION(entry->IsInUse() == PR_FALSE, "### shutting down with active entries");
             next = (nsCacheEntry *)PR_NEXT_LINK(entry);
             PR_REMOVE_AND_INIT_LINK(entry);
         
@@ -124,10 +124,10 @@ nsMemoryCacheDevice::Shutdown()
 
 /*
  * we're not factoring in changes to meta data yet...    
- *  NS_ASSERTION(mTotalSize == 0, "### mem cache leaking entries?\n");
+ *  NS_ASSERTION(mTotalSize == 0, "### mem cache leaking entries?");
  */
-    NS_ASSERTION(mInactiveSize == 0, "### mem cache leaking entries?\n");
-    NS_ASSERTION(mEntryCount == 0, "### mem cache leaking entries?\n");
+    NS_ASSERTION(mInactiveSize == 0, "### mem cache leaking entries?");
+    NS_ASSERTION(mEntryCount == 0, "### mem cache leaking entries?");
     
     mInitialized = PR_FALSE;
 
@@ -161,11 +161,14 @@ nsMemoryCacheDevice::FindEntry(nsCString * key, PRBool *collision)
 nsresult
 nsMemoryCacheDevice::DeactivateEntry(nsCacheEntry * entry)
 {
+    CACHE_LOG_DEBUG(("nsMemoryCacheDevice::DeactivateEntry for entry 0x%p\n",
+                     entry));
     if (entry->IsDoomed()) {
 #ifdef DEBUG
         // XXX verify we've removed it from mMemCacheEntries & eviction list
 #endif
         delete entry;
+        CACHE_LOG_DEBUG(("deleted doomed entry 0x%p\n", entry));
         return NS_OK;
     }
 
@@ -221,7 +224,7 @@ nsMemoryCacheDevice::DoomEntry(nsCacheEntry * entry)
     if (!hashEntry)               NS_WARNING("no entry for key");
     else if (entry != hashEntry)  NS_WARNING("entry != hashEntry");
 #endif
-
+    CACHE_LOG_DEBUG(("Dooming entry 0x%p in memory cache\n", entry));
     EvictEntry(entry, DO_NOT_DELETE_ENTRY);
 }
 
@@ -299,7 +302,10 @@ nsMemoryCacheDevice::OnDataSizeChange( nsCacheEntry * entry, PRInt32 deltaSize)
         // we have the right to refuse or pre-evict
         PRUint32  newSize = entry->DataSize() + deltaSize;
         if ((PRInt32) newSize > mSoftLimit) {
-            nsresult rv = nsCacheService::DoomEntry(entry);
+#ifdef DEBUG
+            nsresult rv =
+#endif
+                nsCacheService::DoomEntry(entry);
             NS_ASSERTION(NS_SUCCEEDED(rv),"DoomEntry() failed.");
             return NS_ERROR_ABORT;
         }
@@ -333,6 +339,8 @@ nsMemoryCacheDevice::AdjustMemoryLimits(PRInt32  softLimit, PRInt32  hardLimit)
 void
 nsMemoryCacheDevice::EvictEntry(nsCacheEntry * entry, PRBool deleteEntry)
 {
+    CACHE_LOG_DEBUG(("Evicting entry 0x%p from memory cache, deleting: %d\n",
+                     entry, deleteEntry));
     // remove entry from our hashtable
     mMemCacheEntries.RemoveEntry(entry);
     
@@ -355,6 +363,10 @@ nsMemoryCacheDevice::EvictEntriesIfNecessary(void)
 {
     nsCacheEntry * entry, * next;
 
+    CACHE_LOG_DEBUG(("EvictEntriesIfNecessary.  mTotalSize: %d, mHardLimit: %d,"
+                     "mInactiveSize: %d, mSoftLimit: %d\n",
+                     mTotalSize, mHardLimit, mInactiveSize, mSoftLimit));
+    
     if ((mTotalSize < mHardLimit) && (mInactiveSize < mSoftLimit))
         return;
 
@@ -472,7 +484,7 @@ nsMemoryCacheDevice::SetCapacity(PRInt32  capacity)
 
 
 #ifdef DEBUG
-static PLDHashOperator PR_CALLBACK
+static PLDHashOperator
 CountEntry(PLDHashTable * table, PLDHashEntryHdr * hdr, PRUint32 number, void * arg)
 {
     PRInt32 *entryCount = (PRInt32 *)arg;

@@ -1,6 +1,6 @@
 // This file tests authentication prompt callbacks
 
-do_import_script("netwerk/test/httpserver/httpd.js");
+do_load_httpd_js();
 
 const FLAG_RETURN_FALSE   = 1 << 0;
 const FLAG_WRONG_PASSWORD = 1 << 1;
@@ -127,7 +127,7 @@ AuthPrompt2.prototype = {
   },
 
   asyncPromptAuth: function ap2_async(chan, cb, ctx, lvl, info) {
-    do_throw("not implemented yet")
+    throw 0x80004001;
   }
 };
 
@@ -195,7 +195,7 @@ RealmTestRequestor.prototype = {
   },
 
   asyncPromptAuth: function realmtest_async(chan, cb, ctx, lvl, info) {
-    do_throw("not implemented yet");
+    throw 0x80004001;
   }
 };
 
@@ -236,8 +236,9 @@ var listener = {
 
       current_test++;
       tests[current_test]();
-    } else { 
-      httpserv.stop();
+    } else {
+      do_test_pending();
+      httpserv.stop(do_test_finished);
     }
 
     do_test_finished();

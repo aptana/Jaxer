@@ -53,9 +53,7 @@ function run_test() {
   for each (var pref in prefData) {
     try {
       pref.oldVal = prefs.getBoolPref(pref.name);
-      pref.set = true;
     } catch(e) {
-      pref.set = false;
     }
     prefs.setBoolPref(pref.name, pref.newVal);
   }
@@ -73,11 +71,8 @@ function run_test() {
     do_check_eq(uri4.asciiHost, uri5.asciiHost);
   } finally {
     for each (var pref in prefData) {
-      if (pref.set) {
-        prefs.setBoolPref(pref.name, pref.oldVal);
-      } else {
+      if (prefs.prefHasUserValue(pref.name))
         prefs.clearUserPref(pref.name);
-      }
     }
   }
 }

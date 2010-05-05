@@ -42,7 +42,7 @@
 #include "nsHttpConnectionInfo.h"
 #include "nsHttpConnection.h"
 #include "nsHttpTransaction.h"
-#include "nsVoidArray.h"
+#include "nsTArray.h"
 #include "nsThreadUtils.h"
 #include "nsHashtable.h"
 #include "nsAutoPtr.h"
@@ -156,10 +156,10 @@ private:
         }
        ~nsConnectionEntry() { NS_RELEASE(mConnInfo); }
 
-        nsHttpConnectionInfo *mConnInfo;
-        nsVoidArray           mPendingQ;    // pending transaction queue
-        nsVoidArray           mActiveConns; // active connections
-        nsVoidArray           mIdleConns;   // idle persistent connections
+        nsHttpConnectionInfo        *mConnInfo;
+        nsTArray<nsHttpTransaction*> mPendingQ;    // pending transaction queue
+        nsTArray<nsHttpConnection*>  mActiveConns; // active connections
+        nsTArray<nsHttpConnection*>  mIdleConns;   // idle persistent connections
     };
 
     // nsConnectionHandle
@@ -204,10 +204,10 @@ private:
     // NOTE: these members are only accessed on the socket transport thread
     //-------------------------------------------------------------------------
 
-    static PRIntn PR_CALLBACK ProcessOneTransactionCB(nsHashKey *, void *, void *);
-    static PRIntn PR_CALLBACK PurgeOneIdleConnectionCB(nsHashKey *, void *, void *);
-    static PRIntn PR_CALLBACK PruneDeadConnectionsCB(nsHashKey *, void *, void *);
-    static PRIntn PR_CALLBACK ShutdownPassCB(nsHashKey *, void *, void *);
+    static PRIntn ProcessOneTransactionCB(nsHashKey *, void *, void *);
+    static PRIntn PurgeOneIdleConnectionCB(nsHashKey *, void *, void *);
+    static PRIntn PruneDeadConnectionsCB(nsHashKey *, void *, void *);
+    static PRIntn ShutdownPassCB(nsHashKey *, void *, void *);
 
     PRBool   ProcessPendingQForEntry(nsConnectionEntry *);
     PRBool   AtActiveConnectionLimit(nsConnectionEntry *, PRUint8 caps);

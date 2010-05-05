@@ -25,6 +25,7 @@
  *   Gordon Sheridan  <gordon@netscape.com>
  *   Patrick C. Beard <beard@netscape.com>
  *   Darin Fisher     <darin@netscape.com>
+ *   Ehsan Akhgari    <ehsan.akhgari@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -97,54 +98,6 @@ public:
     static nsresult  IsStorageEnabledForPolicy(nsCacheStoragePolicy  storagePolicy,
                                                PRBool *              result);
 
-
-    static nsresult  GetOfflineOwnerDomains(nsCacheSession *          session,
-                                            PRUint32 *                count,
-                                            char ***                  domains);
-    static nsresult  GetOfflineOwnerURIs(nsCacheSession *             session,
-                                         const nsACString &           ownerDomain,
-                                         PRUint32 *                   count,
-                                         char ***                     uris);
-
-    static nsresult  SetOfflineOwnedKeys(nsCacheSession *             session,
-                                         const nsACString &           ownerDomain,
-                                         const nsACString &           ownerUri,
-                                         PRUint32                     count,
-                                         const char **                keys);
-
-    static nsresult  GetOfflineOwnedKeys(nsCacheSession *             session,
-                                         const nsACString &           ownerDomain,
-                                         const nsACString &           ownerURI,
-                                         PRUint32 *                   count,
-                                         char ***                     keys);
-
-    static nsresult  AddOfflineOwnedKey(nsCacheSession *              session,
-                                        const nsACString &            ownerDomain,
-                                        const nsACString &            ownerURI,
-                                        const nsACString &            key);
-
-    static nsresult  RemoveOfflineOwnedKey(nsCacheSession *           session,
-                                           const nsACString &         ownerDomain,
-                                           const nsACString &         ownerURI,
-                                           const nsACString &         key);
-
-    static nsresult  OfflineKeyIsOwned(nsCacheSession *               session,
-                                       const nsACString &             ownerDomain,
-                                       const nsACString &             ownerURI,
-                                       const nsACString &             key,
-                                       PRBool *                       isOwned);
-
-    static nsresult  ClearOfflineKeysOwnedByDomain(nsCacheSession   * session,
-                                                   const nsACString & domain);
-    static nsresult  GetOfflineDomainUsage(nsCacheSession           * session,
-                                           const nsACString         & domain,
-                                           PRUint32                 * usage);
-
-    static nsresult  EvictUnownedOfflineEntries(nsCacheSession *      session);
-
-    static nsresult  MergeTemporaryClientID(nsCacheSession *            session,
-                                            const nsACString &          fromClientID);
-
     /**
      * Methods called by nsCacheEntryDescriptor
      */
@@ -197,17 +150,22 @@ public:
     static void      OnProfileChanged();
 
     static void      SetDiskCacheEnabled(PRBool  enabled);
+    // Sets the disk cache capacity (in kilobytes)
     static void      SetDiskCacheCapacity(PRInt32  capacity);
 
     static void      SetOfflineCacheEnabled(PRBool  enabled);
+    // Sets the offline cache capacity (in kilobytes)
     static void      SetOfflineCacheCapacity(PRInt32  capacity);
 
     static void      SetMemoryCache();
+
+    static void      OnEnterExitPrivateBrowsing();
 
     nsresult         Init();
     void             Shutdown();
 private:
     friend class nsCacheServiceAutoLock;
+    friend class nsOfflineCacheDevice;
 
     /**
      * Internal Methods
@@ -260,15 +218,15 @@ private:
     void             DoomActiveEntries(void);
 
     static
-    PLDHashOperator PR_CALLBACK  DeactivateAndClearEntry(PLDHashTable *    table,
-                                                         PLDHashEntryHdr * hdr,
-                                                         PRUint32          number,
-                                                         void *            arg);
+    PLDHashOperator  DeactivateAndClearEntry(PLDHashTable *    table,
+                                             PLDHashEntryHdr * hdr,
+                                             PRUint32          number,
+                                             void *            arg);
     static
-    PLDHashOperator PR_CALLBACK  RemoveActiveEntry(PLDHashTable *    table,
-                                                   PLDHashEntryHdr * hdr,
-                                                   PRUint32          number,
-                                                   void *            arg);
+    PLDHashOperator  RemoveActiveEntry(PLDHashTable *    table,
+                                       PLDHashEntryHdr * hdr,
+                                       PRUint32          number,
+                                       void *            arg);
 #if defined(PR_LOGGING)
     void LogCacheStatistics();
 #endif

@@ -22,6 +22,8 @@
  * Contributor(s):
  *   Daniel Witte (dwitte@stanford.edu)
  *   Michiel van Leeuwen (mvl@exedo.nl)
+ *   Michael Ventnor <m.ventnor@gmail.com>
+ *   Ehsan Akhgari <ehsan.akhgari@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -49,6 +51,8 @@
 #include "nsCookie.h"
 #include "nsString.h"
 #include "nsTHashtable.h"
+#include "mozIStorageStatement.h"
+#include "mozIStorageConnection.h"
 
 struct nsCookieAttributes;
 struct nsListIter;
@@ -60,8 +64,6 @@ class nsIPrefBranch;
 class nsIObserverService;
 class nsIURI;
 class nsIChannel;
-class mozIStorageConnection;
-class mozIStorageStatement;
 
 // hash entry class
 class nsCookieEntry : public PLDHashEntryHdr
@@ -72,6 +74,7 @@ class nsCookieEntry : public PLDHashEntryHdr
     typedef const char* KeyTypePointer;
 
     // do nothing with aHost - we require mHead to be set before we're live!
+    explicit
     nsCookieEntry(KeyTypePointer aHost)
      : mHead(nsnull)
     {
@@ -137,6 +140,20 @@ class nsCookieEntry : public PLDHashEntryHdr
     nsCookie *mHead;
 };
 
+// encapsulates in-memory and on-disk DB states, so we can
+// conveniently switch state when entering or exiting private browsing.
+struct DBState
+{
+  DBState() : cookieCount(0) { }
+
+  nsTHashtable<nsCookieEntry>     hostTable;
+  PRUint32                        cookieCount;
+  nsCOMPtr<mozIStorageConnection> dbConn;
+  nsCOMPtr<mozIStorageStatement>  stmtInsert;
+  nsCOMPtr<mozIStorageStatement>  stmtDelete;
+  nsCOMPtr<mozIStorageStatement>  stmtUpdate;
+};
+
 /******************************************************************************
  * nsCookieService:
  * class declaration
@@ -163,7 +180,9 @@ class nsCookieService : public nsICookieService
   protected:
     void                          PrefChanged(nsIPrefBranch *aPrefBranch);
     nsresult                      InitDB();
+    nsresult                      TryInitDB(PRBool aDeleteExistingDB);
     nsresult                      CreateTable();
+    void                          CloseDB();
     nsresult                      Read();
     void                          GetCookieInternal(nsIURI *aHostURI, nsIChannel *aChannel, PRBool aHttpBound, char **aCookie);
     nsresult                      SetCookieStringInternal(nsIURI *aHostURI, nsIPrompt *aPrompt, const char *aCookieHeader, const char *aServerTime, nsIChannel *aChannel, PRBool aFromHttp);
@@ -188,18 +207,19 @@ class nsCookieService : public nsICookieService
     void                          NotifyChanged(nsICookie2 *aCookie, const PRUnichar *aData);
 
   protected:
-    // cached members
-    nsCOMPtr<mozIStorageConnection>  mDBConn;
-    nsCOMPtr<mozIStorageStatement>   mStmtInsert;
-    nsCOMPtr<mozIStorageStatement>   mStmtDelete;
-    nsCOMPtr<mozIStorageStatement>   mStmtUpdate;
+    // cached members.
     nsCOMPtr<nsIObserverService>     mObserverService;
     nsCOMPtr<nsICookiePermission>    mPermissionService;
     nsCOMPtr<nsIEffectiveTLDService> mTLDService;
 
-    // impl members
-    nsTHashtable<nsCookieEntry>   mHostTable;
-    PRUint32                      mCookieCount;
+    // we have two separate DB states: one for normal browsing and one for
+    // private browsing, switching between them as appropriate. this state
+    // encapsulates both the in-memory table and the on-disk DB.
+    // note that the private states' dbConn should always be null - we never
+    // want to be dealing with the on-disk DB when in private browsing.
+    DBState                      *mDBState;
+    DBState                       mDefaultDBState;
+    DBState                       mPrivateDBState;
 
     // cached prefs
     PRUint8                       mCookiesPermissions;   // BEHAVIOR_{ACCEPT, REJECTFOREIGN, REJECT}
@@ -211,7 +231,7 @@ class nsCookieService : public nsICookieService
     static nsCookieService        *gCookieService;
 
     // this callback needs access to member functions
-    friend PLDHashOperator PR_CALLBACK removeExpiredCallback(nsCookieEntry *aEntry, void *aArg);
+    friend PLDHashOperator removeExpiredCallback(nsCookieEntry *aEntry, void *aArg);
 };
 
 #endif // nsCookieService_h__

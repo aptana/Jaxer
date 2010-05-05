@@ -315,7 +315,7 @@ nsProtocolProxyService::nsProtocolProxyService()
 nsProtocolProxyService::~nsProtocolProxyService()
 {
     // These should have been cleaned up in our Observe method.
-    NS_ASSERTION(mHostFiltersArray.Count() == 0 && mFilters == nsnull &&
+    NS_ASSERTION(mHostFiltersArray.Length() == 0 && mFilters == nsnull &&
                  mPACMan == nsnull, "what happened to xpcom-shutdown?");
 }
 
@@ -353,8 +353,7 @@ nsProtocolProxyService::Observe(nsISupports     *aSubject,
 {
     if (strcmp(aTopic, NS_XPCOM_SHUTDOWN_OBSERVER_ID) == 0) {
         // cleanup
-        if (mHostFiltersArray.Count() > 0) {
-            mHostFiltersArray.EnumerateForwards(CleanupFilterArray, nsnull);
+        if (mHostFiltersArray.Length() > 0) {
             mHostFiltersArray.Clear();
         }
         if (mFilters) {
@@ -407,6 +406,8 @@ nsProtocolProxyService::PrefsChanged(nsIPrefBranch *prefBranch,
 
         if (mProxyConfig == eProxyConfig_System) {
             mSystemProxySettings = do_GetService(NS_SYSTEMPROXYSETTINGS_CONTRACTID);
+            if (!mSystemProxySettings)
+                mProxyConfig = eProxyConfig_Direct;
         } else {
             mSystemProxySettings = nsnull;
         }
@@ -505,7 +506,7 @@ nsProtocolProxyService::PrefsChanged(nsIPrefBranch *prefBranch,
 PRBool
 nsProtocolProxyService::CanUseProxy(nsIURI *aURI, PRInt32 defaultPort) 
 {
-    if (mHostFiltersArray.Count() == 0)
+    if (mHostFiltersArray.Length() == 0)
         return PR_TRUE;
 
     PRInt32 port;
@@ -542,8 +543,8 @@ nsProtocolProxyService::CanUseProxy(nsIURI *aURI, PRInt32 defaultPort)
     }
     
     PRInt32 index = -1;
-    while (++index < mHostFiltersArray.Count()) {
-        HostInfo *hinfo = (HostInfo *) mHostFiltersArray[index];
+    while (++index < PRInt32(mHostFiltersArray.Length())) {
+        HostInfo *hinfo = mHostFiltersArray[index];
 
         if (is_ipaddr != hinfo->is_ipaddr)
             continue;
@@ -1040,22 +1041,11 @@ nsProtocolProxyService::UnregisterFilter(nsIProtocolProxyFilter *filter)
     // No need to throw an exception in this case.
     return NS_OK;
 }
-
-PRBool PR_CALLBACK
-nsProtocolProxyService::CleanupFilterArray(void *aElement, void *aData) 
-{
-    if (aElement)
-        delete (HostInfo *) aElement;
-
-    return PR_TRUE;
-}
-
 void
 nsProtocolProxyService::LoadHostFilters(const char *filters)
 {
     // check to see the owners flag? /!?/ TODO
-    if (mHostFiltersArray.Count() > 0) {
-        mHostFiltersArray.EnumerateForwards(CleanupFilterArray, nsnull);
+    if (mHostFiltersArray.Length() > 0) {
         mHostFiltersArray.Clear();
     }
 
@@ -1076,15 +1066,13 @@ nsProtocolProxyService::LoadHostFilters(const char *filters)
         const char *portLocation = 0; 
         const char *maskLocation = 0;
 
-        //
-        // XXX this needs to be fixed to support IPv6 address literals,
-        // which in this context will need to be []-escaped.
-        //
         while (*endhost && (*endhost != ',' && !IS_ASCII_SPACE(*endhost))) {
             if (*endhost == ':')
                 portLocation = endhost;
             else if (*endhost == '/')
                 maskLocation = endhost;
+            else if (*endhost == ']') // IPv6 address literals
+                portLocation = 0;
             endhost++;
         }
 
@@ -1151,7 +1139,7 @@ nsProtocolProxyService::LoadHostFilters(const char *filters)
 
 //#define DEBUG_DUMP_FILTERS
 #ifdef DEBUG_DUMP_FILTERS
-        printf("loaded filter[%u]:\n", mHostFiltersArray.Count());
+        printf("loaded filter[%u]:\n", mHostFiltersArray.Length());
         printf("  is_ipaddr = %u\n", hinfo->is_ipaddr);
         printf("  port = %u\n", hinfo->port);
         if (hinfo->is_ipaddr) {
@@ -1253,14 +1241,8 @@ nsProtocolProxyService::Resolve_Internal(nsIURI *uri,
 
     if (mSystemProxySettings) {
         nsCAutoString PACURI;
-        if (NS_SUCCEEDED(mSystemProxySettings->GetPACURI(PACURI)) &&
-            !PACURI.IsEmpty()) {
-            // Switch to new PAC file if that setting has changed. If the setting
-            // hasn't changed, ConfigureFromPAC will exit early.
-            nsresult rv = ConfigureFromPAC(PACURI, PR_FALSE);
-            if (NS_FAILED(rv))
-                return rv;
-        } else {
+        if (NS_FAILED(mSystemProxySettings->GetPACURI(PACURI)) ||
+            PACURI.IsEmpty()) {
             nsCAutoString proxy;
             nsresult rv = mSystemProxySettings->GetProxyForURI(uri, proxy);
             if (NS_SUCCEEDED(rv)) {
@@ -1270,13 +1252,19 @@ nsProtocolProxyService::Resolve_Internal(nsIURI *uri,
             // no proxy, stop search
             return NS_OK;
         }
+
+        // Switch to new PAC file if that setting has changed. If the setting
+        // hasn't changed, ConfigureFromPAC will exit early.
+        nsresult rv = ConfigureFromPAC(PACURI, PR_FALSE);
+        if (NS_FAILED(rv))
+            return rv;
     }
 
     // if proxies are enabled and this host:port combo is supposed to use a
     // proxy, check for a proxy.
     if (mProxyConfig == eProxyConfig_Direct ||
-            (mProxyConfig == eProxyConfig_Manual &&
-             !CanUseProxy(uri, info.defaultPort)))
+        (mProxyConfig == eProxyConfig_Manual &&
+         !CanUseProxy(uri, info.defaultPort)))
         return NS_OK;
 
     // Proxy auto config magic...

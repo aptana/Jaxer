@@ -321,8 +321,9 @@ nsGopherContentStream::PromptForQueryString(nsCString &result)
 
     nsXPIDLString value;
     PRBool res = PR_FALSE;
+    PRBool checkState;
     prompter->Prompt(promptTitle.get(), promptText.get(),
-                     getter_Copies(value), NULL, NULL, &res);
+                     getter_Copies(value), NULL, &checkState, &res);
     if (!res || value.IsEmpty())
         return NS_ERROR_FAILURE;
 
@@ -469,7 +470,8 @@ nsGopherChannel::GetProxyInfo(nsIProxyInfo** aProxyInfo)
 }
 
 nsresult
-nsGopherChannel::OpenContentStream(PRBool async, nsIInputStream **result)
+nsGopherChannel::OpenContentStream(PRBool async, nsIInputStream **result,
+                                   nsIChannel** channel)
 {
     // Implement nsIChannel::Open in terms of nsIChannel::AsyncOpen
     if (!async)

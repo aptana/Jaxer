@@ -66,11 +66,15 @@
 #include "nsIInputStream.h"
 #include "nsIProgressEventSink.h"
 #include "nsICachingChannel.h"
+#include "nsICacheSession.h"
 #include "nsICacheEntryDescriptor.h"
 #include "nsICacheListener.h"
+#include "nsIApplicationCache.h"
+#include "nsIApplicationCacheChannel.h"
 #include "nsIEncodedChannel.h"
 #include "nsITransport.h"
 #include "nsIUploadChannel.h"
+#include "nsIUploadChannel2.h"
 #include "nsIStringEnumerator.h"
 #include "nsIOutputStream.h"
 #include "nsIAsyncInputStream.h"
@@ -80,6 +84,8 @@
 #include "nsIProtocolProxyCallback.h"
 #include "nsICancelable.h"
 #include "nsIProxiedChannel.h"
+#include "nsITraceableChannel.h"
+#include "nsIAuthPromptCallback.h"
 
 class nsHttpResponseHead;
 class nsAHttpConnection;
@@ -96,6 +102,7 @@ class nsHttpChannel : public nsHashPropertyBag
                     , public nsIStreamListener
                     , public nsICachingChannel
                     , public nsIUploadChannel
+                    , public nsIUploadChannel2
                     , public nsICacheListener
                     , public nsIEncodedChannel
                     , public nsITransportEventSink
@@ -103,6 +110,9 @@ class nsHttpChannel : public nsHashPropertyBag
                     , public nsISupportsPriority
                     , public nsIProtocolProxyCallback
                     , public nsIProxiedChannel
+                    , public nsITraceableChannel
+                    , public nsIApplicationCacheChannel
+                    , public nsIAuthPromptCallback
 {
 public:
     NS_DECL_ISUPPORTS_INHERITED
@@ -113,6 +123,7 @@ public:
     NS_DECL_NSISTREAMLISTENER
     NS_DECL_NSICACHINGCHANNEL
     NS_DECL_NSIUPLOADCHANNEL
+    NS_DECL_NSIUPLOADCHANNEL2
     NS_DECL_NSICACHELISTENER
     NS_DECL_NSIENCODEDCHANNEL
     NS_DECL_NSIHTTPCHANNELINTERNAL
@@ -121,6 +132,10 @@ public:
     NS_DECL_NSISUPPORTSPRIORITY
     NS_DECL_NSIPROTOCOLPROXYCALLBACK
     NS_DECL_NSIPROXIEDCHANNEL
+    NS_DECL_NSITRACEABLECHANNEL
+    NS_DECL_NSIAPPLICATIONCACHECONTAINER
+    NS_DECL_NSIAPPLICATIONCACHECHANNEL
+    NS_DECL_NSIAUTHPROMPTCALLBACK
 
     nsHttpChannel();
     virtual ~nsHttpChannel();
@@ -144,7 +159,10 @@ private:
     }
 
     // AsyncCall may be used to call a member function asynchronously.
-    nsresult AsyncCall(nsAsyncCallback funcPtr);
+    // retval isn't refcounted and is set only when event was successfully
+    // posted, the event is returned for the purpose of cancelling when needed
+    nsresult AsyncCall(nsAsyncCallback funcPtr,
+                       nsRunnableMethod<nsHttpChannel> **retval = nsnull);
 
     PRBool   RequestIsConditional();
     nsresult Connect(PRBool firstTime = PR_TRUE);
@@ -160,12 +178,16 @@ private:
     nsresult ProcessNormal();
     nsresult ProcessNotModified();
     nsresult ProcessRedirection(PRUint32 httpStatus);
+    PRBool   ShouldSSLProxyResponseContinue(PRUint32 httpStatus);
+    nsresult ProcessFailedSSLConnect(PRUint32 httpStatus);
     nsresult ProcessAuthentication(PRUint32 httpStatus);
+    nsresult ProcessFallback(PRBool *fallingBack);
     PRBool   ResponseWouldVary();
 
     // redirection specific methods
     void     HandleAsyncRedirect();
     void     HandleAsyncNotModified();
+    void     HandleAsyncFallback();
     nsresult PromptTempRedirect();
     nsresult SetupReplacementChannel(nsIURI *, nsIChannel *, PRBool preserveMethod);
 
@@ -178,12 +200,12 @@ private:
     // cache specific methods
     nsresult OpenCacheEntry(PRBool offline, PRBool *delayed);
     nsresult OpenOfflineCacheEntryForWriting();
-    nsresult GenerateCacheKey(nsACString &key);
+    nsresult GenerateCacheKey(PRUint32 postID, nsACString &key);
     nsresult UpdateExpirationTime();
     nsresult CheckCache();
     nsresult ShouldUpdateOfflineCacheEntry(PRBool *shouldCacheForOfflineUse);
     nsresult ReadFromCache();
-    void     CloseCacheEntry();
+    void     CloseCacheEntry(PRBool doomOnFailure);
     void     CloseOfflineCacheEntry();
     nsresult InitCacheEntry();
     nsresult InitOfflineCacheEntry();
@@ -192,6 +214,12 @@ private:
     nsresult FinalizeCacheEntry();
     nsresult InstallCacheListener(PRUint32 offset = 0);
     nsresult InstallOfflineCacheListener();
+    void     MaybeInvalidateCacheEntryForSubsequentGet();
+    nsCacheStoragePolicy DetermineStoragePolicy();
+    void     AsyncOnExamineCachedResponse();
+
+    // Handle the bogus Content-Encoding Apache sometimes sends
+    void ClearBogusContentEncodingIfNeeded();
 
     // byte range request specific methods
     nsresult SetupByteRangeRequest(PRUint32 partialLen);
@@ -201,18 +229,38 @@ private:
     // auth specific methods
     nsresult PrepareForAuthentication(PRBool proxyAuth);
     nsresult GenCredsAndSetEntry(nsIHttpAuthenticator *, PRBool proxyAuth, const char *scheme, const char *host, PRInt32 port, const char *dir, const char *realm, const char *challenge, const nsHttpAuthIdentity &ident, nsCOMPtr<nsISupports> &session, char **result);
-    nsresult GetCredentials(const char *challenges, PRBool proxyAuth, nsAFlatCString &creds);
-    nsresult GetCredentialsForChallenge(const char *challenge, const char *scheme,  PRBool proxyAuth, nsIHttpAuthenticator *auth, nsAFlatCString &creds);
     nsresult GetAuthenticator(const char *challenge, nsCString &scheme, nsIHttpAuthenticator **auth); 
     void     ParseRealm(const char *challenge, nsACString &realm);
     void     GetIdentityFromURI(PRUint32 authFlags, nsHttpAuthIdentity&);
+    /**
+     * Following three methods return NS_ERROR_IN_PROGRESS when
+     * nsIAuthPrompt2.asyncPromptAuth method is called. This result indicates
+     * the user's decision will be gathered in a callback and is not an actual
+     * error.
+     */
+    nsresult GetCredentials(const char *challenges, PRBool proxyAuth, nsAFlatCString &creds);
+    nsresult GetCredentialsForChallenge(const char *challenge, const char *scheme,  PRBool proxyAuth, nsIHttpAuthenticator *auth, nsAFlatCString &creds);
     nsresult PromptForIdentity(PRUint32 level, PRBool proxyAuth, const char *realm, const char *authType, PRUint32 authFlags, nsHttpAuthIdentity &);
+
     PRBool   ConfirmAuth(const nsString &bundleKey, PRBool doYesNoPrompt);
     void     CheckForSuperfluousAuth();
     void     SetAuthorizationHeader(nsHttpAuthCache *, nsHttpAtom header, const char *scheme, const char *host, PRInt32 port, const char *path, nsHttpAuthIdentity &ident);
     void     AddAuthorizationHeaders();
     nsresult GetCurrentPath(nsACString &);
+    /**
+     * Return all information needed to build authorization information,
+     * all paramters except proxyAuth are out parameters. proxyAuth specifies
+     * with what authorization we work (WWW or proxy).
+     */
+    nsresult GetAuthorizationMembers(PRBool proxyAuth, nsCSubstring& scheme, const char*& host, PRInt32& port, nsCSubstring& path, nsHttpAuthIdentity*& ident, nsISupports**& continuationState);
     nsresult DoAuthRetry(nsAHttpConnection *);
+    PRBool   MustValidateBasedOnQueryUrl();
+    /**
+     * Method called to resume suspended transaction after we got credentials
+     * from the user. Called from OnAuthAvailable callback or OnAuthCancelled
+     * when credentials for next challenge were obtained synchronously.
+     */
+    nsresult ContinueOnAuthAvailable(const nsCSubstring& creds);
 
 private:
     nsCOMPtr<nsIURI>                  mOriginalURI;
@@ -240,7 +288,7 @@ private:
 
     PRUint32                          mLoadFlags;
     PRUint32                          mStatus;
-    nsUint64                          mLogicalOffset;
+    PRUint64                          mLogicalOffset;
     PRUint8                           mCaps;
     PRInt16                           mPriority;
 
@@ -260,6 +308,8 @@ private:
     nsCacheAccessMode                 mOfflineCacheAccess;
     nsCString                         mOfflineCacheClientID;
 
+    nsCOMPtr<nsIApplicationCache>     mApplicationCache;
+
     // auth specific data
     nsISupports                      *mProxyAuthContinuationState;
     nsCString                         mProxyAuthType;
@@ -267,6 +317,19 @@ private:
     nsCString                         mAuthType;
     nsHttpAuthIdentity                mIdent;
     nsHttpAuthIdentity                mProxyIdent;
+
+    // Reference to the prompt wating in prompt queue. The channel is
+    // responsible to call its cancel method when user in any way cancels
+    // this request.
+    nsCOMPtr<nsICancelable>           mAsyncPromptAuthCancelable;
+    // Saved in GetCredentials when prompt is asynchronous, the first challenge
+    // we obtained from the server with 401/407 response, will be processed in
+    // OnAuthAvailable callback.
+    nsCString                         mCurrentChallenge;
+    // Saved in GetCredentials when prompt is asynchronous, remaning challenges
+    // we have to process when user cancels the auth dialog for the current
+    // challenge.
+    nsCString                         mRemainingChallenges;
 
     // Resumable channel specific data
     nsCString                         mEntityID;
@@ -287,6 +350,11 @@ private:
     // redirection specific data.
     PRUint8                           mRedirectionLimit;
 
+    // If the channel is associated with a cache, and the URI matched
+    // a fallback namespace, this will hold the key for the fallback
+    // cache entry.
+    nsCString                         mFallbackKey;
+
     // state flags
     PRUint32                          mIsPending                : 1;
     PRUint32                          mWasOpened                : 1;
@@ -299,10 +367,24 @@ private:
     PRUint32                          mTransactionReplaced      : 1;
     PRUint32                          mUploadStreamHasHeaders   : 1;
     PRUint32                          mAuthRetryPending         : 1;
+    // True when we need to authenticate to proxy, i.e. when we get 407
+    // response. Used in OnAuthAvailable and OnAuthCancelled callbacks.
+    PRUint32                          mProxyAuth                : 1;
     PRUint32                          mSuppressDefensiveAuth    : 1;
     PRUint32                          mResuming                 : 1;
     PRUint32                          mInitedCacheEntry         : 1;
     PRUint32                          mCacheForOfflineUse       : 1;
+    // True if mCacheForOfflineUse was set because we were caching
+    // opportunistically.
+    PRUint32                          mCachingOpportunistically : 1;
+    // True if we are loading a fallback cache entry from the
+    // application cache.
+    PRUint32                          mFallbackChannel          : 1;
+    PRUint32                          mInheritApplicationCache  : 1;
+    PRUint32                          mChooseApplicationCache   : 1;
+    PRUint32                          mLoadedFromApplicationCache : 1;
+    PRUint32                          mTracingEnabled           : 1;
+    PRUint32                          mForceAllowThirdPartyCookie : 1;
 
     class nsContentEncodings : public nsIUTF8StringEnumerator
     {

@@ -12,7 +12,7 @@ function run_test()
 {
   var fis = Cc["@mozilla.org/network/file-input-stream;1"]
               .createInstance(Ci.nsIFileInputStream);
-  fis.init(do_get_file("netwerk/dns/src/effective_tld_names.dat"),
+  fis.init(do_get_file("effective_tld_names.dat"),
            PR_RDONLY, 0444, Ci.nsIFileInputStream.CLOSE_ON_EOF);
 
   var lis = Cc["@mozilla.org/intl/converter-input-stream;1"]
@@ -26,6 +26,7 @@ function run_test()
     var more = lis.readLine(out);
     var line = out.value;
 
+    line = line.replace(/^\s+/, "");
     var firstTwo = line.substring(0, 2); // a misnomer, but whatever
     if (firstTwo == "" || firstTwo == "//")
       continue;

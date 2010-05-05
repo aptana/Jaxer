@@ -48,7 +48,6 @@
 #include "nsEscape.h"
 #include "nsNetUtil.h"
 #include "nsStringStream.h"
-#include "nsILocaleService.h"
 #include "nsIComponentManager.h"
 #include "nsDateTimeFormatCID.h"
 #include "nsIStreamListener.h"
@@ -319,10 +318,12 @@ nsFTPDirListingConv::DigestBufferLines(char *aBuffer, nsCString &aString) {
         aString.AppendLiteral("201: ");
         // FILENAME
 
-
-        const char* offset = strstr(result.fe_fname, " -> ");
-        if (offset) {
-            result.fe_fnlen = offset - result.fe_fname;
+        // parsers for styles 'U' and 'W' handle sequence " -> " themself
+	if (state.lstyle != 'U' && state.lstyle != 'W') {
+            const char* offset = strstr(result.fe_fname, " -> ");
+            if (offset) {
+                result.fe_fnlen = offset - result.fe_fname;
+            }
         }
 
         nsCAutoString buf;

@@ -58,16 +58,20 @@ SDK_XPIDLSRCS   = \
 		nsIFileURL.idl \
 		nsIUploadChannel.idl \
 		nsIUnicharStreamListener.idl \
+		nsITraceableChannel.idl \
 		$(NULL)
 
 XPIDLSRCS	= \
+		nsIApplicationCache.idl \
+		nsIApplicationCacheChannel.idl \
+		nsIApplicationCacheContainer.idl \
+		nsIApplicationCacheService.idl \
 		nsIAuthInformation.idl \
 		nsIAuthPrompt.idl \
 		nsIAuthPrompt2.idl \
 		nsIAuthPromptAdapterFactory.idl \
 		nsIAuthPromptCallback.idl \
 		nsIAsyncStreamCopier.idl \
-		nsISafeOutputStream.idl \
 		nsIBufferedStreams.idl \
 		nsICancelable.idl \
 		nsICryptoHash.idl \
@@ -85,6 +89,7 @@ XPIDLSRCS	= \
 		nsIPasswordManagerInternal.idl \
 		nsIPermission.idl \
 		nsIPermissionManager.idl \
+		nsIPrivateBrowsingService.idl \
 		nsIProgressEventSink.idl \
 		nsIPrompt.idl \
 		nsIProtocolProxyService.idl \
@@ -100,13 +105,16 @@ XPIDLSRCS	= \
 		nsIServerSocket.idl \
 		nsIResumableChannel.idl \
 		nsIRequestObserverProxy.idl \
+		nsISecurityInfoProvider.idl \
 		nsIStreamListenerTee.idl \
+		nsIStreamListenerTee_1_9_2.idl \
 		nsISimpleStreamListener.idl \
 		nsIStreamTransportService.idl \
 		nsIStreamLoader.idl \
 		nsISyncStreamListener.idl \
 		nsISystemProxySettings.idl \
 		nsIUnicharStreamLoader.idl \
+		nsIUploadChannel2.idl \
 		nsIStandardURL.idl \
 		nsINestedURI.idl \
 		nsIURLParser.idl \

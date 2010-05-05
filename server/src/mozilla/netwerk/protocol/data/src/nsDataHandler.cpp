@@ -91,7 +91,7 @@ nsDataHandler::GetDefaultPort(PRInt32 *result) {
 NS_IMETHODIMP
 nsDataHandler::GetProtocolFlags(PRUint32 *result) {
     *result = URI_NORELATIVE | URI_NOAUTH | URI_INHERITS_SECURITY_CONTEXT |
-        URI_LOADABLE_BY_ANYONE | URI_NON_PERSISTABLE;
+        URI_LOADABLE_BY_ANYONE | URI_NON_PERSISTABLE | URI_IS_LOCAL_RESOURCE;
     return NS_OK;
 }
 
@@ -166,7 +166,7 @@ nsDataHandler::ParseURI(nsCString& spec,
     isBase64 = PR_FALSE;
 
     // move past "data:"
-    char *buffer = (char *) strstr(spec.BeginWriting(), "data:");
+    char *buffer = (char *) PL_strcasestr(spec.BeginWriting(), "data:");
     if (!buffer) {
         // malformed uri
         return NS_ERROR_MALFORMED_URI;
@@ -181,7 +181,7 @@ nsDataHandler::ParseURI(nsCString& spec,
     *comma = '\0';
 
     // determine if the data is base64 encoded.
-    char *base64 = strstr(buffer, ";base64");
+    char *base64 = PL_strcasestr(buffer, ";base64");
     if (base64) {
         isBase64 = PR_TRUE;
         *base64 = '\0';

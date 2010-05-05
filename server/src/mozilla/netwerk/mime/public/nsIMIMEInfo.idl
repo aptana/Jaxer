@@ -157,7 +157,7 @@ interface nsIHandlerInfo : nsISupports {
  * MIMEInfo objects are generally retrieved from the MIME Service
  * @see nsIMIMEService
  */
-[scriptable, uuid(cd7083f8-5fe9-4248-bb09-0b0e2982fde8)]
+[scriptable, uuid(1c21acef-c7a1-40c6-9d40-a20480ee53a1)]
 interface nsIMIMEInfo : nsIHandlerInfo {
     /**
      * Gives you an array of file types associated with this type.
@@ -201,12 +201,6 @@ interface nsIMIMEInfo : nsIHandlerInfo {
      * @deprecated  use nsIHandlerInfo::type instead.
      */
     readonly attribute ACString MIMEType;
-
-    /**
-     * Mac Type and creator types
-     */
-    attribute PRUint32 macType;
-    attribute PRUint32 macCreator;
 
     /**
      * Returns whether or not these two nsIMIMEInfos are logically
@@ -320,3 +314,40 @@ interface nsIWebHandlerApp : nsIHandlerApp {
      */
     attribute AUTF8String uriTemplate;
 };
+
+/**
+ * nsIDBusHandlerApp represents local applications launched by DBus a message
+ * invoking a method taking a single string argument descibing a URI
+ */
+[scriptable, uuid(1ffc274b-4cbf-4bb5-a635-05ad2cbb6534)]
+interface nsIDBusHandlerApp : nsIHandlerApp {
+
+    /**
+     * Service defines the dbus service that should handle this protocol.
+     * If its not set,  NS_ERROR_FAILURE will be returned by LaunchWithURI
+     */
+    attribute AUTF8String service;
+    
+    /**
+     * Objpath defines the object path of the dbus service that should handle 
+     * this protocol. If its not set,  NS_ERROR_FAILURE will be returned 
+     * by LaunchWithURI
+     */
+    attribute AUTF8String objectPath;
+
+    /**
+     * DBusInterface defines the interface of the dbus service that should 
+     * handle this protocol. If its not set,  NS_ERROR_FAILURE will be  
+     * returned by LaunchWithURI
+     */
+    attribute AUTF8String dBusInterface;
+    
+    /**
+     * Method defines the dbus method that should be invoked to handle this 
+     * protocol. If its not set,  NS_ERROR_FAILURE will be returned by 
+     * LaunchWithURI
+     */
+    attribute AUTF8String method;
+    
+};
+

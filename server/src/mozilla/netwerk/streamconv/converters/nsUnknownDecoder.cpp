@@ -60,7 +60,7 @@
 #include "nsNetCID.h"
 
 
-#define MAX_BUFFER_SIZE 1024
+#define MAX_BUFFER_SIZE 512
 
 nsUnknownDecoder::nsUnknownDecoder()
   : mBuffer(nsnull)
@@ -313,7 +313,6 @@ nsUnknownDecoder::nsSnifferEntry nsUnknownDecoder::sSnifferEntries[] = {
   SNIFFER_ENTRY("%PDF-", APPLICATION_PDF),
 
   SNIFFER_ENTRY("%!PS-Adobe-", APPLICATION_POSTSCRIPT),
-  SNIFFER_ENTRY("%! PS-Adobe-", APPLICATION_POSTSCRIPT),
 
   // Files that start with mailbox delimiters let's provisionally call
   // text/plain
@@ -568,11 +567,10 @@ PRBool nsUnknownDecoder::LastDitchSniff(nsIRequest* aRequest)
   // are for 2-byte encodings and the UTF-8 BOM is 3 bytes).
   if (mBufferLen >= 4) {
     const unsigned char* buf = (const unsigned char*)mBuffer;
-    if ((buf[0] == 0xFE && buf[1] == 0xFF) || // UTF-16BE
-        (buf[0] == 0xFF && buf[1] == 0xFE) || // UTF-16LE
+    if ((buf[0] == 0xFE && buf[1] == 0xFF) || // UTF-16, Big Endian
+        (buf[0] == 0xFF && buf[1] == 0xFE) || // UTF-16 or UCS-4, Little Endian
         (buf[0] == 0xEF && buf[1] == 0xBB && buf[2] == 0xBF) || // UTF-8
-        (buf[0] == 0 && buf[1] == 0 && buf[2] == 0xFE && buf[3] == 0xFF) || // UCS-4BE
-        (buf[0] == 0 && buf[1] == 0 && buf[2] == 0xFF && buf[3] == 0xFE)) { // UCS-4
+        (buf[0] == 0 && buf[1] == 0 && buf[2] == 0xFE && buf[3] == 0xFF)) { // UCS-4, Big Endian
         
       mContentType = TEXT_PLAIN;
       return PR_TRUE;

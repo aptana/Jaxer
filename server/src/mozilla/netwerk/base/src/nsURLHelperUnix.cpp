@@ -44,23 +44,30 @@
 #include "nsILocalFile.h"
 #include "nsNativeCharsetUtils.h"
 
-nsresult
-net_GetURLSpecFromFile(nsIFile *aFile, nsACString &result)
+nsresult 
+net_GetURLSpecFromActualFile(nsIFile *aFile, nsACString &result)
 {
-    // NOTE: This is identical to the implementation in nsURLHelperOSX.cpp
-
     nsresult rv;
+    nsCAutoString nativePath, ePath;
     nsAutoString path;
 
-    // construct URL spec from  file path
-    rv = aFile->GetPath(path);
+    rv = aFile->GetNativePath(nativePath);
     if (NS_FAILED(rv)) return rv;
 
+    // Convert to unicode and back to check correct conversion to native charset
+    NS_CopyNativeToUnicode(nativePath, path);
+    NS_CopyUnicodeToNative(path, ePath);
+
+    // Use UTF8 version if conversion was successful
+    if (nativePath == ePath)
+        CopyUTF16toUTF8(path, ePath);
+    else
+        ePath = nativePath;
+    
     nsCAutoString escPath;
     NS_NAMED_LITERAL_CSTRING(prefix, "file://");
         
     // Escape the path with the directory mask
-    NS_ConvertUTF16toUTF8 ePath(path);
     if (NS_EscapeURL(ePath.get(), -1, esc_Directory+esc_Forced, escPath))
         escPath.Insert(prefix, 0);
     else
@@ -68,20 +75,8 @@ net_GetURLSpecFromFile(nsIFile *aFile, nsACString &result)
 
     // esc_Directory does not escape the semicolons, so if a filename 
     // contains semicolons we need to manually escape them.
+    // This replacement should be removed in bug #473280
     escPath.ReplaceSubstring(";", "%3b");
-
-    // if this file references a directory, then we need to ensure that the
-    // URL ends with a slash.  this is important since it affects the rules
-    // for relative URL resolution when this URL is used as a base URL.
-    // if the file does not exist, then we make no assumption about its type,
-    // and simply leave the URL unmodified.
-    if (escPath.Last() != '/') {
-        PRBool dir;
-        rv = aFile->IsDirectory(&dir);
-        if (NS_SUCCEEDED(rv) && dir)
-            escPath += '/';
-    }
-    
     result = escPath;
     return NS_OK;
 }

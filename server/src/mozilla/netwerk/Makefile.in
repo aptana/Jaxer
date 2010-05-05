@@ -57,7 +57,6 @@ include $(DEPTH)/config/autoconf.mk
 
 MODULE		= necko
 
-ifdef JAXER
 DIRS		= \
 		base \
 		cookie \
@@ -68,25 +67,16 @@ DIRS		= \
 		cache \
 		protocol \
 		system \
-		build \
-		locales \
-		$(NULL)
-else
-DIRS		= \
-		base \
-		cookie \
-		dns \
-		socket \
-		mime \
-		streamconv \
-		cache \
-		protocol \
-		system \
-		build \
-		resources \
-		locales \
-		$(NULL)
+        $(NULL)
+
+ifdef NECKO_WIFI
+DIRS 		+= wifi
 endif
+
+DIRS		+= \
+		build \
+		locales \
+		$(NULL)
 
 ifdef ENABLE_TESTS
 TOOL_DIRS  += test

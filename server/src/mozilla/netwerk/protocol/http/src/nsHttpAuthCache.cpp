@@ -146,7 +146,7 @@ nsHttpAuthCache::SetAuthEntry(const char *scheme,
                               const char *realm,
                               const char *creds,
                               const char *challenge,
-                              const nsHttpAuthIdentity &ident,
+                              const nsHttpAuthIdentity *ident,
                               nsISupports *metadata)
 {
     nsresult rv;
@@ -387,7 +387,7 @@ nsHttpAuthEntry::Set(const char *path,
                      const char *realm,
                      const char *creds,
                      const char *chall,
-                     const nsHttpAuthIdentity &ident,
+                     const nsHttpAuthIdentity *ident,
                      nsISupports *metadata)
 {
     char *newRealm, *newCreds, *newChall;
@@ -415,7 +415,17 @@ nsHttpAuthEntry::Set(const char *path,
         memcpy(newChall, chall, challLen);
     newChall[challLen] = 0;
 
-    nsresult rv = mIdent.Set(ident);
+    nsresult rv;
+    if (ident) {
+        rv = mIdent.Set(*ident);
+    } 
+    else if (mIdent.IsEmpty()) {
+        // If we are not given an identity and our cached identity has not been
+        // initialized yet (so is currently empty), initialize it now by
+        // filling it with nulls.  We need to do that because consumers expect
+        // that mIdent is initialized after this function returns.
+        rv = mIdent.Set(nsnull, nsnull, nsnull);
+    }
     if (NS_FAILED(rv)) {
         free(newRealm);
         return rv;
@@ -453,9 +463,6 @@ nsHttpAuthNode::~nsHttpAuthNode()
 {
     LOG(("Destroying nsHttpAuthNode @%x\n", this));
 
-    PRInt32 i;
-    for (i=0; i<mList.Count(); ++i)
-        delete (nsHttpAuthEntry *) mList[i];
     mList.Clear();
 }
 
@@ -471,8 +478,8 @@ nsHttpAuthNode::LookupEntryByPath(const char *path)
     // look for an entry that either matches or contains this directory.
     // ie. we'll give out credentials if the given directory is a sub-
     // directory of an existing entry.
-    for (PRInt32 i=0; i<mList.Count(); ++i) {
-        entry = (nsHttpAuthEntry *) mList[i];
+    for (PRUint32 i=0; i<mList.Length(); ++i) {
+        entry = mList[i];
         nsHttpAuthPath *authPath = entry->RootPath();
         while (authPath) {
             const char *entryPath = authPath->mPath;
@@ -501,9 +508,9 @@ nsHttpAuthNode::LookupEntryByRealm(const char *realm)
         realm = "";
 
     // look for an entry that matches this realm
-    PRInt32 i;
-    for (i=0; i<mList.Count(); ++i) {
-        entry = (nsHttpAuthEntry *) mList[i];
+    PRUint32 i;
+    for (i=0; i<mList.Length(); ++i) {
+        entry = mList[i];
         if (strcmp(realm, entry->Realm()) == 0)
             return entry;
     }
@@ -515,7 +522,7 @@ nsHttpAuthNode::SetAuthEntry(const char *path,
                              const char *realm,
                              const char *creds,
                              const char *challenge,
-                             const nsHttpAuthIdentity &ident,
+                             const nsHttpAuthIdentity *ident,
                              nsISupports *metadata)
 {
     // look for an entry with a matching realm
@@ -540,6 +547,5 @@ nsHttpAuthNode::ClearAuthEntry(const char *realm)
     nsHttpAuthEntry *entry = LookupEntryByRealm(realm);
     if (entry) {
         mList.RemoveElement(entry); // double search OK
-        delete entry;
     }
 }

@@ -273,6 +273,14 @@
     NS_ERROR_GENERATE_FAILURE(NS_ERROR_MODULE_NETWORK, 30)
 
 /**
+ * A low or medium priority DNS lookup failed because the pending
+ * queue was already full. High priorty (the default) always
+ * makes room
+ */
+#define NS_ERROR_DNS_LOOKUP_QUEUE_FULL \
+    NS_ERROR_GENERATE_FAILURE(NS_ERROR_MODULE_NETWORK, 33)
+
+/**
  * The lookup of a proxy hostname failed.
  *
  * If a channel is configured to speak to a proxy server, then it will
@@ -352,6 +360,19 @@
  */
 #define NS_ERROR_HOST_IS_IP_ADDRESS \
     NS_ERROR_GENERATE_FAILURE(NS_ERROR_MODULE_NETWORK, 81)
+
+
+/******************************************************************************
+ * StreamLoader specific result codes:
+ */
+
+/**
+ * Result code returned by nsIStreamLoaderObserver to indicate that
+ * the observer is taking over responsibility for the data buffer,
+ * and the loader should NOT free it.
+ */
+#define NS_SUCCESS_ADOPTED_DATA \
+    NS_ERROR_GENERATE_SUCCESS(NS_ERROR_MODULE_NETWORK, 90)
 
 
 #endif // !nsNetError_h__

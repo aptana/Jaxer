@@ -1,6 +1,6 @@
 // This file tests bug 250375
 
-do_import_script("netwerk/test/httpserver/httpd.js");
+do_load_httpd_js();
 
 function check_request_header(chan, name, value) {
   var chanValue;
@@ -32,10 +32,12 @@ var listener = {
   },
 
   onStopRequest: function test_onStopR(request, ctx, status) {
-    if (this._iteration == 1)
+    if (this._iteration == 1) {
       run_test_continued();
-    else
-      httpserv.stop();
+    } else {
+      do_test_pending();
+      httpserv.stop(do_test_finished);
+    }
     do_test_finished();
   },
 

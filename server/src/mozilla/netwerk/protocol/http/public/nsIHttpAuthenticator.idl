@@ -185,6 +185,69 @@ interface nsIHttpAuthenticator : nsISupports
     const unsigned long IDENTITY_ENCRYPTED = (1<<12);
 };
 
+[scriptable, uuid(923e7c35-6e0c-448c-81a1-39c93db597d9)]
+interface nsIHttpAuthenticator_1_9_2 : nsISupports
+{
+    /**
+     * Called to generate the authentication credentials for a particular
+     * server/proxy challenge.  This is the value that will be sent back
+     * to the server via an Authorization/Proxy-Authorization header.
+     *
+     * This function may be called using a cached challenge provided the
+     * authenticator sets the REUSABLE_CHALLENGE flag.
+     *
+     * @param aChannel
+     *        the http channel requesting credentials
+     * @param aChallenge
+     *        the challenge from the WWW-Authenticate/Proxy-Authenticate
+     *        server response header.  (possibly from the auth cache.)
+     * @param aProxyAuth
+     *        flag indicating whether or not aChallenge is from a proxy.
+     * @param aDomain
+     *        string containing the domain name (if appropriate)
+     * @param aUser
+     *        string containing the user name
+     * @param aPassword
+     *        string containing the password
+     * @param aSessionState
+     *        state stored along side the user's identity in the auth cache
+     *        for the lifetime of the browser session.  if a new auth cache
+     *        entry is created for this challenge, then this parameter will
+     *        be null.  on return, the result will be stored in the new auth
+     *        cache entry.  this parameter is non-null when an auth cache entry
+     *        is being reused.
+     * @param aContinuationState
+     *        state held by the channel between consecutive calls to
+     *        generateCredentials, assuming multiple calls are required
+     *        to authenticate.  this state is held for at most the lifetime of
+     *        the channel.
+     * @param aFlags
+     *        authenticator may return one of the generate flags bellow.
+     */
+    string generateCredentials_1_9_2(in nsIHttpChannel aChannel,
+                               in string         aChallenge,
+                               in boolean        aProxyAuth,
+                               in wstring        aDomain,
+                               in wstring        aUser,
+                               in wstring        aPassword,
+                               inout nsISupports aSessionState,
+                               inout nsISupports aContinuationState,
+                               out unsigned long aFlags);
+
+    /**
+     * Generate flags
+     */
+
+    /**
+     * Indicates that the authenticator has used an out-of-band or internal 
+     * source of identity and tells the consumer that it must not cache 
+     * the returned identity because it might not be valid and would overwrite
+     * the cached identity.  See bug 542318 comment 32.
+     */
+    const unsigned long USING_INTERNAL_IDENTITY = (1<<0);
+};
+
+
 %{C++
 #define NS_HTTP_AUTHENTICATOR_CONTRACTID_PREFIX \
     "@mozilla.org/network/http-authenticator;1?scheme="

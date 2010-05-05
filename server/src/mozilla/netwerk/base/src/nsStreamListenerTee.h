@@ -39,17 +39,20 @@
 #define nsStreamListenerTee_h__
 
 #include "nsIStreamListenerTee.h"
+#include "nsIStreamListenerTee_1_9_2.h"
 #include "nsIInputStreamTee.h"
 #include "nsIOutputStream.h"
 #include "nsCOMPtr.h"
 
-class nsStreamListenerTee : public nsIStreamListenerTee
+class nsStreamListenerTee : public nsIStreamListenerTee,
+                            public nsIStreamListenerTee_1_9_2
 {
 public:
     NS_DECL_ISUPPORTS
     NS_DECL_NSIREQUESTOBSERVER
     NS_DECL_NSISTREAMLISTENER
     NS_DECL_NSISTREAMLISTENERTEE
+    NS_DECL_NSISTREAMLISTENERTEE_1_9_2
 
     nsStreamListenerTee() { }
     virtual ~nsStreamListenerTee() { }
@@ -58,6 +61,7 @@ private:
     nsCOMPtr<nsIInputStreamTee> mInputTee;
     nsCOMPtr<nsIStreamListener> mListener;
     nsCOMPtr<nsIOutputStream>   mSink;
+    nsCOMPtr<nsIRequestObserver> mObserver;
 };
 
 #endif

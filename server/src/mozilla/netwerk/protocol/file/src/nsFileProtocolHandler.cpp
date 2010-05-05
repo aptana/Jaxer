@@ -51,8 +51,13 @@
 
 // URL file handling, copied and modified from xpfe/components/bookmarks/src/nsBookmarksService.cpp
 #ifdef XP_WIN
+#ifndef WINCE
+// Windows mobile does not support internet shortcuts including
+// CLSID_InternetShortcut and IUniformResourceLocator used in
+// this file
 #include <shlobj.h>
 #include <intshcut.h>
+#endif
 #include "nsIFileURL.h"
 #ifdef CompareString
 #undef CompareString
@@ -114,23 +119,22 @@ nsFileProtocolHandler::ReadURLFile(nsIFile* aFile, nsIURI** aURI)
 
     rv = NS_ERROR_NOT_AVAILABLE;
 
-    IUniformResourceLocator* urlLink = nsnull;
+    IUniformResourceLocatorW* urlLink = nsnull;
     result = ::CoCreateInstance(CLSID_InternetShortcut, NULL, CLSCTX_INPROC_SERVER,
-                                IID_IUniformResourceLocator, (void**)&urlLink);
+                                IID_IUniformResourceLocatorW, (void**)&urlLink);
     if (SUCCEEDED(result) && urlLink) {
         IPersistFile* urlFile = nsnull;
         result = urlLink->QueryInterface(IID_IPersistFile, (void**)&urlFile);
         if (SUCCEEDED(result) && urlFile) {
             result = urlFile->Load(path.get(), STGM_READ);
             if (SUCCEEDED(result) ) {
-                LPSTR lpTemp = nsnull;
+                LPWSTR lpTemp = nsnull;
 
                 // The URL this method will give us back seems to be already
                 // escaped. Hence, do not do escaping of our own.
                 result = urlLink->GetURL(&lpTemp);
                 if (SUCCEEDED(result) && lpTemp) {
-                    rv = NS_NewURI(aURI, lpTemp);
-
+                    rv = NS_NewURI(aURI, nsDependentString(lpTemp));
                     // free the string that GetURL alloc'd
                     CoTaskMemFree(lpTemp);
                 }
@@ -188,7 +192,7 @@ nsFileProtocolHandler::ReadURLFile(nsIFile* aFile, nsIURI** aURI)
     return rv;
 }
 
-#elif defined(XP_UNIX)
+#elif defined(XP_UNIX) && !defined(__SYMBIAN32__)
 NS_IMETHODIMP
 nsFileProtocolHandler::ReadURLFile(nsIFile* aFile, nsIURI** aURI)
 {
@@ -247,7 +251,7 @@ nsFileProtocolHandler::GetDefaultPort(PRInt32 *result)
 NS_IMETHODIMP
 nsFileProtocolHandler::GetProtocolFlags(PRUint32 *result)
 {
-    *result = URI_NOAUTH | URI_IS_LOCAL_FILE;
+    *result = URI_NOAUTH | URI_IS_LOCAL_FILE | URI_IS_LOCAL_RESOURCE;
     return NS_OK;
 }
 
@@ -279,30 +283,12 @@ nsFileProtocolHandler::NewURI(const nsACString &spec,
 NS_IMETHODIMP
 nsFileProtocolHandler::NewChannel(nsIURI *uri, nsIChannel **result)
 {
-    nsresult rv;
-
-    // This file may be a url file
-    nsCOMPtr<nsIFileURL> url(do_QueryInterface(uri));
-    if (url) {
-        nsCOMPtr<nsIFile> file;
-        rv = url->GetFile(getter_AddRefs(file));
-        if (NS_SUCCEEDED(rv)) {
-            nsCOMPtr<nsIURI> uri;
-            rv = ReadURLFile(file, getter_AddRefs(uri));
-            if (NS_SUCCEEDED(rv)) {
-                rv = NS_NewChannel(result, uri);
-                if (NS_SUCCEEDED(rv))
-                    return rv;
-            }
-        }
-    }
-
     nsFileChannel *chan = new nsFileChannel(uri);
     if (!chan)
         return NS_ERROR_OUT_OF_MEMORY;
     NS_ADDREF(chan);
 
-    rv = chan->Init();
+    nsresult rv = chan->Init();
     if (NS_FAILED(rv)) {
         NS_RELEASE(chan);
         return rv;
@@ -346,6 +332,21 @@ nsFileProtocolHandler::GetURLSpecFromFile(nsIFile *file, nsACString &result)
 {
     NS_ENSURE_ARG_POINTER(file);
     return net_GetURLSpecFromFile(file, result);
+}
+
+NS_IMETHODIMP
+nsFileProtocolHandler::GetURLSpecFromActualFile(nsIFile *file, 
+                                                nsACString &result)
+{
+    NS_ENSURE_ARG_POINTER(file);
+    return net_GetURLSpecFromActualFile(file, result);
+}
+
+NS_IMETHODIMP
+nsFileProtocolHandler::GetURLSpecFromDir(nsIFile *file, nsACString &result)
+{
+    NS_ENSURE_ARG_POINTER(file);
+    return net_GetURLSpecFromDir(file, result);
 }
 
 NS_IMETHODIMP

@@ -37,27 +37,43 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "nsNativeConnectionHelper.h"
+
+#if defined(MOZ_ENABLE_LIBCONIC)
+#include "nsAutodialMaemo.h"
+#elif defined(WINCE)
+#include "nsAutodialWinCE.h"
+#else
 #include "nsAutodialWin.h"
+#endif
+
+#include "nsIOService.h"
+
 //-----------------------------------------------------------------------------
 // API typically invoked on the socket transport thread
 //-----------------------------------------------------------------------------
 
-
 PRBool
-nsNativeConnectionHelper::OnConnectionFailed(const char* hostName)
+nsNativeConnectionHelper::OnConnectionFailed(const PRUnichar* hostName)
 {
-    nsRASAutodial autodial;
-
-    if (autodial.ShouldDialOnNetworkError()) 
-        return NS_SUCCEEDED(autodial.DialDefault(hostName));
-    else
+  // On mobile platforms, instead of relying on the link service, we
+  // should ask the dialer directly.  This allows the dialer to update
+  // link status more forcefully rather than passively watching link
+  // status changes.
+#if !defined(MOZ_ENABLE_LIBCONIC) && !defined(WINCE_WINDOWS_MOBILE)
+    if (gIOService->IsLinkUp())
         return PR_FALSE;
+#endif
+
+    nsAutodial autodial;
+    if (autodial.ShouldDialOnNetworkError())
+        return NS_SUCCEEDED(autodial.DialDefault(hostName));
+
+    return PR_FALSE;
 }
 
 PRBool
 nsNativeConnectionHelper::IsAutodialEnabled()
 {
-    nsRASAutodial autodial;
-
+    nsAutodial autodial;
     return autodial.Init() == NS_OK && autodial.ShouldDialOnNetworkError();
 }
