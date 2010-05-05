@@ -58,6 +58,7 @@
 #include "jsfun.h"
 #include "jscntxt.h"        /* For js_ReportErrorAgain().*/
 #include "jsscript.h"
+#include "jsstaticcheck.h"
 
 #include "netscape_javascript_JSObject.h"   /* javah-generated headers */
 #include "nsISecurityContext.h"
@@ -161,20 +162,10 @@ AutoPushJSContext::AutoPushJSContext(nsISupports* aSecuritySupports,
     {
         // See if there are any scripts on the stack.
         // If not, we need to add a dummy frame with a principal.
+        JSStackFrame* tempFP = JS_GetScriptedCaller(cx, NULL);
+        JS_ASSERT_NOT_ON_TRACE(cx);
 
-        PRBool hasScript = PR_FALSE;
-        JSStackFrame* tempFP = cx->fp;
-        while (tempFP)
-        {
-            if (tempFP->script)
-            {
-                hasScript = PR_TRUE;
-                break;
-            }
-            tempFP = tempFP->down;
-        };
-
-        if (!hasScript)
+        if (!tempFP)
         {
             JSPrincipals* jsprinc;
             principal->GetJSPrincipals(cx, &jsprinc);
@@ -186,16 +177,37 @@ AutoPushJSContext::AutoPushJSContext(nsISupports* aSecuritySupports,
 
             if (fun)
             {
+                uintN nslots = 2 + JS_GetFunctionArity(fun);
+
                 JSScript *script = JS_GetFunctionScript(cx, fun);
-                mFrame.fun = fun;
+                nslots += script->nslots;
+
+                jsval *argv;
+                argv = (jsval *) cx->malloc(nslots * sizeof(jsval));
+                if (!argv)
+                {
+                    mPushResult = NS_ERROR_OUT_OF_MEMORY;
+                    return;
+                }
+
+                JSObject *closure = JS_GetFunctionObject(fun);
+                argv[0] = OBJECT_TO_JSVAL(closure);
+                argv[1] = JSVAL_NULL;
+                memset(argv + 2, 0, (nslots - 2) * sizeof(jsval));
+
                 mFrame.script = script;
-                mFrame.callee = JS_GetFunctionObject(fun);
-                mFrame.scopeChain = JS_GetParent(cx, mFrame.callee);
-                mFrame.down = cx->fp;
-                mRegs.pc = script->code + script->length
-                           - JSOP_STOP_LENGTH;
+                mFrame.fun = fun;
+                mFrame.argv = argv + 2;
+                mFrame.down = js_GetTopStackFrame(cx);
+                mFrame.scopeChain = OBJ_GET_PARENT(cx, closure);
+                if (script->nslots)
+                    mFrame.slots = argv + nslots - 2;
+                // NB: JSOP_STOP_LENGTH == 1.
+                mRegs.pc = script->code + script->length - 1;
+                JS_ASSERT(static_cast<JSOp>(*mRegs.pc) == JSOP_STOP);
                 mRegs.sp = NULL;
                 mFrame.regs = &mRegs;
+
                 cx->fp = &mFrame;
             }
             else
@@ -214,12 +226,19 @@ AutoPushJSContext::~AutoPushJSContext()
     if (mFrame.argsobj)
         js_PutArgsObject(mContext, &mFrame);
     JS_ClearPendingException(mContext);
+
+    VOUCH_DOES_NOT_REQUIRE_STACK();
     if (mFrame.script)
         mContext->fp = mFrame.down;
 
     JS_EndRequest(mContext);
 }
 
+extern "C" void
+jsj_LeaveTrace(JSContext *cx)
+{
+    js_LeaveTrace(cx);
+}
 
 ////////////////////////////////////////////////////////////////////////////
 // from nsISupports and AggregatedQueryInterface:

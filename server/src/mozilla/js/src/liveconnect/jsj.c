@@ -414,7 +414,7 @@ static PRMonitor *thread_list_monitor = NULL;
  * created, using the provided classpath in addition to any default classpath.
  * The classpath argument is ignored, however, if java_vm_arg is non-NULL.
  */
-JSJavaVM *
+JS_EXPORT_API(JSJavaVM *)
 JSJ_ConnectToJavaVM(SystemJavaVM *java_vm_arg, void* initargs)
 {
     SystemJavaVM* java_vm;
@@ -514,7 +514,7 @@ jsj_ConnectToJavaVM(JSJavaVM *jsjava_vm)
 JSJCallbacks *JSJ_callbacks = NULL;
 
 /* Called once to set up callbacks for all instances of LiveConnect */
-void
+JS_EXPORT_API(void)
 JSJ_Init(JSJCallbacks *callbacks)
 {
     JS_ASSERT(callbacks);
@@ -530,7 +530,7 @@ JSJ_Init(JSJCallbacks *callbacks)
  * and, more importantly, will avoid unnecessary network accesses if classes
  * are being loaded over the network.)
  */
-JSBool
+JS_EXPORT_API(JSBool)
 JSJ_InitJSContext(JSContext *cx, JSObject *global_obj,
                   JavaPackageDef *predefined_packages)
 {
@@ -569,7 +569,7 @@ JSJ_InitJSContext(JSContext *cx, JSObject *global_obj,
  * JSContexts (so that all LiveConnect objects are finalized) and a JavaScript
  * GC is performed.  Otherwise, accessed to free'ed memory could result.
  */
-void
+JS_EXPORT_API(void)
 JSJ_DisconnectFromJavaVM(JSJavaVM *jsjava_vm)
 {
     SystemJavaVM *java_vm;
@@ -848,7 +848,7 @@ JSJ_DetachCurrentThreadFromJava(JSJavaThreadState *jsj_env)
 
 /* Utility routine to wrap a Java object inside a JS object, having a 
    a result type of either JavaObject or JavaArray. */
-JSBool
+JS_EXPORT_API(JSBool)
 JSJ_ConvertJavaObjectToJSValue(JSContext *cx, jobject java_obj, jsval *vp)
 {
     JNIEnv *jEnv;

@@ -63,48 +63,145 @@ typedef union JSLocalNames {
     JSLocalNameMap  *map;
 } JSLocalNames;
 
-struct JSFunction {
-    JSObject        object;     /* GC'ed object header */
-    uint16          nargs;      /* maximum number of specified arguments,
-                                   reflected as f.length/f.arity */
-    uint16          flags;      /* bound method and other flags, see jsapi.h */
-    union {
-        struct {
-            uint16      extra;  /* number of arg slots for local GC roots */
-            uint16      minargs;/* minimum number of specified arguments, used
-                                   only when calling fast native */
-            JSNative    native; /* native method pointer or null */
-            JSClass     *clasp; /* if non-null, constructor for this class */
-        } n;
-        struct {
-            uint16      nvars;  /* number of local variables */
-            uint16      spare;  /* reserved for future use */
-            JSScript    *script;/* interpreted bytecode descriptor or null */
-            JSLocalNames names; /* argument and variable names */
-        } i;
-    } u;
-    JSAtom          *atom;      /* name for diagnostics and decompiling */
-};
-
-#define JSFUN_EXPR_CLOSURE   0x4000 /* expression closure: function(x)x*x */
-#define JSFUN_INTERPRETED    0x8000 /* use u.i if set, u.n if unset */
-
-#define JSFUN_SCRIPT_OR_FAST_NATIVE (JSFUN_INTERPRETED | JSFUN_FAST_NATIVE)
+/*
+ * The high two bits of JSFunction.flags encode whether the function is native
+ * or interpreted, and if interpreted, what kind of optimized closure form (if
+ * any) it might be.
+ *
+ *   00   not interpreted
+ *   01   interpreted, neither flat nor null closure
+ *   10   interpreted, flat closure
+ *   11   interpreted, null closure
+ *
+ * FUN_FLAT_CLOSURE implies FUN_INTERPRETED and u.i.script->upvarsOffset != 0.
+ * FUN_NULL_CLOSURE implies FUN_INTERPRETED and u.i.script->upvarsOffset == 0.
+ *
+ * FUN_INTERPRETED but not FUN_FLAT_CLOSURE and u.i.script->upvarsOffset != 0
+ * is an Algol-like function expression or nested function, i.e., a function
+ * that never escapes upward or downward (heapward), and is only ever called.
+ *
+ * Finally, FUN_INTERPRETED and u.i.script->upvarsOffset == 0 could be either
+ * a non-closure (a global function definition, or any function that uses no
+ * outer names), or a closure of an escaping function that uses outer names
+ * whose values can't be snapshot (because the outer names could be reassigned
+ * after the closure is formed, or because assignments could not be analyzed
+ * due to with or eval).
+ *
+ * Such a hard-case function must use JSOP_NAME, etc., and reify outer function
+ * activations' call objects, etc. if it's not a global function.
+ *
+ * NB: JSFUN_EXPR_CLOSURE reuses JSFUN_STUB_GSOPS, which is an API request flag
+ * bit only, never stored in fun->flags.
+ *
+ * If we need more bits in the future, all flags for FUN_INTERPRETED functions
+ * can move to u.i.script->flags. For now we use function flag bits to minimize
+ * pointer-chasing.
+ */
+#define JSFUN_EXPR_CLOSURE  0x1000  /* expression closure: function(x) x*x */
+#define JSFUN_TRCINFO       0x2000  /* when set, u.n.trcinfo is non-null,
+                                       JSFunctionSpec::call points to a
+                                       JSNativeTraceInfo. */
+#define JSFUN_INTERPRETED   0x4000  /* use u.i if kind >= this value else u.n */
+#define JSFUN_FLAT_CLOSURE  0x8000  /* flag (aka "display") closure */
+#define JSFUN_NULL_CLOSURE  0xc000  /* null closure entrains no scope chain */
+#define JSFUN_KINDMASK      0xc000  /* encode interp vs. native and closure
+                                       optimization level -- see above */
 
 #define FUN_OBJECT(fun)      (&(fun)->object)
-#define FUN_INTERPRETED(fun) ((fun)->flags & JSFUN_INTERPRETED)
-#define FUN_SLOW_NATIVE(fun) (!((fun)->flags & JSFUN_SCRIPT_OR_FAST_NATIVE))
+#define FUN_KIND(fun)        ((fun)->flags & JSFUN_KINDMASK)
+#define FUN_SET_KIND(fun,k)  ((fun)->flags = ((fun)->flags & ~JSFUN_KINDMASK) | (k))
+#define FUN_INTERPRETED(fun) (FUN_KIND(fun) >= JSFUN_INTERPRETED)
+#define FUN_FLAT_CLOSURE(fun)(FUN_KIND(fun) == JSFUN_FLAT_CLOSURE)
+#define FUN_NULL_CLOSURE(fun)(FUN_KIND(fun) == JSFUN_NULL_CLOSURE)
+#define FUN_SLOW_NATIVE(fun) (!FUN_INTERPRETED(fun) && !((fun)->flags & JSFUN_FAST_NATIVE))
 #define FUN_SCRIPT(fun)      (FUN_INTERPRETED(fun) ? (fun)->u.i.script : NULL)
 #define FUN_NATIVE(fun)      (FUN_SLOW_NATIVE(fun) ? (fun)->u.n.native : NULL)
 #define FUN_FAST_NATIVE(fun) (((fun)->flags & JSFUN_FAST_NATIVE)              \
                               ? (JSFastNative) (fun)->u.n.native              \
                               : NULL)
 #define FUN_MINARGS(fun)     (((fun)->flags & JSFUN_FAST_NATIVE)              \
-                              ? (fun)->u.n.minargs                            \
+                              ? 0                                             \
                               : (fun)->nargs)
+#define FUN_CLASP(fun)       (JS_ASSERT(!FUN_INTERPRETED(fun)),               \
+                              fun->u.n.clasp)
+#define FUN_TRCINFO(fun)     (JS_ASSERT(!FUN_INTERPRETED(fun)),               \
+                              JS_ASSERT((fun)->flags & JSFUN_TRCINFO),        \
+                              fun->u.n.trcinfo)
+
+struct JSFunction {
+    JSObject        object;       /* GC'ed object header */
+    uint16          nargs;        /* maximum number of specified arguments,
+                                     reflected as f.length/f.arity */
+    uint16          flags;        /* flags, see JSFUN_* below and in jsapi.h */
+    union {
+        struct {
+            uint16      extra;    /* number of arg slots for local GC roots */
+            uint16      spare;    /* reserved for future use */
+            JSNative    native;   /* native method pointer or null */
+            JSClass     *clasp;   /* class of objects constructed
+                                     by this function */
+            JSNativeTraceInfo *trcinfo;
+        } n;
+        struct {
+            uint16      nvars;    /* number of local variables */
+            uint16      nupvars;  /* number of upvars (computable from script
+                                     but here for faster access) */
+            uint16       skipmin; /* net skip amount up (toward zero) from
+                                     script->staticLevel to nearest upvar,
+                                     including upvars in nested functions */
+            JSPackedBool wrapper; /* true if this function is a wrapper that
+                                     rewrites bytecode optimized for a function
+                                     judged non-escaping by the compiler, which
+                                     then escaped via the debugger or a rogue
+                                     indirect eval; if true, then this function
+                                     object's proto is the wrapped object */
+            JSScript    *script;  /* interpreted bytecode descriptor or null */
+            JSLocalNames names;   /* argument and variable names */
+        } i;
+    } u;
+    JSAtom          *atom;        /* name for diagnostics and decompiling */
+
+#ifdef __cplusplus /* Allow inclusion from LiveConnect C files. */
+    bool optimizedClosure() { return FUN_KIND(this) > JSFUN_INTERPRETED; }
+    bool needsWrapper()     { return FUN_NULL_CLOSURE(this) && u.i.skipmin != 0; }
+
+    uintN countArgsAndVars() const {
+        JS_ASSERT(FUN_INTERPRETED(this));
+        return nargs + u.i.nvars;
+    }
+
+    uintN countLocalNames() const {
+        JS_ASSERT(FUN_INTERPRETED(this));
+        return countArgsAndVars() + u.i.nupvars;
+    }
+
+    bool hasLocalNames() const {
+        JS_ASSERT(FUN_INTERPRETED(this));
+        return countLocalNames() != 0;
+    }
+
+    uint32 countInterpretedReservedSlots() const;
+#endif /* __cplusplus */
+};
+
+/*
+ * Trace-annotated native. This expands to a JSFunctionSpec initializer (like
+ * JS_FN in jsapi.h). fastcall is a JSFastNative; trcinfo is a
+ * JSNativeTraceInfo*.
+ */
+#ifdef JS_TRACER
+/* MSVC demands the intermediate (void *) cast here. */
+# define JS_TN(name,fastcall,nargs,flags,trcinfo)                             \
+    JS_FN(name, JS_DATA_TO_FUNC_PTR(JSNative, trcinfo), nargs,                \
+          (flags) | JSFUN_FAST_NATIVE | JSFUN_STUB_GSOPS | JSFUN_TRCINFO)
+#else
+# define JS_TN(name,fastcall,nargs,flags,trcinfo)                             \
+    JS_FN(name, fastcall, nargs, flags)
+#endif
 
 extern JSClass js_ArgumentsClass;
 extern JS_FRIEND_DATA(JSClass) js_CallClass;
+extern JSClass js_DeclEnvClass;
 
 /* JS_FRIEND_DATA so that VALUE_IS_FUNCTION is callable from the shell. */
 extern JS_FRIEND_DATA(JSClass) js_FunctionClass;
@@ -123,16 +220,25 @@ extern JS_FRIEND_DATA(JSClass) js_FunctionClass;
  */
 #define GET_FUNCTION_PRIVATE(cx, funobj)                                      \
     (JS_ASSERT(HAS_FUNCTION_CLASS(funobj)),                                   \
-     (JSFunction *) OBJ_GET_PRIVATE(cx, funobj))
+     (JSFunction *) (funobj)->getPrivate())
+
+struct js_ArgsPrivateNative;
+
+#ifdef __cplusplus /* Allow inclusion from LiveConnect C files. */
+inline js_ArgsPrivateNative *
+js_GetArgsPrivateNative(JSObject *argsobj)
+{
+    JS_ASSERT(STOBJ_GET_CLASS(argsobj) == &js_ArgumentsClass);
+    uintptr_t p = (uintptr_t) argsobj->getPrivate();
+    return (js_ArgsPrivateNative *) (p & 2 ? p & ~2 : NULL);
+}
+#endif
 
 extern JSObject *
 js_InitFunctionClass(JSContext *cx, JSObject *obj);
 
 extern JSObject *
 js_InitArgumentsClass(JSContext *cx, JSObject *obj);
-
-extern JSObject *
-js_InitCallClass(JSContext *cx, JSObject *obj);
 
 extern JSFunction *
 js_NewFunction(JSContext *cx, JSObject *funobj, JSNative native, uintN nargs,
@@ -147,8 +253,11 @@ js_FinalizeFunction(JSContext *cx, JSFunction *fun);
 extern JSObject *
 js_CloneFunctionObject(JSContext *cx, JSFunction *fun, JSObject *parent);
 
-extern JSBool
-js_LinkFunctionObject(JSContext *cx, JSFunction *fun, JSObject *object);
+extern JS_REQUIRES_STACK JSObject *
+js_NewFlatClosure(JSContext *cx, JSFunction *fun);
+
+extern JS_REQUIRES_STACK JSObject *
+js_NewDebuggableFlatClosure(JSContext *cx, JSFunction *fun);
 
 extern JSFunction *
 js_DefineFunction(JSContext *cx, JSObject *obj, JSAtom *atom, JSNative native,
@@ -176,16 +285,48 @@ extern void
 js_ReportIsNotFunction(JSContext *cx, jsval *vp, uintN flags);
 
 extern JSObject *
-js_GetCallObject(JSContext *cx, JSStackFrame *fp, JSObject *parent);
+js_GetCallObject(JSContext *cx, JSStackFrame *fp);
 
-extern JS_FRIEND_API(JSBool)
+#ifdef OJI
+JS_EXTERN_API(void)
+#else
+extern void
+#endif
 js_PutCallObject(JSContext *cx, JSStackFrame *fp);
+
+extern JSFunction *
+js_GetCallObjectFunction(JSObject *obj);
 
 extern JSBool
 js_GetCallArg(JSContext *cx, JSObject *obj, jsid id, jsval *vp);
 
 extern JSBool
-js_GetCallVar(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
+js_GetCallVar(JSContext *cx, JSObject *obj, jsid id, jsval *vp);
+
+extern JSBool
+SetCallArg(JSContext *cx, JSObject *obj, jsid id, jsval *vp);
+
+extern JSBool
+SetCallVar(JSContext *cx, JSObject *obj, jsid id, jsval *vp);
+
+/*
+ * js_SetCallArg and js_SetCallVar are extern fastcall copies of the setter
+ * functions. These versions are required in order to set call vars from traces.
+ * The normal versions must not be fastcall because they are stored in the
+ * property ops map.
+ */
+extern JSBool JS_FASTCALL
+js_SetCallArg(JSContext *cx, JSObject *obj, jsid id, jsval v);
+
+extern JSBool JS_FASTCALL
+js_SetCallVar(JSContext *cx, JSObject *obj, jsid id, jsval v);
+
+/*
+ * Slower version of js_GetCallVar used when call_resolve detects an attempt to
+ * leak an optimized closure via indirect or debugger eval.
+ */
+extern JSBool
+js_GetCallVarChecked(JSContext *cx, JSObject *obj, jsid id, jsval *vp);
 
 extern JSBool
 js_GetArgsValue(JSContext *cx, JSStackFrame *fp, jsval *vp);
@@ -193,23 +334,67 @@ js_GetArgsValue(JSContext *cx, JSStackFrame *fp, jsval *vp);
 extern JSBool
 js_GetArgsProperty(JSContext *cx, JSStackFrame *fp, jsid id, jsval *vp);
 
+#ifdef OJI
+JS_EXTERN_API(JSObject *)
+#else
 extern JSObject *
+#endif
 js_GetArgsObject(JSContext *cx, JSStackFrame *fp);
 
-extern JS_FRIEND_API(JSBool)
+#ifdef OJI
+JS_EXTERN_API(void)
+#else
+extern void
+#endif
 js_PutArgsObject(JSContext *cx, JSStackFrame *fp);
 
+/*
+ * Reserved slot structure for Arguments objects:
+ *
+ * JSSLOT_PRIVATE       - the corresponding frame until the frame exits.
+ * JSSLOT_ARGS_LENGTH   - the number of actual arguments and a flag indicating
+ *                        whether arguments.length was overwritten.
+ * JSSLOT_ARGS_CALLEE   - the arguments.callee value or JSVAL_HOLE if that was
+ *                        overwritten.
+ * JSSLOT_ARGS_COPY_START .. - room to store the corresponding arguments after
+ *                        the frame exists. The slot's value will be JSVAL_HOLE
+ *                        if arguments[i] was deleted or overwritten.
+ */
+const uint32 JSSLOT_ARGS_LENGTH =               JSSLOT_PRIVATE + 1;
+const uint32 JSSLOT_ARGS_CALLEE =               JSSLOT_PRIVATE + 2;
+const uint32 JSSLOT_ARGS_COPY_START =           JSSLOT_PRIVATE + 3;
+
+/* Number of extra fixed slots besides JSSLOT_PRIVATE. */
+const uint32 ARGS_CLASS_FIXED_RESERVED_SLOTS =  JSSLOT_ARGS_COPY_START -
+                                                JSSLOT_ARGS_LENGTH;
+
+/*
+ * JSSLOT_ARGS_LENGTH stores ((argc << 1) | overwritten_flag) as int jsval.
+ * Thus (JS_ARGS_LENGTH_MAX << 1) | 1 must fit JSVAL_INT_MAX. To assert that
+ * we check first that the shift does not overflow uint32.
+ */
+JS_STATIC_ASSERT(JS_ARGS_LENGTH_MAX <= JS_BIT(30));
+JS_STATIC_ASSERT(jsval((JS_ARGS_LENGTH_MAX << 1) | 1) <= JSVAL_INT_MAX);
+
+JS_INLINE bool
+js_IsOverriddenArgsLength(JSObject *obj)
+{
+    JS_ASSERT(STOBJ_GET_CLASS(obj) == &js_ArgumentsClass);
+
+    jsval v = obj->fslots[JSSLOT_ARGS_LENGTH];
+    return (JSVAL_TO_INT(v) & 1) != 0;
+}
+
 extern JSBool
-js_XDRFunction(JSXDRState *xdr, JSObject **objp);
+js_XDRFunctionObject(JSXDRState *xdr, JSObject **objp);
 
 typedef enum JSLocalKind {
     JSLOCAL_NONE,
     JSLOCAL_ARG,
     JSLOCAL_VAR,
-    JSLOCAL_CONST
+    JSLOCAL_CONST,
+    JSLOCAL_UPVAR
 } JSLocalKind;
-
-#define JS_GET_LOCAL_NAME_COUNT(fun)    ((fun)->nargs + (fun)->u.i.nvars)
 
 extern JSBool
 js_AddLocal(JSContext *cx, JSFunction *fun, JSAtom *atom, JSLocalKind kind);
@@ -226,18 +411,22 @@ js_LookupLocal(JSContext *cx, JSFunction *fun, JSAtom *atom, uintN *indexp);
 /*
  * Functions to work with local names as an array of words.
  *
- * js_GetLocalNameArray returns the array or null when it cannot be allocated
- * The function must be called only when JS_GET_LOCAL_NAME_COUNT(fun) is not
- * zero. The function use the supplied pool to allocate the array.
+ * js_GetLocalNameArray returns the array, or null if we are out of memory.
+ * This function must be called only when fun->hasLocalNames().
  *
- * The elements of the array with index below fun->nargs correspond to the
- * names of function arguments and of function variables otherwise. Use
- * JS_LOCAL_NAME_TO_ATOM to convert array's element into an atom. It can be
- * null when the element is an argument corresponding to a destructuring
- * pattern. For a variable use JS_LOCAL_NAME_IS_CONST to check if it
- * corresponds to the const declaration.
+ * The supplied pool is used to allocate the returned array, so the caller is
+ * obligated to mark and release to free it.
+ *
+ * The elements of the array with index less than fun->nargs correspond to the
+ * names of function formal parameters. An index >= fun->nargs addresses a var
+ * binding. Use JS_LOCAL_NAME_TO_ATOM to convert array's element to an atom
+ * pointer. This pointer can be null when the element is for a formal parameter
+ * corresponding to a destructuring pattern.
+ *
+ * If nameWord does not name a formal parameter, use JS_LOCAL_NAME_IS_CONST to
+ * check if nameWord corresponds to the const declaration.
  */
-extern jsuword *
+extern JS_FRIEND_API(jsuword *)
 js_GetLocalNameArray(JSContext *cx, JSFunction *fun, struct JSArenaPool *pool);
 
 #define JS_LOCAL_NAME_TO_ATOM(nameWord)                                       \
@@ -248,6 +437,13 @@ js_GetLocalNameArray(JSContext *cx, JSFunction *fun, struct JSArenaPool *pool);
 
 extern void
 js_FreezeLocalNames(JSContext *cx, JSFunction *fun);
+
+extern JSBool
+js_fun_apply(JSContext *cx, uintN argc, jsval *vp);
+
+extern JSBool
+js_fun_call(JSContext *cx, uintN argc, jsval *vp);
+
 
 JS_END_EXTERN_C
 

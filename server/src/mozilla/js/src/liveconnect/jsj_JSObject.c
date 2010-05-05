@@ -52,9 +52,6 @@
 #include "jsj_private.h"
 #include "jsjava.h"
 
-#include "jscntxt.h"        /* For js_ReportErrorAgain().
-                               TODO - get rid of private header */
-
 #include "netscape_javascript_JSObject.h"   /* javah-generated headers */
 
 
@@ -374,7 +371,7 @@ destroy_saved_js_error(JNIEnv *jEnv, CapturedJSError *error)
  * into JavaScript, in which case the error will be re-reported as a JavaScript
  * error.
  */
-JS_STATIC_DLL_CALLBACK(void)
+static void
 capture_js_error_reports_for_java(JSContext *cx, const char *message,
                                   JSErrorReport *report)
 {
@@ -667,7 +664,8 @@ jsj_ReportUncaughtJSException(JSContext *cx, JNIEnv *jEnv, jthrowable java_excep
     if (message_jstr)
         message = (*jEnv)->GetStringUTFChars(jEnv, message_jstr, 0);
 
-    js_ReportErrorAgain(cx, message, &report);
+    JS_ThrowReportedError(cx, message, &report);
+    JS_ReportPendingException(cx);
 
     success = JS_TRUE;
 

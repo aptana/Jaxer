@@ -40,6 +40,22 @@
  */
 
 #include "jsd.h"
+#include "jsapi.h"
+#include "jspubtd.h"
+
+/*
+ * Lifted with slight modification from jsobj.h
+ */
+
+#define OBJ_TO_OUTER_OBJECT(cx, obj)                                \
+do {                                                                \
+    JSClass *clasp_ = JS_GetClass(cx, obj);                         \
+    if (clasp_->flags & JSCLASS_IS_EXTENDED) {                      \
+        JSExtendedClass *xclasp_ = (JSExtendedClass*) clasp_;       \
+        if (xclasp_->outerObject)                                   \
+            obj = xclasp_->outerObject(cx, obj);                    \
+    }                                                               \
+} while(0)
 
 #ifdef DEBUG
 void JSD_ASSERT_VALID_VALUE(JSDValue* jsdval)
@@ -294,7 +310,23 @@ jsd_DropValue(JSDContext* jsdc, JSDValue* jsdval)
 jsval
 jsd_GetValueWrappedJSVal(JSDContext* jsdc, JSDValue* jsdval)
 {
-    return jsdval->val;
+    JSObject* obj;
+    JSContext* cx;
+    jsval val = jsdval->val;
+    if (!JSVAL_IS_PRIMITIVE(val)) {
+        cx = JSD_GetDefaultJSContext(jsdc);
+        obj = JSVAL_TO_OBJECT(val);
+        OBJ_TO_OUTER_OBJECT(cx, obj);
+        if (!obj)
+        {
+            JS_ClearPendingException(cx);
+            val = JSVAL_NULL;
+        }
+        else
+            val = OBJECT_TO_JSVAL(obj);
+    }
+    
+    return val;
 }
 
 static JSDProperty* _newProperty(JSDContext* jsdc, JSPropertyDesc* pd,
@@ -624,6 +656,37 @@ jsd_GetValueClassName(JSDContext* jsdc, JSDValue* jsdval)
     }
     return jsdval->className;
 }
+
+JSDScript*
+jsd_GetScriptForValue(JSDContext* jsdc, JSDValue* jsdval)
+{
+    JSContext* cx = jsdc->dumbContext;
+    jsval val = jsdval->val;
+    JSFunction* fun;
+    JSExceptionState* exceptionState;
+    JSScript* script = NULL;
+    JSDScript* jsdscript;
+
+    if (!jsd_IsValueFunction(jsdc, jsdval))
+        return NULL;
+
+    JS_BeginRequest(cx);
+    exceptionState = JS_SaveExceptionState(cx);
+    fun = JS_ValueToFunction(cx, val);
+    JS_RestoreExceptionState(cx, exceptionState);
+    if (fun)
+        script = JS_GetFunctionScript(cx, fun);
+    JS_EndRequest(cx);
+
+    if (!script)
+        return NULL;
+
+    JSD_LOCK_SCRIPTS(jsdc);
+    jsdscript = jsd_FindJSDScript(jsdc, script);
+    JSD_UNLOCK_SCRIPTS(jsdc);
+    return jsdscript;
+}
+
 
 /***************************************************************************/
 /***************************************************************************/

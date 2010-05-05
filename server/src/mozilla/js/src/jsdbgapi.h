@@ -102,7 +102,7 @@ JS_ClearAllWatchPoints(JSContext *cx);
 #ifdef JS_HAS_OBJ_WATCHPOINT
 /*
  * Hide these non-API function prototypes by testing whether the internal
- * header file "jsconfig.h" has been included.
+ * header file "jsversion.h" has been included.
  */
 extern void
 js_TraceWatchPoints(JSTracer *trc, JSObject *obj);
@@ -120,10 +120,10 @@ extern JSPropertyOp
 js_GetWatchedSetter(JSRuntime *rt, JSScope *scope,
                     const JSScopeProperty *sprop);
 
-extern JSBool JS_DLL_CALLBACK
+extern JSBool
 js_watch_set(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 
-extern JSBool JS_DLL_CALLBACK
+extern JSBool
 js_watch_set_wrapper(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
                      jsval *rval);
 
@@ -421,11 +421,15 @@ JS_NewSystemObject(JSContext *cx, JSClass *clasp, JSObject *proto,
 
 /************************************************************************/
 
-extern JS_PUBLIC_API(JSDebugHooks *)
+extern JS_PUBLIC_API(const JSDebugHooks *)
 JS_GetGlobalDebugHooks(JSRuntime *rt);
 
 extern JS_PUBLIC_API(JSDebugHooks *)
-JS_SetContextDebugHooks(JSContext *cx, JSDebugHooks *hooks);
+JS_SetContextDebugHooks(JSContext *cx, const JSDebugHooks *hooks);
+
+/* Disable debug hooks for this context. */
+extern JS_PUBLIC_API(JSDebugHooks *)
+JS_ClearContextDebugHooks(JSContext *cx);
 
 #ifdef MOZ_SHARK
 
@@ -458,6 +462,51 @@ js_DisconnectShark(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
                    jsval *rval);
 
 #endif /* MOZ_SHARK */
+
+#ifdef MOZ_CALLGRIND
+
+extern JS_FRIEND_API(JSBool)
+js_StopCallgrind(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
+                 jsval *rval);
+
+extern JS_FRIEND_API(JSBool)
+js_StartCallgrind(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
+                  jsval *rval);
+
+extern JS_FRIEND_API(JSBool)
+js_DumpCallgrind(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
+                 jsval *rval);
+
+#endif /* MOZ_CALLGRIND */
+
+#ifdef MOZ_VTUNE
+
+extern JS_FRIEND_API(JSBool)
+js_StartVtune(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
+              jsval *rval);
+
+extern JS_FRIEND_API(JSBool)
+js_StopVtune(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
+             jsval *rval);
+
+extern JS_FRIEND_API(JSBool)
+js_PauseVtune(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
+              jsval *rval);
+
+extern JS_FRIEND_API(JSBool)
+js_ResumeVtune(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
+               jsval *rval);
+
+#endif /* MOZ_VTUNE */
+
+#ifdef MOZ_TRACEVIS
+extern JS_FRIEND_API(JSBool)
+js_InitEthogram(JSContext *cx, JSObject *obj,
+                uintN argc, jsval *argv, jsval *rval);
+extern JS_FRIEND_API(JSBool)
+js_ShutdownEthogram(JSContext *cx, JSObject *obj,
+                    uintN argc, jsval *argv, jsval *rval);
+#endif /* MOZ_TRACEVIS */
 
 JS_END_EXTERN_C
 

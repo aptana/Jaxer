@@ -48,6 +48,7 @@
 #include <string.h>
 
 #include "jsj_private.h"      /* LiveConnect internals */
+#include "jsobj.h"
 
 /* Shorthands for ASCII (7-bit) decimal and hex conversion. */
 #define JS7_ISDEC(c)    (((c) >= '0') && ((c) <= '9'))
@@ -208,7 +209,7 @@ access_java_array_element(JSContext *cx,
     }
 }
 
-JS_STATIC_DLL_CALLBACK(JSBool)
+static JSBool
 JavaArray_getPropertyById(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 {
     JNIEnv *jEnv;
@@ -223,7 +224,7 @@ JavaArray_getPropertyById(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
     return result;
 }
 
-JS_STATIC_DLL_CALLBACK(JSBool)
+static JSBool
 JavaArray_setPropertyById(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 {
     JNIEnv *jEnv;
@@ -238,7 +239,7 @@ JavaArray_setPropertyById(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
     return result;
 }
 
-JS_STATIC_DLL_CALLBACK(JSBool)
+static JSBool
 JavaArray_lookupProperty(JSContext *cx, JSObject *obj, jsid id,
                          JSObject **objp, JSProperty **propp)
 {
@@ -263,7 +264,7 @@ JavaArray_lookupProperty(JSContext *cx, JSObject *obj, jsid id,
     return JS_TRUE;
 }
 
-JS_STATIC_DLL_CALLBACK(JSBool)
+static JSBool
 JavaArray_defineProperty(JSContext *cx, JSObject *obj, jsid id, jsval value,
                          JSPropertyOp getter, JSPropertyOp setter,
                          uintN attrs, JSProperty **propp)
@@ -277,7 +278,7 @@ JavaArray_defineProperty(JSContext *cx, JSObject *obj, jsid id, jsval value,
     return JavaArray_setPropertyById(cx, obj, id, vp);
 }
 
-JS_STATIC_DLL_CALLBACK(JSBool)
+static JSBool
 JavaArray_getAttributes(JSContext *cx, JSObject *obj, jsid id,
                         JSProperty *prop, uintN *attrsp)
 {
@@ -286,7 +287,7 @@ JavaArray_getAttributes(JSContext *cx, JSObject *obj, jsid id,
     return JS_FALSE;
 }
 
-JS_STATIC_DLL_CALLBACK(JSBool)
+static JSBool
 JavaArray_setAttributes(JSContext *cx, JSObject *obj, jsid id,
                         JSProperty *prop, uintN *attrsp)
 {
@@ -300,7 +301,7 @@ JavaArray_setAttributes(JSContext *cx, JSObject *obj, jsid id,
     return JS_TRUE;
 }
 
-JS_STATIC_DLL_CALLBACK(JSBool)
+static JSBool
 JavaArray_deleteProperty(JSContext *cx, JSObject *obj, jsid id, jsval *vp)
 {
     JSVersion version = JS_GetVersion(cx);
@@ -318,14 +319,14 @@ JavaArray_deleteProperty(JSContext *cx, JSObject *obj, jsid id, jsval *vp)
     }
 }
 
-JS_STATIC_DLL_CALLBACK(JSBool)
+static JSBool
 JavaArray_defaultValue(JSContext *cx, JSObject *obj, JSType type, jsval *vp)
 {
     /* printf("In JavaArray_defaultValue()\n"); */
     return JavaObject_convert(cx, obj, JSTYPE_STRING, vp);
 }
 
-JS_STATIC_DLL_CALLBACK(JSBool)
+static JSBool
 JavaArray_newEnumerate(JSContext *cx, JSObject *obj, JSIterateOp enum_op,
                        jsval *statep, jsid *idp)
 {
@@ -388,7 +389,7 @@ JavaArray_newEnumerate(JSContext *cx, JSObject *obj, JSIterateOp enum_op,
     return ok;
 }
 
-JS_STATIC_DLL_CALLBACK(JSBool)
+static JSBool
 JavaArray_checkAccess(JSContext *cx, JSObject *obj, jsid id,
                       JSAccessMode mode, jsval *vp, uintN *attrsp)
 {
@@ -398,20 +399,19 @@ JavaArray_checkAccess(JSContext *cx, JSObject *obj, jsid id,
                                             JSJMSG_JARRAY_PROP_WATCH);
         return JS_FALSE;
 
-    case JSACC_IMPORT:
-        JS_ReportErrorNumber(cx, jsj_GetErrorMessage, NULL, 
-                                            JSJMSG_JARRAY_PROP_EXPORT);
-        return JS_FALSE;
-
     default:
         return JS_TRUE;
     }
 }
 
+extern JSObjectOps JavaArray_ops;
+
+static const JSObjectMap JavaArrayMap = { &JavaArray_ops };
+
 JSObjectOps JavaArray_ops = {
+    &JavaArrayMap,                  /* objectMap */
+
     /* Mandatory non-null function pointer members. */
-    jsj_wrapper_newObjectMap,       /* newObjectMap */
-    jsj_wrapper_destroyObjectMap,   /* destroyObjectMap */
     JavaArray_lookupProperty,
     JavaArray_defineProperty,
     JavaArray_getPropertyById,      /* getProperty */
@@ -428,17 +428,12 @@ JSObjectOps JavaArray_ops = {
     NULL,                           /* dropProperty */
     NULL,                           /* call */
     NULL,                           /* construct */
-    NULL,                           /* xdrObject */
     NULL,                           /* hasInstance */
-    NULL,                           /* setProto */
-    NULL,                           /* setParent */
-    NULL,                           /* mark */
-    NULL,                           /* clear */
-    jsj_wrapper_getRequiredSlot,    /* getRequiredSlot */
-    jsj_wrapper_setRequiredSlot     /* setRequiredSlot */
+    jsj_TraceObject,                /* trace */
+    NULL                            /* clear */
 };
 
-JS_STATIC_DLL_CALLBACK(JSObjectOps *)
+static JSObjectOps *
 JavaArray_getObjectOps(JSContext *cx, JSClass *clazz)
 {
     return &JavaArray_ops;

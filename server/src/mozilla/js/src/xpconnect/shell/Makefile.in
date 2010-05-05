@@ -44,22 +44,36 @@ VPATH		= @srcdir@
 include $(DEPTH)/config/autoconf.mk
 
 MODULE		= xpcshell
-SIMPLE_PROGRAMS	= xpcshell$(BIN_SUFFIX)
+PROGRAM		= xpcshell$(BIN_SUFFIX)
 
 REQUIRES	= xpconnect \
 		  xpcom \
 		  js \
 		  caps \
+		  xulapp \
 		  $(NULL)
 
 CPPSRCS		= xpcshell.cpp
 
+ifneq (,$(filter mac cocoa,$(MOZ_WIDGET_TOOLKIT)))
+CMMSRCS += xpcshellMacUtils.mm
+endif
+
 LIBS		= \
 		$(DIST)/lib/$(LIB_PREFIX)xpcomglue_s.$(LIB_SUFFIX) \
+		$(LIBXUL_LIBS) \
 		$(MOZ_JS_LIBS) \
-		$(XPCOM_LIBS) \
 		$(NSPR_LIBS) \
 		$(NULL)
+
+NSDISTMODE = copy
+
+ifdef _MSC_VER
+ifdef WINCE
+WIN32_EXE_LDFLAGS += -ENTRY:mainWCRTStartup
+LOCAL_INCLUDES += -I$(topsrcdir)/toolkit/xre/
+endif
+endif
 
 include $(topsrcdir)/config/rules.mk
 
@@ -70,7 +84,14 @@ DEFINES += -DMOZ_SHARK
 CFLAGS += -F/System/Library/PrivateFrameworks
 LDFLAGS += -F/System/Library/PrivateFrameworks -framework CHUD
 endif
-
+ifdef MOZ_CALLGRIND
+DEFINES += -DMOZ_CALLGRIND
+endif
+ifdef MOZ_VTUNE
+DEFINES += -DMOZ_VTUNE
+CXXFLAGS += -IC:/Program\ Files/Intel/VTune/Analyzer/Include
+LIBS += C:/Program\ Files/Intel/VTune/Analyzer/Lib/VtuneApi.lib
+endif
 #
 # Line editing support.  If your OS supplies the readline library, define
 # JS_READLINE to get line editing in the xpcshell.

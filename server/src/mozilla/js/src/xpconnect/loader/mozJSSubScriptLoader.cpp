@@ -73,7 +73,7 @@
 #define LOAD_ERROR_NOSPEC "Failed to get URI spec.  This is bad."
 
 // We just use the same reporter as the component loader
-extern void JS_DLL_CALLBACK
+extern void
 mozJSLoaderErrorReporter(JSContext *cx, const char *message, JSErrorReport *rep);
 
 mozJSSubScriptLoader::mozJSSubScriptLoader() : mSystemPrincipal(nsnull)
@@ -151,7 +151,6 @@ mozJSSubScriptLoader::LoadSubScript (const PRUnichar * /*url*/
     ok = JS_ConvertArguments (cx, argc, argv, "s / o", &url, &target_obj);
     if (!ok)
     {
-        cc->SetExceptionWasThrown (JS_TRUE);
         /* let the exception raised by JS_ConvertArguments show through */
         return NS_OK;
     }
@@ -348,7 +347,6 @@ mozJSSubScriptLoader::LoadSubScript (const PRUnichar * /*url*/
     /* repent for our evil deeds */
     JS_SetErrorReporter (cx, er);
 
-    cc->SetExceptionWasThrown (!ok);
     cc->SetReturnValueWasSet (ok);
 
     JSPRINCIPALS_DROP(cx, jsPrincipals);
@@ -356,7 +354,6 @@ mozJSSubScriptLoader::LoadSubScript (const PRUnichar * /*url*/
 
  return_exception:
     JS_SetPendingException (cx, STRING_TO_JSVAL(errmsg));
-    cc->SetExceptionWasThrown (JS_TRUE);
     return NS_OK;
 }
 

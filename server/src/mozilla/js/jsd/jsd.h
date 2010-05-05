@@ -348,6 +348,12 @@ extern void
 jsd_DebuggerOff(JSDContext* jsdc);
 
 extern void
+jsd_DebuggerPause(JSDContext* jsdc, JSBool forceAllHooksOff);
+
+extern void
+jsd_DebuggerUnpause(JSDContext* jsdc);
+
+extern void
 jsd_SetUserCallbacks(JSRuntime* jsrt, JSD_UserCallbacks* callbacks, void* user);
 
 extern JSDContext*
@@ -372,7 +378,7 @@ jsd_GetErrorReporter(JSDContext*        jsdc,
                      JSD_ErrorReporter* reporter,
                      void**             callerdata);
 
-JS_STATIC_DLL_CALLBACK(JSBool)
+static JSBool
 jsd_DebugErrorHook(JSContext *cx, const char *message,
                    JSErrorReport *report, void *closure);
 
@@ -388,6 +394,12 @@ jsd_DestroyScriptManager(JSDContext* jsdc);
 extern JSDScript*
 jsd_FindJSDScript(JSDContext*  jsdc,
                   JSScript     *script);
+
+extern JSDScript*
+jsd_FindOrCreateJSDScript(JSDContext    *jsdc,
+                          JSContext     *cx,
+                          JSScript      *script,
+                          JSStackFrame  *fp);
 
 extern JSDProfileData*
 jsd_GetScriptProfileData(JSDContext* jsdc, JSDScript *script);
@@ -467,7 +479,7 @@ jsd_GetClosestPC(JSDContext* jsdc, JSDScript* jsdscript, uintN line);
 extern uintN
 jsd_GetClosestLine(JSDContext* jsdc, JSDScript* jsdscript, jsuword pc);
 
-extern void JS_DLL_CALLBACK
+extern void
 jsd_NewScriptHookProc(
                 JSContext   *cx,
                 const char  *filename,      /* URL this script loads from */
@@ -476,7 +488,7 @@ jsd_NewScriptHookProc(
                 JSFunction  *fun,
                 void*       callerdata);
 
-extern void JS_DLL_CALLBACK
+extern void
 jsd_DestroyScriptHookProc(
                 JSContext   *cx,
                 JSScript    *script,
@@ -634,11 +646,11 @@ jsd_SetThrowHook(JSDContext*           jsdc,
 extern JSBool
 jsd_ClearThrowHook(JSDContext* jsdc);
 
-extern JSTrapStatus JS_DLL_CALLBACK
+extern JSTrapStatus
 jsd_DebuggerHandler(JSContext *cx, JSScript *script, jsbytecode *pc,
                     jsval *rval, void *closure);
 
-extern JSTrapStatus JS_DLL_CALLBACK
+extern JSTrapStatus
 jsd_ThrowHandler(JSContext *cx, JSScript *script, jsbytecode *pc,
                  jsval *rval, void *closure);
 
@@ -986,6 +998,9 @@ jsd_GetValueConstructor(JSDContext* jsdc, JSDValue* jsdval);
 extern const char*
 jsd_GetValueClassName(JSDContext* jsdc, JSDValue* jsdval);
 
+extern JSDScript*
+jsd_GetScriptForValue(JSDContext* jsdc, JSDValue* jsdval);
+
 /**************************************************/
 
 extern void
@@ -1009,11 +1024,11 @@ jsd_GetPropertyVarArgSlot(JSDContext* jsdc, JSDProperty* jsdprop);
 /**************************************************/
 /* Stepping Functions */
 
-extern void * JS_DLL_CALLBACK
+extern void *
 jsd_FunctionCallHook(JSContext *cx, JSStackFrame *fp, JSBool before,
                      JSBool *ok, void *closure);
 
-extern void * JS_DLL_CALLBACK
+extern void *
 jsd_TopLevelCallHook(JSContext *cx, JSStackFrame *fp, JSBool before,
                      JSBool *ok, void *closure);
 
@@ -1026,7 +1041,10 @@ jsd_InitObjectManager(JSDContext* jsdc);
 extern void
 jsd_DestroyObjectManager(JSDContext* jsdc);
 
-extern void JS_DLL_CALLBACK
+extern void
+jsd_DestroyObjects(JSDContext* jsdc);
+
+extern void
 jsd_ObjectHook(JSContext *cx, JSObject *obj, JSBool isNew, void *closure);
 
 extern void
@@ -1117,7 +1135,7 @@ jsdlw_ProcessedToRawLineNumber(JSDContext* jsdc, JSDScript* jsdscript,
 
 #if 0
 /* our hook proc for LiveWire app start/stop */
-extern void JS_DLL_CALLBACK
+extern void
 jsdlw_AppHookProc(LWDBGApp* app,
                   JSBool created,
                   void *callerdata);

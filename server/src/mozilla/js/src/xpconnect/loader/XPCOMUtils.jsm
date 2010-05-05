@@ -1,4 +1,5 @@
-/*
+/* -*- Mode: C++; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*-
+ * vim: sw=2 ts=2 sts=2 et filetype=javascript
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -82,7 +83,9 @@
  *    // QueryInterface implementation, e.g. using the generateQI helper
  *    QueryInterface: XPCOMUtils.generateQI(
  *      [Components.interfaces.nsIObserver,
- *       Components.interfaces.nsIMyInterface]),
+ *       Components.interfaces.nsIMyInterface,
+ *       "nsIFoo",
+ *       "nsIBar" ]),
  *
  *    // ...component implementation...
  *  };
@@ -101,6 +104,7 @@
 
 var EXPORTED_SYMBOLS = [ "XPCOMUtils" ];
 
+const Cc = Components.classes;
 const Ci = Components.interfaces;
 const Cr = Components.results;
 
@@ -112,7 +116,8 @@ var XPCOMUtils = {
    * param, and if it is, returns |this| (the object it was called on).
    */
   generateQI: function(interfaces) {
-    return makeQI([i.name for each(i in interfaces)]);
+    /* Note that Ci[Ci.x] == Ci.x for all x */
+    return makeQI([Ci[i].name for each (i in interfaces) if (Ci[i])]);
   },
 
   /**
@@ -222,6 +227,47 @@ var XPCOMUtils = {
         return true;
       }
     };
+  },
+
+  /**
+   * Defines a getter on a specified object that will be created upon first use.
+   *
+   * @param aObject
+   *        The object to define the lazy getter on.
+   * @param aName
+   *        The name of the getter to define on aObject.
+   * @param aLambda
+   *        A function that returns what the getter should return.  This will
+   *        only ever be called once.
+   */
+  defineLazyGetter: function XPCU_defineLazyGetter(aObject, aName, aLambda)
+  {
+    aObject.__defineGetter__(aName, function() {
+      delete aObject[aName];
+      return aObject[aName] = aLambda.apply(aObject);
+    });
+  },
+
+  /**
+   * Defines a getter on a specified object for a service.  The service will not
+   * be obtained until first use.
+   *
+   * @param aObject
+   *        The object to define the lazy getter on.
+   * @param aName
+   *        The name of the getter to define on aObject for the service.
+   * @param aContract
+   *        The contract used to obtain the service.
+   * @param aInterfaceName
+   *        The name of the interface to query the service to.
+   */
+  defineLazyServiceGetter: function XPCU_defineLazyServiceGetter(aObject, aName,
+                                                                 aContract,
+                                                                 aInterfaceName)
+  {
+    this.defineLazyGetter(aObject, aName, function XPCU_serviceLambda() {
+      return Cc[aContract].getService(Ci[aInterfaceName]);
+    });
   },
 
   /**

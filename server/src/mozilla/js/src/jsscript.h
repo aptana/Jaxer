@@ -1,5 +1,5 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
- * vim: set ts=8 sw=4 et tw=78:
+ * vim: set ts=8 sw=4 et tw=79 ft=cpp:
  *
  * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -45,17 +45,18 @@
  */
 #include "jsatom.h"
 #include "jsprvtd.h"
+#include "jsdbgapi.h"
 
 JS_BEGIN_EXTERN_C
 
 /*
- * Type of try note associated with each catch or finally block or with for-in
- * loop.
+ * Type of try note associated with each catch or finally block, and also with
+ * for-in loops.
  */
 typedef enum JSTryNoteKind {
-    JSTN_CATCH,
-    JSTN_FINALLY,
-    JSTN_ITER
+    JSTRY_CATCH,
+    JSTRY_FINALLY,
+    JSTRY_ITER
 } JSTryNoteKind;
 
 /*
@@ -72,13 +73,25 @@ struct JSTryNote {
 
 typedef struct JSTryNoteArray {
     JSTryNote       *vector;    /* array of indexed try notes */
-    uint32          length;     /* count of indexded try notes */
+    uint32          length;     /* count of indexed try notes */
 } JSTryNoteArray;
 
 typedef struct JSObjectArray {
     JSObject        **vector;   /* array of indexed objects */
-    uint32          length;     /* count of indexded objects */
+    uint32          length;     /* count of indexed objects */
 } JSObjectArray;
+
+typedef struct JSUpvarArray {
+    uint32          *vector;    /* array of indexed upvar cookies */
+    uint32          length;     /* count of indexed upvar cookies */
+} JSUpvarArray;
+
+#define CALLEE_UPVAR_SLOT               0xffff
+#define FREE_STATIC_LEVEL               0x3fff
+#define FREE_UPVAR_COOKIE               0xffffffff
+#define MAKE_UPVAR_COOKIE(skip,slot)    ((skip) << 16 | (slot))
+#define UPVAR_FRAME_SKIP(cookie)        ((uint32)(cookie) >> 16)
+#define UPVAR_FRAME_SLOT(cookie)        ((uint16)(cookie))
 
 #define JS_OBJECT_ARRAY_SIZE(length)                                          \
     (offsetof(JSObjectArray, vector) + sizeof(JSObject *) * (length))
@@ -91,81 +104,101 @@ struct JSScript {
     jsbytecode      *code;      /* bytecodes and their immediate operands */
     uint32          length;     /* length of code vector */
     uint16          version;    /* JS version under which script was compiled */
-    uint16          ngvars;     /* declared global var/const/function count */
+    uint16          nfixed;     /* number of slots besides stack operands in
+                                   slot array */
     uint8           objectsOffset;  /* offset to the array of nested function,
                                        block, scope, xml and one-time regexps
                                        objects or 0 if none */
+    uint8           upvarsOffset;   /* offset of the array of display ("up")
+                                       closure vars or 0 if none */
     uint8           regexpsOffset;  /* offset to the array of to-be-cloned
                                        regexps or 0 if none. */
     uint8           trynotesOffset; /* offset to the array of try notes or
                                        0 if none */
+    uint8           flags;      /* see below */
     jsbytecode      *main;      /* main entry point, after predef'ing prolog */
     JSAtomMap       atomMap;    /* maps immediate index to literal struct */
     const char      *filename;  /* source filename or null */
-    uintN           lineno;     /* base line number of script */
-    uintN           depth;      /* maximum stack depth in slots */
+    uint32          lineno;     /* base line number of script */
+    uint16          nslots;     /* vars plus maximum stack depth */
+    uint16          staticLevel;/* static level for display maintenance */
     JSPrincipals    *principals;/* principals for this script */
-    JSObject        *object;    /* optional Script-class object wrapper */
+    union {
+        JSObject    *object;    /* optional Script-class object wrapper */
+        JSScript    *nextToGC;  /* next to GC in rt->scriptsToGC list */
+    } u;
 #ifdef CHECK_SCRIPT_OWNER
     JSThread        *owner;     /* for thread-safe life-cycle assertions */
 #endif
+
+#ifdef __cplusplus /* Allow inclusion from LiveConnect C files. */
+
+    /* Script notes are allocated right after the code. */
+    jssrcnote *notes() { return (jssrcnote *)(code + length); }
+
+    JSObjectArray *objects() {
+        JS_ASSERT(objectsOffset != 0);
+        return (JSObjectArray *)((uint8 *) this + objectsOffset);
+    }
+
+    JSUpvarArray *upvars() {
+        JS_ASSERT(upvarsOffset != 0);
+        return (JSUpvarArray *) ((uint8 *) this + upvarsOffset);
+    }
+
+    JSObjectArray *regexps() {
+        JS_ASSERT(regexpsOffset != 0);
+        return (JSObjectArray *) ((uint8 *) this + regexpsOffset);
+    }
+
+    JSTryNoteArray *trynotes() {
+        JS_ASSERT(trynotesOffset != 0);
+        return (JSTryNoteArray *) ((uint8 *) this + trynotesOffset);
+    }
+
+    JSAtom *getAtom(size_t index) {
+        JS_ASSERT(index < atomMap.length);
+        return atomMap.vector[index];
+    }
+
+    JSObject *getObject(size_t index) {
+        JSObjectArray *arr = objects();
+        JS_ASSERT(index < arr->length);
+        return arr->vector[index];
+    }
+
+    inline JSFunction *getFunction(size_t index);
+
+    inline JSObject *getRegExp(size_t index);
+
+#endif /* __cplusplus */
 };
 
-/* No need to store script->notes now that it is allocated right after code. */
-#define SCRIPT_NOTES(script)    ((jssrcnote*)((script)->code+(script)->length))
+#define JSSF_NO_SCRIPT_RVAL     0x01    /* no need for result value of last
+                                           expression statement */
+#define JSSF_SAVED_CALLER_FUN   0x02    /* object 0 is caller function */
 
-#define JS_SCRIPT_OBJECTS(script)                                             \
-    (JS_ASSERT((script)->objectsOffset != 0),                                 \
-     (JSObjectArray *)((uint8 *)(script) + (script)->objectsOffset))
-
-#define JS_SCRIPT_REGEXPS(script)                                             \
-    (JS_ASSERT((script)->regexpsOffset != 0),                                 \
-     (JSObjectArray *)((uint8 *)(script) + (script)->regexpsOffset))
-
-#define JS_SCRIPT_TRYNOTES(script)                                            \
-    (JS_ASSERT((script)->trynotesOffset != 0),                                \
-     (JSTryNoteArray *)((uint8 *)(script) + (script)->trynotesOffset))
-
-#define JS_GET_SCRIPT_ATOM(script, index, atom)                               \
-    JS_BEGIN_MACRO                                                            \
-        JSAtomMap *atoms_ = &(script)->atomMap;                               \
-        JS_ASSERT((uint32)(index) < atoms_->length);                          \
-        (atom) = atoms_->vector[(index)];                                     \
-    JS_END_MACRO
-
-#define JS_GET_SCRIPT_OBJECT(script, index, obj)                              \
-    JS_BEGIN_MACRO                                                            \
-        JSObjectArray *objects_ = JS_SCRIPT_OBJECTS(script);                  \
-        JS_ASSERT((uint32)(index) < objects_->length);                        \
-        (obj) = objects_->vector[(index)];                                    \
-    JS_END_MACRO
-
-#define JS_GET_SCRIPT_FUNCTION(script, index, fun)                            \
-    JS_BEGIN_MACRO                                                            \
-        JSObject *funobj_;                                                    \
-                                                                              \
-        JS_GET_SCRIPT_OBJECT(script, index, funobj_);                         \
-        JS_ASSERT(HAS_FUNCTION_CLASS(funobj_));                               \
-        JS_ASSERT(funobj_ == (JSObject *) STOBJ_GET_PRIVATE(funobj_));        \
-        (fun) = (JSFunction *) funobj_;                                       \
-        JS_ASSERT(FUN_INTERPRETED(fun));                                      \
-    JS_END_MACRO
-
-#define JS_GET_SCRIPT_REGEXP(script, index, obj)                              \
-    JS_BEGIN_MACRO                                                            \
-        JSObjectArray *regexps_ = JS_SCRIPT_REGEXPS(script);                  \
-        JS_ASSERT((uint32)(index) < regexps_->length);                        \
-        (obj) = regexps_->vector[(index)];                                    \
-        JS_ASSERT(STOBJ_GET_CLASS(obj) == &js_RegExpClass);                   \
-    JS_END_MACRO
+static JS_INLINE uintN
+StackDepth(JSScript *script)
+{
+    return script->nslots - script->nfixed;
+}
 
 /*
- * Check if pc is inside a try block that has finally code. GC calls this to
- * check if it is necessary to schedule generator.close() invocation for an
- * unreachable generator.
+ * If pc_ does not point within script_'s bytecode, then it must point into an
+ * imacro body, so we use cx->runtime common atoms instead of script_'s atoms.
+ * This macro uses cx from its callers' environments in the pc-in-imacro case.
  */
-JSBool
-js_IsInsideTryWithFinally(JSScript *script, jsbytecode *pc);
+#define JS_GET_SCRIPT_ATOM(script_, pc_, index, atom)                         \
+    JS_BEGIN_MACRO                                                            \
+        if ((pc_) < (script_)->code ||                                        \
+            (script_)->code + (script_)->length <= (pc_)) {                   \
+            JS_ASSERT((size_t)(index) < js_common_atom_count);                \
+            (atom) = COMMON_ATOMS_START(&cx->runtime->atomState)[index];      \
+        } else {                                                              \
+            (atom) = script_->getAtom(index);                                 \
+        }                                                                     \
+    JS_END_MACRO
 
 extern JS_FRIEND_DATA(JSClass) js_ScriptClass;
 
@@ -180,16 +213,8 @@ extern JSBool
 js_InitRuntimeScriptState(JSRuntime *rt);
 
 /*
- * On last context destroy for rt, if script filenames are all GC'd, free the
- * script filename table and its lock.
- */
-extern void
-js_FinishRuntimeScriptState(JSRuntime *rt);
-
-/*
  * On JS_DestroyRuntime(rt), forcibly free script filename prefixes and any
- * script filename table entries that have not been GC'd, the latter using
- * js_FinishRuntimeScriptState.
+ * script filename table entries that have not been GC'd.
  *
  * This allows script filename prefixes to outlive any context in rt.
  */
@@ -227,7 +252,8 @@ js_SweepScriptFilenames(JSRuntime *rt);
  */
 extern JSScript *
 js_NewScript(JSContext *cx, uint32 length, uint32 nsrcnotes, uint32 natoms,
-             uint32 nobjects, uint32 nregexps, uint32 ntrynotes);
+             uint32 nobjects, uint32 nupvars, uint32 nregexps,
+             uint32 ntrynotes);
 
 extern JSScript *
 js_NewScriptFromCG(JSContext *cx, JSCodeGenerator *cg);
@@ -260,7 +286,14 @@ js_TraceScript(JSTracer *trc, JSScript *script);
 extern jssrcnote *
 js_GetSrcNoteCached(JSContext *cx, JSScript *script, jsbytecode *pc);
 
-/* XXX need cx to lock function objects declared by prolog bytecodes. */
+/*
+ * NOTE: use js_FramePCToLineNumber(cx, fp) when you have an active fp, in
+ * preference to js_PCToLineNumber (cx, fp->script  fp->regs->pc), because
+ * fp->imacpc may be non-null, indicating an active imacro.
+ */
+extern uintN
+js_FramePCToLineNumber(JSContext *cx, JSStackFrame *fp);
+
 extern uintN
 js_PCToLineNumber(JSContext *cx, JSScript *script, jsbytecode *pc);
 
@@ -269,6 +302,15 @@ js_LineNumberToPC(JSScript *script, uintN lineno);
 
 extern JS_FRIEND_API(uintN)
 js_GetScriptLineExtent(JSScript *script);
+
+static JS_INLINE JSOp
+js_GetOpcode(JSContext *cx, JSScript *script, jsbytecode *pc)
+{
+    JSOp op = (JSOp) *pc;
+    if (op == JSOP_TRAP)
+        op = JS_GetTrapOpcode(cx, script, pc);
+    return op;
+}
 
 /*
  * If magic is non-null, js_XDRScript succeeds on magic number mismatch but

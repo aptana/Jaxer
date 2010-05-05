@@ -92,6 +92,7 @@ class mozJSComponentLoader : public nsIModuleLoader,
                              public xpcIJSModuleLoader,
                              public nsIObserver
 {
+    friend class JSCLContextHelper;
  public:
     NS_DECL_ISUPPORTS
     NS_DECL_NSIMODULELOADER
@@ -109,7 +110,8 @@ class mozJSComponentLoader : public nsIModuleLoader,
 
     nsresult GlobalForLocation(nsILocalFile *aComponent,
                                JSObject **aGlobal,
-                               char **location);
+                               char **location,
+                               jsval *exception);
 
     nsresult StartFastLoad(nsIFastLoadService *flSvc);
     nsresult ReadScript(nsIFastLoadService *flSvc, const char *nativePath,
@@ -119,11 +121,10 @@ class mozJSComponentLoader : public nsIModuleLoader,
                          nsIURI *uri, JSContext *cx);
     static void CloseFastLoad(nsITimer *timer, void *closure);
     void CloseFastLoad();
-    nsresult ReportOnCaller(nsAXPCNativeCallContext *cc,
-                            const char *format, ...);
 
     nsCOMPtr<nsIComponentManager> mCompMgr;
     nsCOMPtr<nsIJSRuntimeService> mRuntimeService;
+    nsCOMPtr<nsIThreadJSContextStack> mContextStack;
     nsCOMPtr<nsIFile> mFastLoadFile;
     nsRefPtr<nsXPCFastLoadIO> mFastLoadIO;
     nsCOMPtr<nsIObjectInputStream> mFastLoadInput;

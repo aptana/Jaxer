@@ -40,6 +40,8 @@
 #ifndef _JSDTRACEF_H
 #define _JSDTRACEF_H
 
+JS_BEGIN_EXTERN_C
+
 extern void
 jsdtrace_function_entry(JSContext *cx, JSStackFrame *fp, JSFunction *fun);
 
@@ -48,10 +50,10 @@ jsdtrace_function_info(JSContext *cx, JSStackFrame *fp, JSStackFrame *dfp,
                        JSFunction *fun);
 
 extern void
-jsdtrace_function_args(JSContext *cx, JSStackFrame *fp, JSFunction *fun);
+jsdtrace_function_args(JSContext *cx, JSStackFrame *fp, JSFunction *fun, jsuint argc, jsval *argv);
 
 extern void
-jsdtrace_function_rval(JSContext *cx, JSStackFrame *fp, JSFunction *fun);
+jsdtrace_function_rval(JSContext *cx, JSStackFrame *fp, JSFunction *fun, jsval *rval);
 
 extern void
 jsdtrace_function_return(JSContext *cx, JSStackFrame *fp, JSFunction *fun);
@@ -73,5 +75,7 @@ jsdtrace_execute_start(JSScript *script);
 
 extern void
 jsdtrace_execute_done(JSScript *script);
+
+JS_END_EXTERN_C
 
 #endif /* _JSDTRACE_H */

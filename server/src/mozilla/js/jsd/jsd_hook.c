@@ -41,7 +41,7 @@
 
 #include "jsd.h"
 
-JSTrapStatus JS_DLL_CALLBACK
+JSTrapStatus
 jsd_InterruptHandler(JSContext *cx, JSScript *script, jsbytecode *pc, jsval *rval,
                      void *closure)
 {
@@ -66,7 +66,7 @@ jsd_InterruptHandler(JSContext *cx, JSScript *script, jsbytecode *pc, jsval *rva
         return JSTRAP_CONTINUE;
     
     JSD_LOCK_SCRIPTS(jsdc);
-    jsdscript = jsd_FindJSDScript(jsdc, script);
+    jsdscript = jsd_FindOrCreateJSDScript(jsdc, cx, script, NULL);
     JSD_UNLOCK_SCRIPTS(jsdc);
     if( ! jsdscript )
         return JSTRAP_CONTINUE;
@@ -80,7 +80,7 @@ jsd_InterruptHandler(JSContext *cx, JSScript *script, jsbytecode *pc, jsval *rva
                                  hook, hookData, rval);
 }
 
-JSTrapStatus JS_DLL_CALLBACK
+JSTrapStatus
 jsd_DebuggerHandler(JSContext *cx, JSScript *script, jsbytecode *pc,
                     jsval *rval, void *closure)
 {
@@ -104,7 +104,7 @@ jsd_DebuggerHandler(JSContext *cx, JSScript *script, jsbytecode *pc,
         return JSTRAP_CONTINUE;
 
     JSD_LOCK_SCRIPTS(jsdc);
-    jsdscript = jsd_FindJSDScript(jsdc, script);
+    jsdscript = jsd_FindOrCreateJSDScript(jsdc, cx, script, NULL);
     JSD_UNLOCK_SCRIPTS(jsdc);
     if( ! jsdscript )
         return JSTRAP_CONTINUE;
@@ -114,7 +114,7 @@ jsd_DebuggerHandler(JSContext *cx, JSScript *script, jsbytecode *pc,
 }
 
 
-JSTrapStatus JS_DLL_CALLBACK
+JSTrapStatus
 jsd_ThrowHandler(JSContext *cx, JSScript *script, jsbytecode *pc,
                  jsval *rval, void *closure)
 {
@@ -138,7 +138,7 @@ jsd_ThrowHandler(JSContext *cx, JSScript *script, jsbytecode *pc,
         return JSD_HOOK_RETURN_CONTINUE_THROW;
 
     JSD_LOCK_SCRIPTS(jsdc);
-    jsdscript = jsd_FindJSDScript(jsdc, script);
+    jsdscript = jsd_FindOrCreateJSDScript(jsdc, cx, script, NULL);
     JSD_UNLOCK_SCRIPTS(jsdc);
     if( ! jsdscript )
         return JSD_HOOK_RETURN_CONTINUE_THROW;

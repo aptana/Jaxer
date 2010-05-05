@@ -58,9 +58,9 @@ nsJSID::nsJSID()
 nsJSID::~nsJSID()
 {
     if(mNumber && mNumber != gNoString)
-        PR_Free(mNumber);
+        NS_Free(mNumber);
     if(mName && mName != gNoString)
-        PR_Free(mName);
+        NS_Free(mName);
 }
 
 void nsJSID::Reset()
@@ -68,9 +68,9 @@ void nsJSID::Reset()
     mID = GetInvalidIID();
 
     if(mNumber && mNumber != gNoString)
-        PR_Free(mNumber);
+        NS_Free(mNumber);
     if(mName && mName != gNoString)
-        PR_Free(mName);
+        NS_Free(mName);
 
     mNumber = mName = nsnull;
 }
@@ -80,12 +80,8 @@ nsJSID::SetName(const char* name)
 {
     NS_ASSERTION(!mName || mName == gNoString ,"name already set");
     NS_ASSERTION(name,"null name");
-    int len = strlen(name)+1;
-    mName = (char*)PR_Malloc(len);
-    if(!mName)
-        return PR_FALSE;
-    memcpy(mName, name, len);
-    return PR_TRUE;
+    mName = NS_strdup(name);
+    return mName ? PR_TRUE : PR_FALSE;
 }
 
 NS_IMETHODIMP
@@ -97,7 +93,7 @@ nsJSID::GetName(char * *aName)
     if(!NameIsSet())
         SetNameToNoString();
     NS_ASSERTION(mName, "name not set");
-    *aName = (char*) nsMemory::Clone(mName, strlen(mName)+1);
+    *aName = NS_strdup(mName);
     return *aName ? NS_OK : NS_ERROR_OUT_OF_MEMORY;
 }
 
@@ -113,7 +109,7 @@ nsJSID::GetNumber(char * *aNumber)
             mNumber = gNoString;
     }
 
-    *aNumber = (char*) nsMemory::Clone(mNumber, strlen(mNumber)+1);
+    *aNumber = NS_strdup(mNumber);
     return *aNumber ? NS_OK : NS_ERROR_OUT_OF_MEMORY;
 }
 
@@ -186,20 +182,9 @@ nsJSID::InitWithName(const nsID& id, const char *nameString)
 NS_IMETHODIMP
 nsJSID::ToString(char **_retval)
 {
-    if(mName != gNoString)
-    {
-        char* str;
-        if(NS_SUCCEEDED(GetName(&str)))
-        {
-            if(mName != gNoString)
-            {
-                *_retval = str;
-                return NS_OK;
-            }
-            else
-                nsMemory::Free(str);
-        }
-    }
+    if(mName && mName != gNoString)
+        return GetName(_retval);
+
     return GetNumber(_retval);
 }
 
@@ -516,12 +501,9 @@ nsJSIID::NewResolve(nsIXPConnectWrappedNative *wrapper,
             return NS_ERROR_OUT_OF_MEMORY;
 
         *objp = obj;
-        *_retval = OBJ_DEFINE_PROPERTY(cx, obj, idid, val,
-                                       nsnull, nsnull,
-                                       JSPROP_ENUMERATE |
-                                       JSPROP_READONLY |
-                                       JSPROP_PERMANENT,
-                                       nsnull);
+        *_retval = JS_DefinePropertyById(cx, obj, idid, val, nsnull, nsnull,
+                                         JSPROP_ENUMERATE | JSPROP_READONLY |
+                                         JSPROP_PERMANENT);
     }
 
     return NS_OK;
@@ -576,14 +558,32 @@ nsJSIID::HasInstance(nsIXPConnectWrappedNative *wrapper,
         NS_ASSERTION(obj, "when is an object not an object?");
 
         // is this really a native xpcom object with a wrapper?
+        const nsIID* iid;
+        mInfo->GetIIDShared(&iid);
+
+        if(IS_SLIM_WRAPPER(obj))
+        {
+            XPCWrappedNativeProto* proto = GetSlimWrapperProto(obj);
+            if(proto->GetSet()->HasInterfaceWithAncestor(iid))
+            {
+                *bp = JS_TRUE;
+                return NS_OK;
+            }
+
+#ifdef DEBUG_slimwrappers
+            char foo[NSID_LENGTH];
+            iid->ToProvidedString(foo);
+            SLIM_LOG_WILL_MORPH_FOR_PROP(cx, obj, foo);
+#endif
+            if(!MorphSlimWrapper(cx, obj))
+                return NS_ERROR_FAILURE;
+        }
+
         XPCWrappedNative* other_wrapper =
            XPCWrappedNative::GetWrappedNativeOfJSObject(cx, obj);
 
         if(!other_wrapper)
             return NS_OK;
-
-        const nsIID* iid;
-        mInfo->GetIIDShared(&iid);
 
         // We'll trust the interface set of the wrapper if this is known
         // to be an interface that the objects *expects* to be able to
@@ -795,15 +795,15 @@ nsJSCID::CreateInstance(nsISupports **_retval)
 
     // Do the security check if necessary
 
-    XPCContext* xpcc = nsXPConnect::GetContext(cx);
+    XPCContext* xpcc = XPCContext::GetXPCContext(cx);
 
     nsIXPCSecurityManager* sm;
     sm = xpcc->GetAppropriateSecurityManager(
                         nsIXPCSecurityManager::HOOK_CREATE_INSTANCE);
     if(sm && NS_FAILED(sm->CanCreateInstance(cx, mDetails.ID())))
     {
-        // the security manager vetoed. It should have set an exception.
-        ccxp->SetExceptionWasThrown(JS_TRUE);
+        NS_ASSERTION(JS_IsExceptionPending(cx),
+                     "security manager vetoed CreateInstance without setting exception");
         return NS_OK;
     }
 
@@ -868,15 +868,15 @@ nsJSCID::GetService(nsISupports **_retval)
 
     // Do the security check if necessary
 
-    XPCContext* xpcc = nsXPConnect::GetContext(cx);
+    XPCContext* xpcc = XPCContext::GetXPCContext(cx);
 
     nsIXPCSecurityManager* sm;
     sm = xpcc->GetAppropriateSecurityManager(
                         nsIXPCSecurityManager::HOOK_GET_SERVICE);
     if(sm && NS_FAILED(sm->CanCreateInstance(cx, mDetails.ID())))
     {
-        // the security manager vetoed. It should have set an exception.
-        ccxp->SetExceptionWasThrown(JS_TRUE);
+        NS_ASSERTION(JS_IsExceptionPending(cx),
+                     "security manager vetoed GetService without setting exception");
         return NS_OK;
     }
 
@@ -914,7 +914,7 @@ nsJSCID::Construct(nsIXPConnectWrappedNative *wrapper,
                    PRUint32 argc, jsval * argv, jsval * vp,
                    PRBool *_retval)
 {
-    XPCJSRuntime* rt = nsXPConnect::GetRuntime();
+    XPCJSRuntime* rt = nsXPConnect::GetRuntimeInstance();
     if(!rt)
         return NS_ERROR_FAILURE;
 
@@ -943,16 +943,25 @@ nsJSCID::HasInstance(nsIXPConnectWrappedNative *wrapper,
 
         NS_ASSERTION(obj, "when is an object not an object?");
 
-        // is this really a native xpcom object with a wrapper?
-        XPCWrappedNative* other_wrapper =
-           XPCWrappedNative::GetWrappedNativeOfJSObject(cx, obj);
+        nsIClassInfo* ci;
+        if(IS_SLIM_WRAPPER(obj))
+        {
+            ci = GetSlimWrapperProto(obj)->GetClassInfo();
+        }
+        else
+        {
+            // is this really a native xpcom object with a wrapper?
+            XPCWrappedNative* other_wrapper =
+               XPCWrappedNative::GetWrappedNativeOfJSObject(cx, obj);
 
-        if(!other_wrapper)
-            return NS_OK;
+            if(!other_wrapper)
+                return NS_OK;
+
+            ci = other_wrapper->GetClassInfo();
+        }
 
         // We consider CID equality to be the thing that matters here.
         // This is perhaps debatable.
-        nsIClassInfo* ci = other_wrapper->GetClassInfo();
         if(ci)
         {
             nsID cid;

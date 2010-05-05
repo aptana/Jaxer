@@ -238,26 +238,25 @@ struct JSDHashTable {
  * equal to 0; but note that jsdhash.c code will never call with 0 nbytes).
  */
 typedef void *
-(* JS_DLL_CALLBACK JSDHashAllocTable)(JSDHashTable *table, uint32 nbytes);
+(* JSDHashAllocTable)(JSDHashTable *table, uint32 nbytes);
 
 typedef void
-(* JS_DLL_CALLBACK JSDHashFreeTable) (JSDHashTable *table, void *ptr);
+(* JSDHashFreeTable) (JSDHashTable *table, void *ptr);
 
 /*
  * Compute the hash code for a given key to be looked up, added, or removed
  * from table.  A hash code may have any JSDHashNumber value.
  */
 typedef JSDHashNumber
-(* JS_DLL_CALLBACK JSDHashHashKey)   (JSDHashTable *table, const void *key);
+(* JSDHashHashKey)   (JSDHashTable *table, const void *key);
 
 /*
  * Compare the key identifying entry in table with the provided key parameter.
  * Return JS_TRUE if keys match, JS_FALSE otherwise.
  */
 typedef JSBool
-(* JS_DLL_CALLBACK JSDHashMatchEntry)(JSDHashTable *table,
-                                      const JSDHashEntryHdr *entry,
-                                      const void *key);
+(* JSDHashMatchEntry)(JSDHashTable *table, const JSDHashEntryHdr *entry,
+                      const void *key);
 
 /*
  * Copy the data starting at from to the new entry storage at to.  Do not add
@@ -266,9 +265,8 @@ typedef JSBool
  * any reference-decrementing callback shortly.
  */
 typedef void
-(* JS_DLL_CALLBACK JSDHashMoveEntry)(JSDHashTable *table,
-                                     const JSDHashEntryHdr *from,
-                                     JSDHashEntryHdr *to);
+(* JSDHashMoveEntry)(JSDHashTable *table, const JSDHashEntryHdr *from,
+                     JSDHashEntryHdr *to);
 
 /*
  * Clear the entry and drop any strong references it holds.  This callback is
@@ -276,8 +274,7 @@ typedef void
  * but only if the given key is found in the table.
  */
 typedef void
-(* JS_DLL_CALLBACK JSDHashClearEntry)(JSDHashTable *table,
-                                      JSDHashEntryHdr *entry);
+(* JSDHashClearEntry)(JSDHashTable *table, JSDHashEntryHdr *entry);
 
 /*
  * Called when a table (whether allocated dynamically by itself, or nested in
@@ -285,7 +282,7 @@ typedef void
  * allows table->ops-specific code to finalize table->data.
  */
 typedef void
-(* JS_DLL_CALLBACK JSDHashFinalize)  (JSDHashTable *table);
+(* JSDHashFinalize)  (JSDHashTable *table);
 
 /*
  * Initialize a new entry, apart from keyHash.  This function is called when
@@ -295,9 +292,8 @@ typedef void
  * table.
  */
 typedef JSBool
-(* JS_DLL_CALLBACK JSDHashInitEntry)(JSDHashTable *table,
-                                     JSDHashEntryHdr *entry,
-                                     const void *key);
+(* JSDHashInitEntry)(JSDHashTable *table, JSDHashEntryHdr *entry,
+                     const void *key);
 
 /*
  * Finally, the "vtable" structure for JSDHashTable.  The first eight hooks
@@ -574,11 +570,30 @@ JS_DHashTableRawRemove(JSDHashTable *table, JSDHashEntryHdr *entry);
  * the entry being enumerated, rather than returning JS_DHASH_REMOVE.
  */
 typedef JSDHashOperator
-(* JS_DLL_CALLBACK JSDHashEnumerator)(JSDHashTable *table, JSDHashEntryHdr *hdr,
-                                      uint32 number, void *arg);
+(* JSDHashEnumerator)(JSDHashTable *table, JSDHashEntryHdr *hdr, uint32 number,
+                      void *arg);
 
 extern JS_PUBLIC_API(uint32)
 JS_DHashTableEnumerate(JSDHashTable *table, JSDHashEnumerator etor, void *arg);
+
+#ifdef DEBUG
+/**
+ * Mark a table as immutable for the remainder of its lifetime.  This
+ * changes the implementation from ASSERTing one set of invariants to
+ * ASSERTing a different set.
+ *
+ * When a table is NOT marked as immutable, the table implementation
+ * asserts that the table is not mutated from its own callbacks.  It
+ * assumes the caller protects the table from being accessed on multiple
+ * threads simultaneously.
+ *
+ * When the table is marked as immutable, the re-entry assertions will
+ * no longer trigger erroneously due to multi-threaded access.  Instead,
+ * mutations will cause assertions.
+ */
+extern JS_PUBLIC_API(void)
+JS_DHashMarkTableImmutable(JSDHashTable *table);
+#endif
 
 #ifdef JS_DHASHMETER
 #include <stdio.h>

@@ -46,6 +46,10 @@
 %{ C++
 #define NS_SUCCESS_I_DID_SOMETHING \
    (NS_ERROR_GENERATE_SUCCESS(NS_ERROR_MODULE_XPCONNECT,1))
+#define NS_SUCCESS_CHROME_ACCESS_ONLY \
+   (NS_ERROR_GENERATE_SUCCESS(NS_ERROR_MODULE_XPCONNECT,2))
+#define NS_SUCCESS_ALLOW_SLIM_WRAPPERS \
+   (NS_ERROR_GENERATE_SUCCESS(NS_ERROR_MODULE_XPCONNECT,3))
 %}
 
 /**
@@ -55,7 +59,7 @@
  * to *_retval unless they want to return PR_FALSE.
  */
 
-[uuid(1455f6fe-6de9-4b62-a2b3-d1aee82dd829)]
+[uuid(5d309b93-e9b4-4374-bcd5-44245c83408f)]
 interface nsIXPCScriptable : nsISupports
 {
     /* bitflags used for 'flags' (only 32 bits available!) */
@@ -174,4 +178,6 @@ interface nsIXPCScriptable : nsISupports
 
     JSObjectPtr innerObject(in nsIXPConnectWrappedNative wrapper,
                             in JSContextPtr cx, in JSObjectPtr obj);
+
+    void postCreatePrototype(in JSContextPtr cx, in JSObjectPtr proto);
 };

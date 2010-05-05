@@ -216,31 +216,31 @@ _dumpJSDScriptList( JSDContext* jsdc )
 #endif /* JSD_DUMP */
 
 /***************************************************************************/
-JS_STATIC_DLL_CALLBACK(JSHashNumber)
+static JSHashNumber
 jsd_hash_script(const void *key)
 {
     return ((JSHashNumber) key) >> 2; /* help lame MSVC1.5 on Win16 */
 }
 
-JS_STATIC_DLL_CALLBACK(void *)
+static void *
 jsd_alloc_script_table(void *priv, size_t size)
 {
     return malloc(size);
 }
 
-JS_STATIC_DLL_CALLBACK(void)
-jsd_free_script_table(void *priv, void *item)
+static void
+jsd_free_script_table(void *priv, void *item, size_t size)
 {
     free(item);
 }
 
-JS_STATIC_DLL_CALLBACK(JSHashEntry *)
+static JSHashEntry *
 jsd_alloc_script_entry(void *priv, const void *item)
 {
     return (JSHashEntry*) malloc(sizeof(JSHashEntry));
 }
 
-JS_STATIC_DLL_CALLBACK(void)
+static void
 jsd_free_script_entry(void *priv, JSHashEntry *he, uintN flag)
 {
     if (flag == HT_FREE_ENTRY)
@@ -284,7 +284,29 @@ jsd_FindJSDScript( JSDContext*  jsdc,
 {
     JS_ASSERT(JSD_SCRIPTS_LOCKED(jsdc));
     return (JSDScript*) JS_HashTableLookup(jsdc->scriptsTable, (void *)script);
-}               
+}
+
+JSDScript *
+jsd_FindOrCreateJSDScript(JSDContext    *jsdc,
+                          JSContext     *cx,
+                          JSScript      *script,
+                          JSStackFrame  *fp)
+{
+    JSDScript *jsdscript;
+    JS_ASSERT(JSD_SCRIPTS_LOCKED(jsdc));
+
+    jsdscript = jsd_FindJSDScript(jsdc, script);
+    if (jsdscript)
+        return jsdscript;
+
+    /* Fallback for unknown scripts: create a new script. */
+    if (!fp)
+        JS_FrameIterator(cx, &fp);
+    if (fp)
+        jsdscript = _newJSDScript(jsdc, cx, script, JS_GetFrameFunction(cx, fp));
+
+    return jsdscript;
+}
 
 JSDProfileData*
 jsd_GetScriptProfileData(JSDContext* jsdc, JSDScript *script)
@@ -544,7 +566,7 @@ jsd_GetScriptHook(JSDContext* jsdc, JSD_ScriptHookProc* hook, void** callerdata)
 
 /***************************************************************************/
 
-void JS_DLL_CALLBACK
+void
 jsd_NewScriptHookProc( 
                 JSContext   *cx,
                 const char  *filename,      /* URL this script loads from */
@@ -591,7 +613,7 @@ jsd_NewScriptHookProc(
         hook(jsdc, jsdscript, JS_TRUE, hookData);
 }                
 
-void JS_DLL_CALLBACK
+void
 jsd_DestroyScriptHookProc( 
                 JSContext   *cx,
                 JSScript    *script,
@@ -691,7 +713,7 @@ _isActiveHook(JSDContext* jsdc, JSScript *script, JSDExecHook* jsdhook)
 }
 
 
-JSTrapStatus JS_DLL_CALLBACK
+JSTrapStatus
 jsd_TrapHandler(JSContext *cx, JSScript *script, jsbytecode *pc, jsval *rval,
                 void *closure)
 {
@@ -803,7 +825,6 @@ jsd_ClearExecutionHook(JSDContext*           jsdc,
     jsdhook = _findHook(jsdc, jsdscript, pc);
     if( ! jsdhook )
     {
-        JS_ASSERT(0);
         JSD_UNLOCK();
         return JS_FALSE;
     }

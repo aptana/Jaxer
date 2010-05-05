@@ -49,13 +49,13 @@
 // Note this is returning the bit pattern of the first part of the nsID, not
 // the pointer to the nsID.
 
-static JSDHashNumber JS_DLL_CALLBACK
+static JSDHashNumber
 HashIIDPtrKey(JSDHashTable *table, const void *key)
 {
     return *((JSHashNumber*)key);
 }
 
-static JSBool JS_DLL_CALLBACK
+static JSBool
 MatchIIDPtrKey(JSDHashTable *table,
             const JSDHashEntryHdr *entry,
             const void *key)
@@ -64,7 +64,7 @@ MatchIIDPtrKey(JSDHashTable *table,
                 Equals(*((const nsID*)((JSDHashEntryStub*)entry)->key));
 }
 
-static JSDHashNumber JS_DLL_CALLBACK
+static JSDHashNumber
 HashNativeKey(JSDHashTable *table, const void *key)
 {
     XPCNativeSetKey* Key = (XPCNativeSetKey*) key;
@@ -118,33 +118,6 @@ HashNativeKey(JSDHashTable *table, const void *key)
     }
 
     return h;
-}
-
-/***************************************************************************/
-// implement JSContext2XPCContextMap...
-
-// static
-JSContext2XPCContextMap*
-JSContext2XPCContextMap::newMap(int size)
-{
-    JSContext2XPCContextMap* map = new JSContext2XPCContextMap(size);
-    if(map && map->mTable)
-        return map;
-    delete map;
-    return nsnull;
-}
-
-
-JSContext2XPCContextMap::JSContext2XPCContextMap(int size)
-{
-    mTable = JS_NewDHashTable(JS_DHashGetStubOps(), nsnull,
-                              sizeof(Entry), size);
-}
-
-JSContext2XPCContextMap::~JSContext2XPCContextMap()
-{
-    if(mTable)
-        JS_DHashTableDestroy(mTable);
 }
 
 /***************************************************************************/
@@ -327,7 +300,7 @@ ClassInfo2WrappedNativeProtoMap::~ClassInfo2WrappedNativeProtoMap()
 /***************************************************************************/
 // implement NativeSetMap...
 
-JSBool JS_DLL_CALLBACK
+JSBool
 NativeSetMap::Entry::Match(JSDHashTable *table,
                            const JSDHashEntryHdr *entry,
                            const void *key)
@@ -442,7 +415,7 @@ NativeSetMap::~NativeSetMap()
 /***************************************************************************/
 // implement IID2ThisTranslatorMap...
 
-JSBool JS_DLL_CALLBACK
+JSBool
 IID2ThisTranslatorMap::Entry::Match(JSDHashTable *table,
                                     const JSDHashEntryHdr *entry,
                                     const void *key)
@@ -450,7 +423,7 @@ IID2ThisTranslatorMap::Entry::Match(JSDHashTable *table,
     return ((const nsID*)key)->Equals(((Entry*)entry)->key);
 }
 
-void JS_DLL_CALLBACK
+void
 IID2ThisTranslatorMap::Entry::Clear(JSDHashTable *table, JSDHashEntryHdr *entry)
 {
     NS_IF_RELEASE(((Entry*)entry)->value);
@@ -492,7 +465,7 @@ IID2ThisTranslatorMap::~IID2ThisTranslatorMap()
 
 /***************************************************************************/
 
-JSDHashNumber JS_DLL_CALLBACK
+JSDHashNumber
 XPCNativeScriptableSharedMap::Entry::Hash(JSDHashTable *table, const void *key)
 {
     JSDHashNumber h;
@@ -509,7 +482,7 @@ XPCNativeScriptableSharedMap::Entry::Hash(JSDHashTable *table, const void *key)
     return h;
 }
 
-JSBool JS_DLL_CALLBACK
+JSBool
 XPCNativeScriptableSharedMap::Entry::Match(JSDHashTable *table,
                                          const JSDHashEntryHdr *entry,
                                          const void *key)

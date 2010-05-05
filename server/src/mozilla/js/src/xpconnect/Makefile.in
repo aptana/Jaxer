@@ -52,7 +52,7 @@ endif
 
 DIRS         += src
 
-ifndef MINIMO
+ifndef BUILD_STATIC_LIBS
 ifndef JAXER
 TOOL_DIRS    += shell
 endif

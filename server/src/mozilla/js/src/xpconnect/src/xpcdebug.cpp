@@ -39,7 +39,6 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "xpcprivate.h"
-#if defined(DEBUG_xpc_hacker) || defined(DEBUG)
 
 #ifdef TAB
 #undef TAB
@@ -292,6 +291,11 @@ JSBool
 xpc_DumpJSStack(JSContext* cx, JSBool showArgs, JSBool showLocals, JSBool showThisProps)
 {
     char* buf;
+    JSExceptionState *state = JS_SaveExceptionState(cx);
+    if(!state)
+        puts("Call to a debug function modifying state!");
+
+    JS_ClearPendingException(cx);
 
     buf = FormatJSStackDump(cx, nsnull, showArgs, showLocals, showThisProps);
     if(buf)
@@ -301,12 +305,14 @@ xpc_DumpJSStack(JSContext* cx, JSBool showArgs, JSBool showLocals, JSBool showTh
     }
     else
         puts("Failed to format JavaScript stack for dump");
+
+    JS_RestoreExceptionState(cx, state);
     return JS_TRUE;
 }
 
 /***************************************************************************/
 
-JS_STATIC_DLL_CALLBACK(void)
+static void
 xpcDumpEvalErrorReporter(JSContext *cx, const char *message,
                          JSErrorReport *report)
 {
@@ -364,7 +370,7 @@ xpc_DumpEvalInJSStackFrame(JSContext* cx, JSUint32 frameno, const char* text)
 
 /***************************************************************************/
 
-JSTrapStatus JS_DLL_CALLBACK
+JSTrapStatus
 xpc_DebuggerKeywordHandler(JSContext *cx, JSScript *script, jsbytecode *pc,
                            jsval *rval, void *closure)
 {
@@ -480,4 +486,3 @@ xpc_DumpJSObject(JSObject* obj)
 
     return JS_TRUE;
 }
-#endif

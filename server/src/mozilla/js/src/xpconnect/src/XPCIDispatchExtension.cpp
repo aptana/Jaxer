@@ -42,208 +42,6 @@ static const char* const IDISPATCH_NAME = "IDispatch";
 
 PRBool XPCIDispatchExtension::mIsEnabled = PR_TRUE;
 
-static JSBool
-CommonConstructor(JSContext *cx, int name, JSObject *obj, uintN argc,
-                  jsval *argv, jsval *rval, PRBool enforceSecurity)
-{
-    XPCCallContext ccx(JS_CALLER, cx, JS_GetGlobalObject(cx));
-    // Check if IDispatch is enabled, fail if not
-    if(!nsXPConnect::IsIDispatchEnabled())
-    {
-        XPCThrower::Throw(NS_ERROR_XPC_IDISPATCH_NOT_ENABLED, ccx);
-        return JS_FALSE;
-    }
-    XPCJSRuntime *rt = ccx.GetRuntime();
-    if(!rt)
-    {
-        XPCThrower::Throw(NS_ERROR_UNEXPECTED, ccx);
-        return JS_FALSE;
-    } 
-    nsIXPCSecurityManager* sm = ccx.GetXPCContext()
-        ->GetAppropriateSecurityManager(nsIXPCSecurityManager::HOOK_CALL_METHOD);
-    XPCWrappedNative * wrapper = ccx.GetWrapper();
-    if(sm && NS_FAILED(sm->CanAccess(nsIXPCSecurityManager::ACCESS_CALL_METHOD,
-                                      &ccx, ccx, ccx.GetFlattenedJSObject(),
-                                      wrapper->GetIdentityObject(),
-                                      wrapper->GetClassInfo(),
-                                      rt->GetStringJSVal(name),
-                                      wrapper->GetSecurityInfoAddr())))
-    {
-        // Security manager will have set an exception
-        return JS_FALSE;
-    }
-    // Make sure we were called with one string parameter
-    if(argc != 1 || (argc == 1 && !JSVAL_IS_STRING(argv[0])))
-    {
-        XPCThrower::Throw(NS_ERROR_XPC_COM_INVALID_CLASS_ID, ccx);
-        return JS_FALSE;
-    }
-
-    JSString* str = JSVAL_TO_STRING(argv[0]);
-    PRUint32 len = JS_GetStringLength(str);
-
-    // Cap constructor argument length to keep from crashing in string
-    // code.
-    if(len > XPC_IDISPATCH_CTOR_MAX_ARG_LEN)
-    {
-      XPCThrower::Throw(NS_ERROR_XPC_COM_INVALID_CLASS_ID, ccx);
-      return JS_FALSE;
-    }
-
-    jschar * className = JS_GetStringChars(str);
-    CComBSTR bstrClassName(len, reinterpret_cast<const WCHAR *>(className));
-    if(!bstrClassName)
-    {
-        XPCThrower::Throw(NS_ERROR_XPC_COM_INVALID_CLASS_ID, ccx);
-        return JS_FALSE;
-    }
-    // Instantiate the desired COM object
-    CComPtr<IDispatch> pDispatch;
-    HRESULT rv = XPCDispObject::COMCreateInstance(ccx, bstrClassName,
-                                                  enforceSecurity, &pDispatch);
-    if(FAILED(rv))
-    {
-        XPCThrower::ThrowCOMError(ccx, rv, NS_ERROR_XPC_COM_CREATE_FAILED);
-        return JS_FALSE;
-    }
-    // Get a wrapper for our object
-    nsCOMPtr<nsIXPConnectJSObjectHolder> holder;
-    nsresult nsrv = ccx.GetXPConnect()->WrapNative(
-        ccx, ccx.GetOperandJSObject(), reinterpret_cast<nsISupports*>(pDispatch.p),
-        NSID_IDISPATCH, getter_AddRefs(holder));
-    if(NS_FAILED(nsrv))
-    {
-        XPCThrower::Throw(nsrv, ccx);
-        return JS_FALSE;
-    }
-    // get and return the JS object wrapper
-    JSObject * jsobj;
-    nsrv = holder->GetJSObject(&jsobj);
-    if(NS_FAILED(nsrv))
-    {
-        XPCThrower::Throw(nsrv, ccx);
-        return JS_FALSE;
-    }
-    *rval = OBJECT_TO_JSVAL(jsobj);
-    return JS_TRUE;
-}
-
-JS_STATIC_DLL_CALLBACK(JSBool)
-COMObjectConstructor(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, 
-                     jsval *rval)
-{
-    return CommonConstructor(cx, XPCJSRuntime::IDX_COM_OBJECT, obj, argc,
-                             argv, rval, PR_FALSE);
-}
-
-#ifndef MOZ_NO_ACTIVEX_SUPPORT
-JS_STATIC_DLL_CALLBACK(JSBool)
-ActiveXConstructor(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, 
-                   jsval *rval)
-{
-    return CommonConstructor(cx, XPCJSRuntime::IDX_ACTIVEX_OBJECT, obj, argc, argv,
-                             rval, PR_TRUE);
-}
-
-JS_STATIC_DLL_CALLBACK(JSBool)
-ActiveXSupports(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, 
-                jsval *rval)
-{
-    XPCCallContext ccx(JS_CALLER, cx, JS_GetGlobalObject(cx));
-    // Check if IDispatch is enabled, fail if not
-    if(!nsXPConnect::IsIDispatchEnabled())
-    {
-        XPCThrower::Throw(NS_ERROR_XPC_IDISPATCH_NOT_ENABLED, ccx);
-        return JS_FALSE;
-    }
-    XPCJSRuntime *rt = ccx.GetRuntime();
-    if(!rt)
-    {
-        XPCThrower::Throw(NS_ERROR_UNEXPECTED, ccx);
-        return JS_FALSE;
-    } 
-    // Make sure we were called with one string parameter
-    if(argc != 1 || (argc == 1 && !JSVAL_IS_STRING(argv[0])))
-    {
-        XPCThrower::Throw(NS_ERROR_XPC_COM_INVALID_CLASS_ID, ccx);
-        return JS_FALSE;
-    }
-    PRUint32 len;
-    jschar * className = xpc_JSString2String(ccx, argv[0], &len);
-    CComBSTR bstrClassName(len, reinterpret_cast<const WCHAR *>(className));
-    if(!className)
-    {
-        XPCThrower::Throw(NS_ERROR_XPC_COM_INVALID_CLASS_ID, ccx);
-        return JS_FALSE;
-    }
-    CLSID classID = CLSID_NULL;
-    HRESULT hr = CLSIDFromString(bstrClassName, &classID);
-    if(FAILED(hr) || ::IsEqualCLSID(classID, CLSID_NULL))
-    {
-        XPCThrower::Throw(NS_ERROR_XPC_COM_INVALID_CLASS_ID, ccx);
-        return JS_FALSE;
-    }
-    // Instantiate the desired COM object
-    HRESULT rv = XPCDispObject::SecurityCheck(ccx, classID);
-    *rval = BOOLEAN_TO_JSVAL(SUCCEEDED(rv));
-    return JS_TRUE;
-}
-#endif /* MOZ_NO_ACTIVEX_SUPPORT */
-
-class xpcFunctionDefiner
-{
-public:
-    xpcFunctionDefiner(JSContext * aJSContext);
-    JSFunction * Define(JSObject * globalObject, uintN aNameIndex,
-                        JSNative aCall);
-private:
-    XPCJSRuntime * m_Runtime;
-    JSContext * m_JSContext;
-};
-
-inline
-xpcFunctionDefiner::xpcFunctionDefiner(JSContext * aJSContext) : 
-    m_Runtime(nsXPConnect::GetRuntime()), m_JSContext(aJSContext)
-{
-    NS_ASSERTION(m_Runtime, "nsXPConnect::GetRuntime() returned null");
-    NS_ASSERTION(aJSContext, "xpcFunctionDefiner constructor passed a null context");
-}
-
-inline
-JSFunction * xpcFunctionDefiner::Define(JSObject * globalObject,
-                                        uintN aNameIndex, JSNative aCall)
-{
-    return JS_DefineFunction(m_JSContext, globalObject,
-                      m_Runtime->GetStringName(aNameIndex),
-                      aCall, 1, JSPROP_PERMANENT | JSPROP_READONLY);
-}
-
-JSBool XPCIDispatchExtension::Initialize(JSContext * aJSContext,
-                                         JSObject * aGlobalJSObj)
-{
-    xpcFunctionDefiner fd(aJSContext);
-#ifndef MOZ_NO_ACTIVEX_SUPPORT
-    JSFunction * func = fd.Define(aGlobalJSObj,
-                                  XPCJSRuntime::IDX_ACTIVEX_OBJECT,
-                                  ActiveXConstructor);
-    if(!func)
-        return JS_FALSE;
-
-    JSObject * funcObject = JS_GetFunctionObject(func);
-    if(!funcObject)
-        return JS_FALSE;
-
-    if(!fd.Define(funcObject, XPCJSRuntime::IDX_ACTIVEX_SUPPORTS, ActiveXSupports))
-        return JS_FALSE;
-#endif /* MOZ_NO_ACTIVEX_SUPPORT */
-
-#ifdef XPC_COMOBJECT
-    if(!fd.Define(aGlobalJSObj, XPCJSRuntime::IDX_COM_OBJECT, COMObjectConstructor))
-        return JS_FALSE;
-#endif
-    return JS_TRUE;
-}
-
 JSBool XPCIDispatchExtension::DefineProperty(XPCCallContext & ccx, 
                                              JSObject *obj, jsval idval,
                                              XPCWrappedNative* wrapperToReflectInterfaceNames,
@@ -293,25 +91,30 @@ JSBool XPCIDispatchExtension::DefineProperty(XPCCallContext & ccx,
         if(resolved)
             *resolved = JS_TRUE;
         return JS_ValueToId(ccx, idval, &id) &&
-               OBJ_DEFINE_PROPERTY(ccx, obj, id, OBJECT_TO_JSVAL(funobj),
-                                   nsnull, nsnull, propFlags, nsnull);
+               JS_DefinePropertyById(ccx, obj, id, OBJECT_TO_JSVAL(funobj),
+                                     nsnull, nsnull, propFlags);
     }
     // Define the property on the object
     NS_ASSERTION(member->IsProperty(), "way broken!");
     propFlags |= JSPROP_GETTER | JSPROP_SHARED;
+    JSPropertyOp getter = JS_DATA_TO_FUNC_PTR(JSPropertyOp, funobj);
+    JSPropertyOp setter;
     if(member->IsSetter())
     {
         propFlags |= JSPROP_SETTER;
         propFlags &= ~JSPROP_READONLY;
+        setter = getter;
+    }
+    else
+    {
+        setter = js_GetterOnlyPropertyStub;
     }
     AutoResolveName arn(ccx, idval);
     if(resolved)
         *resolved = JS_TRUE;
     return JS_ValueToId(ccx, idval, &id) &&
-           OBJ_DEFINE_PROPERTY(ccx, obj, id, JSVAL_VOID,
-                               (JSPropertyOp) funobj,
-                               (JSPropertyOp) funobj,
-                               propFlags, nsnull);
+           JS_DefinePropertyById(ccx, obj, id, JSVAL_VOID, getter, setter,
+                                 propFlags);
 
 }
 

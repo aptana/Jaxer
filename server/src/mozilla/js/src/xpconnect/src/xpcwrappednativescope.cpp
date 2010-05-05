@@ -138,6 +138,7 @@ XPCWrappedNativeScope::XPCWrappedNativeScope(XPCCallContext& ccx,
     :   mRuntime(ccx.GetRuntime()),
         mWrappedNativeMap(Native2WrappedNativeMap::newMap(XPC_NATIVE_MAP_SIZE)),
         mWrappedNativeProtoMap(ClassInfo2WrappedNativeProtoMap::newMap(XPC_NATIVE_PROTO_MAP_SIZE)),
+        mMainThreadWrappedNativeProtoMap(ClassInfo2WrappedNativeProtoMap::newMap(XPC_NATIVE_PROTO_MAP_SIZE)),
         mWrapperMap(WrappedNative2WrapperMap::newMap(XPC_WRAPPER_MAP_SIZE)),
         mComponents(nsnull),
         mNext(nsnull),
@@ -145,6 +146,9 @@ XPCWrappedNativeScope::XPCWrappedNativeScope(XPCCallContext& ccx,
         mPrototypeJSObject(nsnull),
         mPrototypeJSFunction(nsnull),
         mPrototypeNoHelper(nsnull)
+#ifndef XPCONNECT_STANDALONE
+        , mScriptObjectPrincipal(nsnull)
+#endif
 {
     // add ourselves to the scopes list
     {   // scoped lock
@@ -159,9 +163,7 @@ XPCWrappedNativeScope::XPCWrappedNativeScope(XPCCallContext& ccx,
         gScopes = this;
 
         // Grab the XPCContext associated with our context.
-        mContext = mRuntime->GetContextMap()->Find(ccx.GetJSContext());
-        NS_ASSERTION(mContext, "Context map is not synchronized");
-
+        mContext = XPCContext::GetXPCContext(ccx.GetJSContext());
         mContext->AddScope(this);
     }
 
@@ -196,14 +198,14 @@ XPCWrappedNativeScope::SetComponents(nsXPCComponents* aComponents)
 // scopes. By doing this we avoid allocating a new scope for every
 // wrapper on creation of the wrapper, and most wrappers won't need
 // their own scope at all for the lifetime of the wrapper.
-// JSCLASS_HAS_PRIVATE is key here (even though there's never anything
+// WRAPPER_SLOTS is key here (even though there's never anything
 // in the private data slot in these prototypes), as the number of
 // reserved slots in this class needs to match that of the wrappers
 // for the JS engine to share scopes.
 
 JSClass XPC_WN_NoHelper_Proto_JSClass = {
     "XPC_WN_NoHelper_Proto_JSClass",// name;
-    JSCLASS_HAS_PRIVATE,            // flags;
+    WRAPPER_SLOTS,                  // flags;
 
     /* Mandatory non-null function pointer members. */
     JS_PropertyStub,                // addProperty;
@@ -213,7 +215,7 @@ JSClass XPC_WN_NoHelper_Proto_JSClass = {
     JS_EnumerateStub,               // enumerate;
     JS_ResolveStub,                 // resolve;
     JS_ConvertStub,                 // convert;
-    JS_FinalizeStub,                // finalize;
+    nsnull,                         // finalize;
 
     /* Optionally non-null members start here. */
     XPC_WN_Proto_GetObjectOps,      // getObjectOps;
@@ -247,14 +249,16 @@ XPCWrappedNativeScope::SetGlobal(XPCCallContext& ccx, JSObject* aGlobal)
         nsISupports* priv = (nsISupports*)xpc_GetJSPrivate(aGlobal);
         nsCOMPtr<nsIXPConnectWrappedNative> native =
             do_QueryInterface(priv);
+        nsCOMPtr<nsIScriptObjectPrincipal> sop;
         if(native)
         {
-            mScriptObjectPrincipal = do_QueryWrappedNative(native);
+            sop = do_QueryWrappedNative(native);
         }
-        if(!mScriptObjectPrincipal)
+        if(!sop)
         {
-            mScriptObjectPrincipal = do_QueryInterface(priv);
+            sop = do_QueryInterface(priv);
         }
+        mScriptObjectPrincipal = sop;
     }
 #endif
 
@@ -267,9 +271,9 @@ XPCWrappedNativeScope::SetGlobal(XPCCallContext& ccx, JSObject* aGlobal)
         jsid idFun = mRuntime->GetStringID(XPCJSRuntime::IDX_FUNCTION);
         jsid idProto = mRuntime->GetStringID(XPCJSRuntime::IDX_PROTOTYPE);
 
-        if(OBJ_GET_PROPERTY(ccx, aGlobal, idObj, &val) &&
+        if(JS_GetPropertyById(ccx, aGlobal, idObj, &val) &&
            !JSVAL_IS_PRIMITIVE(val) &&
-           OBJ_GET_PROPERTY(ccx, JSVAL_TO_OBJECT(val), idProto, &val) &&
+           JS_GetPropertyById(ccx, JSVAL_TO_OBJECT(val), idProto, &val) &&
            !JSVAL_IS_PRIMITIVE(val))
         {
             mPrototypeJSObject = JSVAL_TO_OBJECT(val);
@@ -279,9 +283,9 @@ XPCWrappedNativeScope::SetGlobal(XPCCallContext& ccx, JSObject* aGlobal)
             NS_ERROR("Can't get globalObject.Object.prototype");
         }
 
-        if(OBJ_GET_PROPERTY(ccx, aGlobal, idFun, &val) &&
+        if(JS_GetPropertyById(ccx, aGlobal, idFun, &val) &&
            !JSVAL_IS_PRIMITIVE(val) &&
-           OBJ_GET_PROPERTY(ccx, JSVAL_TO_OBJECT(val), idProto, &val) &&
+           JS_GetPropertyById(ccx, JSVAL_TO_OBJECT(val), idProto, &val) &&
            !JSVAL_IS_PRIMITIVE(val))
         {
             mPrototypeJSFunction = JSVAL_TO_OBJECT(val);
@@ -314,6 +318,12 @@ XPCWrappedNativeScope::~XPCWrappedNativeScope()
     {
         NS_ASSERTION(0 == mWrappedNativeProtoMap->Count(), "scope has non-empty map");
         delete mWrappedNativeProtoMap;
+    }
+
+    if(mMainThreadWrappedNativeProtoMap)
+    {
+        NS_ASSERTION(0 == mMainThreadWrappedNativeProtoMap->Count(), "scope has non-empty map");
+        delete mMainThreadWrappedNativeProtoMap;
     }
 
     if(mWrapperMap)
@@ -350,7 +360,7 @@ XPCWrappedNativeScope::GetPrototypeNoHelper(XPCCallContext& ccx)
     return mPrototypeNoHelper;
 }
 
-JS_STATIC_DLL_CALLBACK(JSDHashOperator)
+static JSDHashOperator
 WrappedNativeJSGCThingTracer(JSDHashTable *table, JSDHashEntryHdr *hdr,
                              uint32 number, void *arg)
 {
@@ -391,23 +401,22 @@ struct SuspectClosure
     nsCycleCollectionTraversalCallback& cb;
 };
 
-JS_STATIC_DLL_CALLBACK(JSDHashOperator)
+static JSDHashOperator
 WrappedNativeSuspecter(JSDHashTable *table, JSDHashEntryHdr *hdr,
                        uint32 number, void *arg)
 {
     SuspectClosure* closure = static_cast<SuspectClosure*>(arg);
     XPCWrappedNative* wrapper = ((Native2WrappedNativeMap::Entry*)hdr)->value;
-    XPCWrappedNativeProto* proto = wrapper->GetProto();
-    if(proto && proto->ClassIsMainThreadOnly() && wrapper->IsValid())
+    if(wrapper->IsValid())
     {
         NS_ASSERTION(NS_IsMainThread(), 
                      "Suspecting wrapped natives from non-main thread");
 
-#ifndef DEBUG_CC
-        // Only record objects that might be part of a cycle as roots.
-        if(!JS_IsAboutToBeFinalized(closure->cx, wrapper->GetFlatJSObject()))
+        // Only record objects that might be part of a cycle as roots, unless
+        // the callback wants all traces (a debug feature).
+        if(!(closure->cb.WantAllTraces()) && 
+           !JS_IsAboutToBeFinalized(closure->cx, wrapper->GetFlatJSObject()))
             return JS_DHASH_NEXT;
-#endif
 
         closure->cb.NoteRoot(nsIProgrammingLanguage::JAVASCRIPT,
                              wrapper->GetFlatJSObject(),
@@ -455,7 +464,9 @@ XPCWrappedNativeScope::FinishedMarkPhaseOfGC(JSContext* cx, XPCJSRuntime* rt)
            JS_IsAboutToBeFinalized(cx, cur->mGlobalJSObject))
         {
             cur->mGlobalJSObject = nsnull;
-
+#ifndef XPCONNECT_STANDALONE
+            cur->mScriptObjectPrincipal = nsnull;
+#endif
             // Move this scope from the live list to the dying list.
             if(prev)
                 prev->mNext = next;
@@ -493,9 +504,7 @@ XPCWrappedNativeScope::FinishedMarkPhaseOfGC(JSContext* cx, XPCJSRuntime* rt)
 void
 XPCWrappedNativeScope::FinishedFinalizationPhaseOfGC(JSContext* cx)
 {
-    XPCJSRuntime* rt = nsXPConnect::GetRuntime();
-    if(!rt)
-        return;
+    XPCJSRuntime* rt = nsXPConnect::GetRuntimeInstance();
 
     // FIXME The lock may not be necessary since we are inside
     // JSGC_FINALIZE_END callback and at this point GC still serializes access
@@ -504,7 +513,7 @@ XPCWrappedNativeScope::FinishedFinalizationPhaseOfGC(JSContext* cx)
     KillDyingScopes();
 }
 
-JS_STATIC_DLL_CALLBACK(JSDHashOperator)
+static JSDHashOperator
 WrappedNativeMarker(JSDHashTable *table, JSDHashEntryHdr *hdr,
                     uint32 number, void *arg)
 {
@@ -514,7 +523,7 @@ WrappedNativeMarker(JSDHashTable *table, JSDHashEntryHdr *hdr,
 
 // We need to explicitly mark all the protos too because some protos may be
 // alive in the hashtable but not currently in use by any wrapper
-JS_STATIC_DLL_CALLBACK(JSDHashOperator)
+static JSDHashOperator
 WrappedNativeProtoMarker(JSDHashTable *table, JSDHashEntryHdr *hdr,
                          uint32 number, void *arg)
 {
@@ -530,13 +539,14 @@ XPCWrappedNativeScope::MarkAllWrappedNativesAndProtos()
     {
         cur->mWrappedNativeMap->Enumerate(WrappedNativeMarker, nsnull);
         cur->mWrappedNativeProtoMap->Enumerate(WrappedNativeProtoMarker, nsnull);
+        cur->mMainThreadWrappedNativeProtoMap->Enumerate(WrappedNativeProtoMarker, nsnull);
     }
 
     DEBUG_TrackScopeTraversal();
 }
 
 #ifdef DEBUG
-JS_STATIC_DLL_CALLBACK(JSDHashOperator)
+static JSDHashOperator
 ASSERT_WrappedNativeSetNotMarked(JSDHashTable *table, JSDHashEntryHdr *hdr,
                                  uint32 number, void *arg)
 {
@@ -544,7 +554,7 @@ ASSERT_WrappedNativeSetNotMarked(JSDHashTable *table, JSDHashEntryHdr *hdr,
     return JS_DHASH_NEXT;
 }
 
-JS_STATIC_DLL_CALLBACK(JSDHashOperator)
+static JSDHashOperator
 ASSERT_WrappedNativeProtoSetNotMarked(JSDHashTable *table, JSDHashEntryHdr *hdr,
                                       uint32 number, void *arg)
 {
@@ -562,11 +572,13 @@ XPCWrappedNativeScope::ASSERT_NoInterfaceSetsAreMarked()
             ASSERT_WrappedNativeSetNotMarked, nsnull);
         cur->mWrappedNativeProtoMap->Enumerate(
             ASSERT_WrappedNativeProtoSetNotMarked, nsnull);
+        cur->mMainThreadWrappedNativeProtoMap->Enumerate(
+            ASSERT_WrappedNativeProtoSetNotMarked, nsnull);
     }
 }
 #endif
 
-JS_STATIC_DLL_CALLBACK(JSDHashOperator)
+static JSDHashOperator
 WrappedNativeTearoffSweeper(JSDHashTable *table, JSDHashEntryHdr *hdr,
                             uint32 number, void *arg)
 {
@@ -610,7 +622,7 @@ struct ShutdownData
     int nonSharedProtoCount;
 };
 
-JS_STATIC_DLL_CALLBACK(JSDHashOperator)
+static JSDHashOperator
 WrappedNativeShutdownEnumerator(JSDHashTable *table, JSDHashEntryHdr *hdr,
                                 uint32 number, void *arg)
 {
@@ -627,7 +639,7 @@ WrappedNativeShutdownEnumerator(JSDHashTable *table, JSDHashEntryHdr *hdr,
     return JS_DHASH_REMOVE;
 }
 
-JS_STATIC_DLL_CALLBACK(JSDHashOperator)
+static JSDHashOperator
 WrappedNativeProtoShutdownEnumerator(JSDHashTable *table, JSDHashEntryHdr *hdr,
                                      uint32 number, void *arg)
 {
@@ -676,6 +688,8 @@ XPCWrappedNativeScope::SystemIsBeingShutDown(JSContext* cx)
         // proto pointers in the proto map.
         cur->mWrappedNativeProtoMap->
                 Enumerate(WrappedNativeProtoShutdownEnumerator,  &data);
+        cur->mMainThreadWrappedNativeProtoMap->
+                Enumerate(WrappedNativeProtoShutdownEnumerator,  &data);
         cur->mWrappedNativeMap->
                 Enumerate(WrappedNativeShutdownEnumerator,  &data);
     }
@@ -706,6 +720,9 @@ GetScopeOfObject(JSObject* obj)
 {
     nsISupports* supports;
     JSClass* clazz = STOBJ_GET_CLASS(obj);
+
+    if(IS_SLIM_WRAPPER_CLASS(clazz))
+        return GetSlimWrapperProto(obj)->GetScope();
 
     if(!IS_WRAPPER_CLASS(clazz) ||
        !(supports = (nsISupports*) xpc_GetJSPrivate(obj)))
@@ -742,15 +759,19 @@ GetScopeOfObject(JSObject* obj)
 
 
 #ifdef DEBUG
-void DEBUG_CheckForComponentsInScope(XPCCallContext& ccx, JSObject* obj,
-                                     JSBool OKIfNotInitialized)
+void DEBUG_CheckForComponentsInScope(JSContext* cx, JSObject* obj,
+                                     JSBool OKIfNotInitialized,
+                                     XPCJSRuntime* runtime)
 {
     if(OKIfNotInitialized)
         return;
 
-    const char* name = ccx.GetRuntime()->GetStringName(XPCJSRuntime::IDX_COMPONENTS);
+    if(!(JS_GetOptions(cx) & JSOPTION_PRIVATE_IS_NSISUPPORTS))
+        return;
+
+    const char* name = runtime->GetStringName(XPCJSRuntime::IDX_COMPONENTS);
     jsval prop;
-    if(JS_LookupProperty(ccx, obj, name, &prop) && !JSVAL_IS_PRIMITIVE(prop))
+    if(JS_LookupProperty(cx, obj, name, &prop) && !JSVAL_IS_PRIMITIVE(prop))
         return;
 
     // This is pretty much always bad. It usually means that native code is
@@ -766,13 +787,15 @@ void DEBUG_CheckForComponentsInScope(XPCCallContext& ccx, JSObject* obj,
 #endif
 }
 #else
-#define DEBUG_CheckForComponentsInScope(ccx, obj, OKIfNotInitialized) ((void)0)
+#define DEBUG_CheckForComponentsInScope(ccx, obj, OKIfNotInitialized, runtime) \
+    ((void)0)
 #endif
 
 // static
 XPCWrappedNativeScope*
-XPCWrappedNativeScope::FindInJSObjectScope(XPCCallContext& ccx, JSObject* obj,
-                                           JSBool OKIfNotInitialized)
+XPCWrappedNativeScope::FindInJSObjectScope(JSContext* cx, JSObject* obj,
+                                           JSBool OKIfNotInitialized,
+                                           XPCJSRuntime* runtime)
 {
     XPCWrappedNativeScope* scope;
 
@@ -788,12 +811,19 @@ XPCWrappedNativeScope::FindInJSObjectScope(XPCCallContext& ccx, JSObject* obj,
 
     // Else we'll have to look up the parent chain to get the scope
 
-    obj = JS_GetGlobalForObject(ccx, obj);
+    obj = JS_GetGlobalForObject(cx, obj);
+
+    if(!runtime)
+    {
+        runtime = nsXPConnect::GetRuntimeInstance();
+        NS_ASSERTION(runtime, "This should never be null!");
+    }
 
     // XXX We are assuming that the scope count is low enough that traversing
     // the linked list is more reasonable then doing a hashtable lookup.
+    XPCWrappedNativeScope* found = nsnull;
     {   // scoped lock
-        XPCAutoLock lock(ccx.GetRuntime()->GetMapLock());
+        XPCAutoLock lock(runtime->GetMapLock());
 
         DEBUG_TrackScopeTraversal();
 
@@ -801,10 +831,16 @@ XPCWrappedNativeScope::FindInJSObjectScope(XPCCallContext& ccx, JSObject* obj,
         {
             if(obj == cur->GetGlobalJSObject())
             {
-                DEBUG_CheckForComponentsInScope(ccx, obj, OKIfNotInitialized);
-                return cur;
+                found = cur;
+                break;
             }
         }
+    }
+
+    if(found) {
+        // This cannot be called within the map lock!
+        DEBUG_CheckForComponentsInScope(cx, obj, OKIfNotInitialized, runtime);
+        return found;
     }
 
     // Failure to find the scope is only OK if the caller told us it might fail.
@@ -814,10 +850,9 @@ XPCWrappedNativeScope::FindInJSObjectScope(XPCCallContext& ccx, JSObject* obj,
     return nsnull;
 }
 
-
 /***************************************************************************/
 
-JS_STATIC_DLL_CALLBACK(JSDHashOperator)
+static JSDHashOperator
 WNProtoSecPolicyClearer(JSDHashTable *table, JSDHashEntryHdr *hdr,
                         uint32 number, void *arg)
 {
@@ -827,7 +862,7 @@ WNProtoSecPolicyClearer(JSDHashTable *table, JSDHashEntryHdr *hdr,
     return JS_DHASH_NEXT;
 }
 
-JS_STATIC_DLL_CALLBACK(JSDHashOperator)
+static JSDHashOperator
 WNSecPolicyClearer(JSDHashTable *table, JSDHashEntryHdr *hdr,
                     uint32 number, void *arg)
 {
@@ -847,6 +882,7 @@ XPCWrappedNativeScope::ClearAllWrappedNativeSecurityPolicies(XPCCallContext& ccx
     for(XPCWrappedNativeScope* cur = gScopes; cur; cur = cur->mNext)
     {
         cur->mWrappedNativeProtoMap->Enumerate(WNProtoSecPolicyClearer, nsnull);
+        cur->mMainThreadWrappedNativeProtoMap->Enumerate(WNProtoSecPolicyClearer, nsnull);
         cur->mWrappedNativeMap->Enumerate(WNSecPolicyClearer, nsnull);
     }
 
@@ -855,7 +891,7 @@ XPCWrappedNativeScope::ClearAllWrappedNativeSecurityPolicies(XPCCallContext& ccx
     return NS_OK;
 }
 
-JS_STATIC_DLL_CALLBACK(JSDHashOperator)
+static JSDHashOperator
 WNProtoRemover(JSDHashTable *table, JSDHashEntryHdr *hdr,
                uint32 number, void *arg)
 {
@@ -875,6 +911,8 @@ XPCWrappedNativeScope::RemoveWrappedNativeProtos()
     XPCAutoLock al(mRuntime->GetMapLock());
     
     mWrappedNativeProtoMap->Enumerate(WNProtoRemover, 
+        GetRuntime()->GetDetachedWrappedNativeProtoMap());
+    mMainThreadWrappedNativeProtoMap->Enumerate(WNProtoRemover, 
         GetRuntime()->GetDetachedWrappedNativeProtoMap());
 }
 
@@ -904,14 +942,14 @@ XPCWrappedNativeScope::DebugDumpAllScopes(PRInt16 depth)
 }
 
 #ifdef DEBUG
-JS_STATIC_DLL_CALLBACK(JSDHashOperator)
+static JSDHashOperator
 WrappedNativeMapDumpEnumerator(JSDHashTable *table, JSDHashEntryHdr *hdr,
                                uint32 number, void *arg)
 {
     ((Native2WrappedNativeMap::Entry*)hdr)->value->DebugDump(*(PRInt16*)arg);
     return JS_DHASH_NEXT;
 }
-JS_STATIC_DLL_CALLBACK(JSDHashOperator)
+static JSDHashOperator
 WrappedNativeProtoMapDumpEnumerator(JSDHashTable *table, JSDHashEntryHdr *hdr,
                                     uint32 number, void *arg)
 {
@@ -956,23 +994,17 @@ XPCWrappedNativeScope::DebugDump(PRInt16 depth)
             mWrappedNativeProtoMap->Enumerate(WrappedNativeProtoMapDumpEnumerator, &depth);
             XPC_LOG_OUTDENT();
         }
+
+        XPC_LOG_ALWAYS(("mMainThreadWrappedNativeProtoMap @ %x with %d protos(s)", \
+                         mMainThreadWrappedNativeProtoMap, \
+                         mMainThreadWrappedNativeProtoMap ? mMainThreadWrappedNativeProtoMap->Count() : 0));
+        // iterate contexts...
+        if(depth && mMainThreadWrappedNativeProtoMap && mMainThreadWrappedNativeProtoMap->Count())
+        {
+            XPC_LOG_INDENT();
+            mMainThreadWrappedNativeProtoMap->Enumerate(WrappedNativeProtoMapDumpEnumerator, &depth);
+            XPC_LOG_OUTDENT();
+        }
     XPC_LOG_OUTDENT();
 #endif
 }
-
-#ifndef XPCONNECT_STANDALONE
-// static
-void
-XPCWrappedNativeScope::TraverseScopes(XPCCallContext& ccx)
-{
-    // Hold the lock throughout.
-    XPCAutoLock lock(ccx.GetRuntime()->GetMapLock());
-
-    for(XPCWrappedNativeScope* cur = gScopes; cur; cur = cur->mNext)
-        if(cur->mGlobalJSObject && cur->mScriptObjectPrincipal)
-        {
-            ccx.GetXPConnect()->RecordTraversal(cur->mGlobalJSObject,
-                                                cur->mScriptObjectPrincipal);
-        }
-}
-#endif

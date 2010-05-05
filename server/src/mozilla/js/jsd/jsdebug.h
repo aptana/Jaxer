@@ -108,7 +108,7 @@ typedef struct JSDObject         JSDObject;
 * up the JSD system.
 */
 typedef void
-(* JS_DLL_CALLBACK JSD_SetContextProc)(JSDContext* jsdc, void* user);
+(* JSD_SetContextProc)(JSDContext* jsdc, void* user);
 
 /* This struct could have more fields in future versions */
 typedef struct
@@ -149,6 +149,18 @@ JSD_DebuggerOnForUser(JSRuntime*         jsrt,
 */
 extern JSD_PUBLIC_API(void)
 JSD_DebuggerOff(JSDContext* jsdc);
+
+/*
+ * Pause JSD for this JSDContext
+ */
+extern JSD_PUBLIC_API(void)
+JSD_DebuggerPause(JSDContext* jsdc);
+
+/*
+ * Unpause JSD for this JSDContext
+ */
+extern JSD_PUBLIC_API(void)
+JSD_DebuggerUnpause(JSDContext* jsdc);
 
 /*
 * Get the Major Version (initial JSD release used major version = 1)
@@ -434,10 +446,10 @@ JSD_GetScriptLineExtent(JSDContext* jsdc, JSDScript *jsdscript);
 * 'callerdata' is what was passed to JSD_SetScriptHook to set the hook.
 */
 typedef void
-(* JS_DLL_CALLBACK JSD_ScriptHookProc)(JSDContext* jsdc,
-                                       JSDScript*  jsdscript,
-                                       JSBool      creating,
-                                       void*       callerdata);
+(* JSD_ScriptHookProc)(JSDContext* jsdc,
+                       JSDScript*  jsdscript,
+                       JSBool      creating,
+                       void*       callerdata);
 
 /*
 * Set a hook to be called when scripts are created or destroyed (loaded or
@@ -713,11 +725,11 @@ JSD_AddFullSourceText(JSDContext* jsdc,
 * Implement a callback of this form in order to hook execution.
 */
 typedef uintN
-(* JS_DLL_CALLBACK JSD_ExecutionHookProc)(JSDContext*     jsdc,
-                                          JSDThreadState* jsdthreadstate,
-                                          uintN           type,
-                                          void*           callerdata,
-                                          jsval*          rval);
+(* JSD_ExecutionHookProc)(JSDContext*     jsdc,
+                          JSDThreadState* jsdthreadstate,
+                          uintN           type,
+                          void*           callerdata,
+                          jsval*          rval);
 
 /* possible 'type' params for JSD_CallHookProc */
 #define JSD_HOOK_TOPLEVEL_START  0   /* about to evaluate top level script */
@@ -732,10 +744,10 @@ typedef uintN
 * ignored to TOPLEVEL_END and FUNCTION_RETURN type hooks.
 */
 typedef JSBool
-(* JS_DLL_CALLBACK JSD_CallHookProc)(JSDContext*     jsdc,
-                                     JSDThreadState* jsdthreadstate,
-                                     uintN           type,
-                                     void*           callerdata);
+(* JSD_CallHookProc)(JSDContext*     jsdc,
+                     JSDThreadState* jsdthreadstate,
+                     uintN           type,
+                     void*           callerdata);
 
 /*
 * Set Hook to be called whenever the given pc is about to be executed --
@@ -1050,11 +1062,11 @@ JSD_SetException(JSDContext* jsdc, JSDThreadState* jsdthreadstate,
 * Implement a callback of this form in order to hook the ErrorReporter
 */
 typedef uintN
-(* JS_DLL_CALLBACK JSD_ErrorReporter)(JSDContext*     jsdc,
-                                      JSContext*      cx,
-                                      const char*     message,
-                                      JSErrorReport*  report,
-                                      void*           callerdata);
+(* JSD_ErrorReporter)(JSDContext*     jsdc,
+                      JSContext*      cx,
+                      const char*     message,
+                      JSErrorReport*  report,
+                      void*           callerdata);
 
 /* Set ErrorReporter hook */
 extern JSD_PUBLIC_API(JSBool)
@@ -1335,6 +1347,13 @@ JSD_GetValueConstructor(JSDContext* jsdc, JSDValue* jsdval);
 */
 extern JSD_PUBLIC_API(const char*)
 JSD_GetValueClassName(JSDContext* jsdc, JSDValue* jsdval);
+
+/*
+* Get the script for the given value if the given value represents a
+* scripted function.  Otherwise, return null.
+*/
+extern JSD_PUBLIC_API(JSDScript*)
+JSD_GetScriptForValue(JSDContext* jsdc, JSDValue* jsdval);
 
 /**************************************************/
 

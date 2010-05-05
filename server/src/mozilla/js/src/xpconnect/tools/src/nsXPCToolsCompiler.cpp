@@ -69,7 +69,7 @@ NS_IMETHODIMP nsXPCToolsCompiler::GetBinDir(nsILocalFile * *aBinDir)
     return NS_OK;
 }
 
-JS_STATIC_DLL_CALLBACK(void) ErrorReporter(JSContext *cx, const char *message,
+static void ErrorReporter(JSContext *cx, const char *message,
                           JSErrorReport *report)
 {
     printf("compile error!\n");
@@ -78,7 +78,7 @@ JS_STATIC_DLL_CALLBACK(void) ErrorReporter(JSContext *cx, const char *message,
 static JSClass global_class = {
     "nsXPCToolsCompiler::global", 0,
     JS_PropertyStub,  JS_PropertyStub,  JS_PropertyStub,  JS_PropertyStub,
-    JS_EnumerateStub, JS_ResolveStub,   JS_ConvertStub,   JS_FinalizeStub
+    JS_EnumerateStub, JS_ResolveStub,   JS_ConvertStub,   nsnull
 };
 
 /* void CompileFile (in nsILocalFile aFile, in PRBool strict); */

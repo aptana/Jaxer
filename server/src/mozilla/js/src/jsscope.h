@@ -195,73 +195,164 @@ JS_BEGIN_EXTERN_C
  * to find a given id, and save on the space overhead of a hash table.
  */
 
-struct JSScope {
-    JSObjectMap     map;                /* base class state */
+struct JSEmptyScope;
+
+struct JSScope : public JSObjectMap
+{
 #ifdef JS_THREADSAFE
     JSTitle         title;              /* lock state */
 #endif
     JSObject        *object;            /* object that owns this scope */
-    uint32          shape;              /* property cache shape identifier */
+    jsrefcount      nrefs;              /* count of all referencing objects */
+    uint32          freeslot;           /* index of next free slot in object */
+    JSEmptyScope    *emptyScope;        /* cache for getEmptyScope below */
     uint8           flags;              /* flags, see below */
     int8            hashShift;          /* multiplicative hash shift */
+
     uint16          spare;              /* reserved */
     uint32          entryCount;         /* number of entries in table */
     uint32          removedCount;       /* removed entry sentinels in table */
     JSScopeProperty **table;            /* table of ptrs to shared tree nodes */
     JSScopeProperty *lastProp;          /* pointer to last property added */
-};
 
-#ifdef JS_THREADSAFE
-JS_STATIC_ASSERT(offsetof(JSScope, title) == sizeof(JSObjectMap));
-#endif
+  private:
+    void initMinimal(JSContext *cx, uint32 newShape);
+    bool createTable(JSContext *cx, bool report);
+    bool changeTable(JSContext *cx, int change);
+    void reportReadOnlyScope(JSContext *cx);
+    void generateOwnShape(JSContext *cx);
+    JSScopeProperty **searchTable(jsid id, bool adding);
+    inline JSScopeProperty **search(jsid id, bool adding);
+    JSEmptyScope *createEmptyScope(JSContext *cx, JSClass *clasp);
 
-#define JS_IS_SCOPE_LOCKED(cx, scope)   JS_IS_TITLE_LOCKED(cx, &(scope)->title)
+  public:
+    explicit JSScope(const JSObjectOps *ops, JSObject *obj = NULL)
+      : JSObjectMap(ops, 0), object(obj) {}
 
-#define OBJ_SCOPE(obj)                  ((JSScope *)(obj)->map)
+    /* Create a mutable, owned, empty scope. */
+    static JSScope *create(JSContext *cx, const JSObjectOps *ops, JSClass *clasp,
+                           JSObject *obj, uint32 shape);
 
-#define SCOPE_MAKE_UNIQUE_SHAPE(cx,scope)                                     \
-    ((scope)->shape = js_GenerateShape((cx), JS_FALSE))
+    static void destroy(JSContext *cx, JSScope *scope);
 
-#define SCOPE_EXTEND_SHAPE(cx,scope,sprop)                                    \
-    JS_BEGIN_MACRO                                                            \
-        if (!(scope)->lastProp ||                                             \
-            (scope)->shape == (scope)->lastProp->shape) {                     \
-            (scope)->shape = (sprop)->shape;                                  \
-        } else {                                                              \
-            (scope)->shape = js_GenerateShape((cx), JS_FALSE);                \
-        }                                                                     \
-    JS_END_MACRO
+    inline void hold();
+    inline bool drop(JSContext *cx, JSObject *obj);
+
+    /*
+     * Return an immutable, shareable, empty scope with the same ops as this
+     * and the same freeslot as this had when empty.
+     *
+     * If |this| is the scope of an object |proto|, the resulting scope can be
+     * used as the scope of a new object whose prototype is |proto|.
+     */
+    inline JSEmptyScope *getEmptyScope(JSContext *cx, JSClass *clasp);
+
+    inline bool canProvideEmptyScope(JSObjectOps *ops, JSClass *clasp);
+ 
+    JSScopeProperty *lookup(jsid id);
+    bool has(JSScopeProperty *sprop);
+
+    JSScopeProperty *add(JSContext *cx, jsid id,
+                         JSPropertyOp getter, JSPropertyOp setter,
+                         uint32 slot, uintN attrs,
+                         uintN flags, intN shortid);
+
+    JSScopeProperty *change(JSContext *cx, JSScopeProperty *sprop,
+                            uintN attrs, uintN mask,
+                            JSPropertyOp getter, JSPropertyOp setter);
+
+    bool remove(JSContext *cx, jsid id);
+    void clear(JSContext *cx);
+
+    void extend(JSContext *cx, JSScopeProperty *sprop);
+
+    void trace(JSTracer *trc);
+
+    void brandingShapeChange(JSContext *cx, uint32 slot, jsval v);
+    void deletingShapeChange(JSContext *cx, JSScopeProperty *sprop);
+    void methodShapeChange(JSContext *cx, uint32 slot, jsval toval);
+    void protoShapeChange(JSContext *cx);
+    void replacingShapeChange(JSContext *cx,
+                              JSScopeProperty *sprop,
+                              JSScopeProperty *newsprop);
+    void sealingShapeChange(JSContext *cx);
+    void shadowingShapeChange(JSContext *cx, JSScopeProperty *sprop);
 
 /* By definition, hashShift = JS_DHASH_BITS - log2(capacity). */
 #define SCOPE_CAPACITY(scope)           JS_BIT(JS_DHASH_BITS-(scope)->hashShift)
 
-/* Scope flags and some macros to hide them from other files than jsscope.c. */
-#define SCOPE_MIDDLE_DELETE             0x0001
-#define SCOPE_SEALED                    0x0002
-#define SCOPE_BRANDED                   0x0004
+    enum {
+        MIDDLE_DELETE           = 0x0001,
+        SEALED                  = 0x0002,
+        BRANDED                 = 0x0004,
+        INDEXED_PROPERTIES      = 0x0008,
+        OWN_SHAPE               = 0x0010,
 
-#define SCOPE_HAD_MIDDLE_DELETE(scope)  ((scope)->flags & SCOPE_MIDDLE_DELETE)
-#define SCOPE_SET_MIDDLE_DELETE(scope)  ((scope)->flags |= SCOPE_MIDDLE_DELETE)
-#define SCOPE_CLR_MIDDLE_DELETE(scope)  ((scope)->flags &= ~SCOPE_MIDDLE_DELETE)
+        /*
+         * This flag toggles with each shape-regenerating GC cycle.
+         * See JSRuntime::gcRegenShapesScopeFlag.
+         */
+        SHAPE_REGEN             = 0x0020
+    };
 
-#define SCOPE_IS_SEALED(scope)          ((scope)->flags & SCOPE_SEALED)
-#define SCOPE_SET_SEALED(scope)         ((scope)->flags |= SCOPE_SEALED)
-#if 0
-/*
- * Don't define this, it can't be done safely because JS_LOCK_OBJ will avoid
- * taking the lock if the object owns its scope and the scope is sealed.
- */
-#undef  SCOPE_CLR_SEALED(scope)         ((scope)->flags &= ~SCOPE_SEALED)
-#endif
+    bool hadMiddleDelete()      { return flags & MIDDLE_DELETE; }
+    void setMiddleDelete()      { flags |= MIDDLE_DELETE; }
+    void clearMiddleDelete()    { flags &= ~MIDDLE_DELETE; }
 
-/*
- * A branded scope's object contains plain old methods (function-valued
- * properties without magic getters and setters), and its scope->shape
- * evolves whenever a function value changes.
- */
-#define SCOPE_IS_BRANDED(scope)         ((scope)->flags & SCOPE_BRANDED)
-#define SCOPE_SET_BRANDED(scope)        ((scope)->flags |= SCOPE_BRANDED)
-#define SCOPE_CLR_BRANDED(scope)        ((scope)->flags &= ~SCOPE_BRANDED)
+    /*
+     * Don't define clearSealed, as it can't be done safely because JS_LOCK_OBJ
+     * will avoid taking the lock if the object owns its scope and the scope is
+     * sealed.
+     */
+    bool sealed()               { return flags & SEALED; }
+    void setSealed()            { flags |= SEALED; }
+
+    /*
+     * A branded scope's object contains plain old methods (function-valued
+     * properties without magic getters and setters), and its scope->shape
+     * evolves whenever a function value changes.
+     */
+    bool branded()              { return flags & BRANDED; }
+    void setBranded()           { flags |= BRANDED; }
+
+    bool hadIndexedProperties() { return flags & INDEXED_PROPERTIES; }
+    void setIndexedProperties() { flags |= INDEXED_PROPERTIES; }
+
+    bool hasOwnShape()          { return flags & OWN_SHAPE; }
+    void setOwnShape()          { flags |= OWN_SHAPE; }
+
+    bool hasRegenFlag(uint8 regenFlag) { return (flags & SHAPE_REGEN) == regenFlag; }
+
+    bool owned()                { return object != NULL; }
+};
+
+struct JSEmptyScope : public JSScope
+{
+    JSClass * const clasp;
+
+    explicit JSEmptyScope(const JSObjectOps *ops, JSClass *clasp)
+      : JSScope(ops), clasp(clasp) {}
+};
+
+inline bool
+JS_IS_SCOPE_LOCKED(JSContext *cx, JSScope *scope)
+{
+    return JS_IS_TITLE_LOCKED(cx, &scope->title);
+}
+
+inline JSScope *
+OBJ_SCOPE(JSObject *obj)
+{
+    JS_ASSERT(OBJ_IS_NATIVE(obj));
+    return (JSScope *) obj->map;
+}
+
+inline uint32
+OBJ_SHAPE(JSObject *obj)
+{
+    JS_ASSERT(obj->map->shape != JSObjectMap::SHAPELESS);
+    return obj->map->shape;
+}
 
 /*
  * A little information hiding for scope->lastProp, in case it ever becomes
@@ -270,6 +361,27 @@ JS_STATIC_ASSERT(offsetof(JSScope, title) == sizeof(JSObjectMap));
 #define SCOPE_LAST_PROP(scope)          ((scope)->lastProp)
 #define SCOPE_REMOVE_LAST_PROP(scope)   ((scope)->lastProp =                  \
                                          (scope)->lastProp->parent)
+/*
+ * Helpers for reinterpreting JSPropertyOp as JSObject* for scripted getters
+ * and setters.
+ */
+inline JSObject *
+js_CastAsObject(JSPropertyOp op)
+{
+    return JS_FUNC_TO_DATA_PTR(JSObject *, op);
+}
+
+inline jsval
+js_CastAsObjectJSVal(JSPropertyOp op)
+{
+    return OBJECT_TO_JSVAL(JS_FUNC_TO_DATA_PTR(JSObject *, op));
+}
+
+inline JSPropertyOp
+js_CastAsPropertyOp(JSObject *object)
+{
+    return JS_DATA_TO_FUNC_PTR(JSPropertyOp, object);
+}
 
 struct JSScopeProperty {
     jsid            id;                 /* int-tagged jsval/untagged JSAtom* */
@@ -283,6 +395,8 @@ struct JSScopeProperty {
     JSScopeProperty *kids;              /* null, single child, or a tagged ptr
                                            to many-kids data structure */
     uint32          shape;              /* property cache shape identifier */
+
+    void trace(JSTracer *trc);
 };
 
 /* JSScopeProperty pointer tag bit indicating a collision. */
@@ -305,6 +419,18 @@ struct JSScopeProperty {
     (*(spp) = (JSScopeProperty *) ((jsuword)(sprop)                           \
                                    | SPROP_HAD_COLLISION(*(spp))))
 
+JS_ALWAYS_INLINE JSScopeProperty *
+JSScope::lookup(jsid id)
+{
+    return SPROP_FETCH(search(id, false));
+}
+
+JS_ALWAYS_INLINE bool
+JSScope::has(JSScopeProperty *sprop)
+{
+    return lookup(sprop->id) == sprop;
+}
+
 /* Bits stored in sprop->flags. */
 #define SPROP_MARK                      0x01
 #define SPROP_IS_ALIAS                  0x02
@@ -321,35 +447,194 @@ struct JSScopeProperty {
 
 #define SPROP_INVALID_SLOT              0xffffffff
 
-#define SLOT_IN_SCOPE(slot,scope)         ((slot) < (scope)->map.freeslot)
+#define SLOT_IN_SCOPE(slot,scope)         ((slot) < (scope)->freeslot)
 #define SPROP_HAS_VALID_SLOT(sprop,scope) SLOT_IN_SCOPE((sprop)->slot, scope)
 
 #define SPROP_HAS_STUB_GETTER(sprop)    (!(sprop)->getter)
 #define SPROP_HAS_STUB_SETTER(sprop)    (!(sprop)->setter)
 
-/*
- * NB: SPROP_GET must not be called if SPROP_HAS_STUB_GETTER(sprop).
- */
-#define SPROP_GET(cx,sprop,obj,obj2,vp)                                       \
-    (((sprop)->attrs & JSPROP_GETTER)                                         \
-     ? js_InternalGetOrSet(cx, obj, (sprop)->id,                              \
-                           OBJECT_TO_JSVAL((sprop)->getter), JSACC_READ,      \
-                           0, 0, vp)                                          \
-     : (sprop)->getter(cx, OBJ_THIS_OBJECT(cx,obj), SPROP_USERID(sprop), vp))
+#ifndef JS_THREADSAFE
+# define js_GenerateShape(cx, gcLocked)    js_GenerateShape (cx)
+#endif
 
-/*
- * NB: SPROP_SET must not be called if (SPROP_HAS_STUB_SETTER(sprop) &&
- * !(sprop->attrs & JSPROP_GETTER)).
- */
-#define SPROP_SET(cx,sprop,obj,obj2,vp)                                       \
-    (((sprop)->attrs & JSPROP_SETTER)                                         \
-     ? js_InternalGetOrSet(cx, obj, (sprop)->id,                              \
-                           OBJECT_TO_JSVAL((sprop)->setter), JSACC_WRITE,     \
-                           1, vp, vp)                                         \
-     : ((sprop)->attrs & JSPROP_GETTER)                                       \
-     ? (JS_ReportErrorNumber(cx, js_GetErrorMessage, NULL,                    \
-                             JSMSG_GETTER_ONLY, NULL), JS_FALSE)              \
-     : (sprop)->setter(cx, OBJ_THIS_OBJECT(cx,obj), SPROP_USERID(sprop), vp))
+extern uint32
+js_GenerateShape(JSContext *cx, bool gcLocked);
+
+#ifdef JS_DUMP_PROPTREE_STATS
+# define METER(x)       JS_ATOMIC_INCREMENT(&js_scope_stats.x)
+#else
+# define METER(x)       /* nothing */
+#endif
+
+inline JSScopeProperty **
+JSScope::search(jsid id, bool adding)
+{
+    JSScopeProperty *sprop, **spp;
+
+    METER(searches);
+    if (!table) {
+        /* Not enough properties to justify hashing: search from lastProp. */
+        JS_ASSERT(!hadMiddleDelete());
+        for (spp = &lastProp; (sprop = *spp); spp = &sprop->parent) {
+            if (sprop->id == id) {
+                METER(hits);
+                return spp;
+            }
+        }
+        METER(misses);
+        return spp;
+    }
+    return searchTable(id, adding);
+}
+
+#undef METER
+
+inline bool
+JSScope::canProvideEmptyScope(JSObjectOps *ops, JSClass *clasp)
+{
+    return this->ops == ops && (!emptyScope || emptyScope->clasp == clasp);
+}
+
+inline JSEmptyScope *
+JSScope::getEmptyScope(JSContext *cx, JSClass *clasp)
+{
+    if (emptyScope) {
+        JS_ASSERT(clasp == emptyScope->clasp);
+        emptyScope->hold();
+        return emptyScope;
+    }
+    return createEmptyScope(cx, clasp);
+}
+
+inline void
+JSScope::hold()
+{
+    JS_ASSERT(nrefs >= 0);
+    JS_ATOMIC_INCREMENT(&nrefs);
+}
+
+inline bool
+JSScope::drop(JSContext *cx, JSObject *obj)
+{
+#ifdef JS_THREADSAFE
+    /* We are called from only js_ShareWaitingTitles and js_FinalizeObject. */
+    JS_ASSERT(!obj || CX_THREAD_IS_RUNNING_GC(cx));
+#endif
+    JS_ASSERT(nrefs > 0);
+    --nrefs;
+
+    if (nrefs == 0) {
+        destroy(cx, this);
+        return false;
+    }
+    if (object == obj)
+        object = NULL;
+    return true;
+}
+
+inline void
+JSScope::extend(JSContext *cx, JSScopeProperty *sprop)
+{
+    js_LeaveTraceIfGlobalObject(cx, object);
+    shape = (!lastProp || shape == lastProp->shape)
+            ? sprop->shape
+            : js_GenerateShape(cx, JS_FALSE);
+    ++entryCount;
+    lastProp = sprop;
+}
+
+inline void
+JSScope::trace(JSTracer *trc)
+{
+    JSContext *cx = trc->context;
+    JSScopeProperty *sprop = lastProp;
+    uint8 regenFlag = cx->runtime->gcRegenShapesScopeFlag;
+    if (IS_GC_MARKING_TRACER(trc) && cx->runtime->gcRegenShapes && !hasRegenFlag(regenFlag)) {
+        /*
+         * Either this scope has its own shape, which must be regenerated, or
+         * it must have the same shape as lastProp.
+         */
+        uint32 newShape;
+
+        if (sprop) {
+            if (!(sprop->flags & SPROP_FLAG_SHAPE_REGEN)) {
+                sprop->shape = js_RegenerateShapeForGC(cx);
+                sprop->flags |= SPROP_FLAG_SHAPE_REGEN;
+            }
+            newShape = sprop->shape;
+        }
+        if (!sprop || hasOwnShape()) {
+            newShape = js_RegenerateShapeForGC(cx);
+            JS_ASSERT_IF(sprop, newShape != sprop->shape);
+        }
+        shape = newShape;
+        flags ^= JSScope::SHAPE_REGEN;
+
+        /* Also regenerate the shapes of empty scopes, in case they are not shared. */
+        for (JSScope *empty = emptyScope;
+             empty && !empty->hasRegenFlag(regenFlag);
+             empty = empty->emptyScope) {
+            empty->shape = js_RegenerateShapeForGC(cx);
+            empty->flags ^= JSScope::SHAPE_REGEN;
+        }
+    }
+    if (sprop) {
+        JS_ASSERT(has(sprop));
+
+        /* Trace scope's property tree ancestor line. */
+        do {
+            if (hadMiddleDelete() && !has(sprop))
+                continue;
+            sprop->trace(trc);
+        } while ((sprop = sprop->parent) != NULL);
+    }
+}
+
+
+static JS_INLINE bool
+js_GetSprop(JSContext* cx, JSScopeProperty* sprop, JSObject* obj, jsval* vp)
+{
+    JS_ASSERT(!SPROP_HAS_STUB_GETTER(sprop));
+
+    if (sprop->attrs & JSPROP_GETTER) {
+        jsval fval = js_CastAsObjectJSVal(sprop->getter);
+        return js_InternalGetOrSet(cx, obj, sprop->id, fval, JSACC_READ,
+                                   0, 0, vp);
+    }
+
+    /*
+     * JSObjectOps is private, so we know there are only two implementations
+     * of the thisObject hook: with objects and XPConnect wrapped native
+     * objects.  XPConnect objects don't expect the hook to be called here,
+     * but with objects do.
+     */
+    if (STOBJ_GET_CLASS(obj) == &js_WithClass)
+        obj = obj->map->ops->thisObject(cx, obj);
+    return sprop->getter(cx, obj, SPROP_USERID(sprop), vp);
+}
+
+static JS_INLINE bool
+js_SetSprop(JSContext* cx, JSScopeProperty* sprop, JSObject* obj, jsval* vp)
+{
+    JS_ASSERT(!(SPROP_HAS_STUB_SETTER(sprop) &&
+                !(sprop->attrs & JSPROP_GETTER)));
+
+    if (sprop->attrs & JSPROP_SETTER) {
+        jsval fval = js_CastAsObjectJSVal(sprop->setter);
+        return js_InternalGetOrSet(cx, obj, (sprop)->id, fval, JSACC_WRITE,
+                                   1, vp, vp);
+    }
+
+    if (sprop->attrs & JSPROP_GETTER) {
+        js_ReportGetterOnlyAssignment(cx);
+        return JS_FALSE;
+    }
+
+    /* See the comment in js_GetSprop as to why we can check for 'with'. */
+    if (STOBJ_GET_CLASS(obj) == &js_WithClass)
+        obj = obj->map->ops->thisObject(cx, obj);
+    return sprop->setter(cx, obj, SPROP_USERID(sprop), vp);
+}
 
 /* Macro for common expression to test for shared permanent attributes. */
 #define SPROP_IS_SHARED_PERMANENT(sprop)                                      \
@@ -358,56 +643,13 @@ struct JSScopeProperty {
 extern JSScope *
 js_GetMutableScope(JSContext *cx, JSObject *obj);
 
-extern JSScope *
-js_NewScope(JSContext *cx, jsrefcount nrefs, JSObjectOps *ops, JSClass *clasp,
-            JSObject *obj);
-
-extern void
-js_DestroyScope(JSContext *cx, JSScope *scope);
-
-extern JS_FRIEND_API(JSScopeProperty **)
-js_SearchScope(JSScope *scope, jsid id, JSBool adding);
-
-#define SCOPE_GET_PROPERTY(scope, id)                                         \
-    SPROP_FETCH(js_SearchScope(scope, id, JS_FALSE))
-
-#define SCOPE_HAS_PROPERTY(scope, sprop)                                      \
-    (SCOPE_GET_PROPERTY(scope, (sprop)->id) == (sprop))
-
-extern JSScopeProperty *
-js_AddScopeProperty(JSContext *cx, JSScope *scope, jsid id,
-                    JSPropertyOp getter, JSPropertyOp setter, uint32 slot,
-                    uintN attrs, uintN flags, intN shortid);
-
-extern JSScopeProperty *
-js_ChangeScopePropertyAttrs(JSContext *cx, JSScope *scope,
-                            JSScopeProperty *sprop, uintN attrs, uintN mask,
-                            JSPropertyOp getter, JSPropertyOp setter);
-
-extern JSBool
-js_RemoveScopeProperty(JSContext *cx, JSScope *scope, jsid id);
-
-extern void
-js_ClearScope(JSContext *cx, JSScope *scope);
-
-/*
- * These macros used to inline short code sequences, but they grew over time.
- * We retain them for internal backward compatibility, and in case one or both
- * ever shrink to inline-able size.
- */
-#define TRACE_ID(trc, id)                js_TraceId(trc, id)
-#define TRACE_SCOPE_PROPERTY(trc, sprop) js_TraceScopeProperty(trc, sprop)
-
 extern void
 js_TraceId(JSTracer *trc, jsid id);
 
 extern void
-js_TraceScopeProperty(JSTracer *trc, JSScopeProperty *sprop);
-
-extern void
 js_SweepScopeProperties(JSContext *cx);
 
-extern JSBool
+extern bool
 js_InitPropertyTree(JSRuntime *rt);
 
 extern void

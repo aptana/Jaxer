@@ -70,8 +70,6 @@ SHORT_LIBNAME	= xpc$(MOZ_BITS)$(VERSION_NUMBER)
 endif
 LIBXUL_LIBRARY = 1
 
-PACKAGE_FILE = xpconnect.pkg
-
 REQUIRES	= xpcom \
 		  string \
 		  js \
@@ -79,6 +77,19 @@ REQUIRES	= xpcom \
 		  necko \
 		  dom \
 		  $(NULL)
+
+# These modules are required because the auto-generated file
+# dom_quickstubs.cpp #includes header files from many places.
+REQUIRES	+= content \
+		   editor \
+		   layout \
+		   rdf \
+		   svg \
+		   xuldoc \
+		   xultmpl \
+		   widget \
+		   $(NULL)
+
 
 CPPSRCS		= \
 		nsScriptError.cpp \
@@ -111,7 +122,11 @@ CPPSRCS		= \
 		xpcJSWeakReference.cpp \
 		XPCSafeJSObjectWrapper.cpp \
 		XPCCrossOriginWrapper.cpp \
+		XPCChromeObjectWrapper.cpp \
+		XPCSystemOnlyWrapper.cpp \
 		XPCWrapper.cpp \
+		xpcquickstubs.cpp \
+		dom_quickstubs.cpp \
 		$(NULL)
 ifdef XPC_IDISPATCH_SUPPORT
 CPPSRCS +=	XPCDispObject.cpp	\
@@ -131,6 +146,8 @@ include $(topsrcdir)/config/config.mk
 
 LOCAL_INCLUDES = \
 		-I$(srcdir)/../loader \
+		-I$(topsrcdir)/js/src \
+		-I$(topsrcdir)/js/src/nanojit \
 		$(NULL)
 
 EXTRA_DSO_LDOPTS += \
@@ -146,7 +163,29 @@ endif
 
 include $(topsrcdir)/config/rules.mk
 
-DEFINES		+= -DJSFILE -DJS_THREADSAFE -DEXPORT_XPC_API
+DEFINES += \
+  -DJSFILE \
+  -DJS_THREADSAFE \
+  -DEXPORT_XPC_API \
+  $(NULL)
+
+CONFIG := $(shell cat $(DEPTH)/js/src/js-confdefs.h)
+
+ENABLE_JIT = $(filter JS_TRACER, $(CONFIG))
+
+ifneq (,$(ENABLE_JIT))
+
+# Ugly! We need the AVMPLUS defines out of js/src/js-confdefs.h to make the
+# nanojit headers happy. Gotta figure out a better way to get them, bug 483677.
+DEFINES += \
+  -DJS_TRACER=1 \
+  -DFEATURE_NANOJIT=1 \
+  $(addprefix -D,$(filter AVMPLUS%,$(CONFIG))) \
+  $(NULL)
+
+ENABLE_TRACEABLE_FLAGS = --enable-traceables
+
+endif # ENABLE_JIT
 
 ifdef MOZ_XPCTOOLS
 DEFINES         +=  -DXPC_TOOLS_SUPPORT
@@ -168,12 +207,6 @@ endif
 
 endif
 
-# the windows ce compiler produces crap when compiling this
-# with any optimizations.  See bug 304714
-ifdef WINCE
-MOZ_OPTIMIZE_FLAGS=-Od
-endif
-
 ifeq ($(OS_ARCH),WINNT)
 ifndef GNU_CXX
 ifeq (,$(filter-out 1200 1300 1310,$(_MSC_VER)))
@@ -188,3 +221,31 @@ endif
 endif
 endif
 
+nsXPConnect.$(OBJ_SUFFIX): dom_quickstubs.h
+
+xpcjsruntime.$(OBJ_SUFFIX): dom_quickstubs.h
+
+dom_quickstubs.h: dom_quickstubs.cpp
+
+dom_quickstubs.cpp: $(srcdir)/dom_quickstubs.qsconf \
+                    $(srcdir)/qsgen.py \
+                    $(topsrcdir)/xpcom/idl-parser/header.py \
+                    $(topsrcdir)/xpcom/idl-parser/xpidl.py \
+                    $(DEPTH)/js/src/js-confdefs.h
+	$(PYTHON) $(topsrcdir)/config/pythonpath.py \
+	  -I$(topsrcdir)/other-licenses/ply \
+	  -I$(topsrcdir)/xpcom/idl-parser \
+	  $(srcdir)/qsgen.py \
+	  --idlpath=$(DEPTH)/dist/idl \
+	  --cachedir=$(DEPTH)/xpcom/idl-parser \
+	  --header-output dom_quickstubs.h \
+	  --stub-output dom_quickstubs.cpp \
+	  --makedepend-output $(MDDEPDIR)/dom_qsgen.pp \
+	  $(ENABLE_TRACEABLE_FLAGS) \
+	  $(srcdir)/dom_quickstubs.qsconf
+
+GARBAGE += \
+		dom_quickstubs.h \
+		dom_quickstubs.cpp \
+		$(MDDEPDIR)/dom_qsgen.pp \
+		$(NULL)

@@ -44,6 +44,10 @@
        expected.sort().toString(),
        'enumeration over SJOWs walks the prototype chain and works over XOWs');
 
+    for (let i in XPCSafeJSObjectWrapper({ 0: 0, "hi": "there" })) {
+        is(typeof i, "string", "enumeration on wrappers only returns strings");
+    }
+
     ok(!(new XPCSafeJSObjectWrapper({}) == new XPCSafeJSObjectWrapper({})),
        'SJOWs equality hook returns false correctly');
 
@@ -88,12 +92,34 @@
         ok(false, "some crazy exception was thrown");
     }
 
+    try {
+        new XPCNativeWrapper("");
+        ok(false, "How did we construct a wrapper around a primitive?");
+    } catch (e) {
+        ok(true, "Unable to new XPCNativeWrapper(primitive)");
+    }
+
+    try {
+        is(XPCNativeWrapper(""), "", "XPCNativeWrapper as a function allows primitives");
+    } catch (e) {
+        ok(false, "Unable to wrap a primitive, even without 'new'");
+    }
+
     // Some tests for SJOWs too.
     is(new XPCSafeJSObjectWrapper(document.body) === document.body, true,
        "triple equals ignores wrappers");
     is(XPCSafeJSObjectWrapper.prototype + '',
        "[object XPCSafeJSObjectWrapper]",
        "able to convert XPCSafeJSObjectWrapper.prototype to string");
+
+    try {
+        is((function(x) { return x+1; }).apply(this,
+                                               XPCSafeJSObjectWrapper([1])),
+           2);
+    } catch (e) {
+        ok(false,
+           "Unable to call apply() with a XPCSafeJSObjectWrapped array");
+    }
     </script>
 </body>
 </html>
