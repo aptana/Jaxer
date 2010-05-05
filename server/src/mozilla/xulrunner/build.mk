@@ -62,13 +62,6 @@ tier_app_dirs += embedding/tests
 endif
 endif
 
-# os2embed
-ifeq ($(OS_ARCH),OS2)
-ifdef ENABLE_TESTS
-tier_app_dirs += embedding/tests
-endif
-endif
-
 ifdef MOZ_JAVAXPCOM
 tier_app_dirs += extensions/java
 endif
@@ -77,7 +70,6 @@ tier_app_dirs += xulrunner
 
 installer:
 	@echo "XULRunner doesn't have an installer yet."
-	@exit 1
 
 package:
 	@$(MAKE) -C xulrunner/installer
@@ -90,3 +82,11 @@ sdk:
 
 distclean::
 	@$(MAKE) -C xulrunner/installer distclean
+
+upload::
+	@$(MAKE) -C xulrunner/installer upload
+
+ifeq ($(OS_TARGET),Linux)
+deb: package
+	@$(MAKE) -C xulrunner/installer deb
+endif

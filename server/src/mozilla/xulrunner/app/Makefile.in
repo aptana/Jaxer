@@ -84,13 +84,17 @@ REQUIRES = \
 
 CPPSRCS = nsXULRunnerApp.cpp
 
-ifeq ($(OS_ARCH),WINNT)
+ifneq (,$(filter WINNT WINCE,$(OS_ARCH)))
 CPPSRCS += nsRegisterGREWin.cpp
 else
-ifneq (,$(filter OS2 Darwin,$(OS_ARCH)))
+ifeq (OS2,$(OS_ARCH))
+CPPSRCS += nsRegisterGREVoid.cpp
+else
+ifeq (cocoa,$(MOZ_WIDGET_TOOLKIT))
 CPPSRCS += nsRegisterGREVoid.cpp
 else
 CPPSRCS += nsRegisterGREUnix.cpp
+endif
 endif
 endif
 
@@ -104,7 +108,7 @@ TK_LIBS := -framework Cocoa $(TK_LIBS)
 endif
 
 ifndef MOZ_ENABLE_LIBXUL
-ifneq (,$(filter mac cocoa,$(MOZ_WIDGET_TOOLKIT)))
+ifeq (bundle,$(MOZ_FS_LAYOUT))
 LIBS += $(DIST)/bin/XUL
 else
 EXTRA_DSO_LIBS += xul
@@ -122,7 +126,7 @@ LIBS += \
 
 # Add explicit X11 dependency when building against X11 toolkits
 ifneq (,$(filter gtk gtk2 xlib,$(MOZ_WIDGET_TOOLKIT)))
-LIBS += $(XLDFLAGS) $(XLIBS)
+LIBS += $(XLDFLAGS) $(XLIBS) $(XEXT_LIBS) $(XCOMPOSITE_LIBS)
 endif
 
 ifdef MOZ_JPROF
@@ -138,6 +142,8 @@ endif
 endif
 DEFINES += -DMOZ_WINCONSOLE=$(MOZ_WINCONSOLE)
 
+# This switches $(INSTALL) to copy mode, like $(SYSINSTALL), so things that
+# shouldn't get 755 perms need $(IFLAGS1) for either way of calling nsinstall.
 NSDISTMODE = copy
 
 include $(topsrcdir)/config/config.mk
@@ -145,11 +151,11 @@ include $(topsrcdir)/config/config.mk
 ifdef _MSC_VER
 # Always enter a Windows program through wmain, whether or not we're
 # a console application.
+ifdef WINCE
+WIN32_EXE_LDFLAGS += -ENTRY:mainWCRTStartup
+else
 WIN32_EXE_LDFLAGS += -ENTRY:wmainCRTStartup
 endif
-
-ifdef NS_TRACE_MALLOC
-EXTRA_DSO_LIBS += tracemalloc
 endif
 
 ifeq ($(OS_ARCH),WINNT)
@@ -178,6 +184,8 @@ endif
 RCFLAGS += -DXULRUNNER_ICO=\"$(DIST)/branding/xulrunner.ico\" -DDOCUMENT_ICO=\"$(DIST)/branding/document.ico\"
 endif
 
+LIBS += $(JEMALLOC_LIBS)
+
 include $(topsrcdir)/config/rules.mk
 
 DEFINES += -DXULRUNNER_ICO=\"$(DIST)/branding/xulrunner.ico\" -DDOCUMENT_ICO=\"$(DIST)/branding/document.ico\"
@@ -202,12 +210,13 @@ LDFLAGS += /HEAP:0x40000
 endif
 endif
 
-ifneq (,$(filter-out OS2 WINNT Darwin BeOS,$(OS_ARCH)))
+ifneq (,$(filter-out OS2 WINCE WINNT BeOS,$(OS_ARCH)))
+ifeq (unix, $(MOZ_FS_LAYOUT))
 
-xulrunner:: mozilla.in Makefile.in Makefile $(DEPTH)/config/autoconf.mk
-	cat $< | sed -e "s|%MOZAPPDIR%|$(mozappdir)|" \
+xulrunner:: $(topsrcdir)/build/unix/mozilla.in $(GLOBAL_DEPS)
+	cat $< | sed -e "s|%MOZAPPDIR%|$(installdir)|" \
                 -e "s|%MOZ_USER_DIR%|.mozilla/xulrunner|" \
-		-e "s|%MREDIR%|$(mredir)|" > $@
+                -e "s|%MOZ_APP_DISPLAYNAME%|$(MOZ_APP_DISPLAYNAME)|" > $@
 	chmod +x $@
 
 libs:: xulrunner
@@ -218,17 +227,16 @@ install:: xulrunner
 
 GARBAGE += xulrunner
 endif
+endif
 
 ifneq (,$(filter gtk gtk2,$(MOZ_WIDGET_TOOLKIT)))
 
 ICON_FILES	= \
-		$(DIST)/branding/mozicon50.xpm \
-		$(DIST)/branding/mozicon16.xpm \
 		$(DIST)/branding/document.png \
 		$(NULL)
 
 libs:: $(ICON_FILES)
-	$(SYSINSTALL) $^ $(DIST)/bin/icons
+	$(INSTALL) $(IFLAGS1) $^ $(DIST)/bin/icons
 
 install::
 	$(SYSINSTALL) $(IFLAGS1) $(ICON_FILES) $(DESTDIR)$(mozappdir)/icons
@@ -236,9 +244,9 @@ endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),gtk2)
 libs::
-	$(INSTALL) $(DIST)/branding/default16.png $(DIST)/bin/chrome/icons/default
-	$(INSTALL) $(DIST)/branding/default32.png $(DIST)/bin/chrome/icons/default
-	$(INSTALL) $(DIST)/branding/default48.png $(DIST)/bin/chrome/icons/default
+	$(INSTALL) $(IFLAGS1) $(DIST)/branding/default16.png $(DIST)/bin/chrome/icons/default
+	$(INSTALL) $(IFLAGS1) $(DIST)/branding/default32.png $(DIST)/bin/chrome/icons/default
+	$(INSTALL) $(IFLAGS1) $(DIST)/branding/default48.png $(DIST)/bin/chrome/icons/default
 endif
 
 # XXX applications would need to supply this file
@@ -253,8 +261,6 @@ ifeq ($(OS_ARCH),WINNT)
 	cp $(srcdir)/document.ico  $(DIST)/branding/document.ico
 endif
 ifneq (,$(filter gtk gtk2,$(MOZ_WIDGET_TOOLKIT)))
-	cp $(srcdir)/mozicon16.xpm $(DIST)/branding/mozicon16.xpm
-	cp $(srcdir)/mozicon50.xpm $(DIST)/branding/mozicon50.xpm
 	cp $(srcdir)/document.png $(DIST)/branding/document.png
 endif
 ifeq ($(MOZ_WIDGET_TOOLKIT),gtk2)
@@ -264,8 +270,6 @@ ifeq ($(MOZ_WIDGET_TOOLKIT),gtk2)
 endif
 ifeq ($(OS_ARCH),OS2)
 	cp $(srcdir)/xulrunner-os2.ico   $(DIST)/branding/xulrunner.ico
-	cp $(srcdir)/xulrunner-os2.ico   $(DIST)/branding/app.ico
-	cp $(srcdir)/document-os2.ico  $(DIST)/branding/document.ico
 endif
 
 libs::
@@ -297,5 +301,5 @@ endif
 README_FILE = $(topsrcdir)/README.txt
 
 libs::
-	$(SYSINSTALL) $(README_FILE) $(DIST)/bin
-	$(SYSINSTALL) $(topsrcdir)/LICENSE	$(DIST)/bin
+	$(INSTALL) $(IFLAGS1) $(README_FILE) $(DIST)/bin
+	$(INSTALL) $(IFLAGS1) $(topsrcdir)/LICENSE	$(DIST)/bin

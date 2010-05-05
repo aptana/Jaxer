@@ -1,3 +1,8 @@
+An explanation of the Mozilla Source Code Directory Structure and links to
+project pages with documentation can be found at:
+
+    https://developer.mozilla.org/en/Mozilla_Source_Code_Directory_Structure
+
 For information on how to build Mozilla from the source code, see:
 
     http://developer.mozilla.org/en/docs/Build_Documentation
@@ -13,7 +18,7 @@ on http://developer.mozilla.org, you can try asking your question in a
 mozilla.* Usenet group, or on IRC at irc.mozilla.org. [The Mozilla news groups
 are accessible on Google Groups, or news.mozilla.org with a NNTP reader.]
 
-You can download nightly development builds from the the Mozilla FTP server.
+You can download nightly development builds from the Mozilla FTP server.
 Keep in mind that nightly builds, which are used by Mozilla developers for
 testing, may be buggy. Firefox nightlies, for example, can be found at:
 

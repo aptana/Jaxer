@@ -213,7 +213,7 @@ const AppInstall = {
         iid.equals(nsISupports))
       return this;
 
-    throw Components.result.NS_ERROR_NO_INTERFACE;
+    throw Components.results.NS_ERROR_NO_INTERFACE;
   },
 
   /* nsIXULAppInstall */
@@ -330,7 +330,7 @@ const AppInstall = {
     var contentsDir = aDirectory.clone();
     contentsDir.append("MacOS");
 
-    var xulrunnerBinary = getDirectoryKey("XCurProcD");
+    var xulrunnerBinary = getDirectoryKey("GreD");
     xulrunnerBinary.append("xulrunner");
 
     xulrunnerBinary.copyTo(contentsDir, "xulrunner");
@@ -340,7 +340,7 @@ const AppInstall = {
 #else
     extractor.copyTo(aDirectory);
 
-    var xulrunnerBinary = getDirectoryKey("XCurProcD");
+    var xulrunnerBinary = getDirectoryKey("GreD");
     xulrunnerBinary.append("xulrunner-stub@BIN_SUFFIX@");
 
     xulrunnerBinary.copyTo(aDirectory, appName.toLowerCase() + "@BIN_SUFFIX@");
