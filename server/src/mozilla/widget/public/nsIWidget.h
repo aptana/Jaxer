@@ -41,10 +41,16 @@
 #include "nsISupports.h"
 #include "nsColor.h"
 #include "nsCoord.h"
+#include "nsRect.h"
+#include "nsPoint.h"
 
 #include "prthread.h"
 #include "nsEvent.h"
 #include "nsCOMPtr.h"
+#include "nsITheme.h"
+#include "nsNativeWidget.h"
+#include "nsWidgetInitData.h"
+#include "nsTArray.h"
 
 // forward declarations
 class   nsIAppShell;
@@ -52,28 +58,25 @@ class   nsIToolkit;
 class   nsIFontMetrics;
 class   nsIRenderingContext;
 class   nsIDeviceContext;
-class   nsIRegion;
-struct  nsRect;
 struct  nsFont;
-class   nsIMenuBar;
 class   nsIEventListener;
 class   nsIRollupListener;
 class   nsGUIEvent;
-struct  nsColorMap;
 class   imgIContainer;
 class   gfxASurface;
-class   nsIMouseListener;
 class   nsIContent;
 
 /**
  * Callback function that processes events.
+ *
  * The argument is actually a subtype (subclass) of nsEvent which carries
- * platform specific information about the event. Platform specific code knows
- * how to deal with it.
- * The return value determines whether or not the default action should take place.
+ * platform specific information about the event. Platform specific code
+ * knows how to deal with it.
+ *
+ * The return value determines whether or not the default action should take
+ * place.
  */
-
-typedef nsEventStatus (*PR_CALLBACK EVENT_CALLBACK)(nsGUIEvent *event);
+typedef nsEventStatus (* EVENT_CALLBACK)(nsGUIEvent *event);
 
 /**
  * Flags for the getNativeData function.
@@ -81,7 +84,6 @@ typedef nsEventStatus (*PR_CALLBACK EVENT_CALLBACK)(nsGUIEvent *event);
  */
 #define NS_NATIVE_WINDOW      0
 #define NS_NATIVE_GRAPHIC     1
-#define NS_NATIVE_COLORMAP    2
 #define NS_NATIVE_WIDGET      3
 #define NS_NATIVE_DISPLAY     4
 #define NS_NATIVE_REGION      5
@@ -94,80 +96,23 @@ typedef nsEventStatus (*PR_CALLBACK EVENT_CALLBACK)(nsGUIEvent *event);
 #define NS_NATIVE_PLUGIN_PORT_QD    100
 #define NS_NATIVE_PLUGIN_PORT_CG    101
 #endif
+#ifdef XP_WIN
+#define NS_NATIVE_TSF_THREAD_MGR       100
+#define NS_NATIVE_TSF_CATEGORY_MGR     101
+#define NS_NATIVE_TSF_DISPLAY_ATTR_MGR 102
+#endif
 
-// 517a0eef-cd1c-48b3-96f0-e341a50f120d
 #define NS_IWIDGET_IID \
-{ 0x517a0eef, 0xcd1c, 0x48b3, \
-  { 0x96, 0xf0, 0xe3, 0x41, 0xa5, 0x0f, 0x12, 0x0d } }
+  { 0xb5df4e95, 0x2879, 0x4140, \
+    { 0x8a, 0x82, 0x9f, 0x5d, 0x9b, 0x4c, 0xf7, 0x99 } }
 
-// Hide the native window systems real window type so as to avoid
-// including native window system types and APIs. This is necessary
-// to ensure cross-platform code.
-typedef void* nsNativeWidget;
-
-/**
- * Border styles
+/*
+ * Window shadow styles
+ * Also used for the -moz-window-shadow CSS property
  */
 
-enum nsWindowType {     // Don't alter previously encoded enum values - 3rd party apps may look at these
-  // default top level window
-  eWindowType_toplevel,
-  // top level window but usually handled differently by the OS
-  eWindowType_dialog,
-  // used for combo boxes, etc
-  eWindowType_popup,
-  // child windows (contained inside a window on the desktop (has no border))
-  eWindowType_child,
-  // windows that are invisible or offscreen
-  eWindowType_invisible,
-  // plugin window
-  eWindowType_plugin,
-  // java plugin window
-  eWindowType_java,
-  // MacOSX sheet (special dialog class)
-  eWindowType_sheet
-};
-
-enum nsPopupType {
-  ePopupTypePanel,
-  ePopupTypeMenu,
-  ePopupTypeTooltip,
-  ePopupTypeAny = 0xF000 // used only to pass to nsXULPopupManager::GetTopPopup
-};
-
-enum nsBorderStyle
-{
-  // no border, titlebar, etc.. opposite of all
-  eBorderStyle_none     = 0,
-
-  // all window decorations
-  eBorderStyle_all      = 1 << 0,
-
-  // enables the border on the window.  these are only for decoration and are not resize hadles
-  eBorderStyle_border   = 1 << 1,
-
-  // enables the resize handles for the window.  if this is set, border is implied to also be set
-  eBorderStyle_resizeh  = 1 << 2,
-
-  // enables the titlebar for the window
-  eBorderStyle_title    = 1 << 3,
-
-  // enables the window menu button on the title bar.  this being on should force the title bar to display
-  eBorderStyle_menu     = 1 << 4,
-
-  // enables the minimize button so the user can minimize the window.
-  //   turned off for tranient windows since they can not be minimized separate from their parent
-  eBorderStyle_minimize = 1 << 5,
-
-  // enables the maxmize button so the user can maximize the window
-  eBorderStyle_maximize = 1 << 6,
-
-  // show the close button
-  eBorderStyle_close    = 1 << 7,
-
-  // whatever the OS wants... i.e. don't do anything
-  eBorderStyle_default  = -1
-};
+#define NS_STYLE_WINDOW_SHADOW_NONE             0
+#define NS_STYLE_WINDOW_SHADOW_DEFAULT          1
 
 /**
  * Cursor types.
@@ -218,47 +163,12 @@ enum nsCursor {   ///(normal cursor,       usually rendered as an arrow)
                 eCursorCount
                 }; 
 
-enum nsContentType {
-  eContentTypeInherit = -1,
-  eContentTypeUI = 0,
-  eContentTypeContent = 1,
-  eContentTypeContentFrame = 2
-};
-
 enum nsTopLevelWidgetZPlacement { // for PlaceBehind()
   eZPlacementBottom = 0,  // bottom of the window stack
   eZPlacementBelow,       // just below another widget
   eZPlacementTop          // top of the window stack
 };
 
-/**
- * Basic struct for widget initialization data.
- * @see Create member function of nsIWidget
- */
-
-struct nsWidgetInitData {
-  nsWidgetInitData()
-    : clipChildren(PR_FALSE), 
-      clipSiblings(PR_FALSE), 
-      mDropShadow(PR_FALSE),
-      mListenForResizes(PR_FALSE),
-      mWindowType(eWindowType_child),
-      mBorderStyle(eBorderStyle_default),
-      mContentType(eContentTypeInherit),
-      mUnicode(PR_TRUE),
-      mPopupHint(ePopupTypePanel)
-  {
-  }
-
-  // when painting exclude area occupied by child windows and sibling windows
-  PRPackedBool  clipChildren, clipSiblings, mDropShadow;
-  PRPackedBool  mListenForResizes;
-  nsWindowType mWindowType;
-  nsBorderStyle mBorderStyle;
-  nsContentType mContentType;  // Exposed so screen readers know what's UI
-  PRPackedBool mUnicode;
-  nsPopupType mPopupHint;
-};
 
 /**
  * The base class for all the widgets. It provides the interface for
@@ -279,9 +189,6 @@ class nsIWidget : public nsISupports {
     /**
      * Create and initialize a widget. 
      *
-     * The widget represents a window that can be drawn into. It also is the 
-     * base class for user-interface widgets such as buttons and text boxes.
-     *
      * All the arguments can be NULL in which case a top level window
      * with size 0 is created. The event callback function has to be
      * provided only if the caller wants to deal with the events this
@@ -294,54 +201,29 @@ class nsIWidget : public nsISupports {
      * calling code must handle paint messages and clear the background 
      * itself. 
      *
-     * aInitData cannot be eWindowType_popup here; popups cannot be
-     * hooked into the nsIWidget hierarchy.
+     * In practice at least one of aParent and aNativeParent will be null. If
+     * both are null the widget isn't parented (e.g. context menus or
+     * independent top level windows).
      *
-     * @param     parent or null if it's a top level window
-     * @param     aRect     the widget dimension
+     * @param     aParent       parent nsIWidget
+     * @param     aNativeParent native parent widget
+     * @param     aRect         the widget dimension
      * @param     aHandleEventFunction the event handler callback function
      * @param     aContext
-     * @param     aAppShell the parent application shell. If nsnull,
-     *                      the parent window's application shell will be used.
+     * @param     aAppShell     the parent application shell. If nsnull,
+     *                          the parent window's application shell will be used.
      * @param     aToolkit
-     * @param     aInitData data that is used for widget initialization
+     * @param     aInitData     data that is used for widget initialization
      *
      */
     NS_IMETHOD Create(nsIWidget        *aParent,
-                        const nsRect     &aRect,
-                        EVENT_CALLBACK   aHandleEventFunction,
-                        nsIDeviceContext *aContext,
-                        nsIAppShell      *aAppShell = nsnull,
-                        nsIToolkit       *aToolkit = nsnull,
-                        nsWidgetInitData *aInitData = nsnull) = 0;
-
-    /**
-     * Create and initialize a widget with a native window parent
-     *
-     * The widget represents a window that can be drawn into. It also is the 
-     * base class for user-interface widgets such as buttons and text boxes.
-     *
-     * All the arguments can be NULL in which case a top level window
-     * with size 0 is created. The event callback function has to be
-     * provided only if the caller wants to deal with the events this
-     * widget receives.  The event callback is basically a preprocess
-     * hook called synchronously. The return value determines whether
-     * the event goes to the default window procedure or it is hidden
-     * to the os. The assumption is that if the event handler returns
-     * false the widget does not see the event.
-     *
-     * @param     aParent   native window.
-     * @param     aRect     the widget dimension
-     * @param     aHandleEventFunction the event handler callback function
-     */
-    NS_IMETHOD Create(nsNativeWidget aParent,
-                        const nsRect     &aRect,
-                        EVENT_CALLBACK   aHandleEventFunction,
-                        nsIDeviceContext *aContext,
-                        nsIAppShell      *aAppShell = nsnull,
-                        nsIToolkit       *aToolkit = nsnull,
-                        nsWidgetInitData *aInitData = nsnull) = 0;
-
+                      nsNativeWidget   aNativeParent,
+                      const nsIntRect  &aRect,
+                      EVENT_CALLBACK   aHandleEventFunction,
+                      nsIDeviceContext *aContext,
+                      nsIAppShell      *aAppShell = nsnull,
+                      nsIToolkit       *aToolkit = nsnull,
+                      nsWidgetInitData *aInitData = nsnull) = 0;
 
     /**
      * Accessor functions to get and set the client data associated with the
@@ -378,6 +260,13 @@ class nsIWidget : public nsISupports {
      *
      */
     virtual nsIWidget* GetParent(void) = 0;
+
+    /**
+     * Return the top level Widget of this Widget
+     *
+     * @return the top level widget
+     */
+    virtual nsIWidget* GetTopLevelWidget() = 0;
 
     /**
      * Return the top (non-sheet) parent of this Widget if it's a sheet,
@@ -570,7 +459,7 @@ class nsIWidget : public nsISupports {
      * @param aRect on return it holds the  x, y, width and height of this widget
      *
      */
-    NS_IMETHOD GetBounds(nsRect &aRect) = 0;
+    NS_IMETHOD GetBounds(nsIntRect &aRect) = 0;
 
 
     /**
@@ -583,7 +472,7 @@ class nsIWidget : public nsISupports {
      * @param aRect on return it holds the  x, y, width and height of this widget
      *
      */
-    NS_IMETHOD GetScreenBounds(nsRect &aRect) = 0;
+    NS_IMETHOD GetScreenBounds(nsIntRect &aRect) = 0;
 
 
     /**
@@ -593,15 +482,7 @@ class nsIWidget : public nsISupports {
      * @param aRect on return it holds the  x. y, width and height of the client area of this widget
      *
      */
-    NS_IMETHOD GetClientBounds(nsRect &aRect) = 0;
-
-    /**
-     * Gets the width and height of the borders
-     * @param aWidth the width of the border
-     * @param aHeight the height of the border
-     *
-     */
-    NS_IMETHOD GetBorderSize(PRInt32 &aWidth, PRInt32 &aHeight) = 0;
+    NS_IMETHOD GetClientBounds(nsIntRect &aRect) = 0;
 
     /**
      * Get the foreground color for this widget
@@ -674,33 +555,73 @@ class nsIWidget : public nsISupports {
     NS_IMETHOD GetWindowType(nsWindowType& aWindowType) = 0;
 
     /**
-     * Set the translucency of the top-level window containing this widget.
+     * Set the transparency mode of the top-level window containing this widget.
      * So, e.g., if you call this on the widget for an IFRAME, the top level
      * browser window containing the IFRAME actually gets set. Be careful.
      *
      * This can fail if the platform doesn't support
-     * transparency/translucency. By default widgets are not
+     * transparency/glass. By default widgets are not
      * transparent.  This will also fail if the toplevel window is not
      * a Mozilla window, e.g., if the widget is in an embedded
      * context.
      *
-     * After translucency has been enabled, the initial alpha channel
+     * After transparency/glass has been enabled, the initial alpha channel
      * value for all pixels is 1, i.e., opaque.
      * If the window is resized then the alpha channel values for
      * all pixels are reset to 1.
      * Pixel RGB color values are already premultiplied with alpha channel values.
-     * @param aTransparent true if the window may have translucent
-     *   or transparent pixels
      */
-    NS_IMETHOD SetHasTransparentBackground(PRBool aTransparent) = 0;
+    virtual void SetTransparencyMode(nsTransparencyMode aMode) = 0;
 
     /**
-     * Get the translucency of the top-level window that contains this
+     * Get the transparency mode of the top-level window that contains this
      * widget.
-     * @param aTransparent true if the window may have translucent or
-     *   transparent pixels
      */
-    NS_IMETHOD GetHasTransparentBackground(PRBool& aTransparent) = 0;
+    virtual nsTransparencyMode GetTransparencyMode() = 0;
+
+    /**
+     * This represents a command to set the bounds and clip region of
+     * a child widget.
+     */
+    struct Configuration {
+        nsIWidget* mChild;
+        nsIntRect mBounds;
+        nsTArray<nsIntRect> mClipRegion;
+    };
+
+    /**
+     * Sets the clip region of each mChild (which must actually be a child
+     * of this widget) to the union of the pixel rects given in
+     * mClipRegion, all relative to the top-left of the child
+     * widget. Clip regions are not implemented on all platforms and only
+     * need to actually work for children that are plugins.
+     * 
+     * Also sets the bounds of each child to mBounds.
+     * 
+     * This will invalidate areas of the children that have changed, but
+     * does not need to invalidate any part of this widget.
+     */
+    virtual nsresult ConfigureChildren(const nsTArray<Configuration>& aConfigurations) = 0;
+
+    /**
+     * Appends to aRects the rectangles constituting this widget's clip
+     * region. If this widget is not clipped, appends a single rectangle
+     * (0, 0, bounds.width, bounds.height).
+     */
+    virtual void GetWindowClipRegion(nsTArray<nsIntRect>* aRects) = 0;
+
+    /**
+     * Set the shadow style of the window.
+     */
+    NS_IMETHOD SetWindowShadowStyle(PRInt32 aStyle) = 0;
+
+    /*
+     * On Mac OS X, this method shows or hides the pill button in the titlebar
+     * that's used to collapse the toolbar.
+     *
+     * Ignored on child widgets and on non-Mac platforms.
+     */
+    virtual void SetShowsToolbarButton(PRBool aShow) = 0;
 
     /** 
      * Hide window chrome (borders, buttons) for this widget.
@@ -736,16 +657,7 @@ class nsIWidget : public nsISupports {
      * @see #Update()
      */
 
-    NS_IMETHOD Invalidate(const nsRect & aRect, PRBool aIsSynchronous) = 0;
-
-    /**
-     * Invalidate a specified region for a widget and repaints it.
-     *
-     * @param aIsSynchronouse PR_TRUE then repaint synchronously. If PR_FALSE repaint later.
-     * @see #Update()
-     */
-
-    NS_IMETHOD InvalidateRegion(const nsIRegion* aRegion, PRBool aIsSynchronous) = 0;
+    NS_IMETHOD Invalidate(const nsIntRect & aRect, PRBool aIsSynchronous) = 0;
 
     /**
      * Force a synchronous repaint of the window if there are dirty rects.
@@ -754,15 +666,6 @@ class nsIWidget : public nsISupports {
      */
 
      NS_IMETHOD Update() = 0;
-
-    /**
-     * Adds a mouse listener to this widget
-     * Any existing mouse listener is replaced
-     *
-     * @param aListener mouse listener to add to this widget.
-     */
-
-    NS_IMETHOD AddMouseListener(nsIMouseListener * aListener) = 0;
 
     /**
      * Adds an event listener to this widget
@@ -784,49 +687,32 @@ class nsIWidget : public nsISupports {
     virtual nsIToolkit* GetToolkit() = 0;    
 
     /**
-     * Set the color map for this widget
+     * Scroll a set of rectangles in this widget and (as simultaneously as
+     * possible) modify the specified child widgets.
+     * 
+     * This will invalidate areas of the children that have changed, unless
+     * they have just moved by the scroll amount, but does not need to
+     * invalidate any part of this widget, except where the scroll
+     * operation fails to blit because part of the window is unavailable
+     * (e.g. partially offscreen).
+     * 
+     * The caller guarantees that the rectangles in aDestRects are ordered
+     * so that copying from aDestRects[i] - aDelta to aDestRects[i] does
+     * not alter anything in aDestRects[j] - aDelta for j > i. That is,
+     * it's safe to just copy the rectangles in the order given in
+     * aDestRects.
      *
-     * @param aColorMap color map for displaying this widget
-     *
+     * @param aDelta amount to scroll (device pixels)
+     * @param aDestRects rectangles to copy into
+     * (device pixels relative to this widget)
+     * @param aReconfigureChildren commands to set the bounds and clip
+     * region of a subset of the children of this widget; these should
+     * be performed simultaneously with the scrolling, as far as possible,
+     * to avoid visual artifacts.
      */
-
-    NS_IMETHOD SetColorMap(nsColorMap *aColorMap) = 0;
-
-    /**
-     * XXX (This is obsolete and will be removed soon, Use ScrollWidgets instead)
-     * Scroll this widget. 
-     *
-     * @param aDx amount to scroll along the x-axis
-     * @param aDy amount to scroll along the y-axis.
-     * @param aClipRect clipping rectangle to limit the scroll to.
-     *
-     */
-
-    NS_IMETHOD Scroll(PRInt32 aDx, PRInt32 aDy, nsRect *aClipRect) = 0;
-
-    /**
-     * Scroll the contents of the widget. 
-     * All child widgets are also scrolled by offsetting their coordinates.
-     * A NS_PAINT message is synchronously dispatched for the newly exposed rectangle.
-     *
-     * @param aDx amount to scroll along the x-axis in pixels
-     * @param aDy amount to scroll along the y-axis in pixels
-     *
-     */
-
-    NS_IMETHOD ScrollWidgets(PRInt32 aDx, PRInt32 aDy) = 0;
-
-    /**
-     * Scroll an area of this widget. Child widgets are not scrolled.
-     * A NS_PAINT message is synchronously dispatched for the newly exposed rectangle.
-     *
-     * @param aRect source rectangle to scroll in the widget in pixels
-     * @param aDx x offset from the source in pixels
-     * @param aDy y offset from the source in pixels
-     *
-     */
-
-    NS_IMETHOD ScrollRect(nsRect &aSrcRect, PRInt32 aDx, PRInt32 aDy) = 0;
+    virtual void Scroll(const nsIntPoint& aDelta,
+                        const nsTArray<nsIntRect>& aDestRects,
+                        const nsTArray<Configuration>& aReconfigureChildren) = 0;
 
     /** 
      * Internal methods
@@ -873,69 +759,12 @@ class nsIWidget : public nsISupports {
     NS_IMETHOD SetIcon(const nsAString& anIconSpec) = 0;
 
     /**
-     * Set the widget's MenuBar.
-     * Must be called after Create.
+     * Return this widget's origin in screen coordinates.
      *
-     * @param aMenuBar the menubar
+     * @return screen coordinates stored in the x,y members
      */
 
-    NS_IMETHOD SetMenuBar(nsIMenuBar * aMenuBar) = 0;
-
-    /**
-     * Set the widget's MenuBar's visibility
-     *
-     * @param aShow PR_TRUE to show, PR_FALSE to hide
-     */
-
-    NS_IMETHOD ShowMenuBar(PRBool aShow) = 0;
-
-    /**
-     * Convert from this widget coordinates to screen coordinates.
-     *
-     * @param  aOldRect  widget coordinates stored in the x,y members
-     * @param  aNewRect  screen coordinates stored in the x,y members
-     */
-
-    NS_IMETHOD WidgetToScreen(const nsRect& aOldRect, nsRect& aNewRect) = 0;
-
-    /**
-     * Convert from screen coordinates to this widget's coordinates.
-     *
-     * @param  aOldRect  screen coordinates stored in the x,y members
-     * @param  aNewRect  widget's coordinates stored in the x,y members
-     */
-
-    NS_IMETHOD ScreenToWidget(const nsRect& aOldRect, nsRect& aNewRect) = 0;
-
-    /**
-     * When adjustments are to made to a whole set of child widgets, call this
-     * before resizing/positioning the child windows to minimize repaints. Must
-     * be followed by EndResizingChildren() after child windows have been
-     * adjusted.
-     *
-     */
-
-    NS_IMETHOD BeginResizingChildren(void) = 0;
-
-    /**
-     * Call this when finished adjusting child windows. Must be preceded by
-     * BeginResizingChildren().
-     *
-     */
-
-    NS_IMETHOD EndResizingChildren(void) = 0;
-
-    /**
-     * Returns the preferred width and height for the widget
-     *
-     */
-    NS_IMETHOD GetPreferredSize(PRInt32& aWidth, PRInt32& aHeight) = 0;
-
-    /**
-     * Set the preferred width and height for the widget
-     *
-     */
-    NS_IMETHOD SetPreferredSize(PRInt32 aWidth, PRInt32 aHeight) = 0;
+    virtual nsIntPoint WidgetToScreenOffset() = 0;
 
     /**
      * Dispatches an event to the widget
@@ -949,8 +778,6 @@ class nsIWidget : public nsISupports {
      */
     NS_IMETHOD EnableDragDrop(PRBool aEnable) = 0;
    
-    virtual void  ConvertToDeviceCoordinates(nscoord &aX,nscoord &aY) = 0;
-
     /**
      * Enables/Disables system mouse capture.
      * @param aCapture PR_TRUE enables mouse capture, PR_FALSE disables mouse capture 
@@ -974,19 +801,6 @@ class nsIWidget : public nsISupports {
     NS_IMETHOD CaptureRollupEvents(nsIRollupListener * aListener, PRBool aDoCapture, PRBool aConsumeRollupEvent) = 0;
 
     /**
-     *   Determine whether a given event should be processed assuming we are
-     * the currently active modal window.
-     *   Note that the exact semantics of this method are platform-dependent.
-     * The Macintosh, for instance, cares deeply that this method do exactly
-     * as advertised. Gtk, for instance, handles modality in a completely
-     * different fashion and does little if anything with this method.
-     * @param aRealEvent event is real or a null placeholder (Macintosh)
-     * @param aEvent void pointer to native event structure
-     * @param aForWindow return value. PR_TRUE iff event should be processed.
-     */
-    NS_IMETHOD ModalEventFilter(PRBool aRealEvent, void *aEvent, PRBool *aForWindow) = 0;
-
-    /**
      * Bring this window to the user's attention.  This is intended to be a more
      * gentle notification than popping the window to the top or putting up an
      * alert.  See, for example, Win32 FlashWindow or the NotificationManager on
@@ -1000,16 +814,10 @@ class nsIWidget : public nsISupports {
     NS_IMETHOD GetAttention(PRInt32 aCycleCount) = 0;
 
     /**
-     * Get the last user input event time in milliseconds. If there are any pending
-     * native toolkit input events it returns the current time. All input events are 
-     * included (ie. it is *not* limited to events targeted at this nsIWidget instance.
-     *
-     * @param aTime Last user input time in milliseconds. This value can be used to compare
-     * durations but can not be used for determining wall clock time. The value returned 
-     * is platform dependent, but is compatible with the expression 
-     * PR_IntervalToMicroseconds(PR_IntervalNow()).
+     * Ask whether there user input events pending.  All input events are
+     * included, including those not targeted at this nsIwidget instance.
      */
-    NS_IMETHOD GetLastInputEventTime(PRUint32& aTime) = 0;
+    virtual PRBool HasPendingInputEvent() = 0;
 
     /**
      * Called when when we need to begin secure keyboard input, such as when a password field
@@ -1046,6 +854,17 @@ class nsIWidget : public nsISupports {
      *                windows.
      */
     NS_IMETHOD SetWindowTitlebarColor(nscolor aColor, PRBool aActive) = 0;
+    
+    /*
+     * Determine whether the widget shows a resize widget. If it does,
+     * aResizerRect returns the resizer's rect.
+     *
+     * Returns false on any platform that does not support it.
+     *
+     * @param aResizerRect The resizer's rect in device pixels.
+     * @return Whether a resize widget is shown.
+     */
+    virtual PRBool ShowsResizeIndicator(nsIntRect* aResizerRect) = 0;
 
     /**
      * Get the Thebes surface associated with this widget.
@@ -1071,9 +890,10 @@ class nsIWidget : public nsISupports {
         CTRL_R = 0x0800,
         ALT_L = 0x1000, // includes Option
         ALT_R = 0x2000,
-        COMMAND = 0x4000,
-        HELP = 0x8000,
-        FUNCTION = 0x10000,
+        COMMAND_L = 0x4000,
+        COMMAND_R = 0x8000,
+        HELP = 0x10000,
+        FUNCTION = 0x100000,
         NUMERIC_KEY_PAD = 0x01000000 // when the key is coming from the keypad
     };
     /**
@@ -1104,6 +924,183 @@ class nsIWidget : public nsISupports {
                                               PRUint32 aModifierFlags,
                                               const nsAString& aCharacters,
                                               const nsAString& aUnmodifiedCharacters) = 0;
+
+    /**
+     * Activates a native menu item at the position specified by the index
+     * string. The index string is a string of positive integers separated
+     * by the "|" (pipe) character. The last integer in the string represents
+     * the item index in a submenu located using the integers preceeding it.
+     *
+     * Example: 1|0|4
+     * In this string, the first integer represents the top-level submenu
+     * in the native menu bar. Since the integer is 1, it is the second submeu
+     * in the native menu bar. Within that, the first item (index 0) is a
+     * submenu, and we want to activate the 5th item within that submenu.
+     */
+    virtual nsresult ActivateNativeMenuItemAt(const nsAString& indexString) = 0;
+
+    /**
+     * This is used for native menu system testing.
+     *
+     * Updates a native menu at the position specified by the index string.
+     * The index string is a string of positive integers separated by the "|" 
+     * (pipe) character.
+     *
+     * Example: 1|0|4
+     * In this string, the first integer represents the top-level submenu
+     * in the native menu bar. Since the integer is 1, it is the second submeu
+     * in the native menu bar. Within that, the first item (index 0) is a
+     * submenu, and we want to update submenu at index 4 within that submenu.
+     *
+     * If this is called with an empty string it forces a full reload of the
+     * menu system.
+     */
+    virtual nsresult ForceUpdateNativeMenuAt(const nsAString& indexString) = 0;
+
+    /*
+     * Force Input Method Editor to commit the uncommitted input
+     */
+    NS_IMETHOD ResetInputState()=0;
+
+    /*
+     * Following methods relates to IME 'Opened'/'Closed' state.
+     * 'Opened' means the user can input any character. I.e., users can input Japanese  
+     * and other characters. The user can change the state to 'Closed'.
+     * 'Closed' means the user can input ASCII characters only. This is the same as a
+     * non-IME environment. The user can change the state to 'Opened'.
+     * For more information is here.
+     * http://bugzilla.mozilla.org/show_bug.cgi?id=16940#c48
+     */
+
+    /*
+     * Set the state to 'Opened' or 'Closed'.
+     * If aState is TRUE, IME open state is set to 'Opened'.
+     * If aState is FALSE, set to 'Closed'.
+     */
+    NS_IMETHOD SetIMEOpenState(PRBool aState) = 0;
+
+    /*
+     * Get IME is 'Opened' or 'Closed'.
+     * If IME is 'Opened', aState is set PR_TRUE.
+     * If IME is 'Closed', aState is set PR_FALSE.
+     */
+    NS_IMETHOD GetIMEOpenState(PRBool* aState) = 0;
+
+    /*
+     * IME enabled states, the aState value of SetIMEEnabled/GetIMEEnabled
+     * should be one value of following values.
+     *
+     * WARNING: If you change these values, you also need to edit:
+     *   nsIDOMWindowUtils.idl
+     *   nsDOMWindowUtils::SetIMEEnabled
+     *   nsContentUtils::GetWidgetStatusFromIMEStatus
+     */
+    enum IMEStatus {
+      /*
+       * 'Disabled' means the user cannot use IME. So, the open state should be
+       * 'closed' during 'disabled'.
+       */
+      IME_STATUS_DISABLED = 0,
+      /*
+       * 'Enabled' means the user can use IME.
+       */
+      IME_STATUS_ENABLED = 1,
+      /*
+       * 'Password' state is a special case for the password editors.
+       * E.g., on mac, the password editors should disable the non-Roman
+       * keyboard layouts at getting focus. Thus, the password editor may have
+       * special rules on some platforms.
+       */
+      IME_STATUS_PASSWORD = 2,
+      /*
+       * This state is used when a plugin is focused.
+       * When a plug-in is focused content, we should send native events
+       * directly. Because we don't process some native events, but they may
+       * be needed by the plug-in.
+       */
+      IME_STATUS_PLUGIN = 3
+    };
+
+    /*
+     * Set the state to 'Enabled' or 'Disabled' or 'Password'.
+     */
+    NS_IMETHOD SetIMEEnabled(PRUint32 aState) = 0;
+
+    /*
+     * Get IME is 'Enabled' or 'Disabled' or 'Password'.
+     */
+    NS_IMETHOD GetIMEEnabled(PRUint32* aState) = 0;
+
+    /*
+     * Destruct and don't commit the IME composition string.
+     */
+    NS_IMETHOD CancelIMEComposition() = 0;
+
+    /*
+     * Get toggled key states.
+     * aKeyCode should be NS_VK_CAPS_LOCK or  NS_VK_NUM_LOCK or
+     * NS_VK_SCROLL_LOCK.
+     * aLEDState is the result for current LED state of the key.
+     * If the LED is 'ON', it returns TRUE, otherwise, FALSE.
+     * If the platform doesn't support the LED state (or we cannot get the
+     * state), this method returns NS_ERROR_NOT_IMPLEMENTED.
+     */
+    NS_IMETHOD GetToggledKeyState(PRUint32 aKeyCode, PRBool* aLEDState) = 0;
+
+    /*
+     * An editable node (i.e. input/textarea/design mode document)
+     *  is receiving or giving up focus
+     * aFocus is true if node is receiving focus
+     * aFocus is false if node is giving up focus (blur)
+     *
+     * If this returns NS_ERROR_*, OnIMETextChange and OnIMESelectionChange
+     * and OnIMEFocusChange(PR_FALSE) will be never called.
+     */
+    NS_IMETHOD OnIMEFocusChange(PRBool aFocus) = 0;
+
+    /*
+     * Text content of the focused node has changed
+     * aStart is the starting offset of the change
+     * aOldEnd is the ending offset of the change
+     * aNewEnd is the caret offset after the change
+     */
+    NS_IMETHOD OnIMETextChange(PRUint32 aStart,
+                               PRUint32 aOldEnd,
+                               PRUint32 aNewEnd) = 0;
+
+    /*
+     * Selection has changed in the focused node
+     */
+    NS_IMETHOD OnIMESelectionChange(void) = 0;
+
+    /*
+     * Call this method when a dialog is opened which has a default button.
+     * The button's rectangle should be supplied in aButtonRect.
+     */ 
+    NS_IMETHOD OnDefaultButtonLoaded(const nsIntRect &aButtonRect) = 0;
+
+    /**
+     * Compute the overridden system mouse scroll speed on the root content of
+     * web pages.  The widget may set the same value as aOriginalDelta.  E.g.,
+     * when the system scrolling settings were customized, widget can respect
+     * the will of the user.
+     *
+     * This is called only when the mouse wheel event scrolls the root content
+     * of the web pages by line.  In other words, this isn't called when the
+     * mouse wheel event is used for zoom, page scroll and other special
+     * actions.  And also this isn't called when the user doesn't use the
+     * system wheel speed settings.
+     *
+     * @param aOriginalDelta   The delta value of the current mouse wheel
+     *                         scrolling event.
+     * @param aIsHorizontal    If TRUE, the scrolling direction is horizontal.
+     *                         Otherwise, it's vertical.
+     * @param aOverriddenDelta The overridden mouse scrolling speed.  This value
+     *                         may be same as aOriginalDelta.
+     */
+    NS_IMETHOD OverrideSystemMouseScrollSpeed(PRInt32 aOriginalDelta,
+                                              PRBool aIsHorizontal,
+                                              PRInt32 &aOverriddenDelta) = 0;
 
 protected:
     // keep the list of children.  We also keep track of our siblings.

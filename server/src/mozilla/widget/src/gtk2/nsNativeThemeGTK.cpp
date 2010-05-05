@@ -23,6 +23,7 @@
  *  Brian Ryner <bryner@brianryner.com>  (Original Author)
  *  Michael Ventnor <m.ventnor@gmail.com>
  *  Teune van Steeg <t.vansteeg@gmail.com>
+ *  Karl Tomlinson <karlt+@karlt.net>, Mozilla Corporation
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -58,29 +59,19 @@
 #include "nsIMenuFrame.h"
 #include "prlink.h"
 #include "nsIDOMHTMLInputElement.h"
+#include "nsIDOMNSHTMLInputElement.h"
 #include "nsWidgetAtoms.h"
 
 #include <gdk/gdkprivate.h>
-#include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 
 #include "gfxContext.h"
 #include "gfxPlatformGtk.h"
-#include "gfxXlibNativeRenderer.h"
+#include "gfxGdkNativeRenderer.h"
 
 NS_IMPL_ISUPPORTS2(nsNativeThemeGTK, nsITheme, nsIObserver)
 
-static int gLastXError;
-
-static inline bool IsCheckboxWidgetType(PRUint8 aWidgetType)
-{
-  return (aWidgetType == NS_THEME_CHECKBOX || aWidgetType == NS_THEME_CHECKBOX_SMALL);
-}
-
-static inline bool IsRadioWidgetType(PRUint8 aWidgetType)
-{
-  return (aWidgetType == NS_THEME_RADIO || aWidgetType == NS_THEME_RADIO_SMALL);
-}
+static int gLastGdkError;
 
 nsNativeThemeGTK::nsNativeThemeGTK()
 {
@@ -129,8 +120,16 @@ nsNativeThemeGTK::RefreshWidgetWindow(nsIFrame* aFrame)
   vm->UpdateAllViews(NS_VMREFRESH_NO_SYNC);
 }
 
+static PRBool IsFrameContentNodeOfType(nsIFrame *aFrame, PRUint32 aFlags)
+{
+  nsIContent *content = aFrame ? aFrame->GetContent() : nsnull;
+  if (!content)
+    return false;
+  return content->IsNodeOfType(aFlags);
+}
+
 static PRBool IsWidgetTypeDisabled(PRUint8* aDisabledVector, PRUint8 aWidgetType) {
-  return aDisabledVector[aWidgetType >> 3] & (1 << (aWidgetType & 7));
+  return (aDisabledVector[aWidgetType >> 3] & (1 << (aWidgetType & 7))) != 0;
 }
 
 static void SetWidgetTypeDisabled(PRUint8* aDisabledVector, PRUint8 aWidgetType) {
@@ -153,7 +152,7 @@ static PRBool IsWidgetStateSafe(PRUint8* aSafeVector,
                                 GtkWidgetState *aWidgetState)
 {
   PRUint8 key = GetWidgetStateKey(aWidgetType, aWidgetState);
-  return aSafeVector[key >> 3] & (1 << (key & 7));
+  return (aSafeVector[key >> 3] & (1 << (key & 7))) != 0;
 }
 
 static void SetWidgetStateSafe(PRUint8 *aSafeVector,
@@ -194,14 +193,13 @@ nsNativeThemeGTK::GetGtkWidgetAndState(PRUint8 aWidgetType, nsIFrame* aFrame,
       // For XUL checkboxes and radio buttons, the state of the parent
       // determines our state.
       nsIFrame *stateFrame = aFrame;
-      if (aFrame && ((aWidgetFlags && (IsCheckboxWidgetType(aWidgetType) ||
-                                       IsRadioWidgetType(aWidgetType))) ||
+      if (aFrame && ((aWidgetFlags && (aWidgetType == NS_THEME_CHECKBOX ||
+                                       aWidgetType == NS_THEME_RADIO)) ||
                      aWidgetType == NS_THEME_CHECKBOX_LABEL ||
                      aWidgetType == NS_THEME_RADIO_LABEL)) {
 
         nsIAtom* atom = nsnull;
-        nsIContent *content = aFrame->GetContent();
-        if (content->IsNodeOfType(nsINode::eXUL)) {
+        if (IsFrameContentNodeOfType(aFrame, nsINode::eXUL)) {
           if (aWidgetType == NS_THEME_CHECKBOX_LABEL ||
               aWidgetType == NS_THEME_RADIO_LABEL) {
             // Adjust stateFrame so GetContentState finds the correct state.
@@ -213,7 +211,7 @@ nsNativeThemeGTK::GetGtkWidgetAndState(PRUint8 aWidgetType, nsIFrame* aFrame,
           }
           if (aWidgetFlags) {
             if (!atom) {
-              atom = (IsCheckboxWidgetType(aWidgetType) ||
+              atom = (aWidgetType == NS_THEME_CHECKBOX ||
                       aWidgetType == NS_THEME_CHECKBOX_LABEL) ? nsWidgetAtoms::checked
                                                               : nsWidgetAtoms::selected;
             }
@@ -221,12 +219,17 @@ nsNativeThemeGTK::GetGtkWidgetAndState(PRUint8 aWidgetType, nsIFrame* aFrame,
           }
         } else {
           if (aWidgetFlags) {
-            nsCOMPtr<nsIDOMHTMLInputElement> inputElt(do_QueryInterface(content));
+            nsCOMPtr<nsIDOMHTMLInputElement> inputElt(do_QueryInterface(aFrame->GetContent()));
+            *aWidgetFlags = 0;
             if (inputElt) {
               PRBool isHTMLChecked;
               inputElt->GetChecked(&isHTMLChecked);
-              *aWidgetFlags = isHTMLChecked;
+              if (isHTMLChecked)
+                *aWidgetFlags |= MOZ_GTK_WIDGET_CHECKED;
             }
+
+            if (GetIndeterminate(aFrame))
+              *aWidgetFlags |= MOZ_GTK_WIDGET_INCONSISTENT;
           }
         }
       } else if (aWidgetType == NS_THEME_TOOLBAR_BUTTON_DROPDOWN ||
@@ -244,7 +247,7 @@ nsNativeThemeGTK::GetGtkWidgetAndState(PRUint8 aWidgetType, nsIFrame* aFrame,
       aState->canDefault = FALSE; // XXX fix me
       aState->depressed = FALSE;
 
-      if (aFrame && aFrame->GetContent()->IsNodeOfType(nsINode::eXUL)) {
+      if (IsFrameContentNodeOfType(aFrame, nsINode::eXUL)) {
         // For these widget types, some element (either a child or parent)
         // actually has element focus, so we check the focused attribute
         // to see whether to draw in the focused state.
@@ -255,8 +258,8 @@ nsNativeThemeGTK::GetGtkWidgetAndState(PRUint8 aWidgetType, nsIFrame* aFrame,
             aWidgetType == NS_THEME_RADIO_CONTAINER ||
             aWidgetType == NS_THEME_RADIO_LABEL) {
           aState->focused = IsFocused(aFrame);
-        } else if (IsRadioWidgetType(aWidgetType) ||
-                   IsCheckboxWidgetType(aWidgetType)) {
+        } else if (aWidgetType == NS_THEME_RADIO ||
+                   aWidgetType == NS_THEME_CHECKBOX) {
           // In XUL, checkboxes and radios shouldn't have focus rings, their labels do
           aState->focused = FALSE;
         }
@@ -311,9 +314,7 @@ nsNativeThemeGTK::GetGtkWidgetAndState(PRUint8 aWidgetType, nsIFrame* aFrame,
             aWidgetType == NS_THEME_MENUSEPARATOR ||
             aWidgetType == NS_THEME_MENUARROW) {
           PRBool isTopLevel = PR_FALSE;
-          nsIMenuFrame *menuFrame;
-          CallQueryInterface(aFrame, &menuFrame);
-
+          nsIMenuFrame *menuFrame = do_QueryFrame(aFrame);
           if (menuFrame) {
             isTopLevel = menuFrame->IsOnMenuBar();
           }
@@ -330,9 +331,12 @@ nsNativeThemeGTK::GetGtkWidgetAndState(PRUint8 aWidgetType, nsIFrame* aFrame,
         
           if (aWidgetType == NS_THEME_CHECKMENUITEM ||
               aWidgetType == NS_THEME_RADIOMENUITEM) {
-            *aWidgetFlags = aFrame && aFrame->GetContent()->
-              AttrValueIs(kNameSpaceID_None, nsWidgetAtoms::checked,
-                          nsWidgetAtoms::_true, eIgnoreCase);
+            *aWidgetFlags = 0;
+            if (aFrame && aFrame->GetContent()) {
+              *aWidgetFlags = aFrame->GetContent()->
+                AttrValueIs(kNameSpaceID_None, nsWidgetAtoms::checked,
+                            nsWidgetAtoms::_true, eIgnoreCase);
+            }
           }
         }
 
@@ -347,7 +351,7 @@ nsNativeThemeGTK::GetGtkWidgetAndState(PRUint8 aWidgetType, nsIFrame* aFrame,
           if (aWidgetType == NS_THEME_TOOLBAR_BUTTON_DROPDOWN)
             aFrame = aFrame->GetParent();
 
-          PRBool menuOpen = CheckBooleanAttr(aFrame, nsWidgetAtoms::open);
+          PRBool menuOpen = IsOpenButton(aFrame);
           aState->depressed = IsCheckedButton(aFrame) || menuOpen;
           // we must not highlight buttons with open drop down menus on hover.
           aState->inHover = aState->inHover && !menuOpen;
@@ -371,10 +375,8 @@ nsNativeThemeGTK::GetGtkWidgetAndState(PRUint8 aWidgetType, nsIFrame* aFrame,
     aGtkWidgetType = MOZ_GTK_BUTTON;
     break;
   case NS_THEME_CHECKBOX:
-  case NS_THEME_CHECKBOX_SMALL:
   case NS_THEME_RADIO:
-  case NS_THEME_RADIO_SMALL:
-    aGtkWidgetType = IsRadioWidgetType(aWidgetType) ? MOZ_GTK_RADIOBUTTON : MOZ_GTK_CHECKBUTTON;
+    aGtkWidgetType = (aWidgetType == NS_THEME_RADIO) ? MOZ_GTK_RADIOBUTTON : MOZ_GTK_CHECKBUTTON;
     break;
   case NS_THEME_SCROLLBAR_BUTTON_UP:
   case NS_THEME_SCROLLBAR_BUTTON_DOWN:
@@ -439,6 +441,9 @@ nsNativeThemeGTK::GetGtkWidgetAndState(PRUint8 aWidgetType, nsIFrame* aFrame,
   case NS_THEME_TEXTFIELD_MULTILINE:
     aGtkWidgetType = MOZ_GTK_ENTRY;
     break;
+  case NS_THEME_TEXTFIELD_CARET:
+    aGtkWidgetType = MOZ_GTK_ENTRY_CARET;
+    break;
   case NS_THEME_LISTBOX:
   case NS_THEME_TREEVIEW:
     aGtkWidgetType = MOZ_GTK_TREEVIEW;
@@ -491,8 +496,7 @@ nsNativeThemeGTK::GetGtkWidgetAndState(PRUint8 aWidgetType, nsIFrame* aFrame,
   case NS_THEME_DROPDOWN:
     aGtkWidgetType = MOZ_GTK_DROPDOWN;
     if (aWidgetFlags)
-        *aWidgetFlags = aFrame && aFrame->GetContent()->
-                                        IsNodeOfType(nsINode::eHTML);
+        *aWidgetFlags = IsFrameContentNodeOfType(aFrame, nsINode::eHTML);
     break;
   case NS_THEME_DROPDOWN_TEXT:
     return PR_FALSE; // nothing to do, but prevents the bg from being drawn
@@ -612,22 +616,15 @@ nsNativeThemeGTK::GetGtkWidgetAndState(PRUint8 aWidgetType, nsIFrame* aFrame,
   return PR_TRUE;
 }
 
-static int
-NativeThemeErrorHandler(Display* dpy, XErrorEvent* error) {
-  gLastXError = error->error_code;
-  return 0;
-}
-
-class ThemeRenderer : public gfxXlibNativeRenderer {
+class ThemeRenderer : public gfxGdkNativeRenderer {
 public:
   ThemeRenderer(GtkWidgetState aState, GtkThemeWidgetType aGTKWidgetType,
                 gint aFlags, GtkTextDirection aDirection,
                 const GdkRectangle& aGDKRect, const GdkRectangle& aGDKClip)
     : mState(aState), mGTKWidgetType(aGTKWidgetType), mFlags(aFlags),
       mDirection(aDirection), mGDKRect(aGDKRect), mGDKClip(aGDKClip) {}
-  nsresult NativeDraw(Display* dpy, Drawable drawable, Visual* visual,
-                      short offsetX, short offsetY,
-                      XRectangle* clipRects, PRUint32 numClipRects);
+  nsresult NativeDraw(GdkDrawable * drawable, short offsetX, short offsetY,
+                      GdkRectangle * clipRects, PRUint32 numClipRects);
 private:
   GtkWidgetState mState;
   GtkThemeWidgetType mGTKWidgetType;
@@ -639,9 +636,8 @@ private:
 };
 
 nsresult
-ThemeRenderer::NativeDraw(Display* dpy, Drawable drawable, Visual* visual,
-                          short offsetX, short offsetY,
-                          XRectangle* clipRects, PRUint32 numClipRects)
+ThemeRenderer::NativeDraw(GdkDrawable * drawable, short offsetX, 
+        short offsetY, GdkRectangle * clipRects, PRUint32 numClipRects)
 {
   GdkRectangle gdk_rect = mGDKRect;
   gdk_rect.x += offsetX;
@@ -651,38 +647,16 @@ ThemeRenderer::NativeDraw(Display* dpy, Drawable drawable, Visual* visual,
   gdk_clip.x += offsetX;
   gdk_clip.y += offsetY;
   
-  GdkDisplay* gdkDpy = gdk_x11_lookup_xdisplay(dpy);
-  if (!gdkDpy)
-    return NS_ERROR_FAILURE;
-
-  GdkPixmap* gdkPixmap = gdk_pixmap_lookup_for_display(gdkDpy, drawable);
-  if (gdkPixmap) {
-    g_object_ref(G_OBJECT(gdkPixmap));
-  } else {
-    gdkPixmap = gdk_pixmap_foreign_new_for_display(gdkDpy, drawable);
-    if (!gdkPixmap)
-      return NS_ERROR_FAILURE;
-    if (visual) {
-      GdkScreen* gdkScreen = gdk_display_get_default_screen(gdkDpy);
-      GdkVisual* gdkVisual = gdk_x11_screen_lookup_visual(gdkScreen, visual->visualid);
-      Colormap cmap = DefaultScreenOfDisplay(dpy)->cmap;
-      GdkColormap* colormap =
-        gdk_x11_colormap_foreign_new(gdkVisual, cmap);
-                                             
-      gdk_drawable_set_colormap(gdkPixmap, colormap);
-    }
-  }
-
   NS_ASSERTION(numClipRects == 0, "We don't support clipping!!!");
-  moz_gtk_widget_paint(mGTKWidgetType, gdkPixmap, &gdk_rect, &gdk_clip, &mState,
-                       mFlags, mDirection);
+  moz_gtk_widget_paint(mGTKWidgetType, drawable, &gdk_rect, &gdk_clip,
+                       &mState, mFlags, mDirection);
 
-  g_object_unref(G_OBJECT(gdkPixmap));
   return NS_OK;
 }
 
 static PRBool
-GetExtraSizeForWidget(PRUint8 aWidgetType, nsIntMargin* aExtra)
+GetExtraSizeForWidget(PRUint8 aWidgetType, PRBool aWidgetIsDefault,
+                      nsIntMargin* aExtra)
 {
   *aExtra = nsIntMargin(0,0,0,0);
   // Allow an extra one pixel above and below the thumb for certain
@@ -698,13 +672,11 @@ GetExtraSizeForWidget(PRUint8 aWidgetType, nsIntMargin* aExtra)
 
   // Include the indicator spacing (the padding around the control).
   case NS_THEME_CHECKBOX:
-  case NS_THEME_CHECKBOX_SMALL:
   case NS_THEME_RADIO:
-  case NS_THEME_RADIO_SMALL:
     {
       gint indicator_size, indicator_spacing;
 
-      if (IsCheckboxWidgetType(aWidgetType)) {
+      if (aWidgetType == NS_THEME_CHECKBOX) {
         moz_gtk_checkbox_get_metrics(&indicator_size, &indicator_spacing);
       } else {
         moz_gtk_radio_get_metrics(&indicator_size, &indicator_spacing);
@@ -716,41 +688,23 @@ GetExtraSizeForWidget(PRUint8 aWidgetType, nsIntMargin* aExtra)
       aExtra->left = indicator_spacing;
       return PR_TRUE;
     }
+  case NS_THEME_BUTTON :
+    {
+      if (aWidgetIsDefault) {
+        // Some themes draw a default indicator outside the widget,
+        // include that in overflow
+        gint top, left, bottom, right;
+        moz_gtk_button_get_default_overflow(&top, &left, &bottom, &right);
+        aExtra->top = top;
+        aExtra->right = right;
+        aExtra->bottom = bottom;
+        aExtra->left = left;
+        return PR_TRUE;
+      }
+    }
   default:
     return PR_FALSE;
   }
-}
-
-static GdkRectangle
-ConvertToGdkRect(const nsRect &aRect, PRInt32 aP2A)
-{
-  GdkRectangle gdk_rect;
-  gdk_rect.x = NSAppUnitsToIntPixels(aRect.x, aP2A);
-  gdk_rect.y = NSAppUnitsToIntPixels(aRect.y, aP2A);
-  gdk_rect.width = NSAppUnitsToIntPixels(aRect.XMost(), aP2A) - gdk_rect.x;
-  gdk_rect.height = NSAppUnitsToIntPixels(aRect.YMost(), aP2A) - gdk_rect.y;
-  return gdk_rect;
-}
-
-static GdkRectangle
-ConvertGfxToGdkRect(const gfxRect &aRect, const gfxPoint &aTranslation)
-{
-  GdkRectangle gdk_rect;
-  gdk_rect.x = NSToIntRound(aRect.X()) - NSToIntRound(aTranslation.x);
-  gdk_rect.y = NSToIntRound(aRect.Y()) - NSToIntRound(aTranslation.y);
-  gdk_rect.width = NSToIntRound(aRect.Width());
-  gdk_rect.height = NSToIntRound(aRect.Height());
-  return gdk_rect;
-}
-
-static gfxRect
-ConvertToGfxRect(const nsRect &aRect, PRInt32 aP2A)
-{
-  gfxRect rect(NSAppUnitsToFloatPixels(aRect.x, aP2A),
-               NSAppUnitsToFloatPixels(aRect.y, aP2A),
-               NSAppUnitsToFloatPixels(aRect.width, aP2A),
-               NSAppUnitsToFloatPixels(aRect.height, aP2A));
-  return rect;
 }
 
 NS_IMETHODIMP
@@ -758,7 +712,7 @@ nsNativeThemeGTK::DrawWidgetBackground(nsIRenderingContext* aContext,
                                        nsIFrame* aFrame,
                                        PRUint8 aWidgetType,
                                        const nsRect& aRect,
-                                       const nsRect& aClipRect)
+                                       const nsRect& aDirtyRect)
 {
   GtkWidgetState state;
   GtkThemeWidgetType gtkWidgetType;
@@ -767,93 +721,96 @@ nsNativeThemeGTK::DrawWidgetBackground(nsIRenderingContext* aContext,
   if (!GetGtkWidgetAndState(aWidgetType, aFrame, gtkWidgetType, &state,
                             &flags))
     return NS_OK;
-    
-  nsCOMPtr<nsIDeviceContext> dctx = nsnull;
-  aContext->GetDeviceContext(*getter_AddRefs(dctx));
-  PRInt32 p2a = dctx->AppUnitsPerDevPixel();
 
-  // This is the rectangle that will actually be drawn, in appunits
-  nsRect drawingRect(aClipRect);
+  gfxContext* ctx = aContext->ThebesContext();
+  nsPresContext *presContext = aFrame->PresContext();
+
+  gfxRect rect = presContext->AppUnitsToGfxUnits(aRect);
+  gfxRect dirtyRect = presContext->AppUnitsToGfxUnits(aDirtyRect);
+
+  // Align to device pixels where sensible
+  // to provide crisper and faster drawing.
+  // Don't snap if it's a non-unit scale factor. We're going to have to take
+  // slow paths then in any case.
+  PRBool snapXY = ctx->UserToDevicePixelSnapped(rect);
+  if (snapXY) {
+    // Leave rect in device coords but make dirtyRect consistent.
+    dirtyRect = ctx->UserToDevice(dirtyRect);
+  }
+
+  // Translate the dirty rect so that it is wrt the widget top-left.
+  dirtyRect.MoveBy(-rect.pos);
+  // Round out the dirty rect to gdk pixels to ensure that gtk draws
+  // enough pixels for interpolation to device pixels.
+  dirtyRect.RoundOut();
+
+  // GTK themes can only draw an integer number of pixels
+  // (even when not snapped).
+  nsIntRect widgetRect(0, 0, NS_lround(rect.Width()), NS_lround(rect.Height()));
+
+  // This is the rectangle that will actually be drawn, in gdk pixels
+  nsIntRect drawingRect(PRInt32(dirtyRect.X()),
+                        PRInt32(dirtyRect.Y()),
+                        PRInt32(dirtyRect.Width()),
+                        PRInt32(dirtyRect.Height()));
+  if (!drawingRect.IntersectRect(widgetRect, drawingRect))
+    return NS_OK;
+
   nsIntMargin extraSize;
-  GetExtraSizeForWidget(aWidgetType, &extraSize);
-  // inflate drawing rect to account for the overdraw
-  nsMargin extraSizeAppUnits(NSIntPixelsToAppUnits(extraSize.left, p2a),
-                             NSIntPixelsToAppUnits(extraSize.top, p2a),
-                             NSIntPixelsToAppUnits(extraSize.right, p2a),
-                             NSIntPixelsToAppUnits(extraSize.bottom, p2a));
-  drawingRect.Inflate(extraSizeAppUnits);
+  // The margin should be applied to the widget rect rather than the dirty
+  // rect but nsCSSRendering::PaintBackgroundWithSC has already intersected
+  // the dirty rect with the uninflated widget rect.
+  if (GetExtraSizeForWidget(aWidgetType, state.isDefault, &extraSize)) {
+    drawingRect.Inflate(extraSize);
+  }
+
+  // gdk rectangles are wrt the drawing rect.
+
+  // The gdk_clip is just advisory here, meaning "you don't
+  // need to draw outside this rect if you don't feel like it!"
+  GdkRectangle gdk_clip = {0, 0, drawingRect.width, drawingRect.height};
+
+  GdkRectangle gdk_rect = {-drawingRect.x, -drawingRect.y,
+                           widgetRect.width, widgetRect.height};
+
+  ThemeRenderer renderer(state, gtkWidgetType, flags, direction,
+                         gdk_rect, gdk_clip);
+
+  // We require the use of the default screen and visual
+  // because I'm afraid that otherwise the GTK theme may explode.
+  // Some themes (e.g. Clearlooks) just don't clip properly to any
+  // clip rect we provide, so we cannot advertise support for clipping within
+  // the widget bounds.
+  PRUint32 rendererFlags = gfxGdkNativeRenderer::DRAW_SUPPORTS_OFFSET;
 
   // translate everything so (0,0) is the top left of the drawingRect
-  nsIRenderingContext::AutoPushTranslation
-    autoTranslation(aContext, drawingRect.x, drawingRect.y);
+  gfxContextAutoSaveRestore autoSR(ctx);
+  if (snapXY) {
+    // Rects are in device coords.
+    ctx->IdentityMatrix(); 
+  }
+  ctx->Translate(rect.pos + gfxPoint(drawingRect.x, drawingRect.y));
 
   NS_ASSERTION(!IsWidgetTypeDisabled(mDisabledWidgetTypes, aWidgetType),
                "Trying to render an unsafe widget!");
 
   PRBool safeState = IsWidgetStateSafe(mSafeWidgetStates, aWidgetType, &state);
-  XErrorHandler oldHandler = nsnull;
   if (!safeState) {
-    gLastXError = 0;
-    oldHandler = XSetErrorHandler(NativeThemeErrorHandler);
+    gLastGdkError = 0;
+    gdk_error_trap_push ();
   }
 
-  gfxContext* ctx = aContext->ThebesContext();
-  gfxMatrix current = ctx->CurrentMatrix();
-
-  // We require the use of the default display and visual
-  // because I'm afraid that otherwise the GTK theme may explode.
-  // Some themes (e.g. Clearlooks) just don't clip properly to any
-  // clip rect we provide, so we cannot advertise support for clipping within the
-  // widget bounds. The gdk_clip is just advisory here, meanining "you don't
-  // need to draw outside this rect if you don't feel like it!"
-  GdkRectangle gdk_rect, gdk_clip;
-  gfxRect gfx_rect = ConvertToGfxRect(aRect - drawingRect.TopLeft(), p2a);
-  gfxRect gfx_clip = ConvertToGfxRect(drawingRect - drawingRect.TopLeft(), p2a);
-  if (ctx->UserToDevicePixelSnapped(gfx_rect) &&
-      ctx->UserToDevicePixelSnapped(gfx_clip)) {
-    gfxPoint currentTranslation = current.GetTranslation();
-    gdk_rect = ConvertGfxToGdkRect(gfx_rect, currentTranslation);
-    gdk_clip = ConvertGfxToGdkRect(gfx_clip, currentTranslation);
-  }
-  else {
-    gdk_rect = ConvertToGdkRect(aRect - drawingRect.TopLeft(), p2a);
-    gdk_clip = ConvertToGdkRect(drawingRect - drawingRect.TopLeft(), p2a);
-  }
-  ThemeRenderer renderer(state, gtkWidgetType, flags, direction, gdk_rect, gdk_clip);
-
-  // XXXbz do we really want to round here, then snap, then round again?
-  gfxRect rect(0, 0, NSAppUnitsToIntPixels(drawingRect.width, p2a),
-                     NSAppUnitsToIntPixels(drawingRect.height, p2a));
-
-  PRUint32 rendererFlags = gfxXlibNativeRenderer::DRAW_SUPPORTS_OFFSET;
-  // Don't snap if it's a non-unit scale factor. We're going to have to take
-  // slow paths then in any case.
-  PRBool snapXY = ctx->UserToDevicePixelSnapped(rect) &&
-    !current.HasNonTranslation();
-  if (snapXY) {
-    gfxMatrix translation;
-    translation.Translate(rect.TopLeft());
-    ctx->SetMatrix(translation);
-    renderer.Draw(gdk_x11_get_default_xdisplay(), ctx,
-                  NSToCoordRound(rect.Width()), NSToCoordRound(rect.Height()),
-                  rendererFlags, nsnull);
-    ctx->SetMatrix(current);
-  } else {
-    renderer.Draw(gdk_x11_get_default_xdisplay(), ctx,
-                  NSToIntCeil(NSAppUnitsToFloatPixels(drawingRect.width, p2a)),
-                  NSToIntCeil(NSAppUnitsToFloatPixels(drawingRect.height, p2a)),
-                  rendererFlags, nsnull);
-  }
+  renderer.Draw(ctx, drawingRect.width, drawingRect.height, rendererFlags, nsnull);
 
   if (!safeState) {
     gdk_flush();
-    XSetErrorHandler(oldHandler);
+    gLastGdkError = gdk_error_trap_pop ();
 
-    if (gLastXError) {
+    if (gLastGdkError) {
 #ifdef DEBUG
       printf("GTK theme failed for widget type %d, error was %d, state was "
              "[active=%d,focused=%d,inHover=%d,disabled=%d]\n",
-             aWidgetType, gLastXError, state.active, state.focused,
+             aWidgetType, gLastGdkError, state.active, state.focused,
              state.inHover, state.disabled);
 #endif
       NS_WARNING("GTK theme failed; disabling unsafe widget");
@@ -871,7 +828,7 @@ nsNativeThemeGTK::DrawWidgetBackground(nsIRenderingContext* aContext,
 
 NS_IMETHODIMP
 nsNativeThemeGTK::GetWidgetBorder(nsIDeviceContext* aContext, nsIFrame* aFrame,
-                                  PRUint8 aWidgetType, nsMargin* aResult)
+                                  PRUint8 aWidgetType, nsIntMargin* aResult)
 {
   GtkTextDirection direction = GetTextDirection(aFrame);
   aResult->top = aResult->left = aResult->right = aResult->bottom = 0;
@@ -914,8 +871,7 @@ nsNativeThemeGTK::GetWidgetBorder(nsIDeviceContext* aContext, nsIFrame* aFrame,
                                nsnull))
         moz_gtk_get_widget_border(gtkWidgetType, &aResult->left, &aResult->top,
                                   &aResult->right, &aResult->bottom, direction,
-                                  aFrame && aFrame->GetContent()->
-                                        IsNodeOfType(nsINode::eHTML));
+                                  IsFrameContentNodeOfType(aFrame, nsINode::eHTML));
     }
   }
   return NS_OK;
@@ -924,7 +880,7 @@ nsNativeThemeGTK::GetWidgetBorder(nsIDeviceContext* aContext, nsIFrame* aFrame,
 PRBool
 nsNativeThemeGTK::GetWidgetPadding(nsIDeviceContext* aContext,
                                    nsIFrame* aFrame, PRUint8 aWidgetType,
-                                   nsMargin* aResult)
+                                   nsIntMargin* aResult)
 {
   switch (aWidgetType) {
     case NS_THEME_BUTTON_FOCUS:
@@ -937,9 +893,7 @@ nsNativeThemeGTK::GetWidgetPadding(nsIDeviceContext* aContext,
     // and have a meaningful baseline, so they can't have
     // author-specified padding.
     case NS_THEME_CHECKBOX:
-    case NS_THEME_CHECKBOX_SMALL:
     case NS_THEME_RADIO:
-    case NS_THEME_RADIO_SMALL:
       aResult->SizeTo(0, 0, 0, 0);
       return PR_TRUE;
   }
@@ -971,7 +925,7 @@ nsNativeThemeGTK::GetWidgetOverflow(nsIDeviceContext* aContext,
     }
   } else {
     nsIntMargin extraSize;
-    if (!GetExtraSizeForWidget(aWidgetType, &extraSize))
+    if (!GetExtraSizeForWidget(aWidgetType, IsDefaultButton(aFrame), &extraSize))
       return PR_FALSE;
 
     p2a = aContext->AppUnitsPerDevPixel();
@@ -988,7 +942,7 @@ nsNativeThemeGTK::GetWidgetOverflow(nsIDeviceContext* aContext,
 NS_IMETHODIMP
 nsNativeThemeGTK::GetMinimumWidgetSize(nsIRenderingContext* aContext,
                                        nsIFrame* aFrame, PRUint8 aWidgetType,
-                                       nsSize* aResult, PRBool* aIsOverridable)
+                                       nsIntSize* aResult, PRBool* aIsOverridable)
 {
   aResult->width = aResult->height = 0;
   *aIsOverridable = PR_TRUE;
@@ -1106,13 +1060,11 @@ nsNativeThemeGTK::GetMinimumWidgetSize(nsIRenderingContext* aContext,
     }
     break;
   case NS_THEME_CHECKBOX:
-  case NS_THEME_CHECKBOX_SMALL:
   case NS_THEME_RADIO:
-  case NS_THEME_RADIO_SMALL:
     {
       gint indicator_size, indicator_spacing;
 
-      if (IsCheckboxWidgetType(aWidgetType)) {
+      if (aWidgetType == NS_THEME_CHECKBOX) {
         moz_gtk_checkbox_get_metrics(&indicator_size, &indicator_spacing);
       } else {
         moz_gtk_radio_get_metrics(&indicator_size, &indicator_spacing);
@@ -1144,7 +1096,7 @@ nsNativeThemeGTK::GetMinimumWidgetSize(nsIRenderingContext* aContext,
       nsCOMPtr<nsIDeviceContext> dc;
       aContext->GetDeviceContext(*getter_AddRefs(dc));
 
-      nsMargin border;
+      nsIntMargin border;
       nsNativeThemeGTK::GetWidgetBorder(dc, aFrame, aWidgetType, &border);
       aResult->width = border.left + border.right;
       aResult->height = border.top + border.bottom;
@@ -1274,9 +1226,7 @@ nsNativeThemeGTK::ThemeSupportsWidget(nsPresContext* aPresContext,
   case NS_THEME_BUTTON:
   case NS_THEME_BUTTON_FOCUS:
   case NS_THEME_RADIO:
-  case NS_THEME_RADIO_SMALL:
   case NS_THEME_CHECKBOX:
-  case NS_THEME_CHECKBOX_SMALL:
   case NS_THEME_TOOLBOX: // N/A
   case NS_THEME_TOOLBAR:
   case NS_THEME_TOOLBAR_BUTTON:
@@ -1322,11 +1272,9 @@ nsNativeThemeGTK::ThemeSupportsWidget(nsPresContext* aPresContext,
   case NS_THEME_SCROLLBAR_TRACK_VERTICAL:
   case NS_THEME_SCROLLBAR_THUMB_HORIZONTAL:
   case NS_THEME_SCROLLBAR_THUMB_VERTICAL:
-    // case NS_THEME_SCROLLBAR_GRIPPER_HORIZONTAL:  (n/a for gtk)
-    // case NS_THEME_SCROLLBAR_GRIPPER_VERTICAL:  (n/a for gtk)
   case NS_THEME_TEXTFIELD:
   case NS_THEME_TEXTFIELD_MULTILINE:
-    // case NS_THEME_TEXTFIELD_CARET:
+  case NS_THEME_TEXTFIELD_CARET:
   case NS_THEME_DROPDOWN_TEXTFIELD:
   case NS_THEME_SCALE_HORIZONTAL:
   case NS_THEME_SCALE_THUMB_HORIZONTAL:
@@ -1356,7 +1304,7 @@ nsNativeThemeGTK::ThemeSupportsWidget(nsPresContext* aPresContext,
   case NS_THEME_DROPDOWN_BUTTON:
     // "Native" dropdown buttons cause padding and margin problems, but only
     // in HTML so allow them in XUL.
-    return (!aFrame || aFrame->GetContent()->IsNodeOfType(nsINode::eXUL)) &&
+    return (!aFrame || IsFrameContentNodeOfType(aFrame, nsINode::eXUL)) &&
            !IsWidgetStyled(aPresContext, aFrame, aWidgetType);
 
   }
@@ -1369,8 +1317,8 @@ nsNativeThemeGTK::WidgetIsContainer(PRUint8 aWidgetType)
 {
   // XXXdwh At some point flesh all of this out.
   if (aWidgetType == NS_THEME_DROPDOWN_BUTTON ||
-      IsRadioWidgetType(aWidgetType) ||
-      IsCheckboxWidgetType(aWidgetType) ||
+      aWidgetType == NS_THEME_RADIO ||
+      aWidgetType == NS_THEME_CHECKBOX ||
       aWidgetType == NS_THEME_TAB_SCROLLARROW_BACK ||
       aWidgetType == NS_THEME_TAB_SCROLLARROW_FORWARD)
     return PR_FALSE;
@@ -1392,4 +1340,10 @@ PRBool
 nsNativeThemeGTK::ThemeNeedsComboboxDropmarker()
 {
   return PR_FALSE;
+}
+
+nsTransparencyMode
+nsNativeThemeGTK::GetWidgetTransparency(PRUint8 aWidgetType)
+{
+  return eTransparencyOpaque;
 }

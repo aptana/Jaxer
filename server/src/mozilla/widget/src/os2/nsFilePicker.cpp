@@ -189,13 +189,13 @@ NS_IMETHODIMP nsFilePicker::Show(PRInt16 *retval)
     filedlg.ulUser = (ULONG)pmydata;
     filedlg.pfnDlgProc = FileDialogProc;
 
-    int i;
+    PRUint32 i;
 
     PSZ *apszTypeList;
-    apszTypeList = (PSZ *)malloc(mTitles.Count()*sizeof(PSZ)+1);
-    for (i = 0; i < mTitles.Count(); i++)
+    apszTypeList = (PSZ *)malloc(mTitles.Length()*sizeof(PSZ)+1);
+    for (i = 0; i < mTitles.Length(); i++)
     {
-      const nsString& typeWide = *mTitles[i];
+      const nsString& typeWide = mTitles[i];
       nsAutoCharBuffer buffer;
       PRInt32 bufLength;
       WideCharToMultiByte(0, typeWide.get(), typeWide.Length(),
@@ -206,10 +206,10 @@ NS_IMETHODIMP nsFilePicker::Show(PRInt16 *retval)
     filedlg.papszITypeList = (PAPSZ)apszTypeList;
 
     PSZ *apszFilterList;
-    apszFilterList = (PSZ *)malloc(mFilters.Count()*sizeof(PSZ)+1);
-    for (i = 0; i < mFilters.Count(); i++)
+    apszFilterList = (PSZ *)malloc(mFilters.Length()*sizeof(PSZ)+1);
+    for (i = 0; i < mFilters.Length(); i++)
     {
-      const nsString& filterWide = *mFilters[i];
+      const nsString& filterWide = mFilters[i];
       apszFilterList[i] = ToNewCString(filterWide);
     }
     apszFilterList[i] = 0;
@@ -288,8 +288,7 @@ NS_IMETHODIMP nsFilePicker::Show(PRInt16 *retval)
     if (filedlg.lReturn == DID_OK) {
       result = PR_TRUE;
       if (mMode == modeOpenMultiple) {
-        nsresult rv = NS_NewISupportsArray(getter_AddRefs(mFiles));
-        NS_ENSURE_SUCCESS(rv,rv);
+        nsresult rv;
 
         if (filedlg.papszFQFilename) {
           for (ULONG i=0;i<filedlg.ulFQFCount;i++) {
@@ -299,7 +298,7 @@ NS_IMETHODIMP nsFilePicker::Show(PRInt16 *retval)
             rv = file->InitWithNativePath(nsDependentCString(*(filedlg.papszFQFilename)[i]));
             NS_ENSURE_SUCCESS(rv,rv);
 
-            rv = mFiles->AppendElement(file);
+            rv = mFiles.AppendObject(file);
             NS_ENSURE_SUCCESS(rv,rv);
           }
           WinFreeFileDlgList(filedlg.papszFQFilename);
@@ -310,7 +309,7 @@ NS_IMETHODIMP nsFilePicker::Show(PRInt16 *retval)
           rv = file->InitWithNativePath(nsDependentCString(filedlg.szFullFile));
           NS_ENSURE_SUCCESS(rv,rv);
 
-          rv = mFiles->AppendElement(file);
+          rv = mFiles.AppendObject(file);
           NS_ENSURE_SUCCESS(rv,rv);
         }
       } else {
@@ -319,13 +318,13 @@ NS_IMETHODIMP nsFilePicker::Show(PRInt16 *retval)
       mSelectedType = (PRInt16)pmydata->ulCurExt;
     }
 
-    for (i = 0; i < mTitles.Count(); i++)
+    for (i = 0; i < mTitles.Length(); i++)
     {
       nsMemory::Free(*(filedlg.papszITypeList[i]));
     }
     free(filedlg.papszITypeList);
 
-    for (i = 0; i < mFilters.Count(); i++)
+    for (i = 0; i < mFilters.Length(); i++)
     {
       nsMemory::Free(*(pmydata->papszIFilterList[i]));
     }
@@ -616,10 +615,10 @@ NS_IMETHODIMP
 nsFilePicker::AppendFilter(const nsAString& aTitle, const nsAString& aFilter)
 {
   if (aFilter.EqualsLiteral("..apps"))
-    mFilters.AppendString(NS_LITERAL_STRING("*.exe;*.cmd;*.com;*.bat"));
+    mFilters.AppendElement(NS_LITERAL_STRING("*.exe;*.cmd;*.com;*.bat"));
   else
-    mFilters.AppendString(aFilter);
-  mTitles.AppendString(aTitle);
+    mFilters.AppendElement(aFilter);
+  mTitles.AppendElement(aTitle);
 
   return NS_OK;
 }

@@ -79,7 +79,7 @@ NS_GENERIC_FACTORY_CONSTRUCTOR(nsFilePicker)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsBidiKeyboard)
 #endif
 
-static nsModuleComponentInfo components[] =
+static const nsModuleComponentInfo components[] =
 {
   { "Ph nsWindow",
     NS_WINDOW_CID,
@@ -140,7 +140,7 @@ static nsModuleComponentInfo components[] =
     nsFilePickerConstructor },
 };
 
-PR_STATIC_CALLBACK(void)
+static void
 nsWidgetPhModuleDtor(nsIModule *self)
 {
 //	nsPhIMEHelper::Shutdown();

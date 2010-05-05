@@ -119,6 +119,9 @@ nsresult nsLookAndFeel::NativeGetColor(const nsColorID aID, nscolor &aColor)
     case eColor_IMESelectedConvertedTextUnderline:
       aColor = NS_TRANSPARENT;
       break;
+    case eColor_SpellCheckerUnderline:
+      aColor = NS_RGB(0xff, 0, 0);
+      break;
 
 		// css2  http://www.w3.org/TR/REC-CSS2/ui.html#system-colors
 	  case eColor_activeborder:
@@ -345,9 +348,6 @@ NS_IMETHODIMP nsLookAndFeel::GetMetric(const nsMetricID aID, PRInt32 & aMetric)
 		// we want XUL popups to be able to overlap the task bar.
 		aMetric = 1;
 		break;
-	case eMetric_DragFullWindow:
-		aMetric = 1;
-		break;
   case eMetric_TreeOpenDelay:
     aMetric = 1000;
     break;
@@ -363,7 +363,15 @@ NS_IMETHODIMP nsLookAndFeel::GetMetric(const nsMetricID aID, PRInt32 & aMetric)
   case eMetric_TreeScrollLinesMax:
     aMetric = 3;
     break;
+  case eMetric_DWMCompositor:
+  case eMetric_WindowsClassic:
   case eMetric_WindowsDefaultTheme:
+  case eMetric_TouchEnabled:
+    aMetric = 0;
+    res = NS_ERROR_NOT_IMPLEMENTED;
+    break;
+  case eMetric_MacGraphiteTheme:
+  case eMetric_MaemoClassic:
     aMetric = 0;
     res = NS_ERROR_NOT_IMPLEMENTED;
     break;
@@ -374,6 +382,9 @@ NS_IMETHODIMP nsLookAndFeel::GetMetric(const nsMetricID aID, PRInt32 & aMetric)
   case eMetric_IMESelectedRawTextUnderlineStyle:
   case eMetric_IMESelectedConvertedTextUnderline:
     aMetric = NS_UNDERLINE_STYLE_NONE;
+    break;
+  case eMetric_SpellCheckerUnderlineStyle:
+    aMetric = NS_UNDERLINE_STYLE_WAVY;
     break;
 
   default:
@@ -419,6 +430,9 @@ NS_IMETHODIMP nsLookAndFeel::GetMetric(const nsMetricFloatID aID, float & aMetri
     aMetric = 0.25f;
     break;
   case eMetricFloat_IMEUnderlineRelativeSize:
+    aMetric = 1.0f;
+    break;
+  case eMetricFloat_SpellCheckerUnderlineRelativeSize:
     aMetric = 1.0f;
     break;
   default:

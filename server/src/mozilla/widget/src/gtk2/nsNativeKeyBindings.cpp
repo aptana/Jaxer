@@ -42,12 +42,9 @@
 #include "nsGtkKeyUtils.h"
 #include "nsGUIEvent.h"
 
-#include <gtk/gtkentry.h>
-#include <gtk/gtktextview.h>
-#include <gtk/gtkbindings.h>
-#include <gtk/gtkmain.h>
+#include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
-#include <gdk/gdkevents.h>
+#include <gdk/gdk.h>
 
 static nsINativeKeyBindings::DoCommandCallback gCurrentCallback;
 static void *gCurrentCallbackData;
@@ -243,6 +240,8 @@ nsNativeKeyBindings::Init(NativeKeyBindingsType  aType)
     break;
   }
 
+  g_object_ref_sink(mNativeTarget);
+
   g_signal_connect(G_OBJECT(mNativeTarget), "copy_clipboard",
                    G_CALLBACK(copy_clipboard_cb), this);
   g_signal_connect(G_OBJECT(mNativeTarget), "cut_clipboard",
@@ -258,6 +257,7 @@ nsNativeKeyBindings::Init(NativeKeyBindingsType  aType)
 nsNativeKeyBindings::~nsNativeKeyBindings()
 {
   gtk_widget_destroy(mNativeTarget);
+  g_object_unref(mNativeTarget);
 }
 
 NS_IMPL_ISUPPORTS1(nsNativeKeyBindings, nsINativeKeyBindings)

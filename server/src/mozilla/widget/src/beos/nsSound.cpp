@@ -153,8 +153,12 @@ NS_METHOD nsSound::Play(nsIURL *aURL)
 NS_IMETHODIMP nsSound::PlaySystemSound(const nsAString &aSoundAlias)
 {
 	nsresult rv = NS_ERROR_FAILURE;
-	if (aSoundAlias.EqualsLiteral("_moz_mailbeep")) 
-		return Beep();
+	if (NS_IsMozAliasSound(aSoundAlias)) {
+		NS_WARNING("nsISound::playSystemSound is called with \"_moz_\" events, they are obsolete, use nsISound::playEventSound instead");
+		if (aSoundAlias.Equals(NS_SYSSOUND_MAIL_BEEP))
+			return Beep();
+		return NS_OK;
+	}
 	nsCOMPtr <nsIURI> fileURI;
 	// create a nsILocalFile and then a nsIFileURL from that
 	nsCOMPtr <nsILocalFile> soundFile;
@@ -167,4 +171,9 @@ NS_IMETHODIMP nsSound::PlaySystemSound(const nsAString &aSoundAlias)
 	NS_ENSURE_SUCCESS(rv, rv);
 	rv = Play(fileURL);
 	return rv;
+}
+
+NS_IMETHODIMP nsSound::PlayEventSound(PRUint32 aEventId)
+{
+  return aEventId == EVENT_NEW_MAIL_RECEIVED ? Beep() : NS_OK;
 }

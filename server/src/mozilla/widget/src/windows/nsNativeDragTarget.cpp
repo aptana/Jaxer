@@ -46,6 +46,7 @@
 
 #include "nsIWidget.h"
 #include "nsWindow.h"
+#include "nsClipboard.h"
 
 #if (_MSC_VER == 1100)
 #define INITGUID
@@ -75,7 +76,7 @@ static POINTL gDragLastPoint;
 // construction
 //-----------------------------------------------------
 nsNativeDragTarget::nsNativeDragTarget(nsIWidget * aWnd)
-  : m_cRef(0), mWindow(aWnd), mCanMove(PR_TRUE),
+  : m_cRef(0), mWindow(aWnd), mCanMove(PR_TRUE), mTookOwnRef(PR_FALSE),
   mDropTargetHelper(nsnull), mDragCancelled(PR_FALSE)
 {
   mHWnd = (HWND)mWindow->GetNativeData(NS_NATIVE_WINDOW);
@@ -97,6 +98,7 @@ nsNativeDragTarget::nsNativeDragTarget(nsIWidget * aWnd)
 nsNativeDragTarget::~nsNativeDragTarget()
 {
   NS_RELEASE(mDragService);
+
   if (mDropTargetHelper) {
     mDropTargetHelper->Release();
     mDropTargetHelper = nsnull;
@@ -158,9 +160,11 @@ nsNativeDragTarget::GetGeckoDragAction(LPDATAOBJECT pData, DWORD grfKeyState,
 
   // Default is move if we can, in fact drop here,
   // and if the drop source supports a move operation.
-  if (mCanMove) {
-    *pdwEffect    = DROPEFFECT_MOVE;
+  // If move is not preferred (mMovePreferred is false)
+  // move only when the shift key is down.
+  if (mCanMove && (mMovePreferred || (grfKeyState & MK_SHIFT))) {
     *aGeckoAction = nsIDragService::DRAGDROP_ACTION_MOVE;
+    *pdwEffect    = DROPEFFECT_MOVE;
   } else {
     *aGeckoAction = nsIDragService::DRAGDROP_ACTION_COPY;
     *pdwEffect    = DROPEFFECT_COPY;
@@ -193,7 +197,7 @@ void
 nsNativeDragTarget::DispatchDragDropEvent(PRUint32 aEventType, POINTL aPT)
 {
   nsEventStatus status;
-  nsMouseEvent event(PR_TRUE, aEventType, mWindow, nsMouseEvent::eReal);
+  nsDragEvent event(PR_TRUE, aEventType, mWindow);
 
   nsWindow * win = static_cast<nsWindow *>(mWindow);
   win->InitEvent(event);
@@ -279,12 +283,31 @@ nsNativeDragTarget::DragEnter(LPDATAOBJECT pIDataSource,
     mDropTargetHelper->DragEnter(mHWnd, pIDataSource, &pt, *pdwEffect);
   }
 
+  // save a ref to this, in case the window is destroyed underneath us
+  NS_ASSERTION(!mTookOwnRef, "own ref already taken!");
+  this->AddRef();
+  mTookOwnRef = PR_TRUE;
+
   // tell the drag service about this drag (it may have come from an
   // outside app).
   mDragService->StartDragSession();
 
   // Remember if this operation allows a move.
   mCanMove = (*pdwEffect) & DROPEFFECT_MOVE;
+
+  void* tempOutData = nsnull;
+  PRUint32 tempDataLen = 0;
+  nsresult loadResult = nsClipboard::GetNativeDataOffClipboard(
+      pIDataSource, 0, ::RegisterClipboardFormat(CFSTR_PREFERREDDROPEFFECT), nsnull, &tempOutData, &tempDataLen);
+  if (NS_SUCCEEDED(loadResult) && tempOutData) {
+    NS_ASSERTION(tempDataLen == 2, "Expected word size");
+    WORD preferredEffect = *((WORD*)tempOutData);
+
+    // Mask effect coming from function call with effect preferred by the source.
+    mMovePreferred = (preferredEffect & DROPEFFECT_MOVE) != 0;
+  }
+  else
+    mMovePreferred = mCanMove;
 
   // Set the native data object into drag service
   //
@@ -368,6 +391,13 @@ nsNativeDragTarget::DragLeave()
     }
   }
 
+  // release the ref that was taken in DragEnter
+  NS_ASSERTION(mTookOwnRef, "want to release own ref, but not taken!");
+  if (mTookOwnRef) {
+    this->Release();
+    mTookOwnRef = PR_FALSE;
+  }
+
   return S_OK;
 }
 
@@ -404,7 +434,27 @@ nsNativeDragTarget::Drop(LPDATAOBJECT pData,
   // Now process the native drag state and then dispatch the event
   ProcessDrag(pData, NS_DRAGDROP_DROP, grfKeyState, aPT, pdwEffect);
 
+  // Let the win drag service know whether this session experienced 
+  // a drop event within the application. Drop will not oocur if the
+  // drop landed outside the app. (used in tab tear off, bug 455884)
+  winDragService->SetDroppedLocal();
+
   // tell the drag service we're done with the session
+  // Use GetMessagePos to get the position of the mouse at the last message
+  // seen by the event loop. (Bug 489729)
+  DWORD pos = ::GetMessagePos();
+  POINT cpos;
+  cpos.x = GET_X_LPARAM(pos);
+  cpos.y = GET_Y_LPARAM(pos);
+  winDragService->SetDragEndPoint(nsIntPoint(cpos.x, cpos.y));
   serv->EndDragSession(PR_TRUE);
+
+  // release the ref that was taken in DragEnter
+  NS_ASSERTION(mTookOwnRef, "want to release own ref, but not taken!");
+  if (mTookOwnRef) {
+    this->Release();
+    mTookOwnRef = PR_FALSE;
+  }
+
   return S_OK;
 }

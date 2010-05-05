@@ -44,16 +44,9 @@ include $(DEPTH)/config/autoconf.mk
 
 MODULE  = widget
 
-PACKAGE_FILE = widget.pkg
-PACKAGE_VARS += \
-	MOZ_ENABLE_GTK2 \
-	MOZ_ENABLE_PHOTON \
-	MOZ_ENABLE_XREMOTE \
-	$(NULL)
+DIRS		= xpwidgets
 
-DIRS		= xpwidgets support
-
-ifneq (,$(filter beos os2 mac cocoa,$(MOZ_WIDGET_TOOLKIT)))
+ifneq (,$(filter beos os2 cocoa qt,$(MOZ_WIDGET_TOOLKIT)))
 DIRS		+= $(MOZ_WIDGET_TOOLKIT)
 endif
 
@@ -70,7 +63,9 @@ endif
 #
 ifdef MOZ_ENABLE_GTK2
 DIRS		+= gtk2
+ifdef MOZ_X11
 DIRS		+= gtkxtbin
+endif
 endif
 
 ifdef MOZ_ENABLE_PHOTON

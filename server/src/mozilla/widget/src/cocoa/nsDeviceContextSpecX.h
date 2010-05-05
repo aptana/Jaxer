@@ -41,18 +41,16 @@
 
 #include "nsIDeviceContextSpec.h"
 
-#include <PMApplication.h>
+#include <ApplicationServices/ApplicationServices.h>
 
 class nsDeviceContextSpecX : public nsIDeviceContextSpec
 {
 public:
-    /**
-     * Construct a nsDeviceContextSpecX, which is an object which contains and manages a mac printrecord
-     * @update  dc 12/02/98
-     */
+    NS_DECL_ISUPPORTS
+
     nsDeviceContextSpecX();
 
-    NS_DECL_ISUPPORTS
+    NS_IMETHOD Init(nsIWidget *aWidget, nsIPrintSettings* aPS, PRBool aIsPrintPreview);
     NS_IMETHOD GetSurfaceForPrinter(gfxASurface **surface);
     NS_IMETHOD BeginDocument(PRUnichar*  aTitle, 
                              PRUnichar*  aPrintToFileName,
@@ -62,27 +60,12 @@ public:
     NS_IMETHOD BeginPage();
     NS_IMETHOD EndPage();
 
-    /**
-     * Initialize the nsDeviceContextSpecX for use.  This will allocate a printrecord for use
-     * @update   dc 12/02/98
-     * @param aWidget           Unused
-     * @param aPS               Settings for this print job
-     * @param aIsPrintPreview   TRUE if doing print preview, FALSE if normal printing.
-     * @return error status
-     */
-    NS_IMETHOD Init(nsIWidget *aWidget, nsIPrintSettings* aPS, PRBool aIsPrintPreview);
-    
     void GetPaperRect(double* aTop, double* aLeft, double* aBottom, double* aRight);
 
 protected:
-/**
- * Destructor for nsDeviceContextSpecX, this will release the printrecord
- * @update  dc 12/02/98
- */
-  virtual ~nsDeviceContextSpecX();
+    virtual ~nsDeviceContextSpecX();
 
 protected:
-
     PMPrintSession    mPrintSession;              // printing context.
     PMPageFormat      mPageFormat;                // page format.
     PMPrintSettings   mPrintSettings;             // print settings.

@@ -49,7 +49,7 @@
 #define _GTK_DRAWING_H_
 
 #include <gdk/gdk.h>
-#include <gtk/gtkstyle.h>
+#include <gtk/gtk.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -110,6 +110,10 @@ typedef gint (*style_prop_t)(GtkStyle*, const gchar*, gint);
 #define MOZ_GTK_UNKNOWN_WIDGET -1
 #define MOZ_GTK_UNSAFE_THEME -2
 
+/*** checkbox/radio flags ***/
+#define MOZ_GTK_WIDGET_CHECKED 1
+#define MOZ_GTK_WIDGET_INCONSISTENT (1 << 1)
+
 /*** widget type constants ***/
 typedef enum {
   /* Paints a GtkButton. flags is a GtkReliefStyle. */
@@ -144,6 +148,8 @@ typedef enum {
   MOZ_GTK_GRIPPER,
   /* Paints a GtkEntry. */
   MOZ_GTK_ENTRY,
+  /* Paints the native caret (or in GTK-speak: insertion cursor) */
+  MOZ_GTK_ENTRY_CARET,
   /* Paints a GtkOptionMenu. */
   MOZ_GTK_DROPDOWN,
   /* Paints a dropdown arrow (a GtkButton containing a down GtkArrow). */
@@ -313,6 +319,21 @@ moz_gtk_button_get_inner_border(GtkWidget* widget, GtkBorder* inner_border);
 gint
 moz_gtk_widget_get_focus(GtkWidget* widget, gboolean* interior_focus,
                          gint* focus_width, gint* focus_pad);
+
+/**
+ * Some GTK themes draw their indication for the default button outside
+ * the button (e.g. the glow in New Wave). This gets the extra space necessary.
+ *
+ * border_top:  [OUT] extra space to add above
+ * border_left:  [OUT] extra space to add to the left
+ * border_bottom:  [OUT] extra space to add underneath
+ * border_right:  [OUT] extra space to add to the right
+ *
+ * returns:   MOZ_GTK_SUCCESS if there was no error, an error code otherwise
+ */
+gint
+moz_gtk_button_get_default_overflow(gint* border_top, gint* border_left,
+                                    gint* border_bottom, gint* border_right);
 
 /**
  * Get the desired size of a GtkScale thumb

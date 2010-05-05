@@ -47,13 +47,11 @@ XPIDL_MODULE	= widget
 GRE_MODULE	= 1
 
 EXPORTS		= \
-		widgetCore.h \
-		nsStringUtil.h \
 		nsIWidget.h \
-		nsIKBStateControl.h \
 		nsGUIEvent.h \
 		nsEvent.h \
-		nsIMouseListener.h \
+		nsNativeWidget.h \
+		nsWidgetInitData.h \
 		nsIEventListener.h \
 		nsWidgetsCID.h \
 		nsILookAndFeel.h \
@@ -64,7 +62,10 @@ EXPORTS		= \
 		$(NULL)
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),cocoa)
-EXPORTS		+= nsIMenuBar.h
+EXPORTS		+= \
+		nsINativeMenuService.h \
+		nsIPrintDialogService.h \
+		$(NULL)
 endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),os2)
@@ -75,7 +76,7 @@ ifeq ($(MOZ_WIDGET_TOOLKIT),beos)
 EXPORTS		+= nsIDragSessionBeOS.h
 endif
 
-ifneq (,$(filter gtk2,$(MOZ_WIDGET_TOOLKIT)))
+ifneq (,$(filter qt gtk2,$(MOZ_WIDGET_TOOLKIT)))
 EXPORTS		+= \
 		nsIDragSessionGTK.h \
 		nsIPrintDialogService.h \
@@ -83,6 +84,7 @@ EXPORTS		+= \
 endif
 
 XPIDLSRCS	= \
+		nsIAccelerometer.idl \
 		nsIAppShell.idl \
 		nsIFilePicker.idl \
 		nsIToolkit.idl \
@@ -99,7 +101,6 @@ XPIDLSRCS	= \
 		nsIRollupListener.idl \
 		nsIBaseWindow.idl \
 		nsIBidiKeyboard.idl \
-		nsIFullScreen.idl \
 		nsIScreen.idl \
 		nsIScreenManager.idl \
 		nsIPrintSession.idl \
@@ -110,12 +111,15 @@ XPIDLSRCS	= \
 		$(NULL)
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),windows)
-XPIDLSRCS	+= nsIPrintSettingsWin.idl
-endif
-
-ifeq ($(MOZ_WIDGET_TOOLKIT),cocoa)
-XPIDLSRCS	+= nsIPrintSettingsX.idl \
-		nsIPrintSessionX.idl
+XPIDLSRCS	+= nsIPrintSettingsWin.idl \
+		nsIWinTaskbar.idl	\
+		nsITaskbarPreview.idl	\
+		nsITaskbarTabPreview.idl \
+		nsITaskbarWindowPreview.idl \
+		nsITaskbarPreviewController.idl \
+		nsITaskbarPreviewButton.idl \
+		nsITaskbarProgress.idl \
+		$(NULL)
 endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),os2)

@@ -41,7 +41,8 @@
 #define nsFilePicker_h__
 
 #include "nsISimpleEnumerator.h"
-#include "nsISupportsArray.h"
+#include "nsCOMArray.h"
+#include "nsTArray.h"
 
 #include "nsICharsetConverterManager.h"
 #include "nsBaseFilePicker.h"
@@ -92,12 +93,12 @@ protected:
   nsCString              mFile;
   nsString               mDefault;
   nsString               mDefaultExtension;
-  nsStringArray          mFilters;
-  nsStringArray          mTitles;
+  nsTArray<nsString>     mFilters;
+  nsTArray<nsString>     mTitles;
   nsIUnicodeEncoder*     mUnicodeEncoder;
   nsIUnicodeDecoder*     mUnicodeDecoder;
   PRInt16                mSelectedType;
-  nsCOMPtr <nsISupportsArray> mFiles;
+  nsCOMArray<nsILocalFile> mFiles;
   static char            mLastUsedDirectory[];
 };
 

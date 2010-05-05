@@ -130,6 +130,9 @@ nsresult nsLookAndFeel::NativeGetColor(const nsColorID aID, nscolor &aColor)
     case eColor_IMESelectedConvertedTextUnderline:
       aColor = NS_TRANSPARENT;
       break;
+    case eColor_SpellCheckerUnderline:
+      aColor = NS_RGB(0xff, 0, 0);
+      break;
 	// two following colors get initialisation in XPLookAndFeel.
 	//eColor_TextSelectBackgroundDisabled,
     //eColor_TextSelectBackgroundAttention,
@@ -220,6 +223,7 @@ nsresult nsLookAndFeel::NativeGetColor(const nsColorID aID, nscolor &aColor)
       }
       break;
     case eColor_menutext:
+    case eColor__moz_menubartext:
       {
         color = ui_color(B_MENU_ITEM_TEXT_COLOR);
         aColor = NS_RGB(color.red, color.green, color.blue);
@@ -255,10 +259,12 @@ nsresult nsLookAndFeel::NativeGetColor(const nsColorID aID, nscolor &aColor)
     case eColor__moz_eventreerow:
     case eColor__moz_oddtreerow:
     case eColor__moz_field: 
+    case eColor__moz_combobox:
       // normal widget background
       aColor = NS_RGB(0xff, 0xff, 0xff);
       break;  
     case eColor__moz_fieldtext:
+    case eColor__moz_comboboxtext:
       aColor = NS_RGB(0x00, 0x00, 0x00);
       break;  
     case eColor__moz_dialog:
@@ -381,9 +387,6 @@ NS_IMETHODIMP nsLookAndFeel::GetMetric(const nsMetricID aID, PRInt32 & aMetric)
     case eMetric_MenusCanOverlapOSBar: // can popups overlap menu/task bar?
       aMetric = 0;
       break;
-    case eMetric_DragFullWindow:
-      aMetric = 0;
-      break;
     case eMetric_ScrollArrowStyle:
       {
         aMetric = eMetric_ScrollArrowStyleBothAtEachEnd; // BeOS default
@@ -421,7 +424,15 @@ NS_IMETHODIMP nsLookAndFeel::GetMetric(const nsMetricID aID, PRInt32 & aMetric)
     case eMetric_TreeScrollLinesMax:
       aMetric = 3;
       break;
+    case eMetric_DWMCompositor:
+    case eMetric_WindowsClassic:
     case eMetric_WindowsDefaultTheme:
+    case eMetric_TouchEnabled:
+      aMetric = 0;
+      res = NS_ERROR_NOT_IMPLEMENTED;
+      break;
+    case eMetric_MacGraphiteTheme:
+    case eMetric_MaemoClassic:
       aMetric = 0;
       res = NS_ERROR_NOT_IMPLEMENTED;
       break;
@@ -432,6 +443,9 @@ NS_IMETHODIMP nsLookAndFeel::GetMetric(const nsMetricID aID, PRInt32 & aMetric)
     case eMetric_IMESelectedRawTextUnderlineStyle:
     case eMetric_IMESelectedConvertedTextUnderline:
       aMetric = NS_UNDERLINE_STYLE_NONE;
+      break;
+    case eMetric_SpellCheckerUnderlineStyle:
+      aMetric = NS_UNDERLINE_STYLE_WAVY;
       break;
     default:
         aMetric = 0;
@@ -473,6 +487,9 @@ NS_IMETHODIMP nsLookAndFeel::GetMetric(const nsMetricFloatID aID, float & aMetri
         aMetric = 0.25f;
         break;
     case eMetricFloat_IMEUnderlineRelativeSize:
+        aMetric = 1.0f;
+        break;
+    case eMetricFloat_SpellCheckerUnderlineRelativeSize:
         aMetric = 1.0f;
         break;
     default:

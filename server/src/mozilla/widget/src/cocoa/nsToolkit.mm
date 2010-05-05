@@ -74,7 +74,6 @@ static io_connect_t gRootPort = MACH_PORT_NULL;
 // object associated with a given thread...
 static PRUintn gToolkitTLSIndex = 0;
 
-
 nsToolkit::nsToolkit()
 : mInited(false)
 , mSleepWakeNotificationRLS(nsnull)
@@ -84,7 +83,6 @@ nsToolkit::nsToolkit()
 {
 }
 
-
 nsToolkit::~nsToolkit()
 {
   RemoveSleepWakeNotifcations();
@@ -93,9 +91,7 @@ nsToolkit::~nsToolkit()
   PR_SetThreadPrivate(gToolkitTLSIndex, nsnull);
 }
 
-
 NS_IMPL_THREADSAFE_ISUPPORTS1(nsToolkit, nsIToolkit);
-
 
 NS_IMETHODIMP
 nsToolkit::Init(PRThread * aThread)
@@ -110,12 +106,10 @@ nsToolkit::Init(PRThread * aThread)
   return NS_OK;
 }
 
-
 nsToolkit* NS_CreateToolkitInstance()
 {
   return new nsToolkit();
 }
-
 
 void
 nsToolkit::PostSleepWakeNotification(const char* aNotification)
@@ -124,7 +118,6 @@ nsToolkit::PostSleepWakeNotification(const char* aNotification)
   if (observerService)
     observerService->NotifyObservers(nsnull, aNotification, nsnull);
 }
-
 
 // http://developer.apple.com/documentation/DeviceDrivers/Conceptual/IOKitFundamentals/PowerMgmt/chapter_10_section_3.html
 static void ToolkitSleepWakeCallback(void *refCon, io_service_t service, natural_t messageType, void * messageArgument)
@@ -157,7 +150,6 @@ static void ToolkitSleepWakeCallback(void *refCon, io_service_t service, natural
   NS_OBJC_END_TRY_ABORT_BLOCK;
 }
 
-
 nsresult
 nsToolkit::RegisterForSleepWakeNotifcations()
 {
@@ -183,7 +175,6 @@ nsToolkit::RegisterForSleepWakeNotifcations()
   NS_OBJC_END_TRY_ABORT_BLOCK_NSRESULT;
 }
 
-
 void
 nsToolkit::RemoveSleepWakeNotifcations()
 {
@@ -200,7 +191,6 @@ nsToolkit::RemoveSleepWakeNotifcations()
 
   NS_OBJC_END_TRY_ABORT_BLOCK;
 }
-
 
 // We shouldn't do anything here.  See RegisterForAllProcessMouseEvents() for
 // the reason why.
@@ -220,7 +210,6 @@ static NSPoint ConvertCGGlobalToCocoaScreen(CGPoint aPoint)
   cocoaPoint.y = nsCocoaUtils::FlippedScreenY(aPoint.y);
   return cocoaPoint;
 }
-
 
 // Since our event tap is "listen only", events arrive here a little after
 // they've already been processed.
@@ -248,12 +237,11 @@ static CGEventRef EventTapCallback(CGEventTapProxy proxy, CGEventType type, CGEv
   // so would break the corresponding context menu).
   if (NSPointInRect(screenLocation, [ctxMenuWindow frame]))
     return event;
-  gRollupListener->Rollup(nsnull);
+  gRollupListener->Rollup(nsnull, nsnull);
   return event;
 
   NS_OBJC_END_TRY_ABORT_BLOCK_RETURN(NULL);
 }
-
 
 // Cocoa Firefox's use of custom context menus requires that we explicitly
 // handle mouse events from other processes that the OS handles
@@ -326,7 +314,6 @@ nsToolkit::RegisterForAllProcessMouseEvents()
   NS_OBJC_END_TRY_ABORT_BLOCK;
 }
 
-
 void
 nsToolkit::UnregisterAllProcessMouseEventHandlers()
 {
@@ -343,13 +330,16 @@ nsToolkit::UnregisterAllProcessMouseEventHandlers()
     mEventTapRLS = nsnull;
   }
   if (mEventTapPort) {
+    // mEventTapPort must be invalidated as well as released.  Otherwise the
+    // event tap doesn't get destroyed until the browser process ends (it
+    // keeps showing up in the list returned by CGGetEventTapList()).
+    CFMachPortInvalidate(mEventTapPort);
     CFRelease(mEventTapPort);
     mEventTapPort = nsnull;
   }
 
   NS_OBJC_END_TRY_ABORT_BLOCK;
 }
-
 
 // Return the nsIToolkit for the current thread.  If a toolkit does not
 // yet exist, then one will be created...
@@ -391,31 +381,29 @@ NS_IMETHODIMP NS_GetCurrentToolkit(nsIToolkit* *aResult)
   NS_OBJC_END_TRY_ABORT_BLOCK_NSRESULT;
 }
 
-
-long nsToolkit::OSXVersion()
+PRInt32 nsToolkit::OSXVersion()
 {
-  NS_OBJC_BEGIN_TRY_ABORT_BLOCK_RETURN;
-
-  static long gOSXVersion = 0x0;
+  static PRInt32 gOSXVersion = 0x0;
   if (gOSXVersion == 0x0) {
-    OSErr err = ::Gestalt(gestaltSystemVersion, &gOSXVersion);
+    OSErr err = ::Gestalt(gestaltSystemVersion, (SInt32*)&gOSXVersion);
     if (err != noErr) {
-      //This should probably be changed when our minimum version changes
+      // This should probably be changed when our minimum version changes
       NS_ERROR("Couldn't determine OS X version, assuming 10.4");
       gOSXVersion = MAC_OS_X_VERSION_10_4_HEX;
     }
   }
   return gOSXVersion;
-
-  NS_OBJC_END_TRY_ABORT_BLOCK_RETURN(0);
 }
-
 
 PRBool nsToolkit::OnLeopardOrLater()
 {
     return (OSXVersion() >= MAC_OS_X_VERSION_10_5_HEX) ? PR_TRUE : PR_FALSE;
 }
 
+PRBool nsToolkit::OnSnowLeopardOrLater()
+{
+    return (OSXVersion() >= MAC_OS_X_VERSION_10_6_HEX) ? PR_TRUE : PR_FALSE;
+}
 
 // An alternative to [NSObject poseAsClass:] that isn't deprecated on OS X
 // Leopard and is available to 64-bit binaries on Leopard and above.  Based on
@@ -454,9 +442,13 @@ nsresult nsToolkit::SwizzleMethods(Class aClass, SEL orgMethod, SEL posedMethod,
   if (!original || !posed)
     return NS_ERROR_FAILURE;
 
+#ifdef __LP64__
+  method_exchangeImplementations(original, posed);
+#else
   IMP aMethodImp = original->method_imp;
   original->method_imp = posed->method_imp;
   posed->method_imp = aMethodImp;
+#endif
 
   return NS_OK;
 

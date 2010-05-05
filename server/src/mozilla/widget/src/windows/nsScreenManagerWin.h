@@ -42,12 +42,21 @@
 
 #include <windows.h>
 #include "nsCOMPtr.h"
-#include "nsVoidArray.h"
+#include "nsTArray.h"
 
 class nsIScreen;
 
-
 //------------------------------------------------------------------------
+
+class ScreenListItem
+{
+public:
+  ScreenListItem ( HMONITOR inMon, nsIScreen* inScreen )
+    : mMon(inMon), mScreen(inScreen) { } ;
+  
+  HMONITOR mMon;
+  nsCOMPtr<nsIScreen> mScreen;
+};
 
 class nsScreenManagerWin : public nsIScreenManager
 {
@@ -65,7 +74,7 @@ private:
   PRUint32 mNumberOfScreens;
 
     // cache the screens to avoid the memory allocations
-  nsAutoVoidArray mScreenList;
+  nsAutoTArray<ScreenListItem, 8> mScreenList;
 
 };
 

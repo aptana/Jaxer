@@ -39,18 +39,54 @@
 #ifndef __MOZ_CONTAINER_H__
 #define __MOZ_CONTAINER_H__
 
-#include <gtk/gtkcontainer.h>
+#include <gtk/gtk.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
+/*
+ * MozContainer
+ *
+ * This class serves two purposes in the nsIWidget implementation.
+ *
+ *   - It provides objects to receive signals from GTK for events on native
+ *     windows.
+ *
+ *   - It provides a container parent for GtkWidgets.  The only GtkWidgets
+ *     that need this in Mozilla are the GtkSockets for windowed plugins (Xt
+ *     and XEmbed).
+ *
+ * Note that the window hierarchy in Mozilla differs from conventional
+ * GtkWidget hierarchies.
+ *
+ * Mozilla's hierarchy exists through the GdkWindow hierarchy, and all child
+ * GdkWindows (within a child nsIWidget hierarchy) belong to one MozContainer
+ * GtkWidget.  If the MozContainer is unrealized or its GdkWindows are
+ * destroyed for some other reason, then the hierarchy no longer exists.  (In
+ * conventional GTK clients, the hierarchy is recorded by the GtkWidgets, and
+ * so can be re-established after destruction of the GdkWindows.)
+ *
+ * One consequence of this is that the MozContainer does not know which of its
+ * GdkWindows should parent child GtkWidgets.  (Conventional GtkContainers
+ * determine which GdkWindow to assign child GtkWidgets.)
+ *
+ * Therefore, when adding a child GtkWidget to a MozContainer,
+ * gtk_widget_set_parent_window should be called on the child GtkWidget before
+ * it is realized.
+ */
+ 
 #define MOZ_CONTAINER_TYPE            (moz_container_get_type())
-#define MOZ_CONTAINER(obj)            (GTK_CHECK_CAST ((obj), MOZ_CONTAINER_TYPE, MozContainer))
-#define MOZ_CONTAINER_CLASS(klass)    (GTK_CHECK_CLASS_CAST ((klass), MOZ_CONTAINER_TYPE, MozContainerClass))
-#define IS_MOZ_CONTAINER(obj)         (GTK_CHECK_TYPE ((obj), MOZ_CONTAINER_TYPE))
-#define IS_MOZ_CONTAINER_CLASS(klass) (GTK_CHECK_CLASS_TYPE ((klass), MOZ_CONTAINER_TYPE))
-#define MOZ_CONAINTER_GET_CLASS(obj)  (GTK_CHECK_GET_CLASS ((obj), MOZ_CONTAINER_TYPE, MozContainerClass))
+#define MOZ_CONTAINER(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), MOZ_CONTAINER_TYPE, MozContainer))
+#define MOZ_CONTAINER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), MOZ_CONTAINER_TYPE, MozContainerClass))
+#define IS_MOZ_CONTAINER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), MOZ_CONTAINER_TYPE))
+#define IS_MOZ_CONTAINER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), MOZ_CONTAINER_TYPE))
+#define MOZ_CONAINTER_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), MOZ_CONTAINER_TYPE, MozContainerClass))
+
+#if (GTK_CHECK_VERSION(2, 12, 0) || \
+    (GTK_CHECK_VERSION(2, 10, 0) && defined(MOZ_PLATFORM_MAEMO)))
+#define HAVE_GTK_MOTION_HINTS
+#endif
 
 typedef struct _MozContainer      MozContainer;
 typedef struct _MozContainerClass MozContainerClass;
@@ -66,7 +102,7 @@ struct _MozContainerClass
     GtkContainerClass parent_class;
 };
 
-GtkType    moz_container_get_type (void);
+GType      moz_container_get_type (void);
 GtkWidget *moz_container_new      (void);
 void       moz_container_put      (MozContainer *container,
                                    GtkWidget    *child_widget,
@@ -78,10 +114,6 @@ void       moz_container_move          (MozContainer *container,
                                         gint          y,
                                         gint          width,
                                         gint          height);
-void       moz_container_scroll_update (MozContainer *container,
-                                        GtkWidget    *child_widget,
-                                        gint          x,
-                                        gint          y);
 
 #ifdef __cplusplus
 }

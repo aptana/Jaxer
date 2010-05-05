@@ -44,8 +44,9 @@
 #import <Cocoa/Cocoa.h>
 
 #include "nsRect.h"
-#include "nsIWidget.h"
 #include "nsObjCExceptions.h"
+
+class nsIWidget;
 
 // "Borrowed" in part from the QTKit framework's QTKitDefines.h.  This is
 // needed when building on OS X Tiger (10.4.X) or with a 10.4 SDK.  It won't
@@ -68,7 +69,6 @@ typedef unsigned int NSUInteger;
 
 #endif  /* NSINTEGER_DEFINED */
 
-
 // Used to retain a Cocoa object for the remainder of a method's execution.
 class nsAutoRetainCocoaObject {
 public:
@@ -84,7 +84,6 @@ private:
   id mObject;  // [STRONG]
 };
 
-
 @interface NSApplication (Undocumented)
 
 // Present in all versions of OS X from (at least) 10.2.8 through 10.5.
@@ -95,7 +94,12 @@ private:
 // cache" in order to deactivate it.  The "window cache" is an undocumented
 // subsystem, all of whose methods are included in the NSWindowCache category
 // of the NSApplication class (in header files generated using class-dump).
+// Present in all versions of OS X from (at least) 10.2.8 through 10.5.
 - (void)_removeWindowFromCache:(NSWindow *)aWindow;
+
+// Send an event to the current Cocoa app-modal session.  Present in all
+// versions of OS X from (at least) 10.2.8 through 10.5.
+- (void)_modalSession:(NSModalSession)aSession sendEvent:(NSEvent *)theEvent;
 
 @end
 
@@ -115,10 +119,10 @@ class nsCocoaUtils
   // (NSRect) contain an origin (x,y) in a coordinate system with (0,0)
   // in the bottom-left of the primary screen. Both nsRect and NSRect
   // contain width/height info, with no difference in their use.
-  static NSRect GeckoRectToCocoaRect(const nsRect &geckoRect);
+  static NSRect GeckoRectToCocoaRect(const nsIntRect &geckoRect);
   
   // See explanation for geckoRectToCocoaRect, guess what this does...
-  static nsRect CocoaRectToGeckoRect(const NSRect &cocoaRect);
+  static nsIntRect CocoaRectToGeckoRect(const NSRect &cocoaRect);
   
   // Gives the location for the event in screen coordinates. Do not call this
   // unless the window the event was originally targeted at is still alive!
@@ -127,7 +131,10 @@ class nsCocoaUtils
   // Determines if an event happened over a window, whether or not the event
   // is for the window. Does not take window z-order into account.
   static BOOL IsEventOverWindow(NSEvent* anEvent, NSWindow* aWindow);
-  
+
+  // Determines if the window should accept mouse events.
+  static BOOL WindowAcceptsEvent(NSWindow* aWindow, NSEvent* anEvent);
+
   // Events are set up so that their coordinates refer to the window to which they
   // were originally sent. If we reroute the event somewhere else, we'll have
   // to get the window coordinates this way. Do not call this unless the window
@@ -135,12 +142,21 @@ class nsCocoaUtils
   static NSPoint EventLocationForWindow(NSEvent* anEvent, NSWindow* aWindow);
   
   // Finds the foremost window that is under the mouse for the current application.
-  static NSWindow* FindWindowUnderPoint(NSPoint aPoint);
+  static NSWindow* FindWindowForEvent(NSEvent* anEvent, BOOL* isUnderMouse);
+
+  // Hides the Menu bar and the Dock. Multiple hide/show requests can be nested.
+  static void HideOSChromeOnScreen(PRBool aShouldHide, NSScreen* aScreen);
 
   static nsIWidget* GetHiddenWindowWidget();
 
   static void PrepareForNativeAppModalDialog();
   static void CleanUpAfterNativeAppModalDialog();
+
+  // Wrap calls to [theEvent keyCode] and [theEvent modifierFlags].  Needed to
+  // work around an Apple bug (on OS X 10.4.X) that causes ctrl-ESC key events
+  // sent via performKeyEquivalent: to return 0 on these calls.
+  static unsigned short GetCocoaEventKeyCode(NSEvent *theEvent);
+  static NSUInteger GetCocoaEventModifierFlags(NSEvent *theEvent);
 };
 
 #endif // nsCocoaUtils_h_

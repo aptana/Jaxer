@@ -39,14 +39,62 @@ DEPTH		= ../..
 topsrcdir	= @top_srcdir@
 srcdir		= @srcdir@
 VPATH		= @srcdir@
-relativesrcdir  = widget/test 
+relativesrcdir  = widget/tests
 
 include $(DEPTH)/config/autoconf.mk
+
+ifeq ($(MOZ_WIDGET_TOOLKIT),windows)
+ifneq ($(OS_ARCH), WINCE)
+CPP_UNIT_TESTS += TestWinTSF.cpp  \
+                  $(NULL)
+REQUIRES += appshell content docshell \
+            dom embed_base gfx layout locale \
+            necko string thebes uriloader view \
+            webbrwsr widget xpcom \
+            $(NULL)
+endif
+endif
+
 include $(topsrcdir)/config/rules.mk
 
 _TEST_FILES =	test_bug343416.xul \
+		test_bug429954.xul \
+		window_bug429954.xul \
+		test_bug444800.xul \
+		test_bug462106.xul \
+		test_bug478536.xul \
+		window_bug478536.xul \
+		test_bug517396.xul \
 		test_keycodes.xul \
+		test_wheeltransaction.xul \
+		window_wheeltransaction.xul \
+		test_imestate.html \
+		test_plugin_scroll_consistency.html \
 		$(NULL)
+
+ifeq ($(OS_ARCH),WINNT)
+_MOCHITEST_FILES += \
+ 		test_windowed_invalidate.html \
+        $(NULL)
+endif
+
+ifeq ($(MOZ_WIDGET_TOOLKIT),cocoa)
+_TEST_FILES += native_menus_window.xul \
+               test_native_menus.xul \
+               test_bug485118.xul \
+               test_bug428405.xul \
+               test_bug466599.xul \
+               $(NULL)
+endif
+
+ifeq ($(MOZ_WIDGET_TOOLKIT),windows)
+ifneq ($(OS_ARCH), WINCE)
+_TEST_FILES  += taskbar_previews.xul \
+		window_state_windows.xul \
+		taskbar_progress.xul \
+		$(NULL)
+endif
+endif
 
 libs:: $(_TEST_FILES)
 	$(INSTALL) $^ $(DEPTH)/_tests/testing/mochitest/chrome/$(relativesrcdir)

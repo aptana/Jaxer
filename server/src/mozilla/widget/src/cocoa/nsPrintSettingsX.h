@@ -1,6 +1,5 @@
-/* -*- Mode: IDL; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 2 -*-
- *
- * ***** BEGIN LICENSE BLOCK *****
+/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -40,23 +39,25 @@
 #define nsPrintSettingsX_h_
 
 #include "nsPrintSettingsImpl.h"  
-#include "nsIPrintSettingsX.h"  
+#import <Cocoa/Cocoa.h>
 
-//*****************************************************************************
-//***    nsPrintSettingsX
-//*****************************************************************************
-
-class nsPrintSettingsX : public nsPrintSettings,
-                         public nsIPrintSettingsX
+class nsPrintSettingsX : public nsPrintSettings
 {
 public:
   NS_DECL_ISUPPORTS_INHERITED
-  NS_DECL_NSIPRINTSETTINGSX
 
   nsPrintSettingsX();
   virtual ~nsPrintSettingsX();
-  
   nsresult Init();
+  NSPrintInfo* GetCocoaPrintInfo() { return mPrintInfo; }
+  void SetCocoaPrintInfo(NSPrintInfo* aPrintInfo);
+  virtual nsresult ReadPageFormatFromPrefs();
+  virtual nsresult WritePageFormatToPrefs();
+
+  PMPrintSettings GetPMPrintSettings();
+  PMPrintSession GetPMPrintSession();
+  PMPageFormat GetPMPageFormat();
+  void SetPMPageFormat(PMPageFormat aPageFormat);
 
 protected:
   nsPrintSettingsX(const nsPrintSettingsX& src);
@@ -64,19 +65,16 @@ protected:
 
   nsresult _Clone(nsIPrintSettings **_retval);
   nsresult _Assign(nsIPrintSettings *aPS);
-  
-  /**
-   * Re-initialize mUnwriteableMargin with values from mPageFormat.
-   * Should be called whenever mPageFormat is initialized or overwritten.
-   */
+
+  // Re-initialize mUnwriteableMargin with values from mPageFormat.
+  // Should be called whenever mPageFormat is initialized or overwritten.
   nsresult InitUnwriteableMargin();
 
   // The out param has a ref count of 1 on return so caller needs to PMRelase() when done.
   OSStatus CreateDefaultPageFormat(PMPrintSession aSession, PMPageFormat& outFormat);
   OSStatus CreateDefaultPrintSettings(PMPrintSession aSession, PMPrintSettings& outSettings);
 
-  PMPageFormat mPageFormat;
-  PMPrintSettings mPrintSettings;
+  NSPrintInfo* mPrintInfo;
 };
 
 #endif // nsPrintSettingsX_h_

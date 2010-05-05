@@ -22,6 +22,8 @@
  * Contributor(s):
  *   Mike Pinkerton <pinkerton@netscape.com>
  *   Gus Verdun <gustavoverdun@aol.com>
+ *   Kathleen Brade <brade@comcast.net>
+ *   Mark Smith <mcs@pearlcrescent.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -38,6 +40,7 @@
  * ***** END LICENSE BLOCK ***** */
  
  
+#include "nsITransferable.h"
 #include "nsImageClipboard.h"
 #include "nsGfxCIID.h"
 #include "nsMemory.h"
@@ -56,9 +59,9 @@ Any other render format? HTML?
 //
 // nsImageToClipboard ctor
 //
-// Given an nsIImage, convert it to a DIB that is ready to go on the win32 clipboard
+// Given an imgIContainer, convert it to a DIB that is ready to go on the win32 clipboard
 //
-nsImageToClipboard :: nsImageToClipboard ( nsIImage* inImage )
+nsImageToClipboard :: nsImageToClipboard ( imgIContainer* inImage )
   : mImage(inImage)
 {
   // nothing to do here
@@ -140,19 +143,21 @@ nsImageToClipboard::CalcSpanLength(PRUint32 aWidth, PRUint32 aBitCount)
 // image. 
 //
 nsresult
-nsImageToClipboard::CreateFromImage ( nsIImage* inImage, HANDLE* outBitmap )
+nsImageToClipboard::CreateFromImage ( imgIContainer* inImage, HANDLE* outBitmap )
 {
     nsresult result = NS_OK;
     *outBitmap = nsnull;
 
-    inImage->LockImagePixels(PR_FALSE);
+    nsRefPtr<gfxImageSurface> frame;
+    nsresult rv = inImage->CopyCurrentFrame(getter_AddRefs(frame));
+    if (NS_FAILED(rv))
+      return rv;
 
-    const PRUint32 imageSize = inImage->GetLineStride() * inImage->GetHeight();
+    const PRUint32 imageSize = frame->GetDataSize();
     const PRInt32 bitmapSize = sizeof(BITMAPINFOHEADER) + imageSize;
 
     HGLOBAL glob = ::GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE | GMEM_ZEROINIT, bitmapSize);
     if (!glob) {
-        inImage->UnlockImagePixels(PR_FALSE);
         return NS_ERROR_OUT_OF_MEMORY;
     }
 
@@ -161,18 +166,21 @@ nsImageToClipboard::CreateFromImage ( nsIImage* inImage, HANDLE* outBitmap )
 
     BITMAPINFOHEADER *header = (BITMAPINFOHEADER*)data;
     header->biSize          = sizeof(BITMAPINFOHEADER);
-    header->biWidth         = inImage->GetWidth();
-    header->biHeight        = inImage->GetHeight();
+    header->biWidth         = frame->Width();
+    header->biHeight        = frame->Height();
 
     header->biPlanes        = 1;
-    header->biBitCount      = inImage->GetBytesPix() * 8;
+    if (frame->Format() == gfxASurface::ImageFormatARGB32)
+        header->biBitCount  = 32;
+    else if (frame->Format() == gfxASurface::ImageFormatRGB24)
+        header->biBitCount  = 24;
     header->biCompression   = BI_RGB;
     header->biSizeImage     = imageSize;
 
-    const PRUint32 bpr = inImage->GetLineStride();
+    const PRUint32 bpr = frame->Stride();
 
     BYTE *dstBits = (BYTE*)data + sizeof(BITMAPINFOHEADER);
-    BYTE *srcBits = inImage->GetBits();
+    BYTE *srcBits = frame->Data();
     for (PRInt32 i = 0; i < header->biHeight; ++i) {
         PRUint32 srcOffset = imageSize - (bpr * (i + 1));
         PRUint32 dstOffset = i * bpr;
@@ -183,11 +191,7 @@ nsImageToClipboard::CreateFromImage ( nsIImage* inImage, HANDLE* outBitmap )
 
     *outBitmap = (HANDLE)glob;
 
-    inImage->UnlockImagePixels(PR_FALSE);
     return NS_OK;
-
-    // Wow the old code is broken.  I'm not touching it.
-    // It should probably lock/unlock the same object....
 }
 
 nsImageFromClipboard :: nsImageFromClipboard ()
@@ -202,12 +206,13 @@ nsImageFromClipboard :: ~nsImageFromClipboard ( )
 //
 // GetEncodedImageStream
 //
-// Take the raw clipboard image data and convert it to a JPG in the form of a nsIInputStream
+// Take the raw clipboard image data and convert it to aMIMEFormat in the form of a nsIInputStream
 //
 nsresult 
-nsImageFromClipboard ::GetEncodedImageStream (unsigned char * aClipboardData, nsIInputStream** aInputStream )
+nsImageFromClipboard ::GetEncodedImageStream (unsigned char * aClipboardData, const char * aMIMEFormat, nsIInputStream** aInputStream )
 {
   NS_ENSURE_ARG_POINTER (aInputStream);
+  NS_ENSURE_ARG_POINTER (aMIMEFormat);
   nsresult rv;
   *aInputStream = nsnull;
 
@@ -225,9 +230,16 @@ nsImageFromClipboard ::GetEncodedImageStream (unsigned char * aClipboardData, ns
     BYTE  * pGlobal = (BYTE *) aClipboardData;
     // Convert the clipboard image into RGB packed pixel data
     rv = ConvertColorBitMap((unsigned char *) (pGlobal + header->bmiHeader.biSize), header, rgbData);
-    // if that succeeded, encode the bitmap as a JPG. Don't return early or we risk leaking rgbData
+    // if that succeeded, encode the bitmap as aMIMEFormat data. Don't return early or we risk leaking rgbData
     if (NS_SUCCEEDED(rv)) {
-      nsCOMPtr<imgIEncoder> encoder = do_CreateInstance("@mozilla.org/image/encoder;2?type=image/jpeg", &rv);
+      nsCAutoString encoderCID(NS_LITERAL_CSTRING("@mozilla.org/image/encoder;2?type="));
+
+      // Map image/jpg to image/jpeg (which is how the encoder is registered).
+      if (strcmp(aMIMEFormat, kJPEGImageMime) == 0)
+        encoderCID.Append("image/jpeg");
+      else
+        encoderCID.Append(aMIMEFormat);
+      nsCOMPtr<imgIEncoder> encoder = do_CreateInstance(encoderCID.get(), &rv);
       if (NS_SUCCEEDED(rv)){
         rv = encoder->InitFromData(rgbData, 0, width, height, 3 * width /* RGB * # pixels in a row */, 
                                    imgIEncoder::INPUT_FORMAT_RGB, EmptyString());

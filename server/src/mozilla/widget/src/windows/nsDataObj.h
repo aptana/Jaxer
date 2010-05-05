@@ -38,19 +38,20 @@
 #ifndef _NSDATAOBJ_H_
 #define _NSDATAOBJ_H_
 
+#ifdef __MINGW32__
 #include <unknwn.h>
 #include <basetyps.h>
 #include <objidl.h>
-// The above are required for __MINGW32__
+#endif
 #include <oleidl.h>
 
-//#include "Ddforw.h"
+#include "nsCOMPtr.h"
 #include "nsString.h"
 #include "nsILocalFile.h"
 #include "nsIURI.h"
 #include "nsIInputStream.h"
 #include "nsIChannel.h"
-#include "nsTArray.h"
+#include "nsTPtrArray.h"
 
 // XXX for older version of PSDK where IAsyncOperation and related stuff is not available
 // but thisdefine  should be removed when parocles config is updated
@@ -82,10 +83,10 @@ IAsyncOperation : public IUnknown
  * See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/shellcc/platform/shell/programmersguide/shell_basics/shell_basics_programming/transferring/clipboard.asp
  */
 #ifndef CFSTR_INETURLA
-#define CFSTR_INETURLA    "UniformResourceLocator"
+#define CFSTR_INETURLA    L"UniformResourceLocator"
 #endif
 #ifndef CFSTR_INETURLW
-#define CFSTR_INETURLW    "UniformResourceLocatorW"
+#define CFSTR_INETURLW    L"UniformResourceLocatorW"
 #endif
 
 // For support of MinGW w32api v2.4. 
@@ -93,10 +94,10 @@ IAsyncOperation : public IUnknown
 // http://sources.redhat.com/cgi-bin/cvsweb.cgi/src/winsup/w32api/include/shlobj.h?cvsroot=src
 // then that can be made the base required version and this code should be removed.
 #ifndef CFSTR_FILEDESCRIPTORA
-# define CFSTR_FILEDESCRIPTORA   "FileGroupDescriptor"
+# define CFSTR_FILEDESCRIPTORA   L"FileGroupDescriptor"
 #endif
 #ifndef CFSTR_FILEDESCRIPTORW
-# define CFSTR_FILEDESCRIPTORW   "FileGroupDescriptorW"
+# define CFSTR_FILEDESCRIPTORW   L"FileGroupDescriptorW"
 #endif
 
 #ifdef __MINGW32__
@@ -128,7 +129,6 @@ typedef struct _FILEGROUPDESCRIPTORW {
 # endif /*__W32API_MAJOR_VERSION*/
 #endif /*__MINGW32__*/
 
-class nsVoidArray;
 class CEnumFormatEtc;
 class nsITransferable;
 
@@ -212,13 +212,6 @@ class nsDataObj : public IDataObject,
 
 	public: // other methods
 
-		// Return the total reference counts of all instances of this class.
-		static ULONG GetCumRefCount();
-
-		// Return the reference count (which helps determine if another app has
-		// released the interface pointer after a drop).
-		ULONG GetRefCount() const;
-
     // Gets the filename from the kFilePromiseURLMime flavour
     nsresult GetDownloadDetails(nsIURI **aSourceURI,
                                 nsAString &aFilename);
@@ -230,8 +223,8 @@ class nsDataObj : public IDataObject,
 		virtual HRESULT AddSetFormat(FORMATETC&  FE);
 		virtual HRESULT AddGetFormat(FORMATETC&  FE);
 
+		virtual HRESULT GetFile ( FORMATETC& aFE, STGMEDIUM& aSTG );
 		virtual HRESULT GetText ( const nsACString& aDF, FORMATETC& aFE, STGMEDIUM & aSTG );
-		virtual HRESULT GetBitmap ( const nsACString& inFlavor, FORMATETC&  FE, STGMEDIUM&  STM);
 		virtual HRESULT GetDib ( const nsACString& inFlavor, FORMATETC &, STGMEDIUM & aSTG );
 		virtual HRESULT GetMetafilePict(FORMATETC&  FE, STGMEDIUM&  STM);
 
@@ -241,11 +234,11 @@ class nsDataObj : public IDataObject,
     virtual HRESULT GetFileDescriptor ( FORMATETC& aFE, STGMEDIUM& aSTG, PRBool aIsUnicode ) ;
     virtual HRESULT GetFileContents ( FORMATETC& aFE, STGMEDIUM& aSTG ) ;
     virtual HRESULT GetPreferredDropEffect ( FORMATETC& aFE, STGMEDIUM& aSTG );
-   
-		virtual HRESULT SetBitmap(FORMATETC&  FE, STGMEDIUM&  STM);
-		virtual HRESULT SetDib   (FORMATETC&  FE, STGMEDIUM&  STM);
-		virtual HRESULT SetText  (FORMATETC&  FE, STGMEDIUM&  STM);
-		virtual HRESULT SetMetafilePict(FORMATETC&  FE, STGMEDIUM&  STM);
+
+    virtual HRESULT SetBitmap(FORMATETC&  FE, STGMEDIUM&  STM);
+    virtual HRESULT SetDib   (FORMATETC&  FE, STGMEDIUM&  STM);
+    virtual HRESULT SetText  (FORMATETC&  FE, STGMEDIUM&  STM);
+    virtual HRESULT SetMetafilePict(FORMATETC&  FE, STGMEDIUM&  STM);
 
       // Provide the structures needed for an internet shortcut by the shell
     virtual HRESULT GetFileDescriptorInternetShortcutA ( FORMATETC& aFE, STGMEDIUM& aSTG ) ;
@@ -259,21 +252,18 @@ class nsDataObj : public IDataObject,
 
     nsresult ExtractShortcutURL ( nsString & outURL ) ;
     nsresult ExtractShortcutTitle ( nsString & outTitle ) ;
-    
+
       // munge our HTML data to win32's CF_HTML spec. Will null terminate
     nsresult BuildPlatformHTML ( const char* inOurHTML, char** outPlatformHTML ) ;
 
     // Used for the SourceURL part of CF_HTML
     nsCString mSourceURL;
 
-    nsString mStringData;
-
     BOOL FormatsMatch(const FORMATETC& source, const FORMATETC& target) const;
 
-   	static ULONG g_cRef;              // the cum reference count of all instances
 		ULONG        m_cRef;              // the reference count
 
-    nsVoidArray * mDataFlavors;       // we own and its contents
+    nsTArray<nsCString> mDataFlavors;
 
     nsITransferable  * mTransferable; // nsDataObj owns and ref counts nsITransferable, 
                                       // the nsITransferable does know anything about the nsDataObj
@@ -281,7 +271,7 @@ class nsDataObj : public IDataObject,
     CEnumFormatEtc   * m_enumFE;      // Ownership Rules: 
                                       // nsDataObj owns and ref counts CEnumFormatEtc,
 
-    nsCOMPtr<nsILocalFile> mCachedTempFile;
+    nsCOMPtr<nsIFile> mCachedTempFile;
 
     BOOL mIsAsyncMode;
     BOOL mIsInOperation;
@@ -326,7 +316,7 @@ class nsDataObj : public IDataObject,
 
   private:
 
-    // Drag and drop helper data for implementing drag and drop image support 
+    // Drag and drop helper data for implementing drag and drop image support.
     typedef struct {
       FORMATETC   fe;
       STGMEDIUM   stgm;
@@ -334,12 +324,8 @@ class nsDataObj : public IDataObject,
 
     nsTArray <LPDATAENTRY> mDataEntryList;
 
-    HRESULT FindFORMATETC(FORMATETC *pfe, LPDATAENTRY *ppde, BOOL fAdd);
-    HRESULT AddRefStgMedium(STGMEDIUM *pstgmIn, STGMEDIUM *pstgmOut,
-                            BOOL fCopyIn);
-    IUnknown* GetCanonicalIUnknown(IUnknown *punk);
-    HGLOBAL GlobalClone(HGLOBAL hglobIn);
-
+    PRBool LookupArbitraryFormat(FORMATETC *aFormat, LPDATAENTRY *aDataEntry, BOOL aAddorUpdate);
+    PRBool CopyMediumData(STGMEDIUM *aMediumDst, STGMEDIUM *aMediumSrc, LPFORMATETC aFormat, BOOL aSetData);
 };
 
 

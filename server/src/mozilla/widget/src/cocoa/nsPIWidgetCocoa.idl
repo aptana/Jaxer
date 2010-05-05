@@ -39,7 +39,7 @@
 
 #include "nsISupports.idl"
 
-interface nsIMenuBar;
+interface nsMenuBarX;
 interface nsCocoaWindow;
 interface nsIWidget;
 
@@ -51,13 +51,10 @@ interface nsIWidget;
 // A private interface (unfrozen, private to the widget implementation) that
 // gives us access to some extra features on a widget/window.
 //
-[uuid(F08E9D06-6705-4749-BE81-CEF931246E06)]
+[uuid(f75ff69e-3a51-419e-bd29-042f804bc2ed)]
 interface nsPIWidgetCocoa : nsISupports
 {
   void SendSetZLevelEvent();
-
-  // Obtain the menubar for a window
-  nsIMenuBar GetMenuBar();
 
   // Find the displayed child sheet (if aShown) or a child sheet that
   // wants to be displayed (if !aShown)
@@ -74,4 +71,3 @@ interface nsPIWidgetCocoa : nsISupports
   readonly attribute boolean isSheet;
   
 }; // nsPIWidgetCocoa
-

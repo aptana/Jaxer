@@ -48,16 +48,11 @@
 
 #include "nsIServiceManager.h"
 #include "nsIPrintOptions.h"
-#include "nsIPrintSettingsX.h"
+#include "nsPrintSettingsX.h"
 
 #include "gfxQuartzSurface.h"
 #include "gfxImageSurface.h"
 
-
-/** -------------------------------------------------------
- *  Construct the nsDeviceContextSpecX
- *  @update   dc 12/02/98
- */
 nsDeviceContextSpecX::nsDeviceContextSpecX()
 : mPrintSession(NULL)
 , mPageFormat(kPMNoPageFormat)
@@ -65,10 +60,6 @@ nsDeviceContextSpecX::nsDeviceContextSpecX()
 {
 }
 
-/** -------------------------------------------------------
- *  Destroy the nsDeviceContextSpecX
- *  @update   dc 12/02/98
- */
 nsDeviceContextSpecX::~nsDeviceContextSpecX()
 {
   NS_OBJC_BEGIN_TRY_ABORT_BLOCK;
@@ -81,34 +72,20 @@ nsDeviceContextSpecX::~nsDeviceContextSpecX()
 
 NS_IMPL_ISUPPORTS1(nsDeviceContextSpecX, nsIDeviceContextSpec)
 
-/** -------------------------------------------------------
- *  Initialize the nsDeviceContextSpecMac
- *  @update   dc 12/02/98
- */
 NS_IMETHODIMP nsDeviceContextSpecX::Init(nsIWidget *aWidget,
                                          nsIPrintSettings* aPS,
                                          PRBool aIsPrintPreview)
 {
   NS_OBJC_BEGIN_TRY_ABORT_BLOCK_NSRESULT;
 
-  nsresult rv;
-
-  nsCOMPtr<nsIPrintSettingsX> printSettingsX(do_QueryInterface(aPS));
-  if (!printSettingsX)
+  nsCOMPtr<nsPrintSettingsX> settings(do_QueryInterface(aPS));
+  if (!settings)
     return NS_ERROR_NO_INTERFACE;
 
-  rv = printSettingsX->GetNativePrintSession(&mPrintSession);
-  if (NS_FAILED(rv))
-    return rv;  
+  mPrintSession = settings->GetPMPrintSession();
   ::PMRetain(mPrintSession);
-
-  rv = printSettingsX->GetPMPageFormat(&mPageFormat);
-  if (NS_FAILED(rv))
-    return rv;
-
-  rv = printSettingsX->GetPMPrintSettings(&mPrintSettings);
-  if (NS_FAILED(rv))
-    return rv;
+  mPageFormat = settings->GetPMPageFormat();
+  mPrintSettings = settings->GetPMPrintSettings();
 
   return NS_OK;
 
@@ -154,13 +131,6 @@ NS_IMETHODIMP nsDeviceContextSpecX::EndDocument()
 
     NS_OBJC_END_TRY_ABORT_BLOCK_NSRESULT;
 }
-
-/*
-NS_IMETHODIMP nsDeviceContextSpecX::AbortDocument()
-{
-    return EndDocument();
-}
-*/
 
 NS_IMETHODIMP nsDeviceContextSpecX::BeginPage()
 {

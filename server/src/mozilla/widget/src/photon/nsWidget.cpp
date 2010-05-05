@@ -120,8 +120,6 @@ nsWidget::nsWidget()
 
   mWidget = nsnull;
   mParent = nsnull;
-  mPreferredWidth  = 0;
-  mPreferredHeight = 0;
   mShown = PR_FALSE;
   mBounds.x = 0;
   mBounds.y = 0;
@@ -152,7 +150,7 @@ nsWidget::~nsWidget( ) {
 // nsISupport stuff
 //
 //-------------------------------------------------------------------------
-NS_IMPL_ISUPPORTS_INHERITED1(nsWidget, nsBaseWidget, nsIKBStateControl)
+NS_IMPL_ISUPPORTS_INHERITED0(nsWidget, nsBaseWidget)
 
 NS_METHOD nsWidget::WidgetToScreen( const nsRect& aOldRect, nsRect& aNewRect ) {
   if( mWidget ) {
@@ -219,41 +217,6 @@ void nsWidget::OnDestroy( ) {
   // release references to children, device context, toolkit + app shell
   nsBaseWidget::OnDestroy();
   DispatchStandardEvent(NS_DESTROY);
-	}
-
-//////////////////////////////////////////////////////////////////////
-//
-// nsIKBStateControl Mehthods
-//
-//////////////////////////////////////////////////////////////////////
-
-NS_IMETHODIMP nsWidget::ResetInputState( ) {
-  return NS_OK;
-	}
-
-NS_IMETHODIMP nsWidget::SetIMEOpenState(PRBool aState) {
-  return NS_ERROR_NOT_IMPLEMENTED;
-	}
-
-NS_IMETHODIMP nsWidget::GetIMEOpenState(PRBool* aState) {
-  return NS_ERROR_NOT_IMPLEMENTED;
-	}
-
-NS_IMETHODIMP nsWidget::SetIMEEnabled(PRUint32 aState) {
-  return NS_ERROR_NOT_IMPLEMENTED;
-	}
-
-NS_IMETHODIMP nsWidget::GetIMEEnabled(PRUint32* aState) {
-  return NS_ERROR_NOT_IMPLEMENTED;
-	}
-
-NS_IMETHODIMP nsWidget::CancelIMEComposition() {
-  return NS_ERROR_NOT_IMPLEMENTED;
-	}
-
-NS_IMETHODIMP nsWidget::GetToggledKeyState(PRUint32 aKeyCode,
-                                           PRBool* aLEDState) {
-  return NS_ERROR_NOT_IMPLEMENTED;
 	}
 
 //-------------------------------------------------------------------------
@@ -639,13 +602,13 @@ NS_IMETHODIMP nsWidget::InvalidateRegion( const nsIRegion *aRegion, PRBool aIsSy
 	}
 
 nsresult nsWidget::CreateWidget(nsIWidget *aParent,
+                                nsNativeWidget aNativeParent,
                                 const nsRect &aRect,
                                 EVENT_CALLBACK aHandleEventFunction,
                                 nsIDeviceContext *aContext,
                                 nsIAppShell *aAppShell,
                                 nsIToolkit *aToolkit,
-                                nsWidgetInitData *aInitData,
-                                nsNativeWidget aNativeParent)
+                                nsWidgetInitData *aInitData)
 {
 
   PtWidget_t *parentWidget = nsnull;
@@ -756,39 +719,15 @@ void nsWidget::InitMouseEvent(PhPointerEvent_t *aPhButtonEvent,
 PRBool nsWidget::DispatchMouseEvent( nsMouseEvent& aEvent ) {
 
   PRBool result = PR_FALSE;
-  if (nsnull == mEventCallback && nsnull == mMouseListener) return result;
 
   // call the event callback
   if (nsnull != mEventCallback) {
     result = DispatchWindowEvent(&aEvent);
     return result;
-  	}
+  }
 
-  if (nsnull != mMouseListener) {
-
-    switch (aEvent.message) {
-      case NS_MOUSE_BUTTON_DOWN:
-        result = ConvertStatus(mMouseListener->MousePressed(aEvent));
-        break;
-
-      case NS_MOUSE_BUTTON_UP:
-        result = ConvertStatus(mMouseListener->MouseReleased(aEvent));
-        result = ConvertStatus(mMouseListener->MouseClicked(aEvent));
-        break;
-
-    	case NS_DRAGDROP_DROP:
-    	  break;
-
-			case NS_MOUSE_MOVE:
-    	  	break;
-
-    	default:
-    	  break;
-
-    	} // switch
-  	}
   return result;
-	}
+}
 
 struct nsKeyConverter {
   PRUint32       vkCode; // Platform independent key code
@@ -1217,15 +1156,11 @@ int nsWidget::GotFocusCallback( PtWidget_t *widget, void *data, PtCallbackInfo_t
 			}
 		}
 
-	pWidget->DispatchStandardEvent(NS_GOTFOCUS);
-
   return Pt_CONTINUE;
 }
 
 int nsWidget::LostFocusCallback( PtWidget_t *widget, void *data, PtCallbackInfo_t *cbinfo ) 
 {
-  nsWidget *pWidget = (nsWidget *) data;
- 	pWidget->DispatchStandardEvent(NS_LOSTFOCUS);
   return Pt_CONTINUE;
 }
 
@@ -1277,7 +1212,7 @@ void nsWidget::ProcessDrag( PhEvent_t *event, PRUint32 aEventType, PhPoint_t *po
 
 void nsWidget::DispatchDragDropEvent( PhEvent_t *phevent, PRUint32 aEventType, PhPoint_t *pos ) {
   nsEventStatus status;
-  nsMouseEvent event(PR_TRUE, 0, nsnull, nsMouseEvent::eReal);
+  nsDragEvent event(PR_TRUE, 0, nsnull);
 
   InitEvent( event, aEventType );
 

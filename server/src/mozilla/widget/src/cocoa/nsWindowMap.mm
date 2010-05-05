@@ -95,6 +95,20 @@
   NS_OBJC_END_TRY_ABORT_BLOCK;
 }
 
+- (void)ensureDataForWindow:(NSWindow*)inWindow
+{
+  NS_OBJC_BEGIN_TRY_ABORT_BLOCK;
+
+  if (!inWindow || [self dataForWindow:inWindow])
+    return;
+
+  TopLevelWindowData* windowData = [[TopLevelWindowData alloc] initWithWindow:inWindow];
+  [self setData:windowData forWindow:inWindow]; // takes ownership
+  [windowData release];
+
+  NS_OBJC_END_TRY_ABORT_BLOCK;
+}
+
 - (id)dataForWindow:(NSWindow*)inWindow
 {
   NS_OBJC_BEGIN_TRY_ABORT_BLOCK_NIL;
@@ -132,7 +146,6 @@
 }
 
 @end
-
 
 //  TopLevelWindowData
 // 
@@ -193,23 +206,6 @@
 // only child widgets (nsChildView objects)).  (The notification is sent
 // to windowBecameKey: or windowBecameMain: below.)
 //
-// If we're using top-level widgets, we need to send them both kinds of
-// focus event (NS_GOTFOCUS and NS_ACTIVATE, which by convention are sent in
-// that order) -- otherwise text input can (under unusual circumstances) stop
-// working in the currently focused child widget (see bmo bug 354768).
-//
-// When we send focus events to a top-level widget, they get propagated
-// (via nsWebShellWindow::HandleEvent(), indirectly) to a child widget (an
-// nsChildView object) -- so in principle we shouldn't have to send them to
-// child widgets here.  But I've found that, unless I also send at least an
-// NS_GOTFOCUS event directly to the currently focused child widget, it's
-// easy to get blinking I-bar cursors in multiple text input fields
-// (particularly if one of them is the Google search box).  On other platforms
-// (e.g. Windows and GTK2), NS_ACTIVATE events are only sent (directly) to
-// top-level widgets -- so we do the same here.  Not sending them directly
-// to child widgets also avoids "win is null" assertions on debug builds
-// (see bug 354768 comments 55 and 58).
-//
 // For use with clients that (like Firefox) do use top-level widgets (and
 // have NSWindow delegates of class WindowDelegate).
 + (void)activateInWindow:(NSWindow*)aWindow
@@ -224,16 +220,6 @@
     return;
   [delegate sendToplevelActivateEvents];
 
-  id firstResponder = [aWindow firstResponder];
-  if ([firstResponder isKindOfClass:[ChildView class]]) {
-    BOOL isMozWindow = [aWindow respondsToSelector:@selector(setSuppressMakeKeyFront:)];
-    if (isMozWindow)
-      [aWindow setSuppressMakeKeyFront:YES];
-    [firstResponder sendFocusEvent:NS_GOTFOCUS];
-    if (isMozWindow)
-      [aWindow setSuppressMakeKeyFront:NO];
-  }
-
   NS_OBJC_END_TRY_ABORT_BLOCK;
 }
 
@@ -241,19 +227,7 @@
 //
 // If we're using top-level widgets (nsCocoaWindow objects), we send them
 // NS_DEACTIVATE events (which propagate to child widgets (nsChildView
-// objects) via nsWebShellWindow::HandleEvent()).  Sending NS_LOSTFOCUS
-// events to top-level widgets currently has no effect (nsWebShellWindow::
-// HandleEvent(), which processes focus events sent to top-level widgets,
-// doesn't have a section for NS_LOSTFOCUS).  But on general principles we
-// send them anyway.
-//
-// On other platforms (e.g. Windows and GTK2), NS_DEACTIVATE events are only
-// sent (directly) to top-level widgets.  And (as noted above) these events
-// propagate to child widgets when they're sent to top-level widgets.  But if
-// we don't send them again, blinking I-bar cursors can appear in multiple
-// text input fields.  Since we also need to send NS_LOSTFOCUS events and
-// call nsTSMManager::CommitIME(), we just always call through to ChildView
-// viewsWindowDidResignKey (whether or not we're using top-level widgets).
+// objects) via nsWebShellWindow::HandleEvent()).
 //
 // For use with clients that (like Firefox) do use top-level widgets (and
 // have NSWindow delegates of class WindowDelegate).
@@ -304,9 +278,9 @@
 
 // We make certain exceptions for top-level windows in non-embedders (see
 // comment above windowBecameMain below).  And we need (elsewhere) to guard
-// against sending duplicate events.  But in general NS_ACTIVATE and
-// NS_GOTFOCUS events should be sent when a native window becomes key, and
-// NS_LOSTFOCUS and NS_DEACTIVATE events should be sent when it resignes key.
+// against sending duplicate events.  But in general the NS_ACTIVATE event
+// should be sent when a native window becomes key, and the NS_DEACTIVATE
+// event should be sent when it resignes key.
 - (void)windowBecameKey:(NSNotification*)inNotification
 {
   NSWindow* window = (NSWindow*)[inNotification object];
@@ -317,6 +291,8 @@
   } else if ([window isSheet]) {
     [TopLevelWindowData activateInWindow:window];
   }
+
+  [[window contentView] setNeedsDisplay:YES];
 }
 
 - (void)windowResignedKey:(NSNotification*)inNotification
@@ -329,6 +305,8 @@
   } else if ([window isSheet]) {
     [TopLevelWindowData deactivateInWindow:window];
   }
+
+  [[window contentView] setNeedsDisplay:YES];
 }
 
 // The appearance of a top-level window depends on its main state (not its key

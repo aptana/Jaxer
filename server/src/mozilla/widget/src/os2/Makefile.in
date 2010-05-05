@@ -51,8 +51,6 @@ MODULE_NAME	= nsWidgetOS2Module
 GRE_MODULE	= 1
 LIBXUL_LIBRARY = 1
 
-PACKAGE_FILE = widget_os2.pkg
-
 REQUIRES	= gfx \
 		  xpcom \
 		  string \
@@ -109,7 +107,7 @@ EXTRA_DSO_LDOPTS = \
 		$(MOZ_UNICHARUTIL_LIBS) \
 		$(MOZ_COMPONENT_LIBS) \
 		-lthebes \
-		$(LCMS_LIBS) \
+		$(QCMS_LIBS) \
 		$(NULL)
 
 ifdef ENABLE_TESTS
@@ -117,6 +115,8 @@ HAS_EXTRAEXPORTS = 1
 endif
 
 include $(topsrcdir)/config/rules.mk
+
+CXXFLAGS += $(MOZ_CAIRO_CFLAGS)
 
 DEFINES		+= -D_IMPL_NS_WIDGET
 
@@ -126,10 +126,16 @@ DEFINES += -DMOZ_APP_DISPLAYNAME=\"$(MOZ_APP_DISPLAYNAME)\"
 
 LOCAL_INCLUDES	= -I. -I$(srcdir)/../xpwidgets -I$(srcdir)
 
+install-readme:	README.$(MOZ_APP_NAME)
+ifneq (,$(filter-out xulrunner sunbird,$(MOZ_APP_NAME)))
+	cp -f $^ $(DIST)/bin/README.txt
+endif
+
+libs::	install-readme
+	$(INSTALL) $(srcdir)/MozSounds.cmd $(DIST)/bin/
+
 export::
 	test -d ./res || mkdir ./res
 	test -f ./res/aliasb.ptr || cp $(srcdir)/res/*.* ./res
-
-ADD_TO_DEF_FILE = cat < $(srcdir)/extradefs.os2 >>$(DEF_FILE)
 
 

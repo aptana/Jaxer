@@ -20,6 +20,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
+ *   Thomas K. Dyas <tdyas@zecador.org>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -53,15 +54,11 @@
 #include "nsIScrollableView.h"
 #include "nsWeakPtr.h"
 
-#include "nsIWidget.h"
-#include "nsIKBStateControl.h"
 #include "nsIAppShell.h"
 
-#include "nsIMouseListener.h"
 #include "nsIEventListener.h"
 #include "nsString.h"
 #include "nsIDragService.h"
-#include "nsIMenuBar.h"
 
 #include "nsplugindefs.h"
 
@@ -71,6 +68,52 @@
 class gfxASurface;
 class nsChildView;
 union nsPluginPort;
+
+enum {
+  // Currently focused ChildView (while this TSM document is active).
+  // Transient (only set while TSMProcessRawKeyEvent() is processing a key
+  // event), and the ChildView will be retained and released around the call
+  // to TSMProcessRawKeyEvent() -- so it can be weak.
+  kFocusedChildViewTSMDocPropertyTag  = 'GKFV', // type ChildView* [WEAK]
+};
+
+// Undocumented HIToolbox function used by WebKit to allow Carbon-based IME
+// to work in a Cocoa-based browser (like Safari or Cocoa-widgets Firefox).
+// (Recent WebKit versions actually use a thin wrapper around this function
+// called WKSendKeyEventToTSM().)
+//
+// Calling TSMProcessRawKeyEvent() from ChildView's keyDown: and keyUp:
+// methods (when the ChildView is a plugin view) bypasses Cocoa's IME
+// infrastructure and (instead) causes Carbon TSM events to be sent on each
+// NSKeyDown event.  We install a Carbon event handler
+// (PluginKeyEventsHandler()) to catch these events and pass them to Gecko
+// (which in turn passes them to the plugin).
+extern "C" long TSMProcessRawKeyEvent(EventRef carbonEvent);
+
+@interface NSEvent (Undocumented)
+
+// Return Cocoa event's corresponding Carbon event.  Not initialized (on
+// synthetic events) until the OS actually "sends" the event.  This method
+// has been present in the same form since at least OS X 10.2.8.
+- (EventRef)_eventRef;
+
+@end
+
+// Needed to support pixel scrolling.
+// See http://developer.apple.com/qa/qa2005/qa1453.html.
+// kEventMouseScroll is only defined on 10.5+. Using the moz prefix avoids
+// potential symbol conflicts.
+// This should be changed when 10.4 support is dropped.
+enum {
+  mozkEventMouseScroll             = 11
+};
+
+// Support for pixel scroll deltas, not part of NSEvent.h
+// See http://lists.apple.com/archives/cocoa-dev/2007/Feb/msg00050.html
+@interface NSEvent (DeviceDelta)
+  - (float)deviceDeltaX;
+  - (float)deviceDeltaY;
+@end
 
 @interface ChildView : NSView<
 #ifdef ACCESSIBILITY
@@ -85,9 +128,6 @@ union nsPluginPort;
   // the link back to it must be weak.
   nsChildView* mGeckoChild;
     
-  // tag for our mouse enter/exit tracking rect
-  NSTrackingRectTag mMouseEnterExitTag;
-
   // Whether we're a plugin view.
   BOOL mIsPluginView;
 
@@ -107,11 +147,6 @@ union nsPluginPort;
 
   // needed for NSTextInput implementation
   NSRange mMarkedRange;
-
-  BOOL mInHandScroll; // true for as long as we are hand scrolling
-  // hand scroll locations
-  NSPoint mHandScrollStartMouseLoc;
-  nscoord mHandScrollStartScrollX, mHandScrollStartScrollY;
   
   // when mouseDown: is called, we store its event here (strong)
   NSEvent* mLastMouseDownEvent;
@@ -123,6 +158,8 @@ union nsPluginPort;
   // All views are always opaque (non-transparent). The only exception is when we're
   // the content view in a transparent XUL window.
   BOOL mIsTransparent;
+  PRIntervalTime mLastShadowInvalidation;
+  BOOL mNeedsShadowInvalidation;
 
   // Holds our drag service across multiple drag calls. The reference to the
   // service is obtained when the mouse enters the view and is released when
@@ -131,8 +168,37 @@ union nsPluginPort;
   // when handling |draggingUpdated:| messages.
   nsIDragService* mDragService;
   
-  PRUint32 mLastModifierState;
+  // For use with plugins, so that we can support IME in them.  We can't use
+  // Cocoa TSM documents (those created and managed by the NSTSMInputContext
+  // class) -- for some reason TSMProcessRawKeyEvent() doesn't work with them.
+  TSMDocumentID mPluginTSMDoc;
+
+  // Simple gestures support
+  //
+  // mGestureState is used to detect when Cocoa has called both
+  // magnifyWithEvent and rotateWithEvent within the same
+  // beginGestureWithEvent and endGestureWithEvent sequence. We
+  // discard the spurious gesture event so as not to confuse Gecko.
+  //
+  // mCumulativeMagnification keeps track of the total amount of
+  // magnification peformed during a magnify gesture so that we can
+  // send that value with the final MozMagnifyGesture event.
+  //
+  // mCumulativeRotation keeps track of the total amount of rotation
+  // performed during a rotate gesture so we can send that value with
+  // the final MozRotateGesture event.
+  enum {
+    eGestureState_None,
+    eGestureState_StartGesture,
+    eGestureState_MagnifyGesture,
+    eGestureState_RotateGesture
+  } mGestureState;
+  float mCumulativeMagnification;
+  float mCumulativeRotation;
 }
+
+// class initialization
++ (void)initialize;
 
 // these are sent to the first responder when the window key status changes
 - (void)viewsWindowDidBecomeKey;
@@ -144,6 +210,24 @@ union nsPluginPort;
 - (void)setTransparent:(BOOL)transparent;
 
 - (void)sendFocusEvent:(PRUint32)eventType;
+
+- (void) processPluginKeyEvent:(EventRef)aKeyEvent;
+
+// Simple gestures support
+//
+// XXX - The swipeWithEvent, beginGestureWithEvent, magnifyWithEvent,
+// rotateWithEvent, and endGestureWithEvent methods are part of a
+// PRIVATE interface exported by nsResponder and reverse-engineering
+// was necessary to obtain the methods' prototypes. Thus, Apple may
+// change the interface in the future without notice.
+//
+// The prototypes were obtained from the following link:
+// http://cocoadex.com/2008/02/nsevent-modifications-swipe-ro.html
+- (void)swipeWithEvent:(NSEvent *)anEvent;
+- (void)beginGestureWithEvent:(NSEvent *)anEvent;
+- (void)magnifyWithEvent:(NSEvent *)anEvent;
+- (void)rotateWithEvent:(NSEvent *)anEvent;
+- (void)endGestureWithEvent:(NSEvent *)anEvent;
 @end
 
 
@@ -160,12 +244,15 @@ public:
   static PRBool IsIMEEnabled() { return sIsIMEEnabled; }
   static PRBool IgnoreCommit() { return sIgnoreCommit; }
 
+  static void OnDestroyView(NSView<mozView>* aDestroyingView);
+
   // Note that we cannot get the actual state in TSM. But we can trust this
   // value. Because nsIMEStateManager reset this at every focus changing.
   static PRBool IsRomanKeyboardsOnly() { return sIsRomanKeyboardsOnly; }
 
   static PRBool GetIMEOpenState();
 
+  static void InitTSMDocument(NSView<mozView>* aViewForCaret);
   static void StartComposing(NSView<mozView>* aComposingView);
   static void UpdateComposing(NSString* aComposingString);
   static void EndComposing();
@@ -193,8 +280,7 @@ private:
 //-------------------------------------------------------------------------
 
 class nsChildView : public nsBaseWidget,
-                    public nsIPluginWidget,
-                    public nsIKBStateControl
+                    public nsIPluginWidget
 {
 private:
   typedef nsBaseWidget Inherited;
@@ -205,54 +291,23 @@ public:
   
   NS_DECL_ISUPPORTS_INHERITED
 
-  // nsIKBStateControl interface
-  NS_IMETHOD              ResetInputState();
-  NS_IMETHOD              SetIMEOpenState(PRBool aState);
-  NS_IMETHOD              GetIMEOpenState(PRBool* aState);
-  NS_IMETHOD              SetIMEEnabled(PRUint32 aState);
-  NS_IMETHOD              GetIMEEnabled(PRUint32* aState);
-  NS_IMETHOD              CancelIMEComposition();
-  NS_IMETHOD              GetToggledKeyState(PRUint32 aKeyCode,
-                                             PRBool* aLEDState);
-
   // nsIWidget interface
   NS_IMETHOD              Create(nsIWidget *aParent,
-                                 const nsRect &aRect,
+                                 nsNativeWidget aNativeParent,
+                                 const nsIntRect &aRect,
                                  EVENT_CALLBACK aHandleEventFunction,
                                  nsIDeviceContext *aContext,
                                  nsIAppShell *aAppShell = nsnull,
                                  nsIToolkit *aToolkit = nsnull,
                                  nsWidgetInitData *aInitData = nsnull);
-  NS_IMETHOD              Create(nsNativeWidget aNativeParent,
-                                 const nsRect &aRect,
-                                 EVENT_CALLBACK aHandleEventFunction,
-                                 nsIDeviceContext *aContext,
-                                 nsIAppShell *aAppShell = nsnull,
-                                 nsIToolkit *aToolkit = nsnull,
-                                 nsWidgetInitData *aInitData = nsnull);
-
-   // Utility method for implementing both Create(nsIWidget ...) and
-   // Create(nsNativeWidget...)
-
-  virtual nsresult        StandardCreate(nsIWidget *aParent,
-                              const nsRect &aRect,
-                              EVENT_CALLBACK aHandleEventFunction,
-                              nsIDeviceContext *aContext,
-                              nsIAppShell *aAppShell,
-                              nsIToolkit *aToolkit,
-                              nsWidgetInitData *aInitData,
-                              nsNativeWidget aNativeParent = nsnull);
 
   NS_IMETHOD              Destroy();
 
   NS_IMETHOD              Show(PRBool aState);
   NS_IMETHOD              IsVisible(PRBool& outState);
 
+  NS_IMETHOD              SetParent(nsIWidget* aNewParent);
   virtual nsIWidget*      GetParent(void);
-  nsIWidget*              GetTopLevelWidget();
-
-  NS_IMETHOD              ModalEventFilter(PRBool aRealEvent, void *aEvent,
-                                           PRBool *aForWindow);
 
   NS_IMETHOD              ConstrainPosition(PRBool aAllowSlop,
                                             PRInt32 *aX, PRInt32 *aY);
@@ -263,40 +318,27 @@ public:
   NS_IMETHOD              Enable(PRBool aState);
   NS_IMETHOD              IsEnabled(PRBool *aState);
   NS_IMETHOD              SetFocus(PRBool aRaise);
-  NS_IMETHOD              SetBounds(const nsRect &aRect);
-  NS_IMETHOD              GetBounds(nsRect &aRect);
+  NS_IMETHOD              SetBounds(const nsIntRect &aRect);
+  NS_IMETHOD              GetBounds(nsIntRect &aRect);
 
   NS_IMETHOD              Invalidate(PRBool aIsSynchronous);
-  NS_IMETHOD              Invalidate(const nsRect &aRect,PRBool aIsSynchronous);
-  NS_IMETHOD              InvalidateRegion(const nsIRegion *aRegion, PRBool aIsSynchronous);
+  NS_IMETHOD              Invalidate(const nsIntRect &aRect, PRBool aIsSynchronous);
   NS_IMETHOD              Validate();
 
   virtual void*           GetNativeData(PRUint32 aDataType);
-  NS_IMETHOD              SetColorMap(nsColorMap *aColorMap);
-  NS_IMETHOD              Scroll(PRInt32 aDx, PRInt32 aDy, nsRect *aClipRect);
-  NS_IMETHOD              WidgetToScreen(const nsRect& aOldRect, nsRect& aNewRect);
-  NS_IMETHOD              ScreenToWidget(const nsRect& aOldRect, nsRect& aNewRect);
-  NS_IMETHOD              BeginResizingChildren(void);
-  NS_IMETHOD              EndResizingChildren(void);
+  virtual nsresult        ConfigureChildren(const nsTArray<Configuration>& aConfigurations);
+  virtual void            Scroll(const nsIntPoint& aDelta,
+                                 const nsTArray<nsIntRect>& aDestRects,
+                                 const nsTArray<Configuration>& aConfigurations);
+  virtual nsIntPoint      WidgetToScreenOffset();
+  virtual PRBool          ShowsResizeIndicator(nsIntRect* aResizerRect);
 
   static  PRBool          ConvertStatus(nsEventStatus aStatus)
                           { return aStatus == nsEventStatus_eConsumeNoDefault; }
   NS_IMETHOD              DispatchEvent(nsGUIEvent* event, nsEventStatus & aStatus);
-  virtual PRBool          DispatchMouseEvent(nsMouseEvent &aEvent);
 
   NS_IMETHOD              Update();
 
-  virtual void      ConvertToDeviceCoordinates(nscoord &aX, nscoord &aY);
-  void              LocalToWindowCoordinate(nsPoint& aPoint)            { ConvertToDeviceCoordinates(aPoint.x, aPoint.y); }
-  void              LocalToWindowCoordinate(nscoord& aX, nscoord& aY)   { ConvertToDeviceCoordinates(aX, aY); }
-  void              LocalToWindowCoordinate(nsRect& aRect)              { ConvertToDeviceCoordinates(aRect.x, aRect.y); }
-
-  NS_IMETHOD        SetMenuBar(nsIMenuBar * aMenuBar);
-  NS_IMETHOD        ShowMenuBar(PRBool aShow);
-
-  NS_IMETHOD        GetPreferredSize(PRInt32& aWidth, PRInt32& aHeight);
-  NS_IMETHOD        SetPreferredSize(PRInt32 aWidth, PRInt32 aHeight);
-  
   NS_IMETHOD        SetCursor(nsCursor aCursor);
   NS_IMETHOD        SetCursor(imgIContainer* aCursor, PRUint32 aHotspotX, PRUint32 aHotspotY);
   
@@ -305,17 +347,31 @@ public:
 
   NS_IMETHOD        GetAttention(PRInt32 aCycleCount);
 
+  virtual PRBool HasPendingInputEvent();
+
+  NS_IMETHOD        ActivateNativeMenuItemAt(const nsAString& indexString);
+  NS_IMETHOD        ForceUpdateNativeMenuAt(const nsAString& indexString);
+
+  NS_IMETHOD        ResetInputState();
+  NS_IMETHOD        SetIMEOpenState(PRBool aState);
+  NS_IMETHOD        GetIMEOpenState(PRBool* aState);
+  NS_IMETHOD        SetIMEEnabled(PRUint32 aState);
+  NS_IMETHOD        GetIMEEnabled(PRUint32* aState);
+  NS_IMETHOD        CancelIMEComposition();
+  NS_IMETHOD        GetToggledKeyState(PRUint32 aKeyCode,
+                                       PRBool* aLEDState);
+
   // nsIPluginWidget
-  NS_IMETHOD        GetPluginClipRect(nsRect& outClipRect, nsPoint& outOrigin, PRBool& outWidgetVisible);
+  NS_IMETHOD        GetPluginClipRect(nsIntRect& outClipRect, nsIntPoint& outOrigin, PRBool& outWidgetVisible);
   NS_IMETHOD        StartDrawPlugin();
   NS_IMETHOD        EndDrawPlugin();
   NS_IMETHOD        SetPluginInstanceOwner(nsIPluginInstanceOwner* aInstanceOwner);
   
-  NS_IMETHOD        GetHasTransparentBackground(PRBool& aTransparent);
-  NS_IMETHOD        SetHasTransparentBackground(PRBool aTransparent);
+  virtual nsTransparencyMode GetTransparencyMode();
+  virtual void                SetTransparencyMode(nsTransparencyMode aMode);
+  NS_IMETHOD        SetWindowShadowStyle(PRInt32 aStyle);
   
   // Mac specific methods
-  virtual PRBool    PointInWidget(Point aThePoint);
   
   virtual PRBool    DispatchWindowEvent(nsGUIEvent& event);
   
@@ -332,14 +388,23 @@ public:
   NS_IMETHOD EndSecureKeyboardInput();
 
   void              HidePlugin();
+  void              UpdatePluginPort();
+
+  void              ResetParent();
+
+  static PRBool DoHasPendingInputEvent();
+  static PRUint32 GetCurrentInputEventCount();
+  static void UpdateCurrentInputEventCount();
+
+  static void ApplyConfiguration(nsIWidget* aExpectedParent,
+                                 const nsIWidget::Configuration& aConfiguration,
+                                 PRBool aRepaint);
 
 protected:
 
   PRBool            ReportDestroyEvent();
   PRBool            ReportMoveEvent();
   PRBool            ReportSizeEvent();
-
-  NS_IMETHOD        CalcOffset(PRInt32 &aX,PRInt32 &aY);
 
   virtual PRBool    OnPaint(nsPaintEvent & aEvent);
 
@@ -372,15 +437,16 @@ protected:
   PRPackedBool          mVisible;
   PRPackedBool          mDrawing;
   PRPackedBool          mLiveResizeInProgress;
-  PRPackedBool          mIsPluginView; // true if this is a plugin view
   PRPackedBool          mPluginDrawing;
   PRPackedBool          mPluginIsCG; // true if this is a CoreGraphics plugin
 
-  PRPackedBool          mInSetFocus;
-
   nsPluginPort          mPluginPort;
   nsIPluginInstanceOwner* mPluginInstanceOwner; // [WEAK]
+
+  static PRUint32 sLastInputEventCount;
 };
 
+void NS_InstallPluginKeyEventsHandler();
+void NS_RemovePluginKeyEventsHandler();
 
 #endif // nsChildView_h_

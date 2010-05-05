@@ -22,6 +22,8 @@
  * Contributor(s):
  *   Mike Pinkerton <pinkerton@netscape.com>
  *   Gus Verdun <gustavoverdun@aol.com>
+ *   Kathleen Brade <brade@comcast.net>
+ *   Mark Smith <mcs@pearlcrescent.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -37,8 +39,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#ifndef WINCE
-
 /* Things To Do 11/8/00
 
 Check image metrics, can we support them? Do we need to?
@@ -50,20 +50,20 @@ Any other render format? HTML?
 #include <windows.h>
 
 #include "nsCOMPtr.h"
-#include "nsIImage.h"
+#include "imgIContainer.h"
 #include "nsIInputStream.h"
 
 
 //
 // nsImageToClipboard
 //
-// A utility class that takes an nsIImage and does all the bitmap magic
+// A utility class that takes an imgIContainer and does all the bitmap magic
 // to allow us to put it on the clipboard
 //
 class nsImageToClipboard
 {
 public:
-  nsImageToClipboard ( nsIImage* inImage );
+  nsImageToClipboard ( imgIContainer* inImage );
   ~nsImageToClipboard();
 
     // Call to get the actual bits that go on the clipboard. If |nsnull|, the
@@ -79,9 +79,9 @@ private:
   PRInt32 CalcSpanLength(PRUint32 aWidth, PRUint32 aBitCount);
 
     // Do the work
-  nsresult CreateFromImage ( nsIImage* inImage, HANDLE* outBitmap );
+  nsresult CreateFromImage ( imgIContainer* inImage, HANDLE* outBitmap );
 
-  nsCOMPtr<nsIImage> mImage;            // the image we're working with
+  nsCOMPtr<imgIContainer> mImage;            // the image we're working with
 
 }; // class nsImageToClipboard
 
@@ -111,7 +111,7 @@ public:
   ~nsImageFromClipboard ( ) ;
   
     // Retrieve the newly created image
-  nsresult GetEncodedImageStream (unsigned char * aClipboardData, nsIInputStream** outImage);
+  nsresult GetEncodedImageStream (unsigned char * aClipboardData, const char * aMIMEFormat, nsIInputStream** outImage);
 
 private:
 
@@ -121,5 +121,3 @@ private:
   void CalcBitShift(bitFields * aColorMask);
 
 }; // nsImageFromClipboard
-
-#endif //WINCE
