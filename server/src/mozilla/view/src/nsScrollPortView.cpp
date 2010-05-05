@@ -62,30 +62,30 @@ static NS_DEFINE_IID(kWidgetCID, NS_CHILD_CID);
 
 #define SMOOTH_SCROLL_PREF_NAME "general.smoothScroll"
 
-class SmoothScroll {
+class AsyncScroll {
 public:
-  SmoothScroll() {}
-  ~SmoothScroll() {
-    if (mScrollAnimationTimer) mScrollAnimationTimer->Cancel();
+  AsyncScroll() {}
+  ~AsyncScroll() {
+    if (mScrollTimer) mScrollTimer->Cancel();
   }
 
-  nsCOMPtr<nsITimer> mScrollAnimationTimer;
+  nsCOMPtr<nsITimer> mScrollTimer;
   PRInt32 mVelocities[SMOOTH_SCROLL_FRAMES*2];
   PRInt32 mFrameIndex;
-  nscoord mDestinationX;
-  nscoord mDestinationY;
+  PRPackedBool mIsSmoothScroll;
 };
 
 nsScrollPortView::nsScrollPortView(nsViewManager* aViewManager)
   : nsView(aViewManager)
 {
   mOffsetX = mOffsetY = 0;
+  mDestinationX = mDestinationY = 0;
   nsCOMPtr<nsIDeviceContext> dev;
   mViewManager->GetDeviceContext(*getter_AddRefs(dev));
   mLineHeight = dev->AppUnitsPerInch() / 6; // 12 pt
 
   mListeners = nsnull;
-  mSmoothScroll = nsnull;
+  mAsyncScroll = nsnull;
 }
 
 nsScrollPortView::~nsScrollPortView()
@@ -103,7 +103,7 @@ nsScrollPortView::~nsScrollPortView()
      }
   }
 
-  delete mSmoothScroll;
+  delete mAsyncScroll;
 }
 
 nsresult nsScrollPortView::QueryInterface(const nsIID& aIID, void** aInstancePtr)
@@ -141,18 +141,6 @@ NS_IMETHODIMP nsScrollPortView::RemoveScrollPositionListener(nsIScrollPositionLi
     return mListeners->RemoveElement(aListener);
   }
   return NS_ERROR_FAILURE;
-}
-
-NS_IMETHODIMP nsScrollPortView::CreateScrollControls(nsNativeWidget aNative)
-{
-  nsWidgetInitData  initData;
-  initData.clipChildren = PR_TRUE;
-  initData.clipSiblings = PR_TRUE;
-
-  CreateWidget(kWidgetCID, &initData,
-               mWindow ? nsnull : aNative);
-  
-  return NS_OK;
 }
 
 NS_IMETHODIMP nsScrollPortView::GetContainerSize(nscoord *aWidth, nscoord *aHeight) const
@@ -208,7 +196,7 @@ static void ComputeVelocities(PRInt32 aCurVelocity, nscoord aCurPos, nscoord aDs
 }
   
 static nsresult ClampScrollValues(nscoord& aX, nscoord& aY, nsScrollPortView* aThis) {
-  // make sure the new position in in bounds
+  // make sure the new position is in bounds
   nsView* scrolledView = aThis->GetScrolledView();
   if (!scrolledView) return NS_ERROR_FAILURE;
   
@@ -243,74 +231,65 @@ static nsresult ClampScrollValues(nscoord& aX, nscoord& aY, nsScrollPortView* aT
 NS_IMETHODIMP nsScrollPortView::ScrollTo(nscoord aDestinationX, nscoord aDestinationY,
                                          PRUint32 aUpdateFlags)
 {
-  // do nothing if the we aren't scrolling.
-  if (aDestinationX == mOffsetX && aDestinationY == mOffsetY) {
-    // kill any in-progress smooth scroll
-    delete mSmoothScroll;
-    mSmoothScroll = nsnull;
-    return NS_OK;
-  }
-  
-  if ((aUpdateFlags & NS_VMREFRESH_SMOOTHSCROLL) == 0
-      || !IsSmoothScrollingEnabled()) {
-    // Smooth scrolling is not allowed, so we'll kill any existing smooth-scrolling process
-    // and do an instant scroll
-    delete mSmoothScroll;
-    mSmoothScroll = nsnull;
-    return ScrollToImpl(aDestinationX, aDestinationY, aUpdateFlags);
+  mDestinationX = aDestinationX;
+  mDestinationY = aDestinationY;
+  ClampScrollValues(mDestinationX, mDestinationY, this);
+
+  if (!(aUpdateFlags & (NS_VMREFRESH_DEFERRED | NS_VMREFRESH_SMOOTHSCROLL))) {
+    // Asynchronous scrolling is not allowed, so we'll kill any existing
+    // async-scrolling process and do an instant scroll
+    delete mAsyncScroll;
+    mAsyncScroll = nsnull;
+    return ScrollToImpl(mDestinationX, mDestinationY);
   }
 
-  PRInt32 currentVelocityX;
-  PRInt32 currentVelocityY;
+  PRInt32 currentVelocityX = 0;
+  PRInt32 currentVelocityY = 0;
+  PRBool isSmoothScroll = (aUpdateFlags & NS_VMREFRESH_SMOOTHSCROLL) &&
+                          IsSmoothScrollingEnabled();
 
-  if (mSmoothScroll) {
-    currentVelocityX = mSmoothScroll->mVelocities[mSmoothScroll->mFrameIndex*2];
-    currentVelocityY = mSmoothScroll->mVelocities[mSmoothScroll->mFrameIndex*2 + 1];
+  if (mAsyncScroll) {
+    if (mAsyncScroll->mIsSmoothScroll) {
+      currentVelocityX = mAsyncScroll->mVelocities[mAsyncScroll->mFrameIndex*2];
+      currentVelocityY = mAsyncScroll->mVelocities[mAsyncScroll->mFrameIndex*2 + 1];
+    }
   } else {
-    currentVelocityX = 0;
-    currentVelocityY = 0;
-
-    mSmoothScroll = new SmoothScroll;
-    if (mSmoothScroll) {
-      mSmoothScroll->mScrollAnimationTimer = do_CreateInstance("@mozilla.org/timer;1");
-      if (!mSmoothScroll->mScrollAnimationTimer) {
-        delete mSmoothScroll;
-        mSmoothScroll = nsnull;
+    mAsyncScroll = new AsyncScroll;
+    if (mAsyncScroll) {
+      mAsyncScroll->mScrollTimer = do_CreateInstance("@mozilla.org/timer;1");
+      if (!mAsyncScroll->mScrollTimer) {
+        delete mAsyncScroll;
+        mAsyncScroll = nsnull;
       }
     }
-    if (!mSmoothScroll) {
+    if (!mAsyncScroll) {
       // some allocation failed. Scroll the normal way.
-      return ScrollToImpl(aDestinationX, aDestinationY, aUpdateFlags);
+      return ScrollToImpl(mDestinationX, mDestinationY);
     }
-    mSmoothScroll->mScrollAnimationTimer->InitWithFuncCallback(
-      SmoothScrollAnimationCallback, this, SMOOTH_SCROLL_MSECS_PER_FRAME,
-      nsITimer::TYPE_REPEATING_PRECISE);
-    mSmoothScroll->mDestinationX = mOffsetX;
-    mSmoothScroll->mDestinationY = mOffsetY;
+    if (isSmoothScroll) {
+      mAsyncScroll->mScrollTimer->InitWithFuncCallback(
+        AsyncScrollCallback, this, SMOOTH_SCROLL_MSECS_PER_FRAME,
+        nsITimer::TYPE_REPEATING_PRECISE);
+    } else {
+      mAsyncScroll->mScrollTimer->InitWithFuncCallback(
+        AsyncScrollCallback, this, 0, nsITimer::TYPE_ONE_SHOT);
+    }
   }
 
-  // need to store these so we know when to stop scrolling
-  // Treat the desired scroll destination as an offset
-  // relative to the current position. This makes things
-  // work when someone starts a smooth scroll
-  // while an existing smooth scroll has not yet been
-  // completed.
-  mSmoothScroll->mDestinationX += aDestinationX - mOffsetX;
-  mSmoothScroll->mDestinationY += aDestinationY - mOffsetY;
-  mSmoothScroll->mFrameIndex = 0;
-  ClampScrollValues(mSmoothScroll->mDestinationX, mSmoothScroll->mDestinationY, this);
+  mAsyncScroll->mFrameIndex = 0;
+  mAsyncScroll->mIsSmoothScroll = isSmoothScroll;
 
-  nsCOMPtr<nsIDeviceContext> dev;
-  mViewManager->GetDeviceContext(*getter_AddRefs(dev));
-  PRInt32 p2a = dev->AppUnitsPerDevPixel();
+  if (isSmoothScroll) {
+    nsCOMPtr<nsIDeviceContext> dev;
+    mViewManager->GetDeviceContext(*getter_AddRefs(dev));
+    PRInt32 p2a = dev->AppUnitsPerDevPixel();
 
-  // compute velocity vectors
-  ComputeVelocities(currentVelocityX, mOffsetX,
-                    mSmoothScroll->mDestinationX, mSmoothScroll->mVelocities,
-                    p2a);
-  ComputeVelocities(currentVelocityY, mOffsetY,
-                    mSmoothScroll->mDestinationY, mSmoothScroll->mVelocities + 1,
-                    p2a);
+    // compute velocity vectors
+    ComputeVelocities(currentVelocityX, mOffsetX, mDestinationX,
+                      mAsyncScroll->mVelocities, p2a);
+    ComputeVelocities(currentVelocityY, mOffsetY, mDestinationY,
+                      mAsyncScroll->mVelocities + 1, p2a);
+  }
 
   return NS_OK;
 }
@@ -339,9 +318,9 @@ static void AdjustChildWidgets(nsView *aView,
         widget->Show(PR_TRUE);
       }
     }
+    // Don't recurse if the view has a widget, because we adjusted the view's
+    // widget position, and its child widgets are relative to its position
   } else {
-    // Don't recurse if the view haLs a widget, because we adjusted the view's
-    // widget position, and its child widgets are relative to its positon
     nsPoint widgetToViewOrigin = aWidgetToParentViewOrigin
       + aView->GetPosition();
 
@@ -381,18 +360,6 @@ NS_IMETHODIMP nsScrollPortView::GetScrollPosition(nscoord &aX, nscoord &aY) cons
   return NS_OK;
 }
 
-NS_IMETHODIMP nsScrollPortView::SetScrollProperties(PRUint32 aProperties)
-{
-  mScrollProperties = aProperties;
-  return NS_OK;
-}
-
-NS_IMETHODIMP nsScrollPortView::GetScrollProperties(PRUint32 *aProperties)
-{
-  *aProperties = mScrollProperties;
-  return NS_OK;
-}
-
 NS_IMETHODIMP nsScrollPortView::SetLineHeight(nscoord aHeight)
 {
   mLineHeight = aHeight;
@@ -405,12 +372,64 @@ NS_IMETHODIMP nsScrollPortView::GetLineHeight(nscoord *aHeight)
   return NS_OK;
 }
 
-NS_IMETHODIMP nsScrollPortView::ScrollByLines(PRInt32 aNumLinesX, PRInt32 aNumLinesY)
+nsresult
+nsScrollPortView::CalcScrollOverflow(nscoord aX, nscoord aY,
+                                     PRInt32& aPixelOverflowX, PRInt32& aPixelOverflowY)
+{
+  // make sure the new position is in bounds
+  nsView* scrolledView = GetScrolledView();
+  if (!scrolledView) return NS_ERROR_FAILURE;
+  
+  nsRect scrolledRect;
+  scrolledView->GetDimensions(scrolledRect);
+  
+  nsSize portSize;
+  this->GetDimensions(portSize);
+  
+  nscoord maxX = scrolledRect.XMost() - portSize.width;
+  nscoord maxY = scrolledRect.YMost() - portSize.height;
+  
+  nsCOMPtr<nsIDeviceContext> dev;
+  mViewManager->GetDeviceContext(*getter_AddRefs(dev));
+  float p2a = (float)dev->AppUnitsPerDevPixel();
+
+  if (maxX != 0 && aX > maxX)
+    aPixelOverflowX = NSAppUnitsToIntPixels(aX - maxX, p2a);
+
+  if (maxY != 0 && aY > maxY)
+    aPixelOverflowY = NSAppUnitsToIntPixels(aY - maxY, p2a);
+
+  if (maxX != 0 && aX < scrolledRect.x)
+    aPixelOverflowX = NSAppUnitsToIntPixels(scrolledRect.x - aX, p2a);
+
+  if (maxY != 0 && aY < scrolledRect.y)
+    aPixelOverflowY = NSAppUnitsToIntPixels(scrolledRect.y - aY, p2a);
+  
+  return NS_OK;
+}
+
+NS_IMETHODIMP nsScrollPortView::ScrollByLines(PRInt32 aNumLinesX,
+                                              PRInt32 aNumLinesY,
+                                              PRUint32 aUpdateFlags)
 {
   nscoord dx = mLineHeight*aNumLinesX;
   nscoord dy = mLineHeight*aNumLinesY;
 
-  return ScrollTo(mOffsetX + dx, mOffsetY + dy, NS_VMREFRESH_SMOOTHSCROLL);
+  return ScrollTo(mDestinationX + dx, mDestinationY + dy, aUpdateFlags);
+}
+
+NS_IMETHODIMP nsScrollPortView::ScrollByLinesWithOverflow(PRInt32 aNumLinesX,
+                                                          PRInt32 aNumLinesY,
+                                                          PRInt32& aOverflowX,
+                                                          PRInt32& aOverflowY,
+                                                          PRUint32 aUpdateFlags)
+{
+  nscoord dx = mLineHeight*aNumLinesX;
+  nscoord dy = mLineHeight*aNumLinesY;
+
+  CalcScrollOverflow(mDestinationX + dx, mDestinationY + dy, aOverflowX, aOverflowY);
+
+  return ScrollTo(mDestinationX + dx, mDestinationY + dy, aUpdateFlags);
 }
 
 NS_IMETHODIMP nsScrollPortView::GetPageScrollDistances(nsSize *aDistances)
@@ -426,7 +445,8 @@ NS_IMETHODIMP nsScrollPortView::GetPageScrollDistances(nsSize *aDistances)
   return NS_OK;
 }
 
-NS_IMETHODIMP nsScrollPortView::ScrollByPages(PRInt32 aNumPagesX, PRInt32 aNumPagesY)
+NS_IMETHODIMP nsScrollPortView::ScrollByPages(PRInt32 aNumPagesX, PRInt32 aNumPagesY,
+                                              PRUint32 aUpdateFlags)
 {
   nsSize delta;
   GetPageScrollDistances(&delta);
@@ -435,11 +455,12 @@ NS_IMETHODIMP nsScrollPortView::ScrollByPages(PRInt32 aNumPagesX, PRInt32 aNumPa
   delta.width *= aNumPagesX;
   delta.height *= aNumPagesY;
 
-  return ScrollTo(mOffsetX + delta.width, mOffsetY + delta.height,
-                  NS_VMREFRESH_SMOOTHSCROLL);
+  return ScrollTo(mDestinationX + delta.width, mDestinationY + delta.height,
+                  aUpdateFlags);
 }
 
-NS_IMETHODIMP nsScrollPortView::ScrollByWhole(PRBool aTop)
+NS_IMETHODIMP nsScrollPortView::ScrollByWhole(PRBool aTop,
+                                              PRUint32 aUpdateFlags)
 {
   nscoord   newPos = 0;
 
@@ -450,13 +471,16 @@ NS_IMETHODIMP nsScrollPortView::ScrollByWhole(PRBool aTop)
     newPos = scrolledSize.height;
   }
 
-  ScrollTo(mOffsetX, newPos, 0);
+  ScrollTo(mDestinationX, newPos, aUpdateFlags);
 
   return NS_OK;
 }
 
 NS_IMETHODIMP nsScrollPortView::ScrollByPixels(PRInt32 aNumPixelsX,
-                                               PRInt32 aNumPixelsY)
+                                               PRInt32 aNumPixelsY,
+                                               PRInt32& aOverflowX,
+                                               PRInt32& aOverflowY,
+                                               PRUint32 aUpdateFlags)
 {
   nsCOMPtr<nsIDeviceContext> dev;
   mViewManager->GetDeviceContext(*getter_AddRefs(dev));
@@ -465,7 +489,9 @@ NS_IMETHODIMP nsScrollPortView::ScrollByPixels(PRInt32 aNumPixelsX,
   nscoord dx = NSIntPixelsToAppUnits(aNumPixelsX, p2a);
   nscoord dy = NSIntPixelsToAppUnits(aNumPixelsY, p2a);
 
-  return ScrollTo(mOffsetX + dx, mOffsetY + dy, 0);
+  CalcScrollOverflow(mDestinationX + dx, mDestinationY + dy, aOverflowX, aOverflowY);
+  
+  return ScrollTo(mDestinationX + dx, mDestinationY + dy, aUpdateFlags);
 }
 
 NS_IMETHODIMP nsScrollPortView::CanScroll(PRBool aHorizontal,
@@ -515,92 +541,185 @@ NS_IMETHODIMP nsScrollPortView::CanScroll(PRBool aHorizontal,
   return NS_OK;
 }
 
-void nsScrollPortView::Scroll(nsView *aScrolledView, nsPoint aTwipsDelta, nsPoint aPixDelta,
-                              PRInt32 aP2A)
+/**
+ * Given aBlitRegion in appunits, create and return an nsRegion in
+ * device pixels that represents the device pixels whose centers are
+ * contained in aBlitRegion. Whatever appunit area was removed from
+ * aBlitRegion in that process is added to aRepaintRegion. An appunits
+ * version of the result is placed in aAppunitsBlitRegion.
+ * 
+ * We convert the blit region to pixels this way because in general
+ * frames touch the pixels whose centers are contained in the
+ * (possibly not pixel-aligned) frame bounds.
+ */
+static void
+ConvertBlitRegionToPixelRects(const nsRegion& aBlitRegion,
+                              nscoord aAppUnitsPerPixel,
+                              nsTArray<nsIntRect>* aPixelRects,
+                              nsRegion* aRepaintRegion,
+                              nsRegion* aAppunitsBlitRegion)
+{
+  const nsRect* r;
+
+  aPixelRects->Clear();
+  aAppunitsBlitRegion->SetEmpty();
+  // The rectangles in aBlitRegion don't overlap so converting them via
+  // ToNearestPixels also produces a sequence of non-overlapping rectangles
+  for (nsRegionRectIterator iter(aBlitRegion); (r = iter.Next());) {
+    nsIntRect pixRect = r->ToNearestPixels(aAppUnitsPerPixel);
+    aPixelRects->AppendElement(pixRect);
+    aAppunitsBlitRegion->Or(*aAppunitsBlitRegion,
+                            pixRect.ToAppUnits(aAppUnitsPerPixel));
+  }
+
+  nsRegion repaint;
+  repaint.Sub(aBlitRegion, *aAppunitsBlitRegion);
+  aRepaintRegion->Or(*aRepaintRegion, repaint);
+}
+
+/**
+ * An nsTArray comparator that lets us sort nsIntRects by their right edge.
+ */
+class RightEdgeComparator {
+public:
+  /** @return True if the elements are equals; false otherwise. */
+  PRBool Equals(const nsIntRect& aA, const nsIntRect& aB) const
+  {
+    return aA.XMost() == aB.XMost();
+  }
+  /** @return True if (a < b); false otherwise. */
+  PRBool LessThan(const nsIntRect& aA, const nsIntRect& aB) const
+  {
+    return aA.XMost() < aB.XMost();
+  }
+};
+
+// If aPixDelta has a negative component, flip aRect across the
+// axis in that direction. We do this so we can assume all scrolling is
+// down and to the right to simplify SortBlitRectsForCopy
+static nsIntRect
+FlipRect(const nsIntRect& aRect, nsIntPoint aPixDelta)
+{
+  nsIntRect r = aRect;
+  if (aPixDelta.x < 0) {
+    r.x = -r.XMost();
+  }
+  if (aPixDelta.y < 0) {
+    r.y = -r.YMost();
+  }
+  return r;
+}
+
+// Sort aRects so that moving rectangle aRects[i] - aPixDelta to aRects[i]
+// will not cause the rectangle to overlap any rectangles that haven't
+// moved yet.
+// See http://weblogs.mozillazine.org/roc/archives/2009/08/homework_answer.html
+static void
+SortBlitRectsForCopy(nsIntPoint aPixDelta, nsTArray<nsIntRect>* aRects)
+{
+  nsTArray<nsIntRect> rects;
+
+  for (PRUint32 i = 0; i < aRects->Length(); ++i) {
+    nsIntRect* r = &aRects->ElementAt(i);
+    nsIntRect rect =
+      FlipRect(nsIntRect(r->x, r->y, r->width, r->height), aPixDelta);
+    rects.AppendElement(rect);
+  }
+  rects.Sort(RightEdgeComparator());
+
+  aRects->Clear();
+  // This could probably be improved a bit for some worst-case scenarios.
+  // But in common cases this should be very fast, and we shouldn't
+  // make it more complex unless we really need to.
+  while (!rects.IsEmpty()) {
+    PRInt32 i = rects.Length() - 1;
+    PRBool overlappedBelow;
+    do {
+      overlappedBelow = PR_FALSE;
+      const nsIntRect& rectI = rects[i];
+      // see if any rectangle < i overlaps rectI horizontally and is below
+      // rectI
+      for (PRInt32 j = i - 1; j >= 0; --j) {
+        if (rects[j].XMost() <= rectI.x) {
+          // No rectangle with index <= j can overlap rectI horizontally
+          break;
+        }
+        // Rectangle j overlaps rectI horizontally.
+        if (rects[j].y >= rectI.y) {
+          // Rectangle j is below rectangle i. This is the rightmost such
+          // rectangle, so set i to this rectangle and continue.
+          i = j;
+          overlappedBelow = PR_TRUE;
+          break;
+        }
+      }
+    } while (overlappedBelow); 
+
+    // Rectangle i has no rectangles to the right or below.
+    // Flip it back before saving the result.
+    aRects->AppendElement(FlipRect(rects[i], aPixDelta));
+    rects.RemoveElementAt(i);
+  }
+}
+
+void nsScrollPortView::Scroll(nsView *aScrolledView, nsPoint aTwipsDelta,
+                              nsIntPoint aPixDelta, PRInt32 aP2A,
+                              const nsTArray<nsIWidget::Configuration>& aConfigurations)
 {
   if (aTwipsDelta.x != 0 || aTwipsDelta.y != 0)
   {
-    nsIWidget *scrollWidget = GetWidget();
-    nsRegion updateRegion;
-    PRBool canBitBlit = PR_TRUE;
-    if (!scrollWidget) {
-      canBitBlit = PR_FALSE;
-    } else {
-      PRUint32 scrolledViewFlags = aScrolledView->GetViewFlags();
-
-      if ((!(mScrollProperties & NS_SCROLL_PROPERTY_ALWAYS_BLIT) && 
-           !mViewManager->CanScrollWithBitBlt(aScrolledView, aTwipsDelta, &updateRegion))) {
-        canBitBlit = PR_FALSE;
-      }
+    /* If we should invalidate our wrapped view, we should do so at this
+     * point.
+     */
+    if (aScrolledView->NeedsInvalidateFrameOnScroll()) {
+      mViewManager->GetViewObserver()->InvalidateFrameForScrolledView(aScrolledView);
     }
 
-    if (canBitBlit) {
-      // We're going to bit-blit.  Let the viewmanager know so it can
-      // adjust dirty regions appropriately.
-      mViewManager->WillBitBlit(this, aTwipsDelta);
-    }
-    
-    if (!scrollWidget)
-    {
-      NS_ASSERTION(!canBitBlit, "Someone screwed up");
-      nsPoint offsetToWidget;
-      GetNearestWidget(&offsetToWidget);
-      // We're moving the child widgets because we are scrolling. But
-      // the child widgets may stick outside our bounds, so their area
-      // may include area that's not supposed to be scrolled. We need
-      // to invalidate to ensure that any such area is properly
-      // repainted back to the right rendering.
-      AdjustChildWidgets(aScrolledView, offsetToWidget, aP2A, PR_TRUE);
-      // If we don't have a scroll widget then we must just update.
-      // We should call this after fixing up the widget positions to be
-      // consistent with the view hierarchy.
-      mViewManager->UpdateView(this, 0);
-    } else if (!canBitBlit) {
-      // We can't blit for some reason.
+    nsPoint nearestWidgetOffset;
+    nsIWidget *nearestWidget = GetNearestWidget(&nearestWidgetOffset);
+    if (!nearestWidget ||
+        nearestWidget->GetTransparencyMode() == eTransparencyTransparent) {
       // Just update the view and adjust widgets
       // Recall that our widget's origin is at our bounds' top-left
+      if (nearestWidget) {
+        nearestWidget->ConfigureChildren(aConfigurations);
+      }
       nsRect bounds(GetBounds());
       nsPoint topLeft(bounds.x, bounds.y);
       AdjustChildWidgets(aScrolledView,
                          GetPosition() - topLeft, aP2A, PR_FALSE);
       // We should call this after fixing up the widget positions to be
       // consistent with the view hierarchy.
-      mViewManager->UpdateView(this, 0);
-    } else { // if we can blit and have a scrollwidget then scroll.
-      nsRect* toScrollPtr = nsnull;
+      mViewManager->GetViewObserver()->InvalidateFrameForScrolledView(aScrolledView);
+    } else {
+      nsRegion blitRegion;
+      nsRegion repaintRegion;
+      mViewManager->GetRegionsForBlit(aScrolledView, aTwipsDelta,
+                                      &blitRegion, &repaintRegion);
+      blitRegion.MoveBy(nearestWidgetOffset);
+      repaintRegion.MoveBy(nearestWidgetOffset);
 
-#ifdef XP_WIN
-      nsRect toScroll;
-      if (!updateRegion.IsEmpty()) {
-        nsRegion regionToScroll;
-        regionToScroll.Sub(nsRect(nsPoint(0,0), GetBounds().Size()),
-                           updateRegion);
-        nsRegionRectIterator iter(regionToScroll);
-        nsRect biggestRect(0,0,0,0);
-        const nsRect* r;
-        for (r = iter.Next(); r; r = iter.Next()) {
-          if (r->width*r->height > biggestRect.width*biggestRect.height) {
-            biggestRect = *r;
-          }
-        }
-        toScrollPtr = &toScroll;
-        biggestRect.ScaleRoundIn(1.0/aP2A);
-        toScroll = biggestRect;
-        biggestRect *= aP2A;
-        regionToScroll.Sub(regionToScroll, biggestRect);
-        updateRegion.Or(updateRegion, regionToScroll);
-      }
-#endif
+      // We're going to bit-blit.  Let the viewmanager know so it can
+      // adjust dirty regions appropriately.
+      mViewManager->WillBitBlit(this, aTwipsDelta);
 
-      // Scroll the contents of the widget by the specified amount, and scroll
-      // the child widgets
-      scrollWidget->Scroll(aPixDelta.x, aPixDelta.y, toScrollPtr);
-      mViewManager->UpdateViewAfterScroll(this, updateRegion);
+      // innerPixRegion is in device pixels
+      nsTArray<nsIntRect> blitRects;
+      nsRegion blitRectsRegion;
+      ConvertBlitRegionToPixelRects(blitRegion, aP2A, &blitRects, &repaintRegion,
+                                    &blitRectsRegion);
+      SortBlitRectsForCopy(aPixDelta, &blitRects);
+
+      nearestWidget->Scroll(aPixDelta, blitRects, aConfigurations);
+      AdjustChildWidgets(aScrolledView, nearestWidgetOffset, aP2A, PR_TRUE);
+      repaintRegion.MoveBy(-nearestWidgetOffset);
+      blitRectsRegion.MoveBy(-nearestWidgetOffset);
+      mViewManager->UpdateViewAfterScroll(this, blitRectsRegion, repaintRegion);
     }
   }
 }
 
-NS_IMETHODIMP nsScrollPortView::ScrollToImpl(nscoord aX, nscoord aY, PRUint32 aUpdateFlags)
+NS_IMETHODIMP nsScrollPortView::ScrollToImpl(nscoord aX, nscoord aY)
 {
   PRInt32           dxPx = 0, dyPx = 0;
 
@@ -621,7 +740,7 @@ NS_IMETHODIMP nsScrollPortView::ScrollToImpl(nscoord aX, nscoord aY, PRUint32 aU
   aX = NSIntPixelsToAppUnits(xPixels, p2a);
   aY = NSIntPixelsToAppUnits(yPixels, p2a);
   
-  // do nothing if the we aren't scrolling.
+  // do nothing if we aren't scrolling.
   // this needs to be rechecked because of the clamping and
   // rounding
   if (aX == mOffsetX && aY == mOffsetY) {
@@ -651,17 +770,28 @@ NS_IMETHODIMP nsScrollPortView::ScrollToImpl(nscoord aX, nscoord aY, PRUint32 aU
   if (!scrolledView) return NS_ERROR_FAILURE;
 
   // move the scrolled view to the new location
-  // Note that child widgets may be scrolled by the native widget scrolling,
-  // so don't update their positions
   scrolledView->SetPositionIgnoringChildWidgets(-aX, -aY);
       
+  // notify the listeners.
+  nsTArray<nsIWidget::Configuration> configurations;
+  if (nsnull != mListeners) {
+    if (NS_SUCCEEDED(mListeners->Count(&listenerCount))) {
+      for (PRUint32 i = 0; i < listenerCount; i++) {
+        if (NS_SUCCEEDED(mListeners->QueryElementAt(i, kScrollPositionListenerIID, (void**)&listener))) {
+          listener->ViewPositionDidChange(this, &configurations);
+          NS_RELEASE(listener);
+        }
+      }
+    }
+  }
+
   nsPoint twipsDelta(aX - mOffsetX, aY - mOffsetY);
 
   // store the new position
   mOffsetX = aX;
   mOffsetY = aY;
 
-  Scroll(scrolledView, twipsDelta, nsPoint(dxPx, dyPx), p2a);
+  Scroll(scrolledView, twipsDelta, nsIntPoint(dxPx, dyPx), p2a, configurations);
 
   mViewManager->SynthesizeMouseMove(PR_TRUE);
   
@@ -680,12 +810,6 @@ NS_IMETHODIMP nsScrollPortView::ScrollToImpl(nscoord aX, nscoord aY, PRUint32 aU
   return NS_OK;
 }
 
-/************************
- *
- * smooth scrolling methods
- *
- ***********************/
-
 PRBool nsScrollPortView::IsSmoothScrollingEnabled() {
   nsCOMPtr<nsIPrefBranch> prefs = do_GetService(NS_PREFSERVICE_CONTRACTID);
   if (prefs) {
@@ -699,12 +823,10 @@ PRBool nsScrollPortView::IsSmoothScrollingEnabled() {
 }
 
 /*
- * Callback function from timer used in nsScrollPortView::DoSmoothScroll
- * this cleans up the target coordinates and incrementally calls 
- * nsScrollPortView::ScrollTo
+ * Callback function from timer used in nsScrollPortView::ScrollTo
  */
 void
-nsScrollPortView::SmoothScrollAnimationCallback (nsITimer *aTimer, void* anInstance) 
+nsScrollPortView::AsyncScrollCallback(nsITimer *aTimer, void* anInstance) 
 {
   nsScrollPortView* self = static_cast<nsScrollPortView*>(anInstance);
   if (self) {
@@ -713,22 +835,29 @@ nsScrollPortView::SmoothScrollAnimationCallback (nsITimer *aTimer, void* anInsta
 }
 
 /*
- * manages data members and calls to ScrollTo from the (static) SmoothScrollAnimationCallback method
+ * manages data members and calls to ScrollTo from the (static) AsyncScrollCallback method
  */ 
 void
 nsScrollPortView::IncrementalScroll()
 {
-  if (!mSmoothScroll) {
+  if (!mAsyncScroll)
     return;
-  }
 
-  if (mSmoothScroll->mFrameIndex < SMOOTH_SCROLL_FRAMES) {
-    ScrollToImpl(mOffsetX + mSmoothScroll->mVelocities[mSmoothScroll->mFrameIndex*2],
-                 mOffsetY + mSmoothScroll->mVelocities[mSmoothScroll->mFrameIndex*2 + 1],
-                 0);
-    mSmoothScroll->mFrameIndex++;
+  nsWeakView thisView = this;
+  if (mAsyncScroll->mIsSmoothScroll) {
+    if (mAsyncScroll->mFrameIndex < SMOOTH_SCROLL_FRAMES) {
+      ScrollToImpl(mOffsetX + mAsyncScroll->mVelocities[mAsyncScroll->mFrameIndex*2],
+                   mOffsetY + mAsyncScroll->mVelocities[mAsyncScroll->mFrameIndex*2 + 1]);
+      if (!thisView.IsAlive())
+        return;
+      mAsyncScroll->mFrameIndex++;
+      return;
+    }
   } else {
-    delete mSmoothScroll;
-    mSmoothScroll = nsnull;
+    ScrollToImpl(mDestinationX, mDestinationY);
+    if (!thisView.IsAlive())
+      return;
   }
+  delete mAsyncScroll;
+  mAsyncScroll = nsnull;
 }

@@ -40,7 +40,6 @@
 #include "nsCOMPtr.h"
 #include "nsIViewManager.h"
 #include "nsCRT.h"
-#include "nsIWidget.h"
 #include "nsITimer.h"
 #include "prtime.h"
 #include "prinrval.h"
@@ -123,6 +122,7 @@ public:
 
   NS_IMETHOD  GetWindowDimensions(nscoord *width, nscoord *height);
   NS_IMETHOD  SetWindowDimensions(nscoord width, nscoord height);
+  NS_IMETHOD  FlushDelayedResize();
 
   NS_IMETHOD  Composite(void);
 
@@ -130,7 +130,8 @@ public:
   NS_IMETHOD  UpdateView(nsIView *aView, const nsRect &aRect, PRUint32 aUpdateFlags);
   NS_IMETHOD  UpdateAllViews(PRUint32 aUpdateFlags);
 
-  NS_IMETHOD  DispatchEvent(nsGUIEvent *aEvent, nsEventStatus* aStatus);
+  NS_IMETHOD  DispatchEvent(nsGUIEvent *aEvent,
+      nsIView* aTargetView, nsEventStatus* aStatus);
 
   NS_IMETHOD  GrabMouseEvents(nsIView *aView, PRBool &aResult);
 
@@ -170,13 +171,10 @@ public:
   NS_IMETHOD  SetRootScrollableView(nsIScrollableView *aScrollable);
   NS_IMETHOD  GetRootScrollableView(nsIScrollableView **aScrollable);
 
-  NS_IMETHOD GetWidget(nsIWidget **aWidget);
-  nsIWidget* GetWidget() { return mRootView ? mRootView->GetWidget() : nsnull; }
+  NS_IMETHOD GetRootWidget(nsIWidget **aWidget);
   NS_IMETHOD ForceUpdate();
  
   NS_IMETHOD IsPainting(PRBool& aIsPainting);
-  NS_IMETHOD SetDefaultBackgroundColor(nscolor aColor);
-  NS_IMETHOD GetDefaultBackgroundColor(nscolor* aColor);
   NS_IMETHOD GetLastUserEventTime(PRUint32& aTime);
   void ProcessInvalidateEvent();
   static PRUint32 gLastUserEventTime;
@@ -192,7 +190,7 @@ public:
    *                        otherwise it returns an enum indicating why not
    */
   NS_IMETHOD GetRectVisibility(nsIView *aView, const nsRect &aRect, 
-                               PRUint16 aMinTwips, 
+                               nscoord aMinTwips,
                                nsRectVisibility *aRectVisibility);
 
   NS_IMETHOD SynthesizeMouseMove(PRBool aFromScroll);
@@ -201,79 +199,34 @@ public:
   /* Update the cached RootViewManager pointer on this view manager. */
   void InvalidateHierarchy();
 
-  /**
-   * Enables/disables focus/blur event suppression.
-   * Enabling stops focus/blur events from reaching the widgets.
-   * This should be enabled when we're messing with the frame tree,
-   * so focus/blur handlers don't mess with stuff while we are.
-   *
-   * Disabling "reboots" the focus by sending a blur to what was focused
-   * before suppression began, and by sending a focus event to what should
-   * be currently focused. Note this can run arbitrary code, and could
-   * even destroy the view manager.
-   * See Bug 399852.
-   */
-  static void SuppressFocusEvents(PRBool aSuppress);
-
-  PRBool IsFocusSuppressed()
-  {
-    return sFocusSuppressed;
-  }
-
-  static void SetCurrentlyFocusedView(nsView *aView)
-  {
-    sCurrentlyFocusView = aView;
-  }
-  
-  static nsView* GetCurrentlyFocusedView()
-  {
-    return sCurrentlyFocusView;
-  }
-
-  static void SetViewFocusedBeforeSuppression(nsView *aView)
-  {
-    sViewFocusedBeforeSuppression = aView;
-  }
-
-  static nsView* GetViewFocusedBeforeSuppression()
-  {
-    return sViewFocusedBeforeSuppression;
-  }
-
 protected:
   virtual ~nsViewManager();
 
 private:
 
-  static nsView *sCurrentlyFocusView;
-  static nsView *sViewFocusedBeforeSuppression;
-  static PRBool sFocusSuppressed;
-
   void FlushPendingInvalidates();
   void ProcessPendingUpdates(nsView *aView, PRBool aDoInvalidate);
+  /**
+   * Call WillPaint() on all view observers under this vm root.
+   */
+  void CallWillPaintOnObservers();
   void ReparentChildWidgets(nsIView* aView, nsIWidget *aNewWidget);
   void ReparentWidgets(nsIView* aView, nsIView *aParent);
   already_AddRefed<nsIRenderingContext> CreateRenderingContext(nsView &aView);
-  void UpdateWidgetArea(nsView *aWidgetView, const nsRegion &aDamagedRegion,
+  void UpdateWidgetArea(nsView *aWidgetView, nsIWidget* aWidget,
+                        const nsRegion &aDamagedRegion,
                         nsView* aIgnoreWidgetView);
 
   void UpdateViews(nsView *aView, PRUint32 aUpdateFlags);
 
   void Refresh(nsView *aView, nsIRenderingContext *aContext,
                nsIRegion *region, PRUint32 aUpdateFlags);
-  /**
-   * Refresh aView (which must be non-null) with our default background color
-   */
-  void DefaultRefresh(nsView* aView, nsIRenderingContext *aContext, const nsRect* aRect);
   void RenderViews(nsView *aRootView, nsIRenderingContext& aRC,
                    const nsRegion& aRegion);
 
   void InvalidateRectDifference(nsView *aView, const nsRect& aRect, const nsRect& aCutOut, PRUint32 aUpdateFlags);
   void InvalidateHorizontalBandDifference(nsView *aView, const nsRect& aRect, const nsRect& aCutOut,
                                           PRUint32 aUpdateFlags, nscoord aY1, nscoord aY2, PRBool aInCutOut);
-
-  void AddCoveringWidgetsToOpaqueRegion(nsRegion &aRgn, nsIDeviceContext* aContext,
-                                        nsView* aRootView);
 
   // Utilities
 
@@ -286,10 +239,11 @@ private:
   void UpdateWidgetsForView(nsView* aView);
 
   /**
-   * Transforms a rectangle from specified view's coordinate system to
-   * the first parent that has an attached widget.
+   * Transforms a rectangle from aView's coordinate system to the coordinate
+   * system of the widget attached to aWidgetView, which should be an ancestor
+   * of aView.
    */
-  void ViewToWidget(nsView *aView, nsView* aWidgetView, nsRect &aRect) const;
+  nsIntRect ViewToWidget(nsView *aView, nsView* aWidgetView, const nsRect &aRect) const;
 
   /**
    * Transforms a rectangle from specified view's coordinate system to
@@ -316,7 +270,8 @@ private:
     nsRect oldDim;
     nsRect newDim(0, 0, aWidth, aHeight);
     mRootView->GetDimensions(oldDim);
-    if (oldDim != newDim) {
+    // We care about resizes even when one dimension is already zero.
+    if (!oldDim.IsExactEqual(newDim)) {
       // Don't resize the widget. It is already being set elsewhere.
       mRootView->SetDimensions(newDim, PR_TRUE, PR_FALSE);
       if (mObserver)
@@ -394,28 +349,28 @@ public: // NOT in nsIViewManager, so private to the view module
   nsresult WillBitBlit(nsView* aView, nsPoint aScrollAmount);
   
   /**
-   * Called to inform the view manager that a view has scrolled.
+   * Called to inform the view manager that a view has scrolled via a
+   * bitblit.
    * The view manager will invalidate any widgets which may need
    * to be rerendered.
    * @param aView view to paint. should be the nsScrollPortView that
    * got scrolled.
+   * @param aBlitRegion the region that was blitted; this is just so
+   * we can notify our view observer
    * @param aUpdateRegion ensure that this part of the view is repainted
    */
-  void UpdateViewAfterScroll(nsView *aView, const nsRegion& aUpdateRegion);
+  void UpdateViewAfterScroll(nsView *aView, const nsRegion& aBlitRegion,
+                             const nsRegion& aUpdateRegion);
 
   /**
-   * Asks whether we can scroll a view using bitblt. If we say 'yes', we
-   * return in aUpdateRegion an area that must be updated (relative to aView
-   * after it has been scrolled).
+   * Given that the view aView has being moved by scrolling by aDelta
+   * (so we want to blit pixels by -aDelta), compute the regions that
+   * must be blitted and repainted to correctly update the screen.
    */
-  PRBool CanScrollWithBitBlt(nsView* aView, nsPoint aDelta, nsRegion* aUpdateRegion);
+  void GetRegionsForBlit(nsView* aView, nsPoint aDelta,
+                         nsRegion* aBlitRegion, nsRegion* aRepaintRegion);
 
   nsresult CreateRegion(nsIRegion* *result);
-
-  // return the sum of all view offsets from aView right up to the
-  // root of this view hierarchy (the view with no parent, which might
-  // not be in this view manager).
-  static nsPoint ComputeViewOffset(const nsView *aView);
 
   PRBool IsRefreshEnabled() { return RootViewManager()->mRefreshEnabled; }
 
@@ -425,11 +380,10 @@ public: // NOT in nsIViewManager, so private to the view module
   // pending updates.
   void PostPendingUpdate() { RootViewManager()->mHasPendingUpdates = PR_TRUE; }
 private:
-  nsIDeviceContext  *mContext;
+  nsCOMPtr<nsIDeviceContext> mContext;
   nsIViewObserver   *mObserver;
   nsIScrollableView *mRootScrollable;
-  nscolor           mDefaultBackgroundColor;
-  nsPoint           mMouseLocation; // device units, relative to mRootView
+  nsIntPoint        mMouseLocation; // device units, relative to mRootView
 
   // The size for a resize that we delayed until the root view becomes
   // visible again.

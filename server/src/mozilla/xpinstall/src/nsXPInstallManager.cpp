@@ -67,6 +67,8 @@
 #include "nsIWindowWatcher.h"
 #include "nsIAuthPrompt.h"
 #include "nsIWindowMediator.h"
+#include "nsIDocument.h"
+#include "nsIDOMDocument.h"
 #include "nsIDOMWindowInternal.h"
 #include "nsDirectoryService.h"
 #include "nsDirectoryServiceDefs.h"
@@ -82,6 +84,7 @@
 #include "nsISSLStatusProvider.h"
 #include "nsISSLStatus.h"
 #include "nsIX509Cert.h"
+#include "nsIX509Cert3.h"
 
 #include "nsIPrefService.h"
 #include "nsIPrefBranch.h"
@@ -113,6 +116,7 @@ nsXPInstallManager::nsXPInstallManager()
 
 nsXPInstallManager::~nsXPInstallManager()
 {
+    NS_ASSERT_OWNINGTHREAD(nsXPInstallManager);
     NS_ASSERTION(!mTriggers, "Shutdown not called, triggers still alive");
 }
 
@@ -133,8 +137,8 @@ NS_INTERFACE_MAP_BEGIN(nsXPInstallManager)
   NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsISupportsWeakReference)
 NS_INTERFACE_MAP_END
 
-NS_IMPL_ADDREF(nsXPInstallManager)
-NS_IMPL_RELEASE(nsXPInstallManager)
+NS_IMPL_THREADSAFE_ADDREF(nsXPInstallManager)
+NS_IMPL_THREADSAFE_RELEASE(nsXPInstallManager)
 
 NS_IMETHODIMP
 nsXPInstallManager::InitManagerFromChrome(const PRUnichar **aURLs,
@@ -232,6 +236,17 @@ nsXPInstallManager::InitManager(nsIDOMWindowInternal* aParentWindow, nsXPITrigge
 
     mParentWindow = aParentWindow;
 
+    // Attempt to find a load group, continue if we can't find one though
+    if (aParentWindow) {
+        nsCOMPtr<nsIDOMDocument> domdoc;
+        rv = aParentWindow->GetDocument(getter_AddRefs(domdoc));
+        if (NS_SUCCEEDED(rv) && domdoc) {
+            nsCOMPtr<nsIDocument> doc = do_QueryInterface(domdoc);
+            if (doc)
+                mLoadGroup = doc->GetDocumentLoadGroup();
+        }
+    }
+
     // Start downloading initial chunks looking for signatures,
     mOutstandingCertLoads = mTriggers->Size();
 
@@ -241,7 +256,7 @@ nsXPInstallManager::InitManager(nsIDOMWindowInternal* aParentWindow, nsXPITrigge
     NS_NewURI(getter_AddRefs(uri), NS_ConvertUTF16toUTF8(item->mURL));
     nsCOMPtr<nsIStreamListener> listener = new CertReader(uri, nsnull, this);
     if (listener)
-        rv = NS_OpenURI(listener, nsnull, uri);
+        rv = NS_OpenURI(listener, nsnull, uri, nsnull, mLoadGroup);
     else
         rv = NS_ERROR_OUT_OF_MEMORY;
 
@@ -715,6 +730,12 @@ OpenAndValidateArchive(nsIZipReader* hZip, nsIFile* jarFile, nsIPrincipal* aPrin
         return nsInstall::INVALID_SIGNATURE;
     }
 
+    if (NS_FAILED(hZip->Test("install.rdf")))
+    {
+        NS_WARNING("Archive did not contain an install manifest!");
+        return nsInstall::NO_INSTALL_SCRIPT;
+    }
+
     return nsInstall::SUCCESS;
 }
 
@@ -874,7 +895,7 @@ NS_IMETHODIMP nsXPInstallManager::DownloadNext()
                 {
                     nsCOMPtr<nsIChannel> channel;
 
-                    rv = NS_NewChannel(getter_AddRefs(channel), pURL, nsnull, nsnull, this);
+                    rv = NS_NewChannel(getter_AddRefs(channel), pURL, nsnull, mLoadGroup, this);
                     if (NS_SUCCEEDED(rv))
                     {
                         rv = channel->AsyncOpen(this, nsnull);
@@ -1082,11 +1103,16 @@ nsXPInstallManager::CheckCert(nsIChannel* aChannel)
     }
 
     if (issuer) {
-        nsAutoString tokenName;
-        rv = issuer->GetTokenName(tokenName);
+        PRUint32 length;
+        PRUnichar** tokenNames;
+        nsCOMPtr<nsIX509Cert3> issuer2(do_QueryInterface(issuer));
+        NS_ENSURE_TRUE(status, NS_ERROR_FAILURE);
+        rv = issuer2->GetAllTokenNames(&length, &tokenNames);
         NS_ENSURE_SUCCESS(rv ,rv);
-        if (tokenName.Equals(NS_LITERAL_STRING("Builtin Object Token")))
-            return NS_OK;
+        for (PRUint32 i = 0; i < length; i++) {
+            if (nsDependentString(tokenNames[i]).Equals(NS_LITERAL_STRING("Builtin Object Token")))
+                return NS_OK;
+        }
     }
     return NS_ERROR_FAILURE;
 }
@@ -1113,6 +1139,9 @@ nsXPInstallManager::OnStartRequest(nsIRequest* request, nsISupports *ctxt)
         }
     }
 
+    if (mLoadGroup)
+        mLoadGroup->RemoveRequest(request, nsnull, NS_BINDING_RETARGETED);
+
     NS_ASSERTION( mItem && mItem->mFile, "XPIMgr::OnStartRequest bad state");
     if ( mItem && mItem->mFile )
     {
@@ -1137,6 +1166,7 @@ nsXPInstallManager::OnStopRequest(nsIRequest *request, nsISupports *ctxt,
     {
 
         case NS_BINDING_SUCCEEDED:
+            NS_ASSERTION( mItem->mOutStream, "XPIManager: output stream doesn't exist");
             rv = NS_OK;
             break;
 
@@ -1153,7 +1183,6 @@ nsXPInstallManager::OnStopRequest(nsIRequest *request, nsISupports *ctxt,
     }
 
     NS_ASSERTION( mItem, "Bad state in XPIManager");
-    NS_ASSERTION( mItem->mOutStream, "XPIManager: output stream doesn't exist");
     if ( mItem && mItem->mOutStream )
     {
         mItem->mOutStream->Close();
@@ -1251,7 +1280,7 @@ nsXPInstallManager::OnProgress(nsIRequest* request, nsISupports *ctxt, PRUint64 
             if (NS_FAILED(rv)) return rv;
         }
         // XXX once channels support that, use 64-bit contentlength
-        rv = mDlg->OnProgress( mNextItem-1, aProgress, nsUint64(mContentLength) );
+        rv = mDlg->OnProgress( mNextItem-1, aProgress, PRUint64(mContentLength) );
     }
 
     return rv;
@@ -1365,7 +1394,7 @@ nsXPInstallManager::OnCertAvailable(nsIURI *aURI,
         return OnCertAvailable(uri, context, NS_ERROR_FAILURE, nsnull);
 
     NS_ADDREF(listener);
-    nsresult rv = NS_OpenURI(listener, nsnull, uri);
+    nsresult rv = NS_OpenURI(listener, nsnull, uri, nsnull, mLoadGroup);
 
     NS_ASSERTION(NS_SUCCEEDED(rv), "OpenURI failed");
     NS_RELEASE(listener);

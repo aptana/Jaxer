@@ -46,9 +46,9 @@
 class nsIRenderingContext;
 class nsGUIEvent;
 
-#define NS_IVIEWOBSERVER_IID   \
-{ 0x0f4bc34a, 0xc93b, 0x4699, \
-{ 0xb6, 0xc2, 0xb3, 0xca, 0x9e, 0xe4, 0x6c, 0x95 } }
+#define NS_IVIEWOBSERVER_IID  \
+  { 0xc85d474d, 0x316e, 0x491c, \
+    { 0x8b, 0xc5, 0x24, 0xba, 0xb7, 0xbb, 0x68, 0x9e } }
 
 class nsIViewObserver : public nsISupports
 {
@@ -63,12 +63,32 @@ public:
    * of the view is painted at (0,0) in the rendering context's current
    * transform. For best results this should transform to pixel-aligned
    * coordinates.
-   * @param aDirtyRegion the region to be painted, in the coordinates of aRootView
+   * @param aDirtyRegion the region to be painted, in the coordinates of
+   * aRootView
    * @return error status
    */
   NS_IMETHOD Paint(nsIView*             aRootView,
                    nsIRenderingContext* aRenderingContext,
                    const nsRegion&      aDirtyRegion) = 0;
+
+  /* called when the observer needs to paint something, but the view
+   * tree is unstable, so it must *not* paint, or even examine, the
+   * frame subtree rooted at the view.  (It is, however, safe to inspect
+   * the state of the view itself, and any associated widget.)  The name
+   * illustrates the expected behavior, which is to paint some default
+   * background color over the dirty rect.
+   *
+   * @param aRenderingContext rendering context to paint to; the origin
+   * of the view is painted at (0,0) in the rendering context's current
+   * transform. For best results this should transform to pixel-aligned
+   * coordinates.
+   * @param aDirtyRect the rectangle to be painted, in the coordinates
+   * of aRootView
+   * @return error status
+   */
+  NS_IMETHOD PaintDefaultBackground(nsIView*             aRootView,
+                                    nsIRenderingContext* aRenderingContext,
+                                    const nsRect&        aDirtyRect) = 0;
 
   /**
    * @see nsLayoutUtils::ComputeRepaintRegionForCopy
@@ -76,7 +96,8 @@ public:
   NS_IMETHOD ComputeRepaintRegionForCopy(nsIView*      aRootView,
                                          nsIView*      aMovingView,
                                          nsPoint       aDelta,
-                                         const nsRect& aCopyRect,
+                                         const nsRect& aUpdateRect,
+                                         nsRegion*     aBlitRegion,
                                          nsRegion*     aRepaintRegion) = 0;
 
   /* called when the observer needs to handle an event
@@ -114,6 +135,28 @@ public:
    * and geometry changes if it wants to.
    */
   NS_IMETHOD_(void) WillPaint() = 0;
+
+  /**
+   * Notify the observer that it should invalidate the frame bounds for
+   * the frame associated with this view, due to scrolling.
+   */
+  NS_IMETHOD_(void) InvalidateFrameForScrolledView(nsIView *aView) = 0;
+
+  /**
+   * Notify the observer that some areas of the root view have been
+   * invalidated/blitted due to scrolling. A bitblit-scroll occurred
+   * so we can be sure that rootView->NeedsInvalidateFrameOnScroll is false.
+   */
+  NS_IMETHOD_(void) NotifyInvalidateForScrolledView(const nsRegion& aBlitRegion,
+                                                    const nsRegion& aInvalidateRegion) = 0;
+
+  /**
+   * Dispatch the given synthesized mouse move event, and if
+   * aFlushOnHoverChange is true, flush layout if :hover changes cause
+   * any restyles.
+   */
+  NS_IMETHOD_(void) DispatchSynthMouseMove(nsGUIEvent *aEvent,
+                                           PRBool aFlushOnHoverChange) = 0;
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsIViewObserver, NS_IVIEWOBSERVER_IID)

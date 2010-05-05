@@ -46,14 +46,12 @@
 #include "nsIRegion.h"
 #include "nsIInterfaceRequestor.h"
 
-
 //mmptemp
 
-static nsEventStatus PR_CALLBACK HandleEvent(nsGUIEvent *aEvent);
+static nsEventStatus HandleEvent(nsGUIEvent *aEvent);
 
 
 //#define SHOW_VIEW_BORDERS
-//#define HIDE_ALL_WIDGETS
 
 // {34297A07-A8FD-d811-87C6-000244212BCB}
 #define VIEW_WRAPPER_IID \
@@ -156,7 +154,7 @@ static ViewWrapper* GetWrapperFor(nsIWidget* aWidget)
 //
 // Main events handler
 //
-nsEventStatus PR_CALLBACK HandleEvent(nsGUIEvent *aEvent)
+nsEventStatus HandleEvent(nsGUIEvent *aEvent)
 { 
 //printf(" %d %d %d (%d,%d) \n", aEvent->widget, aEvent->widgetSupports, 
 //       aEvent->message, aEvent->point.x, aEvent->point.y);
@@ -165,7 +163,8 @@ nsEventStatus PR_CALLBACK HandleEvent(nsGUIEvent *aEvent)
 
   if (view)
   {
-    view->GetViewManager()->DispatchEvent(aEvent, &result);
+    nsCOMPtr<nsIViewManager> vm = view->GetViewManager();
+    vm->DispatchEvent(aEvent, view, &result);
   }
 
   return result;
@@ -199,23 +198,6 @@ void nsView::DropMouseGrabbing() {
 nsView::~nsView()
 {
   MOZ_COUNT_DTOR(nsView);
-
-  if (this == nsViewManager::GetViewFocusedBeforeSuppression()) {
-#ifdef DEBUG_FOCUS_SUPPRESSION
-    if (GetViewManager()->IsFocusSuppressed()) {
-      printf("*** 0 INFO TODO [CPEARCE] destroying view focused before suppression, while suppressed\n");
-    }
-#endif
-    nsViewManager::SetViewFocusedBeforeSuppression(nsnull);
-  }
-  if (this == nsViewManager::GetCurrentlyFocusedView()) {
-#ifdef DEBUG_FOCUS_SUPPRESSION
-    if (GetViewManager()->IsFocusSuppressed()) {
-      printf("*** 0 INFO TODO [CPEARCE] destroying view currently focused, while suppressed\n");
-    }
-#endif
-    nsViewManager::SetCurrentlyFocusedView(nsnull);
-  }
 
   while (GetFirstChild())
   {
@@ -268,9 +250,7 @@ nsView::~nsView()
     NS_IF_RELEASE(wrapper);
 
     mWindow->SetClientData(nsnull);
-    if (!(mVFlags & NS_VIEW_DISOWNS_WIDGET)) {
-      mWindow->Destroy();
-    }
+    mWindow->Destroy();
     NS_RELEASE(mWindow);
   }
   delete mDirtyRegion;
@@ -357,7 +337,16 @@ void nsView::ResetWidgetBounds(PRBool aRecurse, PRBool aMoveOnly,
   }
 }
 
-nsRect nsView::CalcWidgetBounds(nsWindowType aType)
+PRBool nsView::IsEffectivelyVisible()
+{
+  for (nsView* v = this; v; v = v->mParent) {
+    if (v->GetVisibility() == nsViewVisibility_kHide)
+      return PR_FALSE;
+  }
+  return PR_TRUE;
+}
+
+nsIntRect nsView::CalcWidgetBounds(nsWindowType aType)
 {
   nsCOMPtr<nsIDeviceContext> dx;
   mViewManager->GetDeviceContext(*getter_AddRefs(dx));
@@ -373,16 +362,14 @@ nsRect nsView::CalcWidgetBounds(nsWindowType aType)
     viewBounds += offset;
 
     if (parentWidget && aType == eWindowType_popup &&
-        mVis == nsViewVisibility_kShow) {
-      nsRect screenRect(0,0,1,1);
-      parentWidget->WidgetToScreen(screenRect, screenRect);
-      viewBounds += nsPoint(NSIntPixelsToAppUnits(screenRect.x, p2a),
-                            NSIntPixelsToAppUnits(screenRect.y, p2a));
+        IsEffectivelyVisible()) {
+      nsIntPoint screenPoint = parentWidget->WidgetToScreenOffset();
+      viewBounds += nsPoint(NSIntPixelsToAppUnits(screenPoint.x, p2a),
+                            NSIntPixelsToAppUnits(screenPoint.y, p2a));
     }
   }
 
-  nsRect newBounds(viewBounds);
-  newBounds.ScaleRoundPreservingCentersInverse(p2a);
+  nsIntRect newBounds = viewBounds.ToNearestPixels(p2a);
 
   nsPoint roundedOffset(NSIntPixelsToAppUnits(newBounds.x, p2a),
                         NSIntPixelsToAppUnits(newBounds.y, p2a));
@@ -399,7 +386,7 @@ void nsView::DoResetWidgetBounds(PRBool aMoveOnly,
     return;
   }
   
-  nsRect curBounds;
+  nsIntRect curBounds;
   mWindow->GetBounds(curBounds);
   nsWindowType type;
   mWindow->GetWindowType(type);
@@ -415,7 +402,7 @@ void nsView::DoResetWidgetBounds(PRBool aMoveOnly,
 
   NS_PRECONDITION(mWindow, "Why was this called??");
 
-  nsRect newBounds = CalcWidgetBounds(type);
+  nsIntRect newBounds = CalcWidgetBounds(type);
 
   PRBool changedPos = curBounds.TopLeft() != newBounds.TopLeft();
   PRBool changedSize = curBounds.Size() != newBounds.Size();
@@ -454,29 +441,38 @@ void nsView::SetDimensions(const nsRect& aRect, PRBool aPaint, PRBool aResizeWid
   }
 }
 
-NS_IMETHODIMP nsView::SetVisibility(nsViewVisibility aVisibility)
+void nsView::NotifyEffectiveVisibilityChanged(PRBool aEffectivelyVisible)
 {
-
-  mVis = aVisibility;
-
-  if (aVisibility == nsViewVisibility_kHide)
+  if (!aEffectivelyVisible)
   {
     DropMouseGrabbing();
   }
 
   if (nsnull != mWindow)
   {
-#ifndef HIDE_ALL_WIDGETS
-    if (mVis == nsViewVisibility_kShow)
+    if (aEffectivelyVisible)
     {
       DoResetWidgetBounds(PR_FALSE, PR_TRUE);
       mWindow->Show(PR_TRUE);
     }
     else
-#endif
       mWindow->Show(PR_FALSE);
   }
 
+  for (nsView* child = mFirstChild; child; child = child->mNextSibling) {
+    if (child->mVis == nsViewVisibility_kHide) {
+      // It was effectively hidden and still is
+      continue;
+    }
+    // Our child is visible if we are
+    child->NotifyEffectiveVisibilityChanged(aEffectivelyVisible);
+  }
+}
+
+NS_IMETHODIMP nsView::SetVisibility(nsViewVisibility aVisibility)
+{
+  mVis = aVisibility;
+  NotifyEffectiveVisibilityChanged(IsEffectivelyVisible());
   return NS_OK;
 }
 
@@ -631,14 +627,15 @@ nsresult nsIView::CreateWidget(const nsIID &aWindowIID,
     ViewWrapper* wrapper = GetWrapperFor(mWindow);
     NS_IF_RELEASE(wrapper);
     mWindow->SetClientData(nsnull);
+    mWindow->Destroy();
     NS_RELEASE(mWindow);
   }
 
   nsView* v = static_cast<nsView*>(this);
 
-  nsRect trect = v->CalcWidgetBounds(aWidgetInitData
-                                     ? aWidgetInitData->mWindowType
-                                     : eWindowType_child);
+  nsIntRect trect = v->CalcWidgetBounds(aWidgetInitData
+                                        ? aWidgetInitData->mWindowType
+                                        : eWindowType_child);
 
   if (NS_OK == v->LoadWidget(aWindowIID))
   {
@@ -662,7 +659,7 @@ nsresult nsIView::CreateWidget(const nsIID &aWindowIID,
       aWidgetInitData->mContentType = aContentType;
 
       if (aNative && aWidgetInitData->mWindowType != eWindowType_popup)
-        mWindow->Create(aNative, trect, ::HandleEvent, dx, nsnull, nsnull, aWidgetInitData);
+        mWindow->Create(nsnull, aNative, trect, ::HandleEvent, dx, nsnull, nsnull, aWidgetInitData);
       else
       {
         if (!initDataPassedIn && GetParent() && 
@@ -671,7 +668,7 @@ nsresult nsIView::CreateWidget(const nsIID &aWindowIID,
         if (aParentWidget) {
           NS_ASSERTION(aWidgetInitData->mWindowType == eWindowType_popup,
                        "popup widget type expected");
-          mWindow->Create(aParentWidget, trect,
+          mWindow->Create(aParentWidget, nsnull, trect,
                           ::HandleEvent, dx, nsnull, nsnull, aWidgetInitData);
         }
         else {
@@ -682,10 +679,10 @@ nsresult nsIView::CreateWidget(const nsIID &aWindowIID,
             // when printing
             if (!parentWidget)
               return NS_ERROR_FAILURE;
-            mWindow->Create(parentWidget->GetNativeData(NS_NATIVE_WIDGET), trect,
+            mWindow->Create(nsnull, parentWidget->GetNativeData(NS_NATIVE_WIDGET), trect,
                             ::HandleEvent, dx, nsnull, nsnull, aWidgetInitData);
           } else {
-            mWindow->Create(parentWidget, trect,
+            mWindow->Create(parentWidget, nsnull, trect,
                             ::HandleEvent, dx, nsnull, nsnull, aWidgetInitData);
           }
         }
@@ -748,6 +745,31 @@ nsresult nsView::LoadWidget(const nsCID &aClassIID)
   return rv;
 }
 
+EVENT_CALLBACK nsIView::AttachWidgetEventHandler(nsIWidget* aWidget)
+{
+#ifdef DEBUG
+  void* data = nsnull;
+  aWidget->GetClientData(data);
+  NS_ASSERTION(!data, "Already got client data");
+#endif
+
+  nsView* v = static_cast<nsView*>(this);
+  ViewWrapper* wrapper = new ViewWrapper(v);
+  if (!wrapper)
+    return nsnull;
+  NS_ADDREF(wrapper); // Will be released in DetachWidgetEventHandler
+  aWidget->SetClientData(wrapper);
+  return ::HandleEvent;
+}
+
+void nsIView::DetachWidgetEventHandler(nsIWidget* aWidget)
+{
+  ViewWrapper* wrapper = GetWrapperFor(aWidget);
+  NS_ASSERTION(!wrapper || wrapper->GetView() == this, "Wrong view");
+  NS_IF_RELEASE(wrapper);
+  aWidget->SetClientData(nsnull);
+}
+
 #ifdef DEBUG
 void nsIView::List(FILE* out, PRInt32 aIndent) const
 {
@@ -755,17 +777,15 @@ void nsIView::List(FILE* out, PRInt32 aIndent) const
   for (i = aIndent; --i >= 0; ) fputs("  ", out);
   fprintf(out, "%p ", (void*)this);
   if (nsnull != mWindow) {
-    nsRect windowBounds;
-    nsRect nonclientBounds;
-    float p2t;
     nsIDeviceContext *dx;
     mViewManager->GetDeviceContext(dx);
-    p2t = (float) dx->AppUnitsPerDevPixel();
+    nscoord p2a = dx->AppUnitsPerDevPixel();
     NS_RELEASE(dx);
-    mWindow->GetClientBounds(windowBounds);
-    windowBounds *= p2t;
-    mWindow->GetBounds(nonclientBounds);
-    nonclientBounds *= p2t;
+    nsIntRect rect;
+    mWindow->GetClientBounds(rect);
+    nsRect windowBounds = rect.ToAppUnits(p2a);
+    mWindow->GetBounds(rect);
+    nsRect nonclientBounds = rect.ToAppUnits(p2a);
     nsrefcnt widgetRefCnt = mWindow->AddRef() - 1;
     mWindow->Release();
     PRInt32 Z;
@@ -778,7 +798,6 @@ void nsIView::List(FILE* out, PRInt32 aIndent) const
   nsRect brect = GetBounds();
   fprintf(out, "{%d,%d,%d,%d}",
           brect.x, brect.y, brect.width, brect.height);
-  const nsView* v = static_cast<const nsView*>(this);
   fprintf(out, " z=%d vis=%d clientData=%p <\n",
           mZIndex, mVis, mClientData);
   for (nsView* kid = mFirstChild; kid; kid = kid->GetNextSibling()) {
@@ -813,21 +832,19 @@ nsPoint nsIView::GetOffsetTo(const nsIView* aOther) const
 
 nsIntPoint nsIView::GetScreenPosition() const
 {
-  nsIntRect screenRect(0,0,0,0);  
+  nsIntPoint screenPoint(0,0);  
   nsPoint toWidgetOffset(0,0);
   nsIWidget* widget = GetNearestWidget(&toWidgetOffset);
   if (widget) {
     nsCOMPtr<nsIDeviceContext> dx;
     mViewManager->GetDeviceContext(*getter_AddRefs(dx));
     PRInt32 p2a = dx->AppUnitsPerDevPixel();
-    nsIntRect ourRect(NSAppUnitsToIntPixels(toWidgetOffset.x, p2a),
-                      NSAppUnitsToIntPixels(toWidgetOffset.y, p2a),
-                      0,
-                      0);
-    widget->WidgetToScreen(ourRect, screenRect);
+    nsIntPoint ourPoint(NSAppUnitsToIntPixels(toWidgetOffset.x, p2a),
+                        NSAppUnitsToIntPixels(toWidgetOffset.y, p2a));
+    screenPoint = ourPoint + widget->WidgetToScreenOffset();
   }
   
-  return nsIntPoint(screenRect.x, screenRect.y);
+  return screenPoint;
 }
 
 nsIWidget* nsIView::GetNearestWidget(nsPoint* aOffset) const
@@ -842,7 +859,7 @@ nsIWidget* nsIView::GetNearestWidget(nsPoint* aOffset) const
     if (aOffset) {
       *aOffset = pt;
     }
-    return static_cast<const nsView*>(this)->GetViewManager()->GetWidget();
+    return nsnull;
   }
 
   // pt is now the offset from v's origin to this's origin
@@ -874,4 +891,16 @@ nsIView::SetDeletionObserver(nsWeakView* aDeletionObserver)
     aDeletionObserver->SetPrevious(mDeletionObserver);
   }
   mDeletionObserver = aDeletionObserver;
+}
+
+/* We invalidate the frame on a scroll iff this frame is marked as such or if
+ * some parent is.
+ */
+PRBool nsIView::NeedsInvalidateFrameOnScroll() const
+{
+  for (const nsIView *currView = this; currView != nsnull; currView = currView->GetParent())
+    if (currView->mVFlags & NS_VIEW_FLAG_INVALIDATE_ON_SCROLL)
+      return PR_TRUE;
+  
+  return PR_FALSE;
 }

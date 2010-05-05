@@ -40,7 +40,6 @@
 
 #include "nscore.h"
 #include "nsIView.h"
-#include "nsColor.h"
 #include "nsEvent.h"
 #include "nsIRenderingContext.h"
 
@@ -60,10 +59,9 @@ enum nsRectVisibility {
   nsRectVisibility_kZeroAreaRect
 }; 
 
-// 855e75b8-32cf-4e16-bc50-4e04c53f6cbc
 #define NS_IVIEWMANAGER_IID   \
-{ 0x855e75b8, 0x32cf, 0x4e16, \
-  { 0xbc, 0x50, 0x4e, 0x04, 0xc5, 0x3f, 0x6c, 0xbc } }
+  { 0x739bbc2b, 0x5c45, 0x40bb, \
+    { 0xb0, 0xbc, 0xe3, 0x1c, 0xe0, 0xf2, 0x19, 0xc2 } }
 
 class nsIViewManager : public nsISupports
 {
@@ -139,6 +137,11 @@ public:
   NS_IMETHOD  SetWindowDimensions(nscoord aWidth, nscoord aHeight) = 0;
 
   /**
+   * Do any resizes that are pending.
+   */
+  NS_IMETHOD  FlushDelayedResize() = 0;
+
+  /**
    * Called to force a redrawing of any dirty areas.
    */
   // XXXbz why is this exposed?  Shouldn't update view batches handle this?
@@ -177,10 +180,12 @@ public:
    * Called to dispatch an event to the appropriate view. Often called
    * as a result of receiving a mouse or keyboard event from the widget
    * event system.
-   * @param event event to dispatch
-   * @result event handling status
+   * @param aEvent event to dispatch
+   * @param aViewTarget dispatch the event to this view
+   * @param aStatus event handling status
    */
-  NS_IMETHOD  DispatchEvent(nsGUIEvent *aEvent, nsEventStatus* aStatus) = 0;
+  NS_IMETHOD  DispatchEvent(nsGUIEvent *aEvent,
+      nsIView* aViewTarget, nsEventStatus* aStatus) = 0;
 
   /**
    * Used to grab/capture all mouse events for a specific view,
@@ -251,7 +256,12 @@ public:
                          PRBool aRepaintExposedAreaOnly = PR_FALSE) = 0;
 
   /**
-   * Set the visibility of a view.
+   * Set the visibility of a view. Hidden views have the effect of hiding
+   * their descendants as well. This does not affect painting, so layout
+   * is responsible for ensuring that content in hidden views is not
+   * painted nor handling events. It does affect the visibility of widgets;
+   * if a view is hidden, descendant views with widgets have their widgets
+   * hidden.
    * The view manager generates the appropriate dirty regions.
    * @param aView view to change visibility state of
    * @param visible new visibility state
@@ -322,7 +332,7 @@ public:
    */
   NS_IMETHOD EnableRefresh(PRUint32 aUpdateFlags) = 0;
 
-  class UpdateViewBatch {
+  class NS_STACK_CLASS UpdateViewBatch {
   public:
     UpdateViewBatch() {}
   /**
@@ -412,11 +422,10 @@ public:
   NS_IMETHOD GetRootScrollableView(nsIScrollableView **aScrollable) = 0;
 
   /**
-   * Retrieve the widget at the root of the view manager. This is the
-   * widget associated with the root view, if the root view exists and has
-   * a widget.
+   * Retrieve the widget at the root of the nearest enclosing
+   * view manager whose root view has a widget.
    */
-  NS_IMETHOD GetWidget(nsIWidget **aWidget) = 0;
+  NS_IMETHOD GetRootWidget(nsIWidget **aWidget) = 0;
 
   /**
    * Force update of view manager widget
@@ -435,22 +444,6 @@ public:
    *                  PR_FALSE otherwise
    */
   NS_IMETHOD IsPainting(PRBool& aIsPainting)=0;
-
-  /**
-   * Set the default background color that the view manager should use
-   * to paint otherwise unowned areas. If the color isn't known, just set
-   * it to zero (which means 'transparent' since the color is RGBA).
-   *
-   * @param aColor the default background color
-   */
-  NS_IMETHOD SetDefaultBackgroundColor(nscolor aColor)=0;
-
-  /**
-   * Retrieve the default background color.
-   *
-   * @param aColor the default background color
-   */
-  NS_IMETHOD GetDefaultBackgroundColor(nscolor* aColor)=0;
 
   /**
    * Retrieve the time of the last user event. User events
@@ -472,7 +465,7 @@ public:
    *                        otherwise it returns an enum indicating why not
    */
   NS_IMETHOD GetRectVisibility(nsIView *aView, const nsRect &aRect, 
-                               PRUint16 aMinTwips, 
+                               nscoord aMinTwips,
                                nsRectVisibility *aRectVisibility)=0;
 
   /**
