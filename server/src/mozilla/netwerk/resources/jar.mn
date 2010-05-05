@@ -1,6 +1,0 @@
-#ifndef MOZ_XUL_APP
-#ifndef JAXER
-comm.jar:
-*       content/necko/contents.rdf  (content/contents.rdf)
-#endif
-#endif
