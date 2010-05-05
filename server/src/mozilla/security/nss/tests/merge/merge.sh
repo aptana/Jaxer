@@ -1,4 +1,4 @@
-#! /bin/sh  
+#! /bin/bash  
 #
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -13,15 +13,14 @@
 # for the specific language governing rights and limitations under the
 # License.
 #
-# The Original Code is the Netscape security libraries.
+# The Original Code is the Network Security Services (NSS)
 #
 # The Initial Developer of the Original Code is
 # Netscape Communications Corporation.
-# Portions created by the Initial Developer are Copyright (C) 1994-2000
+# Portions created by the Initial Developer are Copyright (C) 2008-2009
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s):
-#   Dr Vipul Gupta <vipul.gupta@sun.com>, Sun Microsystems Laboratories
 #
 # Alternatively, the contents of this file may be used under the terms of
 # either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -122,6 +121,30 @@ merge_init()
   # copy the smime text samples
   cp ${QADIR}/smime/*.txt .
 
+  # create a set of conflicting names.
+  CONFLICT1DIR=conflict1
+  CONFLICT2DIR=conflict2
+  mkdir ${CONFLICT1DIR}
+  mkdir ${CONFLICT2DIR}
+  # in the upgrade mode (dbm->sql), make sure our test databases
+  # are dbm databases.
+  if [ "${TEST_MODE}" = "UPGRADE_DB" ]; then
+	save=${NSS_DEFAULT_DB_TYPE}
+	NSS_DEFAULT_DB_TYPE= ; export NSS_DEFAULT_DB_TYPE
+  fi
+
+  certutil -N -d ${CONFLICT1DIR} -f ${R_PWFILE}
+  certutil -N -d ${CONFLICT2DIR} -f ${R_PWFILE}
+  certutil -A -n Alice -t ,, -i ${R_CADIR}/TestUser41.cert -d ${CONFLICT1DIR}
+  certutil -A -n "Alice #1" -t ,, -i ${R_CADIR}/TestUser42.cert -d ${CONFLICT1DIR}
+  certutil -A -n "Alice #99" -t ,, -i ${R_CADIR}/TestUser43.cert -d ${CONFLICT1DIR}
+  certutil -A -n Alice -t ,, -i ${R_CADIR}/TestUser44.cert -d ${CONFLICT2DIR}
+  certutil -A -n "Alice #1" -t ,, -i ${R_CADIR}/TestUser45.cert -d ${CONFLICT2DIR}
+  certutil -A -n "Alice #99" -t ,, -i ${R_CADIR}/TestUser46.cert -d ${CONFLICT2DIR}
+  if [ "${TEST_MODE}" = "UPGRADE_DB" ]; then
+	NSS_DEFAULT_DB_TYPE=${save}; export NSS_DEFAULT_DB_TYPE
+  fi
+
   #
   # allow all the tests to run in standalone mode.
   #  in standalone mode, TEST_MODE is not set.
@@ -131,7 +154,7 @@ merge_init()
   #   from dbm databases (created above) into a new sql db.
   if [ -z "${TEST_MODE}" ] && [ ${HAS_EXPLICIT_DB} -eq 0 ]; then
 	echo "*** Using Standalone Upgrade DB mode"
-	export NSS_DEFAULT_DB_TYPE=sql
+	NSS_DEFAULT_DB_TYPE=sql; export NSS_DEFAULT_DB_TYPE
 	echo certutil --upgrade-merge --source-dir ${P_R_ALICEDIR} --upgrade-id local -d ${PROFILE} -f ${R_PWFILE} -@ ${R_PWFILE}
 	${BINDIR}/certutil --upgrade-merge --source-dir ${P_R_ALICEDIR} --upgrade-id local -d ${PROFILE}  -f ${R_PWFILE} -@ ${R_PWFILE}
 	TEST_MODE=UPGRADE_DB
@@ -188,6 +211,33 @@ merge_main()
   merge_cmd ext_client --source-dir ${P_R_EXT_CLIENTDIR} -d ${PROFILE} -f ${R_PWFILE} -@ ${R_PWFILE}
   html_msg $? 0 "Merging ext_client"
 
+  # Merge conflicting nicknames in conflict1dir
+  # contains several certificates with nicknames that conflict with the target
+  # database
+  MERGE_ID=conflict1
+  echo "$SCRIPTNAME: Merging in conflicting nicknames 1"
+  merge_cmd conflict1 --source-dir ${CONFLICT1DIR} -d ${PROFILE} -f ${R_PWFILE} -@ ${R_PWFILE}
+
+  html_msg $? 0 "Merging conflicting nicknames 1"
+
+  # Merge conflicting nicknames in conflict2dir
+  # contains several certificates with nicknames that conflict with the target
+  # database
+  MERGE_ID=conflict2
+  echo "$SCRIPTNAME: Merging in conflicting nicknames 1"
+  merge_cmd conflict2 --source-dir ${CONFLICT2DIR} -d ${PROFILE} -f ${R_PWFILE} -@ ${R_PWFILE}
+  html_msg $? 0 "Merging conflicting nicknames 2"
+
+  # Make sure conflicted names were properly sorted out.
+  echo "$SCRIPTNAME: Verify nicknames were deconflicted (Alice #4)"
+  certutil -L -n "Alice #4" -d ${PROFILE}
+  html_msg $? 0 "Verify nicknames were deconflicted (Alice #4)"
+
+  # Make sure conflicted names were properly sorted out.
+  echo "$SCRIPTNAME: Verify nicknames were deconflicted (Alice #100)"
+  certutil -L -n "Alice #100" -d ${PROFILE}
+  html_msg $? 0 "Verify nicknames were deconflicted (Alice #100)"
+
   # Merge in SDR
   # contains a secret SDR key
   MERGE_ID=SDR
@@ -201,8 +251,8 @@ merge_main()
 
   # Make sure we can decrypt with our original SDR key generated above
   echo "$SCRIPTNAME: Decrypt - With Original SDR Key"
-  ${PROFTOOL} echo "sdrtest -d ${PROFILE} -i ${VALUE3} -t Test2 -f ${R_PWFILE}"
-  ${BINDIR}/sdrtest -d ${PROFILE} -i ${VALUE3} -t Test2 -f ${R_PWFILE}
+  echo "sdrtest -d ${PROFILE} -i ${VALUE3} -t Test2 -f ${R_PWFILE}"
+  ${PROFTOOL} ${BINDIR}/sdrtest -d ${PROFILE} -i ${VALUE3} -t Test2 -f ${R_PWFILE}
   html_msg $? 0 "Decrypt - Value 3"
 
   # Make sure we can decrypt with our the SDR key merged in from ../SDR

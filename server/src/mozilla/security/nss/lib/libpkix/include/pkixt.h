@@ -121,7 +121,6 @@ typedef struct PKIX_ListStruct PKIX_List;
 typedef struct PKIX_ForwardBuilderStateStruct PKIX_ForwardBuilderState;
 typedef struct PKIX_DefaultRevocationCheckerStruct
                         PKIX_DefaultRevocationChecker;
-typedef struct PKIX_OcspCheckerStruct PKIX_OcspChecker;
 typedef struct PKIX_VerifyNodeStruct PKIX_VerifyNode;
 
 /* Portability Layer (PL) data types
@@ -130,6 +129,7 @@ typedef struct PKIX_VerifyNodeStruct PKIX_VerifyNode;
  * consistently across platforms
  */
 
+typedef struct PKIX_PL_NssContextStruct PKIX_PL_NssContext;
 typedef struct PKIX_PL_ObjectStruct PKIX_PL_Object;
 typedef struct PKIX_PL_ByteArrayStruct PKIX_PL_ByteArray;
 typedef struct PKIX_PL_HashTableStruct PKIX_PL_HashTable;
@@ -218,11 +218,11 @@ typedef int PKIX_Boolean;
     TYPEMACRO(COMCERTSELPARAMS), \
     TYPEMACRO(COMCRLSELPARAMS), \
     TYPEMACRO(CRL), \
+    TYPEMACRO(CRLDP), \
     TYPEMACRO(CRLENTRY), \
     TYPEMACRO(CRLSELECTOR), \
     TYPEMACRO(DATE), \
-    TYPEMACRO(DEFAULTCRLCHECKERSTATE), \
-    TYPEMACRO(DEFAULTREVOCATIONCHECKER), \
+    TYPEMACRO(CRLCHECKER), \
     TYPEMACRO(EKUCHECKER), \
     TYPEMACRO(ERROR), \
     TYPEMACRO(FORWARDBUILDERSTATE), \
@@ -244,10 +244,10 @@ typedef int PKIX_Boolean;
     TYPEMACRO(OCSPREQUEST), \
     TYPEMACRO(OCSPRESPONSE), \
     TYPEMACRO(OID), \
+    TYPEMACRO(REVOCATIONCHECKER), \
     TYPEMACRO(PROCESSINGPARAMS), \
     TYPEMACRO(PUBLICKEY), \
     TYPEMACRO(RESOURCELIMITS), \
-    TYPEMACRO(REVOCATIONCHECKER), \
     TYPEMACRO(RWLOCK), \
     TYPEMACRO(SIGNATURECHECKERSTATE), \
     TYPEMACRO(SOCKET), \
@@ -311,11 +311,11 @@ typedef enum {     /* Now invoke all those TYPEMACROs to assign the numbers */
    ERRMACRO(COMCRLSELPARAMS), \
    ERRMACRO(CONTEXT), \
    ERRMACRO(CRL), \
+   ERRMACRO(CRLDP), \
    ERRMACRO(CRLENTRY), \
    ERRMACRO(CRLSELECTOR), \
+   ERRMACRO(CRLCHECKER), \
    ERRMACRO(DATE), \
-   ERRMACRO(DEFAULTCRLCHECKERSTATE), \
-   ERRMACRO(DEFAULTREVOCATIONCHECKER), \
    ERRMACRO(EKUCHECKER), \
    ERRMACRO(ERROR), \
    ERRMACRO(FATAL), \
@@ -344,6 +344,7 @@ typedef enum {     /* Now invoke all those TYPEMACROs to assign the numbers */
    ERRMACRO(PROCESSINGPARAMS), \
    ERRMACRO(PUBLICKEY), \
    ERRMACRO(RESOURCELIMITS), \
+   ERRMACRO(REVOCATIONMETHOD), \
    ERRMACRO(REVOCATIONCHECKER), \
    ERRMACRO(RWLOCK), \
    ERRMACRO(SIGNATURECHECKERSTATE), \
@@ -474,18 +475,41 @@ PKIX_Error* PKIX_ALLOC_ERROR(void);
 /*
  * Define Certificate Extension hard-coded OID's
  */
-#define PKIX_CERTKEYUSAGE_OID                  "2.5.29.15"
-#define PKIX_CERTSUBJALTNAME_OID               "2.5.29.17"
-#define PKIX_BASICCONSTRAINTS_OID              "2.5.29.19"
-#define PKIX_CRLREASONCODE_OID                 "2.5.29.21"
-#define PKIX_NAMECONSTRAINTS_OID               "2.5.29.30"
-#define PKIX_CERTIFICATEPOLICIES_OID           "2.5.29.32"
-#define PKIX_CERTIFICATEPOLICIES_ANYPOLICY_OID "2.5.29.32.0"
-#define PKIX_POLICYMAPPINGS_OID                "2.5.29.33"
-#define PKIX_POLICYCONSTRAINTS_OID             "2.5.29.36"
-#define PKIX_EXTENDEDKEYUSAGE_OID              "2.5.29.37"
-#define PKIX_INHIBITANYPOLICY_OID              "2.5.29.54"
-#define PKIX_NSCERTTYPE_OID "2.16.840.1.113730.1.1"
+#define PKIX_UNKNOWN_OID                       SEC_OID_UNKNOWN
+#define PKIX_CERTKEYUSAGE_OID                  SEC_OID_X509_KEY_USAGE
+#define PKIX_CERTSUBJALTNAME_OID               SEC_OID_X509_SUBJECT_ALT_NAME
+#define PKIX_BASICCONSTRAINTS_OID              SEC_OID_X509_BASIC_CONSTRAINTS
+#define PKIX_CRLREASONCODE_OID                 SEC_OID_X509_REASON_CODE
+#define PKIX_NAMECONSTRAINTS_OID               SEC_OID_X509_NAME_CONSTRAINTS
+#define PKIX_CERTIFICATEPOLICIES_OID           SEC_OID_X509_CERTIFICATE_POLICIES
+#define PKIX_CERTIFICATEPOLICIES_ANYPOLICY_OID SEC_OID_X509_ANY_POLICY
+#define PKIX_POLICYMAPPINGS_OID                SEC_OID_X509_POLICY_MAPPINGS
+#define PKIX_POLICYCONSTRAINTS_OID             SEC_OID_X509_POLICY_CONSTRAINTS
+#define PKIX_EXTENDEDKEYUSAGE_OID              SEC_OID_X509_EXT_KEY_USAGE
+#define PKIX_INHIBITANYPOLICY_OID              SEC_OID_X509_INHIBIT_ANY_POLICY 
+#define PKIX_NSCERTTYPE_OID                    SEC_OID_NS_CERT_EXT_CERT_TYPE
+#define PKIX_KEY_USAGE_SERVER_AUTH_OID         SEC_OID_EXT_KEY_USAGE_SERVER_AUTH
+#define PKIX_KEY_USAGE_CLIENT_AUTH_OID         SEC_OID_EXT_KEY_USAGE_CLIENT_AUTH
+#define PKIX_KEY_USAGE_CODE_SIGN_OID           SEC_OID_EXT_KEY_USAGE_CODE_SIGN
+#define PKIX_KEY_USAGE_EMAIL_PROTECT_OID       SEC_OID_EXT_KEY_USAGE_EMAIL_PROTECT
+#define PKIX_KEY_USAGE_TIME_STAMP_OID          SEC_OID_EXT_KEY_USAGE_TIME_STAMP
+#define PKIX_KEY_USAGE_OCSP_RESPONDER_OID      SEC_OID_OCSP_RESPONDER
+
+
+/* Available revocation method types. */
+typedef enum PKIX_RevocationMethodTypeEnum {
+    PKIX_RevocationMethod_CRL = 0,
+    PKIX_RevocationMethod_OCSP,
+    PKIX_RevocationMethod_MAX
+} PKIX_RevocationMethodType;
+
+/* A set of statuses revocation checker operates on */
+typedef enum PKIX_RevocationStatusEnum {
+    PKIX_RevStatus_NoInfo = 0,
+    PKIX_RevStatus_Revoked,
+    PKIX_RevStatus_Success
+} PKIX_RevocationStatus;
+
 
 #ifdef __cplusplus
 }

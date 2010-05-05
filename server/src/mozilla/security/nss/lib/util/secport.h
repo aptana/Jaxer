@@ -37,24 +37,19 @@
 /*
  * secport.h - portability interfaces for security libraries
  *
- * $Id: secport.h,v 1.15 2008/02/14 18:41:38 wtc%google.com Exp $
+ * $Id: secport.h,v 1.23 2009/10/30 09:44:47 nelson%bolyard.com Exp $
  */
 
 #ifndef _SECPORT_H_
 #define _SECPORT_H_
 
 #include "utilrename.h"
+#include "prlink.h"
 
 /*
- * define XP_MAC, XP_WIN, XP_BEOS, or XP_UNIX, in case they are not defined
+ * define XP_WIN, XP_BEOS, or XP_UNIX, in case they are not defined
  * by anyone else
  */
-#ifdef macintosh
-# ifndef XP_MAC
-# define XP_MAC 1
-# endif
-#endif
-
 #ifdef _WINDOWS
 # ifndef XP_WIN
 # define XP_WIN
@@ -62,10 +57,6 @@
 #if defined(_WIN32) || defined(WIN32)
 # ifndef XP_WIN32
 # define XP_WIN32
-# endif
-#else
-# ifndef XP_WIN16
-# define XP_WIN16
 # endif
 #endif
 #endif
@@ -82,16 +73,9 @@
 # endif
 #endif
 
-#if defined(__WATCOMC__) || defined(__WATCOM_CPLUSPLUS__)
-#include "watcomfx.h"
-#endif
-
 #if defined(_WIN32_WCE)
 #include <windef.h>
 #include <types.h>
-#elif defined( XP_MAC ) 
-#include <types.h>
-#include <time.h> /* for time_t below */
 #else
 #include <sys/types.h>
 #endif
@@ -163,7 +147,7 @@ SEC_END_PROTOS
 
 /* Please, keep these defines sorted alphabetically.  Thanks! */
 
-#define PORT_Atoi 	atoi
+#define PORT_Atoi(buff)	(int)strtol(buff, NULL, 10)
 
 #define PORT_Memcmp 	memcmp
 #define PORT_Memcpy 	memcpy
@@ -222,7 +206,7 @@ PRBool PORT_ISO88591_UTF8Conversion(const unsigned char *inBuf,
 			unsigned int inBufLen, unsigned char *outBuf,
 			unsigned int maxOutBufLen, unsigned int *outBufLen);
 
-PR_EXTERN(PRBool)
+extern PRBool
 sec_port_ucs4_utf8_conversion_function
 (
   PRBool toUnicode,
@@ -233,7 +217,7 @@ sec_port_ucs4_utf8_conversion_function
   unsigned int *outBufLen
 );
 
-PR_EXTERN(PRBool)
+extern PRBool
 sec_port_ucs2_utf8_conversion_function
 (
   PRBool toUnicode,
@@ -256,6 +240,43 @@ sec_port_iso88591_utf8_conversion_function
 );
 
 extern int NSS_PutEnv(const char * envVarName, const char * envValue);
+
+extern int NSS_SecureMemcmp(const void *a, const void *b, size_t n);
+
+/*
+ * Load a shared library called "newShLibName" in the same directory as
+ * a shared library that is already loaded, called existingShLibName.
+ * A pointer to a static function in that shared library,
+ * staticShLibFunc, is required.
+ *
+ * existingShLibName:
+ *   The file name of the shared library that shall be used as the 
+ *   "reference library". The loader will attempt to load the requested
+ *   library from the same directory as the reference library.
+ *
+ * staticShLibFunc:
+ *   Pointer to a static function in the "reference library".
+ *
+ * newShLibName:
+ *   The simple file name of the new shared library to be loaded.
+ *
+ * We use PR_GetLibraryFilePathname to get the pathname of the loaded 
+ * shared lib that contains this function, and then do a
+ * PR_LoadLibraryWithFlags with an absolute pathname for the shared
+ * library to be loaded.
+ *
+ * On Windows, the "alternate search path" strategy is employed, if available.
+ * On Unix, if existingShLibName is a symbolic link, and no link exists for the
+ * new library, the original link will be resolved, and the new library loaded
+ * from the resolved location.
+ *
+ * If the new shared library is not found in the same location as the reference
+ * library, it will then be loaded from the normal system library path.
+ */
+PRLibrary *
+PORT_LoadLibraryFromOrigin(const char* existingShLibName,
+                 PRFuncPtr staticShLibFunc,
+                 const char *newShLibName);
 
 SEC_END_PROTOS
 

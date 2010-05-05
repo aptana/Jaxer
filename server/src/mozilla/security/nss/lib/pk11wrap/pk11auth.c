@@ -483,10 +483,17 @@ PK11_ChangePW(PK11SlotInfo *slot, const char *oldpw, const char *newpw)
     int oldLen;
     CK_SESSION_HANDLE rwsession;
 
-    if (newpw == NULL) newpw = "";
-    if (oldpw == NULL) oldpw = "";
-    newLen = PORT_Strlen(newpw);
-    oldLen = PORT_Strlen(oldpw);
+    /* use NULL values to trigger the protected authentication path */
+    if (slot->protectedAuthPath) {
+	if (newpw == NULL) newLen = 0;
+	if (oldpw == NULL) oldLen = 0;
+    } else {
+	if (newpw == NULL) newpw = "";
+	if (oldpw == NULL) oldpw = "";
+	newLen = PORT_Strlen(newpw);
+	oldLen = PORT_Strlen(oldpw);
+    }
+
 
     /* get a rwsession */
     rwsession = PK11_GetRWSession(slot);
@@ -630,7 +637,7 @@ PK11_DoPassword(PK11SlotInfo *slot, PRBool loadCerts, void *wincx)
 void PK11_LogoutAll(void)
 {
     SECMODListLock *lock = SECMOD_GetDefaultModuleListLock();
-    SECMODModuleList *modList = SECMOD_GetDefaultModuleList();
+    SECMODModuleList *modList;
     SECMODModuleList *mlp = NULL;
     int i;
 
@@ -640,6 +647,7 @@ void PK11_LogoutAll(void)
     }
 
     SECMOD_GetReadLock(lock);
+    modList = SECMOD_GetDefaultModuleList();
     /* find the number of entries */
     for (mlp = modList; mlp != NULL; mlp = mlp->next) {
 	for (i=0; i < mlp->module->slotCount; i++) {

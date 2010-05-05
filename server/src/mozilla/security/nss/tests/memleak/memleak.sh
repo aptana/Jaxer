@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/bash
 #
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -17,7 +17,7 @@
 #
 # The Initial Developer of the Original Code is
 # Sun Microsystems, Inc.
-# Portions created by the Initial Developer are Copyright (C) 2006-2007
+# Portions created by the Initial Developer are Copyright (C) 2006-2009
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s):
@@ -73,19 +73,18 @@ memleak_init()
 		CLEANUP="${SCRIPTNAME}"
 	fi
 
-	NSS_DISABLE_ARENA_FREE_LIST="1"
-	export NSS_DISABLE_ARENA_FREE_LIST
-	
 	OLD_LIBRARY_PATH=${LD_LIBRARY_PATH}
-	TMP_LIBDIR="${HOSTDIR}/tmp$$"
-	TMP_STACKS="${HOSTDIR}/stacks$$"
-	TMP_SORTED="${HOSTDIR}/sorted$$"
-	TMP_COUNT="${HOSTDIR}/count$$"
-	TMP_DBX="${HOSTDIR}/dbx$$"
+	TMP_LIBDIR="${HOSTDIR}/tmp"
+	TMP_STACKS="${HOSTDIR}/stacks"
+	TMP_SORTED="${HOSTDIR}/sorted"
+	TMP_COUNT="${HOSTDIR}/count"
+	DBXOUT="${HOSTDIR}/dbxout"
+	DBXERR="${HOSTDIR}/dbxerr"
+	DBXCMD="${HOSTDIR}/dbxcmd"
 	
 	PORT=${PORT:-8443}
 	
-	MODE_LIST="NORMAL BYPASS FIPS"	
+	MODE_LIST="NORMAL BYPASS FIPS"
 	
 	SERVER_DB="${HOSTDIR}/server_memleak"
 	CLIENT_DB="${HOSTDIR}/client_memleak"
@@ -261,18 +260,35 @@ set_freebl()
 		if [ -d "${TMP_LIBDIR}" ] ; then
 			rm -rf ${TMP_LIBDIR}
 		fi
+
 		mkdir ${TMP_LIBDIR}
+		[ $? -ne 0 ] && html_failed "Create temp directory" && return 1
+
 		cp ${DIST}/${OBJDIR}/lib/*.so ${DIST}/${OBJDIR}/lib/*.chk ${TMP_LIBDIR}
+		[ $? -ne 0 ] && html_failed "Copy libraries to temp directory" && return 1
 		
 		echo "${SCRIPTNAME}: Using ${freebl} instead of ${FREEBL_DEFAULT}"
+
 		mv ${TMP_LIBDIR}/${FREEBL_DEFAULT}.so ${TMP_LIBDIR}/${FREEBL_DEFAULT}.so.orig
+		[ $? -ne 0 ] && html_failed "Move ${FREEBL_DEFAULT}.so -> ${FREEBL_DEFAULT}.so.orig" && return 1
+
 		cp ${TMP_LIBDIR}/${freebl}.so ${TMP_LIBDIR}/${FREEBL_DEFAULT}.so
+		[ $? -ne 0 ] && html_failed "Copy ${freebl}.so -> ${FREEBL_DEFAULT}.so" && return 1
+
 		mv ${TMP_LIBDIR}/${FREEBL_DEFAULT}.chk ${TMP_LIBDIR}/${FREEBL_DEFAULT}.chk.orig
+		[ $? -ne 0 ] && html_failed "Move ${FREEBL_DEFAULT}.chk -> ${FREEBL_DEFAULT}.chk.orig" && return 1
+
 		cp ${TMP_LIBDIR}/${freebl}.chk ${TMP_LIBDIR}/${FREEBL_DEFAULT}.chk
-		
+		[ $? -ne 0 ] && html_failed "Copy ${freebl}.chk to temp directory" && return 1
+
+		echo "ls -l ${TMP_LIBDIR}"
+		ls -l ${TMP_LIBDIR}
+
 		LD_LIBRARY_PATH="${TMP_LIBDIR}"
 		export LD_LIBRARY_PATH
 	fi
+
+	return 0
 }
 
 ############################# clear_freebl #############################
@@ -297,24 +313,30 @@ run_command_dbx()
 	COMMAND=$1
 	shift
 	ATTR=$*
-
+	
 	COMMAND=`which ${COMMAND}`
-	DBX_CMD="dbxenv follow_fork_mode parent
-dbxenv rtc_mel_at_exit verbose
-dbxenv rtc_biu_at_exit verbose
-check -memuse -match 16 -frames 16
-run ${ATTR}
-"
-
+	
+	echo "dbxenv follow_fork_mode parent" > ${DBXCMD}
+	echo "dbxenv rtc_mel_at_exit verbose" >> ${DBXCMD}
+	echo "dbxenv rtc_biu_at_exit verbose" >> ${DBXCMD}
+	echo "check -memuse -match 16 -frames 16" >> ${DBXCMD}
+	echo "run ${ATTR}" >> ${DBXCMD}
+	
+	export NSS_DISABLE_ARENA_FREE_LIST=1
+	
 	echo "${SCRIPTNAME}: -------- Running ${COMMAND} under DBX:"
 	echo "${DBX} ${COMMAND}"
 	echo "${SCRIPTNAME}: -------- DBX commands:"
-	echo "${DBX_CMD}"
+	cat ${DBXCMD}
 	
-	echo "${DBX_CMD}" | ${DBX} ${COMMAND} 2>/dev/null | grep -v Reading > ${TMP_DBX}
-	cat ${TMP_DBX} 1>&2
+	( ${DBX} ${COMMAND} < ${DBXCMD} > ${DBXOUT} 2> ${DBXERR} )
+	grep -v Reading ${DBXOUT} 1>&2
+	cat ${DBXERR}
 	
-	grep "exit code is 0" ${TMP_DBX}
+	unset NSS_DISABLE_ARENA_FREE_LIST
+	
+	grep "exit code is" ${DBXOUT}
+	grep "exit code is 0" ${DBXOUT} > /dev/null
 	return $?
 }
 
@@ -327,12 +349,16 @@ run_command_valgrind()
 	shift
 	ATTR=$*
 	
+	export NSS_DISABLE_ARENA_FREE_LIST=1
+	
 	echo "${SCRIPTNAME}: -------- Running ${COMMAND} under Valgrind:"
 	echo "${VALGRIND} --tool=memcheck --leak-check=yes --show-reachable=yes --partial-loads-ok=yes --leak-resolution=high --num-callers=50 ${COMMAND} ${ATTR}"
 	echo "Running: ${COMMAND} ${ATTR}" 1>&2
 	${VALGRIND} --tool=memcheck --leak-check=yes --show-reachable=yes --partial-loads-ok=yes --leak-resolution=high --num-callers=50 ${COMMAND} ${ATTR} 1>&2
 	ret=$?
 	echo "==0=="
+	
+	unset NSS_DISABLE_ARENA_FREE_LIST
 	
 	return $ret
 }
@@ -349,7 +375,7 @@ run_selfserv()
 	${BINDIR}/selfserv ${SELFSERV_ATTR}
 	ret=$?
 	if [ $ret -ne 0 ]; then
-		html_failed "<TR><TD> ${LOGNAME}: Selfserv"
+		html_failed "${LOGNAME}: Selfserv"
 		echo "${SCRIPTNAME} ${LOGNAME}: " \
 			"Selfserv produced a returncode of ${ret} - FAILED"
 	fi
@@ -365,7 +391,7 @@ run_selfserv_dbg()
 	${RUN_COMMAND_DBG} ${BINDIR}/selfserv ${SERVER_OPTION} ${SELFSERV_ATTR}
 	ret=$?
 	if [ $ret -ne 0 ]; then
-		html_failed "<TR><TD> ${LOGNAME}: Selfserv"
+		html_failed "${LOGNAME}: Selfserv"
 		echo "${SCRIPTNAME} ${LOGNAME}: " \
 			"Selfserv produced a returncode of ${ret} - FAILED"
 	fi
@@ -384,7 +410,7 @@ run_strsclnt()
 		${BINDIR}/strsclnt ${ATTR}
 		ret=$?
 		if [ $ret -ne 0 ]; then
-			html_failed "<TR><TD> ${LOGNAME}: Strsclnt with cipher ${cipher}"
+			html_failed "${LOGNAME}: Strsclnt with cipher ${cipher}"
 			echo "${SCRIPTNAME} ${LOGNAME}: " \
 				"Strsclnt produced a returncode of ${ret} - FAILED"
 		fi
@@ -395,10 +421,13 @@ run_strsclnt()
 	${BINDIR}/tstclnt ${TSTCLNT_ATTR} < ${REQUEST_FILE}
 	ret=$?
 	if [ $ret -ne 0 ]; then
-		html_failed "<TR><TD> ${LOGNAME}: Tstclnt"
+		html_failed "${LOGNAME}: Tstclnt"
 		echo "${SCRIPTNAME} ${LOGNAME}: " \
 			"Tstclnt produced a returncode of ${ret} - FAILED"
 	fi
+	
+	sleep 20
+	kill $(jobs -p) 2> /dev/null
 }
 
 ########################### run_strsclnt_dbg ###########################
@@ -412,7 +441,7 @@ run_strsclnt_dbg()
 		${RUN_COMMAND_DBG} ${BINDIR}/strsclnt ${CLIENT_OPTION} ${ATTR}
 		ret=$?
 		if [ $ret -ne 0 ]; then
-			html_failed "<TR><TD> ${LOGNAME}: Strsclnt with cipher ${cipher}"
+			html_failed "${LOGNAME}: Strsclnt with cipher ${cipher}"
 			echo "${SCRIPTNAME} ${LOGNAME}: " \
 				"Strsclnt produced a returncode of ${ret} - FAILED"
 		fi
@@ -423,10 +452,12 @@ run_strsclnt_dbg()
 	${BINDIR}/tstclnt ${TSTCLNT_ATTR} < ${REQUEST_FILE}
 	ret=$?
 	if [ $ret -ne 0 ]; then
-		html_failed "<TR><TD> ${LOGNAME}: Tstclnt"
+		html_failed "${LOGNAME}: Tstclnt"
 		echo "${SCRIPTNAME} ${LOGNAME}: " \
 			"Tstclnt produced a returncode of ${ret} - FAILED"
 	fi
+	
+	kill $(jobs -p) 2> /dev/null
 }
 
 stat_clear()
@@ -501,15 +532,17 @@ run_ciphers_server()
 		set_test_mode
 		
 		for freebl in ${FREEBL_LIST}; do
-			set_freebl
+			set_freebl || continue
 			
 			LOGNAME=server-${BIT_NAME}-${freebl}-${server_mode}
 			LOGFILE=${LOGDIR}/${LOGNAME}.log
 			echo "Running ${LOGNAME}"
 			
-			run_selfserv_dbg 2>> ${LOGFILE} &
-			sleep 5
-			run_strsclnt
+			(
+			    run_selfserv_dbg 2>> ${LOGFILE} &
+			    sleep 5
+			    run_strsclnt
+			)
 			
 			sleep 20
 			clear_freebl
@@ -540,15 +573,17 @@ run_ciphers_client()
 		set_test_mode
 		
 		for freebl in ${FREEBL_LIST}; do
-			set_freebl
+			set_freebl || continue
 			
 			LOGNAME=client-${BIT_NAME}-${freebl}-${client_mode}
 			LOGFILE=${LOGDIR}/${LOGNAME}.log
 			echo "Running ${LOGNAME}"
 			
-			run_selfserv &
-			sleep 5
-			run_strsclnt_dbg 2>> ${LOGFILE}
+			(
+			    run_selfserv &
+			    sleep 5
+			    run_strsclnt_dbg 2>> ${LOGFILE}
+			)
 			
 			sleep 20
 			clear_freebl
@@ -845,34 +880,55 @@ run_ocsp()
 	stat_print "Ocspclnt"
 }
 
-############################### run_pkix ###############################
-# local shell function to run ocsp tests
+############################## run_chains ##############################
+# local shell function to run PKIX certificate chains tests
 ########################################################################
-run_pkix()
+run_chains()
 {
-         [ -z "$PKIX_OBJECT_LEAK_TEST" ] && return
-	stat_clear
-	
-	cd ${QADIR}/libpkix
-	. ./libpkix.sh
-	
-	stat_print "Libpkix"
+    stat_clear
+
+    LOGNAME="chains"
+    LOGFILE=${LOGDIR}/chains.log
+
+    . ${QADIR}/chains/chains.sh
+
+    stat_print "Chains"
+}
+
+############################## run_chains ##############################
+# local shell function to run memory leak tests
+#
+# NSS_MEMLEAK_TESTS - list of tests to run, if not defined before,
+# then is redefined to default list 
+########################################################################
+memleak_run_tests()
+{
+    nss_memleak_tests="ssl_server ssl_client chains ocsp"
+    NSS_MEMLEAK_TESTS="${NSS_MEMLEAK_TESTS:-$nss_memleak_tests}"
+
+    for MEMLEAK_TEST in ${NSS_MEMLEAK_TESTS}
+    do
+        case "${MEMLEAK_TEST}" in
+        "ssl_server")
+            run_ciphers_server
+            ;;
+        "ssl_client")
+            run_ciphers_client
+            ;;
+        "chains")
+            run_chains
+            ;;
+        "ocsp")
+            run_ocsp
+            ;;
+        esac
+    done
 }
 
 ################################# main #################################
 
 memleak_init
-
-# Can not run pkix object/memory leak tests with server/client tests.
-# Pkix test is single-threaded by design. OCSP tests are ok.
-if [ -z "$PKIX_OBJECT_LEAK_TEST" ]; then
-   run_ciphers_server
-   run_ciphers_client
-else
-   run_pkix
-fi
-run_ocsp
-
+memleak_run_tests
 cnt_total
 memleak_cleanup
 

@@ -37,7 +37,7 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
-/* $Id: secsign.c,v 1.20 2007/11/07 02:37:21 julien.pierre.boogz%sun.com Exp $ */
+/* $Id: secsign.c,v 1.22 2010/02/10 00:49:43 wtc%google.com Exp $ */
 
 #include <stdio.h>
 #include "cryptohi.h"
@@ -140,7 +140,7 @@ SGN_Begin(SGNContext *cx)
 }
 
 SECStatus
-SGN_Update(SGNContext *cx, unsigned char *input, unsigned inputLen)
+SGN_Update(SGNContext *cx, const unsigned char *input, unsigned int inputLen)
 {
     if (cx->hashcx == NULL) {
 	PORT_SetError(SEC_ERROR_INVALID_ARGS);
@@ -277,7 +277,7 @@ SGN_End(SGNContext *cx, SECItem *result)
 ** signature. Returns zero on success, an error code on failure.
 */
 SECStatus
-SEC_SignData(SECItem *res, unsigned char *buf, int len,
+SEC_SignData(SECItem *res, const unsigned char *buf, int len,
 	     SECKEYPrivateKey *pk, SECOidTag algid)
 {
     SECStatus rv;

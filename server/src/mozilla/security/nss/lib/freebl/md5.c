@@ -34,6 +34,10 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#ifdef FREEBL_NO_DEPEND
+#include "stubs.h"
+#endif
+
 #include "prerr.h"
 #include "secerr.h"
 
@@ -222,7 +226,7 @@ struct MD5ContextStr {
 SECStatus 
 MD5_Hash(unsigned char *dest, const char *src)
 {
-	return MD5_HashBuf(dest, (unsigned char *)src, PL_strlen(src));
+	return MD5_HashBuf(dest, (const unsigned char *)src, PORT_Strlen(src));
 }
 
 SECStatus 
@@ -471,7 +475,7 @@ MD5_Update(MD5Context *cx, const unsigned char *input, unsigned int inputLen)
 	/* Iterate over 64-byte chunks of the message. */
 	while (inputLen >= MD5_BUFFER_SIZE) {
 #ifdef IS_LITTLE_ENDIAN
-#ifdef _X86_
+#ifdef NSS_X86_OR_X64
 		/* x86 can handle arithmetic on non-word-aligned buffers */
 		wBuf = (PRUint32 *)input;
 #else

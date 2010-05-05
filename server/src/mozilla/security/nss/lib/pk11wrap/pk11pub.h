@@ -109,6 +109,7 @@ PK11SlotList *PK11_FindSlotsByNames(const char *dllName,
         const char* slotName, const char* tokenName, PRBool presentOnly);
 PRBool PK11_IsReadOnly(PK11SlotInfo *slot);
 PRBool PK11_IsInternal(PK11SlotInfo *slot);
+PRBool PK11_IsInternalKeySlot(PK11SlotInfo *slot);
 char * PK11_GetTokenName(PK11SlotInfo *slot);
 char * PK11_GetSlotName(PK11SlotInfo *slot);
 PRBool PK11_NeedLogin(PK11SlotInfo *slot);
@@ -238,6 +239,15 @@ PK11SlotInfo *SECMOD_OpenUserDB(const char *moduleSpec);
 SECStatus SECMOD_CloseUserDB(PK11SlotInfo *slot);
 
 /*
+ * This is exactly the same as OpenUserDB except it can be called on any
+ * module that understands softoken style new slot entries. The resulting
+ * slot can be closed using SECMOD_CloseUserDB above. Value of moduleSpec
+ * is token specific.
+ */
+PK11SlotInfo *SECMOD_OpenNewSlot(SECMODModule *mod, const char *moduleSpec);
+
+
+/*
  * merge the permanent objects from on token to another 
  */
 SECStatus PK11_MergeTokens(PK11SlotInfo *targetSlot, PK11SlotInfo *sourceSlot,
@@ -246,7 +256,7 @@ SECStatus PK11_MergeTokens(PK11SlotInfo *targetSlot, PK11SlotInfo *sourceSlot,
 /*
  * create and destroy merge logs needed by PK11_MergeTokens
  */
-PK11MergeLog * PK11_CreateMergeLog();
+PK11MergeLog * PK11_CreateMergeLog(void);
 void PK11_DestroyMergeLog(PK11MergeLog *log);
 
 
@@ -269,7 +279,7 @@ CK_MECHANISM_TYPE PK11_AlgtagToMechanism(SECOidTag algTag);
 SECOidTag PK11_MechanismToAlgtag(CK_MECHANISM_TYPE type);
 SECOidTag PK11_FortezzaMapSig(SECOidTag algTag);
 SECStatus PK11_ParamToAlgid(SECOidTag algtag, SECItem *param,
-                                   PRArenaPool *arena, SECAlgorithmID *algid);
+                                   PLArenaPool *arena, SECAlgorithmID *algid);
 SECStatus PK11_SeedRandom(PK11SlotInfo *,unsigned char *data,int len);
 SECStatus PK11_GenerateRandomOnSlot(PK11SlotInfo *,unsigned char *data,int len);
 SECStatus PK11_RandomUpdate(void *data, size_t bytes);
@@ -328,6 +338,8 @@ PK11SymKey * PK11_ListFixedKeysInSlot(PK11SlotInfo *slot, char *nickname,
 								void *wincx);
 PK11SymKey *PK11_GetNextSymKey(PK11SymKey *symKey);
 CK_KEY_TYPE PK11_GetSymKeyType(PK11SymKey *key);
+CK_OBJECT_HANDLE PK11_GetSymKeyHandle(PK11SymKey *symKey);
+
 
 /*
  * PK11_SetSymKeyUserData
@@ -562,6 +574,10 @@ SECKEYPrivateKey *PK11_UnwrapPrivKey(PK11SlotInfo *slot,
 SECStatus PK11_WrapPrivKey(PK11SlotInfo *slot, PK11SymKey *wrappingKey,
 			   SECKEYPrivateKey *privKey, CK_MECHANISM_TYPE wrapType,
 			   SECItem *param, SECItem *wrappedKey, void *wincx);
+/*
+ * The caller of PK11_DEREncodePublicKey should free the returned SECItem with
+ * a SECITEM_FreeItem(..., PR_TRUE) call.
+ */
 SECItem* PK11_DEREncodePublicKey(SECKEYPublicKey *pubk);
 PK11SymKey* PK11_CopySymKeyForSigning(PK11SymKey *originalKey,
 	CK_MECHANISM_TYPE mech);
@@ -570,7 +586,7 @@ SECKEYPrivateKeyList* PK11_ListPrivKeysInSlot(PK11SlotInfo *slot,
 SECKEYPublicKeyList* PK11_ListPublicKeysInSlot(PK11SlotInfo *slot,
 							char *nickname);
 SECKEYPQGParams *PK11_GetPQGParamsFromPrivateKey(SECKEYPrivateKey *privKey);
-/* depricated */
+/* deprecated */
 SECKEYPrivateKeyList* PK11_ListPrivateKeysInSlot(PK11SlotInfo *slot);
 
 PK11SymKey *PK11_ConvertSessionSymKeyToTokenSymKey(PK11SymKey *symk,
@@ -591,11 +607,12 @@ CERTCertificate * PK11_FindCertFromNickname(const char *nickname, void *wincx);
 CERTCertList * PK11_FindCertsFromNickname(const char *nickname, void *wincx);
 CERTCertificate *PK11_GetCertFromPrivateKey(SECKEYPrivateKey *privKey);
 SECStatus PK11_ImportCert(PK11SlotInfo *slot, CERTCertificate *cert,
-                CK_OBJECT_HANDLE key, char *nickname, PRBool includeTrust);
+                CK_OBJECT_HANDLE key, const char *nickname, 
+                PRBool includeTrust);
 SECStatus PK11_ImportDERCert(PK11SlotInfo *slot, SECItem *derCert,
                 CK_OBJECT_HANDLE key, char *nickname, PRBool includeTrust);
-PK11SlotInfo *PK11_ImportCertForKey(CERTCertificate *cert, char *nickname,
-								void *wincx);
+PK11SlotInfo *PK11_ImportCertForKey(CERTCertificate *cert, 
+                                    const char *nickname, void *wincx);
 PK11SlotInfo *PK11_ImportDERCertForKey(SECItem *derCert, char *nickname,
 								void *wincx);
 PK11SlotInfo *PK11_KeyForCertExists(CERTCertificate *cert,
@@ -614,6 +631,8 @@ SECStatus PK11_TraverseCertsForSubjectInSlot(CERTCertificate *cert,
 	void *arg);
 CERTCertificate *PK11_FindCertFromDERCert(PK11SlotInfo *slot, 
 					  CERTCertificate *cert, void *wincx);
+CERTCertificate *PK11_FindCertFromDERCertItem(PK11SlotInfo *slot,
+                                          SECItem *derCert, void *wincx);
 SECStatus PK11_ImportCertForKeyToSlot(PK11SlotInfo *slot, CERTCertificate *cert,
 					char *nickname, PRBool addUsage,
 					void *wincx);
@@ -627,7 +646,7 @@ SECStatus PK11_TraverseCertsForNicknameInSlot(SECItem *nickname,
 CERTCertList * PK11_ListCerts(PK11CertListType type, void *pwarg);
 CERTCertList * PK11_ListCertsInSlot(PK11SlotInfo *slot);
 CERTSignedCrl* PK11_ImportCRL(PK11SlotInfo * slot, SECItem *derCRL, char *url,
-    int type, void *wincx, PRInt32 importOptions, PRArenaPool* arena, PRInt32 decodeOptions);
+    int type, void *wincx, PRInt32 importOptions, PLArenaPool* arena, PRInt32 decodeOptions);
 
 /**********************************************************************
  *                   Sign/Verify 
@@ -776,15 +795,27 @@ PK11GenericObject *PK11_CreateGenericObject(PK11SlotInfo *slot,
  *
  *  All other types are considered invalid. If type does not match the object
  *  passed, unpredictable results will occur.
+ *
+ * PK11_ReadRawAttribute allocates the buffer for returning the attribute
+ * value.  The caller of PK11_ReadRawAttribute should free the data buffer
+ * pointed to by item using a SECITEM_FreeItem(item, PR_FALSE) or
+ * PORT_Free(item->data) call.
  */
 SECStatus PK11_ReadRawAttribute(PK11ObjectType type, void *object, 
 				CK_ATTRIBUTE_TYPE attr, SECItem *item);
 SECStatus PK11_WriteRawAttribute(PK11ObjectType type, void *object, 
 				CK_ATTRIBUTE_TYPE attr, SECItem *item);
 
+/*
+ * PK11_GetAllSlotsForCert returns all the slots that a given certificate
+ * exists on, since it's possible for a cert to exist on more than one
+ * PKCS#11 token.
+ */
+PK11SlotList *
+PK11_GetAllSlotsForCert(CERTCertificate *cert, void *arg);
 
 /**********************************************************************
- * New fucntions which are already depricated....
+ * New functions which are already deprecated....
  **********************************************************************/
 SECItem *
 PK11_GetLowLevelKeyIDForCert(PK11SlotInfo *slot,

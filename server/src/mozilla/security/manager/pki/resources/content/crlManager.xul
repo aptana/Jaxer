@@ -40,13 +40,14 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?> 
 
 <!DOCTYPE dialog [
-    <!ENTITY % prefValDTD SYSTEM "chrome://pippki/locale/pref-validation.dtd">
+    <!ENTITY % prefValDTD SYSTEM "chrome://pippki/locale/validation.dtd">
     %prefValDTD;
     <!ENTITY % prefCertMgrDTD SYSTEM "chrome://pippki/locale/certManager.dtd">
     %prefCertMgrDTD;
 ]>
 
 <dialog id="crlviewer"
+        windowtype="mozilla:crlmanager"
         title="&validation.crlmanager.label;"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         style="width: 65ch;"

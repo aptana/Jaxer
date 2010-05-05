@@ -39,7 +39,7 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
-/* $Id: sslproto.h,v 1.12 2007/02/28 19:47:38 rrelyea%redhat.com Exp $ */
+/* $Id: sslproto.h,v 1.15 2010/02/16 18:56:48 wtc%google.com Exp $ */
 
 #ifndef __sslproto_h_
 #define __sslproto_h_
@@ -179,6 +179,17 @@
 #define TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA  	0x0088
 #define TLS_DH_ANON_WITH_CAMELLIA_256_CBC_SHA  	0x0089
 
+#define TLS_RSA_WITH_SEED_CBC_SHA		0x0096
+
+/* TLS "Signaling Cipher Suite Value" (SCSV). May be requested by client.
+ * Must NEVER be chosen by server.  SSL 3.0 server acknowledges by sending
+ * back an empty Renegotiation Info (RI) server hello extension.
+ */
+#define TLS_EMPTY_RENEGOTIATION_INFO_SCSV	0x00FF
+
+/* Cipher Suite Values starting with 0xC000 are defined in informational
+ * RFCs.
+ */
 #define TLS_ECDH_ECDSA_WITH_NULL_SHA            0xC001
 #define TLS_ECDH_ECDSA_WITH_RC4_128_SHA         0xC002
 #define TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA    0xC003

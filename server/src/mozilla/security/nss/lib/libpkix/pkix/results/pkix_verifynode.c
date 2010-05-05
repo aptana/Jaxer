@@ -81,7 +81,6 @@ pkix_VerifyNode_Create(
         PKIX_VerifyNode *node = NULL;
 
         PKIX_ENTER(VERIFYNODE, "pkix_VerifyNode_Create");
-
         PKIX_NULLCHECK_TWO(cert, pObject);
 
         PKIX_CHECK(PKIX_PL_Object_Alloc
@@ -303,7 +302,6 @@ pkix_VerifyNode_AddToTree(
         void *plContext)
 {
         PKIX_List *listOfChildren = NULL;
-        PKIX_UInt32 numChildren = 0;
         PKIX_UInt32 parentDepth = 0;
 
         PKIX_ENTER(VERIFYNODE, "pkix_VerifyNode_AddToTree");
@@ -1139,4 +1137,79 @@ pkix_VerifyNode_SetError(
 
 cleanup:
         PKIX_RETURN(VERIFYNODE);
+}
+
+/*
+ * FUNCTION: PKIX_VerifyNode_FindError
+ * DESCRIPTION:
+ *
+ * Finds meaningful error in the log. For now, just returns the first
+ * error it finds in. In the future the function should be changed to
+ * return a top priority error.
+ *
+ * PARAMETERS:
+ *  "node"
+ *      The address of the VerifyNode to be modified. Must be non-NULL.
+ *  "error"
+ *      The address of a pointer the error will be returned to.
+ *  "plContext"
+ *      Platform-specific context pointer.
+ * THREAD SAFETY:
+ *  Thread Safe (see Thread Safety Definitions in Programmer's Guide)
+ * RETURNS:
+ *  Returns NULL if the function succeeds.
+ *  Returns a Fatal Error if the function fails in an unrecoverable way.
+ */
+PKIX_Error *
+pkix_VerifyNode_FindError(
+        PKIX_VerifyNode *node,
+        PKIX_Error **error,
+        void *plContext)
+{
+    PKIX_VerifyNode *childNode = NULL;
+
+    PKIX_ENTER(VERIFYNODE, "PKIX_VerifyNode_FindError");
+
+    /* Make sure the return address is initialized with NULL */
+    PKIX_DECREF(*error);
+
+    if (!node)
+        goto cleanup;
+    
+    /* First, try to get error from lowest level. */
+    if (node->children) {
+        PKIX_UInt32 length = 0;
+        PKIX_UInt32 index = 0;
+
+        PKIX_CHECK(
+            PKIX_List_GetLength(node->children, &length,
+                                plContext),
+            PKIX_LISTGETLENGTHFAILED);
+        for (index = 0;index < length;index++) {
+            PKIX_CHECK(
+                PKIX_List_GetItem(node->children, index,
+                                  (PKIX_PL_Object**)&childNode, plContext),
+                PKIX_LISTGETITEMFAILED);
+            if (!childNode)
+                continue;
+            PKIX_CHECK(
+                pkix_VerifyNode_FindError(childNode, error,
+                                          plContext),
+                PKIX_VERIFYNODEFINDERRORFAILED);
+            PKIX_DECREF(childNode);
+            if (*error) {
+                goto cleanup;
+            }
+        }
+    }
+    
+    if (node->error && node->error->plErr) {
+        PKIX_INCREF(node->error);
+        *error = node->error;
+    }
+
+cleanup:
+    PKIX_DECREF(childNode);
+    
+    PKIX_RETURN(VERIFYNODE);
 }

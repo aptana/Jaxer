@@ -50,7 +50,11 @@ CPU_ARCH	:= $(shell uname -p)
 endif
 
 ifeq (,$(filter-out i%86,$(CPU_ARCH)))
+ifdef USE_64
+CC              += -arch x86_64
+else
 OS_REL_CFLAGS	= -Di386
+endif
 else
 OS_REL_CFLAGS	= -Dppc
 endif
@@ -109,17 +113,23 @@ ifeq (11,$(ALLOW_OPT_CODE_SIZE)$(OPT_CODE_SIZE))
 else
 	OPTIMIZER	= -O2
 endif
+ifdef MOZ_DEBUG_SYMBOLS
+	OPTIMIZER  += -gdwarf-2 -gfull
+endif
 endif
 
 ARCH		= darwin
 
 DSO_CFLAGS	= -fPIC
+# May override this with different compatibility and current version numbers.
+DARWIN_DYLIB_VERSIONS = -compatibility_version 1 -current_version 1
 # May override this with -bundle to create a loadable module.
-DSO_LDOPTS	= -dynamiclib -compatibility_version 1 -current_version 1 -install_name @executable_path/$(notdir $@) -headerpad_max_install_names
+DSO_LDOPTS	= -dynamiclib $(DARWIN_DYLIB_VERSIONS) -install_name @executable_path/$(notdir $@) -headerpad_max_install_names
 
 MKSHLIB		= $(CC) $(DSO_LDOPTS) $(DARWIN_SDK_SHLIBFLAGS)
 DLL_SUFFIX	= dylib
 PROCESS_MAP_FILE = grep -v ';+' $< | grep -v ';-' | \
                 sed -e 's; DATA ;;' -e 's,;;,,' -e 's,;.*,,' -e 's,^,_,' > $@
 
-G++INCLUDES	= -I/usr/include/g++
+USE_SYSTEM_ZLIB = 1
+ZLIB_LIBS	= -lz

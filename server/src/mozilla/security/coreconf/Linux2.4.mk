@@ -38,11 +38,16 @@
 include $(CORE_DEPTH)/coreconf/Linux.mk
 
 OS_REL_CFLAGS   += -DLINUX2_1
-MKSHLIB         = $(CC) $(DSO_LDOPTS) -Wl,-soname -Wl,$(@:$(OBJDIR)/%.so=%.so)
+MKSHLIB         = $(CC) $(DSO_LDOPTS) -Wl,-soname -Wl,$(@:$(OBJDIR)/%.so=%.so) $(RPATH)
 
 ifdef MAPFILE
 	MKSHLIB += -Wl,--version-script,$(MAPFILE)
 endif
 PROCESS_MAP_FILE = grep -v ';-' $< | \
         sed -e 's,;+,,' -e 's; DATA ;;' -e 's,;;,,' -e 's,;.*,;,' > $@
+        
+# Softoken 3.13 uses NO_FORK_CHECK only.
+# Softoken 3.12 uses NO_FORK_CHECK and NO_CHECK_FORK.
+# Don't use NO_CHECK_FORK in new code.
+DEFINES += -DNO_FORK_CHECK -DNO_CHECK_FORK
 

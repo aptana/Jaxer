@@ -56,12 +56,33 @@ include $(CORE_DEPTH)/coreconf/config.mk
 # (4) Include "local" platform-dependent assignments (OPTIONAL).      #
 #######################################################################
 
-include ../platlibs.mk
+ifeq ($(OS_ARCH), WINNT)
+
+EXTRA_LIBS += \
+	$(NSPR_LIB_DIR)/$(NSPR31_LIB_PREFIX)plc4.$(LIB_SUFFIX) \
+	$(NSPR_LIB_DIR)/$(NSPR31_LIB_PREFIX)plds4.$(LIB_SUFFIX) \
+	$(NSPR_LIB_DIR)/$(NSPR31_LIB_PREFIX)nspr4.$(LIB_SUFFIX) \
+	$(NULL)
+
+else
+
+EXTRA_SHARED_LIBS += \
+	-L$(NSPR_LIB_DIR) \
+	-lplc4 \
+	-lplds4 \
+	-lnspr4 \
+	$(NULL)
+
+endif
+
 
 # sign any and all shared libraries that contain the word freebl
 
 CHECKLIBS = $(DIST)/lib/$(DLL_PREFIX)softokn3.$(DLL_SUFFIX)
 CHECKLIBS += $(wildcard $(DIST)/lib/$(DLL_PREFIX)freebl*3.$(DLL_SUFFIX))
+ifndef NSS_DISABLE_DBM
+CHECKLIBS += $(DIST)/lib/$(DLL_PREFIX)nssdbm3.$(DLL_SUFFIX)
+endif
 CHECKLOC = $(CHECKLIBS:.$(DLL_SUFFIX)=.chk)
 
 MD_LIB_RELEASE_FILES = $(CHECKLOC)

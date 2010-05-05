@@ -35,12 +35,10 @@
  * ***** END LICENSE BLOCK ***** */
 
 #ifdef DEBUG
-static const char CVS_ID[] = "@(#) $RCSfile: ckhelper.c,v $ $Revision: 1.36 $ $Date: 2007/11/16 05:29:25 $";
+static const char CVS_ID[] = "@(#) $RCSfile: ckhelper.c,v $ $Revision: 1.40 $ $Date: 2010/01/08 02:00:58 $";
 #endif /* DEBUG */
 
-#ifndef NSSCKEPV_H
-#include "nssckepv.h"
-#endif /* NSSCKEPV_H */
+#include "pkcs11.h"
 
 #ifndef DEVM_H
 #include "devm.h"
@@ -133,8 +131,8 @@ nssCKObject_GetAttributes (
 	/* Allocate memory for each attribute. */
 	for (i=0; i<count; i++) {
 	    CK_ULONG ulValueLen = obj_template[i].ulValueLen;
-	    if (ulValueLen == 0) continue;
-	    if (ulValueLen == (CK_ULONG) -1) {
+	    if (ulValueLen == 0 || ulValueLen == (CK_ULONG) -1) {
+		obj_template[i].pValue = NULL;
 		obj_template[i].ulValueLen = 0;
 		continue;
 	    }
@@ -359,6 +357,10 @@ nssCryptokiCertificate_GetAttributes (
 	session = sessionOpt ? 
 	          sessionOpt : 
 	          nssToken_GetDefaultSession(certObject->token);
+	if (!session) {
+	    nss_SetError(NSS_ERROR_INVALID_ARGUMENT);
+	    return PR_FAILURE;
+	}
 
 	slot = nssToken_GetSlot(certObject->token);
 	status = nssCKObject_GetAttributes(certObject->handle, 
@@ -457,6 +459,10 @@ nssCryptokiTrust_GetAttributes (
 	session = sessionOpt ? 
 	          sessionOpt : 
 	          nssToken_GetDefaultSession(trustObject->token);
+	if (!session) {
+	    nss_SetError(NSS_ERROR_INVALID_ARGUMENT);
+	    return PR_FAILURE;
+	}
 
 	slot = nssToken_GetSlot(trustObject->token);
 	status = nssCKObject_GetAttributes(trustObject->handle,
@@ -522,6 +528,10 @@ nssCryptokiCRL_GetAttributes (
 	session = sessionOpt ? 
 	          sessionOpt : 
 	          nssToken_GetDefaultSession(crlObject->token);
+	if (session == NULL) {
+	    nss_SetError(NSS_ERROR_INVALID_ARGUMENT);
+	    return PR_FAILURE;
+	}
 
 	slot = nssToken_GetSlot(crlObject->token);
 	status = nssCKObject_GetAttributes(crlObject->handle, 
@@ -556,7 +566,7 @@ NSS_IMPLEMENT PRStatus
 nssCryptokiPrivateKey_SetCertificate (
   nssCryptokiObject *keyObject,
   nssSession *sessionOpt,
-  NSSUTF8 *nickname,
+  const NSSUTF8 *nickname,
   NSSItem *id,
   NSSDER *subject
 )
@@ -580,10 +590,9 @@ nssCryptokiPrivateKey_SetCertificate (
     if (sessionOpt) {
 	if (!nssSession_IsReadWrite(sessionOpt)) {
 	    return PR_FAILURE;
-	} else {
-	    session = sessionOpt;
-	}
-    } else if (nssSession_IsReadWrite(defaultSession)) {
+	} 
+	session = sessionOpt;
+    } else if (defaultSession && nssSession_IsReadWrite(defaultSession)) {
 	session = defaultSession;
     } else {
 	NSSSlot *slot = nssToken_GetSlot(token);

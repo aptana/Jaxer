@@ -59,6 +59,7 @@
 #define PUBLIC_MECH_SHA256_FLAG      0x00004000ul
 #define PUBLIC_MECH_SHA512_FLAG      0x00008000ul
 #define PUBLIC_MECH_CAMELLIA_FLAG    0x00010000ul
+#define PUBLIC_MECH_SEED_FLAG        0x00020000ul
 
 #define PUBLIC_MECH_RANDOM_FLAG      0x08000000ul
 #define PUBLIC_MECH_FRIENDLY_FLAG    0x10000000ul
@@ -79,7 +80,7 @@
 SEC_BEGIN_PROTOS
 
 /*
- * the following functions are going to be depricated in NSS 4.0 in
+ * the following functions are going to be deprecated in NSS 4.0 in
  * favor of the new stan functions.
  */
 
@@ -149,6 +150,10 @@ extern PK11SlotInfo *SECMOD_FindSlot(SECMODModule *module,const char *name);
 /* Funtion reports true if at least one of the modules */
 /* of modType has been installed */
 PRBool SECMOD_IsModulePresent( unsigned long int pubCipherEnableFlags );
+
+/* accessors */
+PRBool SECMOD_GetSkipFirstFlag(SECMODModule *mod);
+PRBool SECMOD_GetDefaultModDBFlag(SECMODModule *mod);
 
 /* Functions used to convert between internal & public representation
  * of Mechanism Flags and Cipher Enable Flags */

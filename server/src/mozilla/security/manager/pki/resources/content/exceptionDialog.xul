@@ -85,7 +85,7 @@
     <hbox align="center">
       <label control="locationTextBox" value="&exceptionMgr.certlocation.url;"/>
       <textbox id="locationTextBox" flex="1" oninput="handleTextChange();"
-               value="https://"/>
+               value="https://" class="uri-element"/>
       <button id="checkCertButton" disabled="true" dlgtype="extra2"
               accesskey="&exceptionMgr.certlocation.accesskey;"
               label="&exceptionMgr.certlocation.download;"/>
@@ -115,7 +115,7 @@
       <description id="status3LongDescription" style="white-space: pre-wrap;"/>
       <spacer flex="1"/>
     </vbox>
-    <checkbox id="permanent" checked="true" disabled="true"
+    <checkbox id="permanent" disabled="true"
               label="&exceptionMgr.permanent.label;"
               accesskey="&exceptionMgr.permanent.accesskey;"/>
   </groupbox>

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -17,10 +17,11 @@
 #
 # The Initial Developer of the Original Code is
 # Netscape Communications Corporation.
-# Portions created by the Initial Developer are Copyright (C) 1994-2000
+# Portions created by the Initial Developer are Copyright (C) 1994-2009
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s):
+#   Slavomir Katuscak <slavomir.katuscak@sun.com>, Sun Microsystems
 #
 # Alternatively, the contents of this file may be used under the terms of
 # either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -38,6 +39,40 @@
 
 
 if [ -z "${CLEANUP}" -o "${CLEANUP}" = "${SCRIPTNAME}" ]; then
+    echo
+    echo "SUMMARY:"
+    echo "========"
+    echo "NSS variables:"
+    echo "--------------"
+    echo "HOST=${HOST}"
+    echo "DOMSUF=${DOMSUF}"
+    echo "BUILD_OPT=${BUILD_OPT}"
+    echo "USE_64=${USE_64}"
+    echo "NSS_CYCLES=\"${NSS_CYCLES}\""
+    echo "NSS_TESTS=\"${NSS_TESTS}\""
+    echo "NSS_SSL_TESTS=\"${NSS_SSL_TESTS}\""
+    echo "NSS_SSL_RUN=\"${NSS_SSL_RUN}\""
+    echo "NSS_AIA_PATH=${NSS_AIA_PATH}"
+    echo "NSS_AIA_HTTP=${NSS_AIA_HTTP}"
+    echo "NSS_AIA_OCSP=${NSS_AIA_OCSP}"
+    echo "IOPR_HOSTADDR_LIST=${IOPR_HOSTADDR_LIST}"
+    echo "PKITS_DATA=${PKITS_DATA}"
+    echo
+    echo "Tests summary:"
+    echo "--------------"
+    LINES_CNT=$(cat ${RESULTS} | grep ">Passed<" | wc -l | sed s/\ *//)
+    echo "Passed:             ${LINES_CNT}"
+    LINES_CNT=$(cat ${RESULTS} | grep ">Failed<" | wc -l | sed s/\ *//)
+    echo "Failed:             ${LINES_CNT}"
+    LINES_CNT=$(cat ${RESULTS} | grep ">Failed Core<" | wc -l | sed s/\ *//)
+    echo "Failed with core:   ${LINES_CNT}"
+    LINES_CNT=$(cat ${RESULTS} | grep ">Unknown<" | wc -l | sed s/\ *//)
+    echo "Unknown status:     ${LINES_CNT}"
+    if [ ${LINES_CNT} -gt 0 ]; then
+        echo "TinderboxPrint:Unknown: ${LINES_CNT}"
+    fi
+    echo
+
     html "END_OF_TEST<BR>"
     html "</BODY></HTML>" 
     rm -f ${TEMPFILES} 2>/dev/null

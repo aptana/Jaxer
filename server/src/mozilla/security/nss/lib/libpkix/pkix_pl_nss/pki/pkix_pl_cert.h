@@ -85,6 +85,11 @@ struct PKIX_PL_CertStruct {
         PKIX_CertStore *store;
         PKIX_List *authorityInfoAccess; /* list of PKIX_PL_InfoAccess */
         PKIX_List *subjectInfoAccess; /* list of PKIX_PL_InfoAccess */
+        PKIX_Boolean isUserTrustAnchor;
+        PKIX_List *crldpList; /* list of CRL DPs based on der in nssCert arena.
+                               * Destruction is needed for pkix object and
+                               * not for undelying der as it is a part
+                               * nssCert arena. */ 
 };
 
 /* see source file for function documentation */

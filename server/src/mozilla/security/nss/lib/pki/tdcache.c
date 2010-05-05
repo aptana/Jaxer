@@ -35,7 +35,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #ifdef DEBUG
-static const char CVS_ID[] = "@(#) $RCSfile: tdcache.c,v $ $Revision: 1.47 $ $Date: 2007/11/16 05:29:27 $";
+static const char CVS_ID[] = "@(#) $RCSfile: tdcache.c,v $ $Revision: 1.49 $ $Date: 2010/02/10 02:04:32 $";
 #endif /* DEBUG */
 
 #ifndef PKIM_H
@@ -499,7 +499,7 @@ nssTrustDomain_UpdateCachedTokenCerts (
     PRUint32 count;
     certList = nssList_Create(NULL, PR_FALSE);
     if (!certList) return PR_FAILURE;
-    (void *)nssTrustDomain_GetCertsFromCache(td, certList);
+    (void)nssTrustDomain_GetCertsFromCache(td, certList);
     count = nssList_Count(certList);
     if (count > 0) {
 	cached = nss_ZNEWARRAY(NULL, NSSCertificate *, count + 1);
@@ -833,6 +833,9 @@ add_cert_to_cache (
 	    goto loser;
 	}
 #endif
+    } else {
+    	/* A new subject entry was not created.  arena is unused. */
+	nssArena_Destroy(arena);
     }
     rvCert = cert;
     PZ_Unlock(td->cache->lock);

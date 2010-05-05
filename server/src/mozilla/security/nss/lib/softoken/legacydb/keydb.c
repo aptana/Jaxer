@@ -34,7 +34,7 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
-/* $Id: keydb.c,v 1.9 2007/12/03 20:26:44 kaie%kuix.de Exp $ */
+/* $Id: keydb.c,v 1.11 2009/02/03 05:34:44 julien.pierre.boogz%sun.com Exp $ */
 
 #include "lowkeyi.h"
 #include "secasn1.h"
@@ -1051,7 +1051,7 @@ nsslowkey_CloseKeyDB(NSSLOWKEYDBHandle *handle)
 	    SECITEM_FreeItem(handle->global_salt,PR_TRUE);
 	}
 	if (handle->lock != NULL) {
-	    PZ_DestroyLock(handle->lock);
+	    SKIP_AFTER_FORK(PZ_DestroyLock(handle->lock));
 	}
 	    
 	PORT_Free(handle);
@@ -1382,6 +1382,7 @@ nsslowkey_GetPWCheckEntry(NSSLOWKEYDBHandle *handle,NSSLOWKEYPasswordEntry *entr
 	goto loser;
     }
     algorithm = SECOID_FindOIDTag(&oid);
+    entryData.type = siBuffer;
     entryData.len = dbkey->derPK.len - (oid.len+1);
     entryData.data = &dbkey->derPK.data[oid.len+1];
 
@@ -2193,11 +2194,11 @@ keydb_Close(NSSLOWKEYDBHandle *kdb)
     DB *db = kdb->db;
 
     PORT_Assert(kdbLock != NULL);
-    PZ_Lock(kdbLock);
+    SKIP_AFTER_FORK(PZ_Lock(kdbLock));
 
     (* db->close)(db);
     
-    prstat = PZ_Unlock(kdbLock);
+    SKIP_AFTER_FORK(prstat = PZ_Unlock(kdbLock));
 
     return;
 }

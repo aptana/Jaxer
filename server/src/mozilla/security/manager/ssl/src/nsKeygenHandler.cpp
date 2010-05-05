@@ -170,7 +170,7 @@ done:
 }
 
 typedef struct curveNameTagPairStr {
-    char *curveName;
+    const char *curveName;
     SECOidTag curveOidTag;
 } CurveNameTagPair;
 
@@ -258,7 +258,7 @@ static CurveNameTagPair nameTagPair[] =
 };
 
 SECKEYECParams * 
-decode_ec_params(char *curve)
+decode_ec_params(const char *curve)
 {
     SECKEYECParams *ecparams;
     SECOidData *oidData = NULL;
@@ -843,14 +843,14 @@ nsKeygenFormProcessor::ProcessValue(nsIDOMHTMLElement *aElement,
 } 
 
 NS_METHOD nsKeygenFormProcessor::ProvideContent(const nsAString& aFormType, 
-						nsStringArray& aContent, 
+						nsTArray<nsString>& aContent, 
 						nsAString& aAttribute) 
 { 
   if (Compare(aFormType, NS_LITERAL_STRING("SELECT"), 
     nsCaseInsensitiveStringComparator()) == 0) {
 
     for (size_t i = 0; i < number_of_key_size_choices; ++i) {
-      aContent.AppendString(mSECKeySizeChoiceList[i].name);
+      aContent.AppendElement(mSECKeySizeChoiceList[i].name);
     }
     aAttribute.AssignLiteral("-mozilla-keygen");
   }

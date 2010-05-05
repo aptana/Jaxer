@@ -164,7 +164,7 @@ AddCert(PK11SlotInfo *slot, CERTCertDBHandle *handle, char *name, char *trusts,
 	    GEN_BREAK(SECFailure);
 	}
 
-	/* Create a cert trust to pass to SEC_AddPermCertificate */
+	/* Create a cert trust */
 	trust = (CERTCertTrust *)PORT_ZAlloc(sizeof(CERTCertTrust));
 	if (!trust) {
 	    SECU_PrintError(progName, "unable to allocate cert trust");
@@ -177,19 +177,26 @@ AddCert(PK11SlotInfo *slot, CERTCertDBHandle *handle, char *name, char *trusts,
 	    GEN_BREAK(SECFailure);
 	}
 
-	if (PK11_IsFIPS() || !PK11_IsInternal(slot)) {
-	    rv = PK11_Authenticate(slot, PR_TRUE, pwdata);
-	    if (rv != SECSuccess) {
-		SECU_PrintError(progName, "could not authenticate to token %s.",
-                                PK11_GetTokenName(slot));
-		GEN_BREAK(SECFailure);
-	    }
-	}
-
 	rv =  PK11_ImportCert(slot, cert, CK_INVALID_HANDLE, name, PR_FALSE);
 	if (rv != SECSuccess) {
-	    SECU_PrintError(progName, "could not add certificate to token or database");
-	    GEN_BREAK(SECFailure);
+	    /* sigh, PK11_Import Cert and CERT_ChangeCertTrust should have 
+	     * been coded to take a password arg. */
+	    if (PORT_GetError() == SEC_ERROR_TOKEN_NOT_LOGGED_IN) {
+		rv = PK11_Authenticate(slot, PR_TRUE, pwdata);
+		if (rv != SECSuccess) {
+                    SECU_PrintError(progName, 
+				"could not authenticate to token %s.",
+				PK11_GetTokenName(slot));
+		    GEN_BREAK(SECFailure);
+		}
+		rv = PK11_ImportCert(slot, cert, CK_INVALID_HANDLE, 
+				     name, PR_FALSE);
+	    }
+	    if (rv != SECSuccess) {
+		SECU_PrintError(progName, 
+			"could not add certificate to token or database");
+		GEN_BREAK(SECFailure);
+	    }
 	}
 
 	rv = CERT_ChangeCertTrust(handle, cert, trust);
@@ -197,8 +204,9 @@ AddCert(PK11SlotInfo *slot, CERTCertDBHandle *handle, char *name, char *trusts,
 	    if (PORT_GetError() == SEC_ERROR_TOKEN_NOT_LOGGED_IN) {
 		rv = PK11_Authenticate(slot, PR_TRUE, pwdata);
 		if (rv != SECSuccess) {
-                    SECU_PrintError(progName, "could not authenticate to token %s.",
-                                    PK11_GetTokenName(slot));
+                    SECU_PrintError(progName, 
+				"could not authenticate to token %s.",
+				PK11_GetTokenName(slot));
 		    GEN_BREAK(SECFailure);
 		}
 		rv = CERT_ChangeCertTrust(handle, cert, trust);
@@ -249,6 +257,7 @@ CertReq(SECKEYPrivateKey *privk, SECKEYPublicKey *pubk, KeyType keyType,
     
     /* Generate certificate request */
     cr = CERT_CreateCertificateRequest(subject, spki, NULL);
+    SECKEY_DestroySubjectPublicKeyInfo(spki);
     if (!cr) {
 	SECU_PrintError(progName, "unable to make certificate request");
 	return SECFailure;
@@ -466,10 +475,20 @@ listCerts(CERTCertDBHandle *handle, char *name, PK11SlotInfo *slot,
 		return SECFailure;
 	    }
 	}
+	/* Here, we have one cert with the desired nickname or email 
+	 * address.  Now, we will attempt to get a list of ALL certs 
+	 * with the same subject name as the cert we have.  That list 
+	 * should contain, at a minimum, the one cert we have already found.
+	 * If the list of certs is empty (NULL), the libraries have failed.
+	 */
 	certs = CERT_CreateSubjectCertList(NULL, handle, &the_cert->derSubject,
 		PR_Now(), PR_FALSE);
 	CERT_DestroyCertificate(the_cert);
-
+	if (!certs) {
+	    PORT_SetError(SEC_ERROR_LIBRARY_FAILURE);
+	    SECU_PrintError(progName, "problem printing certificates");
+	    return SECFailure;
+	}
 	for (node = CERT_LIST_HEAD(certs); !CERT_LIST_END(node,certs);
 						node = CERT_LIST_NEXT(node)) {
 	    the_cert = node->cert;
@@ -527,7 +546,7 @@ ListCerts(CERTCertDBHandle *handle, char *nickname, PK11SlotInfo *slot,
 {
     SECStatus rv;
 
-    if (!ascii && !raw) {
+    if (!ascii && !raw && !nickname) {
         PR_fprintf(outfile, "\n%-60s %-5s\n%-60s %-5s\n\n",
                    "Certificate Nickname", "Trust Attributes", "",
                    "SSL,S/MIME,JAR/XPI");
@@ -793,7 +812,7 @@ ListKeysInSlot(PK11SlotInfo *slot, const char *nickName, KeyType keyType,
 	    keyName = NULL;
 	    cert = PK11_GetCertFromPrivateKey(node->key);
 	    if (cert) {
-		if (cert->nickname && !cert->nickname[0]) {
+		if (cert->nickname && cert->nickname[0]) {
 		    keyName = PORT_Strdup(cert->nickname);
 		} else if (cert->emailAddr && cert->emailAddr[0]) {
 		    keyName = PORT_Strdup(cert->emailAddr);
@@ -832,6 +851,8 @@ ListKeys(PK11SlotInfo *slot, const char *nickName, int index,
          KeyType keyType, PRBool dopriv, secuPWData *pwdata)
 {
     SECStatus rv = SECFailure;
+    static const char fmt[] = \
+    	"%s: Checking token \"%.33s\" in slot \"%.65s\"\n";
 
     if (slot == NULL) {
 	PK11SlotList *list;
@@ -840,11 +861,16 @@ ListKeys(PK11SlotInfo *slot, const char *nickName, int index,
 	list= PK11_GetAllTokens(CKM_INVALID_MECHANISM,PR_FALSE,PR_FALSE,pwdata);
 	if (list) {
 	    for (le = list->head; le; le = le->next) {
+		PR_fprintf(PR_STDOUT, fmt, progName, 
+			   PK11_GetTokenName(le->slot), 
+			   PK11_GetSlotName(le->slot));
 		rv &= ListKeysInSlot(le->slot,nickName,keyType,pwdata);
 	    }
 	    PK11_FreeSlotList(list);
 	}
     } else {
+	PR_fprintf(PR_STDOUT, fmt, progName, PK11_GetTokenName(slot), 
+	           PK11_GetSlotName(slot));
 	rv = ListKeysInSlot(slot,nickName,keyType,pwdata);
     }
     return rv;
@@ -916,14 +942,18 @@ Usage(char *progName)
 #define FPS fprintf(stderr, 
     FPS "Type %s -H for more detailed descriptions\n", progName);
     FPS "Usage:  %s -N [-d certdir] [-P dbprefix] [-f pwfile]\n", progName);
-    FPS "Usage:  %s -T [-d certdir] [-P dbprefix] [-h token-name] [-f pwfile]\n", progName);
+    FPS "Usage:  %s -T [-d certdir] [-P dbprefix] [-h token-name]\n"
+	"\t\t [-f pwfile] [-0 SSO-password]\n", progName);
     FPS "\t%s -A -n cert-name -t trustargs [-d certdir] [-P dbprefix] [-a] [-i input]\n", 
     	progName);
     FPS "\t%s -B -i batch-file\n", progName);
     FPS "\t%s -C [-c issuer-name | -x] -i cert-request-file -o cert-file\n"
 	"\t\t [-m serial-number] [-w warp-months] [-v months-valid]\n"
-        "\t\t [-f pwfile] [-d certdir] [-P dbprefix] [-1] [-2] [-3] [-4] [-5]\n"
-	"\t\t [-6] [-7 emailAddrs] [-8 dns-names] [-a]\n",
+        "\t\t [-f pwfile] [-d certdir] [-P dbprefix]\n"
+        "\t\t [-1 | --keyUsage [keyUsageKeyword,..]] [-2] [-3] [-4]\n"
+        "\t\t [-5 | --nsCertType [nsCertTypeKeyword,...]]\n"
+        "\t\t [-6 | --extKeyUsage [extKeyUsageKeyword,...]] [-7 emailAddrs]\n"
+        "\t\t [-8 dns-names] [-a]\n",
 	progName);
     FPS "\t%s -D -n cert-name [-d certdir] [-P dbprefix]\n", progName);
     FPS "\t%s -E -n cert-name -t trustargs [-d certdir] [-P dbprefix] [-a] [-i input]\n", 
@@ -956,7 +986,7 @@ Usage(char *progName)
 	progName);
     FPS "\t%s -O -n cert-name [-X] [-d certdir] [-P dbprefix]\n", progName);
     FPS "\t%s -R -s subj -o cert-request-file [-d certdir] [-P dbprefix] [-p phone] [-a]\n"
-	"\t\t [-y emailAddrs] [-k key-type-or-id] [-h token-name] [-f pwfile] [-g key-size]\n",
+	"\t\t [-7 emailAddrs] [-k key-type-or-id] [-h token-name] [-f pwfile] [-g key-size]\n",
 	progName);
     FPS "\t%s -V -n cert-name -u usage [-b time] [-e] \n"
 	"\t\t[-X] [-d certdir] [-P dbprefix]\n",
@@ -1031,22 +1061,33 @@ static void LongUsage(char *progName)
 	"   -d certdir");
     FPS "%-20s Cert & Key database prefix\n",
 	"   -P dbprefix");
-    FPS "%-20s Create key usage extension\n",
-	"   -1 ");
+    FPS "%-20s \n"
+              "%-20s Create key usage extension. Possible keywords:\n"
+              "%-20s \"digitalSignature\", \"nonRepudiation\", \"keyEncipherment\",\n"
+              "%-20s \"dataEncipherment\", \"keyAgreement\", \"certSigning\",\n"
+              "%-20s \"crlSigning\", \"critical\"\n",
+        "   -1 | --keyUsage keyword,keyword,...", "", "", "", "");
     FPS "%-20s Create basic constraint extension\n",
 	"   -2 ");
     FPS "%-20s Create authority key ID extension\n",
 	"   -3 ");
     FPS "%-20s Create crl distribution point extension\n",
 	"   -4 ");
-    FPS "%-20s Create netscape cert type extension\n",
-	"   -5 ");
-    FPS "%-20s Create extended key usage extension\n",
-	"   -6 ");
+    FPS "%-20s \n"
+              "%-20s Create netscape cert type extension. Possible keywords:\n"
+              "%-20s \"sslClient\", \"sslServer\", \"smime\", \"objectSigning\",\n"
+              "%-20s \"sslCA\", \"smimeCA\", \"objectSigningCA\", \"critical\".\n",
+        "   -5 | -nsCertType keyword,keyword,... ", "", "", "");
+    FPS "%-20s \n"
+              "%-20s Create extended key usage extension. Possible keywords:\n"
+              "%-20s \"serverAuth\", \"clientAuth\",\"codeSigning\",\n"
+              "%-20s \"emailProtection\", \"timeStamp\",\"ocspResponder\",\n"
+              "%-20s \"stepUp\", \"critical\"\n",
+	"   -6 | --extKeyUsage keyword,keyword,...", "", "", "", "");
     FPS "%-20s Create an email subject alt name extension\n",
-	"   -7 ");
+	"   -7 emailAddrs");
     FPS "%-20s Create an dns subject alt name extension\n",
-	"   -8 ");
+	"   -8 dnsNames");
     FPS "%-20s The input certificate request is encoded in ASCII (RFC1113)\n",
 	"   -a");
     FPS "\n");
@@ -1190,6 +1231,8 @@ static void LongUsage(char *progName)
 	"   -P dbprefix");
     FPS "%-20s Token to reset (default is internal)\n",
 	"   -h token-name");
+    FPS "%-20s Set token's Site Security Officer password\n",
+	"   -0 SSO-password");
     FPS "\n");
 
     FPS "\n");
@@ -1361,9 +1404,9 @@ static void LongUsage(char *progName)
     FPS "%-20s Create extended key usage extension\n",
 	"   -6 ");
     FPS "%-20s Create an email subject alt name extension\n",
-	"   -7 ");
+	"   -7 emailAddrs ");
     FPS "%-20s Create a DNS subject alt name extension\n",
-	"   -8 ");
+	"   -8 DNS-names");
     FPS "%-20s Create an Authority Information Access extension\n",
 	"   --extAIA ");
     FPS "%-20s Create a Subject Information Access extension\n",
@@ -1517,10 +1560,11 @@ done:
 static SECStatus
 CreateCert(
 	CERTCertDBHandle *handle, 
+	PK11SlotInfo *slot,
 	char *  issuerNickName, 
 	PRFileDesc *inFile,
 	PRFileDesc *outFile, 
-	SECKEYPrivateKey *selfsignprivkey,
+	SECKEYPrivateKey **selfsignprivkey,
 	void 	*pwarg,
 	SECOidTag hashAlgTag,
 	unsigned int serialNumber, 
@@ -1534,7 +1578,6 @@ CreateCert(
 {
     void *	extHandle;
     SECItem *	certDER;
-    PRArenaPool *arena			= NULL;
     CERTCertificate *subjectCert 	= NULL;
     CERTCertificateRequest *certReq	= NULL;
     SECStatus 	rv 			= SECSuccess;
@@ -1543,11 +1586,6 @@ CreateCert(
 
     reqDER.data = NULL;
     do {
-	arena = PORT_NewArena(DER_DEFAULT_CHUNKSIZE);
-	if (!arena) {
-	    GEN_BREAK (SECFailure);
-	}
-	
 	/* Create a certrequest object from the input cert request der */
 	certReq = GetCertRequest(inFile, ascii);
 	if (certReq == NULL) {
@@ -1587,8 +1625,18 @@ CreateCert(
 
 	CERT_FinishExtensions(extHandle);
 
+	/* self-signing a cert request, find the private key */
+	if (selfsign && *selfsignprivkey == NULL) {
+	    *selfsignprivkey = PK11_FindKeyByDERCert(slot, subjectCert, pwarg);
+	    if (!*selfsignprivkey) {
+		fprintf(stderr, "Failed to locate private key.\n");
+		rv = SECFailure;
+		break;
+	    }
+	}
+
 	certDER = SignCert(handle, subjectCert, selfsign, hashAlgTag,
-	                   selfsignprivkey, issuerNickName,pwarg);
+	                   *selfsignprivkey, issuerNickName,pwarg);
 
 	if (certDER) {
 	   if (ascii) {
@@ -1603,7 +1651,6 @@ CreateCert(
     } while (0);
     CERT_DestroyCertificateRequest (certReq);
     CERT_DestroyCertificate (subjectCert);
-    PORT_FreeArena (arena, PR_FALSE);
     if (rv != SECSuccess) {
 	PRErrorCode  perr = PR_GetError();
         fprintf(stderr, "%s: unable to create cert (%s)\n", progName,
@@ -1728,7 +1775,7 @@ enum {
     cmd_Version,
     cmd_Batch,
     cmd_Merge,
-    cmd_UpgradeMerge, /* test only */
+    cmd_UpgradeMerge /* test only */
 };
 
 /*  Certutil options */
@@ -1779,6 +1826,9 @@ enum certutilOpts {
     opt_AddPolicyConstrExt,
     opt_AddInhibAnyExt,
     opt_AddSubjectKeyIDExt,
+    opt_AddCmdKeyUsageExt,
+    opt_AddCmdNSCertTypeExt,
+    opt_AddCmdExtKeyUsageExt,
     opt_SourceDir,
     opt_SourcePrefix,
     opt_UpgradeID,
@@ -1864,6 +1914,13 @@ secuCommandFlag options_init[] =
 	{ /* opt_AddInhibAnyExt      */  0,   PR_FALSE, 0, PR_FALSE, "extIA" },
 	{ /* opt_AddSubjectKeyIDExt  */  0,   PR_FALSE, 0, PR_FALSE, 
 						   "extSKID" },
+	{ /* opt_AddCmdKeyUsageExt   */  0,   PR_TRUE,  0, PR_FALSE,
+                                                   "keyUsage" },
+	{ /* opt_AddCmdNSCertTypeExt */   0,   PR_TRUE,  0, PR_FALSE,
+                                                   "nsCertType" },
+	{ /* opt_AddCmdExtKeyUsageExt*/  0,   PR_TRUE,  0, PR_FALSE,
+                                                   "extKeyUsage" },
+
 	{ /* opt_SourceDir           */  0,   PR_TRUE,  0, PR_FALSE,
                                                    "source-dir"},
 	{ /* opt_SourcePrefix        */  0,   PR_TRUE,  0, PR_FALSE, 
@@ -2180,19 +2237,10 @@ certutil_main(int argc, char **argv, PRBool initialize)
 	return 255;
     }
 
-    /*  For now, deny -C -x combination */
-    if (certutil.commands[cmd_CreateNewCert].activated &&
-        certutil.options[opt_SelfSign].activated) {
-	PR_fprintf(PR_STDERR,
-	           "%s: self-signing a cert request is not supported.\n",
-	           progName);
-	return 255;
-    }
-
     /*  If making a cert request, need a subject.  */
     if ((certutil.commands[cmd_CertReq].activated ||
          certutil.commands[cmd_CreateAndAddCert].activated) &&
-        !certutil.options[opt_Subject].activated) {
+        !(certutil.options[opt_Subject].activated || keysource)) {
 	PR_fprintf(PR_STDERR, 
 	           "%s -%c: subject is required to create a cert request.\n",
 	           progName, commandToRun);
@@ -2536,14 +2584,6 @@ merge_fail:
     }
     /*  Modify trust attribute for cert (-M)  */
     if (certutil.commands[cmd_ModifyCertTrust].activated) {
-	if (PK11_IsFIPS() || !PK11_IsFriendly(slot)) {
-	    rv = PK11_Authenticate(slot, PR_TRUE, &pwdata);
-	    if (rv != SECSuccess) {
-		SECU_PrintError(progName, "could not authenticate to token %s.",
-                                PK11_GetTokenName(slot));
-		goto shutdown;
-	    }
-	}
 	rv = ChangeTrustAttributes(certHandle, slot, name, 
 	                           certutil.options[opt_Trust].arg, &pwdata);
 	goto shutdown;
@@ -2611,14 +2651,28 @@ merge_fail:
 	    privkey = PK11_FindKeyByDERCert(slot, keycert, &pwdata);
 	    if (privkey)
 		pubkey = CERT_ExtractPublicKey(keycert);
-	    CERT_DestroyCertificate(keycert);
 	    if (!pubkey) {
 		SECU_PrintError(progName,
 				"Could not get keys from cert %s", keysource);
 		rv = SECFailure;
+		CERT_DestroyCertificate(keycert);
 		goto shutdown;
 	    }
 	    keytype = privkey->keyType;
+	    /* On CertReq for renewal if no subject has been
+	     * specified obtain it from the certificate. 
+	     */
+	    if (certutil.commands[cmd_CertReq].activated && !subject) {
+	        subject = CERT_AsciiToName(keycert->subjectName);
+	        if (!subject) {
+	            SECU_PrintError(progName,
+			"Could not get subject from certificate %s", keysource);
+	            CERT_DestroyCertificate(keycert);
+	            rv = SECFailure;
+	            goto shutdown;
+	        }
+	    }
+	    CERT_DestroyCertificate(keycert);
 	} else {
 	    privkey = 
 		CERTUTIL_GeneratePrivateKey(keytype, slot, keysize,
@@ -2647,31 +2701,54 @@ merge_fail:
     if (certutil.commands[cmd_CertReq].activated ||
         certutil.commands[cmd_CreateAndAddCert].activated ||
         certutil.commands[cmd_CreateNewCert].activated) {
-        certutil_extns[ext_keyUsage] =
-				certutil.options[opt_AddKeyUsageExt].activated;
-        certutil_extns[ext_basicConstraint] =
+        certutil_extns[ext_keyUsage].activated =
+            certutil.options[opt_AddCmdKeyUsageExt].activated;
+        if (!certutil_extns[ext_keyUsage].activated) {
+            certutil_extns[ext_keyUsage].activated =
+                certutil.options[opt_AddKeyUsageExt].activated;
+        } else {
+            certutil_extns[ext_keyUsage].arg =
+                certutil.options[opt_AddCmdKeyUsageExt].arg;
+        }
+        certutil_extns[ext_basicConstraint].activated =
 				certutil.options[opt_AddBasicConstraintExt].activated;
-        certutil_extns[ext_authorityKeyID] =
+        certutil_extns[ext_authorityKeyID].activated =
 				certutil.options[opt_AddAuthorityKeyIDExt].activated;
-        certutil_extns[ext_subjectKeyID] =
+        certutil_extns[ext_subjectKeyID].activated =
 				certutil.options[opt_AddSubjectKeyIDExt].activated;
-        certutil_extns[ext_CRLDistPts] =
+        certutil_extns[ext_CRLDistPts].activated =
 				certutil.options[opt_AddCRLDistPtsExt].activated;
-        certutil_extns[ext_NSCertType] =
-				certutil.options[opt_AddNSCertTypeExt].activated;
-        certutil_extns[ext_extKeyUsage] =
-				certutil.options[opt_AddExtKeyUsageExt].activated;
-        certutil_extns[ext_authInfoAcc] =
+        certutil_extns[ext_NSCertType].activated =
+            certutil.options[opt_AddCmdNSCertTypeExt].activated;
+        if (!certutil_extns[ext_NSCertType].activated) {
+            certutil_extns[ext_NSCertType].activated =
+                certutil.options[opt_AddNSCertTypeExt].activated;
+        } else {
+            certutil_extns[ext_NSCertType].arg =
+                certutil.options[opt_AddCmdNSCertTypeExt].arg;
+        }
+
+        certutil_extns[ext_extKeyUsage].activated =
+            certutil.options[opt_AddCmdExtKeyUsageExt].activated;
+        if (!certutil_extns[ext_extKeyUsage].activated) {
+            certutil_extns[ext_extKeyUsage].activated =
+                certutil.options[opt_AddExtKeyUsageExt].activated;
+        } else {
+            certutil_extns[ext_extKeyUsage].arg =
+                certutil.options[opt_AddCmdExtKeyUsageExt].arg;
+        }
+
+        certutil_extns[ext_authInfoAcc].activated =
 				certutil.options[opt_AddAuthInfoAccExt].activated;
-        certutil_extns[ext_subjInfoAcc] =
+        certutil_extns[ext_subjInfoAcc].activated =
 				certutil.options[opt_AddSubjInfoAccExt].activated;
-        certutil_extns[ext_certPolicies] =
+        certutil_extns[ext_certPolicies].activated =
 				certutil.options[opt_AddCertPoliciesExt].activated;
-        certutil_extns[ext_policyMappings] =
+        certutil_extns[ext_policyMappings].activated =
 				certutil.options[opt_AddPolicyMapExt].activated;
-        certutil_extns[ext_policyConstr] =
+        certutil_extns[ext_policyConstr].activated =
 				certutil.options[opt_AddPolicyConstrExt].activated;
-        certutil_extns[ext_inhibitAnyPolicy] =
+        certutil_extns[ext_inhibitAnyPolicy].activated =
 				certutil.options[opt_AddInhibAnyExt].activated;
     }
     /*
@@ -2701,7 +2778,7 @@ merge_fail:
      *  and output the cert to another file.
      */
     if (certutil.commands[cmd_CreateAndAddCert].activated) {
-	static certutilExtnList nullextnlist = {PR_FALSE};
+	static certutilExtnList nullextnlist = {{PR_FALSE, NULL}};
 	rv = CertReq(privkey, pubkey, keytype, hashAlgTag, subject,
 	             certutil.options[opt_PhoneNumber].arg,
 	             certutil.options[opt_ASCIIForIO].activated,
@@ -2733,9 +2810,9 @@ merge_fail:
     /*  Create a certificate (-C or -S).  */
     if (certutil.commands[cmd_CreateAndAddCert].activated ||
          certutil.commands[cmd_CreateNewCert].activated) {
-	rv = CreateCert(certHandle, 
+	rv = CreateCert(certHandle, slot,
 	                certutil.options[opt_IssuerName].arg,
-	                inFile, outFile, privkey, &pwdata, hashAlgTag,
+	                inFile, outFile, &privkey, &pwdata, hashAlgTag,
 	                serialNumber, warpmonths, validityMonths,
 		        certutil.options[opt_ExtendedEmailAddrs].arg,
 		        certutil.options[opt_ExtendedDNSNames].arg,
@@ -2892,8 +2969,6 @@ shutdown:
     if ((initialized == PR_TRUE) && NSS_Shutdown() != SECSuccess) {
         exit(1);
     }
-    PR_Cleanup();
-
     if (rv == SECSuccess) {
 	return 0;
     } else {
@@ -2904,5 +2979,8 @@ shutdown:
 int
 main(int argc, char **argv)
 {
-    return certutil_main(argc, argv, PR_TRUE);
+    int rv = certutil_main(argc, argv, PR_TRUE);
+    PR_Cleanup();
+    return rv;
 }
+

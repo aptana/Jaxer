@@ -37,7 +37,7 @@
 /*
  * p7env -- A command to create a pkcs7 enveloped data.
  *
- * $Id: p7env.c,v 1.8 2007/01/26 01:15:43 nelson%bolyard.com Exp $
+ * $Id: p7env.c,v 1.10 2010/02/11 02:39:47 wtc%google.com Exp $
  */
 
 #include "nspr.h"
@@ -60,8 +60,6 @@ extern int fread(char *, size_t, size_t, FILE*);
 extern int fwrite(char *, size_t, size_t, FILE*);
 extern int fprintf(FILE *, char *, ...);
 #endif
-
-extern void SEC_Init(void);		/* XXX */
 
 
 static void
@@ -241,7 +239,7 @@ main(int argc, char **argv)
     if (!inFile) inFile = stdin;
     if (!outFile) outFile = stdout;
 
-    /* Call the libsec initialization routines */
+    /* Call the NSS initialization routines */
     PR_Init(PR_SYSTEM_THREAD, PR_PRIORITY_NORMAL, 1);
     rv = NSS_Init(SECU_ConfigDirectory(NULL));
     if (rv != SECSuccess) {

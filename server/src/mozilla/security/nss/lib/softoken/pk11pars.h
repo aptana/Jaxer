@@ -86,6 +86,7 @@ static struct secmodargSlotFlagTable secmod_argSlotFlagTable[] = {
 	SECMOD_ARG_ENTRY(TLS,SECMOD_TLS_FLAG),
 	SECMOD_ARG_ENTRY(AES,SECMOD_AES_FLAG),
 	SECMOD_ARG_ENTRY(Camellia,SECMOD_CAMELLIA_FLAG),
+	SECMOD_ARG_ENTRY(SEED,SECMOD_SEED_FLAG),
 	SECMOD_ARG_ENTRY(PublicCerts,SECMOD_FRIENDLY_FLAG),
 	SECMOD_ARG_ENTRY(RANDOM,SECMOD_RANDOM_FLAG),
 };
@@ -121,7 +122,7 @@ static PRBool secmod_argGetPair(char c) {
 }
 
 static PRBool secmod_argIsBlank(char c) {
-   return isspace(c);
+   return isspace((unsigned char )c);
 }
 
 static PRBool secmod_argIsEscape(char c) {

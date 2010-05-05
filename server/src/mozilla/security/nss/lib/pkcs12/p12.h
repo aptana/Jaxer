@@ -54,7 +54,7 @@ typedef int (PR_CALLBACK * PKCS12WriteFunction)(void *arg,
                                                 unsigned int *lenWritten);
 typedef int (PR_CALLBACK * PKCS12CloseFunction)(void *arg);
 typedef SECStatus (PR_CALLBACK * PKCS12UnicodeConvertFunction)(
-                                 PRArenaPool *arena,
+                                 PLArenaPool *arena,
                                  SECItem *dest, SECItem *src,
                                  PRBool toUnicode,
                                  PRBool swapBytes);
@@ -145,17 +145,20 @@ SEC_PKCS12AddKeyForCert(SEC_PKCS12ExportContext *p12ctxt,
 			SECItem *keyId, SECItem *nickName);
 
 extern SECStatus
+SEC_PKCS12AddCertOrChainAndKey(SEC_PKCS12ExportContext *p12ctxt, 
+			void *certSafe, void *certNestedDest, 
+			CERTCertificate *cert, CERTCertDBHandle *certDb,
+			void *keySafe, void *keyNestedDest, PRBool shroudKey, 
+			SECItem *pwitem, SECOidTag algorithm,
+			PRBool includeCertChain);
+
+
+extern SECStatus
 SEC_PKCS12AddCertAndKey(SEC_PKCS12ExportContext *p12ctxt, 
 			void *certSafe, void *certNestedDest, 
 			CERTCertificate *cert, CERTCertDBHandle *certDb,
 			void *keySafe, void *keyNestedDest, 
 			PRBool shroudKey, SECItem *pwitem, SECOidTag algorithm);
-
-extern SECStatus
-SEC_PKCS12AddDERCertAndEncryptedKey(SEC_PKCS12ExportContext *p12ctxt, 
-			void *certSafe, void *certNestedDest, SECItem *derCert,
-			void *keySafe, void *keyNestedDest, 
-			SECKEYEncryptedPrivateKeyInfo *epki, char *nickname);
 
 extern void *
 SEC_PKCS12CreateNestedSafeContents(SEC_PKCS12ExportContext *p12ctxt,

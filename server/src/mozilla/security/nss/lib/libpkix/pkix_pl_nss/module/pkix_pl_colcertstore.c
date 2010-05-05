@@ -568,11 +568,9 @@ pkix_pl_CollectionCertStoreContext_PopulateCert(
         PKIX_List *certList = NULL;
         PKIX_PL_Cert *certItem = NULL;
         char *dirName = NULL;
-        char *prErrorText = NULL;
         char *pathName = NULL;
         PKIX_UInt32 dirNameLen = 0;
         PRErrorCode prError = 0;
-        PRInt32 prErrorTextLen = 0;
         PRDir *dir = NULL;
         PRDirEntry *dirEntry = NULL;
 
@@ -678,13 +676,7 @@ pkix_pl_CollectionCertStoreContext_PopulateCert(
         }
 
         if ((prError != 0) && (prError != PR_NO_MORE_FILES_ERROR)) {
-                PKIX_COLLECTIONCERTSTORECONTEXT_DEBUG
-                        ("\t\t Calling PR_GetErrorText.\n");
-                prErrorTextLen = PR_GetErrorText(prErrorText);
-                /* PKIX_ERROR(prErrorText); */
-                pkixErrorReceived = PKIX_TRUE;
-                pkixErrorMsg = prErrorText;
-                goto cleanup;
+                PKIX_ERROR(PKIX_COLLECTIONCERTSTOREPOPULATECERTFAILED);
         }
 
         PKIX_CHECK(PKIX_List_SetImmutable(certList, plContext),
@@ -700,7 +692,6 @@ cleanup:
                 PR_CloseDir(dir);
         }
 
-        PKIX_FREE(prErrorText);
         PKIX_FREE(pathName);
         PKIX_FREE(dirName);
 
@@ -745,11 +736,9 @@ pkix_pl_CollectionCertStoreContext_PopulateCRL(
         PKIX_List *crlList = NULL;
         PKIX_PL_CRL *crlItem = NULL;
         char *dirName = NULL;
-        char *prErrorText = NULL;
         char *pathName = NULL;
         PKIX_UInt32 dirNameLen = 0;
         PRErrorCode prError = 0;
-        PRInt32 prErrorTextLen = 0;
         PRDir *dir = NULL;
         PRDirEntry *dirEntry = NULL;
 
@@ -855,14 +844,7 @@ pkix_pl_CollectionCertStoreContext_PopulateCRL(
         }
 
         if ((prError != 0) && (prError != PR_NO_MORE_FILES_ERROR)) {
-                PKIX_COLLECTIONCERTSTORECONTEXT_DEBUG
-                        ("\t\t Calling PR_GetErrorText.\n");
-                prErrorTextLen = PR_GetErrorText(prErrorText);
-
-                /* PKIX_ERROR(prErrorText); */
-                pkixErrorReceived = PKIX_TRUE;
-                pkixErrorMsg = prErrorText;
-                goto cleanup;
+                PKIX_ERROR(PKIX_COLLECTIONCERTSTORECONTEXTGETSELECTCRLFAILED);
         }
 
         PKIX_CHECK(PKIX_List_SetImmutable(crlList, plContext),
@@ -878,7 +860,6 @@ cleanup:
                 PR_CloseDir(dir);
         }
 
-        PKIX_FREE(prErrorText);
         PKIX_FREE(pathName);
         PKIX_FREE(dirName);
 
@@ -929,7 +910,6 @@ pkix_pl_CollectionCertStoreContext_GetSelectedCert(
         PKIX_List *selectCertList = NULL;
         PKIX_PL_Cert *certItem = NULL;
         PKIX_CertSelector_MatchCallback certSelectorMatch = NULL;
-        PKIX_Boolean pass = PKIX_TRUE;
         PKIX_UInt32 numCerts = 0;
         PKIX_UInt32 i = 0;
 
@@ -961,10 +941,10 @@ pkix_pl_CollectionCertStoreContext_GetSelectedCert(
                         if (!PKIX_ERROR_RECEIVED){
                                 PKIX_CHECK_ONLY_FATAL
                                         (certSelectorMatch
-                                        (selector, certItem, &pass, plContext),
+                                        (selector, certItem, plContext),
                                         PKIX_CERTSELECTORMATCHFAILED);
 
-                                if (!PKIX_ERROR_RECEIVED && pass){
+                                if (!PKIX_ERROR_RECEIVED){
                                         PKIX_CHECK_ONLY_FATAL
                                                 (PKIX_List_AppendItem
                                                 (selectCertList,
@@ -1117,6 +1097,7 @@ PKIX_Error *
 pkix_pl_CollectionCertStore_GetCert(
         PKIX_CertStore *certStore,
         PKIX_CertSelector *selector,
+        PKIX_VerifyNode *verifyNode,
         void **pNBIOContext,
         PKIX_List **pCerts,
         void *plContext)
@@ -1316,6 +1297,8 @@ PKIX_PL_CollectionCertStore_Create(
                     NULL, /* GetCertContinue */
                     NULL, /* GetCRLContinue */
                     pkix_pl_CollectionCertStore_CheckTrust,
+                    NULL,      /* can not store crls */
+                    NULL,      /* can not do revocation check */
                     (PKIX_PL_Object *)colCertStoreContext,
                     PKIX_TRUE, /* cache flag */
                     PKIX_TRUE, /* local - no network I/O */

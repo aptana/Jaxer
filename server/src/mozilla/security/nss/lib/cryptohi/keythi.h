@@ -76,7 +76,7 @@ SEC_END_PROTOS
 */
 
 struct SECKEYRSAPublicKeyStr {
-    PRArenaPool * arena;
+    PLArenaPool * arena;
     SECItem modulus;
     SECItem publicExponent;
 };
@@ -88,7 +88,7 @@ typedef struct SECKEYRSAPublicKeyStr SECKEYRSAPublicKey;
 */
 
 struct SECKEYPQGParamsStr {
-    PRArenaPool *arena;
+    PLArenaPool *arena;
     SECItem prime;    /* p */
     SECItem subPrime; /* q */
     SECItem base;     /* g */
@@ -108,14 +108,14 @@ typedef struct SECKEYDSAPublicKeyStr SECKEYDSAPublicKey;
 ** Structure member names suggested by PKCS#3.
 */
 struct SECKEYDHParamsStr {
-    PRArenaPool * arena;
+    PLArenaPool * arena;
     SECItem prime; /* p */
     SECItem base; /* g */
 };
 typedef struct SECKEYDHParamsStr SECKEYDHParams;
 
 struct SECKEYDHPublicKeyStr {
-    PRArenaPool * arena;
+    PLArenaPool * arena;
     SECItem prime;
     SECItem base;
     SECItem publicValue;
@@ -202,13 +202,10 @@ struct SECKEYPublicKeyStr {
 };
 typedef struct SECKEYPublicKeyStr SECKEYPublicKey;
 
-#define CachedAttribute(attribute,setbit) \
-static const PRUint32 SECKEY_##attribute = 1 << setbit;
-
 /* bit flag definitions for staticflags */
 #define SECKEY_Attributes_Cached 0x1    /* bit 0 states
                                            whether attributes are cached */
-CachedAttribute(CKA_PRIVATE,1) /* bit 1 is the value of CKA_PRIVATE */
+#define SECKEY_CKA_PRIVATE (1U << 1)    /* bit 1 is the value of CKA_PRIVATE */
 
 #define SECKEY_ATTRIBUTES_CACHED(key) \
      (0 != (key->staticflags & SECKEY_Attributes_Cached))
@@ -242,7 +239,7 @@ typedef struct {
 
 typedef struct {
     PRCList list;
-    PRArenaPool *arena;
+    PLArenaPool *arena;
 } SECKEYPrivateKeyList;
 
 typedef struct {
@@ -252,7 +249,7 @@ typedef struct {
 
 typedef struct {
     PRCList list;
-    PRArenaPool *arena;
+    PLArenaPool *arena;
 } SECKEYPublicKeyList;
 #endif /* _KEYTHI_H_ */
 

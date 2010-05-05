@@ -1,4 +1,4 @@
-#! /bin/sh  
+#! /bin/bash  
 #
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
@@ -17,7 +17,7 @@
 #
 # The Initial Developer of the Original Code is
 # Netscape Communications Corporation.
-# Portions created by the Initial Developer are Copyright (C) 1994-2000
+# Portions created by the Initial Developer are Copyright (C) 1994-2009
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s):
@@ -260,7 +260,7 @@ fips_140()
     cp ${LIBDIR}/${lib} ${MANGLEDIR}
   done
     
-  echo "$SCRIPTNAME: Detect mangled database --------------------------"
+  echo "$SCRIPTNAME: Detect mangled softoken--------------------------"
   SOFTOKEN=${MANGLEDIR}/${DLL_PREFIX}softokn3.${DLL_SUFFIX}
 
   echo "mangling ${SOFTOKEN}"
@@ -296,7 +296,7 @@ fips_140()
 
     html_msg ${RESULT} 46 "Init NSS with a corrupted library (dbtest -r)" "."
   else
-    html_msg 0 0 "Skipping corruption test, can't open ${DLL_PREFIX}softokn3.${DLL_SUFFIX}"
+    html_failed "Mangle ${DLL_PREFIX}softokn3.${DLL_SUFFIX}"
   fi
 }
 

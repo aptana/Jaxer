@@ -78,9 +78,12 @@
 #include "nsIPrompt.h"
 #include "nsIFormSubmitObserver.h"
 #include "nsISecurityWarningDialogs.h"
+#include "nsISecurityInfoProvider.h"
 #include "nsIProxyObjectManager.h"
+#include "imgIRequest.h"
 #include "nsThreadUtils.h"
 #include "nsNetUtil.h"
+#include "nsNetCID.h"
 #include "nsCRT.h"
 #include "nsAutoLock.h"
 
@@ -269,6 +272,24 @@ nsSecureBrowserUIImpl::GetState(PRUint32* aState)
 {
   nsAutoMonitor lock(mMonitor);
   return MapInternalToExternalState(aState, mNotifiedSecurityState, mNotifiedToplevelIsEV);
+}
+
+// static
+already_AddRefed<nsISupports> 
+nsSecureBrowserUIImpl::ExtractSecurityInfo(nsIRequest* aRequest)
+{
+  nsISupports *retval = nsnull; 
+  nsCOMPtr<nsIChannel> channel(do_QueryInterface(aRequest));
+  if (channel)
+    channel->GetSecurityInfo(&retval);
+  
+  if (!retval) {
+    nsCOMPtr<nsISecurityInfoProvider> provider(do_QueryInterface(aRequest));
+    if (provider)
+      provider->GetSecurityInfo(&retval);
+  }
+
+  return retval;
 }
 
 nsresult
@@ -481,7 +502,8 @@ void nsSecureBrowserUIImpl::ResetStateTracking()
 }
 
 nsresult
-nsSecureBrowserUIImpl::EvaluateAndUpdateSecurityState(nsIRequest* aRequest, nsISupports *info)
+nsSecureBrowserUIImpl::EvaluateAndUpdateSecurityState(nsIRequest* aRequest, nsISupports *info,
+                                                      PRBool withNewLocation)
 {
   /* I explicitly ignore the camelCase variable naming style here,
      I want to make it clear these are temp variables that relate to the 
@@ -545,7 +567,8 @@ nsSecureBrowserUIImpl::EvaluateAndUpdateSecurityState(nsIRequest* aRequest, nsIS
     mCurrentToplevelSecurityInfo = info;
   }
 
-  return UpdateSecurityState(aRequest);
+  return UpdateSecurityState(aRequest, withNewLocation, 
+                             updateStatus, updateTooltip);
 }
 
 void
@@ -685,14 +708,35 @@ nsSecureBrowserUIImpl::OnStateChange(nsIWebProgress* aWebProgress,
   nsCOMPtr<nsIDOMWindow> window;
   PRBool isViewSource;
 
+  nsCOMPtr<nsINetUtil> ioService;
+
   {
     nsAutoMonitor lock(mMonitor);
     window = do_QueryReferent(mWindow);
     NS_ASSERTION(window, "Window has gone away?!");
     isViewSource = mIsViewSource;
+    ioService = mIOService;
   }
 
-  const PRBool isToplevelProgress = (windowForProgress.get() == window.get());
+  if (!ioService)
+  {
+    ioService = do_GetService(NS_IOSERVICE_CONTRACTID);
+    if (ioService)
+    {
+      nsAutoMonitor lock(mMonitor);
+      mIOService = ioService;
+    }
+  }
+
+  PRBool isNoContentResponse = PR_FALSE;
+  nsCOMPtr<nsIHttpChannel> httpChannel = do_QueryInterface(aRequest);
+  if (httpChannel) 
+  {
+    PRUint32 response;
+    isNoContentResponse = NS_SUCCEEDED(httpChannel->GetResponseStatus(&response)) &&
+        (response == 204 || response == 205);
+  }
+  const PRBool isToplevelProgress = (windowForProgress.get() == window.get()) && !isNoContentResponse;
   
 #ifdef PR_LOGGING
   if (windowForProgress)
@@ -738,14 +782,12 @@ nsSecureBrowserUIImpl::OnStateChange(nsIWebProgress* aWebProgress,
   }
 #endif
 
-  nsCOMPtr<nsISupports> securityInfo;
-  nsCOMPtr<nsIChannel> channel(do_QueryInterface(aRequest));
+  nsCOMPtr<nsISupports> securityInfo(ExtractSecurityInfo(aRequest));
 
+  nsCOMPtr<nsIURI> uri;
+  nsCOMPtr<nsIChannel> channel(do_QueryInterface(aRequest));
   if (channel)
   {
-    channel->GetSecurityInfo(getter_AddRefs(securityInfo));
-
-    nsCOMPtr<nsIURI> uri;
     channel->GetURI(getter_AddRefs(uri));
     if (uri)
     {
@@ -791,19 +833,38 @@ nsSecureBrowserUIImpl::OnStateChange(nsIWebProgress* aWebProgress,
   PRBool isSubDocumentRelevant = PR_TRUE;
 
   // We are only interested in requests that load in the browser window...
-  nsCOMPtr<nsIHttpChannel> httpRequest(do_QueryInterface(aRequest));
-  if (!httpRequest) {
-    nsCOMPtr<nsIFileChannel> fileRequest(do_QueryInterface(aRequest));
-    if (!fileRequest) {
-      nsCOMPtr<nsIWyciwygChannel> wyciwygRequest(do_QueryInterface(aRequest));
-      if (!wyciwygRequest) {
-        nsCOMPtr<nsIFTPChannel> ftpRequest(do_QueryInterface(aRequest));
-        if (!ftpRequest) {
-          PR_LOG(gSecureDocLog, PR_LOG_DEBUG,
-                 ("SecureUI:%p: OnStateChange: not relevant for sub content\n", this));
-          isSubDocumentRelevant = PR_FALSE;
+  nsCOMPtr<imgIRequest> imgRequest(do_QueryInterface(aRequest));
+  if (imgRequest) {
+    // for image requests, we get the URI from here
+    imgRequest->GetURI(getter_AddRefs(uri));
+  } else { // is not imgRequest
+    nsCOMPtr<nsIHttpChannel> httpRequest(do_QueryInterface(aRequest));
+    if (!httpRequest) {
+      nsCOMPtr<nsIFileChannel> fileRequest(do_QueryInterface(aRequest));
+      if (!fileRequest) {
+        nsCOMPtr<nsIWyciwygChannel> wyciwygRequest(do_QueryInterface(aRequest));
+        if (!wyciwygRequest) {
+          nsCOMPtr<nsIFTPChannel> ftpRequest(do_QueryInterface(aRequest));
+          if (!ftpRequest) {
+            PR_LOG(gSecureDocLog, PR_LOG_DEBUG,
+                   ("SecureUI:%p: OnStateChange: not relevant for sub content\n", this));
+            isSubDocumentRelevant = PR_FALSE;
+          }
         }
       }
+    }
+  }
+
+  // This will ignore all resource, chrome, data, file, moz-icon, and anno
+  // protocols. Local resources are treated as trusted.
+  if (uri && ioService) {
+    PRBool hasFlag;
+    nsresult rv = 
+      ioService->URIChainHasFlags(uri, 
+                                  nsIProtocolHandler::URI_IS_LOCAL_RESOURCE,
+                                  &hasFlag);
+    if (NS_SUCCEEDED(rv) && hasFlag) {
+      isSubDocumentRelevant = PR_FALSE;
     }
   }
 
@@ -951,13 +1012,31 @@ nsSecureBrowserUIImpl::OnStateChange(nsIWebProgress* aWebProgress,
       &&
       aProgressStateFlags & STATE_IS_REQUEST)
   {
-    nsAutoMonitor lock(mMonitor);
-    PLDHashEntryHdr *entry = PL_DHashTableOperate(&mTransferringRequests, aRequest, PL_DHASH_LOOKUP);
-    if (PL_DHASH_ENTRY_IS_BUSY(entry))
-    {
-      PL_DHashTableOperate(&mTransferringRequests, aRequest, PL_DHASH_REMOVE);
+    { /* scope for the nsAutoMonitor */
+      nsAutoMonitor lock(mMonitor);
+      PLDHashEntryHdr *entry = PL_DHashTableOperate(&mTransferringRequests, aRequest, PL_DHASH_LOOKUP);
+      if (PL_DHASH_ENTRY_IS_BUSY(entry))
+      {
+        PL_DHashTableOperate(&mTransferringRequests, aRequest, PL_DHASH_REMOVE);
 
-      requestHasTransferedData = PR_TRUE;
+        requestHasTransferedData = PR_TRUE;
+      }
+    }
+
+    if (!requestHasTransferedData) {
+      // Because image loads doesn't support any TRANSFERRING notifications but
+      // only START and STOP we must ask them directly whether content was
+      // transferred.  See bug 432685 for details.
+      nsCOMPtr<nsISecurityInfoProvider> securityInfoProvider =
+        do_QueryInterface(aRequest);
+      // Guess true in all failure cases to be safe.  But if we're not
+      // an nsISecurityInfoProvider, then we just haven't transferred
+      // any data.
+      PRBool hasTransferred;
+      requestHasTransferedData =
+        securityInfoProvider &&
+        (NS_FAILED(securityInfoProvider->GetHasTransferredData(&hasTransferred)) ||
+         hasTransferred);
     }
   }
 
@@ -1024,9 +1103,20 @@ nsSecureBrowserUIImpl::OnStateChange(nsIWebProgress* aWebProgress,
         prevContentSecurity->SetCountSubRequestsBrokenSecurity(saveSubBroken);
         prevContentSecurity->SetCountSubRequestsNoSecurity(saveSubNo);
       }
-  
+
+      PRBool retrieveAssociatedState = PR_FALSE;
+
       if (securityInfo &&
-          (aProgressStateFlags & nsIWebProgressListener::STATE_RESTORING) != 0)
+          (aProgressStateFlags & nsIWebProgressListener::STATE_RESTORING) != 0) {
+        retrieveAssociatedState = PR_TRUE;
+      } else {
+        nsCOMPtr<nsIWyciwygChannel> wyciwygRequest(do_QueryInterface(aRequest));
+        if (wyciwygRequest) {
+          retrieveAssociatedState = PR_TRUE;
+        }
+      }
+
+      if (retrieveAssociatedState)
       {
         // When restoring from bfcache, we will not get events for the 
         // page's sub elements, so let's load the state of sub elements
@@ -1126,7 +1216,7 @@ nsSecureBrowserUIImpl::OnStateChange(nsIWebProgress* aWebProgress,
       // Data has been transferred for the single toplevel
       // request. Evaluate the security state.
 
-      return EvaluateAndUpdateSecurityState(aRequest, securityInfo);
+      return EvaluateAndUpdateSecurityState(aRequest, securityInfo, PR_FALSE);
     }
     
     return NS_OK;
@@ -1164,7 +1254,7 @@ nsSecureBrowserUIImpl::OnStateChange(nsIWebProgress* aWebProgress,
       }
 
       if (temp_NewToplevelSecurityStateKnown)
-        return UpdateSecurityState(aRequest);
+        return UpdateSecurityState(aRequest, PR_FALSE, PR_FALSE, PR_FALSE);
     }
 
     return NS_OK;
@@ -1182,20 +1272,31 @@ void nsSecureBrowserUIImpl::ObtainEventSink(nsIChannel *channel,
     NS_QueryNotificationCallbacks(channel, sink);
 }
 
-nsresult nsSecureBrowserUIImpl::UpdateSecurityState(nsIRequest* aRequest)
+nsresult nsSecureBrowserUIImpl::UpdateSecurityState(nsIRequest* aRequest, 
+                                                    PRBool withNewLocation, 
+                                                    PRBool withUpdateStatus, 
+                                                    PRBool withUpdateTooltip)
 {
   lockIconState warnSecurityState = lis_no_security;
   PRBool showWarning = PR_FALSE;
+  nsresult rv = NS_OK;
 
-  UpdateMyFlags(showWarning, warnSecurityState);
-  return TellTheWorld(showWarning, warnSecurityState, aRequest);
+  // both parameters are both input and outout
+  PRBool flagsChanged = UpdateMyFlags(showWarning, warnSecurityState);
+
+  if (flagsChanged || withNewLocation || withUpdateStatus || withUpdateTooltip)
+    rv = TellTheWorld(showWarning, warnSecurityState, aRequest);
+
+  return rv;
 }
 
 // must not fail, by definition, only trivial assignments
 // or string operations are allowed
-void nsSecureBrowserUIImpl::UpdateMyFlags(PRBool &showWarning, lockIconState &warnSecurityState)
+// returns true if our overall state has changed and we must send out notifications
+PRBool nsSecureBrowserUIImpl::UpdateMyFlags(PRBool &showWarning, lockIconState &warnSecurityState)
 {
   nsAutoMonitor lock(mMonitor);
+  PRBool mustTellTheWorld = PR_FALSE;
 
   lockIconState newSecurityState;
 
@@ -1255,8 +1356,8 @@ void nsSecureBrowserUIImpl::UpdateMyFlags(PRBool &showWarning, lockIconState &wa
 
   if (mNotifiedSecurityState != newSecurityState)
   {
-    // must show alert
-    
+    mustTellTheWorld = PR_TRUE;
+
     // we'll treat "broken" exactly like "insecure",
     // i.e. we do not show alerts when switching between broken and insecure
 
@@ -1327,7 +1428,12 @@ void nsSecureBrowserUIImpl::UpdateMyFlags(PRBool &showWarning, lockIconState &wa
     }
   }
 
-  mNotifiedToplevelIsEV = mNewToplevelIsEV;
+  if (mNotifiedToplevelIsEV != mNewToplevelIsEV) {
+    mustTellTheWorld = PR_TRUE;
+    mNotifiedToplevelIsEV = mNewToplevelIsEV;
+  }
+
+  return mustTellTheWorld;
 }
 
 nsresult nsSecureBrowserUIImpl::TellTheWorld(PRBool showWarning, 
@@ -1450,14 +1556,11 @@ nsSecureBrowserUIImpl::OnLocationChange(nsIWebProgress* aWebProgress,
   nsCOMPtr<nsIDOMWindow> windowForProgress;
   aWebProgress->GetDOMWindow(getter_AddRefs(windowForProgress));
 
-  nsCOMPtr<nsISupports> securityInfo;
-  nsCOMPtr<nsIChannel> channel(do_QueryInterface(aRequest));
-  if (channel)
-    channel->GetSecurityInfo(getter_AddRefs(securityInfo));
+  nsCOMPtr<nsISupports> securityInfo(ExtractSecurityInfo(aRequest));
 
   if (windowForProgress.get() == window.get()) {
     // For toplevel channels, update the security state right away.
-    return EvaluateAndUpdateSecurityState(aRequest, securityInfo);
+    return EvaluateAndUpdateSecurityState(aRequest, securityInfo, PR_TRUE);
   }
 
   // For channels in subdocuments we only update our subrequest state members.
@@ -1481,7 +1584,7 @@ nsSecureBrowserUIImpl::OnLocationChange(nsIWebProgress* aWebProgress,
   }
 
   if (temp_NewToplevelSecurityStateKnown)
-    return UpdateSecurityState(aRequest);
+    return UpdateSecurityState(aRequest, PR_TRUE, PR_FALSE, PR_FALSE);
 
   return NS_OK;
 }

@@ -43,16 +43,6 @@
 
 #include "pkix_pl_infoaccess.h"
 
-/* XXX Following SEC_OID_PKIX defines should be merged in NSS */
-#define SEC_OID_PKIX_CA_REPOSITORY     1003
-#define SEC_OID_PKIX_TIMESTAMPING      1005
-/* XXX Following OID defines hould be moved to NSS */
-static const unsigned char siaTimeStampingOID[] = {0x2b, 0x06, 0x01, 0x05,
-                                0x05, 0x07, 0x030, 0x03};
-static const unsigned char siaCaRepositoryOID[] = {0x2b, 0x06, 0x01, 0x05,
-                                0x05, 0x07, 0x030, 0x05};
-
-
 /* --Private-InfoAccess-Functions----------------------------------*/
 
 /*
@@ -415,37 +405,6 @@ pkix_pl_InfoAccess_CreateList(
 
                 PKIX_CERT_DEBUG("\t\tCalling SECOID_FindOIDTag).\n");
                 method = SECOID_FindOIDTag(&nssInfoAccess[i]->method);
-
-                if (method == 0) {
-
-                /* XXX
-                 * This part of code is definitely hacking, need NSS decode
-                 * support. We can reuse the CERT_DecodeAuthInfoAccessExtension
-                 * since SIA and AIA are all the same type. However NSS need
-                 * to add SIA, CaRepository, TimeStamping OID definitions and
-                 * the numerical method, timeStamping and caRepository values.
-                 *
-                 * We assume now, since method is 0, implies the method for SIA
-                 * was not decoded by CERT_DecodeAuthInfoAccessExtension()
-                 * so we compare and put value in. This part should be taken
-                 * out eventually if CERT_DecodeInfoAccessExtension (*renamed*)
-                 * is doing the job.
-                 */
-
-                        PKIX_CERT_DEBUG("\t\tCalling PORT_Strncmp).\n");
-                        if (PORT_Strncmp
-                                ((char *)nssInfoAccess[i]->method.data,
-                                (char *)siaTimeStampingOID,
-                                nssInfoAccess[i]->method.len) == 0) {
-                                method = SEC_OID_PKIX_TIMESTAMPING;
-                        } else if (PORT_Strncmp
-                                ((char *)nssInfoAccess[i]->method.data,
-                                (char *)siaCaRepositoryOID,
-                                nssInfoAccess[i]->method.len) == 0) {
-                                method = SEC_OID_PKIX_CA_REPOSITORY;
-                        }
-                }
-
                 /* Map NSS access method value into PKIX constant */
                 switch(method) {
                         case SEC_OID_PKIX_CA_ISSUERS:
@@ -461,7 +420,7 @@ pkix_pl_InfoAccess_CreateList(
                                 method = PKIX_INFOACCESS_CA_REPOSITORY;
                                 break;
                         default:
-                                break;
+                                PKIX_ERROR(PKIX_UNKNOWNINFOACCESSMETHOD);
                 }
 
                 PKIX_CHECK(pkix_pl_InfoAccess_Create
@@ -650,27 +609,29 @@ pkix_pl_InfoAccess_ParseTokens(
          */
         if (numFilters > 2) numFilters = 2;
 
-        PKIX_PL_NSSCALLRV
-                (INFOACCESS, *tokens, PORT_ArenaZAlloc,
-                (arena, (numFilters+1)*sizeof(void *)));
+        filterP = PORT_ArenaZNewArray(arena, char*, numFilters+1);
+        if (filterP == NULL) {
+            PKIX_ERROR(PKIX_PORTARENAALLOCFAILED);
+        }
 
         /* Second pass: parse to fill in components in token array */
-        filterP = *tokens;
+        *tokens = filterP;
         endPos = *startPos;
 
         while (numFilters) {
             if (*endPos == separator || *endPos == terminator) {
                     len = endPos - *startPos;
-                    PKIX_PL_NSSCALLRV(INFOACCESS, p, PORT_ArenaZAlloc,
-                            (arena, (len+1)));
+                    p = PORT_ArenaZAlloc(arena, len+1);
+                    if (p == NULL) {
+                        PKIX_ERROR(PKIX_PORTARENAALLOCFAILED);
+                    }
 
                     *filterP = p;
 
                     while (len) {
                             if (**startPos == '%') {
                             /* replace %20 by blank */
-                                PKIX_PL_NSSCALLRV(INFOACCESS, cmpResult,
-                                    strncmp, ((void *)*startPos, "%20", 3));
+                                cmpResult = strncmp(*startPos, "%20", 3);
                                 if (cmpResult == 0) {
                                     *p = ' ';
                                     *startPos += 3;
@@ -769,7 +730,6 @@ pkix_pl_InfoAccess_ParseLocation(
         LdapAttrMask attrBit = 0;
         LDAPNameComponent **setOfNameComponent = NULL;
         LDAPNameComponent *nameComponent = NULL;
-        void *v = NULL;
 
         PKIX_ENTER(INFOACCESS, "pkix_pl_InfoAccess_ParseLocation");
         PKIX_NULLCHECK_FOUR(generalName, arena, request, pDomainName);
@@ -821,10 +781,12 @@ pkix_pl_InfoAccess_ParseLocation(
         len = endPos - startPos;
         endPos++;
 
-        PKIX_PL_NSSCALLRV(INFOACCESS, domainName, PORT_ArenaZAlloc,
-                (arena, len + 1));
+        domainName = PORT_ArenaZAlloc(arena, len + 1);
+        if (!domainName) {
+            PKIX_ERROR(PKIX_PORTARENAALLOCFAILED);
+        }
 
-        PKIX_PL_NSSCALL(INFOACCESS, PORT_Memcpy, (domainName, startPos, len));
+        PORT_Memcpy(domainName, startPos, len);
 
         domainName[len] = '\0';
 
@@ -860,18 +822,16 @@ pkix_pl_InfoAccess_ParseLocation(
         avaArray[len - 1] = NULL;
 
         /* Get room for null-terminated array of (LdapNameComponent *) */
-        PKIX_PL_NSSCALLRV
-                (INFOACCESS, v, PORT_ArenaZAlloc,
-                (arena, len*sizeof(LDAPNameComponent *)));
-
-        setOfNameComponent = (LDAPNameComponent **)v;
+        setOfNameComponent = PORT_ArenaZNewArray(arena, LDAPNameComponent *, len);
+        if (setOfNameComponent == NULL) {
+            PKIX_ERROR(PKIX_PORTARENAALLOCFAILED);
+        }
 
         /* Get room for the remaining LdapNameComponents */
-        PKIX_PL_NSSCALLRV
-                (INFOACCESS, v, PORT_ArenaZNewArray,
-                (arena, LDAPNameComponent, --len));
-
-        nameComponent = (LDAPNameComponent *)v;
+        nameComponent = PORT_ArenaZNewArray(arena, LDAPNameComponent, --len);
+        if (nameComponent == NULL) {
+            PKIX_ERROR(PKIX_PORTARENAALLOCFAILED);
+        }
 
         /* Convert remaining AVAs to LDAPNameComponents */
         for (ncIndex = 0; ncIndex < len; ncIndex ++) {

@@ -534,18 +534,34 @@ ParseType2Msg(const void *inBuf, PRUint32 inLen, Type2Msg *msg)
   // verify NTLMSSP signature
   if (memcmp(cursor, NTLM_SIGNATURE, sizeof(NTLM_SIGNATURE)) != 0)
     return NS_ERROR_UNEXPECTED;
+
   cursor += sizeof(NTLM_SIGNATURE);
 
   // verify Type-2 marker
   if (memcmp(cursor, NTLM_TYPE2_MARKER, sizeof(NTLM_TYPE2_MARKER)) != 0)
     return NS_ERROR_UNEXPECTED;
+
   cursor += sizeof(NTLM_TYPE2_MARKER);
 
-  // read target name security buffer
-  msg->targetLen = ReadUint16(cursor);
-  ReadUint16(cursor); // discard next 16-bit value
-  PRUint32 offset = ReadUint32(cursor); // get offset from inBuf
-  msg->target = ((const PRUint8 *) inBuf) + offset;
+  // Read target name security buffer: ...
+  // ... read target length.
+  PRUint32 targetLen = ReadUint16(cursor);
+  // ... skip next 16-bit "allocated space" value.
+  ReadUint16(cursor);
+  // ... read offset from inBuf.
+  PRUint32 offset = ReadUint32(cursor);
+  // Check the offset / length combo is in range of the input buffer, including
+  // integer overflow checking.
+  if (NS_LIKELY(offset < offset + targetLen && offset + targetLen <= inLen)) {
+    msg->targetLen = targetLen;
+    msg->target = ((const PRUint8 *) inBuf) + offset;
+  }
+  else
+  {
+    // Do not error out, for (conservative) backward compatibility.
+    msg->targetLen = 0;
+    msg->target = NULL;
+  }
 
   // read flags
   msg->flags = ReadUint32(cursor);
@@ -786,7 +802,6 @@ nsNTLMAuthModule::Init(const char      *serviceName,
                        const PRUnichar *username,
                        const PRUnichar *password)
 {
-  NS_ASSERTION(serviceName == nsnull, "unexpected service name");
   NS_ASSERTION(serviceFlags == nsIAuthModule::REQ_DEFAULT, "unexpected service flags");
 
   mDomain = domain;
@@ -821,8 +836,10 @@ nsNTLMAuthModule::GetNextToken(const void *inToken,
     rv = GenerateType1Msg(outToken, outTokenLen);
   }
 
+#ifdef PR_LOGGING
   if (NS_SUCCEEDED(rv))
     LogToken("out-token", *outToken, *outTokenLen);
+#endif
 
   return rv;
 }

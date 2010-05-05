@@ -37,8 +37,11 @@
 /*
  * PQG parameter generation/verification.  Based on FIPS 186-1.
  *
- * $Id: pqg.c,v 1.15 2007/11/09 18:49:32 wtc%google.com Exp $
+ * $Id: pqg.c,v 1.17 2009/03/26 23:16:37 glen.beasley%sun.com Exp $
  */
+#ifdef FREEBL_NO_DEPEND
+#include "stubs.h"
+#endif
 
 #include "prerr.h"
 #include "secerr.h"
@@ -51,7 +54,7 @@
 #include "mplogic.h"
 #include "secmpi.h"
 
-#define MAX_ITERATIONS 600  /* Maximum number of iterations of primegen */
+#define MAX_ITERATIONS 1000  /* Maximum number of iterations of primegen */
 #define PQG_Q_PRIMALITY_TESTS 18 /* from HAC table 4.4 */
 #define PQG_P_PRIMALITY_TESTS 5  /* from HAC table 4.4 */
 

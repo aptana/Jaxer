@@ -50,6 +50,7 @@
 #include "secitem.h"
 #include "secoid.h"
 #include "secerr.h"
+#include "hasht.h"
 
 /* forward static declarations. */
 static PK11SymKey *pk11_DeriveWithTemplate(PK11SymKey *baseKey, 
@@ -678,6 +679,26 @@ __PK11_GetKeyData(PK11SymKey *symKey)
     return PK11_GetKeyData(symKey);
 }
 
+
+/*
+ * PKCS #11 key Types with predefined length
+ */
+unsigned int
+pk11_GetPredefinedKeyLength(CK_KEY_TYPE keyType)
+{
+    int length = 0;
+    switch (keyType) {
+      case CKK_DES: length = 8; break;
+      case CKK_DES2: length = 16; break;
+      case CKK_DES3: length = 24; break;
+      case CKK_SKIPJACK: length = 10; break;
+      case CKK_BATON: length = 20; break;
+      case CKK_JUNIPER: length = 20; break;
+      default: break;
+    }
+    return length;
+}
+
 /* return the keylength if possible.  '0' if not */
 unsigned int
 PK11_GetKeyLength(PK11SymKey *key)
@@ -688,20 +709,12 @@ PK11_GetKeyLength(PK11SymKey *key)
 
     /* First try to figure out the key length from its type */
     keyType = PK11_ReadULongAttribute(key->slot,key->objectID,CKA_KEY_TYPE);
-    switch (keyType) {
-      case CKK_DES: key->size = 8; break;
-      case CKK_DES2: key->size = 16; break;
-      case CKK_DES3: key->size = 24; break;
-      case CKK_SKIPJACK: key->size = 10; break;
-      case CKK_BATON: key->size = 20; break;
-      case CKK_JUNIPER: key->size = 20; break;
-      case CKK_GENERIC_SECRET:
-	if (key->type == CKM_SSL3_PRE_MASTER_KEY_GEN)  {
-	    key->size=48;
-	}
-	break;
-      default: break;
+    key->size = pk11_GetPredefinedKeyLength(keyType);
+    if ((keyType == CKK_GENERIC_SECRET) &&
+	(key->type == CKM_SSL3_PRE_MASTER_KEY_GEN))  {
+	key->size=48;
     }
+
    if( key->size != 0 ) return key->size;
 
    if (key->data.data == NULL) {
@@ -1614,6 +1627,7 @@ PK11_PubDerive(SECKEYPrivateKey *privKey, SECKEYPublicKey *pubKey,
 	    mechanism.mechanism = derive;
 
 	    /* we can undefine these when we define diffie-helman keys */
+
 	    mechanism.pParameter = pubKey->u.dh.publicValue.data; 
 	    mechanism.ulParameterLen = pubKey->u.dh.publicValue.len;
 		
@@ -1653,8 +1667,16 @@ PK11_PubDerive(SECKEYPrivateKey *privKey, SECKEYPublicKey *pubKey,
 
 	    keyType = PK11_GetKeyType(target,keySize);
 	    key_size = keySize;
-	    symKey->size = keySize;
-	    if (key_size == 0) templateCount--;
+	    if (key_size == 0) {
+		if (pk11_GetPredefinedKeyLength(keyType)) {
+		    templateCount --;
+		} else {
+		    /* sigh, some tokens can't figure this out and require
+		     * CKA_VALUE_LEN to be set */
+		    key_size = SHA1_LENGTH;
+		}
+	    }
+	    symKey->size = key_size;
 
 	    mechParams = PORT_ZNew(CK_ECDH1_DERIVE_PARAMS); 
 	    mechParams->kdf = CKD_SHA1_KDF;
@@ -1672,6 +1694,28 @@ PK11_PubDerive(SECKEYPrivateKey *privKey, SECKEYPublicKey *pubKey,
 		&mechanism, privKey->pkcs11ID, keyTemplate, 
 		templateCount, &symKey->objectID);
 	    pk11_ExitKeyMonitor(symKey);
+
+	    /* old PKCS #11 spec was ambiguous on what needed to be passed,
+	     * try this again with and encoded public key */
+	    if (crv != CKR_OK) {
+		SECItem *pubValue = SEC_ASN1EncodeItem(NULL, NULL,
+			&pubKey->u.ec.publicValue,
+			SEC_ASN1_GET(SEC_OctetStringTemplate));
+		if (pubValue == NULL) {
+	    	    PORT_ZFree(mechParams, sizeof(CK_ECDH1_DERIVE_PARAMS));
+		    break;
+		}
+		mechParams->ulPublicDataLen =  pubValue->len;
+		mechParams->pPublicData =  pubValue->data;
+
+		pk11_EnterKeyMonitor(symKey);
+		crv = PK11_GETTAB(slot)->C_DeriveKey(symKey->session, 
+		    &mechanism, privKey->pkcs11ID, keyTemplate, 
+		    templateCount, &symKey->objectID);
+		pk11_ExitKeyMonitor(symKey);
+
+		SECITEM_FreeItem(pubValue,PR_TRUE);
+	    }
 
 	    PORT_ZFree(mechParams, sizeof(CK_ECDH1_DERIVE_PARAMS));
 
@@ -1731,9 +1775,27 @@ pk11_PubDeriveECKeyWithKDF(
 
     keyType = PK11_GetKeyType(target,keySize);
     key_size = keySize;
-    symKey->size = keySize;
-    if (key_size == 0) 
-    	templateCount--;
+    if (key_size == 0) {
+	if (pk11_GetPredefinedKeyLength(keyType)) {
+	    templateCount --;
+	} else {
+	    /* sigh, some tokens can't figure this out and require
+	     * CKA_VALUE_LEN to be set */
+	    switch (kdf) {
+	    case CKD_NULL:
+		key_size = (pubKey->u.ec.publicValue.len-1)/2;
+		break;
+	    case CKD_SHA1_KDF:
+		key_size = SHA1_LENGTH;
+		break;
+	    default:
+		PORT_Assert(!"Invalid CKD");
+		PORT_SetError(SEC_ERROR_INVALID_ALGORITHM);
+		return NULL;
+	    }
+	}
+    }
+    symKey->size = key_size;
 
     mechParams = PORT_ZNew(CK_ECDH1_DERIVE_PARAMS);
     if (!mechParams) {
@@ -1748,8 +1810,8 @@ pk11_PubDeriveECKeyWithKDF(
 	mechParams->ulSharedDataLen = sharedData->len;
 	mechParams->pSharedData     = sharedData->data;
     }
-    mechParams->ulPublicDataLen = pubKey->u.ec.publicValue.len;
-    mechParams->pPublicData     = pubKey->u.ec.publicValue.data;
+    mechParams->ulPublicDataLen =  pubKey->u.ec.publicValue.len;
+    mechParams->pPublicData =  pubKey->u.ec.publicValue.data;
 
     mechanism.mechanism      = derive;
     mechanism.pParameter     = mechParams;
@@ -1760,6 +1822,28 @@ pk11_PubDeriveECKeyWithKDF(
     	privKey->pkcs11ID, keyTemplate, templateCount, &symKey->objectID);
     pk11_ExitKeyMonitor(symKey);
 
+    /* old PKCS #11 spec was ambiguous on what needed to be passed,
+     * try this again with and encoded public key */
+    if (crv != CKR_OK) {
+	SECItem *pubValue = SEC_ASN1EncodeItem(NULL, NULL,
+		&pubKey->u.ec.publicValue,
+		SEC_ASN1_GET(SEC_OctetStringTemplate));
+	if (pubValue == NULL) {
+	    goto loser;
+	}
+	mechParams->ulPublicDataLen =  pubValue->len;
+	mechParams->pPublicData =  pubValue->data;
+
+	pk11_EnterKeyMonitor(symKey);
+	crv = PK11_GETTAB(slot)->C_DeriveKey(symKey->session, 
+	    &mechanism, privKey->pkcs11ID, keyTemplate, 
+	    templateCount, &symKey->objectID);
+	pk11_ExitKeyMonitor(symKey);
+
+	SECITEM_FreeItem(pubValue,PR_TRUE);
+    }
+
+loser:
     PORT_ZFree(mechParams, sizeof(CK_ECDH1_DERIVE_PARAMS));
 
     if (crv != CKR_OK) {
@@ -2218,3 +2302,10 @@ PK11_GenerateFortezzaIV(PK11SymKey *symKey,unsigned char *iv,int len)
     PK11_ExitSlotMonitor(symKey->slot);
     return rv;
 }
+
+CK_OBJECT_HANDLE
+PK11_GetSymKeyHandle(PK11SymKey *symKey)
+{
+    return symKey->objectID;
+}
+

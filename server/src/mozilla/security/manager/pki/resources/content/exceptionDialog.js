@@ -20,6 +20,7 @@
  *
  * Contributor(s):
  *   Johnathan Nightingale <johnath@mozilla.com>
+ *   Ehsan Akhgari <ehsan.akhgari@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -89,9 +90,24 @@ function initExceptionDialog() {
       document.getElementById("locationTextBox").value = args[0].location;
       document.getElementById('checkCertButton').disabled = false;
       
-      // We can optionally pre-fetch the certificate too
-      if (args[0].prefetchCert)
-        checkCert();
+      // We can optionally pre-fetch the certificate too.  Don't do this
+      // synchronously, since it would prevent the window from appearing
+      // until the fetch is completed, which could be multiple seconds.
+      // Instead, let's use a timer to spawn the actual fetch, but update
+      // the dialog to "checking..." state right away, so that the UI
+      // is appropriately responsive.  We could include a very short lag
+      // and there would still be time for the window to draw, but bringing
+      // it up to a couple seconds still feels responsive, while also giving
+      // users who are unfamiliar with the dialog a chance to read the preamble
+      // before the dialog fills up with details about the certificate
+      // problems.  Bug 453855
+      if (args[0].prefetchCert) {
+        
+        gChecking = true;
+        updateCertStatus();
+        
+        window.setTimeout(checkCert, 2000);
+      }
     }
     
     // Set out parameter to false by default
@@ -271,7 +287,15 @@ function updateCertStatus() {
       
       // In these cases, we do want to enable the "Add Exception" button
       gDialog.getButton("extra1").disabled = false;
-      document.getElementById("permanent").disabled = false;
+
+      // If the Private Browsing service is available and the mode is active,
+      // don't store permanent exceptions, since they would persist after
+      // private browsing mode was disabled.
+      var inPrivateBrowsing = inPrivateBrowsingMode();
+      var pe = document.getElementById("permanent");
+      pe.disabled = inPrivateBrowsing;
+      pe.checked = !inPrivateBrowsing;
+
       setText("headerDescription", gPKIBundle.GetStringFromName("addExceptionInvalidHeader"));
     }
     else {
@@ -282,6 +306,11 @@ function updateCertStatus() {
     }
     
     document.getElementById("viewCertButton").disabled = false;
+
+    // Notify observers about the availability of the certificate
+    Components.classes["@mozilla.org/observer-service;1"]
+              .getService(Components.interfaces.nsIObserverService)
+              .notifyObservers(null, "cert-exception-ui-ready", null);
   }
   else if (gChecking) {
     shortDesc = "addExceptionCheckingShort";
@@ -341,17 +370,39 @@ function addException() {
     flags |= overrideService.ERROR_TIME;
   
   var permanentCheckbox = document.getElementById("permanent");
+  var shouldStorePermanently = permanentCheckbox.checked && !inPrivateBrowsingMode();
 
   var uri = getURI();
   overrideService.rememberValidityOverride(
     uri.asciiHost, uri.port,
     gCert,
     flags,
-    !permanentCheckbox.checked);
+    !shouldStorePermanently);
   
   var args = window.arguments;
   if (args && args[0])
     args[0].exceptionAdded = true;
   
   gDialog.acceptDialog();
+}
+
+/**
+ * Returns true if the private browsing mode is currently active and
+ * we have been instructed to handle it.
+ */
+function inPrivateBrowsingMode() {
+  // first, check to see if we should handle the private browsing mode
+  var args = window.arguments;
+  if (args && args[0] && args[0].handlePrivateBrowsing) {
+    // detect if the private browsing mode is active
+    try {
+      var pb = Components.classes["@mozilla.org/privatebrowsing;1"].
+               getService(Components.interfaces.nsIPrivateBrowsingService);
+      return pb.privateBrowsingEnabled;
+    } catch (ex) {
+      Components.utils.reportError("Could not get the Private Browsing service");
+    }
+  }
+
+  return false;
 }

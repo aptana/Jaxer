@@ -52,79 +52,43 @@ RANLIB			= ranlib
 
 DEFAULT_COMPILER = gcc
 
-ifeq ($(OS_TEST),m68k)
-	OS_REL_CFLAGS	= -DLINUX1_2 -D_XOPEN_SOURCE
-	CPU_ARCH	= m68k
-else
 ifeq ($(OS_TEST),ppc64)
-	OS_REL_CFLAGS	= -DLINUX1_2 -D_XOPEN_SOURCE
 	CPU_ARCH	= ppc
 ifeq ($(USE_64),1)
 	ARCHFLAG	= -m64
 endif
 else
-ifeq ($(OS_TEST),ppc)
-	OS_REL_CFLAGS	= -DLINUX1_2 -D_XOPEN_SOURCE
-	CPU_ARCH	= ppc
-else
 ifeq ($(OS_TEST),alpha)
-        OS_REL_CFLAGS   = -D_ALPHA_ -DLINUX1_2 -D_XOPEN_SOURCE
+        OS_REL_CFLAGS   = -D_ALPHA_
 	CPU_ARCH	= alpha
-else
-ifeq ($(OS_TEST),ia64)
-	OS_REL_CFLAGS	= -DLINUX1_2 -D_XOPEN_SOURCE
-	CPU_ARCH	= ia64
 else
 ifeq ($(OS_TEST),x86_64)
 ifeq ($(USE_64),1)
-	OS_REL_CFLAGS	= -DLINUX1_2 -D_XOPEN_SOURCE
 	CPU_ARCH	= x86_64
 else
-	OS_REL_CFLAGS	= -DLINUX1_2 -Di386 -D_XOPEN_SOURCE
+	OS_REL_CFLAGS	= -Di386
 	CPU_ARCH	= x86
 	ARCHFLAG	= -m32
 endif
 else
-ifeq ($(OS_TEST),sparc)
-	OS_REL_CFLAGS   = -DLINUX1_2 -D_XOPEN_SOURCE
-	CPU_ARCH        = sparc
-else
 ifeq ($(OS_TEST),sparc64)
-	OS_REL_CFLAGS   = -DLINUX1_2 -D_XOPEN_SOURCE
 	CPU_ARCH        = sparc
 else
 ifeq (,$(filter-out arm% sa110,$(OS_TEST)))
-	OS_REL_CFLAGS   = -DLINUX1_2 -D_XOPEN_SOURCE
 	CPU_ARCH        = arm
 else
-ifeq ($(OS_TEST),parisc)
-	OS_REL_CFLAGS   = -DLINUX1_2 -D_XOPEN_SOURCE
+ifeq (,$(filter-out parisc%,$(OS_TEST)))
 	CPU_ARCH        = hppa
 else
-ifeq ($(OS_TEST),parisc64)
-	OS_REL_CFLAGS   = -DLINUX1_2 -D_XOPEN_SOURCE
-	CPU_ARCH        = hppa
-else
-ifeq ($(OS_TEST),s390)
-	OS_REL_CFLAGS   = -DLINUX1_2 -D_XOPEN_SOURCE
-	CPU_ARCH        = s390
-else
-ifeq ($(OS_TEST),s390x)
-	OS_REL_CFLAGS   = -DLINUX1_2 -D_XOPEN_SOURCE
-	CPU_ARCH        = s390x
-else
-ifeq ($(OS_TEST),mips)
-	OS_REL_CFLAGS   = -DLINUX1_2 -D_XOPEN_SOURCE
-	CPU_ARCH        = mips
-else
-	OS_REL_CFLAGS	= -DLINUX1_2 -Di386 -D_XOPEN_SOURCE
+ifeq (,$(filter-out i%86,$(OS_TEST)))
+	OS_REL_CFLAGS	= -Di386
 	CPU_ARCH	= x86
-endif
-endif
-endif
-endif
-endif
-endif
+else
+ifeq ($(OS_TEST),sh4a)
+	CPU_ARCH        = sh4
+else
+# $(OS_TEST) == m68k, ppc, ia64, sparc, s390, s390x, mips, sh3, sh4
+	CPU_ARCH	= $(OS_TEST)
 endif
 endif
 endif
@@ -139,7 +103,7 @@ LIBC_TAG		= _glibc
 
 ifeq ($(OS_RELEASE),2.0)
 	OS_REL_CFLAGS	+= -DLINUX2_0
-	MKSHLIB		= $(CC) -shared -Wl,-soname -Wl,$(@:$(OBJDIR)/%.so=%.so)
+	MKSHLIB		= $(CC) -shared -Wl,-soname -Wl,$(@:$(OBJDIR)/%.so=%.so) $(RPATH)
 	ifdef MAPFILE
 		MKSHLIB += -Wl,--version-script,$(MAPFILE)
 	endif
@@ -153,13 +117,22 @@ ifeq (11,$(ALLOW_OPT_CODE_SIZE)$(OPT_CODE_SIZE))
 else
 	OPTIMIZER = -O2
 endif
+ifdef MOZ_DEBUG_SYMBOLS
+	OPTIMIZER  += -gstabs+
 endif
+endif
+
 
 ifeq ($(USE_PTHREADS),1)
 OS_PTHREAD = -lpthread 
 endif
 
-OS_CFLAGS		= $(DSO_CFLAGS) $(OS_REL_CFLAGS) $(ARCHFLAG) -ansi -Wall -Werror-implicit-function-declaration -Wno-switch -pipe -DLINUX -Dlinux -D_POSIX_SOURCE -D_BSD_SOURCE -DHAVE_STRERROR
+# See bug 537829, in particular comment 23.
+# Place -ansi and *_SOURCE before $(DSO_CFLAGS) so DSO_CFLAGS can override
+# -ansi on platforms like Android where the system headers are C99 and do
+# not build with -ansi.
+STANDARDS_CFLAGS	= -ansi -D_POSIX_SOURCE -D_BSD_SOURCE -D_XOPEN_SOURCE
+OS_CFLAGS		= $(STANDARDS_CFLAGS) $(DSO_CFLAGS) $(OS_REL_CFLAGS) $(ARCHFLAG) -Wall -Werror-implicit-function-declaration -Wno-switch -pipe -DLINUX -Dlinux -DHAVE_STRERROR
 OS_LIBS			= $(OS_PTHREAD) -ldl -lc
 
 ifdef USE_PTHREADS
@@ -169,14 +142,32 @@ endif
 ARCH			= linux
 
 DSO_CFLAGS		= -fPIC
-DSO_LDOPTS		= -shared $(ARCHFLAG) -Wl,-z,defs
-DSO_LDFLAGS		=
+DSO_LDOPTS		= -shared $(ARCHFLAG)
+# The linker on Red Hat Linux 7.2 and RHEL 2.1 (GNU ld version 2.11.90.0.8)
+# incorrectly reports undefined references in the libraries we link with, so
+# we don't use -z defs there.
+ZDEFS_FLAG		= -Wl,-z,defs
+DSO_LDOPTS		+= $(if $(findstring 2.11.90.0.8,$(shell ld -v)),,$(ZDEFS_FLAG))
 LDFLAGS			+= $(ARCHFLAG)
 
 # INCLUDES += -I/usr/include -Y/usr/include/linux
 G++INCLUDES		= -I/usr/include/g++
 
 #
-# Always set CPU_TAG on Linux, OpenVMS, WINCE.
+# Always set CPU_TAG on Linux, WINCE.
 #
 CPU_TAG = _$(CPU_ARCH)
+
+USE_SYSTEM_ZLIB = 1
+ZLIB_LIBS = -lz
+
+# The -rpath '$$ORIGIN' linker option instructs this library to search for its
+# dependencies in the same directory where it resides.
+ifeq ($(BUILD_SUN_PKG), 1)
+ifeq ($(USE_64), 1)
+RPATH = -Wl,-rpath,'$$ORIGIN:/opt/sun/private/lib64:/opt/sun/private/lib'
+else
+RPATH = -Wl,-rpath,'$$ORIGIN:/opt/sun/private/lib'
+endif
+endif
+

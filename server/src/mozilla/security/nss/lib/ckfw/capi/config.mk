@@ -34,7 +34,7 @@
 # the terms of any one of the MPL, the GPL or the LGPL.
 #
 # ***** END LICENSE BLOCK *****
-CONFIG_CVS_ID = "@(#) $RCSfile: config.mk,v $ $Revision: 1.1 $ $Date: 2005/11/04 02:05:04 $"
+CONFIG_CVS_ID = "@(#) $RCSfile: config.mk,v $ $Revision: 1.3 $ $Date: 2009/06/11 00:55:42 $"
 
 #
 #  Override TARGETS variable so that only shared libraries
@@ -60,12 +60,8 @@ endif
 # To create a loadable module on Darwin, we must use -bundle.
 #
 ifeq ($(OS_TARGET),Darwin)
+ifndef USE_64
 DSO_LDOPTS = -bundle
 endif
-
-ifeq ($(OS_TARGET),SunOS)
-# The -R '$ORIGIN' linker option instructs this library to search for its
-# dependencies in the same directory where it resides.
-MKSHLIB += -R '$$ORIGIN'
 endif
 

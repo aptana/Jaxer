@@ -980,7 +980,7 @@ sec_pkcs12_decoder_pfx_notify_proc(void *arg, PRBool before, void *dest,
     SECStatus rv;
     SEC_PKCS12DecoderContext *p12dcx = (SEC_PKCS12DecoderContext*)arg;
 
-    /* if an error occurrs, clear the notifyProc and the filterProc 
+    /* if an error occurs, clear the notifyProc and the filterProc 
      * and continue. 
      */
     if(p12dcx->error) {
@@ -1646,7 +1646,7 @@ sec_pkcs12_sanitize_nickname(PK11SlotInfo *slot, SECItem *nick)
     char *delimit;
     int delimitlen;
  
-    nickname = (char*)nick->data; /*Mac breaks without this type cast*/
+    nickname = (char*)nick->data;
     if ((delimit = PORT_Strchr(nickname, ':')) != NULL) {
         char *slotName;
 	int slotNameLen;
@@ -2407,7 +2407,10 @@ sec_pkcs12_add_cert(sec_PKCS12SafeBag *cert, PRBool keyExists, void *wincx)
 	rv = PK11_ImportDERCert(cert->slot, derCert, CK_INVALID_HANDLE,
 							nickData, PR_FALSE);
     }
-
+    if (rv) {
+	cert->problem = 1;
+	cert->error = PORT_GetError();
+    }
     cert->installed = PR_TRUE;
     if(nickName) SECITEM_ZfreeItem(nickName, PR_TRUE);
     return rv;

@@ -39,13 +39,26 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
-/* $Id: sslenum.c,v 1.14 2007/02/28 19:47:38 rrelyea%redhat.com Exp $ */
+/* $Id: sslenum.c,v 1.17 2010/02/10 18:07:21 wtc%google.com Exp $ */
 
 #include "ssl.h"
 #include "sslproto.h"
 
+/*
+ * The ciphers are listed in the following order:
+ * - stronger ciphers before weaker ciphers
+ * - national ciphers before international ciphers
+ * - faster ciphers before slower ciphers
+ *
+ * National ciphers such as Camellia are listed before international ciphers
+ * such as AES and RC4 to allow servers that prefer Camellia to negotiate
+ * Camellia without having to disable AES and RC4, which are needed for
+ * interoperability with clients that don't yet implement Camellia.
+ *
+ * If new ECC cipher suites are added, also update the ssl3CipherSuite arrays
+ * in ssl3ecc.c.
+ */
 const PRUint16 SSL_ImplementedCiphers[] = {
-
     /* 256-bit */
 #ifdef NSS_ENABLE_ECC
     TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
@@ -80,6 +93,7 @@ const PRUint16 SSL_ImplementedCiphers[] = {
     TLS_ECDH_ECDSA_WITH_RC4_128_SHA,
     TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA,
 #endif /* NSS_ENABLE_ECC */
+    TLS_RSA_WITH_SEED_CBC_SHA,
     TLS_RSA_WITH_CAMELLIA_128_CBC_SHA,
     SSL_RSA_WITH_RC4_128_MD5,
     SSL_RSA_WITH_RC4_128_SHA,
@@ -138,3 +152,14 @@ const PRUint16 SSL_ImplementedCiphers[] = {
 const PRUint16 SSL_NumImplementedCiphers = 
     (sizeof SSL_ImplementedCiphers) / (sizeof SSL_ImplementedCiphers[0]) - 1;
 
+const PRUint16 *
+SSL_GetImplementedCiphers(void)
+{
+    return SSL_ImplementedCiphers;
+}
+
+PRUint16
+SSL_GetNumImplementedCiphers(void)
+{
+    return SSL_NumImplementedCiphers;
+}

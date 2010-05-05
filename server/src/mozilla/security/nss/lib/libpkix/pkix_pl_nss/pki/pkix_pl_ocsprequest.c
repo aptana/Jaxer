@@ -268,9 +268,6 @@ pkix_pl_OcspRequest_RegisterSelf(void *plContext)
  *  "validity"
  *     Address of the Date for which the Cert's validity is to be determined.
  *     May be NULL.
- *  "addServiceLocator"
- *     Boolean value indicating whether the request should include the
- *     AddServiceLocator extension
  *  "signerCert"
  *     Address of the Cert to be used, if present, in signing the request.
  *     May be NULL.
@@ -290,14 +287,15 @@ pkix_pl_OcspRequest_Create(
         PKIX_PL_Cert *cert,
         PKIX_PL_OcspCertID *cid,
         PKIX_PL_Date *validity,
-        PKIX_Boolean addServiceLocator,
         PKIX_PL_Cert *signerCert,
+        PKIX_UInt32 methodFlags,
         PKIX_Boolean *pURIFound,
         PKIX_PL_OcspRequest **pRequest,
         void *plContext)
 {
         PKIX_PL_OcspRequest *ocspRequest = NULL;
 
+        CERTCertDBHandle *handle = NULL;
         SECStatus rv = SECFailure;
         SECItem *encoding = NULL;
         CERTOCSPRequest *certRequest = NULL;
@@ -307,6 +305,7 @@ pkix_pl_OcspRequest_Create(
         CERTCertificate *nssSignerCert = NULL;
         char *location = NULL;
         PRErrorCode locError = 0;
+        PKIX_Boolean canUseDefaultSource = PKIX_FALSE;
 
         PKIX_ENTER(OCSPREQUEST, "pkix_pl_OcspRequest_Create");
         PKIX_NULLCHECK_TWO(cert, pRequest);
@@ -325,8 +324,6 @@ pkix_pl_OcspRequest_Create(
         PKIX_INCREF(validity);
         ocspRequest->validity = validity;
 
-        ocspRequest->addServiceLocator = addServiceLocator;
-
         PKIX_INCREF(signerCert);
         ocspRequest->signerCert = signerCert;
 
@@ -341,20 +338,27 @@ pkix_pl_OcspRequest_Create(
          * Does this Cert have an Authority Information Access extension with
          * the URI of an OCSP responder?
          */
-        location = CERT_GetOCSPAuthorityInfoAccessLocation(nssCert);
+        handle = CERT_GetDefaultCertDB();
 
+        if (!(methodFlags & PKIX_REV_M_IGNORE_IMPLICIT_DEFAULT_SOURCE)) {
+            canUseDefaultSource = PKIX_TRUE;
+        }
+        location = ocsp_GetResponderLocation(handle, nssCert,
+                                             canUseDefaultSource,
+                                             &addServiceLocatorExtension);
         if (location == NULL) {
                 locError = PORT_GetError();
-                if (locError == SEC_ERROR_CERT_BAD_ACCESS_LOCATION) {
-                        *pURIFound = PKIX_FALSE;
-                        goto cleanup;
-                } else {
-                        PKIX_ERROR(PKIX_ERRORFINDINGORPROCESSINGURI);
+                if (locError == SEC_ERROR_EXTENSION_NOT_FOUND ||
+                    locError == SEC_ERROR_CERT_BAD_ACCESS_LOCATION) {
+                    PORT_SetError(0);
+                    *pURIFound = PKIX_FALSE;
+                    goto cleanup;
                 }
-        } else {
-                ocspRequest->location = location;
-                *pURIFound = PKIX_TRUE;
+                PKIX_ERROR(PKIX_ERRORFINDINGORPROCESSINGURI);
         }
+
+        ocspRequest->location = location;
+        *pURIFound = PKIX_TRUE;
 
         if (signerCert != NULL) {
                 nssSignerCert = signerCert->nssCert;
@@ -366,9 +370,6 @@ pkix_pl_OcspRequest_Create(
         } else {
                 time = PR_Now();
 	}
-
-        addServiceLocatorExtension = 
-                ((addServiceLocator == PKIX_TRUE)? PR_TRUE : PR_FALSE);
 
         certRequest = cert_CreateSingleCertOCSPRequest(
                 cid->certID, cert->nssCert, time, 

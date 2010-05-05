@@ -44,21 +44,22 @@
 #include "secitem.h"
 #include "secerr.h"
 
-struct NameToKind {
+typedef struct NameToKindStr {
     const char * name;
     unsigned int maxLen; /* max bytes in UTF8 encoded string value */
     SECOidTag    kind;
     int		 valueType;
-};
+} NameToKind;
 
 /* local type for directory string--could be printable_string or utf8 */
 #define SEC_ASN1_DS SEC_ASN1_HIGH_TAG_NUMBER
 
-/* Add new entries to this table, and maybe to function CERT_ParseRFC1485AVA */
-static const struct NameToKind name2kinds[] = {
+/* Add new entries to this table, and maybe to function ParseRFC1485AVA */
+static const NameToKind name2kinds[] = {
 /* IANA registered type names
-   (See: http://www.iana.org/assignments/ldap-parameters) */
-    /* RFC 3280,4630 MUST SUPPORT */
+ * (See: http://www.iana.org/assignments/ldap-parameters) 
+ */
+/* RFC 3280, 4630 MUST SUPPORT */
     { "CN",             64, SEC_OID_AVA_COMMON_NAME,    SEC_ASN1_DS},
     { "ST",            128, SEC_OID_AVA_STATE_OR_PROVINCE,
 							SEC_ASN1_DS},
@@ -69,7 +70,8 @@ static const struct NameToKind name2kinds[] = {
     { "dnQualifier", 32767, SEC_OID_AVA_DN_QUALIFIER, SEC_ASN1_PRINTABLE_STRING},
     { "C",               2, SEC_OID_AVA_COUNTRY_NAME, SEC_ASN1_PRINTABLE_STRING},
     { "serialNumber",   64, SEC_OID_AVA_SERIAL_NUMBER,SEC_ASN1_PRINTABLE_STRING},
-    /* RFC 3280,4630 SHOULD SUPPORT */
+
+/* RFC 3280, 4630 SHOULD SUPPORT */
     { "L",             128, SEC_OID_AVA_LOCALITY,       SEC_ASN1_DS},
     { "title",          64, SEC_OID_AVA_TITLE,          SEC_ASN1_DS},
     { "SN",             64, SEC_OID_AVA_SURNAME,        SEC_ASN1_DS},
@@ -78,26 +80,58 @@ static const struct NameToKind name2kinds[] = {
     { "generationQualifier",
                         64, SEC_OID_AVA_GENERATION_QUALIFIER,
                                                         SEC_ASN1_DS},
-    /* RFC 3280,4630 MAY SUPPORT */
+/* RFC 3280, 4630 MAY SUPPORT */
     { "DC",            128, SEC_OID_AVA_DC,             SEC_ASN1_IA5_STRING},
-    /* values from draft-ietf-ldapbis-user-schema-05 (not in RFC 3280) */
+    { "MAIL",          256, SEC_OID_RFC1274_MAIL,       SEC_ASN1_IA5_STRING},
+    { "UID",           256, SEC_OID_RFC1274_UID,        SEC_ASN1_DS},
+
+/* ------------------ "strict" boundary ---------------------------------
+ * In strict mode, cert_NameToAscii does not encode any of the attributes
+ * below this line. The first SECOidTag below this line must be used to
+ * conditionally define the "endKind" in function AppendAVA() below.
+ * Most new attribute names should be added below this line.
+ * Maybe this line should be up higher?  Say, after the 3280 MUSTs and 
+ * before the 3280 SHOULDs?
+ */
+
+/* values from draft-ietf-ldapbis-user-schema-05 (not in RFC 3280) */
     { "postalAddress", 128, SEC_OID_AVA_POSTAL_ADDRESS, SEC_ASN1_DS},
     { "postalCode",     40, SEC_OID_AVA_POSTAL_CODE,    SEC_ASN1_DS},
     { "postOfficeBox",  40, SEC_OID_AVA_POST_OFFICE_BOX,SEC_ASN1_DS},
     { "houseIdentifier",64, SEC_OID_AVA_HOUSE_IDENTIFIER,SEC_ASN1_DS},
-    /* legacy keywords */
-    { "MAIL",          256, SEC_OID_RFC1274_MAIL,       SEC_ASN1_IA5_STRING},
-    { "UID",           256, SEC_OID_RFC1274_UID,        SEC_ASN1_DS},
-    
 /* end of IANA registered type names */
-    { "E",             128, SEC_OID_PKCS9_EMAIL_ADDRESS,SEC_ASN1_DS},
 
+/* legacy keywords */
+    { "E",             128, SEC_OID_PKCS9_EMAIL_ADDRESS,SEC_ASN1_IA5_STRING},
 
 #if 0 /* removed.  Not yet in any IETF draft or RFC. */
     { "pseudonym",      64, SEC_OID_AVA_PSEUDONYM,      SEC_ASN1_DS},
 #endif
+
     { 0,           256, SEC_OID_UNKNOWN                      , 0},
 };
+
+/* Table facilitates conversion of ASCII hex to binary. */
+static const PRInt16 x2b[256] = {
+/* #0x */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+/* #1x */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+/* #2x */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+/* #3x */  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, -1, -1, -1, -1, -1, -1, 
+/* #4x */ -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+/* #5x */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+/* #6x */ -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+/* #7x */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+/* #8x */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+/* #9x */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+/* #ax */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+/* #bx */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+/* #cx */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+/* #dx */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+/* #ex */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
+/* #fx */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
+};
+
+#define IS_HEX(c) (x2b[(PRUint8)(c)] >= 0)
 
 #define C_DOUBLE_QUOTE '\042'
 
@@ -128,10 +162,21 @@ static const struct NameToKind name2kinds[] = {
      ((c) == '=') ||						\
      ((c) == '?'))
 
+/* RFC 2253 says we must escape ",+\"\\<>;=" EXCEPT inside a quoted string.
+ * Inside a quoted string, we only need to escape " and \
+ * We choose to quote strings containing any of those special characters,
+ * so we only need to escape " and \
+ */
+#define NEEDS_ESCAPE(c) \
+    (c == C_DOUBLE_QUOTE || c == C_BACKSLASH)
+
+#define NEEDS_HEX_ESCAPE(c) \
+    ((PRUint8)c < 0x20 || c == 0x7f)
+
 int
 cert_AVAOidTagToMaxLen(SECOidTag tag)
 {
-    const struct NameToKind *n2k = name2kinds;
+    const NameToKind *n2k = name2kinds;
 
     while (n2k->kind != tag && n2k->kind != SEC_OID_UNKNOWN) {
 	++n2k;
@@ -210,11 +255,12 @@ scanTag(char **pbp, char *endptr, char *tagBuf, int tagBufSize)
     return SECSuccess;
 }
 
-static SECStatus
+/* Returns the number of bytes in the value. 0 means failure. */
+static int
 scanVal(char **pbp, char *endptr, char *valBuf, int valBufSize)  
 {
     char *bp, *valBufp;
-    int vallen;
+    int vallen = 0;
     PRBool isQuoted;
     
     PORT_Assert(valBufSize > 0);
@@ -223,7 +269,7 @@ scanVal(char **pbp, char *endptr, char *valBuf, int valBufSize)
     skipSpace(pbp, endptr);
     if(*pbp == endptr) {
 	/* nothing left */
-	return SECFailure;
+	return 0;
     }
     
     bp = *pbp;
@@ -238,7 +284,6 @@ scanVal(char **pbp, char *endptr, char *valBuf, int valBufSize)
     }
     
     valBufp = valBuf;
-    vallen = 0;
     while (bp < endptr) {
 	char c = *bp;
 	if (c == C_BACKSLASH) {
@@ -247,7 +292,12 @@ scanVal(char **pbp, char *endptr, char *valBuf, int valBufSize)
 	    if (bp >= endptr) {
 		/* escape charater must appear with paired char */
 		*pbp = bp;
-		return SECFailure;
+		return 0;
+	    }
+	    c = *bp;
+	    if (IS_HEX(c) && (endptr - bp) >= 2 && IS_HEX(bp[1])) {
+		bp++;
+		c = (char)((x2b[(PRUint8)c] << 4) | x2b[(PRUint8)*bp]); 
 	    }
 	} else if (c == '#' && bp == *pbp) {
 	    /* ignore leading #, quotation not required for it. */
@@ -262,27 +312,28 @@ scanVal(char **pbp, char *endptr, char *valBuf, int valBufSize)
         vallen++;
 	if (vallen >= valBufSize) {
 	    *pbp = bp;
-	    return SECFailure;
+	    return 0;
 	}
-	*valBufp++ = *bp++;
+	*valBufp++ = c;
+	bp++;
     }
     
-    /* stip trailing spaces from unquoted values */
+    /* strip trailing spaces from unquoted values */
     if (!isQuoted) {
-	if (valBufp > valBuf) {
-	    valBufp--;
-	    while ((valBufp > valBuf) && OPTIONAL_SPACE(*valBufp)) {
-		valBufp--;
-	    }
-	    valBufp++;
+	while (valBufp > valBuf) {
+	    char c = valBufp[-1];
+	    if (! OPTIONAL_SPACE(c))
+	        break;
+	    --valBufp;
 	}
+	vallen = valBufp - valBuf;
     }
     
     if (isQuoted) {
 	/* insist that we stopped on a double quote */
 	if (*bp != C_DOUBLE_QUOTE) {
 	    *pbp = bp;
-	    return SECFailure;
+	    return 0;
 	}
 	/* skip over the quote and skip optional space */
 	bp++;
@@ -291,36 +342,11 @@ scanVal(char **pbp, char *endptr, char *valBuf, int valBufSize)
     
     *pbp = bp;
     
-    if (valBufp == valBuf) {
-	/* empty value -- not allowed */
-	return SECFailure;
-    }
-    
     /* null-terminate valBuf -- guaranteed at least one space left */
-    *valBufp++ = 0;
+    *valBufp = 0;
     
-    return SECSuccess;
+    return vallen;
 }
-
-static const PRInt16 x2b[256] = 
-{
-/* #0x */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-/* #1x */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-/* #2x */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-/* #3x */  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, -1, -1, -1, -1, -1, -1, 
-/* #4x */ -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-/* #5x */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-/* #6x */ -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-/* #7x */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-/* #8x */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-/* #9x */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-/* #ax */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-/* #bx */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-/* #cx */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-/* #dx */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-/* #ex */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
-/* #fx */ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
-};
 
 /* Caller must set error code upon failure */
 static SECStatus
@@ -349,40 +375,45 @@ loser:
     return SECFailure;
 }
 
-
-CERTAVA *
-CERT_ParseRFC1485AVA(PRArenaPool *arena, char **pbp, char *endptr,
-		    PRBool singleAVA) 
+/* Parses one AVA, starting at *pbp.  Stops at endptr.
+ * Advances *pbp past parsed AVA and trailing separator (if present).
+ * On any error, returns NULL and *pbp is undefined.
+ * On success, returns CERTAVA allocated from arena, and (*pbp)[-1] was 
+ * the last character parsed.  *pbp is either equal to endptr or 
+ * points to first character after separator.
+ */
+static CERTAVA *
+ParseRFC1485AVA(PRArenaPool *arena, char **pbp, char *endptr)
 {
     CERTAVA *a;
-    const struct NameToKind *n2k;
+    const NameToKind *n2k;
     char *bp;
     int       vt = -1;
     int       valLen;
     SECOidTag kind  = SEC_OID_UNKNOWN;
     SECStatus rv    = SECFailure;
     SECItem   derOid = { 0, NULL, 0 };
+    SECItem   derVal = { 0, NULL, 0};
+    char      sep   = 0;
 
     char tagBuf[32];
     char valBuf[384];
 
     PORT_Assert(arena);
-    if (scanTag(pbp, endptr, tagBuf, sizeof(tagBuf)) == SECFailure ||
-	scanVal(pbp, endptr, valBuf, sizeof(valBuf)) == SECFailure) {
+    if (SECSuccess != scanTag(pbp, endptr, tagBuf, sizeof tagBuf) ||
+	!(valLen    = scanVal(pbp, endptr, valBuf, sizeof valBuf))) {
 	goto loser;
     }
 
-    /* insist that if we haven't finished we've stopped on a separator */
     bp = *pbp;
     if (bp < endptr) {
-	if (singleAVA || (*bp != ',' && *bp != ';')) {
-	    *pbp = bp;
-	    goto loser;
-	}
-	/* ok, skip over separator */
-	bp++;
+	sep = *bp++; /* skip over separator */
     }
     *pbp = bp;
+    /* if we haven't finished, insist that we've stopped on a separator */
+    if (sep && sep != ',' && sep != ';' && sep != '+') {
+	goto loser;
+    }
 
     /* is this a dotted decimal OID attribute type ? */
     if (!PL_strncasecmp("oid.", tagBuf, 4)) {
@@ -407,16 +438,13 @@ CERT_ParseRFC1485AVA(PRArenaPool *arena, char **pbp, char *endptr,
     /* Is this a hex encoding of a DER attribute value ? */
     if ('#' == valBuf[0]) {
     	/* convert attribute value from hex to binary */
-	SECItem  derVal = { 0, NULL, 0};
-	valLen = PORT_Strlen(valBuf+1);
-	rv = hexToBin(arena, &derVal, valBuf + 1, valLen);
+	rv = hexToBin(arena, &derVal, valBuf + 1, valLen - 1);
 	if (rv)
 	    goto loser;
 	a = CERT_CreateAVAFromRaw(arena, &derOid, &derVal);
     } else {
 	if (kind == SEC_OID_UNKNOWN)
 	    goto loser;
-	valLen = PORT_Strlen(valBuf);
 	if (kind == SEC_OID_AVA_COUNTRY_NAME && valLen != 2)
 	    goto loser;
 	if (vt == SEC_ASN1_PRINTABLE_STRING &&
@@ -430,7 +458,9 @@ CERT_ParseRFC1485AVA(PRArenaPool *arena, char **pbp, char *endptr,
 		vt = SEC_ASN1_UTF8_STRING;
 	}
 
-	a = CERT_CreateAVA(arena, kind, vt, (char *)valBuf);
+	derVal.data = (unsigned char*) valBuf;
+	derVal.len  = valLen;
+	a = CERT_CreateAVAFromSECItem(arena, kind, vt, &derVal);
     }
     return a;
 
@@ -447,7 +477,7 @@ ParseRFC1485Name(char *buf, int len)
     CERTName *name;
     char *bp, *e;
     CERTAVA *ava;
-    CERTRDN *rdn;
+    CERTRDN *rdn = NULL;
 
     name = CERT_CreateName(NULL);
     if (name == NULL) {
@@ -457,12 +487,21 @@ ParseRFC1485Name(char *buf, int len)
     e = buf + len;
     bp = buf;
     while (bp < e) {
-	ava = CERT_ParseRFC1485AVA(name->arena, &bp, e, PR_FALSE);
-	if (ava == 0) goto loser;
-	rdn = CERT_CreateRDN(name->arena, ava, (CERTAVA *)0);
-	if (rdn == 0) goto loser;
-	rv = CERT_AddRDN(name, rdn);
-	if (rv) goto loser;
+	ava = ParseRFC1485AVA(name->arena, &bp, e);
+	if (ava == 0) 
+	    goto loser;
+	if (!rdn) {
+	    rdn = CERT_CreateRDN(name->arena, ava, (CERTAVA *)0);
+	    if (rdn == 0) 
+		goto loser;
+	    rv = CERT_AddRDN(name, rdn);
+	} else {
+	    rv = CERT_AddAVA(name->arena, rdn, ava);
+	}
+	if (rv) 
+	    goto loser;
+	if (bp[-1] != '+')
+	    rdn = NULL; /* done with this RDN */
 	skipSpace(&bp, e);
     }
 
@@ -555,70 +594,117 @@ AppendStr(stringBuf *bufp, char *str)
     return SECSuccess;
 }
 
-SECStatus
-CERT_RFC1485_EscapeAndQuote(char *dst, int dstlen, char *src, int srclen)
+typedef enum {
+    minimalEscape = 0,		/* only hex escapes, and " and \ */
+    minimalEscapeAndQuote,	/* as above, plus quoting        */
+    fullEscape                  /* no quoting, full escaping     */
+} EQMode;
+
+/* Some characters must be escaped as a hex string, e.g. c -> \nn .
+ * Others must be escaped by preceeding with a '\', e.g. c -> \c , but
+ * there are certain "special characters" that may be handled by either
+ * escaping them, or by enclosing the entire attribute value in quotes.
+ * A NULL value for pEQMode implies selecting minimalEscape mode.
+ * Some callers will do quoting when needed, others will not.
+ * If a caller selects minimalEscapeAndQuote, and the string does not
+ * need quoting, then this function changes it to minimalEscape.
+ */
+static int
+cert_RFC1485_GetRequiredLen(const char *src, int srclen, EQMode *pEQMode)
 {
     int i, reqLen=0;
-    char *d = dst;
+    EQMode mode = pEQMode ? *pEQMode : minimalEscape;
     PRBool needsQuoting = PR_FALSE;
     char lastC = 0;
-    
+
     /* need to make an initial pass to determine if quoting is needed */
     for (i = 0; i < srclen; i++) {
 	char c = src[i];
 	reqLen++;
-	if (!needsQuoting && (SPECIAL_CHAR(c) ||
-	    (OPTIONAL_SPACE(c) && OPTIONAL_SPACE(lastC)))) {
-	    /* entirety will need quoting */
-	    needsQuoting = PR_TRUE;
-	}
-	if (c == C_DOUBLE_QUOTE || c == C_BACKSLASH) {
-	    /* this char will need escaping */
+	if (NEEDS_HEX_ESCAPE(c)) {      /* c -> \xx  */
+	    reqLen += 2;
+	} else if (NEEDS_ESCAPE(c)) {   /* c -> \c   */
 	    reqLen++;
+	} else if (SPECIAL_CHAR(c)) {
+	    if (mode == minimalEscapeAndQuote) /* quoting is allowed */
+		needsQuoting = PR_TRUE; /* entirety will need quoting */
+	    else if (mode == fullEscape)
+	    	reqLen++;               /* MAY escape this character */
+	} else if (OPTIONAL_SPACE(c) && OPTIONAL_SPACE(lastC)) {
+	    if (mode == minimalEscapeAndQuote) /* quoting is allowed */
+		needsQuoting = PR_TRUE; /* entirety will need quoting */
 	}
 	lastC = c;
     }
     /* if it begins or ends in optional space it needs quoting */
-    if (!needsQuoting && srclen > 0 && 
+    if (!needsQuoting && srclen > 0 && mode == minimalEscapeAndQuote && 
 	(OPTIONAL_SPACE(src[srclen-1]) || OPTIONAL_SPACE(src[0]))) {
 	needsQuoting = PR_TRUE;
     }
-    
-    if (needsQuoting) reqLen += 2;
+
+    if (needsQuoting) 
+    	reqLen += 2;
+    if (pEQMode && mode == minimalEscapeAndQuote && !needsQuoting)
+    	*pEQMode = minimalEscape;
+    return reqLen;
+}
+
+static const char hexChars[16] = { "0123456789abcdef" };
+
+static SECStatus
+escapeAndQuote(char *dst, int dstlen, char *src, int srclen, EQMode *pEQMode)
+{
+    int i, reqLen=0;
+    EQMode mode = pEQMode ? *pEQMode : minimalEscape;
 
     /* space for terminal null */
-    reqLen++;
-    
+    reqLen = cert_RFC1485_GetRequiredLen(src, srclen, &mode) + 1;
     if (reqLen > dstlen) {
 	PORT_SetError(SEC_ERROR_OUTPUT_LEN);
 	return SECFailure;
     }
-    
-    d = dst;
-    if (needsQuoting) *d++ = C_DOUBLE_QUOTE;
+
+    if (mode == minimalEscapeAndQuote)
+        *dst++ = C_DOUBLE_QUOTE;
     for (i = 0; i < srclen; i++) {
 	char c = src[i];
-	if (c == C_DOUBLE_QUOTE || c == C_BACKSLASH) {
-	    /* escape it */
-	    *d++ = C_BACKSLASH;
+	if (NEEDS_HEX_ESCAPE(c)) {
+	    *dst++ = C_BACKSLASH;
+	    *dst++ = hexChars[ (c >> 4) & 0x0f ];
+	    *dst++ = hexChars[  c       & 0x0f ];
+	} else {
+	    if (NEEDS_ESCAPE(c) || (SPECIAL_CHAR(c) && mode == fullEscape)) {
+		*dst++ = C_BACKSLASH;
+	    }
+	    *dst++ = c;
 	}
-	*d++ = c;
     }
-    if (needsQuoting) *d++ = C_DOUBLE_QUOTE;
-    *d++ = 0;
+    if (mode == minimalEscapeAndQuote)
+    	*dst++ = C_DOUBLE_QUOTE;
+    *dst++ = 0;
+    if (pEQMode)
+    	*pEQMode = mode;
     return SECSuccess;
 }
+
+SECStatus
+CERT_RFC1485_EscapeAndQuote(char *dst, int dstlen, char *src, int srclen)
+{
+    EQMode mode = minimalEscapeAndQuote;
+    return escapeAndQuote(dst, dstlen, src, srclen, &mode);
+}
+
 
 /* convert an OID to dotted-decimal representation */
 /* Returns a string that must be freed with PR_smprintf_free(), */
 char *
 CERT_GetOidString(const SECItem *oid)
 {
-    PRUint8 *end;
-    PRUint8 *d;
-    PRUint8 *e;
-    char *a         = NULL;
-    char *b;
+    PRUint8 *stop;   /* points to first byte after OID string */
+    PRUint8 *first;  /* byte of an OID component integer      */
+    PRUint8 *last;   /* byte of an OID component integer      */
+    char *rvString   = NULL;
+    char *prefix     = NULL;
 
 #define MAX_OID_LEN 1024 /* bytes */
 
@@ -627,75 +713,117 @@ CERT_GetOidString(const SECItem *oid)
 	return NULL;
     }
 
-    /* d will point to the next sequence of bytes to decode */
-    d = (PRUint8 *)oid->data;
-    /* end points to one past the legitimate data */
-    end = &d[ oid->len ];
+    /* first will point to the next sequence of bytes to decode */
+    first = (PRUint8 *)oid->data;
+    /* stop points to one past the legitimate data */
+    stop = &first[ oid->len ];
 
     /*
      * Check for our pseudo-encoded single-digit OIDs
      */
-    if( (*d == 0x80) && (2 == oid->len) ) {
+    if ((*first == 0x80) && (2 == oid->len)) {
 	/* Funky encoding.  The second byte is the number */
-	a = PR_smprintf("%lu", (PRUint32)d[1]);
-	if( (char *)NULL == a ) {
+	rvString = PR_smprintf("%lu", (PRUint32)first[1]);
+	if (!rvString) {
 	    PORT_SetError(SEC_ERROR_NO_MEMORY);
-	    return (char *)NULL;
 	}
-	return a;
+	return rvString;
     }
 
-    for( ; d < end; d = &e[1] ) {
+    for (; first < stop; first = last + 1) {
+    	unsigned int bytesBeforeLast;
     
-	for( e = d; e < end; e++ ) {
-	    if( 0 == (*e & 0x80) ) {
+	for (last = first; last < stop; last++) {
+	    if (0 == (*last & 0x80)) {
 		break;
 	    }
 	}
-    
-	if( ((e-d) > 4) || (((e-d) == 4) && (*d & 0x70)) ) {
-	    /* More than a 32-bit number */
-	} else {
+	bytesBeforeLast = (unsigned int)(last - first);
+	if (bytesBeforeLast <= 3U) {        /* 0-28 bit number */
 	    PRUint32 n = 0;
-      
-	    switch( e-d ) {
-	    case 4:
-		n |= ((PRUint32)(e[-4] & 0x0f)) << 28;
-	    case 3:
-		n |= ((PRUint32)(e[-3] & 0x7f)) << 21;
-	    case 2:
-		n |= ((PRUint32)(e[-2] & 0x7f)) << 14;
-	    case 1:
-		n |= ((PRUint32)(e[-1] & 0x7f)) <<  7;
-	    case 0:
-		n |= ((PRUint32)(e[-0] & 0x7f))      ;
+	    PRUint32 c;
+
+#define CGET(i, m) \
+		c  = last[-i] & m; \
+		n |= c << (7 * i)
+
+#define CASE(i, m) \
+	    case i:                      \
+		CGET(i, m);              \
+		if (!n) goto unsupported \
+		/* fall-through */
+
+	    switch (bytesBeforeLast) {
+	    CASE(3, 0x7f);
+	    CASE(2, 0x7f);
+	    CASE(1, 0x7f);
+	    case 0: n |= last[0] & 0x7f;
+		break;
 	    }
+	    if (last[0] & 0x80)
+	    	goto unsupported;
       
-	    if( (char *)NULL == a ) {
+	    if (!rvString) {
 		/* This is the first number.. decompose it */
 		PRUint32 one = PR_MIN(n/40, 2); /* never > 2 */
-		PRUint32 two = n - one * 40;
+		PRUint32 two = n - (one * 40);
         
-		a = PR_smprintf("OID.%lu.%lu", one, two);
-		if( (char *)NULL == a ) {
-		    PORT_SetError(SEC_ERROR_NO_MEMORY);
-		    return (char *)NULL;
-		}
+		rvString = PR_smprintf("OID.%lu.%lu", one, two);
 	    } else {
-		b = PR_smprintf("%s.%lu", a, n);
-		if( (char *)NULL == b ) {
-		    PR_smprintf_free(a);
-		    PORT_SetError(SEC_ERROR_NO_MEMORY);
-		    return (char *)NULL;
-		}
+		prefix = rvString;
+		rvString = PR_smprintf("%s.%lu", prefix, n);
+	    }
+	} else if (bytesBeforeLast <= 9U) { /* 29-64 bit number */
+	    PRUint64 n = 0;
+	    PRUint64 c;
+
+	    switch (bytesBeforeLast) {
+	    CASE(9, 0x01);
+	    CASE(8, 0x7f);
+	    CASE(7, 0x7f);
+	    CASE(6, 0x7f);
+	    CASE(5, 0x7f);
+	    CASE(4, 0x7f);
+	    CGET(3, 0x7f);
+	    CGET(2, 0x7f);
+	    CGET(1, 0x7f);
+	    CGET(0, 0x7f);
+		break;
+	    }
+	    if (last[0] & 0x80)
+	    	goto unsupported;
+      
+	    if (!rvString) {
+		/* This is the first number.. decompose it */
+		PRUint64 one = PR_MIN(n/40, 2); /* never > 2 */
+		PRUint64 two = n - (one * 40);
         
-		PR_smprintf_free(a);
-		a = b;
+		rvString = PR_smprintf("OID.%llu.%llu", one, two);
+	    } else {
+		prefix = rvString;
+		rvString = PR_smprintf("%s.%llu", prefix, n);
+	    }
+	} else {
+	    /* More than a 64-bit number, or not minimal encoding. */
+unsupported:
+	    if (!rvString)
+		rvString = PR_smprintf("OID.UNSUPPORTED");
+	    else {
+		prefix = rvString;
+		rvString = PR_smprintf("%s.UNSUPPORTED", prefix);
 	    }
 	}
-    }
 
-    return a;
+	if (prefix) {
+	    PR_smprintf_free(prefix);
+	    prefix = NULL;
+	}
+	if (!rvString) {
+	    PORT_SetError(SEC_ERROR_NO_MEMORY);
+	    break;
+	}
+    }
+    return rvString;
 }
 
 /* convert DER-encoded hex to a string */
@@ -722,98 +850,246 @@ get_hex_string(SECItem *data)
     return rv;
 }
 
+/* For compliance with RFC 2253, RFC 3280 and RFC 4630, we choose to 
+ * use the NAME=STRING form, rather than the OID.N.N=#hexXXXX form, 
+ * when both of these conditions are met:
+ *  1) The attribute name OID (kind) has a known name string that is 
+ *     defined in one of those RFCs, or in RFCs that they cite, AND
+ *  2) The attribute's value encoding is RFC compliant for the kind
+ *     (e.g., the value's encoding tag is correct for the kind, and
+ *     the value's length is in the range allowed for the kind, and
+ *     the value's contents are appropriate for the encoding tag).
+ *  Otherwise, we use the OID.N.N=#hexXXXX form.
+ *
+ *  If the caller prefers maximum human readability to RFC compliance,
+ *  then 
+ *  - We print the kind in NAME= string form if we know the name
+ *    string for the attribute type OID, regardless of whether the 
+ *    value is correctly encoded or not. else we use the OID.N.N= form.
+ *  - We use the non-hex STRING form for the attribute value if the
+ *    value can be represented in such a form.  Otherwise, we use 
+ *    the hex string form.
+ *  This implies that, for maximum human readability, in addition to 
+ *  the two forms allowed by the RFC, we allow two other forms of output:
+ *  - the OID.N.N=STRING form, and 
+ *  - the NAME=#hexXXXX form
+ *  When the caller prefers maximum human readability, we do not allow
+ *  the value of any attribute to exceed the length allowed by the RFC.
+ *  If the attribute value exceeds the allowed length, we truncate it to 
+ *  the allowed length and append "...".
+ *  Also in this case, we arbitrarily impose a limit on the length of the 
+ *  entire AVA encoding, regardless of the form, of 384 bytes per AVA.
+ *  This limit includes the trailing NULL character.  If the encoded 
+ *  AVA length exceeds that limit, this function reports failure to encode
+ *  the AVA.
+ *
+ *  An ASCII representation of an AVA is said to be "invertible" if 
+ *  conversion back to DER reproduces the original DER encoding exactly.
+ *  The RFC 2253 rules do not ensure that all ASCII AVAs derived according
+ *  to its rules are invertible. That is because the RFCs allow some 
+ *  attribute values to be encoded in any of a number of encodings,
+ *  and the encoding type information is lost in the non-hex STRING form.
+ *  This is particularly true of attributes of type DirectoryString.
+ *  The encoding type information is always preserved in the hex string 
+ *  form, because the hex includes the entire DER encoding of the value.
+ *
+ *  So, when the caller perfers maximum invertibility, we apply the 
+ *  RFC compliance rules stated above, and add a third required 
+ *  condition on the use of the NAME=STRING form.  
+ *   3) The attribute's kind is not is allowed to be encoded in any of 
+ *      several different encodings, such as DirectoryStrings.
+ *
+ * The chief difference between CERT_N2A_STRICT and CERT_N2A_INVERTIBLE
+ * is that the latter forces DirectoryStrings to be hex encoded.
+ *
+ * As a simplification, we assume the value is correctly encoded for 
+ * its encoding type.  That is, we do not test that all the characters
+ * in a string encoded type are allowed by that type.  We assume it.
+ */
 static SECStatus
-AppendAVA(stringBuf *bufp, CERTAVA *ava)
+AppendAVA(stringBuf *bufp, CERTAVA *ava, CertStrictnessLevel strict)
 {
-    const struct NameToKind *n2k = name2kinds;
-    const char *tagName;
-    unsigned len, maxLen;
-    int tag;
-    SECStatus rv;
-    SECItem *avaValue = NULL;
-    char *unknownTag = NULL;
-    PRBool hexValue = PR_FALSE;
-    char tmpBuf[384];
+#define TMPBUF_LEN 384
+    const NameToKind *pn2k   = name2kinds;
+    SECItem     *avaValue    = NULL;
+    char        *unknownTag  = NULL;
+    char        *encodedAVA  = NULL;
+    PRBool       useHex      = PR_FALSE;  /* use =#hexXXXX form */
+    PRBool       truncateName  = PR_FALSE;
+    PRBool       truncateValue = PR_FALSE;
+    SECOidTag    endKind;
+    SECStatus    rv;
+    unsigned int len;
+    unsigned int nameLen, valueLen;
+    unsigned int maxName, maxValue;
+    EQMode       mode        = minimalEscapeAndQuote;
+    NameToKind   n2k         = { NULL, 32767, SEC_OID_UNKNOWN, SEC_ASN1_DS };
+    char         tmpBuf[TMPBUF_LEN];
 
+#define tagName  n2k.name    /* non-NULL means use NAME= form */
+#define maxBytes n2k.maxLen
+#define tag      n2k.kind
+#define vt       n2k.valueType
+
+    /* READABLE mode recognizes more names from the name2kinds table
+     * than do STRICT or INVERTIBLE modes.  This assignment chooses the
+     * point in the table where the attribute type name scanning stops.
+     */
+    endKind = (strict == CERT_N2A_READABLE) ? SEC_OID_UNKNOWN
+                                            : SEC_OID_AVA_POSTAL_ADDRESS;
     tag = CERT_GetAVATag(ava);
-    while (n2k->kind != tag && n2k->kind != SEC_OID_UNKNOWN) {
-        ++n2k;
+    while (pn2k->kind != tag && pn2k->kind != endKind) {
+        ++pn2k;
     }
-    if (n2k->kind != SEC_OID_UNKNOWN) {
-        tagName = n2k->name;
-    } else {
+
+    if (pn2k->kind != endKind ) {
+        n2k = *pn2k;
+    } else if (strict != CERT_N2A_READABLE) {
+        useHex = PR_TRUE;
+    }
+    /* For invertable form, force Directory Strings to use hex form. */
+    if (strict == CERT_N2A_INVERTIBLE && vt == SEC_ASN1_DS) {
+	tagName = NULL;      /* must use OID.N form */
+	useHex = PR_TRUE;    /* must use hex string */
+    }
+    if (!useHex) {
+	avaValue = CERT_DecodeAVAValue(&ava->value);
+	if (!avaValue) {
+	    useHex = PR_TRUE;
+	    if (strict != CERT_N2A_READABLE) {
+		tagName = NULL;  /* must use OID.N form */
+	    }
+	}
+    }
+    if (!tagName) {
 	/* handle unknown attribute types per RFC 2253 */
 	tagName = unknownTag = CERT_GetOidString(&ava->type);
-	if (!tagName)
+	if (!tagName) {
+	    if (avaValue)
+		SECITEM_FreeItem(avaValue, PR_TRUE);
 	    return SECFailure;
+	}
     }
-    maxLen = n2k->maxLen;
-
-#ifdef NSS_STRICT_RFC_2253_VALUES_ONLY
-    if (!unknownTag)
-#endif
-    avaValue = CERT_DecodeAVAValue(&ava->value);
-    if(!avaValue) {
-	/* the attribute value is not recognized, get the hex value */
+    if (useHex) {
 	avaValue = get_hex_string(&ava->value);
-	if(!avaValue) {
-	    if (unknownTag) PR_smprintf_free(unknownTag);
+	if (!avaValue) {
+	    if (unknownTag) 
+	    	PR_smprintf_free(unknownTag);
 	    return SECFailure;
 	}
-	hexValue = PR_TRUE;
     }
 
-    /* Check value length */
-    if (avaValue->len > maxLen + 3) {  /* must be room for "..." */
-	/* avaValue is a UTF8 string, freshly allocated and returned to us 
-	** by CERT_DecodeAVAValue or get_hex_string just above, so we can
-	** modify it here.  See if we're in the middle of a multi-byte
-	** UTF8 character.
-	*/
-	while (((avaValue->data[maxLen] & 0xc0) == 0x80) && maxLen > 0) {
-	   maxLen--;
+    nameLen  = strlen(tagName);
+    valueLen = (useHex ? avaValue->len : 
+		cert_RFC1485_GetRequiredLen((char *)avaValue->data, avaValue->len, 
+					    &mode));
+    len = nameLen + valueLen + 2; /* Add 2 for '=' and trailing NUL */
+
+    maxName  = nameLen;
+    maxValue = valueLen;
+    if (len <= sizeof(tmpBuf)) {
+    	encodedAVA = tmpBuf;
+    } else if (strict != CERT_N2A_READABLE) {
+	encodedAVA = PORT_Alloc(len);
+	if (!encodedAVA) {
+	    SECITEM_FreeItem(avaValue, PR_TRUE);
+	    if (unknownTag) 
+		PR_smprintf_free(unknownTag);
+	    return SECFailure;
 	}
-	/* add elipsis to signify truncation. */
-	avaValue->data[maxLen++] = '.'; 
-	avaValue->data[maxLen++] = '.';
-	avaValue->data[maxLen++] = '.';
-	avaValue->data[maxLen]   = 0;
-	avaValue->len = maxLen;
+    } else {
+	/* Must make output fit in tmpbuf */
+	unsigned int fair = (sizeof tmpBuf)/2 - 1; /* for = and \0 */
+
+	if (nameLen < fair) {
+	    /* just truncate the value */
+	    maxValue = (sizeof tmpBuf) - (nameLen + 6); /* for "=...\0",
+                                                           and possibly '"' */
+	} else if (valueLen < fair) {
+	    /* just truncate the name */
+	    maxName  = (sizeof tmpBuf) - (valueLen + 5); /* for "=...\0" */
+	} else {
+	    /* truncate both */
+	    maxName = maxValue = fair - 3;  /* for "..." */
+	}
+	if (nameLen > maxName) {
+	    PORT_Assert(unknownTag && unknownTag == tagName);
+	    truncateName = PR_TRUE;
+	    nameLen = maxName;
+	}
+    	encodedAVA = tmpBuf;
     }
 
-    len = PORT_Strlen(tagName);
-    if (len+1 > sizeof(tmpBuf)) {
-	if (unknownTag) PR_smprintf_free(unknownTag);
-	SECITEM_FreeItem(avaValue, PR_TRUE);
-	PORT_SetError(SEC_ERROR_OUTPUT_LEN);
-	return SECFailure;
+    memcpy(encodedAVA, tagName, nameLen);
+    if (truncateName) {
+	/* If tag name is too long, we know it is an OID form that was 
+	 * allocated from the heap, so we can modify it in place 
+	 */
+	encodedAVA[nameLen-1] = '.';
+	encodedAVA[nameLen-2] = '.';
+	encodedAVA[nameLen-3] = '.';
     }
-    PORT_Memcpy(tmpBuf, tagName, len);
-    if (unknownTag) PR_smprintf_free(unknownTag);
-    tmpBuf[len++] = '=';
-    
+    encodedAVA[nameLen++] = '=';
+    if (unknownTag) 
+    	PR_smprintf_free(unknownTag);
+
+    if (strict == CERT_N2A_READABLE && maxValue > maxBytes)
+	maxValue = maxBytes;
+    if (valueLen > maxValue) {
+    	valueLen = maxValue;
+	truncateValue = PR_TRUE;
+    }
     /* escape and quote as necessary - don't quote hex strings */
-    if (hexValue) {
-        /* appent avaValue to tmpBuf */
-	if (avaValue->len + len + 1 > sizeof tmpBuf) {
-	    PORT_SetError(SEC_ERROR_LIBRARY_FAILURE);
-	    rv = SECFailure;
-    	} else {
-	    PORT_Strncpy(tmpBuf+len, (char *)avaValue->data, avaValue->len + 1);
-	    rv = SECSuccess;
+    if (useHex) {
+	char * end = encodedAVA + nameLen + valueLen;
+	memcpy(encodedAVA + nameLen, (char *)avaValue->data, valueLen);
+	end[0] = '\0';
+	if (truncateValue) {
+	    end[-1] = '.';
+	    end[-2] = '.';
+	    end[-3] = '.';
 	}
-    } else 
-	rv = CERT_RFC1485_EscapeAndQuote(tmpBuf+len, sizeof(tmpBuf)-len, 
-		    		     (char *)avaValue->data, avaValue->len);
+	rv = SECSuccess;
+    } else if (!truncateValue) {
+	rv = escapeAndQuote(encodedAVA + nameLen, len - nameLen, 
+			    (char *)avaValue->data, avaValue->len, &mode);
+    } else {
+	/* must truncate the escaped and quoted value */
+	char bigTmpBuf[TMPBUF_LEN * 3 + 3];
+	rv = escapeAndQuote(bigTmpBuf, sizeof bigTmpBuf,
+			    (char *)avaValue->data, valueLen, &mode);
+
+	bigTmpBuf[valueLen--] = '\0'; /* hard stop here */
+	/* See if we're in the middle of a multi-byte UTF8 character */
+	while (((bigTmpBuf[valueLen] & 0xc0) == 0x80) && valueLen > 0) {
+	    bigTmpBuf[valueLen--] = '\0';
+	}
+	/* add ellipsis to signify truncation. */
+	bigTmpBuf[++valueLen] = '.';
+	bigTmpBuf[++valueLen] = '.';
+	bigTmpBuf[++valueLen] = '.';
+	if (bigTmpBuf[0] == '"')
+	    bigTmpBuf[++valueLen] = '"';
+	bigTmpBuf[++valueLen] = '\0';
+	PORT_Assert(nameLen + valueLen <= (sizeof tmpBuf) - 1);
+	memcpy(encodedAVA + nameLen, bigTmpBuf, valueLen+1);
+    }
+
     SECITEM_FreeItem(avaValue, PR_TRUE);
-    if (rv) return SECFailure;
-    
-    rv = AppendStr(bufp, tmpBuf);
+    if (rv == SECSuccess)
+	rv = AppendStr(bufp, encodedAVA);
+    if (encodedAVA != tmpBuf)
+    	PORT_Free(encodedAVA);
     return rv;
 }
 
+#undef tagName
+#undef maxBytes
+#undef tag
+#undef vt
+
 char *
-CERT_NameToAscii(CERTName *name)
+CERT_NameToAsciiInvertible(CERTName *name, CertStrictnessLevel strict)
 {
     CERTRDN** rdns;
     CERTRDN** lastRdn;
@@ -853,8 +1129,8 @@ CERT_NameToAscii(CERTName *name)
 		first = PR_FALSE;
 	    }
 	    
-	    /* Add in tag type plus value into buf */
-	    rv = AppendAVA(&strBuf, ava);
+	    /* Add in tag type plus value into strBuf */
+	    rv = AppendAVA(&strBuf, ava, strict);
 	    if (rv) goto loser;
 	    newRDN = PR_FALSE;
 	}
@@ -865,6 +1141,12 @@ loser:
 	PORT_Free(strBuf.buffer);
     }
     return NULL;
+}
+
+char *
+CERT_NameToAscii(CERTName *name)
+{
+    return CERT_NameToAsciiInvertible(name, CERT_N2A_READABLE);
 }
 
 /*
@@ -901,44 +1183,58 @@ loser:
     return(retstr);
 }
 
+static char *
+avaToString(PRArenaPool *arena, CERTAVA *ava)
+{
+    char *    buf       = NULL;
+    SECItem*  avaValue;
+    int       valueLen;
+
+    avaValue = CERT_DecodeAVAValue(&ava->value);
+    if(!avaValue) {
+	return buf;
+    }
+    valueLen = cert_RFC1485_GetRequiredLen((char *)avaValue->data,
+                                           avaValue->len, NULL) + 1;
+    if (arena) {
+	buf = (char *)PORT_ArenaZAlloc(arena, valueLen);
+    } else {
+	buf = (char *)PORT_ZAlloc(valueLen);
+    }
+    if (buf) {
+	SECStatus rv = escapeAndQuote(buf, valueLen, (char *)avaValue->data, 
+	                              avaValue->len, NULL);
+	if (rv != SECSuccess) {
+	    if (!arena)
+		PORT_Free(buf);
+	    buf = NULL;
+	}
+    }
+    SECITEM_FreeItem(avaValue, PR_TRUE);
+    return buf;
+}
+
 /* RDNs are sorted from most general to most specific.
  * This code returns the FIRST one found, the most general one found.
  */
 static char *
 CERT_GetNameElement(PRArenaPool *arena, CERTName *name, int wantedTag)
 {
-    CERTRDN** rdns;
-    CERTRDN *rdn;
-    char *buf = 0;
-    
-    rdns = name->rdns;
+    CERTRDN** rdns = name->rdns;
+    CERTRDN*  rdn;
+    CERTAVA*  ava  = NULL;
+
     while (rdns && (rdn = *rdns++) != 0) {
 	CERTAVA** avas = rdn->avas;
-	CERTAVA*  ava;
 	while (avas && (ava = *avas++) != 0) {
 	    int tag = CERT_GetAVATag(ava);
 	    if ( tag == wantedTag ) {
-		SECItem *decodeItem = CERT_DecodeAVAValue(&ava->value);
-		if(!decodeItem) {
-		    return NULL;
-		}
-		if (arena) {
-		    buf = (char *)PORT_ArenaZAlloc(arena,decodeItem->len + 1);
-		} else {
-		    buf = (char *)PORT_ZAlloc(decodeItem->len + 1);
-		}
-		if ( buf ) {
-		    PORT_Memcpy(buf, decodeItem->data, decodeItem->len);
-		    buf[decodeItem->len] = 0;
-		}
-		SECITEM_FreeItem(decodeItem, PR_TRUE);
-		goto done;
+		avas = NULL;
+		rdns = NULL; /* break out of all loops */
 	    }
 	}
     }
-    
-  done:
-    return buf;
+    return ava ? avaToString(arena, ava) : NULL;
 }
 
 /* RDNs are sorted from most general to most specific.
@@ -948,12 +1244,10 @@ CERT_GetNameElement(PRArenaPool *arena, CERTName *name, int wantedTag)
 static char *
 CERT_GetLastNameElement(PRArenaPool *arena, CERTName *name, int wantedTag)
 {
-    CERTRDN** rdns;
-    CERTRDN *rdn;
-    CERTAVA * lastAva = NULL;
-    char *buf = 0;
+    CERTRDN** rdns    = name->rdns;
+    CERTRDN*  rdn;
+    CERTAVA*  lastAva = NULL;
     
-    rdns = name->rdns;
     while (rdns && (rdn = *rdns++) != 0) {
 	CERTAVA** avas = rdn->avas;
 	CERTAVA*  ava;
@@ -964,24 +1258,7 @@ CERT_GetLastNameElement(PRArenaPool *arena, CERTName *name, int wantedTag)
 	    }
 	}
     }
-
-    if (lastAva) {
-	SECItem *decodeItem = CERT_DecodeAVAValue(&lastAva->value);
-	if(!decodeItem) {
-	    return NULL;
-	}
-	if (arena) {
-	    buf = (char *)PORT_ArenaZAlloc(arena,decodeItem->len + 1);
-	} else {
-	    buf = (char *)PORT_ZAlloc(decodeItem->len + 1);
-	}
-	if ( buf ) {
-	    PORT_Memcpy(buf, decodeItem->data, decodeItem->len);
-	    buf[decodeItem->len] = 0;
-	}
-	SECITEM_FreeItem(decodeItem, PR_TRUE);
-    }    
-    return buf;
+    return lastAva ? avaToString(arena, lastAva) : NULL;
 }
 
 char *
@@ -1081,18 +1358,35 @@ appendStringToBuf(char *dest, char *src, PRUint32 *pRemaining)
     return dest;
 }
 
+#undef NEEDS_HEX_ESCAPE
+#define NEEDS_HEX_ESCAPE(c) (c < 0x20)
+
 static char *
 appendItemToBuf(char *dest, SECItem *src, PRUint32 *pRemaining)
 {
-    if (dest && src && src->data && src->len && src->data[0] && 
-        *pRemaining > src->len + 1 ) {
+    if (dest && src && src->data && src->len && src->data[0]) {
 	PRUint32 len = src->len;
 	PRUint32 i;
-	for (i = 0; i < len && src->data[i] ; ++i)
-	    dest[i] = tolower(src->data[i]);
-	dest[len] = 0;
-	dest        += len + 1;
-	*pRemaining -= len + 1;
+	PRUint32 reqLen = len + 1;
+	/* are there any embedded control characters ? */
+	for (i = 0; i < len; i++) {
+	    if (NEEDS_HEX_ESCAPE(src->data[i]))
+	    	reqLen += 2;   
+	}
+	if (*pRemaining > reqLen) {
+	    for (i = 0; i < len; ++i) {
+		PRUint8 c = src->data[i];
+		if (NEEDS_HEX_ESCAPE(c)) {
+		    *dest++ = C_BACKSLASH;
+		    *dest++ = hexChars[ (c >> 4) & 0x0f ];
+		    *dest++ = hexChars[  c       & 0x0f ];
+		} else {
+		    *dest++ = tolower(c);
+	    	}
+	    }
+	    *dest++ = '\0';
+	    *pRemaining -= reqLen;
+	}
     }
     return dest;
 }

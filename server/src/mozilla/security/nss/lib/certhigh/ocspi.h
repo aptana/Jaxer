@@ -36,7 +36,7 @@
 /*
  * ocspi.h - NSS internal interfaces to OCSP code
  *
- * $Id: ocspi.h,v 1.9 2008/02/06 17:27:48 kaie%kuix.de Exp $
+ * $Id: ocspi.h,v 1.11 2008/10/31 23:02:37 alexei.volkov.bugs%sun.com Exp $
  */
 
 #ifndef _OCSPI_H_
@@ -137,5 +137,36 @@ cert_ProcessOCSPResponse(CERTCertDBHandle *handle,
 SECStatus
 cert_RememberOCSPProcessingFailure(CERTOCSPCertID *certID,
                                    PRBool         *certIDWasConsumed);
+
+/*
+ * FUNCTION: ocsp_GetResponderLocation
+ *  Check ocspx context for user-designated responder URI first. If not
+ *  found, checks cert AIA extension.
+ * INPUTS:
+ *  CERTCertDBHandle *handle
+ *    certificate DB of the cert that is being checked
+ *  CERTCertificate *cert
+ *     The certificate being examined.
+ *  PRBool *certIDWasConsumed
+ *    Out parameter, if set to true, URI of default responder is
+ *    returned.
+ *  RETURN:
+ *    Responder URI.
+ */
+char *
+ocsp_GetResponderLocation(CERTCertDBHandle *handle,
+                          CERTCertificate *cert,
+                          PRBool canUseDefaultLocation,
+                          PRBool *isDefault);
+
+/* FUNCTION: ocsp_FetchingFailureIsVerificationFailure
+ * The function checks the global ocsp settings and
+ * tells how to treat an ocsp response fetching failure.
+ * RETURNS:
+ *   if PR_TRUE is returned, then treat fetching as a
+ *   revoked cert status.
+ */
+PRBool
+ocsp_FetchingFailureIsVerificationFailure();
 
 #endif /* _OCSPI_H_ */

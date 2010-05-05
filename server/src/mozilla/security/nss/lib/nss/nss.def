@@ -957,3 +957,43 @@ VFY_VerifyDigestWithAlgorithmID;
 ;+    local:
 ;+       *;
 ;+};
+;+NSS_3.12.1 { 	# NSS 3.12.1 release
+;+    global:
+CERT_NameToAsciiInvertible;
+PK11_FindCertFromDERCertItem;
+;+    local:
+;+       *;
+;+};
+;+NSS_3.12.3 { 	# NSS 3.12.3 release
+;+    global:
+CERT_CompareCerts;
+CERT_RegisterAlternateOCSPAIAInfoCallBack;
+PK11_GetSymKeyHandle;
+;+    local:
+;+       *;
+;+};
+;+NSS_3.12.4 { 	# NSS 3.12.4 release
+;+    global:
+PK11_IsInternalKeySlot;
+SECMOD_OpenNewSlot;
+;+    local:
+;+       *;
+;+};
+;+NSS_3.12.5 { 	# NSS 3.12.5 release
+;+    global:
+CERT_AddCertToListSorted;
+NSS_InitContext;
+NSS_ShutdownContext;
+SECMOD_GetDefaultModDBFlag;
+SECMOD_GetSkipFirstFlag;
+;+    local:
+;+       *;
+;+};
+;+NSS_3.12.6 { 	# NSS 3.12.6 release
+;+    global:
+CERT_CacheOCSPResponseFromSideChannel;
+CERT_DistNamesFromCertList;
+CERT_DupDistNames;
+;+    local:
+;+       *;
+;+};

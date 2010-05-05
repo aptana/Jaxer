@@ -1,21 +1,12 @@
 pippki.jar:
-#ifdef MOZ_XUL_APP
 % content pippki %content/pippki/ xpcnativewrappers=yes
-#else
-*   content/pippki/contents.rdf              (content/contents.rdf)
-#endif
     content/pippki/changepassword.xul        (content/changepassword.xul)
     content/pippki/getpassword.xul           (content/getpassword.xul)
     content/pippki/password.js               (content/password.js)
     content/pippki/resetpassword.xul         (content/resetpassword.xul)
     content/pippki/resetpassword.js          (content/resetpassword.js)
-    content/pippki/PrefOverlay.xul           (content/PrefOverlay.xul)
-    content/pippki/pref-security.js          (content/pref-security.js)
-    content/pippki/pref-ssl.xul              (content/pref-ssl.xul)
-    content/pippki/pref-certs.xul            (content/pref-certs.xul)
-#ifndef MOZ_PHOENIX
-    content/pippki/PageInfoOverlay.xul       (content/PageInfoOverlay.xul)
-#endif
+    content/pippki/certerror.js              (content/certerror.js)
+*   content/pippki/certerror.xul             (content/certerror.xul)
     content/pippki/downloadcert.js           (content/downloadcert.js)
     content/pippki/downloadcert.xul          (content/downloadcert.xul)
     content/pippki/cacertexists.xul          (content/cacertexists.xul)
@@ -52,12 +43,8 @@ pippki.jar:
     content/pippki/choosetoken.js            (content/choosetoken.js)
     content/pippki/escrowWarn.xul            (content/escrowWarn.xul)
     content/pippki/escrowWarn.js             (content/escrowWarn.js)
-    content/pippki/pref-validation.xul       (content/pref-validation.xul)
-    content/pippki/pref-validation.js        (content/pref-validation.js)
     content/pippki/crlManager.xul            (content/crlManager.xul)
     content/pippki/crlManager.js             (content/crlManager.js)
-    content/pippki/pref-masterpass.js        (content/pref-masterpass.js)
-    content/pippki/pref-masterpass.xul       (content/pref-masterpass.xul)
     content/pippki/serverCrlNextupdate.js    (content/serverCrlNextupdate.js)
     content/pippki/serverCrlNextupdate.xul   (content/serverCrlNextupdate.xul)
     content/pippki/createCertInfo.xul        (content/createCertInfo.xul)

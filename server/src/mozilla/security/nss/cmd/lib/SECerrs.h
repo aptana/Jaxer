@@ -546,3 +546,19 @@ ER3(SEC_ERROR_BAD_INFO_ACCESS_LOCATION,    		(SEC_ERROR_BASE + 165),
 
 ER3(SEC_ERROR_LIBPKIX_INTERNAL,      		(SEC_ERROR_BASE + 166),
 "Libpkix internal error occured during cert validation.")
+
+ER3(SEC_ERROR_PKCS11_GENERAL_ERROR,      		(SEC_ERROR_BASE + 167),
+"A PKCS #11 module returned CKR_GENERAL_ERROR, indicating that an unrecoverable error has occurred.")
+
+ER3(SEC_ERROR_PKCS11_FUNCTION_FAILED,      		(SEC_ERROR_BASE + 168),
+"A PKCS #11 module returned CKR_FUNCTION_FAILED, indicating that the requested function could not be performed.  Trying the same operation again might succeed.")
+
+ER3(SEC_ERROR_PKCS11_DEVICE_ERROR,      		(SEC_ERROR_BASE + 169),
+"A PKCS #11 module returned CKR_DEVICE_ERROR, indicating that a problem has occurred with the token or slot.")
+
+ER3(SEC_ERROR_BAD_INFO_ACCESS_METHOD,      		(SEC_ERROR_BASE + 170),
+"Unknown information access method in certificate extension.")
+
+ER3(SEC_ERROR_CRL_IMPORT_FAILED,        		(SEC_ERROR_BASE + 171),
+"Error attempting to import a CRL.")
+

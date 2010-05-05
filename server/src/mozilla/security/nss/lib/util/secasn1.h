@@ -39,7 +39,7 @@
  * Encoding Rules).  The routines are found in and used extensively by the
  * security library, but exported for other use.
  *
- * $Id: secasn1.h,v 1.15 2007/10/12 01:44:51 julien.pierre.boogz%sun.com Exp $
+ * $Id: secasn1.h,v 1.17 2009/09/19 00:03:17 wtc%google.com Exp $
  */
 
 #ifndef _SECASN1_H_
@@ -63,7 +63,7 @@ SEC_BEGIN_PROTOS
 ** Decoding.
 */
 
-extern SEC_ASN1DecoderContext *SEC_ASN1DecoderStart(PRArenaPool *pool,
+extern SEC_ASN1DecoderContext *SEC_ASN1DecoderStart(PLArenaPool *pool,
 						    void *dest,
 						    const SEC_ASN1Template *t);
 
@@ -89,7 +89,7 @@ extern void SEC_ASN1DecoderSetNotifyProc(SEC_ASN1DecoderContext *cx,
 
 extern void SEC_ASN1DecoderClearNotifyProc(SEC_ASN1DecoderContext *cx);
 
-extern SECStatus SEC_ASN1Decode(PRArenaPool *pool, void *dest,
+extern SECStatus SEC_ASN1Decode(PLArenaPool *pool, void *dest,
 				const SEC_ASN1Template *t,
 				const char *buf, long len);
 
@@ -100,11 +100,11 @@ extern SECStatus SEC_ASN1Decode(PRArenaPool *pool, void *dest,
    allocated (from POINTER, SET OF, SEQUENCE OF) the decoder sets the type
    field to siBuffer. */
 
-extern SECStatus SEC_ASN1DecodeItem(PRArenaPool *pool, void *dest,
+extern SECStatus SEC_ASN1DecodeItem(PLArenaPool *pool, void *dest,
 				    const SEC_ASN1Template *t,
 				    const SECItem *src);
 
-extern SECStatus SEC_QuickDERDecodeItem(PRArenaPool* arena, void* dest,
+extern SECStatus SEC_QuickDERDecodeItem(PLArenaPool* arena, void* dest,
                      const SEC_ASN1Template* templateEntry,
                      const SECItem* src);
 
@@ -149,13 +149,19 @@ extern SECStatus SEC_ASN1Encode(const void *src, const SEC_ASN1Template *t,
 				SEC_ASN1WriteProc output_proc,
 				void *output_arg);
 
-extern SECItem * SEC_ASN1EncodeItem(PRArenaPool *pool, SECItem *dest,
+/*
+ * If both pool and dest are NULL, the caller should free the returned SECItem
+ * with a SECITEM_FreeItem(..., PR_TRUE) call.  If pool is NULL but dest is
+ * not NULL, the caller should free the data buffer pointed to by dest with a
+ * SECITEM_FreeItem(dest, PR_FALSE) or PORT_Free(dest->data) call.
+ */
+extern SECItem * SEC_ASN1EncodeItem(PLArenaPool *pool, SECItem *dest,
 				    const void *src, const SEC_ASN1Template *t);
 
-extern SECItem * SEC_ASN1EncodeInteger(PRArenaPool *pool,
+extern SECItem * SEC_ASN1EncodeInteger(PLArenaPool *pool,
 				       SECItem *dest, long value);
 
-extern SECItem * SEC_ASN1EncodeUnsignedInteger(PRArenaPool *pool,
+extern SECItem * SEC_ASN1EncodeUnsignedInteger(PLArenaPool *pool,
 					       SECItem *dest,
 					       unsigned long value);
 

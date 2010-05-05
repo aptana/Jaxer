@@ -60,12 +60,11 @@ META_COMPONENT	= crypto
 GRE_MODULE	= 1
 LIBXUL_LIBRARY	= 1
 
-PACKAGE_FILE = pipnss.pkg
-
 CPPSRCS = 				\
 	nsNSSCleaner.cpp                \
 	nsCertOverrideService.cpp   \
 	nsRecentBadCerts.cpp \
+        nsClientAuthRemember.cpp        \
 	nsPSMBackgroundThread.cpp       \
 	nsSSLThread.cpp                 \
 	nsCertVerificationThread.cpp    \

@@ -70,17 +70,87 @@ NSSCleanupAutoPtrClass_WithParam(SECItem, SECITEM_FreeItem, TrueParam, PR_TRUE)
 
 struct nsMyTrustedEVInfo
 {
-  char *dotted_oid;
-  char *oid_name; // Set this to null to signal an invalid structure,
+  const char *dotted_oid;
+  const char *oid_name; // Set this to null to signal an invalid structure,
                   // (We can't have an empty list, so we'll use a dummy entry)
   SECOidTag oid_tag;
-  char *ev_root_sha1_fingerprint;
-  char *issuer_base64;
-  char *serial_base64;
+  const char *ev_root_sha1_fingerprint;
+  const char *issuer_base64;
+  const char *serial_base64;
   CERTCertificate *cert;
 };
 
 static struct nsMyTrustedEVInfo myTrustedEVInfos[] = {
+  {
+    // CN=WellsSecure Public Root Certificate Authority,OU=Wells Fargo Bank NA,O=Wells Fargo WellsSecure,C=US
+    "2.16.840.1.114171.500.9",
+    "WellsSecure EV OID",
+    SEC_OID_UNKNOWN,
+    "E7:B4:F6:9D:61:EC:90:69:DB:7E:90:A7:40:1A:3C:F4:7D:4F:E8:EE",
+    "MIGFMQswCQYDVQQGEwJVUzEgMB4GA1UECgwXV2VsbHMgRmFyZ28gV2VsbHNTZWN1"
+    "cmUxHDAaBgNVBAsME1dlbGxzIEZhcmdvIEJhbmsgTkExNjA0BgNVBAMMLVdlbGxz"
+    "U2VjdXJlIFB1YmxpYyBSb290IENlcnRpZmljYXRlIEF1dGhvcml0eQ==",
+    "AQ==",
+    nsnull
+  },
+  {
+    // OU=Security Communication EV RootCA1,O="SECOM Trust Systems CO.,LTD.",C=JP
+    "1.2.392.200091.100.721.1",
+    "SECOM EV OID",
+    SEC_OID_UNKNOWN,
+    "FE:B8:C4:32:DC:F9:76:9A:CE:AE:3D:D8:90:8F:FD:28:86:65:64:7D",
+    "MGAxCzAJBgNVBAYTAkpQMSUwIwYDVQQKExxTRUNPTSBUcnVzdCBTeXN0ZW1zIENP"
+    "LixMVEQuMSowKAYDVQQLEyFTZWN1cml0eSBDb21tdW5pY2F0aW9uIEVWIFJvb3RD"
+    "QTE=",
+    "AA==",
+    nsnull
+  },
+  {
+    // CN=Cybertrust Global Root,O=Cybertrust, Inc
+    "1.3.6.1.4.1.6334.1.100.1",
+    "Cybertrust EV OID",
+    SEC_OID_UNKNOWN,
+    "5F:43:E5:B1:BF:F8:78:8C:AC:1C:C7:CA:4A:9A:C6:22:2B:CC:34:C6",
+    "MDsxGDAWBgNVBAoTD0N5YmVydHJ1c3QsIEluYzEfMB0GA1UEAxMWQ3liZXJ0cnVz"
+    "dCBHbG9iYWwgUm9vdA==",
+    "BAAAAAABD4WqLUg=",
+    nsnull
+  },
+  {
+    // E=info@diginotar.nl,CN=DigiNotar Root CA,O=DigiNotar,C=NL
+    "2.16.528.1.1001.1.1.1.12.6.1.1.1",
+    "DigiNotar EV OID",
+    SEC_OID_UNKNOWN,
+    "C0:60:ED:44:CB:D8:81:BD:0E:F8:6C:0B:A2:87:DD:CF:81:67:47:8C",
+    "MF8xCzAJBgNVBAYTAk5MMRIwEAYDVQQKEwlEaWdpTm90YXIxGjAYBgNVBAMTEURp"
+    "Z2lOb3RhciBSb290IENBMSAwHgYJKoZIhvcNAQkBFhFpbmZvQGRpZ2lub3Rhci5u"
+    "bA==",
+    "DHbanJEMTiye/hXQWJM8TA==",
+    nsnull
+  },
+  {
+    // CN=SwissSign Gold CA - G2,O=SwissSign AG,C=CH
+    "2.16.756.1.89.1.2.1.1",
+    "SwissSign EV OID",
+    SEC_OID_UNKNOWN,
+    "D8:C5:38:8A:B7:30:1B:1B:6E:D4:7A:E6:45:25:3A:6F:9F:1A:27:61",
+    "MEUxCzAJBgNVBAYTAkNIMRUwEwYDVQQKEwxTd2lzc1NpZ24gQUcxHzAdBgNVBAMT"
+    "FlN3aXNzU2lnbiBHb2xkIENBIC0gRzI=",
+    "ALtAHEP1Xk+w",
+    nsnull
+  },
+  {
+    // CN=StartCom Certification Authority,OU=Secure Digital Certificate Signing,O=StartCom Ltd.,C=IL
+    "1.3.6.1.4.1.23223.2",
+    "StartCom EV OID",
+    SEC_OID_UNKNOWN,
+    "3E:2B:F7:F2:03:1B:96:F3:8C:E6:C4:D8:A8:5D:3E:2D:58:47:6A:0F",
+    "MH0xCzAJBgNVBAYTAklMMRYwFAYDVQQKEw1TdGFydENvbSBMdGQuMSswKQYDVQQL"
+    "EyJTZWN1cmUgRGlnaXRhbCBDZXJ0aWZpY2F0ZSBTaWduaW5nMSkwJwYDVQQDEyBT"
+    "dGFydENvbSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eQ==",
+    "AQ==",
+    nsnull
+  },
   {
     // CN=VeriSign Class 3 Public Primary Certification Authority - G5,OU="(c) 2006 VeriSign, Inc. - For authorized use only",OU=VeriSign Trust Network,O="VeriSign, Inc.",C=US
     "2.16.840.1.113733.1.7.23.6",
@@ -151,6 +221,18 @@ static struct nsMyTrustedEVInfo myTrustedEVInfos[] = {
     "MEoxCzAJBgNVBAYTAlVTMSAwHgYDVQQKExdTZWN1cmVUcnVzdCBDb3Jwb3JhdGlv"
     "bjEZMBcGA1UEAxMQU2VjdXJlIEdsb2JhbCBDQQ==",
     "B1YipOjUiolN9BPI8PjqpQ==",
+    nsnull
+  },
+  {
+    // CN=COMODO ECC Certification Authority,O=COMODO CA Limited,L=Salford,ST=Greater Manchester,C=GB
+    "1.3.6.1.4.1.6449.1.2.1.5.1",
+    "Comodo EV OID",
+    SEC_OID_UNKNOWN,
+    "9F:74:4E:9F:2B:4D:BA:EC:0F:31:2C:50:B6:56:3B:8E:2D:93:C3:11",
+    "MIGFMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAw"
+    "DgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDErMCkG"
+    "A1UEAxMiQ09NT0RPIEVDQyBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eQ==",
+    "H0evqmIAcFBUTAGem2OZKg==",
     nsnull
   },
   {
@@ -289,11 +371,57 @@ static struct nsMyTrustedEVInfo myTrustedEVInfos[] = {
     nsnull
   },
   {
+    // CN=Entrust Root Certification Authority,OU="(c) 2006 Entrust, Inc.",OU=www.entrust.net/CPS is incorporated by reference,O="Entrust, Inc.",C=US
+    "2.16.840.1.114028.10.1.2",
+    "Entrust EV OID",
+    SEC_OID_UNKNOWN,
+    "B3:1E:B1:B7:40:E3:6C:84:02:DA:DC:37:D4:4D:F5:D4:67:49:52:F9",
+    "MIGwMQswCQYDVQQGEwJVUzEWMBQGA1UEChMNRW50cnVzdCwgSW5jLjE5MDcGA1UE"
+    "CxMwd3d3LmVudHJ1c3QubmV0L0NQUyBpcyBpbmNvcnBvcmF0ZWQgYnkgcmVmZXJl"
+    "bmNlMR8wHQYDVQQLExYoYykgMjAwNiBFbnRydXN0LCBJbmMuMS0wKwYDVQQDEyRF"
+    "bnRydXN0IFJvb3QgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHk=",
+    "RWtQVA==",
+    nsnull
+  },
+  {
+    // CN=GlobalSign Root CA,OU=Root CA,O=GlobalSign nv-sa,C=BE
+    "1.3.6.1.4.1.4146.1.1",
+    "GlobalSign EV OID",
+    SEC_OID_UNKNOWN,
+    "B1:BC:96:8B:D4:F4:9D:62:2A:A8:9A:81:F2:15:01:52:A4:1D:82:9C",
+    "MFcxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMRAwDgYD"
+    "VQQLEwdSb290IENBMRswGQYDVQQDExJHbG9iYWxTaWduIFJvb3QgQ0E=",
+    "BAAAAAABFUtaw5Q=",
+    nsnull
+  },
+  {
+    // CN=GlobalSign,O=GlobalSign,OU=GlobalSign Root CA - R2
+    "1.3.6.1.4.1.4146.1.1",
+    "GlobalSign EV OID",
+    SEC_OID_UNKNOWN,
+    "75:E0:AB:B6:13:85:12:27:1C:04:F8:5F:DD:DE:38:E4:B7:24:2E:FE",
+    "MEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9vdCBDQSAtIFIyMRMwEQYDVQQKEwpH"
+    "bG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWdu",
+    "BAAAAAABD4Ym5g0=",
+    nsnull
+  },
+  {
+    // CN=Buypass Class 3 CA 1,O=Buypass AS-983163327,C=NO
+    "2.16.578.1.26.1.3.3",
+    "Buypass Class 3 CA 1", // for real entries use a string like "Sample INVALID EV OID"
+    SEC_OID_UNKNOWN,
+    "61:57:3A:11:DF:0E:D8:7E:D5:92:65:22:EA:D0:56:D7:44:B3:23:71",
+    "MEsxCzAJBgNVBAYTAk5PMR0wGwYDVQQKDBRCdXlwYXNzIEFTLTk4MzE2MzMyNzEd"
+    "MBsGA1UEAwwUQnV5cGFzcyBDbGFzcyAzIENBIDE=",
+    "Ag==",
+    nsnull
+  },
+  {
     // OU=Sample Certification Authority,O=\"Sample, Inc.\",C=US
     "0.0.0.0",
     0, // for real entries use a string like "Sample INVALID EV OID"
     SEC_OID_UNKNOWN,
-    "00:11:22:33:44:55:66:77:88:99:AA:BB:CC:DD:EE:FF:00:11:22:33"
+    "00:11:22:33:44:55:66:77:88:99:AA:BB:CC:DD:EE:FF:00:11:22:33", //UPPERCASE!
     "Cg==",
     "Cg==",
     nsnull
@@ -337,11 +465,12 @@ nsMyTrustedEVInfoClass::nsMyTrustedEVInfoClass()
 
 nsMyTrustedEVInfoClass::~nsMyTrustedEVInfoClass()
 {
-  free(dotted_oid);
-  free(oid_name);
-  free(ev_root_sha1_fingerprint);
-  free(issuer_base64);
-  free(serial_base64);
+  // Cast away const-ness in order to free these strings
+  free(const_cast<char*>(dotted_oid));
+  free(const_cast<char*>(oid_name));
+  free(const_cast<char*>(ev_root_sha1_fingerprint));
+  free(const_cast<char*>(issuer_base64));
+  free(const_cast<char*>(serial_base64));
   if (cert)
     CERT_DestroyCertificate(cert);
 }
@@ -584,7 +713,7 @@ getRootsForOidFromExternalRootsFile(CERTCertList* certList,
     if (!ev)
       continue;
     if (policyOIDTag == ev->oid_tag)
-      CERT_AddCertToListTail(certList, ev->cert);
+      CERT_AddCertToListTail(certList, CERT_DupCertificate(ev->cert));
   }
 
   return PR_FALSE;
@@ -653,7 +782,7 @@ getRootsForOid(SECOidTag oid_tag)
     if (!entry.oid_name) // invalid or placeholder list entry
       continue;
     if (entry.oid_tag == oid_tag)
-      CERT_AddCertToListTail(certList, entry.cert);
+      CERT_AddCertToListTail(certList, CERT_DupCertificate(entry.cert));
   }
 
 #ifdef PSM_ENABLE_TEST_EV_ROOTS
@@ -772,19 +901,21 @@ static SECStatus getFirstEVPolicy(CERTCertificate *cert, SECOidTag &outOidTag)
     
       policyInfos = policies->policyInfos;
 
+      PRBool found = PR_FALSE;
       while (*policyInfos != NULL) {
         policyInfo = *policyInfos++;
 
         SECOidTag oid_tag = SECOID_FindOIDTag(&policyInfo->policyID);
-        if (oid_tag == SEC_OID_UNKNOWN) // not in our list of OIDs accepted for EV
-          continue;
-
-        if (!isEVPolicy(oid_tag))
-          continue;
-
-        outOidTag = oid_tag;
-        return SECSuccess;
+        if (oid_tag != SEC_OID_UNKNOWN && isEVPolicy(oid_tag)) {
+          // in our list of OIDs accepted for EV
+          outOidTag = oid_tag;
+          found = PR_TRUE;
+          break;
+        }
       }
+      CERT_DestroyCertificatePoliciesExtension(policies);
+      if (found)
+        return SECSuccess;
     }
   }
 
@@ -875,7 +1006,7 @@ nsNSSCertificate::hasValidEVOidTag(SECOidTag &resultOidTag, PRBool &validEV)
     return NS_OK;
 
   CERTCertList *rootList = getRootsForOid(oid_tag);
-  CERTCertListCleaner rootListCleaner();
+  CERTCertListCleaner rootListCleaner(rootList);
 
   CERTRevocationMethodIndex preferedRevMethods[1] = { 
     cert_revocation_method_ocsp
@@ -912,7 +1043,7 @@ nsNSSCertificate::hasValidEVOidTag(SECOidTag &resultOidTag, PRBool &validEV)
   rev.chainTests.cert_rev_method_independent_flags =
     revMethodIndependentFlags;
 
-  CERTValInParam cvin[3];
+  CERTValInParam cvin[4];
   cvin[0].type = cert_pi_policyOID;
   cvin[0].value.arraySize = 1; 
   cvin[0].value.array.oids = &oid_tag;

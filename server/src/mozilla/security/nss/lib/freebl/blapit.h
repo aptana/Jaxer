@@ -38,7 +38,7 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
-/* $Id: blapit.h,v 1.20 2007/02/28 19:47:37 rrelyea%redhat.com Exp $ */
+/* $Id: blapit.h,v 1.22 2008/12/17 06:09:12 nelson%bolyard.com Exp $ */
 
 #ifndef _BLAPIT_H_
 #define _BLAPIT_H_
@@ -72,6 +72,10 @@
 /* Camellia operation modes */
 #define NSS_CAMELLIA                 0
 #define NSS_CAMELLIA_CBC             1
+
+/* SEED operation modes */
+#define NSS_SEED		0
+#define NSS_SEED_CBC		1
 
 #define DSA_SIGNATURE_LEN 	40	/* Bytes */
 #define DSA_SUBPRIME_LEN	20	/* Bytes */
@@ -112,6 +116,9 @@
 #define AES_BLOCK_SIZE          16  /* bytes */
 
 #define CAMELLIA_BLOCK_SIZE          16  /* bytes */
+
+#define SEED_BLOCK_SIZE 16              /* bytes */
+#define SEED_KEY_LENGTH 16              /* bytes */
 
 #define NSS_FREEBL_DEFAULT_CHUNKSIZE 2048
 
@@ -183,6 +190,7 @@ struct SHA1ContextStr       ;
 struct SHA256ContextStr     ;
 struct SHA512ContextStr     ;
 struct AESKeyWrapContextStr ;
+struct SEEDContextStr       ;	
 
 typedef struct DESContextStr        DESContext;
 typedef struct RC2ContextStr        RC2Context;
@@ -198,6 +206,7 @@ typedef struct SHA512ContextStr     SHA512Context;
 /* SHA384Context is really a SHA512ContextStr.  This is not a mistake. */
 typedef struct SHA512ContextStr     SHA384Context;
 typedef struct AESKeyWrapContextStr AESKeyWrapContext;
+typedef struct SEEDContextStr	    SEEDContext;	
 
 /***************************************************************************
 ** RSA Public and Private Key structures
@@ -205,7 +214,7 @@ typedef struct AESKeyWrapContextStr AESKeyWrapContext;
 
 /* member names from PKCS#1, section 7.1 */
 struct RSAPublicKeyStr {
-    PRArenaPool * arena;
+    PLArenaPool * arena;
     SECItem modulus;
     SECItem publicExponent;
 };
@@ -213,7 +222,7 @@ typedef struct RSAPublicKeyStr RSAPublicKey;
 
 /* member names from PKCS#1, section 7.2 */
 struct RSAPrivateKeyStr {
-    PRArenaPool * arena;
+    PLArenaPool * arena;
     SECItem version;
     SECItem modulus;
     SECItem publicExponent;
@@ -232,7 +241,7 @@ typedef struct RSAPrivateKeyStr RSAPrivateKey;
 */
 
 struct PQGParamsStr {
-    PRArenaPool *arena;
+    PLArenaPool *arena;
     SECItem prime;    /* p */
     SECItem subPrime; /* q */
     SECItem base;     /* g */
@@ -241,7 +250,7 @@ struct PQGParamsStr {
 typedef struct PQGParamsStr PQGParams;
 
 struct PQGVerifyStr {
-    PRArenaPool * arena;	/* includes this struct, seed, & h. */
+    PLArenaPool * arena;	/* includes this struct, seed, & h. */
     unsigned int  counter;
     SECItem       seed;
     SECItem       h;
@@ -267,14 +276,14 @@ typedef struct DSAPrivateKeyStr DSAPrivateKey;
 */
 
 struct DHParamsStr {
-    PRArenaPool * arena;
+    PLArenaPool * arena;
     SECItem prime; /* p */
     SECItem base; /* g */
 };
 typedef struct DHParamsStr DHParams;
 
 struct DHPublicKeyStr {
-    PRArenaPool * arena;
+    PLArenaPool * arena;
     SECItem prime;
     SECItem base;
     SECItem publicValue;
@@ -282,7 +291,7 @@ struct DHPublicKeyStr {
 typedef struct DHPublicKeyStr DHPublicKey;
 
 struct DHPrivateKeyStr {
-    PRArenaPool * arena;
+    PLArenaPool * arena;
     SECItem prime;
     SECItem base;
     SECItem publicValue;
@@ -333,7 +342,7 @@ struct ECCurveStr {
 typedef struct ECCurveStr ECCurve;
 
 struct ECParamsStr {
-    PRArenaPool * arena;
+    PLArenaPool * arena;
     ECParamsType  type;
     ECFieldID     fieldID;
     ECCurve       curve; 

@@ -62,28 +62,18 @@ struct PKIX_ProcessingParamsStruct {
         PKIX_Boolean initialExplicitPolicy;
         PKIX_Boolean qualifiersRejected;
         PKIX_List *certChainCheckers;
-        PKIX_List *revCheckers;
         PKIX_List *certStores;
         PKIX_Boolean isCrlRevocationCheckingEnabled;
         PKIX_Boolean isCrlRevocationCheckingEnabledWithNISTPolicy;
+        PKIX_RevocationChecker *revChecker;
         PKIX_ResourceLimits *resourceLimits;
+        PKIX_Boolean useAIAForCertFetching;
+        PKIX_Boolean qualifyTargetCert;
 };
 
 /* see source file for function documentation */
 
 PKIX_Error *pkix_ProcessingParams_RegisterSelf(void *plContext);
-
-PKIX_Error *
-pkix_ProcessingParams_GetRevocationEnabled(
-        PKIX_ProcessingParams *params,
-        PKIX_Boolean *pEnabled,
-        void *plContext);
-
-PKIX_Error *
-pkix_ProcessingParams_GetNISTRevocationPolicyEnabled(
-        PKIX_ProcessingParams *params,
-        PKIX_Boolean *pEnabled,
-        void *plContext);
 
 #ifdef __cplusplus
 }

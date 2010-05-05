@@ -42,7 +42,7 @@
 /*
  * secoid.h - public data structures and prototypes for ASN.1 OID functions
  *
- * $Id: secoid.h,v 1.9 2008/02/16 04:38:09 julien.pierre.boogz%sun.com Exp $
+ * $Id: secoid.h,v 1.14 2009/11/11 23:24:33 alexei.volkov.bugs%sun.com Exp $
  */
 
 #include "plarena.h"
@@ -78,7 +78,7 @@ extern SECOidData *SECOID_FindOIDByMechanism(unsigned long mechanism);
 **	"tag" the tag number defining the algorithm 
 **	"params" if not NULL, the parameters to go with the algorithm
 */
-extern SECStatus SECOID_SetAlgorithmID(PRArenaPool *arena, SECAlgorithmID *aid,
+extern SECStatus SECOID_SetAlgorithmID(PLArenaPool *arena, SECAlgorithmID *aid,
 				   SECOidTag tag, SECItem *params);
 
 /*
@@ -87,7 +87,7 @@ extern SECStatus SECOID_SetAlgorithmID(PRArenaPool *arena, SECAlgorithmID *aid,
 ** before memory is allocated (use SECOID_DestroyAlgorithmID(dest, PR_FALSE)
 ** to do that).
 */
-extern SECStatus SECOID_CopyAlgorithmID(PRArenaPool *arena, SECAlgorithmID *dest,
+extern SECStatus SECOID_CopyAlgorithmID(PLArenaPool *arena, SECAlgorithmID *dest,
 				    SECAlgorithmID *src);
 
 /*
@@ -146,6 +146,29 @@ extern SECStatus SECOID_Shutdown(void);
  */
 extern SECStatus SEC_StringToOID(PLArenaPool *pool, SECItem *to, 
                                  const char *from, PRUint32 len);
+
+extern void UTIL_SetForkState(PRBool forked);
+
+/*
+ * Accessor functions for new opaque extended SECOID table.
+ * Any of these functions may return SECSuccess or SECFailure with the error 
+ * code set to SEC_ERROR_UNKNOWN_OBJECT_TYPE if the SECOidTag is out of range.
+ */
+
+/* The Get function outputs the 32-bit value associated with the SECOidTag.
+ * Flags bits are the NSS_USE_ALG_ #defines in "secoidt.h".
+ * Default value for any algorithm is 0xffffffff (enabled for all purposes).
+ * No value is output if function returns SECFailure.
+ */
+extern SECStatus NSS_GetAlgorithmPolicy(SECOidTag tag, PRUint32 *pValue);
+
+/* The Set function modifies the stored value according to the following
+ * algorithm:
+ *   policy[tag] = (policy[tag] & ~clearBits) | setBits;
+ */
+extern SECStatus
+NSS_SetAlgorithmPolicy(SECOidTag tag, PRUint32 setBits, PRUint32 clearBits);
+
 
 SEC_END_PROTOS
 

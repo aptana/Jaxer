@@ -53,8 +53,6 @@ META_COMPONENT	= crypto
 GRE_MODULE	= 1
 LIBXUL_LIBRARY	= 1
 
-PACKAGE_FILE = pipboot.pkg
-
 CPPSRCS = \
 	nsEntropyCollector.cpp \
 	nsSecureBrowserUIImpl.cpp \
@@ -76,6 +74,7 @@ REQUIRES	= nspr \
 		  caps \
 		  pref \
 		  pipnss \
+		  imglib2 \
 		  $(NULL)
 
 include $(topsrcdir)/config/rules.mk

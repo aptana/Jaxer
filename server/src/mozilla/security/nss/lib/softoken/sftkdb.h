@@ -47,9 +47,8 @@ CK_RV sftkdb_FindObjects(SFTKDBHandle *sdb, SDBFind *find,
 CK_RV sftkdb_FindObjectsFinal(SFTKDBHandle *sdb, SDBFind *find);
 CK_RV sftkdb_GetAttributeValue(SFTKDBHandle *handle,
 	 CK_OBJECT_HANDLE object_id, CK_ATTRIBUTE *template, CK_ULONG count);
-CK_RV sftkdb_SetAttributeValue(SFTKDBHandle *handle, 
-	 CK_OBJECT_HANDLE object_id, const CK_ATTRIBUTE *template, 
-	 CK_ULONG count);
+CK_RV sftkdb_SetAttributeValue(SFTKDBHandle *handle, SFTKObject *object, 
+	 		const CK_ATTRIBUTE *template, CK_ULONG count);
 CK_RV sftkdb_DestroyObject(SFTKDBHandle *handle, CK_OBJECT_HANDLE object_id);
 CK_RV sftkdb_closeDB(SFTKDBHandle *handle);
 
@@ -108,7 +107,7 @@ CK_RV sftk_DBInit(const char *configdir, const char *certPrefix,
 	 	const char *keyPrefix, const char *updatedir, 
 		const char *updCertPrefix, const char *updKeyPrefix,
 		const char *updateID, PRBool readOnly, PRBool noCertDB, 
-		PRBool noKeyDB, PRBool forceOpen, 
+		PRBool noKeyDB, PRBool forceOpen, PRBool isFIPS,
 		SFTKDBHandle **certDB, SFTKDBHandle **keyDB);
 CK_RV sftkdb_Shutdown(void);
 

@@ -57,18 +57,22 @@ static void
 Usage(char *progName)
 {
 #define FPS PR_fprintf(PR_STDERR,
-    FPS "Usage:	 %s -i importfile [-d certdir] [-P dbprefix] [-h tokenname] [-v]\n",
+    FPS "Usage:	 %s -i importfile [-d certdir] [-P dbprefix] [-h tokenname]\n",
 				 progName);
     FPS "\t\t [-k slotpwfile | -K slotpw] [-w p12filepwfile | -W p12filepw]\n");
+    FPS "\t\t [-v]\n");
 
-    FPS "Usage:	 %s -l listfile [-d certdir] [-P dbprefix] [-h tokenname] [-r]\n",
+    FPS "Usage:	 %s -l listfile [-d certdir] [-P dbprefix] [-h tokenname]\n",
 				 progName);
     FPS "\t\t [-k slotpwfile | -K slotpw] [-w p12filepwfile | -W p12filepw]\n");
+    FPS "\t\t [-v]\n");
 
-    FPS "Usage:	 %s -o exportfile -n certname [-d certdir] [-P dbprefix] [-v]\n", 
-        progName);
-    FPS "\t\t [-c key_cipher] [-C cert_cipher] [-k key_leng]\n");
-    FPS "\t\t [-k slotpwfile | -K slotpw] [-w p12filepwfile | -W p12filepw]\n");
+    FPS "Usage:	 %s -o exportfile -n certname [-d certdir] [-P dbprefix]\n",
+		progName);
+    FPS "\t\t [-c key_cipher] [-C cert_cipher]\n"
+        "\t\t [-m | --key_len keyLen] [--cert_key_len certKeyLen] [-v]\n");
+    FPS "\t\t [-k slotpwfile | -K slotpw]\n"
+		"\t\t [-w p12filepwfile | -W p12filefilepw]\n");
 
     exit(PK12UERR_USAGE);
 }
@@ -112,7 +116,8 @@ p12u_DestroyContext(p12uContext **ppCtx, PRBool removeFile)
 	if(removeFile) {
 	    PR_Delete((*ppCtx)->filename);
 	}
-	PR_Free((*ppCtx)->filename);
+	PL_strfree((*ppCtx)->filename);
+	(*ppCtx)->filename = NULL;
     }
 
     PR_Free(*ppCtx);
@@ -134,7 +139,7 @@ p12u_InitContext(PRBool fileImport, char *filename)
 
     p12cxt->error = PR_FALSE;
     p12cxt->errorValue = 0;
-    p12cxt->filename = strdup(filename);
+    p12cxt->filename = PL_strdup(filename);
 
     if(!p12u_OpenFile(p12cxt, fileImport)) {
 	p12u_DestroyContext(&p12cxt, PR_FALSE);
@@ -583,7 +588,7 @@ p12u_WriteToExportFile(void *arg, const char *buf, unsigned long len)
 
     if(writeLen != (int)len) {
 	PR_Close(p12cxt->file);
-	PR_Free(p12cxt->filename);
+	PL_strfree(p12cxt->filename);
 	p12cxt->filename = NULL;
 	p12cxt->file = NULL;
 	p12cxt->errorValue = SEC_ERROR_PKCS12_UNABLE_TO_WRITE;
@@ -669,8 +674,9 @@ P12U_ExportPKCS12Object(char *nn, char *outfile, PK11SlotInfo *inSlot,
         goto loser;
     }
 
-    for (node = CERT_LIST_HEAD(certlist);!CERT_LIST_END(node,certlist);node=CERT_LIST_NEXT(node))
-    {
+    for (node = CERT_LIST_HEAD(certlist);
+         !CERT_LIST_END(node,certlist);
+	 node=CERT_LIST_NEXT(node)) {
         CERTCertificate* cert = node->cert;
         if (!cert->slot) {
             SECU_PrintError(progName,"cert does not have a slot");
@@ -744,8 +750,7 @@ P12U_ListPKCS12File(char *in_file, PK11SlotInfo *slot,
     SECStatus rv = SECFailure;
     const SEC_PKCS12DecoderItem *dip;
 
-    p12dcx = p12U_ReadPKCS12File(&uniPwitem, in_file, slot, slotPw,
-                             p12FilePw);
+    p12dcx = p12U_ReadPKCS12File(&uniPwitem, in_file, slot, slotPw, p12FilePw);
     /* did the blob authenticate properly? */
     if(p12dcx == NULL) {
 	SECU_PrintError(progName,"PKCS12 decode not verified");
@@ -953,8 +958,8 @@ static secuCommandFlag pk12util_options[] =
     { /* opt_Debug	       */ 'v', PR_FALSE, 0, PR_FALSE },
     { /* opt_Cipher	       */ 'c', PR_TRUE,  0, PR_FALSE },
     { /* opt_CertCipher	       */ 'C', PR_TRUE,  0, PR_FALSE },
-    { /* opt_KeyLength	       */ 'k', PR_TRUE,  0, PR_FALSE },
-    { /* opt_CertKeyLength     */ 'K', PR_TRUE,  0, PR_FALSE }
+    { /* opt_KeyLength         */ 'm', PR_TRUE,  0, PR_FALSE, "key_len" },
+    { /* opt_CertKeyLength     */ 0, PR_TRUE,  0, PR_FALSE, "cert_key_len" }
 };
 
 int
@@ -1010,22 +1015,22 @@ main(int argc, char **argv)
 
     if (pk12util.options[opt_P12FilePWFile].activated) {
 	p12FilePw.source = PW_FROMFILE;
-	p12FilePw.data = PL_strdup(pk12util.options[opt_P12FilePWFile].arg);
+	p12FilePw.data = PORT_Strdup(pk12util.options[opt_P12FilePWFile].arg);
     }
 
     if (pk12util.options[opt_P12FilePW].activated) {
 	p12FilePw.source = PW_PLAINTEXT;
-	p12FilePw.data = PL_strdup(pk12util.options[opt_P12FilePW].arg);
+	p12FilePw.data = PORT_Strdup(pk12util.options[opt_P12FilePW].arg);
     }
 
     if (pk12util.options[opt_SlotPWFile].activated) {
 	slotPw.source = PW_FROMFILE;
-	slotPw.data = PL_strdup(pk12util.options[opt_SlotPWFile].arg);
+	slotPw.data = PORT_Strdup(pk12util.options[opt_SlotPWFile].arg);
     }
 
     if (pk12util.options[opt_SlotPW].activated) {
 	slotPw.source = PW_PLAINTEXT;
-	slotPw.data = PL_strdup(pk12util.options[opt_SlotPW].arg);
+	slotPw.data = PORT_Strdup(pk12util.options[opt_SlotPW].arg);
     }
 
     if (pk12util.options[opt_CertDir].activated) {
@@ -1094,8 +1099,7 @@ main(int argc, char **argv)
 	   
 
     if (pk12util.options[opt_Import].activated) {
-	P12U_ImportPKCS12Object(import_file, slot,  &slotPw,
-					   &p12FilePw);
+	P12U_ImportPKCS12Object(import_file, slot,  &slotPw, &p12FilePw);
 
     } else if (pk12util.options[opt_Export].activated) {
 	P12U_ExportPKCS12Object(pk12util.options[opt_Nickname].arg,
@@ -1115,7 +1119,8 @@ done:
 	PORT_ZFree(slotPw.data, PL_strlen(slotPw.data));
     if (p12FilePw.data != NULL)
 	PORT_ZFree(p12FilePw.data, PL_strlen(p12FilePw.data));
-    if (slot) PK11_FreeSlot(slot);
+    if (slot) 
+    	PK11_FreeSlot(slot);
     if (NSS_Shutdown() != SECSuccess) {
 	pk12uErrno = 1;
     }

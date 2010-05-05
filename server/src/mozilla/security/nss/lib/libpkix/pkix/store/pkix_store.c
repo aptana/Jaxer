@@ -215,6 +215,8 @@ PKIX_CertStore_Create(
         PKIX_CertStore_CertContinueFunction certContinue,
         PKIX_CertStore_CrlContinueFunction crlContinue,
         PKIX_CertStore_CheckTrustCallback trustCallback,
+        PKIX_CertStore_ImportCrlCallback importCrlCallback,
+        PKIX_CertStore_CheckRevokationByCrlCallback checkRevByCrlCallback,
         PKIX_PL_Object *certStoreContext,
         PKIX_Boolean cacheFlag,
         PKIX_Boolean localFlag,
@@ -238,6 +240,8 @@ PKIX_CertStore_Create(
         certStore->certContinue = certContinue;
         certStore->crlContinue = crlContinue;
         certStore->trustCallback = trustCallback;
+        certStore->importCrlCallback = importCrlCallback;
+        certStore->checkRevByCrlCallback = checkRevByCrlCallback;
         certStore->cacheFlag = cacheFlag;
         certStore->localFlag = localFlag;
 
@@ -295,6 +299,7 @@ PKIX_Error *
 PKIX_CertStore_CertContinue(
         PKIX_CertStore *store,
         PKIX_CertSelector *selector,
+        PKIX_VerifyNode *verifyNode,
         void **pNBIOContext,
         PKIX_List **pCertList,
         void *plContext)
@@ -303,7 +308,8 @@ PKIX_CertStore_CertContinue(
         PKIX_NULLCHECK_FOUR(store, selector, pNBIOContext, pCertList);
 
         PKIX_CHECK(store->certContinue
-                (store, selector, pNBIOContext, pCertList, plContext),
+                   (store, selector, verifyNode,
+                    pNBIOContext, pCertList, plContext),
                 PKIX_CERTSTORECERTCONTINUEFUNCTIONFAILED);
 
 cleanup:
@@ -347,6 +353,40 @@ PKIX_CertStore_GetTrustCallback(
         PKIX_NULLCHECK_TWO(store, pCallback);
 
         *pCallback = store->trustCallback;
+
+        PKIX_RETURN(CERTSTORE);
+}
+
+/*
+ * FUNCTION: PKIX_CertStore_GetImportCrlCallback (see comments in pkix_certstore.h)
+ */
+PKIX_Error *
+PKIX_CertStore_GetImportCrlCallback(
+        PKIX_CertStore *store,
+        PKIX_CertStore_ImportCrlCallback *pCallback,
+        void *plContext)
+{
+        PKIX_ENTER(CERTSTORE, "PKIX_CertStore_GetTrustCallback");
+        PKIX_NULLCHECK_TWO(store, pCallback);
+
+        *pCallback = store->importCrlCallback;
+
+        PKIX_RETURN(CERTSTORE);
+}
+
+/*
+ * FUNCTION: PKIX_CertStore_GetCheckRevByCrl (see comments in pkix_certstore.h)
+ */
+PKIX_Error *
+PKIX_CertStore_GetCrlCheckerFn(
+        PKIX_CertStore *store,
+        PKIX_CertStore_CheckRevokationByCrlCallback *pCallback,
+        void *plContext)
+{
+        PKIX_ENTER(CERTSTORE, "PKIX_CertStore_GetTrustCallback");
+        PKIX_NULLCHECK_TWO(store, pCallback);
+
+        *pCallback = store->checkRevByCrlCallback;
 
         PKIX_RETURN(CERTSTORE);
 }

@@ -58,13 +58,19 @@ include $(CORE_DEPTH)/coreconf/config.mk
 # (4) Include "local" platform-dependent assignments (OPTIONAL).      #
 #######################################################################
 
-ifeq ($(OS_TARGET), WINCE)
-DIRS := $(filter-out fortcrypt,$(DIRS))
+ifndef USE_SYSTEM_ZLIB
+ZLIB_SRCDIR = zlib  # Add the zlib directory to DIRS.
 endif
 
 ifndef MOZILLA_CLIENT
 ifndef NSS_USE_SYSTEM_SQLITE
-DIRS := sqlite $(DIRS)
+SQLITE_SRCDIR = sqlite  # Add the sqlite directory to DIRS.
+endif
+endif
+
+ifndef MOZILLA_CLIENT
+ifeq ($(OS_ARCH),Linux)
+SYSINIT_SRCDIR = sysinit  # Add the sysinit directory to DIRS.
 endif
 endif
 
@@ -84,18 +90,3 @@ include $(CORE_DEPTH)/coreconf/rules.mk
 # (7) Execute "local" rules. (OPTIONAL).                              #
 #######################################################################
 
-ifdef MOZILLA_SECURITY_BUILD
-FILES=$(shell ls -d $(CORE_DEPTH)/../../ns/security/lib/crypto/*)
-
-export::
-	if test -d $(CORE_DEPTH)/../../ns/security/lib/crypto; then \
-	    $(NSINSTALL) -D crypto; \
-	    for file in $(FILES) ; do \
-		if test -f $$file; then \
-		    $(INSTALL) -m 444 $$file crypto; \
-		fi; \
-	    done;  \
-	    $(INSTALL) -m 444 freebl/sha_fast.c crypto; \
-	    $(INSTALL) -m 444 freebl/sha_fast.h crypto; \
-	fi
-endif
