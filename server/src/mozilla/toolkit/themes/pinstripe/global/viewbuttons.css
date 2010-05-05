@@ -1,0 +1,130 @@
+/* ***** BEGIN LICENSE BLOCK *****
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ *
+ * The contents of this file are subject to the Mozilla Public License Version
+ * 1.1 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ * The Original Code is mozilla.org code.
+ *
+ * The Initial Developer of the Original Code is
+ * Markus Stange <mstange@themasta.com>
+ * Portions created by the Initial Developer are Copyright (C) 2008
+ * the Initial Developer. All Rights Reserved.
+ *
+ * Contributor(s):
+ *
+ * Alternatively, the contents of this file may be used under the terms of
+ * either the GNU General Public License Version 2 or later (the "GPL"), or
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+ * in which case the provisions of the GPL or the LGPL are applicable instead
+ * of those above. If you wish to allow use of your version of this file only
+ * under the terms of either the GPL or the LGPL, and not to allow others to
+ * use your version of this file under the terms of the MPL, indicate your
+ * decision by deleting the provisions above and replace them with the notice
+ * and other provisions required by the GPL or the LGPL. If you do not delete
+ * the provisions above, a recipient may use your version of this file under
+ * the terms of any one of the MPL, the GPL or the LGPL.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+#topBar {
+  -moz-appearance: -moz-mac-unified-toolbar;
+}
+
+.viewGroupWrapper {
+  -moz-box-align: center;
+  -moz-box-pack: center;
+}
+
+#viewGroup {
+  background-color: rgba(0, 0, 0, 0.55);
+  padding: 1px;
+  -moz-border-radius: 3px;
+  -moz-box-shadow: rgba(255, 255, 255, 0.4) 0 1px;
+  margin: 4px 0 9px;
+}
+
+#viewGroup > radio,
+#viewGroup > toolbarbutton {
+  -moz-box-orient: vertical;
+  -moz-box-align: center;
+  -moz-appearance: none;
+  font: menu;
+  text-shadow: rgba(255, 255, 255, 0.4) 0 1px;
+  margin: 0;
+  padding: 0 4px;
+  border: none;
+  border-left: 1px solid rgba(0, 0, 0, 0.8);
+  background: -moz-linear-gradient(top, #FFF, #ADADAD) repeat-x;
+}
+
+#viewGroup > radio:active:hover,
+#viewGroup > toolbarbutton:active:hover {
+  background: #B5B5B5;
+  text-shadow: rgba(255, 255, 255, 0.4) 0 1px;
+  -moz-box-shadow: inset rgba(0, 0, 0, 0.3) 0 -6px 14px, inset #000 0 1px 4px, inset rgba(0, 0, 0, 0.2) 0 1px 4px;
+}
+
+#viewGroup > radio[selected=true],
+#viewGroup > toolbarbutton[checked=true] {
+  color: #FFF !important;
+  text-shadow: rgba(0, 0, 0, 0.4) 0 1px;
+  background: #606060;
+  -moz-box-shadow: inset #2A2A2A 0 3px 5px;
+}
+
+#viewGroup > radio[selected=true]:active:hover,
+#viewGroup > toolbarbutton[checked=true]:active:hover {
+  background-color: #4E4E4E;
+  -moz-box-shadow: inset #1c1c1c 0 3px 5px;
+}
+
+:root:not([active]) #viewGroup {
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+:root:not([active]) #viewGroup > radio,
+:root:not([active]) #viewGroup > toolbarbutton {
+  color: #7C7C7C !important; /* remove this when we support click-through */
+  border-color: rgba(0, 0, 0, 0.4);
+  background-image: -moz-linear-gradient(top, #FFF, #CCC);
+}
+
+:root:not([active]) #viewGroup > radio[selected=true],
+:root:not([active]) #viewGroup > toolbarbutton[checked=true] {
+  color: #E6E6E6 !important; /* remove this when we support click-through */
+  background: #8E8E8E;
+  -moz-box-shadow: inset rgba(0, 0, 0, 0.5) 0 3px 5px;
+}
+
+#viewGroup > radio:-moz-locale-dir(ltr):first-child,
+#viewGroup > radio:-moz-locale-dir(ltr)[first-visible],
+#viewGroup > radio:-moz-locale-dir(rtl):last-child,
+#viewGroup > radio:-moz-locale-dir(rtl)[last-visible],
+#viewGroup > toolbarbutton:-moz-locale-dir(ltr):first-child,
+#viewGroup > toolbarbutton:-moz-locale-dir(ltr)[first-visible],
+#viewGroup > toolbarbutton:-moz-locale-dir(rtl):last-child,
+#viewGroup > toolbarbutton:-moz-locale-dir(rtl)[last-visible] {
+  -moz-border-radius-topleft: 2px;
+  -moz-border-radius-bottomleft: 2px;
+  border-left: none !important;
+}
+
+#viewGroup > radio:-moz-locale-dir(ltr):last-child,
+#viewGroup > radio:-moz-locale-dir(ltr)[last-visible],
+#viewGroup > radio:-moz-locale-dir(rtl):first-child,
+#viewGroup > radio:-moz-locale-dir(rtl)[first-visible],
+#viewGroup > toolbarbutton:-moz-locale-dir(ltr):last-child,
+#viewGroup > toolbarbutton:-moz-locale-dir(ltr)[last-visible],
+#viewGroup > toolbarbutton:-moz-locale-dir(rtl):first-child,
+#viewGroup > toolbarbutton:-moz-locale-dir(rtl)[first-visible] {
+  -moz-border-radius-topright: 2px;
+  -moz-border-radius-bottomright: 2px;
+}
