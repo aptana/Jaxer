@@ -47,13 +47,14 @@
 #include "nsIEditor.h"
 #include "nsIEditActionListener.h"
 #include "nsITextServicesDocument.h"
-#include "nsVoidArray.h"
+#include "nsTArray.h"
 #include "nsTSDNotifier.h"
 #include "nsISelectionController.h"
 #include "nsITextServicesFilter.h"
 #include "nsWeakReference.h"
 
 class nsIRangeUtils;
+class OffsetEntry;
 
 /** implementation of a text services object.
  *
@@ -103,7 +104,7 @@ private:
   nsCOMPtr<nsIContent>            mPrevTextBlock;
   nsCOMPtr<nsIContent>            mNextTextBlock;
   nsCOMPtr<nsIEditActionListener> mNotifier;
-  nsVoidArray                     mOffsetTable;
+  nsTArray<OffsetEntry*>          mOffsetTable;
 
   PRInt32                         mSelStartIndex;
   PRInt32                         mSelStartOffset;
@@ -138,18 +139,13 @@ public:
   NS_DECL_ISUPPORTS
 
   /* nsITextServicesDocument method implementations. */
-  NS_IMETHOD InitWithDocument(nsIDOMDocument *aDOMDocument, nsIPresShell *aPresShell);
   NS_IMETHOD InitWithEditor(nsIEditor *aEditor);
   NS_IMETHOD GetDocument(nsIDOMDocument **aDoc);
   NS_IMETHOD SetExtent(nsIDOMRange* aDOMRange);
-  NS_IMETHOD GetExtent(nsIDOMRange** aDOMRange);
   NS_IMETHOD ExpandRangeToWordBoundaries(nsIDOMRange *aRange);
   NS_IMETHOD SetFilter(nsITextServicesFilter *aFilter);
-  NS_IMETHOD CanEdit(PRBool *aCanEdit);
   NS_IMETHOD GetCurrentTextBlock(nsString *aStr);
   NS_IMETHOD FirstBlock();
-  NS_IMETHOD LastBlock();
-  NS_IMETHOD FirstSelectedBlock(TSDBlockSelectionStatus *aSelStatus, PRInt32 *aSelOffset, PRInt32 *aSelLength);
   NS_IMETHOD LastSelectedBlock(TSDBlockSelectionStatus *aSelStatus, PRInt32 *aSelOffset, PRInt32 *aSelLength);
   NS_IMETHOD PrevBlock();
   NS_IMETHOD NextBlock();
@@ -158,8 +154,6 @@ public:
   NS_IMETHOD ScrollSelectionIntoView();
   NS_IMETHOD DeleteSelection();
   NS_IMETHOD InsertText(const nsString *aText);
-  NS_IMETHOD SetDisplayStyle(TSDDisplayStyle aStyle);
-  NS_IMETHOD GetDOMRangeFor(PRInt32 aOffset, PRInt32 aLength, nsIDOMRange** aRange);
 
   /* nsIEditActionListener method implementations. */
   nsresult InsertNode(nsIDOMNode * aNode,
@@ -218,14 +212,14 @@ private:
   PRBool SelectionIsCollapsed();
   PRBool SelectionIsValid();
 
-  static nsresult CreateOffsetTable(nsVoidArray *aOffsetTable,
+  static nsresult CreateOffsetTable(nsTArray<OffsetEntry*> *aOffsetTable,
                              nsIContentIterator *aIterator,
                              TSDIteratorStatus *aIteratorStatus,
                              nsIDOMRange *aIterRange,
                              nsString *aStr);
-  static nsresult ClearOffsetTable(nsVoidArray *aOffsetTable);
+  static nsresult ClearOffsetTable(nsTArray<OffsetEntry*> *aOffsetTable);
 
-  static nsresult NodeHasOffsetEntry(nsVoidArray *aOffsetTable,
+  static nsresult NodeHasOffsetEntry(nsTArray<OffsetEntry*> *aOffsetTable,
                                      nsIDOMNode *aNode,
                                      PRBool *aHasEntry,
                                      PRInt32 *aEntryIndex);
@@ -233,7 +227,8 @@ private:
   nsresult RemoveInvalidOffsetEntries();
   nsresult SplitOffsetEntry(PRInt32 aTableIndex, PRInt32 aOffsetIntoEntry);
 
-  static nsresult FindWordBounds(nsVoidArray *offsetTable, nsString *blockStr,
+  static nsresult FindWordBounds(nsTArray<OffsetEntry*> *offsetTable,
+                                 nsString *blockStr,
                                  nsIDOMNode *aNode, PRInt32 aNodeOffset,
                                  nsIDOMNode **aWordStartNode,
                                  PRInt32 *aWordStartOffset,

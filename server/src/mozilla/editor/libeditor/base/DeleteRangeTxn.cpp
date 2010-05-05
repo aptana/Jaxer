@@ -43,7 +43,6 @@
 #include "nsISelection.h"
 #include "DeleteTextTxn.h"
 #include "DeleteElementTxn.h"
-#include "TransactionFactory.h"
 #include "nsIContentIterator.h"
 #include "nsIContent.h"
 #include "nsComponentManagerUtils.h"
@@ -65,6 +64,27 @@ DeleteRangeTxn::DeleteRangeTxn()
 ,mRangeUpdater(nsnull)
 {
 }
+
+NS_IMPL_CYCLE_COLLECTION_CLASS(DeleteRangeTxn)
+
+NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN_INHERITED(DeleteRangeTxn,
+                                                EditAggregateTxn)
+  NS_IMPL_CYCLE_COLLECTION_UNLINK_NSCOMPTR(mRange)
+  NS_IMPL_CYCLE_COLLECTION_UNLINK_NSCOMPTR(mStartParent)
+  NS_IMPL_CYCLE_COLLECTION_UNLINK_NSCOMPTR(mEndParent)
+  NS_IMPL_CYCLE_COLLECTION_UNLINK_NSCOMPTR(mCommonParent)
+NS_IMPL_CYCLE_COLLECTION_UNLINK_END
+
+NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN_INHERITED(DeleteRangeTxn,
+                                                  EditAggregateTxn)
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE_NSCOMPTR(mRange)
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE_NSCOMPTR(mStartParent)
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE_NSCOMPTR(mEndParent)
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE_NSCOMPTR(mCommonParent)
+NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
+
+NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(DeleteRangeTxn)
+NS_INTERFACE_MAP_END_INHERITING(EditAggregateTxn)
 
 NS_IMETHODIMP DeleteRangeTxn::Init(nsIEditor *aEditor, 
                                    nsIDOMRange *aRange,
@@ -237,10 +257,9 @@ DeleteRangeTxn::CreateTxnsToDeleteBetween(nsIDOMNode *aStartParent,
   nsCOMPtr<nsIDOMCharacterData> textNode = do_QueryInterface(aStartParent);
   if (textNode)
   { // if the node is a text node, then delete text content
-    DeleteTextTxn *txn;
-    result = TransactionFactory::GetNewTransaction(DeleteTextTxn::GetCID(), (EditTxn **)&txn);
-    if (NS_FAILED(result)) return result;
-    if (!txn) return NS_ERROR_NULL_POINTER;
+    nsRefPtr<DeleteTextTxn> txn = new DeleteTextTxn();
+    if (!txn)
+      return NS_ERROR_OUT_OF_MEMORY;
 
     PRInt32 numToDel;
     if (aStartOffset==aEndOffset)
@@ -250,7 +269,6 @@ DeleteRangeTxn::CreateTxnsToDeleteBetween(nsIDOMNode *aStartParent,
     result = txn->Init(mEditor, textNode, aStartOffset, numToDel, mRangeUpdater);
     if (NS_SUCCEEDED(result))
       AppendChild(txn);
-    NS_RELEASE(txn);
   }
   else
   {
@@ -272,15 +290,13 @@ DeleteRangeTxn::CreateTxnsToDeleteBetween(nsIDOMNode *aStartParent,
       if (NS_FAILED(result)) return result;
       if (!child) return NS_ERROR_NULL_POINTER;
 
-      DeleteElementTxn *txn;
-      result = TransactionFactory::GetNewTransaction(DeleteElementTxn::GetCID(), (EditTxn **)&txn);
-      if (NS_FAILED(result)) return result;
-      if (!txn) return NS_ERROR_NULL_POINTER;
+      nsRefPtr<DeleteElementTxn> txn = new DeleteElementTxn();
+      if (!txn)
+        return NS_ERROR_OUT_OF_MEMORY;
 
       result = txn->Init(mEditor, child, mRangeUpdater);
       if (NS_SUCCEEDED(result))
         AppendChild(txn);
-      NS_RELEASE(txn);
     }
   }
   return result;
@@ -310,15 +326,13 @@ NS_IMETHODIMP DeleteRangeTxn::CreateTxnsToDeleteContent(nsIDOMNode *aParent,
     
     if (numToDelete)
     {
-      DeleteTextTxn *txn;
-      result = TransactionFactory::GetNewTransaction(DeleteTextTxn::GetCID(), (EditTxn **)&txn);
-      if (NS_FAILED(result)) return result;
-      if (!txn) return NS_ERROR_NULL_POINTER;
+      nsRefPtr<DeleteTextTxn> txn = new DeleteTextTxn();
+      if (!txn)
+        return NS_ERROR_OUT_OF_MEMORY;
 
       result = txn->Init(mEditor, textNode, start, numToDelete, mRangeUpdater);
       if (NS_SUCCEEDED(result))
         AppendChild(txn);
-      NS_RELEASE(txn);
     }
   }
 
@@ -339,15 +353,13 @@ NS_IMETHODIMP DeleteRangeTxn::CreateTxnsToDeleteNodesBetween()
     if (!node)
       return NS_ERROR_NULL_POINTER;
 
-    DeleteElementTxn *txn;
-    result = TransactionFactory::GetNewTransaction(DeleteElementTxn::GetCID(), (EditTxn **)&txn);
-    if (NS_FAILED(result)) return result;
-    if (!txn) return NS_ERROR_NULL_POINTER;
+    nsRefPtr<DeleteElementTxn> txn = new DeleteElementTxn();
+    if (!txn)
+      return NS_ERROR_OUT_OF_MEMORY;
 
     result = txn->Init(mEditor, node, mRangeUpdater);
     if (NS_SUCCEEDED(result))
       AppendChild(txn);
-    NS_RELEASE(txn);
     iter->Next();
   }
   return result;

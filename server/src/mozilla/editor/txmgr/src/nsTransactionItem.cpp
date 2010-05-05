@@ -40,6 +40,7 @@
 #include "nsTransactionManager.h"
 #include "nsTransactionItem.h"
 #include "nsCOMPtr.h"
+#include "nsAutoPtr.h"
 
 nsTransactionItem::nsTransactionItem(nsITransaction *aTransaction)
     : mTransaction(aTransaction), mUndoStack(0), mRedoStack(0)
@@ -53,9 +54,53 @@ nsTransactionItem::~nsTransactionItem()
 
   if (mUndoStack)
     delete mUndoStack;
-
-  NS_IF_RELEASE(mTransaction);
 }
+
+nsrefcnt
+nsTransactionItem::AddRef()
+{
+  ++mRefCnt;
+  NS_LOG_ADDREF(this, mRefCnt, "nsTransactionItem",
+                sizeof(nsTransactionItem));
+  return mRefCnt;
+}
+
+nsrefcnt
+nsTransactionItem::Release() {
+  --mRefCnt;
+  NS_LOG_RELEASE(this, mRefCnt, "nsTransactionItem");
+  if (mRefCnt == 0) {
+    mRefCnt = 1;
+    delete this;
+    return 0;
+  }
+  return mRefCnt;
+}
+
+NS_IMPL_CYCLE_COLLECTION_CLASS(nsTransactionItem)
+
+NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN_NATIVE(nsTransactionItem)
+  NS_IMPL_CYCLE_COLLECTION_UNLINK_NSCOMPTR(mTransaction)
+  if (tmp->mRedoStack) {
+    tmp->mRedoStack->DoUnlink();
+  }
+  if (tmp->mUndoStack) {
+    tmp->mUndoStack->DoUnlink();
+  }
+NS_IMPL_CYCLE_COLLECTION_UNLINK_END
+
+NS_IMPL_CYCLE_COLLECTION_TRAVERSE_NATIVE_BEGIN(nsTransactionItem)
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE_NSCOMPTR(mTransaction)
+  if (tmp->mRedoStack) {
+    tmp->mRedoStack->DoTraverse(cb);
+  }
+  if (tmp->mUndoStack) {
+    tmp->mUndoStack->DoTraverse(cb);
+  }
+NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
+
+NS_IMPL_CYCLE_COLLECTION_ROOT_NATIVE(nsTransactionItem, AddRef)
+NS_IMPL_CYCLE_COLLECTION_UNROOT_NATIVE(nsTransactionItem, Release)
 
 nsresult
 nsTransactionItem::AddChild(nsTransactionItem *aTransactionItem)
@@ -80,7 +125,7 @@ nsTransactionItem::GetTransaction(nsITransaction **aTransaction)
   if (!aTransaction)
     return NS_ERROR_NULL_POINTER;
 
-  *aTransaction = mTransaction;
+  NS_IF_ADDREF(*aTransaction = mTransaction);
 
   return NS_OK;
 }
@@ -207,7 +252,7 @@ nsTransactionItem::UndoTransaction(nsTransactionManager *aTxMgr)
 nsresult
 nsTransactionItem::UndoChildren(nsTransactionManager *aTxMgr)
 {
-  nsTransactionItem *item;
+  nsRefPtr<nsTransactionItem> item;
   nsresult result = NS_OK;
   PRInt32 sz = 0;
 
@@ -225,15 +270,15 @@ nsTransactionItem::UndoChildren(nsTransactionManager *aTxMgr)
       return result;
 
     while (sz-- > 0) {
-      result = mUndoStack->Peek(&item);
+      result = mUndoStack->Peek(getter_AddRefs(item));
 
-      if (NS_FAILED(result)) {
+      if (NS_FAILED(result) || !item) {
         return result;
       }
 
-      nsITransaction *t = 0;
+      nsCOMPtr<nsITransaction> t;
 
-      result = item->GetTransaction(&t);
+      result = item->GetTransaction(getter_AddRefs(t));
 
       if (NS_FAILED(result)) {
         return result;
@@ -254,7 +299,7 @@ nsTransactionItem::UndoChildren(nsTransactionManager *aTxMgr)
       result = item->UndoTransaction(aTxMgr);
 
       if (NS_SUCCEEDED(result)) {
-        result = mUndoStack->Pop(&item);
+        result = mUndoStack->Pop(getter_AddRefs(item));
 
         if (NS_SUCCEEDED(result)) {
           result = mRedoStack->Push(item);
@@ -281,6 +326,7 @@ nsTransactionItem::RedoTransaction(nsTransactionManager *aTxMgr)
 {
   nsresult result;
 
+  nsCOMPtr<nsITransaction> kungfuDeathGrip(mTransaction);
   if (mTransaction) {
     result = mTransaction->RedoTransaction();
 
@@ -301,7 +347,7 @@ nsTransactionItem::RedoTransaction(nsTransactionManager *aTxMgr)
 nsresult
 nsTransactionItem::RedoChildren(nsTransactionManager *aTxMgr)
 {
-  nsTransactionItem *item;
+  nsRefPtr<nsTransactionItem> item;
   nsresult result = NS_OK;
   PRInt32 sz = 0;
 
@@ -316,15 +362,15 @@ nsTransactionItem::RedoChildren(nsTransactionManager *aTxMgr)
 
 
   while (sz-- > 0) {
-    result = mRedoStack->Peek(&item);
+    result = mRedoStack->Peek(getter_AddRefs(item));
 
-    if (NS_FAILED(result)) {
+    if (NS_FAILED(result) || !item) {
       return result;
     }
 
-    nsITransaction *t = 0;
+    nsCOMPtr<nsITransaction> t;
 
-    result = item->GetTransaction(&t);
+    result = item->GetTransaction(getter_AddRefs(t));
 
     if (NS_FAILED(result)) {
       return result;
@@ -345,7 +391,7 @@ nsTransactionItem::RedoChildren(nsTransactionManager *aTxMgr)
     result = item->RedoTransaction(aTxMgr);
 
     if (NS_SUCCEEDED(result)) {
-      result = mRedoStack->Pop(&item);
+      result = mRedoStack->Pop(getter_AddRefs(item));
 
       if (NS_SUCCEEDED(result)) {
         result = mUndoStack->Push(item);

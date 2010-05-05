@@ -67,7 +67,7 @@ class nsHTMLEditor;
 // will only render as one space (in non-preformatted stlye html), yet both
 // spaces count as NormalWS.  Together, they render as the one visible space.
 
-class nsWSRunObject
+class NS_STACK_CLASS nsWSRunObject
 {
   public:
 
@@ -226,7 +226,7 @@ class nsWSRunObject
     // always within a textnode that is one of the nodes stored in the list
     // in the wsRunObject.  For convenience, the character at that point is also 
     // stored in the struct.
-    struct WSPoint
+    struct NS_STACK_CLASS WSPoint
     {
       nsCOMPtr<nsIContent> mTextNode;
       PRInt16 mOffset;
@@ -253,6 +253,14 @@ class nsWSRunObject
     
     // protected methods ---------------------------------------------------------
     // tons of utility methods.  
+
+    /**
+     * Return the node which we will handle white-space under. This is the
+     * closest block within the DOM subtree we're editing, or if none is
+     * found, the (inline) root of the editable subtree.
+     */
+    already_AddRefed<nsIDOMNode> GetWSBoundingParent();
+
     nsresult GetWSNodes();
     nsresult GetRuns();
     void     ClearRuns();

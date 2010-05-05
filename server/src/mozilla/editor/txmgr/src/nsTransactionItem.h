@@ -38,21 +38,29 @@
 #ifndef nsTransactionItem_h__
 #define nsTransactionItem_h__
 
-class nsITransaction;
+#include "nsITransaction.h"
+#include "nsCOMPtr.h"
+#include "nsCycleCollectionParticipant.h"
+
 class nsTransactionStack;
 class nsTransactionRedoStack;
 class nsTransactionManager;
 
 class nsTransactionItem
 {
-  nsITransaction         *mTransaction;
-  nsTransactionStack     *mUndoStack;
-  nsTransactionRedoStack *mRedoStack;
+  nsCOMPtr<nsITransaction> mTransaction;
+  nsTransactionStack      *mUndoStack;
+  nsTransactionRedoStack  *mRedoStack;
+  nsAutoRefCnt             mRefCnt;
 
 public:
 
   nsTransactionItem(nsITransaction *aTransaction);
   virtual ~nsTransactionItem();
+  nsrefcnt AddRef();
+  nsrefcnt Release();
+
+  NS_DECL_CYCLE_COLLECTION_NATIVE_CLASS(nsTransactionItem)
 
   virtual nsresult AddChild(nsTransactionItem *aTransactionItem);
   virtual nsresult GetTransaction(nsITransaction **aTransaction);

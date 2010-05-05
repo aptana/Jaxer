@@ -760,7 +760,7 @@ nsEditingSession::OnStateChange(nsIWebProgress *aWebProgress,
     }
   }
   //
-  // A network or document Request as finished...
+  // A network or document Request has finished...
   //
   else if (aStateFlags & nsIWebProgressListener::STATE_STOP)
   {
@@ -990,7 +990,7 @@ nsEditingSession::EndDocumentLoad(nsIWebProgress *aWebProgress,
 
   // We want to call the base class EndDocumentLoad,
   // but avoid some of the stuff
-  // that nsWebShell does (need to refactor).
+  // that nsDocShell does (need to refactor).
   
   // OK, time to make an editor on this document
   nsCOMPtr<nsIDOMWindow> domWindow;

@@ -49,6 +49,7 @@
 #include "nsIDOMEventListener.h"
 
 #include "nsEditRules.h"
+#include "nsCycleCollectionParticipant.h"
  
 class nsITransferable;
 class nsIDocumentEncoder;
@@ -68,6 +69,7 @@ public:
 // NOTE macro used is for classes that inherit from 
 // another class. Only the base class should use NS_DECL_ISUPPORTS
   NS_DECL_ISUPPORTS_INHERITED
+  NS_DECL_CYCLE_COLLECTION_CLASS_INHERITED(nsPlaintextEditor, nsEditor)
 
   /* below used by TypedText() */
   enum {
@@ -86,9 +88,9 @@ public:
   NS_DECL_NSIEDITORMAILSUPPORT
 
   /* ------------ nsIEditorIMESupport overrides -------------- */
-  
-  NS_IMETHOD SetCompositionString(const nsAString & aCompositionString, nsIPrivateTextRangeList * aTextRange, nsTextEventReply * aReply);
-  NS_IMETHOD GetReconversionString(nsReconversionEventReply* aReply);
+  NS_IMETHOD SetCompositionString(const nsAString &aCompositionString,
+                                  nsIPrivateTextRangeList *aTextRange,
+                                  nsTextEventReply *aReply);
 
   /* ------------ Overrides of nsEditor interface methods -------------- */
   NS_IMETHOD BeginComposition(nsTextEventReply* aReply);
@@ -164,6 +166,14 @@ public:
                         PRInt32 aDestOffset,
                         PRBool aDoDeleteSelection);
 
+  /**
+   * Extends the selection for given deletion operation
+   * If done, also update aAction to what's actually left to do after the
+   * extension.
+   */
+  nsresult ExtendSelectionForDelete(nsISelection* aSelection,
+                                    nsIEditor::EDirection *aAction);
+
 protected:
 
   NS_IMETHOD  InitRules();
@@ -173,13 +183,6 @@ protected:
   // Create the event listeners for the editor to install.
   virtual nsresult CreateEventListeners();
 
-  /** returns the layout object (nsIFrame in the real world) for aNode
-    * @param aNode          the content to get a frame for
-    * @param aLayoutObject  the "primary frame" for aNode, if one exists.  May be null
-    * @return NS_OK whether a frame is found or not
-    *         an error if some serious error occurs
-    */
-  NS_IMETHOD GetLayoutObject(nsIDOMNode *aInNode, nsISupports **aOutLayoutObject);
   // Helpers for output routines
   NS_IMETHOD GetAndInitDocEncoder(const nsAString& aFormatType,
                                   PRUint32 aFlags,

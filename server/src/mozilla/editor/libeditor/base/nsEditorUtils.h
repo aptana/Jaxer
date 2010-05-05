@@ -45,7 +45,6 @@
 #include "nsISelection.h"
 #include "nsIEditor.h"
 #include "nsIAtom.h"
-#include "nsVoidArray.h"
 #include "nsEditor.h"
 #include "nsIContentIterator.h"
 #include "nsCOMArray.h"
@@ -56,7 +55,7 @@ class nsPlaintextEditor;
  * stack based helper class for batching a collection of txns inside a 
  * placeholder txn.
  */
-class nsAutoPlaceHolderBatch
+class NS_STACK_CLASS nsAutoPlaceHolderBatch
 {
   private:
     nsCOMPtr<nsIEditor> mEd;
@@ -82,7 +81,7 @@ class nsAutoEditBatch : public nsAutoPlaceHolderBatch
  * stack based helper class for saving/restoring selection.  Note that this
  * assumes that the nodes involved are still around afterwards!
  */
-class nsAutoSelectionReset
+class NS_STACK_CLASS nsAutoSelectionReset
 {
   private:
     /** ref-counted reference to the selection that we are supposed to restore */
@@ -103,7 +102,7 @@ class nsAutoSelectionReset
 /***************************************************************************
  * stack based helper class for StartOperation()/EndOperation() sandwich
  */
-class nsAutoRules
+class NS_STACK_CLASS nsAutoRules
 {
   public:
   
@@ -134,7 +133,7 @@ class nsAutoRules
  * stack based helper class for turning off active selection adjustment
  * by low level transactions
  */
-class nsAutoTxnsConserveSelection
+class NS_STACK_CLASS nsAutoTxnsConserveSelection
 {
   public:
   
@@ -163,7 +162,7 @@ class nsAutoTxnsConserveSelection
 /***************************************************************************
  * stack based helper class for batching reflow and paint requests.
  */
-class nsAutoUpdateViewBatch
+class NS_STACK_CLASS nsAutoUpdateViewBatch
 {
   public:
   
@@ -201,7 +200,7 @@ class nsBoolDomIterFunctor
     virtual PRBool operator()(nsIDOMNode* aNode)=0;
 };
 
-class nsDOMIterator
+class NS_STACK_CLASS nsDOMIterator
 {
   public:
     nsDOMIterator();
@@ -239,7 +238,7 @@ class nsTrivialFunctor : public nsBoolDomIterFunctor
 /******************************************************************************
  * general dom point utility struct
  *****************************************************************************/
-struct DOMPoint
+struct NS_STACK_CLASS DOMPoint
 {
   nsCOMPtr<nsIDOMNode> node;
   PRInt32 offset;
@@ -274,11 +273,6 @@ class nsISimpleEnumerator;
 class nsEditorHookUtils
 {
   public:
-    static PRBool   DoAllowDragHook(nsIDOMDocument *aDoc, nsIDOMEvent *aEvent);
-    static PRBool   DoDragHook(nsIDOMDocument *aDoc, nsIDOMEvent *aEvent,
-                                    nsITransferable *aTrans);
-    static PRBool   DoAllowDropHook(nsIDOMDocument *aDoc, nsIDOMEvent *aEvent,
-                                    nsIDragSession *aSession);
     static PRBool   DoInsertionHook(nsIDOMDocument *aDoc, nsIDOMEvent *aEvent,
                                     nsITransferable *aTrans);
   private:

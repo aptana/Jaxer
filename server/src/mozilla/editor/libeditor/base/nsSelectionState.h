@@ -39,9 +39,10 @@
 #define __selectionstate_h__
 
 #include "nsCOMPtr.h"
-#include "nsVoidArray.h"
+#include "nsTArray.h"
 #include "nsIDOMNode.h"
 #include "nsIDOMRange.h"
+#include "nsCycleCollectionParticipant.h"
 
 class nsIDOMCharacterData;
 class nsISelection;
@@ -73,6 +74,9 @@ class nsSelectionState
       
     nsSelectionState();
     ~nsSelectionState();
+
+    void DoTraverse(nsCycleCollectionTraversalCallback &cb);
+    void DoUnlink() { MakeEmpty(); }
   
     nsresult SaveSelection(nsISelection *aSel);
     nsresult RestoreSelection(nsISelection *aSel);
@@ -81,7 +85,7 @@ class nsSelectionState
     void     MakeEmpty();
     PRBool   IsEmpty();
   protected:    
-    nsVoidArray mArray;
+    nsTArray<nsRangeStore> mArray;
     
     friend class nsRangeUpdater;
 };
@@ -125,7 +129,7 @@ class nsRangeUpdater
     nsresult WillMoveNode();
     nsresult DidMoveNode(nsIDOMNode *aOldParent, PRInt32 aOldOffset, nsIDOMNode *aNewParent, PRInt32 aNewOffset);
   protected:    
-    nsVoidArray mArray;
+    nsTArray<nsRangeStore*> mArray;
     PRBool mLock;
 };
 
@@ -135,7 +139,7 @@ class nsRangeUpdater
  * preservation of dom points across editor actions
  */
 
-class nsAutoTrackDOMPoint
+class NS_STACK_CLASS nsAutoTrackDOMPoint
 {
   private:
     nsRangeUpdater &mRU;
@@ -170,7 +174,7 @@ class nsAutoTrackDOMPoint
  * Will/DidReplaceContainer()
  */
 
-class nsAutoReplaceContainerSelNotify
+class NS_STACK_CLASS nsAutoReplaceContainerSelNotify
 {
   private:
     nsRangeUpdater &mRU;
@@ -198,7 +202,7 @@ class nsAutoReplaceContainerSelNotify
  * Will/DidRemoveContainer()
  */
 
-class nsAutoRemoveContainerSelNotify
+class NS_STACK_CLASS nsAutoRemoveContainerSelNotify
 {
   private:
     nsRangeUpdater &mRU;
@@ -233,7 +237,7 @@ class nsAutoRemoveContainerSelNotify
  * Will/DidInsertContainer()
  */
 
-class nsAutoInsertContainerSelNotify
+class NS_STACK_CLASS nsAutoInsertContainerSelNotify
 {
   private:
     nsRangeUpdater &mRU;
@@ -257,7 +261,7 @@ class nsAutoInsertContainerSelNotify
  * Will/DidMoveNode()
  */
 
-class nsAutoMoveNodeSelNotify
+class NS_STACK_CLASS nsAutoMoveNodeSelNotify
 {
   private:
     nsRangeUpdater &mRU;

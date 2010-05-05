@@ -86,11 +86,11 @@ NS_IMETHODIMP nsEditorParserObserver::Notify(
   else
     return NS_ERROR_ILLEGAL_VALUE;
 }
-NS_IMETHODIMP nsEditorParserObserver::Notify(nsISupports* aWebShell, 
+NS_IMETHODIMP nsEditorParserObserver::Notify(nsISupports* aDocShell, 
                                              nsISupports* aChannel, 
                                              const PRUnichar* aTag, 
-                                             const nsStringArray* aKeys, 
-                                             const nsStringArray* aValues,
+                                             const nsTArray<nsString>* aKeys, 
+                                             const nsTArray<nsString>* aValues,
                                              const PRUint32 aFlags)
 {
   Notify();

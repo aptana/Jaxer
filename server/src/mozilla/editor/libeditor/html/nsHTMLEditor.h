@@ -62,8 +62,6 @@
 #include "nsEditProperty.h"
 #include "nsHTMLCSSUtils.h"
 
-#include "nsVoidArray.h"
-
 #include "nsHTMLObjectResizer.h"
 #include "nsIHTMLAbsPosEditor.h"
 #include "nsIHTMLInlineTableEditor.h"
@@ -84,6 +82,7 @@ class nsIContentFilter;
 class nsIURL;
 class nsIRangeUtils;
 class nsILinkHandler;
+struct PropItem;
 
 /**
  * The HTML editor implementation.<br>
@@ -171,14 +170,9 @@ public:
 
   NS_IMETHOD LoadHTML(const nsAString &aInputString);
 
-  NS_IMETHOD GetParentBlockTags(nsStringArray *aTagList, PRBool aGetLists);
-
   nsresult GetCSSBackgroundColorState(PRBool *aMixed, nsAString &aOutColor,
                                       PRBool aBlockLevel);
   NS_IMETHOD GetHTMLBackgroundColorState(PRBool *aMixed, nsAString &outColor);
-  NS_IMETHOD GetHighlightColor(PRBool *mixed, PRUnichar **_retval);
-
-  NS_IMETHOD GetNextElementByTagName(nsIDOMElement *aCurrentElement, const nsAString *aTagName, nsIDOMElement **aReturn);
 
   /* ------------ nsIEditorStyleSheets methods -------------- */
 
@@ -230,8 +224,6 @@ public:
                            PRBool* aIsSelected);
   NS_IMETHOD GetFirstRow(nsIDOMElement* aTableElement, nsIDOMNode** aRowNode);
   NS_IMETHOD GetNextRow(nsIDOMNode* aCurrentRowNode, nsIDOMNode** aRowNode);
-  NS_IMETHOD GetFirstCellInRow(nsIDOMNode* aRowNode, nsIDOMNode** aCellNode);
-  NS_IMETHOD GetNextCellInRow(nsIDOMNode* aCurrentCellNode, nsIDOMNode** aRowNode);
   NS_IMETHOD GetLastCellInRow(nsIDOMNode* aRowNode, nsIDOMNode** aCellNode);
 
   NS_IMETHOD SetSelectionAfterTableEdit(nsIDOMElement* aTable, PRInt32 aRow, PRInt32 aCol, 
@@ -264,7 +256,6 @@ public:
 
   /* ------------ Block methods moved from nsEditor -------------- */
   static nsCOMPtr<nsIDOMNode> GetBlockNodeParent(nsIDOMNode *aNode);
-  static PRBool HasSameBlockNodeParent(nsIDOMNode *aNode1, nsIDOMNode *aNode2);
   /** Determines the bounding nodes for the block section containing aNode.
     * The calculation is based on some nodes intrinsically being block elements
     * acording to HTML.  Style sheets are not considered in this calculation.
@@ -392,14 +383,6 @@ public:
                                    PRInt32 &aStartOffset, 
                                    PRInt32 &aEndOffset);
 
-  nsresult GetAbsoluteOffsetsForPoints(nsIDOMNode *aInStartNode,
-                                       PRInt32 aInStartOffset,
-                                       nsIDOMNode *aInEndNode,
-                                       PRInt32 aInEndOffset,
-                                       nsIDOMNode *aInCommonParentNode,
-                                       PRInt32 &aOutStartOffset, 
-                                       PRInt32 &aEndOffset);
-  
   // Use this to assure that selection is set after attribute nodes when 
   //  trying to collapse selection at begining of a block node
   //  e.g., when setting at beginning of a table cell
@@ -425,7 +408,6 @@ public:
                            PRBool *aSeenBR);
 
   // Stylesheet-related methods that aren't part of nsIEditorStyleSheets.
-  nsresult AddCSSStyleSheet(nsICSSStyleSheet* aSheet);
   nsresult GetCSSLoader(const nsAString& aURL, nsICSSLoader** aCSSLoader);
 
   // Returns TRUE if sheet was loaded, false if it wasn't
@@ -457,14 +439,6 @@ protected:
   void UpdateForFlags(PRUint32 aFlags) {
     mCSSAware = ((aFlags & (eEditorNoCSSMask | eEditorMailMask)) == 0);
   }
-
-  /** returns the layout object (nsIFrame in the real world) for aNode
-    * @param aNode          the content to get a frame for
-    * @param aLayoutObject  the "primary frame" for aNode, if one exists.  May be null
-    * @return NS_OK whether a frame is found or not
-    *         an error if some serious error occurs
-    */
-  NS_IMETHOD GetLayoutObject(nsIDOMNode *aInNode, nsISupports **aOutLayoutObject);
 
   // Return TRUE if aElement is a table-related elemet and caret was set
   PRBool SetCaretInTableCell(nsIDOMElement* aElement);
@@ -550,8 +524,6 @@ protected:
   
   NS_IMETHOD IsRootTag(nsString &aTag, PRBool &aIsTag);
 
-  NS_IMETHOD IsSubordinateBlock(nsString &aTag, PRBool &aIsTag);
-
   virtual PRBool IsBlockNode(nsIDOMNode *aNode);
   
   static nsCOMPtr<nsIDOMNode> GetEnclosingTable(nsIDOMNode *aNode);
@@ -578,11 +550,6 @@ protected:
                                           PRBool            &aIsSet,
                                           nsIDOMNode       **aStyleNode,
                                           nsAString *outValue = nsnull);
-
-  void ResetTextSelectionForRange(nsIDOMNode *aParent,
-                                  PRInt32     aStartOffset,
-                                  PRInt32     aEndOffset,
-                                  nsISelection *aSelection);
 
   // Methods for handling plaintext quotations
   NS_IMETHOD PasteAsPlaintextQuotation(PRInt32 aSelectionType);
@@ -787,11 +754,11 @@ protected:
   nsString mLastOverrideStyleSheetURL;
 
   // Maintain a list of associated style sheets and their urls.
-  nsStringArray mStyleSheetURLs;
+  nsTArray<nsString> mStyleSheetURLs;
   nsCOMArray<nsICSSStyleSheet> mStyleSheets;
   
   // an array for holding default style settings
-  nsVoidArray mDefaultStyles;
+  nsTArray<PropItem*> mDefaultStyles;
 
    // for real-time spelling
    nsCOMPtr<nsITextServicesDocument> mTextServices;
@@ -815,6 +782,8 @@ protected:
   void     DeleteRefToAnonymousNode(nsIDOMElement* aElement,
                                     nsIContent * aParentContent,
                                     nsIPresShell* aShell);
+
+  nsresult ShowResizersInner(nsIDOMElement *aResizedElement);
 
   // Returns the offset of an element's frame to its absolute containing block.
   nsresult GetElementOrigin(nsIDOMElement * aElement, PRInt32 & aX, PRInt32 & aY);

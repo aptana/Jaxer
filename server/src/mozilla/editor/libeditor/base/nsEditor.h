@@ -45,7 +45,6 @@
 #include "nsIEditor.h"
 #include "nsIEditorIMESupport.h"
 #include "nsIPhonetic.h"
-#include "nsIKBStateControl.h"
 
 #include "nsIAtom.h"
 #include "nsIDOMDocument.h"
@@ -66,6 +65,7 @@
 #include "nsPIDOMEventTarget.h"
 #include "nsStubMutationObserver.h"
 #include "nsIViewManager.h"
+#include "nsCycleCollectionParticipant.h"
 
 class nsIDOMCharacterData;
 class nsIDOMRange;
@@ -79,7 +79,6 @@ class DeleteTextTxn;
 class SplitElementTxn;
 class JoinElementTxn;
 class EditAggregateTxn;
-class nsILocale;
 class IMETextTxn;
 class AddStyleSheetTxn;
 class RemoveStyleSheetTxn;
@@ -139,7 +138,9 @@ public:
 
 //Interfaces for addref and release and queryinterface
 //NOTE: Use   NS_DECL_ISUPPORTS_INHERITED in any class inherited from nsEditor
-  NS_DECL_ISUPPORTS
+  NS_DECL_CYCLE_COLLECTING_ISUPPORTS
+  NS_DECL_CYCLE_COLLECTION_CLASS_AMBIGUOUS(nsEditor,
+                                           nsIEditor)
 
   /* ------------ utility methods   -------------- */
   NS_IMETHOD GetPresShell(nsIPresShell **aPS);
@@ -164,9 +165,10 @@ public:
                                nsCOMPtr<nsIDOMNode> *aInOutNode, 
                                PRInt32 *aInOutOffset,
                                nsIDOMDocument *aDoc);
-  NS_IMETHOD InsertTextIntoTextNodeImpl(const nsAString& aStringToInsert, 
-                                           nsIDOMCharacterData *aTextNode, 
-                                           PRInt32 aOffset, PRBool suppressIME=PR_FALSE);
+  nsresult InsertTextIntoTextNodeImpl(const nsAString& aStringToInsert, 
+                                      nsIDOMCharacterData *aTextNode, 
+                                      PRInt32 aOffset,
+                                      PRBool aSuppressIME = PR_FALSE);
   NS_IMETHOD DeleteSelectionImpl(EDirection aAction);
   NS_IMETHOD DeleteSelectionAndCreateNode(const nsAString& aTag,
                                            nsIDOMNode ** aNewNode);
@@ -339,8 +341,8 @@ protected:
                            nsCOMPtr<nsIDOMNode> *aResultNode,
                            PRBool       bNoBlockCrossing = PR_FALSE);
 
-  // Get nsIKBStateControl interface
-  nsresult GetKBStateControl(nsIKBStateControl **aKBSC);
+  // Get nsIWidget interface
+  nsresult GetWidget(nsIWidget **aWidget);
 
 
   // install the event listeners for the editor 

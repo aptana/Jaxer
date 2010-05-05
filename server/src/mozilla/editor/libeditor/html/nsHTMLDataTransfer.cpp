@@ -35,7 +35,6 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
-#include "nsICaret.h"
 
 
 #include "nsHTMLEditor.h"
@@ -76,7 +75,6 @@
 #include "nsIDOMRange.h"
 #include "nsIDOMNSRange.h"
 #include "nsCOMArray.h"
-#include "nsVoidArray.h"
 #include "nsIFile.h"
 #include "nsIURL.h"
 #include "nsIComponentManager.h"
@@ -87,9 +85,6 @@
 #include "nsPresContext.h"
 #include "nsIParser.h"
 #include "nsParserCIID.h"
-#include "nsIImage.h"
-#include "nsAOLCiter.h"
-#include "nsInternetCiter.h"
 #include "nsXPCOM.h"
 #include "nsISupportsPrimitives.h"
 #include "nsLinebreakConverter.h"
@@ -502,7 +497,6 @@ nsHTMLEditor::InsertHTMLWithContext(const nsAString & aInputString,
     }
 
     // Loop over the node list and paste the nodes:
-    PRBool bDidInsert = PR_FALSE;
     nsCOMPtr<nsIDOMNode> parentBlock, lastInsertNode, insertedContextParent;
     PRInt32 listCount = nodeList.Count();
     PRInt32 j;
@@ -513,6 +507,7 @@ nsHTMLEditor::InsertHTMLWithContext(const nsAString & aInputString,
       
     for (j=0; j<listCount; j++)
     {
+      PRBool bDidInsert = PR_FALSE;
       nsCOMPtr<nsIDOMNode> curNode = nodeList[j];
 
       NS_ENSURE_TRUE(curNode, NS_ERROR_FAILURE);
@@ -538,12 +533,13 @@ nsHTMLEditor::InsertHTMLWithContext(const nsAString & aInputString,
         while (child)
         {
           res = InsertNodeAtPoint(child, address_of(parentNode), &offsetOfNewNode, PR_TRUE);
-          if (NS_SUCCEEDED(res)) 
-          {
-            bDidInsert = PR_TRUE;
-            lastInsertNode = child;
-            offsetOfNewNode++;
-          }
+          if (NS_FAILED(res))
+            break;
+
+          bDidInsert = PR_TRUE;
+          lastInsertNode = child;
+          offsetOfNewNode++;
+
           curNode->GetFirstChild(getter_AddRefs(child));
         }
       }
@@ -580,12 +576,12 @@ nsHTMLEditor::InsertHTMLWithContext(const nsAString & aInputString,
               }
             } 
             res = InsertNodeAtPoint(child, address_of(parentNode), &offsetOfNewNode, PR_TRUE);
-            if (NS_SUCCEEDED(res)) 
-            {
-              bDidInsert = PR_TRUE;
-              lastInsertNode = child;
-              offsetOfNewNode++;
-            }
+            if (NS_FAILED(res))
+              break;
+
+            bDidInsert = PR_TRUE;
+            lastInsertNode = child;
+            offsetOfNewNode++;
           }
           else
           {
@@ -603,18 +599,19 @@ nsHTMLEditor::InsertHTMLWithContext(const nsAString & aInputString,
         while (child)
         {
           res = InsertNodeAtPoint(child, address_of(parentNode), &offsetOfNewNode, PR_TRUE);
-          if (NS_SUCCEEDED(res)) 
-          {
-            bDidInsert = PR_TRUE;
-            lastInsertNode = child;
-            offsetOfNewNode++;
-          }
+          if (NS_FAILED(res))
+            break;
+
+          bDidInsert = PR_TRUE;
+          lastInsertNode = child;
+          offsetOfNewNode++;
+
           curNode->GetFirstChild(getter_AddRefs(child));
         }
       }
-      else
+
+      if (!bDidInsert || NS_FAILED(res))
       {
-        
         // try to insert
         res = InsertNodeAtPoint(curNode, address_of(parentNode), &offsetOfNewNode, PR_TRUE);
         if (NS_SUCCEEDED(res)) 
@@ -622,9 +619,9 @@ nsHTMLEditor::InsertHTMLWithContext(const nsAString & aInputString,
           bDidInsert = PR_TRUE;
           lastInsertNode = curNode;
         }
-          
-        // assume failure means no legal parent in the document heirarchy.
-        // try again with the parent of curNode in the paste heirarchy.
+
+        // Assume failure means no legal parent in the document hierarchy,
+        // try again with the parent of curNode in the paste hierarchy.
         nsCOMPtr<nsIDOMNode> parent;
         while (NS_FAILED(res) && curNode)
         {
@@ -642,7 +639,7 @@ nsHTMLEditor::InsertHTMLWithContext(const nsAString & aInputString,
           curNode = parent;
         }
       }
-      if (bDidInsert)
+      if (lastInsertNode)
       {
         res = GetNodeLocation(lastInsertNode, address_of(parentNode), &offsetOfNewNode);
         NS_ENSURE_SUCCESS(res, res);
@@ -1117,10 +1114,36 @@ NS_IMETHODIMP nsHTMLEditor::PrepareHTMLTransferable(nsITransferable **aTransfera
       }
       (*aTransferable)->AddDataFlavor(kHTMLMime);
       (*aTransferable)->AddDataFlavor(kFileMime);
-      // image pasting from the clipboard is only implemented on Windows & Mac right now.
-      (*aTransferable)->AddDataFlavor(kJPEGImageMime);
+
+      nsCOMPtr<nsIPrefBranch> prefs = do_GetService(NS_PREFSERVICE_CONTRACTID);
+      PRInt32 clipboardPasteOrder = 1; // order of image-encoding preference
+
+      if (prefs)
+      {
+        prefs->GetIntPref("clipboard.paste_image_type", &clipboardPasteOrder);
+        switch (clipboardPasteOrder)
+        {
+          case 0:  // prefer JPEG over PNG over GIF encoding
+            (*aTransferable)->AddDataFlavor(kJPEGImageMime);
+            (*aTransferable)->AddDataFlavor(kPNGImageMime);
+            (*aTransferable)->AddDataFlavor(kGIFImageMime);
+            break;
+          case 1:  // prefer PNG over JPEG over GIF encoding (default)
+          default:
+            (*aTransferable)->AddDataFlavor(kPNGImageMime);
+            (*aTransferable)->AddDataFlavor(kJPEGImageMime);
+            (*aTransferable)->AddDataFlavor(kGIFImageMime);
+            break;
+          case 2:  // prefer GIF over JPEG over PNG encoding
+            (*aTransferable)->AddDataFlavor(kGIFImageMime);
+            (*aTransferable)->AddDataFlavor(kJPEGImageMime);
+            (*aTransferable)->AddDataFlavor(kPNGImageMime);
+            break;
+        }
+      }
     }
     (*aTransferable)->AddDataFlavor(kUnicodeMime);
+    (*aTransferable)->AddDataFlavor(kMozTextInternal);
   }
   
   return NS_OK;
@@ -1311,7 +1334,8 @@ NS_IMETHODIMP nsHTMLEditor::InsertFromTransferable(nsITransferable *transferable
                                    aDoDeleteSelection);
       }
     }
-    else if (0 == nsCRT::strcmp(bestFlavor, kUnicodeMime))
+    else if (0 == nsCRT::strcmp(bestFlavor, kUnicodeMime) ||
+             0 == nsCRT::strcmp(bestFlavor, kMozTextInternal))
     {
       nsCOMPtr<nsISupportsString> textDataObj(do_QueryInterface(genericDataObj));
       if (textDataObj && len > 0)
@@ -1383,14 +1407,23 @@ NS_IMETHODIMP nsHTMLEditor::InsertFromTransferable(nsITransferable *transferable
         }
       }
     }
-    else if (0 == nsCRT::strcmp(bestFlavor, kJPEGImageMime))
+    else if (0 == nsCRT::strcmp(bestFlavor, kJPEGImageMime) ||
+             0 == nsCRT::strcmp(bestFlavor, kPNGImageMime) ||
+             0 == nsCRT::strcmp(bestFlavor, kGIFImageMime))
     {
       nsCOMPtr<nsIInputStream> imageStream(do_QueryInterface(genericDataObj));
       NS_ENSURE_TRUE(imageStream, NS_ERROR_FAILURE);
 
       nsCOMPtr<nsIFile> fileToUse;
       NS_GetSpecialDirectory(NS_OS_TEMP_DIR, getter_AddRefs(fileToUse));
-      fileToUse->Append(NS_LITERAL_STRING("moz-screenshot.jpg"));
+
+      if (0 == nsCRT::strcmp(bestFlavor, kJPEGImageMime))
+        fileToUse->Append(NS_LITERAL_STRING("moz-screenshot.jpg"));
+      else if (0 == nsCRT::strcmp(bestFlavor, kPNGImageMime))
+        fileToUse->Append(NS_LITERAL_STRING("moz-screenshot.png"));
+      else if (0 == nsCRT::strcmp(bestFlavor, kGIFImageMime))
+        fileToUse->Append(NS_LITERAL_STRING("moz-screenshot.gif"));
+
       nsCOMPtr<nsILocalFile> path = do_QueryInterface(fileToUse);
       path->CreateUnique(nsIFile::NORMAL_FILE_TYPE, 0600);
 
@@ -1464,8 +1497,6 @@ NS_IMETHODIMP nsHTMLEditor::InsertFromDrop(nsIDOMEvent* aDropEvent)
   // transferable hooks here
   nsCOMPtr<nsIDOMDocument> domdoc;
   GetDocument(getter_AddRefs(domdoc));
-  if (!nsEditorHookUtils::DoAllowDropHook(domdoc, aDropEvent, dragSession))
-    return NS_OK;
 
   // find out if we have our internal html flavor on the clipboard.  We don't want to mess
   // around with cfhtml if we do.
@@ -1949,10 +1980,10 @@ NS_IMETHODIMP nsHTMLEditor::CanPaste(PRInt32 aSelectionType, PRBool *aCanPaste)
   nsCOMPtr<nsIClipboard> clipboard(do_GetService("@mozilla.org/widget/clipboard;1", &rv));
   if (NS_FAILED(rv)) return rv;
   
-  // the flavors that we can deal with
+  // the flavors that we can deal with (preferred order selectable for k*ImageMime)
   const char* textEditorFlavors[] = { kUnicodeMime };
   const char* textHtmlEditorFlavors[] = { kUnicodeMime, kHTMLMime,
-                                          kJPEGImageMime };
+                                          kJPEGImageMime, kPNGImageMime, kGIFImageMime };
 
   PRUint32 editorFlags;
   GetFlags(&editorFlags);

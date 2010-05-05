@@ -58,6 +58,23 @@ DeleteElementTxn::DeleteElementTxn()
 {
 }
 
+NS_IMPL_CYCLE_COLLECTION_CLASS(DeleteElementTxn)
+
+NS_IMPL_CYCLE_COLLECTION_UNLINK_BEGIN_INHERITED(DeleteElementTxn, EditTxn)
+  NS_IMPL_CYCLE_COLLECTION_UNLINK_NSCOMPTR(mElement)
+  NS_IMPL_CYCLE_COLLECTION_UNLINK_NSCOMPTR(mParent)
+  NS_IMPL_CYCLE_COLLECTION_UNLINK_NSCOMPTR(mRefNode)
+NS_IMPL_CYCLE_COLLECTION_UNLINK_END
+
+NS_IMPL_CYCLE_COLLECTION_TRAVERSE_BEGIN_INHERITED(DeleteElementTxn, EditTxn)
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE_NSCOMPTR(mElement)
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE_NSCOMPTR(mParent)
+  NS_IMPL_CYCLE_COLLECTION_TRAVERSE_NSCOMPTR(mRefNode)
+NS_IMPL_CYCLE_COLLECTION_TRAVERSE_END
+
+NS_INTERFACE_MAP_BEGIN_CYCLE_COLLECTION(DeleteElementTxn)
+NS_INTERFACE_MAP_END_INHERITING(EditTxn)
+
 NS_IMETHODIMP DeleteElementTxn::Init(nsIEditor *aEditor,
                                      nsIDOMNode *aElement,
                                      nsRangeUpdater *aRangeUpdater)
@@ -113,7 +130,7 @@ NS_IMETHODIMP DeleteElementTxn::DoTransaction(void)
 #endif
 
   // remember which child mElement was (by remembering which child was next)
-  nsresult result = mElement->GetNextSibling(getter_AddRefs(mRefNode));  // can return null mRefNode
+  mElement->GetNextSibling(getter_AddRefs(mRefNode));  // can return null mRefNode
 
   // give range updater a chance.  SelAdjDeleteNode() needs to be called *before*
   // we do the action, unlike some of the other nsRangeStore update methods.

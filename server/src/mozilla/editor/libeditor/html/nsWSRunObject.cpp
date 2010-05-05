@@ -691,6 +691,21 @@ nsWSRunObject::AdjustWhitespace()
 //   protected methods
 //--------------------------------------------------------------------------------------------
 
+already_AddRefed<nsIDOMNode>
+nsWSRunObject::GetWSBoundingParent()
+{
+  nsCOMPtr<nsIDOMNode> wsBoundingParent = mNode;
+  while (!IsBlockNode(wsBoundingParent))
+  {
+    nsCOMPtr<nsIDOMNode> parent;
+    wsBoundingParent->GetParentNode(getter_AddRefs(parent));
+    if (!parent || !mHTMLEditor->IsEditable(parent))
+      break;
+    wsBoundingParent.swap(parent);
+  }
+  return wsBoundingParent.forget();
+}
+
 nsresult
 nsWSRunObject::GetWSNodes()
 {
@@ -699,10 +714,8 @@ nsWSRunObject::GetWSNodes()
   // block boundary.
   nsresult res = NS_OK;
   
-  nsCOMPtr<nsIDOMNode> blockParent;
   DOMPoint start(mNode, mOffset), end(mNode, mOffset);
-  if (IsBlockNode(mNode)) blockParent = mNode;
-  else blockParent = mHTMLEditor->GetBlockNodeParent(mNode);
+  nsCOMPtr<nsIDOMNode> wsBoundingParent = GetWSBoundingParent();
 
   // first look backwards to find preceding ws nodes
   if (mHTMLEditor->IsTextNode(mNode))
@@ -753,7 +766,7 @@ nsWSRunObject::GetWSNodes()
   while (!mStartNode)
   {
     // we haven't found the start of ws yet.  Keep looking
-    res = GetPreviousWSNode(start, blockParent, address_of(priorNode));
+    res = GetPreviousWSNode(start, wsBoundingParent, address_of(priorNode));
     NS_ENSURE_SUCCESS(res, res);
     if (priorNode)
     {
@@ -830,10 +843,10 @@ nsWSRunObject::GetWSNodes()
     }
     else
     {
-      // no prior node means we exhausted blockParent
+      // no prior node means we exhausted wsBoundingParent
       start.GetPoint(mStartNode, mStartOffset);
       mStartReason = eThisBlock;
-      mStartReasonNode = blockParent;
+      mStartReasonNode = wsBoundingParent;
     } 
   }
   
@@ -886,7 +899,7 @@ nsWSRunObject::GetWSNodes()
   while (!mEndNode)
   {
     // we haven't found the end of ws yet.  Keep looking
-    res = GetNextWSNode(end, blockParent, address_of(nextNode));
+    res = GetNextWSNode(end, wsBoundingParent, address_of(nextNode));
     NS_ENSURE_SUCCESS(res, res);
     if (nextNode)
     {
@@ -965,10 +978,10 @@ nsWSRunObject::GetWSNodes()
     }
     else
     {
-      // no next node means we exhausted blockParent
+      // no next node means we exhausted wsBoundingParent
       end.GetPoint(mEndNode, mEndOffset);
       mEndReason = eThisBlock;
-      mEndReasonNode = blockParent;
+      mEndReasonNode = wsBoundingParent;
     } 
   }
 
@@ -1249,7 +1262,7 @@ nsWSRunObject::GetPreviousWSNode(nsIDOMNode *aStartNode,
   }
 
   nsCOMPtr<nsIContent> startContent( do_QueryInterface(aStartNode) );
-
+  NS_ENSURE_STATE(startContent);
   nsIContent *priorContent = startContent->GetChildAt(aOffset - 1);
   if (!priorContent) 
     return NS_ERROR_NULL_POINTER;
@@ -1347,6 +1360,7 @@ nsWSRunObject::GetNextWSNode(nsIDOMNode *aStartNode,
     return GetNextWSNode(aStartNode, aBlockParent, aNextNode);
   
   nsCOMPtr<nsIContent> startContent( do_QueryInterface(aStartNode) );
+  NS_ENSURE_STATE(startContent);
   nsIContent *nextContent = startContent->GetChildAt(aOffset);
   if (!nextContent)
   {
@@ -1710,7 +1724,6 @@ nsWSRunObject::GetCharBefore(WSPoint &aPoint, WSPoint *outPoint)
   outPoint->mOffset = 0;
   outPoint->mChar = 0;
   
-  nsresult res = NS_OK;
   nsCOMPtr<nsIDOMNode> pointTextNode(do_QueryInterface(aPoint.mTextNode));
   PRInt32 idx = mNodeArray.IndexOf(pointTextNode);
   if (idx == -1) return NS_OK;  // can't find point, but it's not an error
@@ -2068,7 +2081,8 @@ nsWSRunObject::CheckTrailingNBSPOfRun(WSFragment *aRun)
       if (aRun->mRightType == eText)    rightCheck = PR_TRUE;
       if (aRun->mRightType == eSpecial) rightCheck = PR_TRUE;
       if (aRun->mRightType == eBreak)   rightCheck = PR_TRUE;
-      if (aRun->mRightType & eBlock)
+      if ((aRun->mRightType & eBlock) &&
+          IsBlockNode(nsCOMPtr<nsIDOMNode>(GetWSBoundingParent())))
       {
         // we are at a block boundary.  Insert a <br>.  Why?  Well, first note that
         // the br will have no visible effect since it is up against a block boundary.
@@ -2087,11 +2101,11 @@ nsWSRunObject::CheckTrailingNBSPOfRun(WSFragment *aRun)
         // here, which allows us to do: |<body>foo.&nbsp <br></body>|, which doesn't
         // cause foo to jump lines, doesn't cause spaces to show up at the beginning of 
         // soft wrapped lines, and lets the user see 2 spaces when they type 2 spaces.
-        
+
         nsCOMPtr<nsIDOMNode> brNode;
         res = mHTMLEditor->CreateBR(aRun->mEndNode, aRun->mEndOffset, address_of(brNode));
         NS_ENSURE_SUCCESS(res, res);
-        
+
         // refresh thePoint, prevPoint
         res = GetCharBefore(aRun->mEndNode, aRun->mEndOffset, &thePoint);
         NS_ENSURE_SUCCESS(res, res);

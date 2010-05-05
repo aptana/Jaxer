@@ -43,7 +43,6 @@
 
 #include "nsIEditorSpellCheck.h"
 #include "nsISpellChecker.h"
-#include "nsVoidArray.h"
 #include "nsCOMPtr.h"
 
 #define NS_EDITORSPELLCHECK_CID                     \
@@ -66,12 +65,12 @@ public:
 protected:
   nsCOMPtr<nsISpellChecker> mSpellChecker;
 
-  nsStringArray  mSuggestedWordList;
+  nsTArray<nsString>  mSuggestedWordList;
   PRInt32        mSuggestedWordIndex;
 
   // these are the words in the current personal dictionary,
   // GetPersonalDictionary must be called to load them.
-  nsStringArray  mDictionaryList;
+  nsTArray<nsString>  mDictionaryList;
   PRInt32        mDictionaryIndex;
 
   nsresult       DeleteSuggestedWordList();

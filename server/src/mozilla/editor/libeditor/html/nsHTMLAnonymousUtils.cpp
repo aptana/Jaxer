@@ -188,7 +188,7 @@ nsHTMLEditor::CreateAnonymousElement(const nsAString & aTag, nsIDOMNode *  aPare
 
     // establish parenthood of the element
     newContent->SetNativeAnonymous();
-    res = newContent->BindToTree(doc, parentContent, newContent, PR_TRUE);
+    res = newContent->BindToTree(doc, parentContent, parentContent, PR_TRUE);
     if (NS_FAILED(res)) {
       newContent->UnbindFromTree();
       return res;
@@ -253,7 +253,7 @@ nsHTMLEditor::DeleteRefToAnonymousNode(nsIDOMElement* aElement,
           // Call BeginUpdate() so that the nsCSSFrameConstructor/PresShell
           // knows we're messing with the frame tree.
           nsCOMPtr<nsIDOMDocument> domDocument;
-          nsresult res = GetDocument(getter_AddRefs(domDocument));
+          GetDocument(getter_AddRefs(domDocument));
           nsCOMPtr<nsIDocument> document = do_QueryInterface(domDocument);
           if (document)
             docObserver->BeginUpdate(document, UPDATE_CONTENT_MODEL);
