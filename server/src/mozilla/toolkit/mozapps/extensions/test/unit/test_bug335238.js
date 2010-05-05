@@ -42,7 +42,7 @@ const PREF_SELECTED_LOCALE = "general.useragent.locale";
 // Disables security checking our updates which haven't been signed
 gPrefs.setBoolPref("extensions.checkUpdateSecurity", false);
 
-do_import_script("netwerk/test/httpserver/httpd.js");
+do_load_httpd_js();
 
 // This is the data we expect to see sent as part of the update url.
 var EXPECTED = [
@@ -56,7 +56,7 @@ var EXPECTED = [
     appOs: "XPCShell",
     appAbi: "noarch-spidermonkey",
     locale: "en-US",
-    reqVersion: "1"
+    reqVersion: "2"
   },
   {
     id: "bug335238_2@tests.mozilla.org",
@@ -68,7 +68,7 @@ var EXPECTED = [
     appOs: "XPCShell",
     appAbi: "noarch-spidermonkey",
     locale: "en-US",
-    reqVersion: "1"
+    reqVersion: "2"
   }
 ];
 
@@ -88,8 +88,7 @@ var updateListener = {
   
   onUpdateEnded: function()
   {
-    server.stop();
-    do_test_finished();
+    server.stop(do_test_finished);
   },
   
   onAddonUpdateStarted: function(addon)

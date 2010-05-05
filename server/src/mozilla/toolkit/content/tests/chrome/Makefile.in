@@ -42,19 +42,36 @@ VPATH		= @srcdir@
 relativesrcdir  = toolkit/content/tests/chrome
 
 include $(DEPTH)/config/autoconf.mk
+
+DIRS = rtltest
+
 include $(topsrcdir)/config/rules.mk
 
-_TEST_FILES = 	bug288254_window.xul \
-		test_bug288254.xul \
+_TEST_FILES = 	findbar_window.xul \
+		test_findbar.xul \
 		test_bug253481.xul \
+		bug263683_window.xul \
+		test_bug263683.xul \
 		bug304188_window.xul \
 		test_bug304188.xul \
+		bug331215_window.xul \
+		test_bug331215.xul \
 		bug360437_window.xul \
 		test_bug360437.xul \
 		bug366992_window.xul \
 		test_bug366992.xul \
-		bug331215_window.xul \
-		test_bug331215.xul \
+		test_bug418874.xul \
+		bug429723_window.xul \
+		test_bug429723.xul \
+		bug437844.css \
+		bug437844.dtd \
+		bug437844.manifest \
+		test_bug437844.xul \
+		bug451286_window.xul \
+		test_bug451286.xul \
+		bug451540_window.xul \
+		test_bug451540.xul \
+		test_bug471776.xul \
 		test_popup_preventdefault_chrome.xul \
 		window_popup_preventdefault_chrome.xul \
 		test_largemenu.xul \
@@ -64,13 +81,34 @@ _TEST_FILES = 	bug288254_window.xul \
 		frame_popup_anchor.xul \
 		test_preferences.xul \
 		window_preferences.xul \
+		window_preferences2.xul \
+		window_preferences3.xul \
+		test_autocomplete2.xul \
+		test_autocomplete3.xul \
+		test_autocomplete4.xul \
+		test_keys.xul \
+		window_keys.xul \
+		test_showcaret.xul \
+		test_righttoleft.xul \
+		test_screenPersistence.xul \
+		window_screenPosSize.xul \
 		$(NULL)
 
+# test_panel_focus.xul won't work if the Full Keyboard Access preference is set to
+# textboxes and lists only, so skip this test on Mac
 ifeq (,$(filter mac cocoa,$(MOZ_WIDGET_TOOLKIT)))
 _TEST_FILES += test_panel_focus.xul \
-               window_panel_focus.xul
+               window_panel_focus.xul \
+               test_dialogfocus.xul \
+               dialog_dialogfocus.xul
 else
 _TEST_FILES += test_autocomplete.xul
+endif
+
+ifeq ($(MOZ_WIDGET_TOOLKIT),windows)
+_TEST_FILES += 	$(warning test_cursorsnap.xul temporarily disabled) \
+		window_cursorsnap_dialog.xul \
+		window_cursorsnap_wizard.xul
 endif
 
 libs:: $(_TEST_FILES)

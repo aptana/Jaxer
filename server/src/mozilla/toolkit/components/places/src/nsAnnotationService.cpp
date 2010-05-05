@@ -22,6 +22,7 @@
  * Contributor(s):
  *   Brett Wilson <brettw@gmail.com> (original author)
  *   Asaf Romano <mano@mozilla.com>
+ *   Ehsan Akhgari <ehsan.akhgari@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -50,6 +51,9 @@
 #include "nsString.h"
 #include "nsVariant.h"
 #include "nsNavBookmarks.h"
+#include "nsPlacesTables.h"
+#include "nsPlacesIndexes.h"
+#include "nsPlacesMacros.h"
 
 const PRInt32 nsAnnotationService::kAnnoIndex_ID = 0;
 const PRInt32 nsAnnotationService::kAnnoIndex_PageOrItem = 1;
@@ -62,7 +66,7 @@ const PRInt32 nsAnnotationService::kAnnoIndex_Type = 7;
 const PRInt32 nsAnnotationService::kAnnoIndex_DateAdded = 8;
 const PRInt32 nsAnnotationService::kAnnoIndex_LastModified = 9;
 
-nsAnnotationService* nsAnnotationService::gAnnotationService;
+PLACES_FACTORY_SINGLETON_IMPLEMENTATION(nsAnnotationService, gAnnotationService)
 
 NS_IMPL_ISUPPORTS1(nsAnnotationService,
                    nsIAnnotationService)
@@ -72,7 +76,7 @@ NS_IMPL_ISUPPORTS1(nsAnnotationService,
 nsAnnotationService::nsAnnotationService()
 {
   NS_ASSERTION(!gAnnotationService,
-               "ATTEMPTING TO CREATE TWO INSTANCES OF THE ANNOTATION SERVICE!");
+               "Attempting to create two instances of the service!");
   gAnnotationService = this;
 }
 
@@ -82,7 +86,7 @@ nsAnnotationService::nsAnnotationService()
 nsAnnotationService::~nsAnnotationService()
 {
   NS_ASSERTION(gAnnotationService == this,
-               "Deleting a non-singleton annotation service");
+               "Deleting a non-singleton instance of the service");
   if (gAnnotationService == this)
     gAnnotationService = nsnull;
 }
@@ -98,9 +102,9 @@ nsAnnotationService::Init()
   // The history service will normally already be created and will call our
   // static InitTables function. It will get autocreated here if it hasn't
   // already been created.
-  nsNavHistory* history = nsNavHistory::GetHistoryService();
-  if (! history)
-    return NS_ERROR_FAILURE;
+  nsNavHistory *history = nsNavHistory::GetHistoryService();
+  NS_ENSURE_TRUE(history, NS_ERROR_OUT_OF_MEMORY);
+
   mDBConn = history->GetStorageConnection();
 
   // annotation statements
@@ -108,7 +112,8 @@ nsAnnotationService::Init()
   // mDBSetAnnotation
   rv = mDBConn->CreateStatement(NS_LITERAL_CSTRING(
       "UPDATE moz_annos "
-      "SET mime_type = ?4, content = ?5, flags = ?6, expiration = ?7, type = ?8, lastModified = ?10 "
+      "SET mime_type = ?4, content = ?5, flags = ?6, expiration = ?7, "
+        "type = ?8, lastModified = ?10 "
       "WHERE id = ?1"),
     getter_AddRefs(mDBSetAnnotation));
   NS_ENSURE_SUCCESS(rv, rv);
@@ -116,7 +121,8 @@ nsAnnotationService::Init()
   // mDBSetItemAnnotation
   rv = mDBConn->CreateStatement(NS_LITERAL_CSTRING(
       "UPDATE moz_items_annos "
-      "SET mime_type = ?4, content = ?5, flags = ?6, expiration = ?7, type = ?8, lastModified = ?10 "
+      "SET mime_type = ?4, content = ?5, flags = ?6, expiration = ?7, "
+        "type = ?8, lastModified = ?10 "
       "WHERE id = ?1"),
     getter_AddRefs(mDBSetItemAnnotation));
   NS_ENSURE_SUCCESS(rv, rv);
@@ -126,7 +132,7 @@ nsAnnotationService::Init()
       "SELECT * "
       "FROM moz_annos "
       "WHERE place_id = ?1 AND anno_attribute_id = "
-      "(SELECT id FROM moz_anno_attributes WHERE name = ?2)"),
+        "(SELECT id FROM moz_anno_attributes WHERE name = ?2)"),
     getter_AddRefs(mDBGetAnnotation));
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -135,14 +141,15 @@ nsAnnotationService::Init()
       "SELECT * "
       "FROM moz_items_annos "
       "WHERE item_id = ?1 AND anno_attribute_id = "
-      "(SELECT id FROM moz_anno_attributes WHERE name = ?2)"),
+        "(SELECT id FROM moz_anno_attributes WHERE name = ?2)"),
     getter_AddRefs(mDBGetItemAnnotation));
   NS_ENSURE_SUCCESS(rv, rv);
 
   // mDBGetAnnotationNames
   rv = mDBConn->CreateStatement(NS_LITERAL_CSTRING(
       "SELECT n.name "
-      "FROM moz_annos a LEFT JOIN moz_anno_attributes n ON a.anno_attribute_id = n.id "
+      "FROM moz_annos a "
+      "JOIN moz_anno_attributes n ON a.anno_attribute_id = n.id "
       "WHERE a.place_id = ?1"),
     getter_AddRefs(mDBGetAnnotationNames));
   NS_ENSURE_SUCCESS(rv, rv);
@@ -150,18 +157,29 @@ nsAnnotationService::Init()
   // mDBGetItemAnnotationNames
   rv = mDBConn->CreateStatement(NS_LITERAL_CSTRING(
       "SELECT n.name "
-      "FROM moz_items_annos a LEFT JOIN moz_anno_attributes n ON a.anno_attribute_id = n.id "
+      "FROM moz_items_annos a "
+      "JOIN moz_anno_attributes n ON a.anno_attribute_id = n.id "
       "WHERE a.item_id = ?1"),
     getter_AddRefs(mDBGetItemAnnotationNames));
   NS_ENSURE_SUCCESS(rv, rv);
 
   // mDBGetAnnotationFromURI
+  // We are not checking for duplicated ids into the unified table
+  // for perf reasons, LIMIT 1 will discard duplicates faster since we
+  // can only have one anno with a certain name for every place_id.
   rv = mDBConn->CreateStatement(NS_LITERAL_CSTRING(
       "SELECT a.id, a.place_id, ?2, a.mime_type, a.content, a.flags, "
         "a.expiration, a.type "
-      "FROM moz_places h JOIN moz_annos a ON h.id = a.place_id "
-      "WHERE h.url = ?1 AND a.anno_attribute_id = "
-      "(SELECT id FROM moz_anno_attributes WHERE name = ?2)"),
+      "FROM ( "
+        "SELECT id FROM moz_places_temp "
+        "WHERE url = ?1 "
+        "UNION ALL "
+        "SELECT id FROM moz_places "
+        "WHERE url = ?1 "
+      ") AS h JOIN moz_annos a ON h.id = a.place_id "
+      "WHERE a.anno_attribute_id = "
+        "(SELECT id FROM moz_anno_attributes WHERE name = ?2) "
+      "LIMIT 1"),
     getter_AddRefs(mDBGetAnnotationFromURI));
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -171,7 +189,7 @@ nsAnnotationService::Init()
         "a.expiration, a.type "
       "FROM moz_items_annos a "
       "WHERE a.item_id = ?1 AND a.anno_attribute_id = "
-      "(SELECT id FROM moz_anno_attributes WHERE name = ?2)"),
+        "(SELECT id FROM moz_anno_attributes WHERE name = ?2)"),
     getter_AddRefs(mDBGetAnnotationFromItemId));
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -191,7 +209,8 @@ nsAnnotationService::Init()
   //   Note: kAnnoIndex_Name here is a name ID and not a string like the getters
   rv = mDBConn->CreateStatement(NS_LITERAL_CSTRING(
       "INSERT INTO moz_annos "
-      "(place_id, anno_attribute_id, mime_type, content, flags, expiration, type, dateAdded) "
+        "(place_id, anno_attribute_id, mime_type, content, flags, expiration, "
+         "type, dateAdded) "
       "VALUES (?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)"),
     getter_AddRefs(mDBAddAnnotation));
   NS_ENSURE_SUCCESS(rv, rv);
@@ -200,7 +219,8 @@ nsAnnotationService::Init()
   //   Note: kAnnoIndex_Name here is a name ID and not a string like the getters
   rv = mDBConn->CreateStatement(NS_LITERAL_CSTRING(
       "INSERT INTO moz_items_annos "
-      "(item_id, anno_attribute_id, mime_type, content, flags, expiration, type, dateAdded) "
+        "(item_id, anno_attribute_id, mime_type, content, flags, expiration, "
+         "type, dateAdded) "
       "VALUES (?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)"),
     getter_AddRefs(mDBAddItemAnnotation));
   NS_ENSURE_SUCCESS(rv, rv);
@@ -208,21 +228,21 @@ nsAnnotationService::Init()
   // mDBRemoveAnnotation
   rv = mDBConn->CreateStatement(NS_LITERAL_CSTRING(
       "DELETE FROM moz_annos WHERE place_id = ?1 AND anno_attribute_id = "
-      "(SELECT id FROM moz_anno_attributes WHERE name = ?2)"),
+        "(SELECT id FROM moz_anno_attributes WHERE name = ?2)"),
     getter_AddRefs(mDBRemoveAnnotation));
   NS_ENSURE_SUCCESS(rv, rv);
 
   // mDBRemoveItemAnnotation
   rv = mDBConn->CreateStatement(NS_LITERAL_CSTRING(
       "DELETE FROM moz_items_annos WHERE item_id = ?1 AND anno_attribute_id = "
-      "(SELECT id FROM moz_anno_attributes WHERE name = ?2)"),
+        "(SELECT id FROM moz_anno_attributes WHERE name = ?2)"),
     getter_AddRefs(mDBRemoveItemAnnotation));
   NS_ENSURE_SUCCESS(rv, rv);
 
   // mDBGetItemsWithAnnotation
   rv = mDBConn->CreateStatement(NS_LITERAL_CSTRING(
     "SELECT a.item_id FROM moz_anno_attributes n "
-    "INNER JOIN moz_items_annos a ON n.id = a.anno_attribute_id "
+    "JOIN moz_items_annos a ON n.id = a.anno_attribute_id "
     "WHERE n.name = ?1"),
     getter_AddRefs(mDBGetItemsWithAnnotation));
   NS_ENSURE_SUCCESS(rv, rv);
@@ -248,49 +268,26 @@ nsAnnotationService::InitTables(mozIStorageConnection* aDBConn)
   rv = aDBConn->TableExists(NS_LITERAL_CSTRING("moz_annos"), &exists);
   NS_ENSURE_SUCCESS(rv, rv);
   if (! exists) {
-    rv = aDBConn->ExecuteSimpleSQL(NS_LITERAL_CSTRING("CREATE TABLE moz_annos ("
-        "id INTEGER PRIMARY KEY,"
-        "place_id INTEGER NOT NULL,"
-        "anno_attribute_id INTEGER,"
-        "mime_type VARCHAR(32) DEFAULT NULL,"
-        "content LONGVARCHAR, flags INTEGER DEFAULT 0,"
-        "expiration INTEGER DEFAULT 0,"
-        "type INTEGER DEFAULT 0,"
-        "dateAdded INTEGER DEFAULT 0," 
-        "lastModified INTEGER DEFAULT 0)"));
+    rv = aDBConn->ExecuteSimpleSQL(CREATE_MOZ_ANNOS);
     NS_ENSURE_SUCCESS(rv, rv);
 
-    rv = aDBConn->ExecuteSimpleSQL(NS_LITERAL_CSTRING(
-        "CREATE UNIQUE INDEX moz_annos_placeattributeindex ON moz_annos (place_id, anno_attribute_id)"));
+    rv = aDBConn->ExecuteSimpleSQL(CREATE_IDX_MOZ_ANNOS_PLACEATTRIBUTE);
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
   rv = aDBConn->TableExists(NS_LITERAL_CSTRING("moz_anno_attributes"), &exists);
   NS_ENSURE_SUCCESS(rv, rv);
   if (! exists) {
-    rv = aDBConn->ExecuteSimpleSQL(NS_LITERAL_CSTRING(
-        "CREATE TABLE moz_anno_attributes ("
-        "id INTEGER PRIMARY KEY,"
-        "name VARCHAR(32) UNIQUE NOT NULL)"));
+    rv = aDBConn->ExecuteSimpleSQL(CREATE_MOZ_ANNO_ATTRIBUTES);
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
   rv = aDBConn->TableExists(NS_LITERAL_CSTRING("moz_items_annos"), &exists);
   NS_ENSURE_SUCCESS(rv, rv);
   if (! exists) {
-    rv = aDBConn->ExecuteSimpleSQL(NS_LITERAL_CSTRING("CREATE TABLE moz_items_annos ("
-        "id INTEGER PRIMARY KEY,"
-        "item_id INTEGER NOT NULL,"
-        "anno_attribute_id INTEGER,"
-        "mime_type VARCHAR(32) DEFAULT NULL,"
-        "content LONGVARCHAR, flags INTEGER DEFAULT 0,"
-        "expiration INTEGER DEFAULT 0,"
-        "type INTEGER DEFAULT 0,"
-        "dateAdded INTEGER DEFAULT 0," 
-        "lastModified INTEGER DEFAULT 0)"));
+    rv = aDBConn->ExecuteSimpleSQL(CREATE_MOZ_ITEMS_ANNOS);
     NS_ENSURE_SUCCESS(rv, rv);
-    rv = aDBConn->ExecuteSimpleSQL(NS_LITERAL_CSTRING(
-        "CREATE UNIQUE INDEX moz_items_annos_itemattributeindex ON moz_items_annos (item_id, anno_attribute_id)"));
+    rv = aDBConn->ExecuteSimpleSQL(CREATE_IDX_MOZ_ITEMSANNOS_PLACEATTRIBUTE);
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
@@ -340,6 +337,7 @@ nsAnnotationService::SetPageAnnotation(nsIURI* aURI,
                                        PRInt32 aFlags,
                                        PRUint16 aExpiration)
 {
+  NS_ENSURE_ARG(aURI);
   NS_ENSURE_ARG(aValue);
 
   PRUint16 dataType;
@@ -412,6 +410,7 @@ nsAnnotationService::SetItemAnnotation(PRInt64 aItemId,
                                        PRInt32 aFlags,
                                        PRUint16 aExpiration)
 {
+  NS_ENSURE_ARG_MIN(aItemId, 1);
   NS_ENSURE_ARG(aValue);
 
   if (aExpiration == EXPIRE_WITH_HISTORY)
@@ -489,6 +488,11 @@ nsAnnotationService::SetPageAnnotationString(nsIURI* aURI,
                                              PRInt32 aFlags,
                                              PRUint16 aExpiration)
 {
+  NS_ENSURE_ARG(aURI);
+
+  if (InPrivateBrowsingMode())
+    return NS_OK;
+
   PRInt64 placeId;
   nsresult rv = GetPlaceIdForURI(aURI, &placeId);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -511,6 +515,8 @@ nsAnnotationService::SetItemAnnotationString(PRInt64 aItemId,
                                              PRInt32 aFlags,
                                              PRUint16 aExpiration)
 {
+  NS_ENSURE_ARG_MIN(aItemId, 1);
+
   if (aExpiration == EXPIRE_WITH_HISTORY)
     return NS_ERROR_INVALID_ARG;
 
@@ -566,6 +572,11 @@ nsAnnotationService::SetPageAnnotationInt32(nsIURI* aURI,
                                             PRInt32 aFlags,
                                             PRUint16 aExpiration)
 {
+  NS_ENSURE_ARG(aURI);
+
+  if (InPrivateBrowsingMode())
+    return NS_OK;
+
   PRInt64 placeId;
   nsresult rv = GetPlaceIdForURI(aURI, &placeId);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -587,6 +598,8 @@ nsAnnotationService::SetItemAnnotationInt32(PRInt64 aItemId,
                                             PRInt32 aFlags,
                                             PRUint16 aExpiration)
 {
+  NS_ENSURE_ARG_MIN(aItemId, 1);
+
   if (aExpiration == EXPIRE_WITH_HISTORY)
     return NS_ERROR_INVALID_ARG;
 
@@ -642,6 +655,11 @@ nsAnnotationService::SetPageAnnotationInt64(nsIURI* aURI,
                                             PRInt32 aFlags,
                                             PRUint16 aExpiration)
 {
+  NS_ENSURE_ARG(aURI);
+
+  if (InPrivateBrowsingMode())
+    return NS_OK;
+
   PRInt64 placeId;
   nsresult rv = GetPlaceIdForURI(aURI, &placeId);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -663,6 +681,8 @@ nsAnnotationService::SetItemAnnotationInt64(PRInt64 aItemId,
                                             PRInt32 aFlags,
                                             PRUint16 aExpiration)
 {
+  NS_ENSURE_ARG_MIN(aItemId, 1);
+
   if (aExpiration == EXPIRE_WITH_HISTORY)
     return NS_ERROR_INVALID_ARG;
 
@@ -718,6 +738,11 @@ nsAnnotationService::SetPageAnnotationDouble(nsIURI* aURI,
                                              PRInt32 aFlags,
                                              PRUint16 aExpiration)
 {
+  NS_ENSURE_ARG(aURI);
+
+  if (InPrivateBrowsingMode())
+    return NS_OK;
+
   PRInt64 placeId;
   nsresult rv = GetPlaceIdForURI(aURI, &placeId);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -739,6 +764,8 @@ nsAnnotationService::SetItemAnnotationDouble(PRInt64 aItemId,
                                              PRInt32 aFlags,
                                              PRUint16 aExpiration)
 {
+  NS_ENSURE_ARG_MIN(aItemId, 1);
+
   if (aExpiration == EXPIRE_WITH_HISTORY)
     return NS_ERROR_INVALID_ARG;
 
@@ -801,6 +828,11 @@ nsAnnotationService::SetPageAnnotationBinary(nsIURI* aURI,
                                              PRInt32 aFlags,
                                              PRUint16 aExpiration)
 {
+  NS_ENSURE_ARG(aURI);
+
+  if (InPrivateBrowsingMode())
+    return NS_OK;
+
   PRInt64 placeId;
   nsresult rv = GetPlaceIdForURI(aURI, &placeId);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -822,6 +854,8 @@ nsAnnotationService::SetItemAnnotationBinary(PRInt64 aItemId,
                                              PRInt32 aFlags,
                                              PRUint16 aExpiration)
 {
+  NS_ENSURE_ARG_MIN(aItemId, 1);
+
   if (aExpiration == EXPIRE_WITH_HISTORY)
     return NS_ERROR_INVALID_ARG;
 
@@ -848,6 +882,8 @@ nsAnnotationService::GetPageAnnotationString(nsIURI* aURI,
                                              const nsACString& aName,
                                              nsAString& _retval)
 {
+  NS_ENSURE_ARG(aURI);
+
   nsresult rv = StartGetAnnotationFromURI(aURI, aName);
   if (NS_FAILED(rv))
     return rv;
@@ -865,6 +901,8 @@ nsAnnotationService::GetItemAnnotationString(PRInt64 aItemId,
                                              const nsACString& aName,
                                              nsAString& _retval)
 {
+  NS_ENSURE_ARG_MIN(aItemId, 1);
+
   nsresult rv = StartGetAnnotationFromItemId(aItemId, aName);
   if (NS_FAILED(rv))
     return rv;
@@ -880,6 +918,8 @@ nsAnnotationService::GetPageAnnotation(nsIURI* aURI,
                                        const nsACString& aName,
                                        nsIVariant** _retval)
 {
+  NS_ENSURE_ARG(aURI);
+
   *_retval = nsnull;
   nsresult rv = StartGetAnnotationFromURI(aURI, aName);
   if (NS_FAILED(rv))
@@ -923,6 +963,9 @@ nsAnnotationService::GetItemAnnotation(PRInt64 aItemId,
                                        const nsACString& aName,
                                        nsIVariant** _retval)
 {
+  NS_ENSURE_ARG_MIN(aItemId, 1);
+  NS_ENSURE_ARG_POINTER(_retval);
+
   *_retval = nsnull;
   nsresult rv = StartGetAnnotationFromItemId(aItemId, aName);
   if (NS_FAILED(rv))
@@ -968,6 +1011,8 @@ nsAnnotationService::GetPageAnnotationInt32(nsIURI* aURI,
                                         const nsACString& aName,
                                         PRInt32 *_retval)
 {
+  NS_ENSURE_ARG(aURI);
+
   nsresult rv = StartGetAnnotationFromURI(aURI, aName);
   if (NS_FAILED(rv))
     return rv;
@@ -985,6 +1030,8 @@ nsAnnotationService::GetItemAnnotationInt32(PRInt64 aItemId,
                                             const nsACString& aName,
                                             PRInt32 *_retval)
 {
+  NS_ENSURE_ARG_MIN(aItemId, 1);
+
   nsresult rv = StartGetAnnotationFromItemId(aItemId, aName);
   if (NS_FAILED(rv))
     return rv;
@@ -1001,6 +1048,8 @@ nsAnnotationService::GetPageAnnotationInt64(nsIURI* aURI,
                                             const nsACString& aName,
                                             PRInt64 *_retval)
 {
+  NS_ENSURE_ARG(aURI);
+
   nsresult rv = StartGetAnnotationFromURI(aURI, aName);
   NS_ENSURE_SUCCESS(rv, rv);
   ENSURE_ANNO_TYPE(TYPE_INT64, mDBGetAnnotationFromURI)
@@ -1016,6 +1065,8 @@ nsAnnotationService::GetItemAnnotationInt64(PRInt64 aItemId,
                                             const nsACString& aName,
                                             PRInt64 *_retval)
 {
+  NS_ENSURE_ARG_MIN(aItemId, 1);
+
   nsresult rv = StartGetAnnotationFromItemId(aItemId, aName);
   NS_ENSURE_SUCCESS(rv, rv);
   ENSURE_ANNO_TYPE(TYPE_INT64, mDBGetAnnotationFromItemId)
@@ -1031,6 +1082,9 @@ nsAnnotationService::GetPageAnnotationType(nsIURI* aURI,
                                            const nsACString& aName,
                                            PRUint16* _retval)
 {
+  NS_ENSURE_ARG(aURI);
+  NS_ENSURE_ARG_POINTER(_retval);
+
   nsresult rv = StartGetAnnotationFromURI(aURI, aName);
   NS_ENSURE_SUCCESS(rv, rv);
   *_retval = mDBGetAnnotationFromURI->AsInt32(kAnnoIndex_Type);
@@ -1045,6 +1099,8 @@ nsAnnotationService::GetItemAnnotationType(PRInt64 aItemId,
                                            const nsACString& aName,
                                            PRUint16* _retval)
 {
+  NS_ENSURE_ARG_MIN(aItemId, 1);
+  NS_ENSURE_ARG_POINTER(_retval);
   nsresult rv = StartGetAnnotationFromItemId(aItemId, aName);
   NS_ENSURE_SUCCESS(rv, rv);
   *_retval = mDBGetAnnotationFromItemId->AsInt32(kAnnoIndex_Type);
@@ -1059,6 +1115,9 @@ nsAnnotationService::GetPageAnnotationDouble(nsIURI* aURI,
                                              const nsACString& aName,
                                              double *_retval)
 {
+  NS_ENSURE_ARG(aURI);
+  NS_ENSURE_ARG_POINTER(_retval);
+
   nsresult rv = StartGetAnnotationFromURI(aURI, aName);
   if (NS_FAILED(rv))
     return rv;
@@ -1075,6 +1134,8 @@ nsAnnotationService::GetItemAnnotationDouble(PRInt64 aItemId,
                                              const nsACString& aName,
                                              double *_retval)
 {
+  NS_ENSURE_ARG_MIN(aItemId, 1);
+  NS_ENSURE_ARG_POINTER(_retval);
   nsresult rv = StartGetAnnotationFromItemId(aItemId, aName);
   if (NS_FAILED(rv))
     return rv;
@@ -1093,6 +1154,10 @@ nsAnnotationService::GetPageAnnotationBinary(nsIURI* aURI,
                                              PRUint32* aDataLen,
                                              nsACString& aMimeType)
 {
+  NS_ENSURE_ARG(aURI);
+  NS_ENSURE_ARG_POINTER(aData);
+  NS_ENSURE_ARG_POINTER(aDataLen);
+
   nsresult rv = StartGetAnnotationFromURI(aURI, aName);
   if (NS_FAILED(rv))
     return rv;
@@ -1116,6 +1181,9 @@ nsAnnotationService::GetItemAnnotationBinary(PRInt64 aItemId,
                                              PRUint32* aDataLen,
                                              nsACString& aMimeType)
 {
+  NS_ENSURE_ARG_MIN(aItemId, 1);
+  NS_ENSURE_ARG_POINTER(aData);
+  NS_ENSURE_ARG_POINTER(aDataLen);
   nsresult rv = StartGetAnnotationFromItemId(aItemId, aName);
   if (NS_FAILED(rv))
     return rv;
@@ -1140,6 +1208,11 @@ nsAnnotationService::GetPageAnnotationInfo(nsIURI* aURI,
                                            nsACString& aMimeType,
                                            PRUint16 *aStorageType)
 {
+  NS_ENSURE_ARG(aURI);
+  NS_ENSURE_ARG_POINTER(aFlags);
+  NS_ENSURE_ARG_POINTER(aExpiration);
+  NS_ENSURE_ARG_POINTER(aStorageType);
+
   nsresult rv = StartGetAnnotationFromURI(aURI, aName);
   if (NS_FAILED(rv))
     return rv;
@@ -1170,6 +1243,11 @@ nsAnnotationService::GetItemAnnotationInfo(PRInt64 aItemId,
                                            nsACString& aMimeType,
                                            PRUint16 *aStorageType)
 {
+  NS_ENSURE_ARG_MIN(aItemId, 1);
+  NS_ENSURE_ARG_POINTER(aFlags);
+  NS_ENSURE_ARG_POINTER(aExpiration);
+  NS_ENSURE_ARG_POINTER(aStorageType);
+
   nsresult rv = StartGetAnnotationFromItemId(aItemId, aName);
   if (NS_FAILED(rv))
     return rv;
@@ -1230,10 +1308,18 @@ nsAnnotationService::GetPagesWithAnnotationCOMArray(
   // statement. Perhaps this should change.
   nsCOMPtr<mozIStorageStatement> statement;
   nsresult rv = mDBConn->CreateStatement(NS_LITERAL_CSTRING(
-    "SELECT h.url FROM moz_anno_attributes n "
-    "INNER JOIN moz_annos a ON n.id = a.anno_attribute_id "
-    "INNER JOIN moz_places h ON a.place_id = h.id "
-    "WHERE n.name = ?1"),
+      "SELECT h.url "
+      "FROM moz_places_temp h "
+      "JOIN moz_annos a ON h.id = a.place_id "
+      "JOIN moz_anno_attributes n ON n.id = a.anno_attribute_id "
+      "WHERE n.name = ?1 "
+      "UNION ALL "
+      "SELECT h.url "
+      "FROM moz_places h "
+      "JOIN moz_annos a ON h.id = a.place_id "
+      "JOIN moz_anno_attributes n ON n.id = a.anno_attribute_id "
+      "WHERE n.name = ?1 "
+        "AND h.id NOT IN (SELECT id FROM moz_places_temp)"),
     getter_AddRefs(statement));
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -1266,6 +1352,9 @@ nsAnnotationService::GetItemsWithAnnotation(const nsACString& aName,
                                             PRUint32* aResultCount,
                                             PRInt64** aResults)
 {
+  NS_ENSURE_ARG_POINTER(aResultCount);
+  NS_ENSURE_ARG_POINTER(aResults);
+
   if (aName.IsEmpty() || !aResultCount || !aResults)
     return NS_ERROR_INVALID_ARG;
 
@@ -1313,6 +1402,10 @@ NS_IMETHODIMP
 nsAnnotationService::GetPageAnnotationNames(nsIURI* aURI, PRUint32* aCount,
                                             nsIVariant*** _result)
 {
+  NS_ENSURE_ARG(aURI);
+  NS_ENSURE_ARG_POINTER(aCount);
+  NS_ENSURE_ARG_POINTER(_result);
+
   *aCount = 0;
   *_result = nsnull;
 
@@ -1385,6 +1478,10 @@ NS_IMETHODIMP
 nsAnnotationService::GetItemAnnotationNames(PRInt64 aItemId, PRUint32* aCount,
                                             nsIVariant*** _result)
 {
+  NS_ENSURE_ARG_MIN(aItemId, 1);
+  NS_ENSURE_ARG_POINTER(aCount);
+  NS_ENSURE_ARG_POINTER(_result);
+
   *aCount = 0;
   *_result = nsnull;
 
@@ -1423,6 +1520,9 @@ nsAnnotationService::PageHasAnnotation(nsIURI* aURI,
                                        const nsACString& aName,
                                        PRBool *_retval)
 {
+  NS_ENSURE_ARG(aURI);
+  NS_ENSURE_ARG_POINTER(_retval);
+
   nsresult rv = StartGetAnnotationFromURI(aURI, aName);
   if (rv == NS_ERROR_NOT_AVAILABLE) {
     *_retval = PR_FALSE;
@@ -1442,6 +1542,9 @@ nsAnnotationService::ItemHasAnnotation(PRInt64 aItemId,
                                        const nsACString& aName,
                                        PRBool *_retval)
 {
+  NS_ENSURE_ARG_MIN(aItemId, 1);
+  NS_ENSURE_ARG_POINTER(_retval);
+
   nsresult rv = StartGetAnnotationFromItemId(aItemId, aName);
   if (rv == NS_ERROR_NOT_AVAILABLE) {
     *_retval = PR_FALSE;
@@ -1488,6 +1591,8 @@ NS_IMETHODIMP
 nsAnnotationService::RemovePageAnnotation(nsIURI* aURI,
                                           const nsACString& aName)
 {
+  NS_ENSURE_ARG(aURI);
+
   PRInt64 placeId;
   nsresult rv = GetPlaceIdForURI(aURI, &placeId, PR_FALSE);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -1510,6 +1615,8 @@ NS_IMETHODIMP
 nsAnnotationService::RemoveItemAnnotation(PRInt64 aItemId,
                                           const nsACString& aName)
 {
+  NS_ENSURE_ARG_MIN(aItemId, 1);
+
   nsresult rv = RemoveAnnotationInternal(aItemId, PR_TRUE, aName);
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -1529,6 +1636,8 @@ nsAnnotationService::RemoveItemAnnotation(PRInt64 aItemId,
 NS_IMETHODIMP
 nsAnnotationService::RemovePageAnnotations(nsIURI* aURI)
 {
+  NS_ENSURE_ARG(aURI);
+
   PRInt64 placeId;
   nsresult rv = GetPlaceIdForURI(aURI, &placeId, PR_FALSE);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -1558,6 +1667,8 @@ nsAnnotationService::RemovePageAnnotations(nsIURI* aURI)
 NS_IMETHODIMP
 nsAnnotationService::RemoveItemAnnotations(PRInt64 aItemId)
 {
+  NS_ENSURE_ARG_MIN(aItemId, 1);
+
   nsCOMPtr<mozIStorageStatement> statement;
   nsresult rv = mDBConn->CreateStatement(NS_LITERAL_CSTRING(
       "DELETE FROM moz_items_annos WHERE item_id = ?1"),
@@ -1595,6 +1706,12 @@ nsAnnotationService::CopyPageAnnotations(nsIURI* aSourceURI,
                                          nsIURI* aDestURI,
                                          PRBool aOverwriteDest)
 {
+  NS_ENSURE_ARG(aSourceURI);
+  NS_ENSURE_ARG(aDestURI);
+
+  if (InPrivateBrowsingMode())
+    return NS_OK;
+
   mozStorageTransaction transaction(mDBConn, PR_FALSE);
 
   // source
@@ -1648,10 +1765,12 @@ nsAnnotationService::CopyPageAnnotations(nsIURI* aSourceURI,
   // source with the same values of the annotation on dest.
   nsCOMPtr<mozIStorageStatement> statement;
   rv = mDBConn->CreateStatement(NS_LITERAL_CSTRING(
-      "INSERT INTO moz_annos (place_id, anno_attribute_id, mime_type, content, flags, expiration) "
+      "INSERT INTO moz_annos "
+      "(place_id, anno_attribute_id, mime_type, content, flags, expiration) "
       "SELECT ?1, anno_attribute_id, mime_type, content, flags, expiration "
-      "FROM moz_annos WHERE place_id = ?2 AND anno_attribute_id = "
-      "(SELECT id FROM moz_anno_attributes WHERE name = ?3)"),
+      "FROM moz_annos "
+      "WHERE place_id = ?2 AND anno_attribute_id = "
+        "(SELECT id FROM moz_anno_attributes WHERE name = ?3)"),
     getter_AddRefs(statement));
   NS_ENSURE_SUCCESS(rv, rv);
 
@@ -1660,8 +1779,8 @@ nsAnnotationService::CopyPageAnnotations(nsIURI* aSourceURI,
   // it gets the names. If this function requires optimization, we should only
   // do this once and get the names ourselves using the IDs.
   PRInt64 sourceID, destID;
-  nsNavHistory* history = nsNavHistory::GetHistoryService();
-  NS_ENSURE_TRUE(history, NS_ERROR_FAILURE);
+  nsNavHistory *history = nsNavHistory::GetHistoryService();
+  NS_ENSURE_TRUE(history, NS_ERROR_OUT_OF_MEMORY);
 
   rv = history->GetUrlIdFor(aSourceURI, &sourceID, PR_FALSE);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -1701,6 +1820,8 @@ nsAnnotationService::CopyItemAnnotations(PRInt64 aSourceItemId,
 NS_IMETHODIMP
 nsAnnotationService::AddObserver(nsIAnnotationObserver* aObserver)
 {
+  NS_ENSURE_ARG(aObserver);
+
   if (mObservers.IndexOfObject(aObserver) >= 0)
     return NS_ERROR_INVALID_ARG; // already registered
   if (!mObservers.AppendObject(aObserver))
@@ -1714,6 +1835,8 @@ nsAnnotationService::AddObserver(nsIAnnotationObserver* aObserver)
 NS_IMETHODIMP
 nsAnnotationService::RemoveObserver(nsIAnnotationObserver* aObserver)
 {
+  NS_ENSURE_ARG(aObserver);
+
   if (!mObservers.RemoveObject(aObserver))
     return NS_ERROR_INVALID_ARG;
   return NS_OK;
@@ -1839,12 +1962,20 @@ nsAnnotationService::StartGetAnnotationFromItemId(PRInt64 aItemId,
 }
 
 
+PRBool
+nsAnnotationService::InPrivateBrowsingMode() const
+{
+  nsNavHistory *history = nsNavHistory::GetHistoryService();
+  return history && history->InPrivateBrowsingMode();
+}
+
+
 nsresult
 nsAnnotationService::GetPlaceIdForURI(nsIURI* aURI, PRInt64* _retval,
                                       PRBool aAutoCreate)
 {
-  nsNavHistory* history = nsNavHistory::GetHistoryService();
-  NS_ENSURE_TRUE(history, NS_ERROR_FAILURE);
+  nsNavHistory *history = nsNavHistory::GetHistoryService();
+  NS_ENSURE_TRUE(history, NS_ERROR_OUT_OF_MEMORY);
 
   return history->GetUrlIdFor(aURI, _retval, aAutoCreate);
 }
@@ -1874,7 +2005,7 @@ nsAnnotationService::StartSetAnnotation(PRInt64 aFkId,
   // Disallow setting item-annotations on invalid item ids
   if (aIsItemAnnotation) {
     nsNavBookmarks* bookmarks = nsNavBookmarks::GetBookmarksService();
-    NS_ENSURE_STATE(bookmarks);
+    NS_ENSURE_TRUE(bookmarks, NS_ERROR_OUT_OF_MEMORY);
     if (!bookmarks->ItemExists(aFkId))
       return NS_ERROR_INVALID_ARG;
   }
@@ -1914,8 +2045,18 @@ nsAnnotationService::StartSetAnnotation(PRInt64 aFkId,
         rv = mDBAddAnnotationName->Execute();
         NS_ENSURE_SUCCESS(rv, rv);
 
-        rv = mDBConn->GetLastInsertRowID(&nameID);
-        NS_ENSURE_SUCCESS(rv, rv);
+        {
+          mozStorageStatementScoper scoper(mDBGetAnnotationNameID);
+
+          rv = mDBGetAnnotationNameID->BindUTF8StringParameter(0, aName);
+          NS_ENSURE_SUCCESS(rv, rv);
+
+          PRBool hasResult;
+          rv = mDBGetAnnotationNameID->ExecuteStep(&hasResult);
+          NS_ENSURE_SUCCESS(rv, rv);
+          NS_ASSERTION(hasResult, "hasResult is false but the call succeeded?");
+          nameID = mDBGetAnnotationNameID->AsInt64(0);
+        }
       } else {
         nameID = mDBGetAnnotationNameID->AsInt64(0);
       }
@@ -1961,4 +2102,32 @@ nsAnnotationService::CallSetForItemObservers(PRInt64 aItemId, const nsACString& 
 {
   for (PRInt32 i = 0; i < mObservers.Count(); i ++)
     mObservers[i]->OnItemAnnotationSet(aItemId, aName);
+}
+
+nsresult
+nsAnnotationService::FinalizeStatements() {
+  mozIStorageStatement* stmts[] = {
+    mDBSetAnnotation,
+    mDBSetItemAnnotation,
+    mDBGetAnnotation,
+    mDBGetItemAnnotation,
+    mDBGetAnnotationNames,
+    mDBGetItemAnnotationNames,
+    mDBGetAnnotationFromURI,
+    mDBGetAnnotationFromItemId,
+    mDBGetAnnotationNameID,
+    mDBAddAnnotationName,
+    mDBAddAnnotation,
+    mDBAddItemAnnotation,
+    mDBRemoveAnnotation,
+    mDBRemoveItemAnnotation,
+    mDBGetItemsWithAnnotation
+  };
+
+  for (PRUint32 i = 0; i < NS_ARRAY_LENGTH(stmts); i++) {
+    nsresult rv = nsNavHistory::FinalizeStatement(stmts[i]);
+    NS_ENSURE_SUCCESS(rv, rv);
+  }
+
+  return NS_OK;
 }

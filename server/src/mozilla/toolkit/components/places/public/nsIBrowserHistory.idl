@@ -42,7 +42,7 @@
 #include "nsISupports.idl"
 #include "nsIGlobalHistory2.idl"
 
-[scriptable, uuid(96602bf3-de2a-42ed-812f-a83b130e6299)]
+[scriptable, uuid(b333c6dd-3dbe-4c0b-8062-92ed92b7e7c9)]
 interface nsIBrowserHistory : nsIGlobalHistory2
 {
     /**
@@ -88,11 +88,16 @@ interface nsIBrowserHistory : nsIGlobalHistory2
     /**
      * removePagesFromHost
      *
-     * Remove all pages from the given host.
-     * If aEntireDomain is true, will assume aHost is a domain,
-     * and remove all pages from the entire domain.
-     * Notice that this does not call observers for single deleted uris,
-     * instead it will send Begin/EndUpdateBatch
+     * Removes all history information about pages from a given host. If
+     * aEntireDomain is set, we will also delete pages from sub hosts (so if
+     * we are passed in "microsoft.com" we delete "www.microsoft.com",
+     * "msdn.microsoft.com", etc.). An empty host name means local files and
+     * anything else with no host name. You can also pass in the localized
+     * "(local files)" title given to you from a history query to remove all
+     * history information from local files.
+     *
+     * Note that this does not call observers for single deleted uris,
+     * but will send Begin/EndUpdateBatch.
      */
     void removePagesFromHost(in AUTF8String aHost, in boolean aEntireDomain);
 
@@ -105,6 +110,19 @@ interface nsIBrowserHistory : nsIGlobalHistory2
      * instead it will send Begin/EndUpdateBatch
      */
     void removePagesByTimeframe(in long long aBeginTime, in long long aEndTime);
+
+    /**
+     * removeVisitsByTimeframe
+     *
+     * Removes all visits in a given timeframe.  Limits are included:
+     * aBeginTime <= timeframe <= aEndTime.  Any place that becomes unvisited
+     * as a result will also be deleted.
+     *
+     * Note that removal is performed in batch, so observers will not be
+     * notified of individual places that are deleted.  Instead they will be
+     * notified onBeginUpdateBatch and onEndUpdateBatch.
+     */
+    void removeVisitsByTimeframe(in long long aBeginTime, in long long aEndTime);
 
     /**
      * removeAllPages

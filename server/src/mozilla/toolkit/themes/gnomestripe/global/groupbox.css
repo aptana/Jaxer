@@ -56,3 +56,10 @@ caption {
   margin-bottom: 2px;
   font-weight: bold;
 }
+
+/* !important is needed to override label in global.css */
+.caption-text {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  -moz-margin-start: 1px !important;
+}

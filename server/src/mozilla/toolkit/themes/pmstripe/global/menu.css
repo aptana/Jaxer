@@ -22,6 +22,7 @@
  * Contributor(s):
  *   Joe Hewitt (hewitt@netscape.com)
  *   Peter Weilbacher (mozilla@Weilbacher.org)
+ *   Walter Meinl (wuno@lsvw.de)
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -49,11 +50,16 @@ menu,
 menuitem {
   -moz-appearance: menuitem;
   -moz-box-align: center;
+  -moz-margin-start: 2px !important;
+  -moz-margin-end: 1px !important;
   color: MenuText;
-  background-color:  Menu;
   font: menu;
   list-style-image: none;
   -moz-image-region: auto;
+}
+
+menu:not(:-moz-lwtheme) {
+  background-color: Menu;
 }
 
 menuitem[default="true"] {
@@ -67,7 +73,7 @@ menuitem[_moz-menuactive="true"][disabled="true"] {
 }
 
 menuitem.spell-suggestion {
-  font-weight:bold;
+  font-weight: bold;
 }
 
 /* ..... internal content .... */
@@ -84,7 +90,7 @@ menuitem.spell-suggestion {
 }
 
 .menu-text {
-  -moz-margin-start: 18px !important;
+  -moz-margin-start: 21px !important;
   font-weight: inherit;
 }
 
@@ -102,10 +108,11 @@ menuitem.spell-suggestion {
 }
 
 .menu-iconic-text {
-  -moz-margin-start: 2px !important;
+  -moz-margin-start: 3px !important;
 }
 
 .menu-iconic-left {
+  -moz-margin-start: 2px !important;
   min-width: 16px;
   min-height: 16px;
 }
@@ -139,6 +146,20 @@ menubar > menu {
 menubar > menu[_moz-menuactive="true"][open="true"] {
   color: -moz-MenuBarHoverText;
   background-color: -moz-MenuHover;
+}
+
+menubar > menu:-moz-lwtheme {
+  -moz-appearance: none;
+  border-style: none;
+}
+
+menubar > menu:-moz-lwtheme:not([disabled="true"]) {
+  color: inherit !important;
+}
+
+menubar > menu:-moz-lwtheme[_moz-menuactive="true"][open="true"] {
+  color: HighlightText !important;
+  text-shadow: none;
 }
 
 /* ..... internal content .... */

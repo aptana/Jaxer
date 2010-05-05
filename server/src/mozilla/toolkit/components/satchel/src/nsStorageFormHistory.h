@@ -95,46 +95,40 @@ public:
   nsFormHistory();
   nsresult Init();
 
-  static nsFormHistory* GetInstance()
-    {
-      if (!gFormHistory) {
-        nsCOMPtr<nsIFormHistory2> fh = do_GetService(NS_FORMHISTORY_CONTRACTID);
-      }
-      return gFormHistory;
-    }
-
-  nsresult AutoCompleteSearch(const nsAString &aInputName,
-			      const nsAString &aInputValue,
-                              nsIAutoCompleteSimpleResult *aPrevResult,
-			      nsIAutoCompleteResult **aNewResult);
-
  private:
   ~nsFormHistory();
 
  protected:
   // Database I/O
-  nsresult OpenDatabase();
+  nsresult OpenDatabase(PRBool *aDoImport);
   nsresult CloseDatabase();
   nsresult GetDatabaseFile(nsIFile** aFile);
+
+  nsresult dbMigrate();
+  nsresult dbCleanup();
+  nsresult MigrateToVersion1();
+  nsresult MigrateToVersion2();
+  PRBool   dbAreExpectedColumnsPresent();
+
+  nsresult CreateTable();
+  nsresult CreateStatements();
 
   static PRBool FormHistoryEnabled();
   static nsFormHistory *gFormHistory;
   static PRBool gFormHistoryEnabled;
   static PRBool gPrefsInitialized;
 
+  nsresult ExpireOldEntries();
+  PRInt32 CountAllEntries();
+  PRInt64 GetExistingEntryID(const nsAString &aName, const nsAString &aValue);
+
   nsCOMPtr<nsIPrefBranch> mPrefBranch;
   nsCOMPtr<mozIStorageService> mStorageService;
-  nsCOMPtr<mozIStorageStatement> mDBGetMatchingField;
   nsCOMPtr<mozIStorageStatement> mDBFindEntry;
   nsCOMPtr<mozIStorageStatement> mDBFindEntryByName;
   nsCOMPtr<mozIStorageStatement> mDBSelectEntries;
   nsCOMPtr<mozIStorageStatement> mDBInsertNameValue;
-
-  // dummy statement (see StartCache)
-  nsresult StartCache();
-  nsresult StopCache();
-  nsCOMPtr<mozIStorageConnection> mDummyConnection;
-  nsCOMPtr<mozIStorageStatement> mDummyStatement;
+  nsCOMPtr<mozIStorageStatement> mDBUpdateEntry;
 };
 
 #ifdef MOZ_MORKREADER
@@ -146,7 +140,7 @@ public:
 
 private:
   // Enumerator callback to add a single row to the FormHistory.
-  static PLDHashOperator PR_CALLBACK
+  static PLDHashOperator
   AddToFormHistoryCB(const nsCSubstring &aRowID,
                      const nsTArray<nsCString> *aValues,
                      void *aData);

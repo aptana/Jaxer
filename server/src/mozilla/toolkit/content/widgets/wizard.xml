@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 
 <!DOCTYPE bindings [
-  <!ENTITY % globalDTD SYSTEM "chrome://global/locale/global.dtd">
-  %globalDTD;
   <!ENTITY % wizardDTD SYSTEM "chrome://global/locale/wizard.dtd">
   %wizardDTD;
 ]>
@@ -18,9 +16,12 @@
     </resources>
   </binding>
   
-  <binding id="wizard" extends="chrome://global/content/bindings/wizard.xml#wizard-base">
+  <binding id="wizard" extends="chrome://global/content/bindings/general.xml#root-element">
+    <resources>
+      <stylesheet src="chrome://global/skin/wizard.css"/>
+    </resources>
     <content>
-      <xul:hbox class="wizard-header" chromedir="&locale.dir;" anonid="Header"/>
+      <xul:hbox class="wizard-header" anonid="Header"/>
       
       <xul:deck class="wizard-page-box" flex="1" anonid="Deck">
         <children includes="wizardpage"/>
@@ -175,12 +176,9 @@
         try {
           // need to create string bundle manually instead of using <xul:stringbundle/>
           // see bug 63370 for details
-          var localeService = Components.classes["@mozilla.org/intl/nslocaleservice;1"]
-                                .getService(Components.interfaces.nsILocaleService);
-          var stringBundleService = Components.classes["@mozilla.org/intl/stringbundle;1"]
-                                      .getService(Components.interfaces.nsIStringBundleService);
-          var bundleURL = "chrome://global/locale/wizard.properties";
-          this._bundle = stringBundleService.createBundle(bundleURL);
+          this._bundle = Components.classes["@mozilla.org/intl/stringbundle;1"]
+                                   .getService(Components.interfaces.nsIStringBundleService)
+                                   .createBundle("chrome://global/locale/wizard.properties");
         } catch (e) {
           // This fails in remote XUL, which has to provide titles for all pages
           // see bug 142502
@@ -327,6 +325,13 @@
               // give focus to the first focusable element in the dialog
               if (!document.commandDispatcher.focusedElement)
                 document.commandDispatcher.advanceFocusIntoSubtree(document.documentElement);
+
+              try {
+                var button =
+                      document.documentElement._wizardButtons.defaultButton;
+                if (button)
+                  window.notifyDefaultButtonLoaded(button);
+              } catch (e) { }
             };
 
           // Give focus after onload completes, see bug 103197.
@@ -489,9 +494,6 @@
           <xul:spacer flex="1"/>
           <xul:button label="&button-back-mac.label;" accesskey="&button-back-mac.accesskey;"
                       class="wizard-button wizard-nav-button" dlgtype="back"/>
-          <xul:hbox class="wizard-label-box" align="center">
-            <xul:label class="wizard-page-label" xbl:inherits="value=pagestep"/>
-          </xul:hbox>
           <xul:button label="&button-next-mac.label;" accesskey="&button-next-mac.accesskey;"
                       class="wizard-button wizard-nav-button" dlgtype="next"
                       default="true" xbl:inherits="hidden=lastpage" />
@@ -547,7 +549,7 @@
             <xul:hbox>
               <xul:button label="&button-next-unix.label;" accesskey="&button-next-unix.accesskey;"
                           class="wizard-button" dlgtype="next" icon="go-forward" 
-                          default="true" flex="1"/> 
+                          default="true" flex="1"/>
             </xul:hbox>
           </xul:deck>
 #else
@@ -561,7 +563,7 @@
             <xul:hbox>
               <xul:button label="&button-next-win.label;" accesskey="&button-next-win.accesskey;"
                           class="wizard-button" dlgtype="next" icon="go-forward" 
-                          default="true" flex="1"/> 
+                          default="true" flex="1"/>
             </xul:hbox>
           </xul:deck>
           <xul:button label="&button-cancel-win.label;" class="wizard-button"
@@ -585,6 +587,21 @@
           }
         ]]></body>
       </method>
+
+      <property name="defaultButton" readonly="true">
+        <getter><![CDATA[
+          const kXULNS =
+            "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+          var buttons = this._wizardButtonDeck.selectedPanel
+                            .getElementsByTagNameNS(kXULNS, "button");
+          for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].getAttribute("default") == "true" &&
+                !buttons[i].hidden && !buttons[i].disabled)
+              return buttons[i];
+          }
+          return null;
+        ]]></getter>
+      </property>
     </implementation>
   </binding>
 #endif

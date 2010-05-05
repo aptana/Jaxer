@@ -55,15 +55,18 @@ REQUIRES = \
 	necko \
 	$(NULL)
 
+# mochitest tests
+DIRS += mochitest \
+	$(NULL)
+
 # xpcshell tests
 XPCSHELL_TESTS=unit
 
+ifndef MOZ_ENABLE_LIBXUL
 # simple c++ tests (no xpcom)
-CPPSRCS = \
+CPP_UNIT_TESTS = \
 	TestUrlClassifierUtils.cpp \
 	$(NULL)
-
-SIMPLE_PROGRAMS = $(CPPSRCS:.cpp=$(BIN_SUFFIX))
 
 LOCAL_INCLUDES = \
 	-I$(srcdir)/../src \
@@ -76,12 +79,6 @@ LIBS = \
 	$(XPCOM_LIBS) \
 	$(NSPR_LIBS) \
 	$(NULL)
+endif
 
 include $(topsrcdir)/config/rules.mk
-
-check::
-	@echo Running tests...
-	@$(EXIT_ON_ERROR) \
-	for f in $(SIMPLE_PROGRAMS); do \
-	  $(RUN_TEST_PROGRAM) $(DIST)/bin/$$f; \
-  done

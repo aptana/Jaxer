@@ -51,7 +51,6 @@
 #include "nsCycleCollectionParticipant.h"
 
 class nsNavHistory;
-class nsIDateTimeFormat;
 class nsIWritablePropertyBag;
 class nsNavHistoryQuery;
 class nsNavHistoryQueryOptions;
@@ -98,15 +97,15 @@ private:
   NS_DECL_NSINAVBOOKMARKOBSERVER                                        \
   NS_IMETHOD OnVisit(nsIURI* aURI, PRInt64 aVisitId, PRTime aTime,      \
                      PRInt64 aSessionId, PRInt64 aReferringId,          \
-                     PRUint32 aTransitionType, PRUint32* aAdded);      \
+                     PRUint32 aTransitionType, PRUint32* aAdded);       \
   NS_IMETHOD OnTitleChanged(nsIURI* aURI, const nsAString& aPageTitle); \
+  NS_IMETHOD OnBeforeDeleteURI(nsIURI *aURI);                           \
   NS_IMETHOD OnDeleteURI(nsIURI *aURI);                                 \
   NS_IMETHOD OnClearHistory();                                          \
   NS_IMETHOD OnPageChanged(nsIURI *aURI, PRUint32 aWhat,                \
                            const nsAString &aValue);                    \
   NS_IMETHOD OnPageExpired(nsIURI* aURI, PRTime aVisitTime,             \
                            PRBool aWholeEntry);
-
 
 // nsNavHistoryResult
 //
@@ -152,6 +151,7 @@ public:
   void RemoveHistoryObserver(nsNavHistoryQueryResultNode* aNode);
   void RemoveBookmarkFolderObserver(nsNavHistoryFolderResultNode* aNode, PRInt64 aFolder);
   void RemoveAllBookmarksObserver(nsNavHistoryQueryResultNode* aNode);
+  void StopObserving();
 
   // returns the view. NOT-ADDREFED. May be NULL if there is no view
   nsINavHistoryResultViewer* GetView() const
@@ -160,7 +160,7 @@ public:
 public:
   // two-stage init, use NewHistoryResult to construct
   nsNavHistoryResult(nsNavHistoryContainerResultNode* mRoot);
-  ~nsNavHistoryResult();
+  virtual ~nsNavHistoryResult();
   nsresult Init(nsINavHistoryQuery** aQueries,
                 PRUint32 aQueryCount,
                 nsNavHistoryQueryOptions *aOptions);
@@ -173,6 +173,10 @@ public:
   // One of nsNavHistoryQueryOptions.SORY_BY_* This is initialized to mOptions.sortingMode,
   // but may be overridden if the user clicks on one of the columns.
   PRUint16 mSortingMode;
+  // If root node is closed and we try to apply a sortingMode, it would not
+  // work.  So we will apply it when the node will be reopened and populated.
+  // This var states the fact we need to apply sortingMode in such a situation.
+  PRBool mNeedsToApplySortingMode;
 
   // The sorting annotation to be used for in SORT_BY_ANNOTATION_* modes
   nsCString mSortingAnnotation;
@@ -187,10 +191,12 @@ public:
   PRBool mIsBookmarkFolderObserver;
   PRBool mIsAllBookmarksObserver;
 
-  nsTArray<nsNavHistoryQueryResultNode*> mHistoryObservers;
-  nsTArray<nsNavHistoryQueryResultNode*> mAllBookmarksObservers;
-  typedef nsTArray<nsRefPtr<nsNavHistoryFolderResultNode> > FolderObserverList;
-  nsDataHashtable<nsTrimInt64HashKey, FolderObserverList* > mBookmarkFolderObservers;
+  typedef nsTArray< nsRefPtr<nsNavHistoryQueryResultNode> > QueryObserverList;
+  QueryObserverList mHistoryObservers;
+  QueryObserverList mAllBookmarksObservers;
+
+  typedef nsTArray< nsRefPtr<nsNavHistoryFolderResultNode> > FolderObserverList;
+  nsDataHashtable<nsTrimInt64HashKey, FolderObserverList*> mBookmarkFolderObservers;
   FolderObserverList* BookmarkFolderObserversForId(PRInt64 aFolderId, PRBool aCreate);
 
   void RecursiveExpandCollapse(nsNavHistoryContainerResultNode* aContainer,
@@ -225,10 +231,6 @@ NS_DEFINE_STATIC_IID_ACCESSOR(nsNavHistoryResult, NS_NAVHISTORYRESULT_IID)
     { *aTime = mTime; return NS_OK; } \
   NS_IMETHOD GetIndentLevel(PRInt32* aIndentLevel) \
     { *aIndentLevel = mIndentLevel; return NS_OK; } \
-  NS_IMETHOD GetViewIndex(PRInt32* aViewIndex) \
-    { *aViewIndex = mViewIndex; return NS_OK; } \
-  NS_IMETHOD SetViewIndex(PRInt32 aViewIndex) \
-    { mViewIndex = aViewIndex; return NS_OK; } \
   NS_IMETHOD GetBookmarkIndex(PRInt32* aIndex) \
     { *aIndex = mBookmarkIndex; return NS_OK; } \
   NS_IMETHOD GetDateAdded(PRTime* aDateAdded) \
@@ -252,7 +254,7 @@ NS_DEFINE_STATIC_IID_ACCESSOR(nsNavHistoryResult, NS_NAVHISTORYRESULT_IID)
 // buffer.)
 #define NS_FORWARD_COMMON_RESULTNODE_TO_BASE_NO_GETITEMMID \
   NS_IMPLEMENT_SIMPLE_RESULTNODE_NO_GETITEMMID \
-  NS_IMETHOD GetIcon(nsIURI** aIcon) \
+  NS_IMETHOD GetIcon(nsACString& aIcon) \
     { return nsNavHistoryResultNode::GetIcon(aIcon); } \
   NS_IMETHOD GetParent(nsINavHistoryContainerResultNode** aParent) \
     { return nsNavHistoryResultNode::GetParent(aParent); } \
@@ -261,7 +263,7 @@ NS_DEFINE_STATIC_IID_ACCESSOR(nsNavHistoryResult, NS_NAVHISTORYRESULT_IID)
   NS_IMETHOD GetPropertyBag(nsIWritablePropertyBag** aBag) \
     { return nsNavHistoryResultNode::GetPropertyBag(aBag); } \
   NS_IMETHOD GetTags(nsAString& aTags) \
-    { return nsNavHistoryResultNode::GetTags(aTags); } \
+    { return nsNavHistoryResultNode::GetTags(aTags); }
 
 #define NS_FORWARD_COMMON_RESULTNODE_TO_BASE \
   NS_FORWARD_COMMON_RESULTNODE_TO_BASE_NO_GETITEMMID \
@@ -282,7 +284,7 @@ public:
   NS_DECL_CYCLE_COLLECTION_CLASS(nsNavHistoryResultNode)
 
   NS_IMPLEMENT_SIMPLE_RESULTNODE
-  NS_IMETHOD GetIcon(nsIURI** aIcon);
+  NS_IMETHOD GetIcon(nsACString& aIcon);
   NS_IMETHOD GetParent(nsINavHistoryContainerResultNode** aParent);
   NS_IMETHOD GetParentResult(nsINavHistoryResult** aResult);
   NS_IMETHOD GetPropertyBag(nsIWritablePropertyBag** aBag);
@@ -299,7 +301,9 @@ public:
   NS_IMETHOD OnItemChanged(PRInt64 aItemId,
                            const nsACString &aProperty,
                            PRBool aIsAnnotationProperty,
-                           const nsACString &aValue);
+                           const nsACString &aValue,
+                           PRTime aNewLastModified,
+                           PRUint16 aItemType);
 
 public:
 
@@ -392,20 +396,13 @@ public:
   nsCString mFaviconURI;
   PRInt32 mBookmarkIndex;
   PRInt64 mItemId;
+  PRInt64 mFolderId;
   PRTime mDateAdded;
   PRTime mLastModified;
 
   // The indent level of this node. The root node will have a value of -1.  The
   // root's children will have a value of 0, and so on.
   PRInt32 mIndentLevel;
-
-  // Value used by the view for whatever it wants. For the built-in tree view,
-  // this is the index into the result's mVisibleElements list of this element.
-  // This is -1 if it is invalid. For items, >= 0 can be used to determine if
-  // the node is visible in the list or not. For folders, call IsVisible, since
-  // they can be the root node which is not itself visible, but its children
-  // are.
-  PRInt32 mViewIndex;
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsNavHistoryResultNode, NS_NAVHISTORYRESULTNODE_IID)
@@ -526,6 +523,8 @@ public:
     PRBool aReadOnly, const nsACString& aDynamicContainerType,
     nsNavHistoryQueryOptions* aOptions);
 
+  virtual ~nsNavHistoryContainerResultNode();
+
   NS_DECLARE_STATIC_IID_ACCESSOR(NS_NAVHISTORYCONTAINERRESULTNODE_IID)
 
   NS_DECL_ISUPPORTS_INHERITED
@@ -589,43 +588,43 @@ public:
 
   static PRInt32 SortComparison_StringLess(const nsAString& a, const nsAString& b);
 
-  PR_STATIC_CALLBACK(int) SortComparison_Bookmark(
+  static int SortComparison_Bookmark(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
-  PR_STATIC_CALLBACK(int) SortComparison_TitleLess(
+  static int SortComparison_TitleLess(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
-  PR_STATIC_CALLBACK(int) SortComparison_TitleGreater(
+  static int SortComparison_TitleGreater(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
-  PR_STATIC_CALLBACK(int) SortComparison_DateLess(
+  static int SortComparison_DateLess(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
-  PR_STATIC_CALLBACK(int) SortComparison_DateGreater(
+  static int SortComparison_DateGreater(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
-  PR_STATIC_CALLBACK(int) SortComparison_URILess(
+  static int SortComparison_URILess(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
-  PR_STATIC_CALLBACK(int) SortComparison_URIGreater(
+  static int SortComparison_URIGreater(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
-  PR_STATIC_CALLBACK(int) SortComparison_VisitCountLess(
+  static int SortComparison_VisitCountLess(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
-  PR_STATIC_CALLBACK(int) SortComparison_VisitCountGreater(
+  static int SortComparison_VisitCountGreater(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
-  PR_STATIC_CALLBACK(int) SortComparison_KeywordLess(
+  static int SortComparison_KeywordLess(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
-  PR_STATIC_CALLBACK(int) SortComparison_KeywordGreater(
+  static int SortComparison_KeywordGreater(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
-  PR_STATIC_CALLBACK(int) SortComparison_AnnotationLess(
+  static int SortComparison_AnnotationLess(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
-  PR_STATIC_CALLBACK(int) SortComparison_AnnotationGreater(
+  static int SortComparison_AnnotationGreater(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
-  PR_STATIC_CALLBACK(int) SortComparison_DateAddedLess(
+  static int SortComparison_DateAddedLess(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
-  PR_STATIC_CALLBACK(int) SortComparison_DateAddedGreater(
+  static int SortComparison_DateAddedGreater(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
-  PR_STATIC_CALLBACK(int) SortComparison_LastModifiedLess(
+  static int SortComparison_LastModifiedLess(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
-  PR_STATIC_CALLBACK(int) SortComparison_LastModifiedGreater(
+  static int SortComparison_LastModifiedGreater(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
-  PR_STATIC_CALLBACK(int) SortComparison_TagsLess(
+  static int SortComparison_TagsLess(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
-  PR_STATIC_CALLBACK(int) SortComparison_TagsGreater(
+  static int SortComparison_TagsGreater(
       nsNavHistoryResultNode* a, nsNavHistoryResultNode* b, void* closure);
 
   // finding children: THESE DO NOT ADDREF
@@ -638,8 +637,6 @@ public:
   }
   nsNavHistoryResultNode* FindChildURI(const nsACString& aSpec,
                                        PRUint32* aNodeIndex);
-  nsNavHistoryFolderResultNode* FindChildFolder(PRInt64 aFolderId,
-                                                PRUint32* aNodeIndex);
   nsNavHistoryContainerResultNode* FindChildContainerByName(const nsACString& aTitle,
                                                             PRUint32* aNodeIndex);
   // returns the index of the given node, -1 if not found
@@ -662,7 +659,7 @@ public:
                          nsCOMArray<nsNavHistoryResultNode>* aMatches);
   void UpdateURIs(PRBool aRecursive, PRBool aOnlyOne, PRBool aUpdateSort,
                   const nsCString& aSpec,
-                  void (*aCallback)(nsNavHistoryResultNode*,void*),
+                  void (*aCallback)(nsNavHistoryResultNode*,void*, nsNavHistoryResult*),
                   void* aClosure);
   nsresult ChangeTitles(nsIURI* aURI, const nsACString& aNewTitle,
                         PRBool aRecursive, PRBool aOnlyOne);
@@ -693,6 +690,8 @@ public:
                               PRTime aTime,
                               const nsCOMArray<nsNavHistoryQuery>& aQueries,
                               nsNavHistoryQueryOptions* aOptions);
+
+  virtual ~nsNavHistoryQueryResultNode();
 
   NS_DECL_ISUPPORTS_INHERITED
   NS_FORWARD_COMMON_RESULTNODE_TO_BASE
@@ -740,6 +739,8 @@ public:
 
   virtual PRUint16 GetSortType();
   virtual void GetSortingAnnotation(nsACString& aSortingAnnotation);
+  virtual void RecursiveSort(const char* aData,
+                             SortComparator aComparator);
 };
 
 
@@ -784,7 +785,6 @@ public:
   NS_DECL_NSINAVBOOKMARKOBSERVER
 
   virtual void OnRemoving();
-
 public:
 
   // this indicates whether the folder contents are valid, they don't go away

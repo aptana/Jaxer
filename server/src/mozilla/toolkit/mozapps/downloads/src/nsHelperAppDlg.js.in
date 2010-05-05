@@ -27,6 +27,7 @@
 #   Fredrik Holmqvist <thesuckiestemail@yahoo.se>
 #   Dan Mosedale <dmose@mozilla.org>
 #   Jim Mathies <jmathies@mozilla.com>
+#   Ehsan Akhgari <ehsan.akhgari@gmail.com>
 #
 # Alternatively, the contents of this file may be used under the terms of
 # either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -43,6 +44,25 @@
 # ***** END LICENSE BLOCK *****
 */
 
+///////////////////////////////////////////////////////////////////////////////
+//// Helper Functions
+
+/**
+ * Determines if a given directory is able to be used to download to.
+ *
+ * @param aDirectory
+ *        The directory to check.
+ * @returns true if we can use the directory, false otherwise.
+ */
+function isUsableDirectory(aDirectory)
+{
+  return aDirectory.exists() && aDirectory.isDirectory() &&
+         aDirectory.isWritable();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//// nsUnkownContentTypeDialog
+
 /* This file implements the nsIHelperAppLauncherDialog interface.
  *
  * The implementation consists of a JavaScript "class" named nsUnknownContentTypeDialog,
@@ -56,6 +76,8 @@
 
 const PREF_BD_USEDOWNLOADDIR = "browser.download.useDownloadDir";
 const nsITimer = Components.interfaces.nsITimer;
+
+Components.utils.import("resource://gre/modules/DownloadLastDir.jsm");
 
 /* ctor
  */
@@ -149,6 +171,9 @@ nsUnknownContentTypeDialog.prototype = {
 
       let prefs = Components.classes["@mozilla.org/preferences-service;1"]
                             .getService(Components.interfaces.nsIPrefBranch);
+      let bundle = Components.classes["@mozilla.org/intl/stringbundle;1"].
+        getService(Components.interfaces.nsIStringBundleService).
+        createBundle("chrome://mozapps/locale/downloads/unknownContentType.properties");
 
       if (!aForcePrompt) {
         // Check to see if the user wishes to auto save to the default download
@@ -163,7 +188,23 @@ nsUnknownContentTypeDialog.prototype = {
           let dnldMgr = Components.classes["@mozilla.org/download-manager;1"]
                                   .getService(Components.interfaces.nsIDownloadManager);
           let defaultFolder = dnldMgr.userDownloadsDirectory;
-          result = this.validateLeafName(defaultFolder, aDefaultFile, aSuggestedFileExtension);
+
+          try {
+            result = this.validateLeafName(defaultFolder, aDefaultFile, aSuggestedFileExtension);
+          }
+          catch (ex) {
+            if (ex.result == Components.results.NS_ERROR_FILE_ACCESS_DENIED) {
+              let prompter = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].
+                getService(Components.interfaces.nsIPromptService);
+
+              // Display error alert (using text supplied by back-end)
+              prompter.alert(this.dialog,
+                             bundle.GetStringFromName("badPermissions.title"),
+                             bundle.GetStringFromName("badPermissions"));
+
+              return;
+            }
+          }
 
           // Check to make sure we have a valid directory, otherwise, prompt
           if (result)
@@ -174,10 +215,6 @@ nsUnknownContentTypeDialog.prototype = {
       // Use file picker to show dialog.
       var nsIFilePicker = Components.interfaces.nsIFilePicker;
       var picker = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
-
-      var bundle = Components.classes["@mozilla.org/intl/stringbundle;1"].getService(Components.interfaces.nsIStringBundleService);
-      bundle = bundle.createBundle("chrome://mozapps/locale/downloads/unknownContentType.properties");
-
       var windowTitle = bundle.GetStringFromName("saveDialogTitle");
       var parent = aContext.QueryInterface(Components.interfaces.nsIInterfaceRequestor).getInterface(Components.interfaces.nsIDOMWindowInternal);
       picker.init(parent, windowTitle, nsIFilePicker.modeSave);
@@ -202,19 +239,34 @@ nsUnknownContentTypeDialog.prototype = {
 
       picker.appendFilters( nsIFilePicker.filterAll );
 
-      // Default to lastDir if it's valid, use the user's default
-      // downloads directory otherwise.
+      var inPrivateBrowsing = false;
+      try {
+        var pbs = Components.classes["@mozilla.org/privatebrowsing;1"]
+                            .getService(Components.interfaces.nsIPrivateBrowsingService);
+        inPrivateBrowsing = pbs.privateBrowsingEnabled;
+      }
+      catch (e) {
+      }
+
+      // Default to lastDir if it is valid, otherwise use the user's default
+      // downloads directory.  userDownloadsDirectory should always return a
+      // valid directory, so we can safely default to it.
       var dnldMgr = Components.classes["@mozilla.org/download-manager;1"]
                               .getService(Components.interfaces.nsIDownloadManager);
+      picker.displayDirectory = dnldMgr.userDownloadsDirectory;
+
+      // The last directory preference may not exist, which will throw.
       try {
-        var lastDir = prefs.getComplexValue("browser.download.lastDir",
-                            Components.interfaces.nsILocalFile);
-        if (lastDir.exists())
-          picker.displayDirectory = lastDir;
+        var lastDir;
+        if (inPrivateBrowsing && gDownloadLastDir.file)
+          lastDir = gDownloadLastDir.file;
         else
-          picker.displayDirectory = dnldMgr.userDownloadsDirectory;
-      } catch (ex) {
-        picker.displayDirectory = dnldMgr.userDownloadsDirectory;
+          lastDir = prefs.getComplexValue("browser.download.lastDir",
+                          Components.interfaces.nsILocalFile);
+        if (isUsableDirectory(lastDir))
+          picker.displayDirectory = lastDir;
+      }
+      catch (ex) {
       }
 
       if (picker.show() == nsIFilePicker.returnCancel) {
@@ -236,8 +288,14 @@ nsUnknownContentTypeDialog.prototype = {
             result.remove(false);
         }
         catch (e) { }
-        var newDir = result.parent;
-        prefs.setComplexValue("browser.download.lastDir", Components.interfaces.nsILocalFile, newDir);
+        var newDir = result.parent.QueryInterface(Components.interfaces.nsILocalFile);
+
+        // Do not store the last save directory as a pref inside the private browsing mode
+        if (inPrivateBrowsing)
+          gDownloadLastDir.file = newDir;
+        else
+          prefs.setComplexValue("browser.download.lastDir", Components.interfaces.nsILocalFile, newDir);
+
         result = this.validateLeafName(newDir, result.leafName, null);
       }
       return result;
@@ -261,7 +319,7 @@ nsUnknownContentTypeDialog.prototype = {
      */
     validateLeafName: function (aLocalFile, aLeafName, aFileExt)
     {
-      if (!aLocalFile || !aLocalFile.exists())
+      if (!(aLocalFile && isUsableDirectory(aLocalFile)))
         return null;
 
       // Remove any leading periods, since we don't want to save hidden files
@@ -331,6 +389,10 @@ nsUnknownContentTypeDialog.prototype = {
       }
       catch (e) {
         dump("*** exception in validateLeafName: " + e + "\n");
+
+        if (e.result == Components.results.NS_ERROR_FILE_ACCESS_DENIED)
+          throw e;
+
         if (aLocalFile.leafName == "" || aLocalFile.isDirectory()) {
           aLocalFile.append("unnamed");
           if (aLocalFile.exists())
@@ -440,14 +502,19 @@ nsUnknownContentTypeDialog.prototype = {
                                     this.mLauncher.targetFileIsExecutable);
       if (shouldntRememberChoice && !this.openWithDefaultOK()) {
         // hide featured choice 
-        this.mDialog.document.getElementById("normalBox").collapsed = "true";
+        this.dialogElement("normalBox").collapsed = true;
         // show basic choice 
-        this.mDialog.document.getElementById("basicBox").collapsed = "false";
-        // change button labels
-        this.mDialog.document.documentElement.getButton("accept").label = this.dialogElement("strings").getString("unknownAccept.label");
+        this.dialogElement("basicBox").collapsed = false;
+        // change button labels and icons; use "save" icon for the accept
+        // button since it's the only action possible
+        let acceptButton = this.mDialog.document.documentElement
+                               .getButton("accept");
+        acceptButton.label = this.dialogElement("strings")
+                                 .getString("unknownAccept.label");
+        acceptButton.setAttribute("icon", "save");
         this.mDialog.document.documentElement.getButton("cancel").label = this.dialogElement("strings").getString("unknownCancel.label");
         // hide other handler
-        this.mDialog.document.getElementById("openHandler").collapsed = "true";
+        this.dialogElement("openHandler").collapsed = true;
         // set save as the selected option
         this.dialogElement("mode").selectedItem = this.dialogElement("save");
       }
@@ -699,7 +766,13 @@ nsUnknownContentTypeDialog.prototype = {
           this.chosenApp.executable.path) {
         otherHandler.setAttribute("path",
                                   this.getPath(this.chosenApp.executable));
+
+#if XP_MACOSX
+        this.chosenApp.executable.QueryInterface(Components.interfaces.nsILocalFileMac);
+        otherHandler.label = this.chosenApp.executable.bundleDisplayName;
+#else
         otherHandler.label = this.chosenApp.executable.leafName;
+#endif
         otherHandler.hidden = false;
       }
 
@@ -855,7 +928,7 @@ nsUnknownContentTypeDialog.prototype = {
             !helperApp.executable.exists()) {
           // Show alert and try again.        
           var bundle = this.dialogElement("strings");                    
-          var msg = bundle.getFormattedString("badApp", [this.dialogElement("otherHandler").path]);
+          var msg = bundle.getFormattedString("badApp", [this.dialogElement("otherHandler").getAttribute("path")]);
           var svc = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
           svc.alert(this.mDialog, bundle.getString("badApp.title"), msg);
 
@@ -1059,7 +1132,13 @@ nsUnknownContentTypeDialog.prototype = {
         var otherHandler = this.dialogElement("otherHandler");
         otherHandler.removeAttribute("hidden");
         otherHandler.setAttribute("path", this.getPath(this.chosenApp.executable));
+#ifdef XP_MACOSX
+        this.chosenApp.executable
+            .QueryInterface(Components.interfaces.nsILocalFileMac);
+        otherHandler.label = this.chosenApp.executable.bundleDisplayName;
+#else
         otherHandler.label = this.chosenApp.executable.leafName;
+#endif
         this.dialogElement("openHandler").selectedIndex = 1;
         this.dialogElement("openHandler").setAttribute("lastSelectedItemID", "otherHandler");
         
@@ -1122,14 +1201,8 @@ nsUnknownContentTypeDialog.prototype = {
 // This Component's module implementation.  All the code below is used to get this
 // component registered and accessible via XPCOM.
 var module = {
-    firstTime: true,
-
     // registerSelf: Register this component.
     registerSelf: function (compMgr, fileSpec, location, type) {
-        if (this.firstTime) {
-            this.firstTime = false;
-            throw Components.results.NS_ERROR_FACTORY_REGISTER_AGAIN;
-        }
         compMgr = compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
 
         compMgr.registerFactoryLocation( this.cid,

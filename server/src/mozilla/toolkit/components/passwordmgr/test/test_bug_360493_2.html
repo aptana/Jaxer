@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Test for Login Manager</title>
-  <script type="text/javascript" src="/MochiKit/MochiKit.js"></script>
+  <script type="text/javascript" src="/MochiKit/packed.js"></script>
   <script type="text/javascript" src="/tests/SimpleTest/SimpleTest.js"></script>  
   <script type="text/javascript" src="pwmgr_common.js"></script>
   <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
@@ -130,6 +130,8 @@ Login Manager test: 360493
 <script class="testbody" type="text/javascript">
 
 /** Test for Login Manager: 360493 (Cross-Site Forms + Password Manager = Security Failure) **/
+
+commonInit();
 
 function startTest() {
   for (var i = 1; i <= 8; i++) {

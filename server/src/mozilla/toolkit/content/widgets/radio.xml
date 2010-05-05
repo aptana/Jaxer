@@ -441,7 +441,7 @@
       </xul:hbox>
     </content>
 
-    <implementation implements="nsIDOMXULSelectControlItemElement, nsIDOMXULLabeledControlElement, nsIAccessibleProvider">
+    <implementation implements="nsIDOMXULSelectControlItemElement, nsIAccessibleProvider">
       <constructor>
         <![CDATA[
           // Just clear out the parent's cached list of radio children
@@ -520,14 +520,6 @@
         <![CDATA[
           if (!this.disabled)
             this.control.focusedItem = this;
-         ]]>
-      </handler>
-      <handler event="focus">
-        <![CDATA[
-          if (!this.disabled) {
-            this.control.focusedItem = this;
-            this.control.focus();
-          }
          ]]>
       </handler>
     </handlers>

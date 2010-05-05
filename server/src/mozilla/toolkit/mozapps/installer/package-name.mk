@@ -20,6 +20,7 @@
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s):
+#   Robert Kaiser <kairo@kairo.at>
 #
 # Alternatively, the contents of this file may be used under the terms of
 # either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -35,9 +36,11 @@
 #
 # ***** END LICENSE BLOCK *****
 
-ifndef MOZ_PKG_APPNAME
-MOZ_PKG_APPNAME = $(MOZ_APP_NAME)
-endif
+# assemble package names, see convention at
+# http://developer.mozilla.org/index.php?title=En/Package_Filename_Convention
+# for (at least Firefox) releases we use a different format with directories,
+# e.g. win32/de/Firefox Setup 3.0.1.exe
+# the latter format is triggered with MOZ_PKG_PRETTYNAMES=1
 
 ifndef MOZ_PKG_VERSION
 MOZ_PKG_VERSION = $(MOZ_APP_VERSION)
@@ -84,4 +87,81 @@ ifdef MOZ_PKG_SPECIAL
 MOZ_PKG_PLATFORM := $(MOZ_PKG_PLATFORM)-$(MOZ_PKG_SPECIAL)
 endif
 
+MOZ_PKG_DIR = $(MOZ_APP_NAME)
+
+ifndef MOZ_PKG_PRETTYNAMES # standard package names
+
+ifndef MOZ_PKG_APPNAME
+MOZ_PKG_APPNAME = $(MOZ_APP_NAME)
+endif
+
 PKG_BASENAME = $(MOZ_PKG_APPNAME)-$(MOZ_PKG_VERSION).$(AB_CD).$(MOZ_PKG_PLATFORM)
+PKG_PATH =
+PKG_INST_BASENAME = $(PKG_BASENAME).installer
+PKG_INST_PATH = install/sea/
+PKG_UPDATE_BASENAME = $(PKG_BASENAME)
+PKG_UPDATE_PATH = update/
+COMPLETE_MAR = $(PKG_UPDATE_PATH)$(PKG_UPDATE_BASENAME).complete.mar
+# PARTIAL_MAR needs to be processed by $(wildcard) before you use it.
+PARTIAL_MAR = $(PKG_UPDATE_PATH)$(PKG_UPDATE_BASENAME).partial.*.mar
+PKG_LANGPACK_BASENAME = $(MOZ_PKG_APPNAME)-$(MOZ_PKG_VERSION).$(AB_CD).langpack
+PKG_LANGPACK_PATH = install/
+LANGPACK = $(PKG_LANGPACK_PATH)$(PKG_LANGPACK_BASENAME).xpi
+PKG_SRCPACK_BASENAME = $(MOZ_PKG_APPNAME)-$(MOZ_PKG_VERSION).source
+PKG_SRCPACK_PATH =
+
+else # "pretty" release package names
+
+ifndef MOZ_PKG_APPNAME
+MOZ_PKG_APPNAME = $(MOZ_APP_DISPLAYNAME)
+endif
+MOZ_PKG_APPNAME_LC = $(shell echo $(MOZ_PKG_APPNAME) | tr '[A-Z]' '[a-z]')
+
+
+ifndef MOZ_PKG_LONGVERSION
+MOZ_PKG_LONGVERSION = $(shell echo $(MOZ_PKG_VERSION) |\
+                       sed -e 's/a\([0-9][0-9]*\)$$/ Alpha \1/' |\
+                       sed -e 's/b\([0-9][0-9]*\)$$/ Beta \1/' |\
+                       sed -e 's/rc\([0-9][0-9]*\)$$/ RC \1/')
+endif
+
+ifeq (,$(filter-out Darwin OS2, $(OS_ARCH))) # Mac and OS2
+PKG_BASENAME = $(MOZ_PKG_APPNAME) $(MOZ_PKG_LONGVERSION)
+PKG_INST_BASENAME = $(MOZ_PKG_APPNAME) Setup $(MOZ_PKG_LONGVERSION)
+else
+ifeq (,$(filter-out WINNT, $(OS_ARCH))) # Windows
+PKG_BASENAME = $(MOZ_PKG_APPNAME_LC)-$(MOZ_PKG_VERSION)
+PKG_INST_BASENAME = $(MOZ_PKG_APPNAME) Setup $(MOZ_PKG_LONGVERSION)
+else # unix (actually, not Windows, Mac or OS/2)
+PKG_BASENAME = $(MOZ_PKG_APPNAME_LC)-$(MOZ_PKG_VERSION)
+PKG_INST_BASENAME = $(MOZ_PKG_APPNAME_LC)-setup-$(MOZ_PKG_VERSION)
+endif
+endif
+PKG_PATH = $(MOZ_PKG_PLATFORM)/$(AB_CD)/
+PKG_INST_PATH = $(PKG_PATH)
+PKG_UPDATE_BASENAME = $(MOZ_PKG_APPNAME_LC)-$(MOZ_PKG_VERSION)
+PKG_UPDATE_PATH = update/$(PKG_PATH)
+COMPLETE_MAR = $(PKG_UPDATE_PATH)$(PKG_UPDATE_BASENAME).complete.mar
+# PARTIAL_MAR needs to be processed by $(wildcard) before you use it.
+PARTIAL_MAR = $(PKG_UPDATE_PATH)$(PKG_UPDATE_BASENAME).partial.*.mar
+PKG_LANGPACK_BASENAME = $(AB_CD)
+PKG_LANGPACK_PATH = $(MOZ_PKG_PLATFORM)/xpi/
+LANGPACK = $(PKG_LANGPACK_PATH)$(PKG_LANGPACK_BASENAME).xpi
+PKG_SRCPACK_BASENAME = $(MOZ_PKG_APPNAME_LC)-$(MOZ_PKG_VERSION).source
+PKG_SRCPACK_PATH = source/
+
+endif # MOZ_PKG_PRETTYNAMES
+
+# Symbol package naming
+SYMBOL_ARCHIVE_BASENAME = $(PKG_BASENAME).crashreporter-symbols
+
+# Test package naming
+TEST_PACKAGE = $(PKG_BASENAME).tests.tar.bz2
+
+ifneq (,$(wildcard $(DIST)/bin/application.ini))
+BUILDID = $(shell $(PYTHON) $(topsrcdir)/config/printconfigsetting.py $(DIST)/bin/application.ini App BuildID)
+else
+BUILDID = $(shell $(PYTHON) $(topsrcdir)/config/printconfigsetting.py $(DIST)/bin/platform.ini Build BuildID)
+endif
+
+MOZ_SOURCE_STAMP = $(shell hg -R $(topsrcdir) parent --template="{node|short}\n" 2>/dev/null)

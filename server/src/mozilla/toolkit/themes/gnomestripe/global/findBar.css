@@ -5,16 +5,10 @@
 }
 
 findbar {
-  -moz-appearance: none !important;
   border-top: 2px solid;
-  -moz-border-top-colors: ThreeDShadow ThreeDHighlight !important;
-  border-bottom: 1px solid;
-  -moz-border-bottom-colors: transparent;
+  -moz-border-top-colors: ThreeDShadow ThreeDHighlight;
+  padding-bottom: 1px;
   min-width: 1px;
-}
-
-.find-buttons-container {
-  -moz-box-direction: reverse;
 }
 
 /* find-next button */
@@ -27,11 +21,11 @@ findbar {
   list-style-image: url("moz-icon://stock/gtk-go-forward-ltr?size=menu&state=disabled");
 }
 
-.findbar-find-next[chromedir="rtl"] {
+.findbar-find-next:-moz-locale-dir(rtl) {
   list-style-image: url("moz-icon://stock/gtk-go-forward-rtl?size=menu");
 }
 
-.findbar-find-next[disabled="true"][chromedir="rtl"] {
+.findbar-find-next[disabled="true"]:-moz-locale-dir(rtl) {
   list-style-image: url("moz-icon://stock/gtk-go-forward-rtl?size=menu&state=disabled");
 }
 
@@ -45,11 +39,11 @@ findbar {
   list-style-image: url("moz-icon://stock/gtk-go-back-ltr?size=menu&state=disabled");
 }
 
-.findbar-find-previous[chromedir="rtl"] {
+.findbar-find-previous:-moz-locale-dir(rtl) {
   list-style-image: url("moz-icon://stock/gtk-go-back-rtl?size=menu");
 }
 
-.findbar-find-previous[disabled="true"][chromedir="rtl"] {
+.findbar-find-previous[disabled="true"]:-moz-locale-dir(rtl) {
   list-style-image: url("moz-icon://stock/gtk-go-back-rtl?size=menu&state=disabled");
 }
 
@@ -86,26 +80,16 @@ findbar {
   list-style-image: url("moz-icon://stock/gtk-dialog-error?size=menu");
 }
 
-.findbar-textbox {
-  -moz-binding: url("chrome://global/content/bindings/findbar.xml#findbar-textbox");
-  -moz-appearance: none;
-  border: none;
-  margin: 0;
-}
-
 .findbar-textbox[status="notfound"] {
-  background-color: #FF6666;
-  color: #FFFFFF;
+  -moz-box-shadow: 0 0 0 1em #f66 inset;
+  color: white;
 }
 
-findbar[flash="true"] > .findbar-container > .find-field-container > .findbar-textbox {
-  background-color: yellow;
+.findbar-textbox[flash="true"] {
+  -moz-box-shadow: 0 0 0 1em yellow inset;
+  color: black;
 }
 
 .find-status-icon[status="wrapped"] {
   list-style-image: url("chrome://global/skin/icons/wrap.png");
-}
-
-.find-field-container {
-  -moz-appearance: textfield;
 }

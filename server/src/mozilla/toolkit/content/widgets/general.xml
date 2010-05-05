@@ -19,7 +19,7 @@
   </binding>
 
   <binding id="basetext" extends="chrome://global/content/bindings/general.xml#basecontrol">
-    <implementation>
+    <implementation implements="nsIDOMXULLabeledControlElement">
       <!-- public implementation -->
       <property name="label"      onset="this.setAttribute('label',val); return val;"
                                   onget="return this.getAttribute('label');"/>
@@ -57,6 +57,25 @@
     <implementation>
       <property name="value"      onset="this.setAttribute('value', val); return val;"
                                   onget="return this.getAttribute('value');"/>
+    </implementation>
+  </binding>
+
+  <binding id="root-element">
+    <implementation>
+      <field name="_lightweightTheme">null</field>
+      <constructor><![CDATA[
+        if (this.hasAttribute("lightweightthemes")) {
+          let temp = {};
+          Components.utils.import("resource://gre/modules/LightweightThemeConsumer.jsm", temp);
+          this._lightweightTheme = new temp.LightweightThemeConsumer(this.ownerDocument);
+        }
+      ]]></constructor>
+      <destructor><![CDATA[
+        if (this._lightweightTheme) {
+          this._lightweightTheme.destroy();
+          this._lightweightTheme = null;
+        }
+      ]]></destructor>
     </implementation>
   </binding>
 
@@ -270,7 +289,7 @@
     <content>
       <children/>
       <xul:statusbarpanel class="statusbar-resizerpanel">
-        <xul:resizer dir="bottomright"/>
+        <xul:resizer dir="bottomend"/>
       </xul:statusbarpanel>
     </content>
 
@@ -285,6 +304,18 @@
     </implementation>
   </binding>
   
+  <binding id="statusbar-drag"
+           extends="chrome://global/content/bindings/general.xml#statusbar">
+    <implementation>
+      <constructor>
+        try {
+          Components.utils.import("resource://gre/modules/WindowDraggingUtils.jsm");
+          new WindowDraggingElement(this, window);
+        } catch (e) {}
+      </constructor>
+    </implementation>
+  </binding>
+
   <binding id="statusbarpanel-iconic" display="xul:button"
            extends="chrome://global/content/bindings/general.xml#statusbarpanel">
     <content>
@@ -372,6 +403,17 @@
           ]]>
         </getter>
       </property>
+    </implementation>
+  </binding>
+
+  <binding id="windowdragbox">
+    <implementation>
+      <constructor>
+        try {
+          Components.utils.import("resource://gre/modules/WindowDraggingUtils.jsm");
+          new WindowDraggingElement(this, window);
+        } catch (e) {}
+      </constructor>
     </implementation>
   </binding>
 

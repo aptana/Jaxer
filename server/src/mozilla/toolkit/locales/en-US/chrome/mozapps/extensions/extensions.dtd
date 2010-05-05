@@ -22,13 +22,14 @@
 <!ENTITY cmd.checkUpdatesAll.accesskey    "F">
 <!ENTITY cmd.checkUpdatesAllAddon.tooltip "Finds Updates to your Add-ons">
 <!ENTITY cmd.checkUpdatesAllTheme.tooltip "Finds Updates to your Themes">
+<!ENTITY cmd.checkUpdatesAllPlugin.tooltip "Finds Updates to your Plugins">
 <!ENTITY cmd.installLocalFile.label       "Install…">
 <!ENTITY cmd.installLocalFile.accesskey   "n">
 <!ENTITY cmd.installFileAddon.tooltip     "Install an Add-on">
 <!ENTITY cmd.installFileTheme.tooltip     "Install a Theme">
-<!ENTITY cmd.installUpdatesAll.label      "Install Updates">
-<!ENTITY cmd.installUpdatesAll.accesskey  "I">
-<!ENTITY cmd.installUpdatesAll.tooltip    "Installs the selected updates">
+<!ENTITY cmd.installUpdatesAll2.label     "Install Updates">
+<!ENTITY cmd.installUpdatesAll2.accesskey "I">
+<!ENTITY cmd.installUpdatesAll2.tooltip   "Install the selected updates">
 <!ENTITY cmd.restartApp2.label            "Restart &brandShortName;">
 <!ENTITY cmd.restartApp2.accesskey        "R">
 <!ENTITY cmd.restartApp2.tooltip          "Restart &brandShortName; to apply changes">
@@ -54,7 +55,7 @@
 <!ENTITY cmd.options.accesskey            "O">
 <!ENTITY cmd.options.tooltip              "Set Options for the selected Extension">
 <!ENTITY cmd.optionsUnix.label            "Preferences">
-<!ENTITY cmd.optionsUnix.accesskey        "r">
+<!ENTITY cmd.optionsUnix.accesskey        "P">
 <!ENTITY cmd.optionsUnix.tooltip          "Edit Preferences for the selected Extension">
 <!ENTITY cmd.enable.label                 "Enable">
 <!ENTITY cmd.enable.accesskey             "E">
@@ -112,6 +113,8 @@
 <!ENTITY insecureUpdate.label             "Does not provide secure updates.">
 <!ENTITY needsDependencies.label          "Requires additional items.">
 <!ENTITY blocklisted.label                "Disabled for your protection.">
+<!ENTITY softBlocklisted.label            "Known to cause security or stability issues.">
+<!ENTITY outdated.label                   "A newer, safer version is available.">
 <!ENTITY toBeDisabled.label               "This add-on will be disabled when &brandShortName; is restarted.">
 <!ENTITY toBeEnabled.label                "This add-on will be enabled when &brandShortName; is restarted.">
 <!ENTITY toBeInstalled.label              "This add-on will be installed when &brandShortName; is restarted.">
@@ -168,3 +171,6 @@
 <!ENTITY eula.width                       "560px">
 <!ENTITY eula.height                      "400px">
 <!ENTITY eula.accept                      "Accept and Install…">
+
+<!ENTITY blocklist.blocked.label          "Blocked">
+<!ENTITY blocklist.checkbox.label         "Disable">

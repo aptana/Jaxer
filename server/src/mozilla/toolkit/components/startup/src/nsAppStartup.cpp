@@ -42,6 +42,7 @@
 #include "nsAppStartup.h"
 
 #include "nsIAppShellService.h"
+#include "nsPIDOMWindow.h"
 #include "nsIDOMWindowInternal.h"
 #include "nsIInterfaceRequestor.h"
 #include "nsILocalFile.h"
@@ -115,6 +116,7 @@ nsAppStartup::Init()
     (do_GetService("@mozilla.org/observer-service;1", &rv));
   NS_ENSURE_SUCCESS(rv, rv);
 
+  os->AddObserver(this, "quit-application-forced", PR_TRUE);
   os->AddObserver(this, "profile-change-teardown", PR_TRUE);
   os->AddObserver(this, "xul-window-registered", PR_TRUE);
   os->AddObserver(this, "xul-window-destroyed", PR_TRUE);
@@ -127,8 +129,9 @@ nsAppStartup::Init()
 // nsAppStartup->nsISupports
 //
 
-NS_IMPL_THREADSAFE_ISUPPORTS5(nsAppStartup,
+NS_IMPL_THREADSAFE_ISUPPORTS6(nsAppStartup,
                               nsIAppStartup,
+                              nsIAppStartup2,
                               nsIWindowCreator,
                               nsIWindowCreator2,
                               nsIObserver,
@@ -159,7 +162,6 @@ nsAppStartup::DestroyHiddenWindow()
 
   return appShellService->DestroyHiddenWindow();
 }
-
 
 NS_IMETHODIMP
 nsAppStartup::Run(void)
@@ -201,14 +203,6 @@ nsAppStartup::Quit(PRUint32 aMode)
   if (mShuttingDown)
     return NS_OK;
 
-  /* eForceQuit doesn't actually work; it can cause a subtle crash if
-     there are windows open which have unload handlers which open
-     new windows. Use eAttemptQuit for now. */
-  if (ferocity == eForceQuit) {
-    NS_WARNING("attempted to force quit");
-    // it will be treated the same as eAttemptQuit, below
-  }
-
   // If we're considering quitting, we will only do so if:
   if (ferocity == eConsiderQuit) {
     if (mConsiderQuitStopper == 0) {
@@ -238,22 +232,42 @@ nsAppStartup::Quit(PRUint32 aMode)
 #endif
   }
 
-  mShuttingDown = PR_TRUE;
-  if (!mRestart) 
-      mRestart = (aMode & eRestart) != 0;
-
   nsCOMPtr<nsIObserverService> obsService;
-  /* Currently ferocity can never have the value of eForceQuit here.
-     That's temporary (in an unscheduled kind of way) and logically
-     this code is part of the eForceQuit case, so I'm checking against
-     that value anyway. Reviewers made me add this comment. */
   if (ferocity == eAttemptQuit || ferocity == eForceQuit) {
 
-    obsService = do_GetService("@mozilla.org/observer-service;1");
-    if (obsService)
-      obsService->NotifyObservers(nsnull, "quit-application-granted", nsnull);
+    nsCOMPtr<nsISimpleEnumerator> windowEnumerator;
+    nsCOMPtr<nsIWindowMediator> mediator (do_GetService(NS_WINDOWMEDIATOR_CONTRACTID));
+    if (mediator) {
+      mediator->GetEnumerator(nsnull, getter_AddRefs(windowEnumerator));
+      if (windowEnumerator) {
+        PRBool more;
+        while (windowEnumerator->HasMoreElements(&more), more) {
+          nsCOMPtr<nsISupports> window;
+          windowEnumerator->GetNext(getter_AddRefs(window));
+          nsCOMPtr<nsPIDOMWindow> domWindow(do_QueryInterface(window));
+          if (domWindow) {
+            if (!domWindow->CanClose())
+              return NS_OK;
+          }
+        }
+      }
+    }
 
-    AttemptingQuit(PR_TRUE);
+    mShuttingDown = PR_TRUE;
+    if (!mRestart)
+      mRestart = (aMode & eRestart) != 0;
+
+    obsService = do_GetService("@mozilla.org/observer-service;1");
+
+    if (!mAttemptingQuit) {
+      mAttemptingQuit = PR_TRUE;
+#ifdef XP_MACOSX
+      // now even the Mac wants to quit when the last window is closed
+      ExitLastWindowClosingSurvivalArea();
+#endif
+      if (obsService)
+        obsService->NotifyObservers(nsnull, "quit-application-granted", nsnull);
+    }
 
     /* Enumerate through each open window and close it. It's important to do
        this before we forcequit because this can control whether we really quit
@@ -261,12 +275,8 @@ nsAppStartup::Quit(PRUint32 aMode)
        opens a new window. Ugh. I know. */
     CloseAllWindows();
 
-    nsCOMPtr<nsIWindowMediator> mediator
-      (do_GetService(NS_WINDOWMEDIATOR_CONTRACTID));
     if (mediator) {
       if (ferocity == eAttemptQuit) {
-        nsCOMPtr<nsISimpleEnumerator> windowEnumerator;
-
         ferocity = eForceQuit; // assume success
 
         /* Were we able to immediately close all windows? if not, eAttemptQuit
@@ -337,27 +347,6 @@ nsAppStartup::Quit(PRUint32 aMode)
 }
 
 
-/* We know we're trying to quit the app, but may not be able to do so
-   immediately. Enter a state where we're more ready to quit.
-   (Does useful work only on the Mac.) */
-void
-nsAppStartup::AttemptingQuit(PRBool aAttempt)
-{
-#ifdef XP_MACOSX
-  if (aAttempt) {
-    // now even the Mac wants to quit when the last window is closed
-    if (!mAttemptingQuit)
-      ExitLastWindowClosingSurvivalArea();
-  } else {
-    // changed our mind. back to normal.
-    if (mAttemptingQuit)
-      EnterLastWindowClosingSurvivalArea();
-  }
-#endif
-
-  mAttemptingQuit = aAttempt;
-}
-
 void
 nsAppStartup::CloseAllWindows()
 {
@@ -377,10 +366,10 @@ nsAppStartup::CloseAllWindows()
     if (NS_FAILED(windowEnumerator->GetNext(getter_AddRefs(isupports))))
       break;
 
-    nsCOMPtr<nsIDOMWindowInternal> window = do_QueryInterface(isupports);
-    NS_ASSERTION(window, "not an nsIDOMWindowInternal");
+    nsCOMPtr<nsPIDOMWindow> window = do_QueryInterface(isupports);
+    NS_ASSERTION(window, "not an nsPIDOMWindow");
     if (window)
-      window->Close();
+      window->ForceClose();
   }
 }
 
@@ -398,14 +387,20 @@ nsAppStartup::ExitLastWindowClosingSurvivalArea(void)
   NS_ASSERTION(mConsiderQuitStopper > 0, "consider quit stopper out of bounds");
   --mConsiderQuitStopper;
 
-#ifdef XP_MACOSX
-  if (!mShuttingDown && mRunning && (mConsiderQuitStopper <= 1))
+  if (mRunning)
     Quit(eConsiderQuit);
-#else
-  if (!mShuttingDown && mRunning && (mConsiderQuitStopper == 0))
-    Quit(eConsiderQuit);
-#endif
 
+  return NS_OK;
+}
+
+//
+// nsAppStartup->nsIAppStartup2
+//
+
+NS_IMETHODIMP
+nsAppStartup::GetShuttingDown(PRBool *aResult)
+{
+  *aResult = mShuttingDown;
   return NS_OK;
 }
 
@@ -439,6 +434,10 @@ nsAppStartup::CreateChromeWindow2(nsIWebBrowserChrome *aParent,
   NS_ENSURE_ARG_POINTER(_retval);
   *aCancel = PR_FALSE;
   *_retval = 0;
+
+  // Non-modal windows cannot be opened if we are attempting to quit
+  if (mAttemptingQuit && (aChromeFlags & nsIWebBrowserChrome::CHROME_MODAL) == 0)
+    return NS_ERROR_ILLEGAL_DURING_SHUTDOWN;
 
   nsCOMPtr<nsIXULWindow> newWindow;
 
@@ -488,13 +487,17 @@ nsAppStartup::Observe(nsISupports *aSubject,
                       const char *aTopic, const PRUnichar *aData)
 {
   NS_ASSERTION(mAppShell, "appshell service notified before appshell built");
-  if (!strcmp(aTopic, "profile-change-teardown")) {
-    EnterLastWindowClosingSurvivalArea();
-    CloseAllWindows();
-    ExitLastWindowClosingSurvivalArea();
+  if (!strcmp(aTopic, "quit-application-forced")) {
+    mShuttingDown = PR_TRUE;
+  }
+  else if (!strcmp(aTopic, "profile-change-teardown")) {
+    if (!mShuttingDown) {
+      EnterLastWindowClosingSurvivalArea();
+      CloseAllWindows();
+      ExitLastWindowClosingSurvivalArea();
+    }
   } else if (!strcmp(aTopic, "xul-window-registered")) {
     EnterLastWindowClosingSurvivalArea();
-    AttemptingQuit(PR_FALSE);
   } else if (!strcmp(aTopic, "xul-window-destroyed")) {
     ExitLastWindowClosingSurvivalArea();
   } else {

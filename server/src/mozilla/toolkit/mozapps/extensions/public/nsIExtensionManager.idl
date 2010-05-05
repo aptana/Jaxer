@@ -45,7 +45,6 @@ interface nsIRDFDataSource;
 interface nsIUpdateItem;
 interface nsIAddonInstallListener;
 interface nsIAddonUpdateCheckListener;
-interface nsICommandLine;
 interface nsISimpleEnumerator;
 interface nsIDirectoryEnumerator;
 interface nsIObserver;
@@ -199,7 +198,7 @@ interface nsIInstallLocation : nsISupports
  * XXXben - Some of this stuff should go into a management-ey interface,
  *          some into an app-startup-ey interface.
  */
-[scriptable, uuid(cc58fd12-0a61-4336-876b-617c330e157e)]
+[scriptable, uuid(494e8302-8689-4a8a-a08d-0da17c649c7d)]
 interface nsIExtensionManager : nsISupports
 {
   /**
@@ -208,17 +207,34 @@ interface nsIExtensionManager : nsISupports
   const unsigned long UPDATE_CHECK_NEWVERSION    = 0;
   const unsigned long UPDATE_CHECK_COMPATIBILITY = 1;
   const unsigned long UPDATE_SYNC_COMPATIBILITY  = 2;
+  const unsigned long UPDATE_NOTIFY_NEWVERSION   = 3;
+
+  /**
+   * Constants that callers can use to indicate the reason for an add-on update
+   * check. Internal code uses other constants in nsExtensionManager.js.in.
+   *
+   * The update check is being performed at the request of the user.
+   */
+  const unsigned long UPDATE_WHEN_USER_REQUESTED    = 1;
+  /**
+   * The update check is being performed after a new version of the application
+   * has been detected.
+   */
+  const unsigned long UPDATE_WHEN_NEW_APP_DETECTED  = 2;
+  /**
+   * The update check is being performed after a new version of the application
+   * has been installed.
+   */
+  const unsigned long UPDATE_WHEN_NEW_APP_INSTALLED = 3;
 
   /**
    * Starts the Extension Manager, checking for item changes, additions and
    * removals, and finishing pending operations.
-   * @param   commandLine
-   *          The command line the application was started with.
    * @returns true if the application has rewritten the extensions.ini file
    *          and needs to restart to register components/chrome etc,
    *          false otherwise
    */
-  boolean start(in nsICommandLine commandLine);
+  boolean start();
 
   /**
    * Determines if there are incompatible items installed (and offers to
@@ -228,16 +244,6 @@ interface nsIExtensionManager : nsISupports
    *          chrome etc, false otherwise.
    */
   boolean checkForMismatches();
-
-  /**
-   * Handle command line flags, e.g. -install-global-[extension|theme]
-   * @param   cmdLine
-   *          the command line the application was started with
-   * XXXben - move this off this API - currently it is only used for
-   *          global installation, and the apprunner can do this directly
-   *          with |installItemFromFile|
-   */
-  void handleCommandLineArgs(in nsICommandLine cmdline);
 
   /**
    * Gets the Install Location for an item
@@ -294,25 +300,46 @@ interface nsIExtensionManager : nsISupports
    *          The length of |items|
    * @param   updateCheckType
    *          UPDATE_CHECK_NEWVERSION if this check should find the newest
-   *          versions available,
-   *          UPDATE_CHECK_COMPATIBILITY if it should only find newer target
-   *          application compatibility information for the currently
-   *          installed version.
+   *          versions available and write the results to the extensions
+   *          datasource.
+   *          UPDATE_CHECK_COMPATIBILITY if this check should only find newer
+   *          target application compatibility information for the currently
+   *          installed version and write the results to the extensions
+   *          datasource.
    *          UPDATE_SYNC_COMPATIBILITY if this check should only find target
    *          application compatibility information for the currently
-   *          installed version and synchronize the values.
+   *          installed version and synchronize the values to the extensions
+   *          datasource.
+   *          UPDATE_NOTIFY_NEWVERSION if this check should find the newest
+   *          versions available without updating the extensions datasource.
    * @param   listener
-   *          An nsIAddonUpdateCheckListener object which will be notified during
-   *          the update check process.  If not null, the object's
+   *          An nsIAddonUpdateCheckListener object which will be notified
+   *          during the update check process. If not null, the object's
    *          onUpdateStarted() and onUpdateEnded() methods will be called even
    *          if there are no items to update.
+   * @param   updateType (optional)
+   *          The type of the update check. Should be one of the UPDATE_WHEN
+   *          values.
+   * @param   appVersion (optional)
+   *          The version of the application to check for compatible updates.
+   *          This param is only honored when updateCheckType is equal to
+   *          UPDATE_NOTIFY_NEWVERSION and it defaults to the current version of
+   *          the application when it is not specified.
+   * @param   platformVersion (optional)
+   *          The version of the toolkit to check for compatible updates.
+   *          This param is only honored when updateCheckType is equal to
+   *          UPDATE_NOTIFY_NEWVERSION and it defaults to the current version of
+   *          the toolkit when it is not specified.
    *
    * @throws  NS_ERROR_ILLEGAL_VALUE if any item is invalid.
    */
    void update([array, size_is(itemCount)] in nsIUpdateItem items,
                in unsigned long itemCount,
                in unsigned long updateCheckType,
-               in nsIAddonUpdateCheckListener listener);
+               in nsIAddonUpdateCheckListener listener,
+               [optional] in unsigned long updateType,
+               [optional] in AString appVersion,
+               [optional] in AString platformVersion);
 
   /**
    * Gets a nsIUpdateItem for the item with the specified id.
@@ -341,8 +368,6 @@ interface nsIExtensionManager : nsISupports
   /**
    * Retrieves a list of nsIUpdateItems of items that are incompatible
    * with the supplied parameters.
-   * @param   id
-   *          The id of the application to check compatibility against
    * @param   appVersion
    *          The version of the application to check compatibility against
    * @param   platformVersion
@@ -356,8 +381,7 @@ interface nsIExtensionManager : nsISupports
    *          The XPCJS reference to the number of items returned.
    * @returns An array of incompatible nsIUpdateItems.
    */
-  void getIncompatibleItemList(in AString id,
-                               in AString appVersion,
+  void getIncompatibleItemList(in AString appVersion,
                                in AString platformVersion,
                                in unsigned long type,
                                in boolean includeDisabled,
@@ -411,15 +435,6 @@ interface nsIExtensionManager : nsISupports
   void removeInstallListenerAt(in long index);
 
   /**
-   * Move an Item to the index of another item in its container.
-   * @param   movingID
-   *          The ID of an item to be moved.
-   * @param   destinationID
-   *          The ID of an item to move an item to.
-   */
-  void moveToIndexOf(in AString movingID, in AString destinationID);
-
-  /**
    * Cancels a pending install or upgrade of an item. If the item does
    * not have a pending install or upgrade then this will do nothing.
    * @param   id
@@ -452,28 +467,20 @@ interface nsIExtensionManager : nsISupports
                                  [retval, array, size_is(itemCount)] out nsIUpdateItem items);
 
   /**
-   * Checks for changes to the blocklist using the local blocklist file,
-   * application disables / enables items that have been added / removed from
-   * the blocklist, and if there are additions to the blocklist this will
-   * inform the user by displaying a list of the items added.
+   * Checks for changes to the blocklist using the local blocklist file.
+   * This will immediately application disable items that have been hard blocked
+   * and application enable items that are no longer hard blocked. It will also
+   * return items that are either soft or hard blocked and aren't already
+   * disabled or disabled pending a restart.
    *
-   * XXXrstrong - this method is not terribly useful and was added so we can
-   * trigger this check from the additional timer used by blocklisting.
+   * This is likely to change or go away in the future and should not be used
+   * by anyone outside of the blocklist service.
+   *
+   * @returns An array of nsIUpdateItems that are blocklisted or the user should
+   *          be warned about but are currently enabled.
    */
-  void checkForBlocklistChanges();
-
-  /**
-   * Sorts addons of the specified type by the specified property in the
-   * Extensions Datasource container starting from the top of their container.
-   * If the addons are already sorted then no action is performed.
-   * @param   type
-   *          The nsIUpdateItem type of the items to sort.
-   * @param   propertyName
-   *          The RDF property name used for sorting.
-   * @param   isAscending
-   *          true to sort ascending and false to sort descending
-   */
-  void sortTypeByProperty(in unsigned long type, in AString propertyName, in boolean isAscending);
+  void updateAndGetNewBlocklistedItems(out unsigned long itemCount,
+                                       [retval, array, size_is(itemCount)] out nsIUpdateItem items);
 };
 
 /**
@@ -629,7 +636,7 @@ interface nsIAddonInstallListener : nsISupports
 
   /**
    * Called when an add-on compatibility check starts. This will be called 
-   * during an install if an add-on is incompatible according to it's
+   * during an install if an add-on is incompatible according to its
    * install.rdf.
    * @param   addon
    *          The add-on that the compatibility check will be for

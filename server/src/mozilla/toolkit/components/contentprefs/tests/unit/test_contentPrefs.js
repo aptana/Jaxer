@@ -347,4 +347,147 @@ function run_test() {
   do_check_eq(genericObserver.numTimesSetCalled, 2);
   do_check_eq(specificObserver.numTimesRemovedCalled, 1);
   do_check_eq(genericObserver.numTimesRemovedCalled, 2);
+
+
+  //**************************************************************************//
+  // Get/Remove Prefs By Name
+  
+  {
+    var anObserver = {
+      interfaces: [Ci.nsIContentPrefObserver, Ci.nsISupports],
+
+      QueryInterface: function ContentPrefTest_QueryInterface(iid) {
+        if (!this.interfaces.some( function(v) { return iid.equals(v) } ))
+          throw Cr.NS_ERROR_NO_INTERFACE;
+        return this;
+      },
+
+      onContentPrefSet: function anObserver_onContentPrefSet(group, name, value) {
+      },
+
+      expectedDomains: [],
+      numTimesRemovedCalled: 0,
+      onContentPrefRemoved: function anObserver_onContentPrefRemoved(group, name) {
+        ++this.numTimesRemovedCalled;
+
+        // remove the domain from the list of expected domains
+        var index = this.expectedDomains.indexOf(group);
+        do_check_true(index >= 0);
+        this.expectedDomains.splice(index, 1);
+      }
+    };
+
+    var uri1 = ContentPrefTest.getURI("http://www.domain1.com/");
+    var uri2 = ContentPrefTest.getURI("http://foo.domain1.com/");
+    var uri3 = ContentPrefTest.getURI("http://domain1.com/");
+    var uri4 = ContentPrefTest.getURI("http://www.domain2.com/");
+
+    cps.setPref(uri1, "test.byname.1", 1);
+    cps.setPref(uri1, "test.byname.2", 2);
+    cps.setPref(uri2, "test.byname.1", 4);
+    cps.setPref(uri3, "test.byname.3", 8);
+    cps.setPref(uri4, "test.byname.1", 16);
+    cps.setPref(null, "test.byname.1", 32);
+    cps.setPref(null, "test.byname.2", false);
+    
+    function enumerateAndCheck(testName, expectedSum, expectedDomains) {
+      var prefsByName = cps.getPrefsByName(testName);
+      var enumerator = prefsByName.enumerator;
+      var sum = 0;
+      while (enumerator.hasMoreElements()) {
+        var property = enumerator.getNext().QueryInterface(Components.interfaces.nsIProperty);
+        sum += parseInt(property.value);
+
+        // remove the domain from the list of expected domains
+        var index = expectedDomains.indexOf(property.name);
+        do_check_true(index >= 0);
+        expectedDomains.splice(index, 1);
+      }
+      do_check_eq(sum, expectedSum);
+      // check all domains have been removed from the array
+      do_check_eq(expectedDomains.length, 0);
+    }
+    
+    enumerateAndCheck("test.byname.1", 53,
+      ["foo.domain1.com", null, "www.domain1.com", "www.domain2.com"]);
+    enumerateAndCheck("test.byname.2", 2, ["www.domain1.com", null]);
+    enumerateAndCheck("test.byname.3", 8, ["domain1.com"]);
+
+    cps.addObserver("test.byname.1", anObserver);
+    anObserver.expectedDomains = ["foo.domain1.com", null, "www.domain1.com", "www.domain2.com"];
+
+    cps.removePrefsByName("test.byname.1");
+    do_check_false(cps.hasPref(uri1, "test.byname.1"));
+    do_check_false(cps.hasPref(uri2, "test.byname.1"));
+    do_check_false(cps.hasPref(uri3, "test.byname.1"));
+    do_check_false(cps.hasPref(uri4, "test.byname.1"));
+    do_check_false(cps.hasPref(null, "test.byname.1"));
+    do_check_true(cps.hasPref(uri1, "test.byname.2"));
+    do_check_true(cps.hasPref(uri3, "test.byname.3"));
+
+    do_check_eq(anObserver.numTimesRemovedCalled, 4);
+    do_check_eq(anObserver.expectedDomains.length, 0);
+ 
+    cps.removeObserver("test.byname.1", anObserver);
+    
+    // Clean up after ourselves
+    cps.removePref(uri1, "test.byname.2");
+    cps.removePref(uri3, "test.byname.3");
+    cps.removePref(null, "test.byname.2");
+  }
+
+
+  //**************************************************************************//
+  // Clear Private Data Pref Removal
+
+  {
+    let uri1 = ContentPrefTest.getURI("http://www.domain1.com/");
+    let uri2 = ContentPrefTest.getURI("http://www.domain2.com/");
+    let uri3 = ContentPrefTest.getURI("http://www.domain3.com/");
+
+    let dbConnection = cps.DBConnection;
+
+    let prefCount = Cc["@mozilla.org/storage/statement-wrapper;1"].
+                    createInstance(Ci.mozIStorageStatementWrapper);
+    prefCount.initialize(dbConnection.createStatement("SELECT COUNT(*) AS count FROM prefs"));
+
+    let groupCount = Cc["@mozilla.org/storage/statement-wrapper;1"].
+                     createInstance(Ci.mozIStorageStatementWrapper);
+    groupCount.initialize(dbConnection.createStatement("SELECT COUNT(*) AS count FROM groups"));
+
+    // Add some prefs for multiple domains.
+    cps.setPref(uri1, "test.removeAllGroups", 1);
+    cps.setPref(uri2, "test.removeAllGroups", 2);
+    cps.setPref(uri3, "test.removeAllGroups", 3);
+
+    // Add a global pref.
+    cps.setPref(null, "test.removeAllGroups", 1);
+
+    // Make sure there are some prefs and groups in the database.
+    prefCount.step();
+    do_check_true(prefCount.row.count > 0);
+    prefCount.reset();
+    groupCount.step();
+    do_check_true(groupCount.row.count > 0);
+    groupCount.reset();
+
+    // Remove all prefs and groups from the database using the same routine
+    // the Clear Private Data dialog uses.
+    cps.removeGroupedPrefs();
+
+    // Make sure there are no longer any groups in the database and the only pref
+    // is the global one.
+    prefCount.step();
+    do_check_true(prefCount.row.count == 1);
+    prefCount.reset();
+    groupCount.step();
+    do_check_true(groupCount.row.count == 0);
+    groupCount.reset();
+    let globalPref = Cc["@mozilla.org/storage/statement-wrapper;1"].
+                     createInstance(Ci.mozIStorageStatementWrapper);
+    globalPref.initialize(dbConnection.createStatement("SELECT groupID FROM prefs"));
+    globalPref.step();
+    do_check_true(globalPref.row.groupID == null);
+    globalPref.reset();
+  }
 }

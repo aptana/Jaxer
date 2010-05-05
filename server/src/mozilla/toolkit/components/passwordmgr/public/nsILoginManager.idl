@@ -41,8 +41,10 @@ interface nsIURI;
 interface nsILoginInfo;
 interface nsIAutoCompleteResult;
 interface nsIDOMHTMLInputElement;
+interface nsIDOMHTMLFormElement;
+interface nsIPropertyBag;
 
-[scriptable, uuid(579f45b7-682f-479f-9085-3f8075488803)]
+[scriptable, uuid(30534ff7-fb95-45c5-8336-5448638f2aa1)]
 
 interface nsILoginManager : nsISupports {
 
@@ -51,6 +53,10 @@ interface nsILoginManager : nsISupports {
      *
      * @param aLogin
      *        The login to be added.
+     *
+     * Default values for the login's nsILoginMetaInfo properties will be
+     * created. However, if the caller specifies non-default values, they will
+     * be used instead.
      */
     void addLogin(in nsILoginInfo aLogin);
 
@@ -60,6 +66,9 @@ interface nsILoginManager : nsISupports {
      *
      * @param aLogin
      *        The login to be removed.
+     *
+     * The specified login must exactly match a stored login. However, the
+     * values of any nsILoginMetaInfo properties are ignored.
      */
     void removeLogin(in nsILoginInfo aLogin);
 
@@ -67,10 +76,20 @@ interface nsILoginManager : nsISupports {
     /**
      * Modify an existing login in the login manager.
      *
-     * @param aLogin
+     * @param oldLogin
      *        The login to be modified.
+     * @param newLoginData
+     *        The new login values (either a nsILoginInfo or nsIProperyBag)
+     *
+     * If newLoginData is a nsILoginInfo, all of the old login's nsILoginInfo
+     * properties are changed to the values from newLoginData (but the old
+     * login's nsILoginMetaInfo properties are unmodified).
+     *
+     * If newLoginData is a nsIPropertyBag, only the specified properties
+     * will be changed. The nsILoginMetaInfo properties of oldLogin can be
+     * changed in this manner.
      */
-    void modifyLogin(in nsILoginInfo oldLogin, in nsILoginInfo newLogin);
+    void modifyLogin(in nsILoginInfo oldLogin, in nsISupports newLoginData);
 
 
     /**
@@ -211,6 +230,38 @@ interface nsILoginManager : nsISupports {
     nsIAutoCompleteResult autoCompleteSearch(in AString aSearchString,
                                     in nsIAutoCompleteResult aPreviousResult,
                                     in nsIDOMHTMLInputElement aElement);
+
+    /**
+     * Fill a form with login information if we have it. This method will fill
+     * aForm regardless of the signon.autofillForms preference.
+     *
+     * @param aForm
+     *        The form to fill
+     * @return Success of attempt fill form
+     */
+    boolean fillForm(in nsIDOMHTMLFormElement aForm);
+
+    /**
+     * Search for logins in the login manager. An array is always returned;
+     * if there are no logins the array is empty.
+     *
+     * @param count
+     *        The number of elements in the array. JS callers can simply use
+     *        the array's .length property, and supply an dummy object for
+     *        this out param. For example: |searchLogins({}, matchData)|
+     * @param matchData
+     *        The data used to search. This does not follow the same
+     *        requirements as findLogins for those fields. Wildcard matches are
+     *        simply not specified.
+     * @param logins
+     *        An array of nsILoginInfo objects.
+     *
+     * NOTE: This can be called from JS as:
+     *       var logins = pwmgr.searchLogins({}, matchData);
+     *       (|logins| is an array).
+     */
+    void searchLogins(out unsigned long count, in nsIPropertyBag matchData,
+                      [retval, array, size_is(count)] out nsILoginInfo logins);
 };
 
 %{C++

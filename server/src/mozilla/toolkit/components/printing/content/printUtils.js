@@ -120,13 +120,13 @@ var PrintUtils = {
     // For the browser implemented via XUL with the PP toolbar we cannot let it be
     // automatically opened from the print engine because the XUL scrollbars in the PP window
     // will layout before the content window and a crash will occur.
-    // Doing it all from script, means it lays out before hand and we can let printing do it's own thing
+    // Doing it all from script, means it lays out before hand and we can let printing do its own thing
     var PPROMPTSVC = Components.classes["@mozilla.org/embedcomp/printingprompt-service;1"]
                                .getService(Components.interfaces.nsIPrintingPromptService);
     // just in case we are already printing, 
     // an error code could be returned if the Prgress Dialog is already displayed
     try {
-      PPROMPTSVC.showProgress(this, webBrowserPrint, printSettings, this._obsPP, false,
+      PPROMPTSVC.showProgress(window, webBrowserPrint, printSettings, this._obsPP, false,
                               this._webProgressPP, ppParams, notifyOnOpen);
       if (ppParams.value) {
         var webNav = getWebNavigation();
@@ -190,6 +190,7 @@ var PrintUtils = {
     return printSettings;
   },
 
+  _originalZoomValue: null,
   _closeHandlerPP: null,
   _webProgressPP: null,
   _onEnterPP: null,
@@ -218,11 +219,19 @@ var PrintUtils = {
   {
     gFocusedElement = document.commandDispatcher.focusedElement;
 
+    // Reset the zoom value and save it to be restored later.
+    if (typeof ZoomManager == "object") {
+      this._originalZoomValue = ZoomManager.zoom;
+      ZoomManager.reset();
+    }
+
     var webBrowserPrint = this.getWebBrowserPrint(aWindow);
     var printSettings   = this.getPrintSettings();
     try {
       webBrowserPrint.printPreview(printSettings, null, this._webProgressPP.value);
     } catch (e) {
+      if (typeof ZoomManager == "object")
+        ZoomManager.zoom = this._originalZoomValue;
       // Pressing cancel is expressed as an NS_ERROR_ABORT return value,
       // causing an exception to be thrown which we catch here.
       // Unfortunately this will also consume helpful failures, so add a
@@ -245,7 +254,8 @@ var PrintUtils = {
       "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
     printPreviewTB = document.createElementNS(XUL_NS, "toolbar");
     printPreviewTB.setAttribute("printpreview", true);
-    printPreviewTB.setAttribute("id", "print-preview-toolbar");
+    printPreviewTB.id = "print-preview-toolbar";
+    printPreviewTB.className = "toolbar-primary";
 
     var navToolbox = getNavToolbox();
     navToolbox.parentNode.insertBefore(printPreviewTB, navToolbox);
@@ -279,29 +289,21 @@ var PrintUtils = {
     this._closeHandlerPP = null;
 
     var webBrowserPrint = this.getWebBrowserPrint(aWindow);
-    webBrowserPrint.exitPrintPreview(); 
+    webBrowserPrint.exitPrintPreview();
+    if (typeof ZoomManager == "object")
+      ZoomManager.zoom = this._originalZoomValue;
 
     // remove the print preview toolbar
     var printPreviewTB = document.getElementById("print-preview-toolbar");
     getNavToolbox().parentNode.removeChild(printPreviewTB);
 
-    var contentWindow = aWindow || window.content;
-    contentWindow.focus();
-
-    var cmdDispatcher = document.commandDispatcher;
-    cmdDispatcher.suppressFocusScroll = true;
-    if (gFocusedElement instanceof HTMLElement ||
-        gFocusedElement instanceof XULElement ||
-        gFocusedElement instanceof Window) {
-      gFocusedElement.focus();
-    }
-    else if (gFocusedElement instanceof Node) {
-      var content = window.content;
-      if (content instanceof Components.interfaces.nsIInterfaceRequestor)
-        content.getInterface(Components.interfaces.nsIDOMWindowUtils).focus(gFocusedElement);
-      }
+    var fm = Components.classes["@mozilla.org/focus-manager;1"]
+                       .getService(Components.interfaces.nsIFocusManager);
+    if (gFocusedElement)
+      fm.setFocus(gFocusedElement, fm.FLAG_NOSCROLL);
+    else
+      (aWindow || window.content).focus();
     gFocusedElement = null;
-    cmdDispatcher.suppressFocusScroll = false;
 
     // on Exit PP Call back
     if (this._onExitPP) {

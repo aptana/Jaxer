@@ -107,32 +107,30 @@ FORCE_STATIC_LIB = 1
 
 XPIDLSRCS = \
 	nsINativeAppSupport.idl \
-	nsIXULRuntime.idl \
 	$(NULL)
 
 ifneq (,$(filter WINCE WINNT,$(OS_ARCH)))
 XPIDLSRCS += nsIWinAppHelper.idl
 endif
 
-EXPORTS = \
-	xrecore.h \
-	nsXULAppAPI.h \
-	$(NULL)
-
 ifndef JAXER
 
-SHAREDCPPSRCS = \
-	showOSAlert.cpp \
-	$(NULL)
-
 CPPSRCS = \
-	$(SHAREDCPPSRCS) \
 	nsAppRunner.cpp \
 	nsConsoleWriter.cpp \
 	nsXREDirProvider.cpp \
 	nsNativeAppSupportBase.cpp \
 	nsAppData.cpp \
+	nsSigHandlers.cpp \
 	$(NULL)
+
+ifdef MOZ_SPLASHSCREEN
+ifeq ($(OS_ARCH),WINCE)
+CPPSRCS += nsSplashScreenWin.cpp
+else
+CPPSRCS += nsSplashScreenDummy.cpp
+endif
+endif
 
 DEFINES += -DIMPL_XREAPI
 
@@ -146,11 +144,7 @@ DEFINES += -DMOZ_UPDATER
 endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),windows)
-ifdef WINCE
-CPPSRCS += nsNativeAppSupportDefault.cpp
-else
 CPPSRCS += nsNativeAppSupportWin.cpp
-endif
 DEFINES += -DWIN32_LEAN_AND_MEAN -DUNICODE -D_UNICODE
 else
 ifeq ($(MOZ_WIDGET_TOOLKIT),cocoa)
@@ -172,24 +166,13 @@ endif
 endif
 endif
 
-ifneq (,$(filter mac cocoa,$(MOZ_WIDGET_TOOLKIT)))
-CMSRCS = MacLaunchHelper.m
+ifeq ($(MOZ_WIDGET_TOOLKIT),cocoa)
+CMMSRCS += MacLaunchHelper.mm
 CPPSRCS += nsCommandLineServiceMac.cpp
-LOCAL_INCLUDES += -I$(topsrcdir)/xpfe/bootstrap/appleevents
 OS_CXXFLAGS += -fexceptions
-SHARED_LIBRARY_LIBS += $(DEPTH)/xpfe/bootstrap/appleevents/$(LIB_PREFIX)appleevents_s.$(LIB_SUFFIX)
 endif
 ifeq ($(MOZ_WIDGET_TOOLKIT),cocoa)
 CMMSRCS += MacApplicationDelegate.mm
-endif
-
-ifneq (,$(filter-out OS2 WINNT,$(OS_ARCH)))
-SHAREDCPPSRCS	  += nsSigHandlers.cpp
-endif
-
-GARBAGE += $(SHAREDCPPSRCS) $(wildcard *.$(OBJ_SUFFIX))
-ifneq (,$(filter WINCE WINNT,$(OS_ARCH)))
-GARBAGE	+= $(addprefix $(srcdir)/,$(SHAREDCPPSRCS))
 endif
 
 SHARED_LIBRARY_LIBS += ../profile/src/$(LIB_PREFIX)profile_s.$(LIB_SUFFIX)
@@ -204,6 +187,7 @@ SHARED_LIBRARY_LIBS += $(DEPTH)/toolkit/crashreporter/$(LIB_PREFIX)exception_han
 ifeq ($(OS_ARCH),WINNT)
 SHARED_LIBRARY_LIBS += \
 	$(DEPTH)/toolkit/crashreporter/google-breakpad/src/client/windows/handler/$(LIB_PREFIX)exception_handler_s.$(LIB_SUFFIX) \
+	$(DEPTH)/toolkit/crashreporter/google-breakpad/src/client/windows/crash_generation/$(LIB_PREFIX)crash_generation_s.$(LIB_SUFFIX) \
 	$(DEPTH)/toolkit/crashreporter/google-breakpad/src/common/windows/$(LIB_PREFIX)breakpad_windows_common_s.$(LIB_SUFFIX)
 endif
 
@@ -234,6 +218,10 @@ SHARED_LIBRARY_LIBS += \
 endif
 endif
 
+ifdef ENABLE_TESTS
+DIRS += test
+endif
+
 endif
 
 include $(topsrcdir)/config/rules.mk
@@ -253,13 +241,20 @@ LOCAL_INCLUDES += \
 	-I$(topsrcdir)/config \
 	$(NULL)
 
-CXXFLAGS += $(TK_CFLAGS)
+CXXFLAGS += $(TK_CFLAGS) $(MOZ_DBUS_GLIB_CFLAGS)
+
+ifeq ($(MOZ_WIDGET_TOOLKIT),gtk2)
+CXXFLAGS += $(MOZ_PANGO_CFLAGS)
+endif
 
 ifdef BUILD_STATIC_LIBS
 DEFINES += -D_BUILD_STATIC_BIN
 endif
 
-DEFINES += -DOS_TARGET=\"$(OS_TARGET)\"
+DEFINES += \
+  -DOS_TARGET=\"$(OS_TARGET)\" \
+  -DMOZ_WIDGET_TOOLKIT=\"$(MOZ_WIDGET_TOOLKIT)\"
+
 ifdef TARGET_XPCOM_ABI
 DEFINES += \
 	-DTARGET_XPCOM_ABI=\"$(TARGET_XPCOM_ABI)\" \
@@ -279,11 +274,24 @@ DEFINES     += -DHAVE_USR_LIB64_DIR
 endif
 endif
 
-export:: $(addprefix $(topsrcdir)/xpfe/bootstrap/, $(SHAREDCPPSRCS))
-	$(INSTALL) $^ .
+SOURCE_STAMP := $(shell cd $(topsrcdir) && hg identify 2>/dev/null | cut -f1 -d' ')
+# strip a trailing slash from the repo URL because it's not always present,
+# and we want to construct a working URL in buildconfig.html
+# make+shell+sed = awful
+_dollar=$$
+SOURCE_REPO := $(shell cd $(topsrcdir) && hg showconfig paths.default 2>/dev/null | head -n1 | sed -e "s/^ssh:/http:/" -e "s/\/$(_dollar)//" )
+
+ifdef SOURCE_STAMP
+INIARGS = --sourcestamp=$(SOURCE_STAMP)
+# extra sanity check for old versions of hg
+# that don't support showconfig
+ifeq (http,$(patsubst http%,http,$(SOURCE_REPO)))
+INIARGS += --sourcerepo=$(SOURCE_REPO)
+endif
+endif
 
 platform.ini: FORCE
-	$(PYTHON) $(srcdir)/make-platformini.py --buildid=$(shell cat $(DEPTH)/config/buildid) $(topsrcdir)/config/milestone.txt > $@
+	$(PYTHON) $(srcdir)/make-platformini.py --buildid=$(shell cat $(DEPTH)/config/buildid) $(INIARGS) $(topsrcdir)/config/milestone.txt > $@
 
 GARBAGE += platform.ini
 

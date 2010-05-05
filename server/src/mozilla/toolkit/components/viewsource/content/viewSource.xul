@@ -58,6 +58,7 @@
 <window id="viewSource"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         onload="onLoadViewSource();"
+        onunload="onUnloadViewSource();"
         contenttitlesetting="true"
         title="&mainWindow.title;" 
         titlemodifier="&mainWindow.titlemodifier;" 
@@ -73,7 +74,6 @@
   <script type="application/javascript" src="chrome://global/content/viewSource.js"/>
   <script type="application/javascript" src="chrome://global/content/viewZoomOverlay.js"/>
   <script type="application/javascript" src="chrome://global/content/contentAreaUtils.js"/>
-  <script type="application/javascript" src="chrome://global/content/nsDragAndDrop.js"/>
   
   <stringbundle id="viewSourceBundle" src="chrome://global/locale/viewSource.properties"/>
 
@@ -96,6 +96,11 @@
   <command id="cmd_textZoomReduce" oncommand="ZoomManager.reduce();"/>
   <command id="cmd_textZoomEnlarge" oncommand="ZoomManager.enlarge();"/>
   <command id="cmd_textZoomReset" oncommand="ZoomManager.reset();"/>
+
+  <command id="Browser:Back" oncommand="BrowserBack();" observes="viewSourceNavigation"/>
+  <command id="Browser:Forward" oncommand="BrowserForward();" observes="viewSourceNavigation"/>
+
+  <broadcaster id="viewSourceNavigation"/>
 
   <keyset id="editMenuKeys"/>
   <keyset id="viewSourceKeys">
@@ -121,9 +126,35 @@
     <key id="key_findPrevious" key="&findAgainCmd.commandkey;" command="cmd_findPrevious" modifiers="accel,shift"/>
     <key keycode="&findAgainCmd.commandkey2;" command="cmd_findAgain"/>
     <key keycode="&findAgainCmd.commandkey2;"  command="cmd_findPrevious" modifiers="shift"/>
+
+    <key keycode="VK_BACK" command="Browser:Back"/>
+    <key keycode="VK_BACK" command="Browser:Forward" modifiers="shift"/>
+#ifndef XP_MACOSX
+    <key id="goBackKb" keycode="VK_LEFT" command="Browser:Back" modifiers="alt"/>
+    <key id="goForwardKb" keycode="VK_RIGHT" command="Browser:Forward" modifiers="alt"/>
+#else
+    <key id="goBackKb" keycode="VK_LEFT" command="Browser:Back" modifiers="accel" />
+    <key id="goForwardKb" keycode="VK_RIGHT" command="Browser:Forward" modifiers="accel" />
+#endif
+#ifdef XP_UNIX
+    <key id="goBackKb2" key="&goBackCmd.commandKey;" command="Browser:Back" modifiers="accel"/>
+    <key id="goForwardKb2" key="&goForwardCmd.commandKey;" command="Browser:Forward" modifiers="accel"/>
+#endif
+
   </keyset>
 
   <popup id="viewSourceContextMenu">
+    <menuitem id="context-back"
+              label="&backCmd.label;"
+              accesskey="&backCmd.accesskey;"
+              command="Browser:Back"
+              observes="viewSourceNavigation"/>
+    <menuitem id="context-forward"
+              label="&forwardCmd.label;"
+              accesskey="&forwardCmd.accesskey;"
+              command="Browser:Forward"
+              observes="viewSourceNavigation"/>
+    <menuseparator observes="viewSourceNavigation"/>
     <menuitem id="cMenu_findAgain"/>
     <menuseparator/>
     <menuitem id="cMenu_copy"/>
@@ -203,11 +234,10 @@
     </menubar>  
   </toolbox>
 
-  <vbox id="appcontent" flex="1"
-       ondragdrop="nsDragAndDrop.drop(event, contentAreaDNDObserver);">
+  <vbox id="appcontent" flex="1" ondrop="contentAreaDNDObserver.drop(event);">
 
     <browser id="content" type="content-primary" name="content" src="about:blank" flex="1"
-             disablehistory="true" context="viewSourceContextMenu" showcaret="true"/>
+             context="viewSourceContextMenu" showcaret="true"/>
     <findbar id="FindToolbar" browserid="content"/>
   </vbox> 
 

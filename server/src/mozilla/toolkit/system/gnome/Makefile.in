@@ -51,6 +51,13 @@ REQUIRES = \
 	xpcom \
 	string \
 	necko \
+	alerts \
+	gfx \
+	imglib2 \
+	intl \
+	widget \
+	thebes \
+	cairo \
 	$(NULL)
 
 CPPSRCS = \
@@ -59,21 +66,31 @@ CPPSRCS = \
 	nsGnomeModule.cpp \
 	$(NULL)
 
+ifdef MOZ_ENABLE_LIBNOTIFY
+REQUIRES += thebes
+CPPSRCS += \
+	nsAlertsService.cpp \
+	nsAlertsIconListener.cpp \
+	$(NULL)
+endif
+
 EXTRA_DSO_LDOPTS += \
 		$(XPCOM_GLUE_LDOPTS) \
 		$(XPCOM_FROZEN_LDOPTS) \
 		$(NSPR_LIBS) \
 		$(MOZ_GCONF_LIBS) \
 		$(MOZ_GNOMEVFS_LIBS) \
-		$(MOZ_LIBGNOME_LIBS) \
 		$(GLIB_LIBS) \
+		$(MOZ_LIBNOTIFY_LIBS) \
 		$(NULL)
+
+LOCAL_INCLUDES += -I$(topsrcdir)/toolkit/components/build/
 
 include $(topsrcdir)/config/rules.mk
 
 CXXFLAGS += \
 	$(MOZ_GCONF_CFLAGS) \
 	$(MOZ_GNOMEVFS_CFLAGS) \
-	$(MOZ_LIBGNOME_CFLAGS) \
 	$(GLIB_CFLAGS) \
+	$(MOZ_LIBNOTIFY_CFLAGS) \
 	$(NULL)

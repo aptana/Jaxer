@@ -35,6 +35,37 @@
  *
  * ***** END LICENSE BLOCK *****
  */
+const URI_EXTENSION_UPDATE_DIALOG = "chrome://mozapps/content/extensions/update.xul";
+
+// Don't need the full interface, attempts to call other methods will just
+// throw which is just fine
+var WindowWatcher = {
+  openWindow: function(parent, url, name, features, arguments) {
+    // It is expected that the update dialog is shown during this test.
+    do_check_eq(url, URI_EXTENSION_UPDATE_DIALOG);
+  },
+
+  QueryInterface: function(iid) {
+    if (iid.equals(Components.interfaces.nsIWindowWatcher)
+     || iid.equals(Components.interfaces.nsISupports))
+      return this;
+
+    throw Components.results.NS_ERROR_NO_INTERFACE;
+  }
+}
+
+var WindowWatcherFactory = {
+  createInstance: function createInstance(outer, iid) {
+    if (outer != null)
+      throw Components.results.NS_ERROR_NO_AGGREGATION;
+    return WindowWatcher.QueryInterface(iid);
+  }
+};
+var registrar = Components.manager.QueryInterface(Components.interfaces.nsIComponentRegistrar);
+registrar.registerFactory(Components.ID("{1dfeb90a-2193-45d5-9cb8-864928b2af55}"),
+                          "Fake Window Watcher",
+                          "@mozilla.org/embedcomp/window-watcher;1",
+                          WindowWatcherFactory);
 
 function write_cache_line(stream, location, id, mtime) {
   var line = location + "\t" + id + "\trel%" + id + "\t" + Math.floor(mtime / 1000) + "\t\r\n";
@@ -58,7 +89,7 @@ function setup_profile() {
   // Set up the profile with some existing extensions
   // Not nice to copy the extensions datasource in, but bringing up the EM to
   // create it properly will invalidate the test
-  var source = do_get_file("toolkit/mozapps/extensions/test/unit/data/test_bug356370.rdf");
+  var source = do_get_file("data/test_bug356370.rdf");
   source.copyTo(gProfD, "extensions.rdf");
 
   // Must programmatically generate the cache since it depends on the mimetimes
@@ -72,7 +103,7 @@ function setup_profile() {
   var addon = gProfD.clone();
   addon.append("extensions");
   addon.append("bug356370_1@tests.mozilla.org");
-  source = do_get_file("toolkit/mozapps/extensions/test/unit/data/test_bug356370_1.rdf");
+  source = do_get_file("data/test_bug356370_1.rdf");
   addon.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0755);
   source.copyTo(addon, "install.rdf");
   write_cache_line(foStream, "app-profile", "bug356370_1@tests.mozilla.org",
@@ -81,7 +112,7 @@ function setup_profile() {
   addon = gProfD.clone();
   addon.append("extensions");
   addon.append("bug356370_2@tests.mozilla.org");
-  source = do_get_file("toolkit/mozapps/extensions/test/unit/data/test_bug356370_2.rdf");
+  source = do_get_file("data/test_bug356370_2.rdf");
   addon.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0755);
   source.copyTo(addon, "install.rdf");
   write_cache_line(foStream, "app-profile", "bug356370_2@tests.mozilla.org",
@@ -90,7 +121,7 @@ function setup_profile() {
   addon = gProfD.clone();
   addon.append("extensions");
   addon.append("bug356370_4@tests.mozilla.org");
-  source = do_get_file("toolkit/mozapps/extensions/test/unit/data/test_bug356370_4.rdf");
+  source = do_get_file("data/test_bug356370_4.rdf");
   addon.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0755);
   source.copyTo(addon, "install.rdf");
 

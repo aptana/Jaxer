@@ -48,9 +48,10 @@
 #include "nsString.h"
 #include "nsITreeView.h"
 #include "nsITreeSelection.h"
-#include "nsISupportsArray.h"
 #include "nsITimer.h"
 #include "nsTArray.h"
+#include "nsCOMArray.h"
+#include "nsCycleCollectionParticipant.h"
 
 class nsAutoCompleteController : public nsIAutoCompleteController,
                                  public nsIAutoCompleteObserver,
@@ -58,7 +59,9 @@ class nsAutoCompleteController : public nsIAutoCompleteController,
                                  public nsITreeView
 {
 public:
-  NS_DECL_ISUPPORTS
+  NS_DECL_CYCLE_COLLECTING_ISUPPORTS
+  NS_DECL_CYCLE_COLLECTION_CLASS_AMBIGUOUS(nsAutoCompleteController,
+                                           nsIAutoCompleteController)
   NS_DECL_NSIAUTOCOMPLETECONTROLLER
   NS_DECL_NSIAUTOCOMPLETEOBSERVER
   NS_DECL_NSITREEVIEW
@@ -83,19 +86,22 @@ protected:
   nsresult RevertTextValue();
 
   nsresult CompleteDefaultIndex(PRInt32 aSearchIndex);
-  nsresult CompleteValue(nsString &aValue, PRBool selectDifference);
-  nsresult GetResultValueAt(PRInt32 aIndex, PRBool aValueOnly, nsAString & _retval);
-
+  nsresult CompleteValue(nsString &aValue);
+  nsresult GetResultValueAt(PRInt32 aIndex, PRBool aValueOnly,
+                            nsAString & _retval);
+  nsresult GetDefaultCompleteValue(PRInt32 aSearchIndex, PRBool aPreserveCasing,
+                                   nsAString &_retval);
   nsresult ClearResults();
   
-  nsresult RowIndexToSearch(PRInt32 aRowIndex, PRInt32 *aSearchIndex, PRInt32 *aItemIndex);
+  nsresult RowIndexToSearch(PRInt32 aRowIndex,
+                            PRInt32 *aSearchIndex, PRInt32 *aItemIndex);
 
   // members //////////////////////////////////////////
   
   nsCOMPtr<nsIAutoCompleteInput> mInput;
-  
-  nsCOMPtr<nsISupportsArray> mSearches;
-  nsCOMPtr<nsISupportsArray> mResults;
+
+  nsCOMArray<nsIAutoCompleteSearch> mSearches;
+  nsCOMArray<nsIAutoCompleteResult> mResults;
   nsTArray<PRUint32> mMatchCounts;
   
   nsCOMPtr<nsITimer> mTimer;
@@ -103,10 +109,6 @@ protected:
   nsCOMPtr<nsITreeBoxObject> mTree;
 
   nsString mSearchString;
-  // whether EnterMatch was called while a search was ongoing. Values:
-  //   0 - EnterMatch not called, 1 - called with false aIsPopupSelection
-  //   2 - called with true aIsPopupSelection
-  PRInt8 mEnterAfterSearch;
   PRPackedBool mDefaultIndexCompleted;
   PRPackedBool mBackspaced;
   PRPackedBool mPopupClosedByCompositionStart;

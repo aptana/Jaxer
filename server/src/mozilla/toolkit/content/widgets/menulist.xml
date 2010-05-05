@@ -8,6 +8,7 @@
 
   <binding id="menulist-base" extends="chrome://global/content/bindings/general.xml#basecontrol">
     <resources>
+      <stylesheet src="chrome://global/content/menulist.css"/>
       <stylesheet src="chrome://global/skin/menulist.css"/>
     </resources>
   </binding>
@@ -19,7 +20,7 @@
         <xul:image class="menulist-icon" xbl:inherits="src=image,src"/>
         <xul:label class="menulist-label" xbl:inherits="value=label,crop,accesskey" crop="right" flex="1"/>
       </xul:hbox>
-      <xul:dropmarker class="menulist-dropmarker" type="menu" xbl:inherits="disabled"/>
+      <xul:dropmarker class="menulist-dropmarker" type="menu" xbl:inherits="disabled,open"/>
       <children includes="menupopup"/>
     </content>
 
@@ -36,9 +37,9 @@
         ]]>
       </handler>
 
-      <handler event="keypress" modifiers="shift any">
+      <handler event="keypress" modifiers="shift any" group="system">
         <![CDATA[
-          if (event.originalTarget == this && 
+          if (!event.getPreventDefault() &&
               (event.keyCode == KeyEvent.DOM_VK_UP ||
                event.keyCode == KeyEvent.DOM_VK_DOWN ||
                event.keyCode == KeyEvent.DOM_VK_PAGE_UP ||
@@ -412,7 +413,7 @@
                     xbl:inherits="value=label,value,disabled,tabindex,readonly"/>
       </xul:hbox>
       <xul:dropmarker class="menulist-dropmarker" type="menu"
-          xbl:inherits="open,disabled,parentfocused=focused"/>
+                      xbl:inherits="open,disabled,parentfocused=focused"/>
       <children includes="menupopup"/>
     </content>
 
@@ -558,11 +559,7 @@
     <handlers>
       <handler event="focus" phase="capturing">
         <![CDATA[
-          if (!this.hasAttribute('focused')) {
-            if (event.originalTarget != this.inputField)
-              this.inputField.focus();
-            this.setAttribute('focused','true');
-          }
+          this.setAttribute('focused','true');
         ]]>
       </handler>
 
@@ -607,7 +604,7 @@
   <binding id="menulist-compact" display="xul:menu"
            extends="chrome://global/content/bindings/menulist.xml#menulist">
     <content sizetopopup="false">
-      <xul:dropmarker class="menulist-dropmarker" type="menu"/>
+      <xul:dropmarker class="menulist-dropmarker" type="menu" xbl:inherits="disabled,open"/>
       <xul:image class="menulist-icon" xbl:inherits="src=image,src"/>
       <xul:label class="menulist-label" xbl:inherits="value=label,crop,accesskey" crop="right" flex="1"/>
       <children includes="menupopup"/>
@@ -622,7 +619,7 @@
         <xul:label class="menulist-label" xbl:inherits="value=label,crop,accesskey" crop="right" flex="1"/>
         <xul:label class="menulist-label menulist-description" xbl:inherits="value=description" crop="right" flex="10000"/>
       </xul:hbox>
-      <xul:dropmarker class="menulist-dropmarker" type="menu"/>
+      <xul:dropmarker class="menulist-dropmarker" type="menu" xbl:inherits="disabled,open"/>
       <children includes="menupopup"/>
     </content>
   </binding>

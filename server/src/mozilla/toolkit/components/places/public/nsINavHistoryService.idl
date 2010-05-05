@@ -21,6 +21,9 @@
  *
  * Contributor(s):
  *   Brett Wilson <brett@gmail.com>
+ *   Dietrich Ayala <dietrich@mozilla.com>
+ *   Marco Bonardo <mak77@bonardo.net>
+ *   Asaf Romano <mano@mozilla.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -36,9 +39,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+/**
+ * Using Places services on quit-application or later is not reliable, so make
+ * sure to do shutdown work on quit-application-granted, or history
+ * synchronization could fail, losing latest changes.
+ */
+ 
 #include "nsISupports.idl"
 #include "nsIArray.idl"
 #include "nsIURI.idl"
+#include "nsIVariant.idl"
 
 interface nsIFile;
 interface nsINavHistoryContainerResultNode;
@@ -50,7 +60,7 @@ interface nsINavHistoryBatchCallback;
 interface nsITreeColumn;
 interface nsIWritablePropertyBag;
 
-[scriptable, uuid(47cf89e3-4777-46bf-9677-21793870ce62)]
+[scriptable, uuid(464ae28f-3a9c-4483-afb2-bb0fb0ddb893)]
 interface nsINavHistoryResultNode : nsISupports
 {
   /**
@@ -126,7 +136,7 @@ interface nsINavHistoryResultNode : nsISupports
    * default favicon. If the favicon originally lived in chrome, this will
    * be the original chrome URI of the icon.
    */
-  readonly attribute nsIURI icon;
+  readonly attribute AUTF8String icon;
 
   /**
    * This is the number of levels between this node and the top of the
@@ -135,18 +145,6 @@ interface nsINavHistoryResultNode : nsISupports
    * set to -1.
    */
   readonly attribute long indentLevel;
-
-  /**
-   * Value with undefined meaning for use by the view. Its initial value will
-   * be -1. The result implementation treats nodes with this property set to
-   * -1 as invisible!
-   *
-   * View-implementations may use this value to track the node index in the
-   * view, e.g. the tree view uses this value to indicate the row in the
-   * tree that this node is at. Other views may choose not to use this, but
-   * should inititalize this value to anything but -1 for visible nodes.
-   */
-  attribute long viewIndex;
 
   /**
    * You can use this to associate temporary information with the result node.
@@ -179,6 +177,9 @@ interface nsINavHistoryResultNode : nsISupports
   /**
    * If the node is an item (bookmark, folder or a separator) this value is the 
    * time that the item was last modified. For other nodes, this value is 0.
+   *
+   *  @note When an item is added lastModified is set to the same value as
+   *        dateAdded.
    */
   readonly attribute PRTime lastModified;
 
@@ -423,7 +424,7 @@ interface nsINavHistoryQueryResultNode : nsINavHistoryContainerResultNode
  *
  * @see nsINavHistoryResult for where this fits in
  */
-[scriptable, uuid(e60f4429-3787-45c8-a8c0-18ef52621bbf)]
+[scriptable, uuid(af4ac418-a687-4775-8ffa-97c160196432)]
 interface nsINavHistoryResultViewer : nsISupports
 {
   /**
@@ -431,8 +432,8 @@ interface nsINavHistoryResultViewer : nsISupports
    * The item previously at index (if any) and everything below it will have
    * been shifted down by one. The item may be a container or a leaf.
    */
-  void itemInserted(in nsINavHistoryContainerResultNode aParent,
-                    in nsINavHistoryResultNode aItem,
+  void nodeInserted(in nsINavHistoryContainerResultNode aParent,
+                    in nsINavHistoryResultNode aNode,
                     in unsigned long aNewIndex);
 
   /**
@@ -441,7 +442,7 @@ interface nsINavHistoryResultViewer : nsISupports
    * has been removed from its parent list, but before anything else (including
    * NULLing out the item's parent) has happened.
    */
-  void itemRemoved(in nsINavHistoryContainerResultNode aParent,
+  void nodeRemoved(in nsINavHistoryContainerResultNode aParent,
                    in nsINavHistoryResultNode aItem,
                    in unsigned long aOldIndex);
 
@@ -454,53 +455,158 @@ interface nsINavHistoryResultViewer : nsISupports
    * a new node is created for the item, and the itemRemoved/itemAdded methods
    * are used.
    */
-  void itemMoved(in nsINavHistoryResultNode aItem,
+  void nodeMoved(in nsINavHistoryResultNode aNode,
                  in nsINavHistoryContainerResultNode aOldParent,
                  in unsigned long aOldIndex,
                  in nsINavHistoryContainerResultNode aNewParent,
                  in unsigned long aNewIndex);
 
   /**
-   * Called when an item has been changed and should be repainted. This only
-   * refers to the specific item. If it is a container, getting this message
-   * does not imply anything happened to the children. You'll get separate
-   * messages for those. Also, this may be called for container nodes at times
-   * when the result thinks it's possible that a twisty mey need to bw redrawn.
+   * Called right after aNode's title has changed.
+   * 
+   * @param aNode
+   *        a result node
+   * @param aNewTitle
+   *        the new title
    */
-  void itemChanged(in nsINavHistoryResultNode item);
+  void nodeTitleChanged(in nsINavHistoryResultNode aNode,
+                        in AUTF8String aNewTitle);
+
+  /**
+   * Called right after aNode's uri property has changed.
+   * 
+   * @param aNode
+   *        a result node
+   * @param aNewURI
+   *        the new uri
+   */
+  void nodeURIChanged(in nsINavHistoryResultNode aNode,
+                      in AUTF8String aNewURI);
+
+  /**
+   * Called right after aNode's icon property has changed.
+   *
+   * @param aNode
+   *        a result node
+   *
+   * @note: The new icon is accessible through aNode.icon.
+   */
+  void nodeIconChanged(in nsINavHistoryResultNode aNode);
+
+  /**
+   * Called right after aNode's time property or accessCount property, or both,
+   * have changed.
+   *
+   * @param aNode
+   *        a uri result node
+   * @param aNewVisitDate
+   *        the new visit date
+   * @param aNewAccessCount
+   *        the new access-count
+   */
+  void nodeHistoryDetailsChanged(in nsINavHistoryResultNode aNode,
+                                 in PRTime aNewVisitDate,
+                                 in unsigned long aNewAccessCount);
+
+  /**
+   * Called when the tags set on the uri represented by aNode have changed.
+   *
+   * @param aNode
+   *        a uri result node
+   *
+   * @note: The new tags list is accessible through aNode.tags.
+   */
+  void nodeTagsChanged(in nsINavHistoryResultNode aNode);
+
+  /**
+   * Called right after the aNode's keyword property has changed.
+   * 
+   * @param aNode
+   *        a uri result node
+   * @param aNewKeyword
+   *        the new keyword
+   */
+  void nodeKeywordChanged(in nsINavHistoryResultNode aNode,
+                          in AUTF8String aNewKeyword);
+
+  /**
+   * Called right after an annotation of aNode's has changed (set, altered, or
+   * unset).
+   * 
+   * @param aNode
+   *        a result node
+   * @param aAnnoName
+   *        the name of the annotation that changed
+   */
+  void nodeAnnotationChanged(in nsINavHistoryResultNode aNode,
+                             in AUTF8String aAnnoName);
+
+  /**
+   * Called right after aNode's dateAdded property has changed.
+   *
+   * @param aNode
+   *        a result node
+   * @param aNewValue
+   *        the new value of the dateAdded property
+   */
+  void nodeDateAddedChanged(in nsINavHistoryResultNode aNode,
+                            in PRTime aNewValue);
+
+  /**
+   * Called right after aNode's dateModified property has changed.
+   *
+   * @param aNode
+   *        a result node
+   * @param aNewValue
+   *        the new value of the dateModified property
+   */
+  void nodeLastModifiedChanged(in nsINavHistoryResultNode aNode,
+                               in PRTime aNewValue);
 
   /**
    * Called when an item is being replaced with another item at the exact
    * same position.
+   *
+   * @param aParentNode
+   *        the parent node of the node which is being replaced
+   * @param aOldNode
+   *        the node which is being replaced
+   * @param aNewNode
+   *        the new node
+   * @param aParentNode
+   *        the index in aParentNode, at which a node is being replaced
    */
-  void itemReplaced(in nsINavHistoryContainerResultNode parent,
-                    in nsINavHistoryResultNode oldItem,
-                    in nsINavHistoryResultNode newItem,
-                    in unsigned long index);
+  void nodeReplaced(in nsINavHistoryContainerResultNode aParentNode,
+                    in nsINavHistoryResultNode aOldNode,
+                    in nsINavHistoryResultNode aNewNode,
+                    in unsigned long aIndex);
 
   /**
    * Called after a container node went from closed to opened.
+   *
+   * @param aContainerNode
+   *        the container node which was opened
    */
-  void containerOpened(in nsINavHistoryContainerResultNode item);
+  void containerOpened(in nsINavHistoryContainerResultNode aContainerNode);
 
   /**
    * Called after a container node went from opened to closed. This will be
    * called for the topmost container that is closing, and implies that any
    * child containers have closed as well.
+   *
+   * @param aContainerNode
+   *        the container node which was closed
    */
-  void containerClosed(in nsINavHistoryContainerResultNode item);
+  void containerClosed(in nsINavHistoryContainerResultNode aContainerNode);
 
   /**
    * Called when something significant has happened within the container. The
    * contents of the container should be re-built.
+   *
+   * @param aContainerNode
+   *        the container node to invalidate
    */
-  void invalidateContainer(in nsINavHistoryContainerResultNode item);
-
-  /**
-   * Called when something significant is changing that requires everything
-   * to be recomputed. For example, changing sorting can affect every row.
-   */
-  void invalidateAll();
+  void invalidateContainer(in nsINavHistoryContainerResultNode aContainerNode);
 
   /**
    * This is called to indicate to the UI that the sort has changed to the
@@ -526,6 +632,8 @@ interface nsINavHistoryResultViewer : nsISupports
 
 
 /**
+ * TODO: Bug 517719.
+ *
  * A predefined view adaptor for interfacing results with an nsITree. This
  * object will remove itself from its associated result when the tree has been
  * detached. This prevents circular references. Users should be aware of this,
@@ -607,6 +715,13 @@ interface nsINavHistoryResult : nsISupports
   /**
    * This is the root of the results. Remember that you need to open all
    * containers for their contents to be valid.
+   *
+   * When a result goes out of scope it will continue to observe changes till
+   * it is cycle collected.  While the result waits to be collected it will stay
+   * in memory, and continue to update itself, potentially causing unwanted
+   * additional work.  When you close the root node the result will stop
+   * observing changes, so it is good practice to close the root node when you
+   * are done with a result, since that will avoid unwanted performance hits.
    */
   readonly attribute nsINavHistoryContainerResultNode root;
 };
@@ -619,7 +734,7 @@ interface nsINavHistoryResult : nsISupports
  * DANGER! If you are in the middle of a batch transaction, there may be a
  * database transaction active. You can still access the DB, but be careful.
  */
-[scriptable, uuid(eacb76eb-3eeb-419b-a963-9b3a9d65f356)]
+[scriptable, uuid(14065711-8a91-4d96-ba32-59512f5401b6)]
 interface nsINavHistoryObserver : nsISupports
 {
   /**
@@ -674,6 +789,15 @@ interface nsINavHistoryObserver : nsISupports
   void onTitleChanged(in nsIURI aURI, in AString aPageTitle);
 
   /**
+   * This page and all of its visits are about to be deleted.  Note: the page
+   * may not necessarily have actually existed for this function to be called.
+   *
+   * @param aURI
+   *        The URI being deleted.
+   */
+  void onBeforeDeleteURI(in nsIURI aURI);
+
+  /**
    * This page and all of its visits are being deleted. Note: the page may not
    * necessarily have actually existed for this function to be called.
    *
@@ -698,7 +822,7 @@ interface nsINavHistoryObserver : nsISupports
   void onPageChanged(in nsIURI aURI, in unsigned long aWhat, in AString aValue);
 
   /**
-   * Called when a history entry expires. You will recieve notifications that
+   * Called when a history entry expires. You will receive notifications that
    * a specific visit has expired with the time of that visit. When the last
    * visit for a history entry expires, the history entry itself is deleted
    * and aWholeEntry is set. (If your observer only cares about URLs and not
@@ -723,7 +847,7 @@ interface nsINavHistoryObserver : nsISupports
  * can be non-negligible.
  */
 
-[scriptable, uuid(53B51AFE-9DE8-40AD-9C81-F2CC1701F1FF)]
+[scriptable, uuid(6f5668f0-da8e-4069-a0de-6680e5cd8570)]
 interface nsINavHistoryQuery : nsISupports
 {
   /**
@@ -836,6 +960,25 @@ interface nsINavHistoryQuery : nsISupports
   readonly attribute boolean hasAnnotation;
 
   /**
+   * Limit results to items that are tagged with all of the given tags.  This
+   * attribute must be set to an array of strings.  When called as a getter it
+   * will return an array of strings sorted ascending in lexicographical order.
+   * The array may be empty in either case.  Duplicate tags may be specified
+   * when setting the attribute, but the getter returns only unique tags.
+   *
+   * To search for items that are tagged with any given tags rather than all,
+   * multiple queries may be passed to nsINavHistoryService.executeQueries().
+   */
+  attribute nsIVariant tags;
+
+  /**
+   * If 'tagsAreNot' is true, the results are instead limited to items that
+   * are not tagged with any of the given tags.  This attribute is used in
+   * conjunction with the 'tags' attribute.
+   */
+  attribute boolean tagsAreNot;
+
+  /**
    * Limit results to items that are in all of the given folders.
    */
   void getFolders(out unsigned long count,
@@ -859,7 +1002,7 @@ interface nsINavHistoryQuery : nsISupports
 /**
  * This object represents the global options for executing a query.
  */
-[scriptable, uuid(a46c132e-35f3-4e1e-bb3d-4e3043657248)]
+[scriptable, uuid(b3d5de06-f8ef-4433-84c2-b8b237403b2a)]
 interface nsINavHistoryQueryOptions : nsISupports
 {
   /**
@@ -903,6 +1046,8 @@ interface nsINavHistoryQueryOptions : nsISupports
    * "Visit" results, with one for each time a page was visited (this will
    * often give you multiple results for one URI). Individual result nodes will
    * have type "Visit"
+   *
+   * @note This result type is only supported by QUERY_TYPE_HISTORY.
    */
   const unsigned short RESULTS_AS_VISIT = 1;
 
@@ -911,6 +1056,9 @@ interface nsINavHistoryQueryOptions : nsISupports
    * will have type "FullVisit".  This is used for the attributes that are not
    * commonly accessed to save space in the common case (the lists can be very
    * long).
+   *
+   * @note Not yet implemented. See bug 409662.
+   * @note This result type is only supported by QUERY_TYPE_HISTORY.
    */
   const unsigned short RESULTS_AS_FULL_VISIT = 2;
 
@@ -918,6 +1066,8 @@ interface nsINavHistoryQueryOptions : nsISupports
    * This returns query nodes for each predefined date range where we 
    * had visits. The node contains information how to load its content:
    * - visits for the given date range will be loaded.
+   *
+   * @note This result type is only supported by QUERY_TYPE_HISTORY.
    */
   const unsigned short RESULTS_AS_DATE_QUERY = 3;
 
@@ -925,6 +1075,8 @@ interface nsINavHistoryQueryOptions : nsISupports
    * This returns nsINavHistoryQueryResultNode nodes for each site where we 
    * have visits. The node contains information how to load its content:
    * - last visit for each url in the given host will be loaded.
+   *
+   * @note This result type is only supported by QUERY_TYPE_HISTORY.
    */
   const unsigned short RESULTS_AS_SITE_QUERY = 4;
 
@@ -932,6 +1084,8 @@ interface nsINavHistoryQueryOptions : nsISupports
    * This returns nsINavHistoryQueryResultNode nodes for each day where we 
    * have visits. The node contains information how to load its content:
    * - list of hosts visited in the given period will be loaded.
+   *
+   * @note This result type is only supported by QUERY_TYPE_HISTORY.
    */
   const unsigned short RESULTS_AS_DATE_SITE_QUERY = 5;
 
@@ -939,6 +1093,8 @@ interface nsINavHistoryQueryOptions : nsISupports
    * This returns nsINavHistoryQueryResultNode nodes for each tag.
    * The node contains information how to load its content:
    * - list of bookmarks with the given tag will be loaded.
+   *
+   * @note Setting this resultType will force queryType to QUERY_TYPE_BOOKMARKS.
    */
   const unsigned short RESULTS_AS_TAG_QUERY = 6;
 
@@ -946,6 +1102,8 @@ interface nsINavHistoryQueryOptions : nsISupports
    * This is a container with an URI result type that contains the last
    * modified bookmarks for the given tag.
    * Tag folder id must be defined in the query.
+   *
+   * @note Setting this resultType will force queryType to QUERY_TYPE_BOOKMARKS.
    */
   const unsigned short RESULTS_AS_TAG_CONTENTS = 7;
 
@@ -970,7 +1128,7 @@ interface nsINavHistoryQueryOptions : nsISupports
    * This option excludes all URIs and separators from a bookmarks query.
    * This would be used if you just wanted a list of bookmark folders and
    * queries (such as the left pane of the places page).
-   * Ignored for queries over history. Defaults to false.
+   * Defaults to false.
    */
   attribute boolean excludeItems;
 
@@ -1022,6 +1180,29 @@ interface nsINavHistoryQueryOptions : nsISupports
   attribute boolean includeHidden;
 
   /**
+   * Include both redirected-from and redirected-to pages into results.
+   */
+  const unsigned short REDIRECTS_MODE_ALL = 0;
+  /**
+   * Query results will not include redirected-to pages, but will include
+   * redirected-from pages.
+   */
+  const unsigned short REDIRECTS_MODE_SOURCE = 1;
+  /**
+   * Query results will not include redirected-from pages but will include
+   * redirected-to pages.
+   */
+  const unsigned short REDIRECTS_MODE_TARGET = 2;
+
+  /**
+   * Defines how redirects should be handled, see REDIRECTS_MODE_* constants
+   * above.
+   * Defaults to REDIRECTS_MODE_ALL.
+   * Note: this option is effective only on QUERY_TYPE_HISTORY.
+   */
+  attribute unsigned short redirectsMode;
+
+  /**
    * Separate/group history items based on session information.  Only
    * matters when sorting by date.
    */
@@ -1043,8 +1224,9 @@ interface nsINavHistoryQueryOptions : nsISupports
 
   const unsigned short QUERY_TYPE_HISTORY = 0;
   const unsigned short QUERY_TYPE_BOOKMARKS = 1;
+  /* Unified queries are not yet implemented. See bug 378798 */
   const unsigned short QUERY_TYPE_UNIFIED = 2;
-  
+
   /**
    * The type of search to use when querying the DB; This attribute is only
    * honored by query nodes. It is silently ignored for simple folder queries.
@@ -1057,9 +1239,19 @@ interface nsINavHistoryQueryOptions : nsISupports
   nsINavHistoryQueryOptions clone();
 };
 
-[scriptable, uuid(8b258ff6-b591-4da5-8b7c-0665b27d09cc)]
+[scriptable, uuid(437f539b-d541-4a0f-a200-6f9a6d45cce2)]
 interface nsINavHistoryService : nsISupports
 {
+  /**
+   * System Notifications:
+   *
+   * places-init-complete - Sent once the History service is completely
+   *                        initialized successfully.
+   * places-database-locked - Sent if initialization of the History service
+   *                          failed due to the inability to open the places.sqlite
+   *                          for access reasons.
+   */
+
   /**
    * This transition type means the user followed a link and got a new toplevel
    * window.
@@ -1102,6 +1294,31 @@ interface nsINavHistoryService : nsISupports
    * Set when the transition is a download.
    */
   const unsigned long TRANSITION_DOWNLOAD = 7;
+
+  /**
+   * Set when database is coherent
+   */
+  const unsigned short DATABASE_STATUS_OK = 0;
+
+  /**
+   * Set when database did not exist and we created a new one
+   */
+  const unsigned short DATABASE_STATUS_CREATE = 1;
+
+  /**
+   * Set when database was corrupt and we replaced it
+   */
+  const unsigned short DATABASE_STATUS_CORRUPT = 2;
+
+  /**
+   * Set when database schema has been upgraded
+   */
+  const unsigned short DATABASE_STATUS_UPGRADED = 3;
+
+  /**
+   * Returns the current database status
+   */
+  readonly attribute unsigned short databaseStatus;
 
   /**
    * True if there is any history. This can be used in UI to determine whether

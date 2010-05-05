@@ -10,6 +10,7 @@
   -moz-border-bottom-colors: ThreeDHighlight ThreeDLightShadow;
   -moz-border-left-colors: ThreeDShadow ThreeDDarkShadow;
   margin: 0;
+  min-width: 245px;
 }
 
 #resizerBox {
@@ -21,6 +22,10 @@
   height: 10px;
   max-height: 10px;
   visibility: visible;
+}
+
+#searchfield {
+  -moz-margin-start: 0;
 }
 
 /* Command Bar */
@@ -80,10 +85,6 @@ richlistitem[selected="true"] .text-link {
   margin-bottom: 2px;
 }
 
-richlistitem[selected="true"]:not([opType]) .descriptionCrop {
-  display: none;
-}
-
 .addonName {
   font-weight: bold;
 }
@@ -104,8 +105,12 @@ richlistitem[selected="true"]:not([opType]) .descriptionCrop {
   -moz-border-left-colors: ThreeDShadow ThreeDDarkShadow;
   background-color: -moz-Field;
   color: -moz-FieldText;
+  min-width: 65px;
   overflow: auto;
-  width: 0px;
+}
+
+#previewImageDeck {
+  min-width: 220px;
 }
 
 #themeSplitter {
@@ -121,6 +126,14 @@ richlistitem[selected="true"]:not([opType]) .descriptionCrop {
 .addonIcon > image {
   max-width: 32px;
   max-height: 32px;
+}
+
+richlistitem[lwtheme] .addonIcon > image {
+  list-style-image: url("chrome://mozapps/skin/extensions/themeGeneric.png");
+}
+
+richlistitem[plugin] .addonIcon > image {
+  list-style-image: url("chrome://mozapps/skin/plugins/pluginGeneric.png");
 }
 
 .updateBadge,
@@ -139,21 +152,6 @@ richlistitem[selected="true"]:not([opType]) .descriptionCrop {
 .notifyBadge {
   -moz-margin-start: -2px;
   -moz-image-region: rect(0px 48px 16px 32px);
-}
-
-.updateBadge,
-.updateAvailableBox,
-.notifyBadge {
-  display: none;
-}
-
-richlistitem[availableUpdateURL][updateable="true"] .updateBadge,
-richlistitem[availableUpdateURL][updateable="true"] .updateAvailableBox,
-richlistitem[compatible="false"] .notifyBadge,
-richlistitem[providesUpdatesSecurely="false"] .notifyBadge,
-richlistitem[blocklisted="true"] .notifyBadge,
-richlistitem[satisfiesDependencies="false"] .notifyBadge {
-  display: -moz-box;
 }
 
 /* Selected Add-on buttons
@@ -180,20 +178,7 @@ richlistitem[satisfiesDependencies="false"] .notifyBadge {
   -moz-margin-start: 5px;
 }
 
-/* Selected Add-on status messages and images */
-richlistitem[compatible="true"] .incompatibleBox,
-richlistitem[providesUpdatesSecurely="true"] .insecureUpdateBox,
-richlistitem[satisfiesDependencies="true"] .needsDependenciesBox,
-richlistitem[blocklisted="false"] .blocklistedBox,
-richlistitem[opType="needs-uninstall"] .blocklistedBox,
-richlistitem[opType="needs-uninstall"] .incompatibleBox,
-richlistitem[opType="needs-uninstall"] .needsDependenciesBox,
-richlistitem[opType="needs-uninstall"] .blocklistedBox {
-  display: none;
-}
-
 richlistitem[loading="true"] .updateBadge {
-  display: -moz-box;
   width: 16px;
   height: 16px;
   margin-bottom: -3px;
@@ -221,10 +206,6 @@ richlistitem[loading="true"] .updateBadge {
 .selectedStatusMsgs label.text-link {
   font-weight: normal;
   border: none;
-}
-
-richlistitem[opType="needs-uninstall"] .notifyBadge {
-  display: none;
 }
 
 .addon-search-details {
@@ -256,17 +237,12 @@ richlistitem[opType="needs-uninstall"] .notifyBadge {
   -moz-image-region: rect(0px 48px 16px 32px);
 }
 
-.addonRating {
-  display: none;
-}
-
 .addonLearnMore {
   margin-top: 4px;
   margin-bottom: 4px;
 }
 
 .addonRating[rating] {
-  display: -moz-box;
   width: 59px;
   height: 11px;
   list-style-image: url("chrome://mozapps/skin/extensions/ratings.png");
@@ -330,37 +306,6 @@ vbox[typeName="status"][type="header-recommended"] {
   background: -moz-dialog;
 }
 
-#searchbox {
-  padding: 2px;
-}
-
-.searchbox-search, .searchbox-cancel {
-  -moz-appearance: none;
-  cursor: default;
-  margin: 0;
-  border: 0;
-  padding: 0;
-  width: 16px;
-  height: 16px;
-  min-width: 16px;
-  list-style-image: url("chrome://mozapps/skin/extensions/searchIcons.png");
-  background-color: -moz-field;
-}
-
-.searchbox-search {
-  -moz-image-region: rect(0px 16px 16px 0px);
-}
-
-.searchbox-cancel {
-  -moz-image-region: rect(0px 32px 16px 16px);
-}
-
-.searchbox-search .button-box,
-.searchbox-cancel .button-box {
-  border: 0px;
-  padding: 0px;
-}
-
 #progressBox {
   padding: 5px 5px 5px 5px;
 }
@@ -369,16 +314,18 @@ vbox[typeName="status"][type="header-recommended"] {
   -moz-box-align: center;
 }
 
-/* View buttons */
-.viewSelector {
+/* View buttons resp. Progress box */
+#topBar {
   border-bottom: 2px groove ThreeDFace;
-  margin: 0px;
-  -moz-padding-start: 10px;
   background-color: -moz-Field;
   color: -moz-FieldText;
 }
 
-#viewGroup radio {
+#viewGroup {
+  -moz-padding-start: 10px;
+}
+
+#viewGroup > radio {
   -moz-appearance: none;
   margin: 0px 1px 0px 1px;
   padding: 5px 3px 1px;
@@ -386,12 +333,12 @@ vbox[typeName="status"][type="header-recommended"] {
   list-style-image: url("chrome://mozapps/skin/extensions/viewButtons.png");
 }
 
-#viewGroup radio:hover {
+#viewGroup > radio:hover {
   background-color: #E0E8F6;
   color: black;
 }
 
-#viewGroup radio[selected="true"] {
+#viewGroup > radio[selected="true"] {
   background-color: #C1D2EE;
   color: black;
 }

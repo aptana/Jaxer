@@ -123,9 +123,7 @@ function run_test()
         do_check_eq(data.length, aDl.amountTransferred);
         do_check_eq(data.length, aDl.size);
 
-        httpserv.stop();
-        // we're done with the test!
-        do_test_finished();
+        httpserv.stop(do_test_finished);
       }
     },
     onStateChange: function(a, b, aState, d, aDl) {
@@ -141,12 +139,15 @@ function run_test()
     onProgressChange: function(a, b, c, d, e, f, g) { },
     onSecurityChange: function(a, b, c, d) { }
   });
+  dm.addListener(getDownloadListener());
 
   /**
    * 4. Start the download
    */
   var destFile = dirSvc.get("ProfD", nsIF);
   destFile.append("resumed");
+  if (destFile.exists())
+    destFile.remove(false);
   var persist = Cc["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"].
                 createInstance(nsIWBP);
   persist.persistFlags = nsIWBP.PERSIST_FLAGS_REPLACE_EXISTING_FILES |

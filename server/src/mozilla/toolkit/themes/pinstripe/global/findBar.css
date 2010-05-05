@@ -3,27 +3,36 @@
 /* ::::: find toolbar ::::: */
 
 findbar {
-  background: url("chrome://global/skin/icons/find-bar-background.png") repeat-x top center #D0D0D0;
-  border-top: 1px solid #686868;
-  border-bottom: none;
+  background: -moz-linear-gradient(top, #E8E8E8, #D0D0D0) repeat-x;
+  border-top: 1px solid #888;
   min-width: 1px;
+  padding: 4px 1px;
 }
 
-.findbar-container > label,
-.findbar-container > description {
-  font-weight: bold;
+findbar:-moz-lwtheme {
+  -moz-appearance: none;
+  background: none;
+  border-style: none;
 }
 
-.findbar-find-fast {
+label.findbar-find-fast {
+  margin: 1px 3px 0 !important;
   color: #6D6D6D;
+  font-weight: bold;
+  text-shadow: 0 1px rgba(255, 255, 255, .4);
+}
+
+label.findbar-find-fast:-moz-lwtheme,
+.findbar-find-status:-moz-lwtheme {
+  color: inherit;
+  text-shadow: inherit;
 }
 
 .findbar-closebutton {
-  padding-right: 4px;
+  padding: 0;
+  margin: 0 4px;
   list-style-image: url("chrome://global/skin/icons/closetab.png");
   border: none;
-  background-image: none !important;
-  background-color: transparent !important;
 }
 
 .findbar-closebutton:hover {
@@ -38,52 +47,73 @@ findbar {
 .findbar-find-previous,
 .findbar-highlight {
   -moz-appearance: none;
-  border: 1px solid #5F5F5F;
-  -moz-border-radius: 10px;
-  background: url("chrome://global/skin/icons/white-gray-gradient.gif") #A09E9D repeat-x top center;
-  margin: 0 4px 1px 4px;
-  padding: 0 3px;
+  border: 1px solid rgba(0, 0, 0, .4);
+  -moz-border-radius: 100%;
+  background: -moz-linear-gradient(top, #FFF, #CACACA) repeat-x;
+  color: buttontext;
+  margin: 0 4px;
+  padding: 1px 3px;
+  -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, .4);
 }
 
-.findbar-container > toolbarbutton > .toolbarbutton-text,
-.findbar-container > hbox > toolbarbutton > .toolbarbutton-text {
-  margin: 1px 6px !important;
+.findbar-container > toolbarbutton:focus {
+  position: relative;
+  -moz-box-shadow: 0 0 1px -moz-mac-focusring inset,
+                   0 0 4px 1px -moz-mac-focusring,
+                   0 0 2px 1px -moz-mac-focusring;
 }
 
-.findbar-container > toolbarbutton[disabled],
-.findbar-container > hbox > toolbarbutton[disabled] {
-  border-color: #8F8F8F !important;
-  color: graytext;
+.findbar-container > toolbarbutton > .toolbarbutton-text {
+  margin: 0 6px !important;
 }
 
-.findbar-container > toolbarbutton:not([disabled]):hover:active,
-.findbar-container > hbox > toolbarbutton:not([disabled]):hover:active {
-  background-image: url("chrome://global/skin/icons/white-gray-gradient-active.gif");
+.findbar-container > toolbarbutton[disabled] {
+  color: GrayText !important;
 }
 
+.findbar-find-next:not([disabled]):hover:active,
+.findbar-find-previous:not([disabled]):hover:active,
+.findbar-highlight:not([disabled]):hover:active {
+  text-shadow: 0 1px rgba(255, 255, 255, .4);
+  background: #CCC;
+  -moz-box-shadow: inset 0 1px 4px rgba(0, 0, 0, .2),
+                   0 1px rgba(255, 255, 255, .4);
+}
+
+.findbar-container > toolbarbutton:hover:active:focus {
+  text-shadow: 0 1px rgba(255, 255, 255, .4);
+  background: #CCC;
+  -moz-box-shadow: 0 0 1px -moz-mac-focusring inset,
+                   0 0 4px 1px -moz-mac-focusring,
+                   0 0 2px 1px -moz-mac-focusring,
+                   inset 0 1px 4px rgba(0, 0, 0, .2),
+                   0 1px rgba(255, 255, 255, .4);
+}
 
 .findbar-closebutton > .toolbarbutton-text {
   display: none;  
 }
 
+/* Match case checkbox */
+
 .findbar-container > checkbox {
-   list-style-image: url("chrome://global/skin/icons/checkbox.png");
-   -moz-image-region: rect(0px 16px 16px 0px);
-   -moz-appearance: none;
-   -moz-margin-start: 7px;
-   padding-top: 2px;
+  list-style-image: url("chrome://global/skin/icons/checkbox.png");
+  -moz-image-region: rect(0px 16px 16px 0px);
+  -moz-appearance: none;
+  margin: 0 2px;
+  -moz-margin-start: 7px;
 }
 
 .findbar-container > checkbox:hover:active {
-   -moz-image-region: rect(0px 32px 16px 16px);
+  -moz-image-region: rect(0px 32px 16px 16px);
 }
 
 .findbar-container > checkbox[checked] {
-   -moz-image-region: rect(0px 48px 16px 32px);
+  -moz-image-region: rect(0px 48px 16px 32px);
 }
 
 .findbar-container > checkbox[checked]:hover:active {
-   -moz-image-region: rect(0px 64px 16px 48px);
+  -moz-image-region: rect(0px 64px 16px 48px);
 }
 
 .findbar-container > checkbox > .checkbox-check {
@@ -91,7 +121,8 @@ findbar {
 }
 
 .findbar-container > checkbox > .checkbox-label-box > .checkbox-label {
-  margin: 1px 0 !important;
+  margin: 0 !important;
+  padding: 2px 0 0;
 }
 
 .findbar-container > checkbox > .checkbox-label-box > .checkbox-icon {
@@ -100,45 +131,37 @@ findbar {
 }
 
 .findbar-container > checkbox:focus > .checkbox-label-box > .checkbox-icon {
-  outline: 2px solid #4F8EC9;
-  outline-offset: -2px;
-  -moz-outline-radius: 4px;
+  -moz-border-radius: 4px;
+  -moz-box-shadow: 0 0 0 2px -moz-mac-focusring inset,
+                   0 0 4px -moz-mac-focusring;
 }
 
+/* Search field */
+
 .findbar-textbox {
-  -moz-binding: url("chrome://global/content/bindings/findbar.xml#findbar-textbox");
   -moz-appearance: none;
-  border: 3px solid;
-  -moz-border-top-colors: #5F5F5F #CFCFCF -moz-Field;
-  -moz-border-bottom-colors: #9F9F9F #EEE -moz-Field;
-  -moz-border-right-colors: #7F7F7F #EEE -moz-Field;
-  -moz-border-left-colors: #7F7F7F #EFEFEF -moz-Field;
-  -moz-border-radius: 11.5px;
-  background: url("chrome://global/skin/icons/search-textbox.png") -moz-Field no-repeat 1px center;
-  -moz-background-clip: border !important;
-  padding: 0 8px;
-  -moz-padding-start: 17px;
+  -moz-border-radius: 100%;
+  border: none;
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .7) inset,
+                   0 0 0 1px rgba(0, 0, 0, .17) inset;
+  background: url("chrome://global/skin/icons/search-textbox.png") -moz-Field no-repeat 5px center;
+  margin: 0 4px -1px;
+  padding: 3px 8px 2px;
+  -moz-padding-start: 19px;
 }
 
 .findbar-textbox[focused="true"] {
-  outline: 2px solid #4A8BC7;
-  outline-offset: -2px;
-  -moz-outline-radius: 11px;
+  -moz-box-shadow: 0 0 1px -moz-mac-focusring inset,
+                   0 0 4px 1px -moz-mac-focusring,
+                   0 0 2px 1px -moz-mac-focusring,
+                   0 1px 2px rgba(0, 0, 0, .8) inset;
 }
 
-findbar[flash="true"] > .findbar-container > .find-field-container > .findbar-textbox {
-  -moz-border-top-colors: #5F5F5F #F7E379 #F7E379;
-  -moz-border-bottom-colors: #9F9F9F #F7E379 #F7E379;
-  -moz-border-right-colors: #7F7F7F #F7E379 #F7E379;
-  -moz-border-left-colors: #7F7F7F #F7E379 #F7E379;
+.findbar-textbox[flash="true"] {
   background-color: #F7E379;
 }
 
 .findbar-textbox[status="notfound"] {
-  -moz-border-top-colors: #5F5F5F #FD919B #FD919B;
-  -moz-border-bottom-colors: #9F9F9F #FD919B #FD919B;
-  -moz-border-right-colors: #7F7F7F #FD919B #FD919B;
-  -moz-border-left-colors: #7F7F7F #FD919B #FD919B;
   background-color: #FD919B;
   color: #FFF;
 }
@@ -150,8 +173,8 @@ findbar[flash="true"] > .findbar-container > .find-field-container > .findbar-te
   -moz-margin-end: 0 !important;
 }
 
-.findbar-find-next[chromedir="ltr"],
-.findbar-find-previous[chromedir="rtl"] {
+.findbar-find-next:-moz-locale-dir(ltr),
+.findbar-find-previous:-moz-locale-dir(rtl) {
   -moz-border-radius-topright: 0px;
   -moz-border-radius-bottomright: 0px;
 }
@@ -162,8 +185,8 @@ findbar[flash="true"] > .findbar-container > .find-field-container > .findbar-te
   -moz-margin-start: 0 !important;
 }
 
-.findbar-find-previous[chromedir="ltr"],
-.findbar-find-next[chromedir="rtl"] {
+.findbar-find-previous:-moz-locale-dir(ltr),
+.findbar-find-next:-moz-locale-dir(rtl) {
   -moz-border-radius-topleft: 0px;
   -moz-border-radius-bottomleft: 0px;
 }
@@ -177,7 +200,7 @@ findbar[flash="true"] > .findbar-container > .find-field-container > .findbar-te
 .findbar-highlight > .toolbarbutton-icon {
   width: 13px;
   height: 8px;
-  margin: 4px;
+  margin: 0 4px;
   -moz-margin-end: 0;
   border: 1px solid #818181;
   -moz-border-radius: 4px;
@@ -195,7 +218,9 @@ findbar[flash="true"] > .findbar-container > .find-field-container > .findbar-te
 }
 
 .findbar-find-status {
-  color: #436599 !important;
-  margin: 1px;
-  -moz-margin-start: 12px;
+  color: #436599;
+  font-weight: bold;
+  text-shadow: 0 1px rgba(255, 255, 255, .4);
+  margin: 1px 1px 0 !important;
+  -moz-margin-start: 12px !important;
 }

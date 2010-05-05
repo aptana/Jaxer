@@ -66,17 +66,19 @@ var observer = {
   onEndUpdateBatch: function() {
     this._endUpdateBatch = true;
   },
-  onItemAdded: function(id, folder, index) {
+  onItemAdded: function(id, folder, index, itemType) {
     this._itemAddedId = id;
     this._itemAddedParent = folder;
     this._itemAddedIndex = index;
   },
-  onItemRemoved: function(id, folder, index) {
+  onBeforeItemRemoved: function(){},
+  onItemRemoved: function(id, folder, index, itemType) {
     this._itemRemovedId = id;
     this._itemRemovedFolder = folder;
     this._itemRemovedIndex = index;
   },
-  onItemChanged: function(id, property, isAnnotationProperty, value) {
+  onItemChanged: function(id, property, isAnnotationProperty, value,
+                          lastModified, itemType) {
     this._itemChangedId = id;
     this._itemChangedProperty = property;
     this._itemChanged_isAnnotationProperty = isAnnotationProperty;
@@ -87,7 +89,8 @@ var observer = {
     this._itemVisitedVistId = visitID;
     this._itemVisitedTime = time;
   },
-  onItemMoved: function(id, oldParent, oldIndex, newParent, newIndex) {
+  onItemMoved: function(id, oldParent, oldIndex, newParent, newIndex,
+                        itemType) {
     this._itemMovedId = id
     this._itemMovedOldParent = oldParent;
     this._itemMovedOldIndex = oldIndex;
@@ -169,11 +172,16 @@ function run_test() {
 
   // after just inserting, modified should not be set
   var lastModified = bmsvc.getItemLastModified(newId);
-  do_check_eq(lastModified, 0);
+  do_check_eq(lastModified, dateAdded);
 
-  // the time before we set the title, in microseconds
+  // The time before we set the title, in microseconds.
   var beforeSetTitle = Date.now() * 1000;
   do_check_true(beforeSetTitle >= beforeInsert);
+
+  // Workaround possible VM timers issues moving lastModified and dateAdded
+  // to the past.
+  bmsvc.setItemLastModified(newId, --lastModified);
+  bmsvc.setItemDateAdded(newId, --dateAdded);
 
   // set bookmark title
   bmsvc.setItemTitle(newId, "Google");
@@ -192,10 +200,8 @@ function run_test() {
   LOG("beforeSetTitle = " + beforeSetTitle);
   LOG("lastModified = " + lastModified);
   LOG("lastModified2 = " + lastModified2);
-  // XXX bug 381240
-  //do_check_true(lastModified2 > lastModified);
-  //do_check_true(lastModified2 >= dateAdded);
-  //do_check_true(lastModified2 >= beforeSetTitle);
+  do_check_true(lastModified2 > lastModified);
+  do_check_true(lastModified2 > dateAdded);
 
   // get item title
   var title = bmsvc.getItemTitle(newId);
@@ -295,6 +301,12 @@ function run_test() {
 
   // test getIdForItemAt
   do_check_eq(bmsvc.getIdForItemAt(testRoot, 0), workFolder);
+  // wrong parent, should return -1
+  do_check_eq(bmsvc.getIdForItemAt(1337, 0), -1);
+  // wrong index, should return -1
+  do_check_eq(bmsvc.getIdForItemAt(testRoot, 1337), -1);
+  // wrong parent and index, should return -1
+  do_check_eq(bmsvc.getIdForItemAt(1337, 1337), -1);
 
   // move folder, appending, to different folder
   var oldParentCC = getChildCount(testRoot);
@@ -329,27 +341,6 @@ function run_test() {
   do_check_eq(observer._itemMovedNewParent, testRoot);
   do_check_eq(observer._itemMovedNewIndex, 3);
 
-  // test insertSeparator and removeChildAt
-  // XXX - this should also query bookmarks for the folder children
-  // and then test the node type at our index
-  try {
-    bmsvc.insertSeparator(testRoot, 1);
-    bmsvc.removeChildAt(testRoot, 1);
-  } catch(ex) {
-    do_throw("insertSeparator: " + ex);
-  }
-
-  // XXX test getItemType for separators 
-  // add when 379952 is fixed
-
-  // removeChildAt w/ folder
-  bmsvc.createFolder(testRoot, "tmp", 1);
-  bmsvc.removeChildAt(testRoot, 1);
-
-  // removeChildAt w/ bookmark
-  bmsvc.insertBookmark(root, uri("http://blah.com"), 1, "");
-  bmsvc.removeChildAt(root, 1);
-
   // test get folder's index 
   var tmpFolder = bmsvc.createFolder(testRoot, "tmp", 2);
   do_check_eq(bmsvc.getItemIndex(tmpFolder), 2);
@@ -361,7 +352,12 @@ function run_test() {
     var dateAdded = bmsvc.getItemDateAdded(kwTestItemId);
     // after just inserting, modified should not be set
     var lastModified = bmsvc.getItemLastModified(kwTestItemId);
-    do_check_eq(lastModified, 0);
+    do_check_eq(lastModified, dateAdded);
+
+    // Workaround possible VM timers issues moving lastModified and dateAdded
+    // to the past.
+    bmsvc.setItemLastModified(kwTestItemId, --lastModified);
+    bmsvc.setItemDateAdded(kwTestItemId, --dateAdded);
 
     bmsvc.setKeywordForBookmark(kwTestItemId, "bar");
 
@@ -370,9 +366,8 @@ function run_test() {
     LOG("dateAdded = " + dateAdded);
     LOG("lastModified = " + lastModified);
     LOG("lastModified2 = " + lastModified2);
-    // XXX bug 381240
-    //do_check_true(lastModified2 > lastModified);
-    //do_check_true(lastModified2 >= dateAdded);
+    do_check_true(lastModified2 > lastModified);
+    do_check_true(lastModified2 > dateAdded);
   } catch(ex) {
     do_throw("setKeywordForBookmark: " + ex);
   }
@@ -484,7 +479,12 @@ function run_test() {
   var dateAdded = bmsvc.getItemDateAdded(newId10);
   // after just inserting, modified should not be set
   var lastModified = bmsvc.getItemLastModified(newId10);
-  do_check_eq(lastModified, 0);
+  do_check_eq(lastModified, dateAdded);
+
+  // Workaround possible VM timers issues moving lastModified and dateAdded
+  // to the past.
+  bmsvc.setItemLastModified(newId10, --lastModified);
+  bmsvc.setItemDateAdded(newId10, --dateAdded);
 
   bmsvc.changeBookmarkURI(newId10, uri("http://foo11.com/"));
 
@@ -494,9 +494,8 @@ function run_test() {
   LOG("dateAdded = " + dateAdded);
   LOG("lastModified = " + lastModified);
   LOG("lastModified2 = " + lastModified2);
-  // XXX bug 381240
-  //do_check_true(lastModified2 > lastModified);
-  //do_check_true(lastModified2 >= dateAdded);
+  do_check_true(lastModified2 > lastModified);
+  do_check_true(lastModified2 > dateAdded);
 
   do_check_eq(observer._itemChangedId, newId10);
   do_check_eq(observer._itemChangedProperty, "uri");
@@ -625,8 +624,7 @@ function run_test() {
                                      bmsvc.DEFAULT_INDEX, "");
   var dateAdded = bmsvc.getItemDateAdded(newId14);
   var lastModified = bmsvc.getItemLastModified(newId14);
-  do_check_eq(lastModified, 0);
-  do_check_true(dateAdded > lastModified);
+  do_check_eq(lastModified, dateAdded);
   bmsvc.setItemLastModified(newId14, 1234);
   var fakeLastModified = bmsvc.getItemLastModified(newId14);
   do_check_eq(fakeLastModified, 1234);
@@ -649,36 +647,32 @@ function run_test() {
 
 function testSimpleFolderResult() {
   // the time before we create a folder, in microseconds
-  var beforeCreate = Date.now() * 1000;
+  // Workaround possible VM timers issues subtracting 1us.
+  var beforeCreate = Date.now() * 1000 - 1;
   do_check_true(beforeCreate > 0);
 
   // create a folder
   var parent = bmsvc.createFolder(root, "test", bmsvc.DEFAULT_INDEX);
 
   var dateCreated = bmsvc.getItemDateAdded(parent);
-  do_check_true(dateCreated > 0);
-  // dateCreated can equal beforeCreate
   LOG("check that the folder was created with a valid dateAdded");
   LOG("beforeCreate = " + beforeCreate);
   LOG("dateCreated = " + dateCreated);
-  // XXX bug 381240
-  //do_check_true(dateCreated >= beforeCreate);
+  do_check_true(dateCreated > beforeCreate);
 
   // the time before we insert, in microseconds
-  var beforeInsert = Date.now() * 1000;
+  // Workaround possible VM timers issues subtracting 1us.
+  var beforeInsert = Date.now() * 1000 - 1;
   do_check_true(beforeInsert > 0);
 
   // insert a separator 
   var sep = bmsvc.insertSeparator(parent, bmsvc.DEFAULT_INDEX);
 
   var dateAdded = bmsvc.getItemDateAdded(sep);
-  do_check_true(dateAdded > 0);
-  // dateAdded can equal beforeInsert
   LOG("check that the separator was created with a valid dateAdded");
   LOG("beforeInsert = " + beforeInsert);
   LOG("dateAdded = " + dateAdded);
-  // XXX bug 381240
-  //do_check_true(dateAdded >= beforeInsert);
+  do_check_true(dateAdded > beforeInsert);
 
   // re-set item title separately so can test nodes' last modified
   var item = bmsvc.insertBookmark(parent, uri("about:blank"),
@@ -699,7 +693,7 @@ function testSimpleFolderResult() {
 
   var node = rootNode.getChild(0);
   do_check_true(node.dateAdded > 0);
-  do_check_eq(node.lastModified, 0);
+  do_check_eq(node.lastModified, node.dateAdded);
   do_check_eq(node.itemId, sep);
   do_check_eq(node.title, "");
   node = rootNode.getChild(1);

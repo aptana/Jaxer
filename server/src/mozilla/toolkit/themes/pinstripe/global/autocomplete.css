@@ -46,18 +46,21 @@
 
 /* ::::: autocomplete ::::: */
 
-textbox {
+/* .padded is used by autocomplete widgets that don't have an icon. Gross. -dwh */
+textbox:not(.padded) {
   cursor: default;
   padding: 0;
 }
 
-/* Used by autocomplete widgets that don't have an icon. Gross. -dwh */
-textbox.padded {
-  padding: 1px 0px 1px 2px;
+textbox[nomatch="true"][highlightnonmatches="true"] {
+  color: red;
+}
+
+textbox:not(.padded) .textbox-input-box {
+  margin: 0 3px;
 }
 
 .textbox-input-box {
-  margin: 0 3px;
   -moz-box-align: center;
 }
 
@@ -126,6 +129,7 @@ treechildren.autocomplete-treebody::-moz-tree-cell-text(selected) {
 /* ::::: richlistbox autocomplete ::::: */
 
 .autocomplete-richlistbox {
+  -moz-appearance: none;
   margin: 0;
 }
 
@@ -136,7 +140,10 @@ treechildren.autocomplete-treebody::-moz-tree-cell-text(selected) {
 
 .autocomplete-richlistitem {
   padding: 1px 2px;
-  border-bottom: 1px solid ThreeDLightShadow;
+}
+
+.autocomplete-richlistitem:not(:first-child) {
+  border-top: 1px solid ThreeDLightShadow;
 }
 
 .ac-site-icon {

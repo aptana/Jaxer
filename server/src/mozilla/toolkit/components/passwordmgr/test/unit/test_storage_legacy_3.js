@@ -7,6 +7,8 @@
  */
 
 
+const STORAGE_TYPE = "legacy";
+
 function run_test() {
 
 try {
@@ -55,36 +57,36 @@ dummyuser3.init("http://dummyhost2.mozilla.org", "", null,
 testnum++;
 
 testdesc = "checking import of mime64-obscured entries"
-LoginTest.initStorage(storage, INDIR, "signons-380961-1.txt",
+storage = LoginTest.initStorage(INDIR, "signons-380961-1.txt",
                                OUTDIR, "output-380961-1.txt");
 LoginTest.checkStorageData(storage, [], [dummyuser1]);
 
 testdesc = "[flush and reload for verification]"
-LoginTest.initStorage(storage, OUTDIR, "output-380961-1.txt");
+storage = LoginTest.reloadStorage(OUTDIR, "output-380961-1.txt");
 LoginTest.checkStorageData(storage, [], [dummyuser1]);
 
 /* ========== 3 ========== */
 testnum++;
 
 testdesc = "testing import of multiple mime-64 entries for a host"
-LoginTest.initStorage(storage, INDIR, "signons-380961-2.txt",
+storage = LoginTest.initStorage(INDIR, "signons-380961-2.txt",
                                OUTDIR, "output-380961-2.txt");
 LoginTest.checkStorageData(storage, [], [dummyuser2, dummyuser3]);
 
 testdesc = "[flush and reload for verification]"
-LoginTest.initStorage(storage, OUTDIR, "output-380961-2.txt");
+storage = LoginTest.reloadStorage(OUTDIR, "output-380961-2.txt");
 LoginTest.checkStorageData(storage, [], [dummyuser2, dummyuser3]);
 
 /* ========== 4 ========== */
 testnum++;
 
 testdesc = "testing import of mixed encrypted and mime-64 entries."
-LoginTest.initStorage(storage, INDIR, "signons-380961-3.txt",
+storage = LoginTest.initStorage(INDIR, "signons-380961-3.txt",
                                OUTDIR, "output-380961-3.txt");
 LoginTest.checkStorageData(storage, [], [dummyuser1, dummyuser2, dummyuser3]);
 
 testdesc = "[flush and reload for verification]"
-LoginTest.initStorage(storage, OUTDIR, "output-380961-3.txt");
+storage = LoginTest.reloadStorage(OUTDIR, "output-380961-3.txt");
 LoginTest.checkStorageData(storage, [], [dummyuser1, dummyuser2, dummyuser3]);
 
 
@@ -120,12 +122,12 @@ dummyuser4.httpRealm     = null;
 testnum++;
 
 testdesc = "testing import of non-ascii username and password."
-LoginTest.initStorage(storage, INDIR, "signons-381262.txt",
+storage = LoginTest.initStorage(INDIR, "signons-381262.txt",
                                OUTDIR, "output-381262-1.txt");
 LoginTest.checkStorageData(storage, [], [dummyuser4]);
 
 testdesc = "[flush and reload for verification]"
-LoginTest.initStorage(storage, OUTDIR, "output-381262-1.txt");
+storage = LoginTest.reloadStorage(OUTDIR, "output-381262-1.txt");
 LoginTest.checkStorageData(storage, [], [dummyuser4]);
 
 
@@ -133,14 +135,14 @@ LoginTest.checkStorageData(storage, [], [dummyuser4]);
 testnum++;
 
 testdesc = "testing storage of non-ascii username and password."
-LoginTest.initStorage(storage, INDIR, "signons-empty.txt",
+storage = LoginTest.initStorage(INDIR, "signons-empty.txt",
                                OUTDIR, "output-381262-2.txt");
 LoginTest.checkStorageData(storage, [], []);
 storage.addLogin(dummyuser4);
 LoginTest.checkStorageData(storage, [], [dummyuser4]);
 
 testdesc = "[flush and reload for verification]"
-LoginTest.initStorage(storage, OUTDIR, "output-381262-2.txt");
+storage = LoginTest.reloadStorage(OUTDIR, "output-381262-2.txt");
 LoginTest.checkStorageData(storage, [], [dummyuser4]);
 
 
@@ -155,7 +157,7 @@ LoginTest.checkStorageData(storage, [], [dummyuser4]);
 testnum++;
 
 testdesc = "checking double reading of mime64-obscured entries";
-LoginTest.initStorage(storage, INDIR, "signons-380961-1.txt");
+storage = LoginTest.initStorage(INDIR, "signons-380961-1.txt");
 LoginTest.checkStorageData(storage, [], [dummyuser1]);
 
 testdesc = "checking double reading of mime64-obscured entries part 2";
@@ -165,7 +167,7 @@ LoginTest.checkStorageData(storage, [], [dummyuser1]);
 testnum++;
 
 testdesc = "checking correct storage of mime64 converted entries";
-LoginTest.initStorage(storage, INDIR, "signons-380961-1.txt",
+storage = LoginTest.initStorage(INDIR, "signons-380961-1.txt",
                                OUTDIR, "output-400751-1.txt");
 LoginTest.checkStorageData(storage, [], [dummyuser1]);
 LoginTest.checkStorageData(storage, [], [dummyuser1]);
@@ -173,7 +175,7 @@ storage.addLogin(dummyuser2); // trigger a write
 LoginTest.checkStorageData(storage, [], [dummyuser1, dummyuser2]);
 
 testdesc = "[flush and reload for verification]";
-LoginTest.initStorage(storage, OUTDIR, "output-400751-1.txt");
+storage = LoginTest.reloadStorage(OUTDIR, "output-400751-1.txt");
 LoginTest.checkStorageData(storage, [], [dummyuser1, dummyuser2]);
 
 /*
@@ -197,7 +199,7 @@ function tryAddUser(storage, aUser, aExpectedError) {
 }
 
 testdesc = "preparting to try logins with bogus values";
-LoginTest.initStorage(storage, INDIR, "signons-empty.txt",
+storage = LoginTest.initStorage(INDIR, "signons-empty.txt",
                                OUTDIR, "output-394610-1.txt");
 LoginTest.checkStorageData(storage, [], []);
 
@@ -293,7 +295,7 @@ var numLines = LoginTest.countLinesInFile(OUTDIR, "output-394610-1.txt");
 do_check_eq(numLines, 10);
 
 testdesc = "[flush and reload for verification]"
-LoginTest.initStorage(storage, OUTDIR, "output-394610-1.txt");
+storage = LoginTest.reloadStorage(OUTDIR, "output-394610-1.txt");
 LoginTest.checkStorageData(storage, [], [failUser]);
 
 failUser.username = "username";
@@ -304,7 +306,7 @@ failUser.password = "password";
 testnum++;
 
 testdesc = "storing data values with special period-only value"
-LoginTest.initStorage(storage, INDIR, "signons-empty.txt",
+storage = LoginTest.initStorage(INDIR, "signons-empty.txt",
                                OUTDIR, "output-394610-2.txt");
 LoginTest.checkStorageData(storage, [], []);
 
@@ -336,7 +338,7 @@ var numLines = LoginTest.countLinesInFile(OUTDIR, "output-394610-2.txt");
 do_check_eq(numLines, 2);
 
 testdesc = "[flush and reload for verification]"
-LoginTest.initStorage(storage, OUTDIR, "output-394610-2.txt");
+storage = LoginTest.reloadStorage(OUTDIR, "output-394610-2.txt");
 LoginTest.checkStorageData(storage, [], []);
 
 
@@ -345,7 +347,7 @@ testnum++;
 
 testdesc = "create logins with parens in host/httpRealm"
 
-LoginTest.initStorage(storage, INDIR, "signons-empty.txt",
+storage = LoginTest.initStorage(INDIR, "signons-empty.txt",
                                OUTDIR, "output-394610-3.txt");
 LoginTest.checkStorageData(storage, [], []);
 
@@ -416,7 +418,7 @@ var numLines = LoginTest.countLinesInFile(OUTDIR, "output-394610-3.txt");
 do_check_eq(numLines, 66);
 
 testdesc = "[flush and reload for verification]"
-LoginTest.initStorage(storage, OUTDIR, "output-394610-3.txt");
+storage = LoginTest.reloadStorage(OUTDIR, "output-394610-3.txt");
 LoginTest.checkStorageData(storage, [], parenLogins);
 
 
@@ -429,7 +431,7 @@ testdesc = "storing data values with embedded nulls."
 do_check_eq( "foo\0bar", "foo\0bar");
 do_check_neq("foo\0bar", "foobar");
 
-LoginTest.initStorage(storage, INDIR, "signons-empty.txt",
+storage = LoginTest.initStorage(INDIR, "signons-empty.txt",
                                OUTDIR, "output-394610-4.txt");
 LoginTest.checkStorageData(storage, [], []);
 
@@ -485,23 +487,282 @@ tryAddUser(storage, nullUser, /login values can't contain nulls/);
 nullUser.passwordField = "passnull";
 
 
-// check username and password, which are OK with embedded nulls.
+// check username with null
 nullUser.username = "user\0name";
-nullUser.password = "pass\0word";
-tryAddUser(storage, nullUser, null);
-
-LoginTest.checkStorageData(storage, [], [nullUser]);
-var numLines = LoginTest.countLinesInFile(OUTDIR, "output-394610-4.txt");
-do_check_eq(numLines, 10);
-
-testdesc = "[flush and reload for verification]"
-LoginTest.initStorage(storage, OUTDIR, "output-394610-4.txt");
-LoginTest.checkStorageData(storage, [], [nullUser]);
-
+tryAddUser(storage, nullUser, /login values can't contain nulls/);
 nullUser.username = "username";
+
+// check password with null
+nullUser.password = "pass\0word";
+tryAddUser(storage, nullUser, /login values can't contain nulls/);
 nullUser.password = "password";
 
 
+// Final sanity check, to make sure we didn't store anything unexpected.
+LoginTest.checkStorageData(storage, [], []);
+var numLines = LoginTest.countLinesInFile(OUTDIR, "output-394610-4.txt");
+do_check_eq(numLines, 2);
+
+testdesc = "[flush and reload for verification]"
+storage = LoginTest.reloadStorage(OUTDIR, "output-394610-4.txt");
+LoginTest.checkStorageData(storage, [], []);
+
+
+/*
+ * ---------------------- Bug 449701 ----------------------
+ * Ensure changes to login objects given to / obtained from
+ * the storage module don't affect the internal storage.
+ */
+
+/* ========== 14 ========== */
+testnum++;
+testdesc = "ensure internal login objects not shared with callers."
+
+storage = LoginTest.initStorage(INDIR, "signons-empty.txt",
+                               OUTDIR, "output-449701.txt");
+LoginTest.checkStorageData(storage, [], []);
+
+// dummyuser1 == dummyuser2
+dummyuser1.init("http://dummyhost.mozilla.org", "", null,
+    "testuser1", "testpass1", "put_user_here", "put_pw_here");
+dummyuser2.init("http://dummyhost.mozilla.org", "", null,
+    "testuser1", "testpass1", "put_user_here", "put_pw_here");
+
+
+// Add a login, modify it, make sure orginal values are still stored.
+storage.addLogin(dummyuser1);
+LoginTest.checkStorageData(storage, [], [dummyuser2]);
+dummyuser1.usernameField = "ohnoes";
+LoginTest.checkStorageData(storage, [], [dummyuser2]);
+
+// Get a stored login, modify it, make sure the stored login wasn't changed.
+var logins = storage.getAllLogins({});
+do_check_eq(logins.length, 1);
+var obtainedLogin1 = logins[0];
+obtainedLogin1.usernameField = "ohnoes";
+
+logins = storage.getAllLogins({});
+var obtainedLogin2 = logins[0];
+
+do_check_neq(obtainedLogin1.usernameField, obtainedLogin2.usernameField);
+
+
+/*
+ * ---------------------- Bug 451155 ----------------------
+ * Ensure that we don't mangle strings when then contain
+ * UCS2 characters above U+00FF.
+ */
+
+/* ========== 15 ========== */
+testnum++;
+testdesc = "ensure UCS2 strings don't get mangled."
+
+storage = LoginTest.initStorage(INDIR, "signons-empty.txt",
+                               OUTDIR, "output-451155.txt");
+LoginTest.checkStorageData(storage, [], []);
+
+var testString = String.fromCharCode(355, 277, 349, 357, 533, 537, 101, 345, 185);
+
+var utfHost = "http://" + testString + ".org";
+var utfUser1 = Cc["@mozilla.org/login-manager/loginInfo;1"].
+               createInstance(Ci.nsILoginInfo);
+var utfUser2 = Cc["@mozilla.org/login-manager/loginInfo;1"].
+               createInstance(Ci.nsILoginInfo);
+
+utfUser1.init("http://" + testString + ".org",
+    "http://" + testString + ".org", null,
+    testString, testString, testString, testString);
+utfUser2.init("http://realm.check.net", null, "realm " + testString + " test",
+    "user", "pass", "", "");
+
+storage.addLogin(utfUser1);
+storage.addLogin(utfUser2);
+storage.setLoginSavingEnabled(utfHost, false);
+
+LoginTest.checkStorageData(storage, [utfHost], [utfUser1, utfUser2]);
+
+testdesc = "[flush and reload for verification]"
+storage = LoginTest.reloadStorage(OUTDIR, "output-451155.txt");
+LoginTest.checkStorageData(storage, [utfHost], [utfUser1, utfUser2]);
+
+
+/*
+ * ---------------------- Bug 454708 ----------------------
+ * Check that previous saved entries that are not valid UTF8
+ * are read without blowing up.
+ */
+
+/* ========== 16 ========== */
+testnum++;
+testdesc = "ensure bogus UTF8 strings don't cause failures."
+
+var badHost = "https://FcK" + String.fromCharCode(0x8a) + ".jp";
+var bad8User = Cc["@mozilla.org/login-manager/loginInfo;1"].
+               createInstance(Ci.nsILoginInfo);
+bad8User.init(badHost, badHost, null,
+              "dummydude", "itsasecret", "put_user_here", "put_pw_here");
+
+storage = LoginTest.initStorage(INDIR, "signons-454708.txt",
+                               OUTDIR, "output-454708.txt");
+LoginTest.checkStorageData(storage, [], [bad8User]);
+
+// The output file should contain valid UTF8 now, but the resulting
+// JS string value remains the same.
+
+testdesc = "[flush and reload for verification]"
+storage = LoginTest.reloadStorage(OUTDIR, "output-454708.txt");
+LoginTest.checkStorageData(storage, [], [bad8User]);
+
+
+/*
+ * ---------------------- Bug 457358 ----------------------
+ * need to reset UTF8 converter after it encounters invalid input
+ * (pwmgr problems in FF3.0.3)
+ */
+
+/* ========== 17 ========== */
+testnum++;
+testdesc = "ensure UTF8 converter isn't left in bad state."
+
+var utfRealm = "Acc" +
+               String.fromCharCode(0xe8) +
+               "s reserv" +
+               String.fromCharCode(0xe9);
+bad8User.init("https://bugzilla.mozilla.org", null, utfRealm,
+            "dummydude", "itsasecret", "", "");
+
+storage = LoginTest.initStorage(INDIR, "signons-457358-1.txt",
+                               OUTDIR, "output-457358-1.txt");
+LoginTest.checkStorageData(storage, [], [bad8User]);
+
+// The output file should contain valid UTF8 now, but the resulting
+// JS string value remains the same.
+
+testdesc = "[flush and reload for verification]"
+storage = LoginTest.reloadStorage(OUTDIR, "output-457358-1.txt");
+LoginTest.checkStorageData(storage, [], [bad8User]);
+
+/* ========== 18 ========== */
+testnum++;
+testdesc = "ensure UTF8 converter isn't left in bad state."
+
+// The username field here is "Acc" + String.fromCharCode(0xe8), but the last
+// character is invalid UTF8 -- it's the beginning of a multibyte sequence,
+// but at the end of the input. The unicode converter silently truncates the
+// string, and will throw when we feed it the next chunk of input (the
+// encrypted username)
+//
+// Test for an expected login -- everthing fine except for the truncated field
+// name (which we don't use anyway)
+bad8User.init("https://bugzilla.mozilla.org", "https://bugzilla.mozilla.org", null,
+            "dummydude", "itsasecret", "Acc", "pass");
+
+storage = LoginTest.initStorage(INDIR, "signons-457358-2.txt",
+                               OUTDIR, "output-457358-2.txt");
+LoginTest.checkStorageData(storage, [], [bad8User]);
+
+// The output file should contain valid UTF8 now, but the resulting
+// JS string value remains the same.
+
+testdesc = "[flush and reload for verification]"
+storage = LoginTest.reloadStorage(OUTDIR, "output-457358-2.txt");
+LoginTest.checkStorageData(storage, [], [bad8User]);
+
+/* ========== 19 ========== */
+testnum++;
+testdesc = "ensure UTF8 converter isn't left in bad state."
+
+// As with previous test, but triggered with both field names.
+
+bad8User.init("https://bugzilla.mozilla.org", "https://bugzilla.mozilla.org", null,
+            "dummydude", "itsasecret", "u-Acc", "p-Acc");
+
+storage = LoginTest.initStorage(INDIR, "signons-457358-3.txt",
+                               OUTDIR, "output-457358-3.txt");
+LoginTest.checkStorageData(storage, [], [bad8User]);
+
+// The output file should contain valid UTF8 now, but the resulting
+// JS string value remains the same.
+
+testdesc = "[flush and reload for verification]"
+storage = LoginTest.reloadStorage(OUTDIR, "output-457358-3.txt");
+LoginTest.checkStorageData(storage, [], [bad8User]);
+
+/* ========== 20 ========== */
+testnum++;
+testdesc = "ensure UTF8 converter isn't left in bad state."
+
+// Last character in the realm, this time. Not trunated, because the
+// "http://site.com (realm)" format means there's always a trailing character,
+// so the conversino throws.
+
+bad8User.init("https://bugzilla.mozilla.org", null, "Acc" + String.fromCharCode(0xe8),
+            "dummydude", "itsasecret", "", "");
+
+storage = LoginTest.initStorage(INDIR, "signons-457358-4.txt",
+                               OUTDIR, "output-457358-4.txt");
+LoginTest.checkStorageData(storage, [], [bad8User]);
+
+// The output file should contain valid UTF8 now, but the resulting
+// JS string value remains the same.
+
+testdesc = "[flush and reload for verification]"
+storage = LoginTest.reloadStorage(OUTDIR, "output-457358-4.txt");
+LoginTest.checkStorageData(storage, [], [bad8User]);
+
+/* ========== 21 ========== */
+testnum++;
+testdesc = "ensure UTF8 converter isn't left in bad state."
+
+// Like last test, but try adding and removing a login too.
+
+bad8User.init("https://bugzilla.mozilla.org", null, "Acc" + String.fromCharCode(0xe8),
+            "dummydude", "itsasecret", "", "");
+
+storage = LoginTest.initStorage(INDIR, "signons-457358-4.txt",
+                               OUTDIR, "output-457358-4b.txt");
+
+var anotherUser = Cc["@mozilla.org/login-manager/loginInfo;1"].
+              createInstance(Ci.nsILoginInfo);
+anotherUser.init("http://mozilla.org", null,
+                 String.fromCharCode(0xe8) + "xtra user " + String.fromCharCode(0x0163) + "est",
+                 "dummydude", "itsasecret", "", "");
+
+storage.addLogin(anotherUser);
+LoginTest.checkStorageData(storage, [], [bad8User, anotherUser]);
+
+testdesc = "[flush and reload for verification]"
+storage = LoginTest.reloadStorage(OUTDIR, "output-457358-4b.txt");
+LoginTest.checkStorageData(storage, [], [bad8User, anotherUser]);
+
+storage.removeLogin(anotherUser);
+LoginTest.checkStorageData(storage, [], [bad8User]);
+
+testdesc = "[flush and reload for verification 2]"
+storage = LoginTest.reloadStorage(OUTDIR, "output-457358-4b.txt");
+LoginTest.checkStorageData(storage, [], [bad8User]);
+
+/* ========== 22 ========== */
+testnum++;
+testdesc = "ensure UTF8 converter isn't left in bad state."
+
+// The first login's username (plaintext) is invalid UTF8. It's handled as a
+// bad decryption so we don't see the login, but make sure the other login in
+// the file is ok.
+
+// This is the first login:
+//bad8User.init("https://www.google.com", "https://www.google.com", null,
+//              "Acc" + String.fromCharCode(0xe8) + "ss", "passw", "un", "pw");
+anotherUser.init("https://bugzilla.mozilla.org", null, "extra user test",
+                 "dummydude", "itsasecret", "", "");
+
+storage = LoginTest.initStorage(INDIR, "signons-457358-5.txt",
+                               OUTDIR, "output-457358-5.txt");
+LoginTest.checkStorageData(storage, [], [anotherUser]);
+
+testdesc = "[flush and reload for verification]"
+storage = LoginTest.reloadStorage(OUTDIR, "output-457358-5.txt");
+LoginTest.checkStorageData(storage, [], [anotherUser]);
 
 /* ========== end ========== */
 } catch (e) {

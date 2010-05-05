@@ -39,9 +39,9 @@
 #include <sys/wait.h>
 
 #include <cstdlib>
+#include <cstdio>
 #include <ctime>
 #include <string.h>
-#include <stdio.h>
 
 #include "common/linux/file_id.h"
 #include "client/linux/handler/linux_thread.h"

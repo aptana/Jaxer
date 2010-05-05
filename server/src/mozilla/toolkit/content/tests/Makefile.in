@@ -47,8 +47,6 @@ MODULE		= test_toolkit_general
 
 XPCSHELL_TESTS = unit
 
-ifdef MOZ_MOCHITEST
-DIRS = chrome widgets
-endif
+DIRS = browser chrome widgets
 
 include $(topsrcdir)/config/rules.mk

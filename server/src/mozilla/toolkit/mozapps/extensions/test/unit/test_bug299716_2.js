@@ -53,9 +53,7 @@ const checkListener = {
     do_check_eq(item.minAppVersion, 1);
     do_check_eq(item.maxAppVersion, 1);
 
-    do_test_finished();
-
-    testserver.stop();
+    testserver.stop(do_test_finished);
   },
 
   // nsIAddonUpdateCheckListener
@@ -68,7 +66,7 @@ const checkListener = {
 }
 
 // Get the HTTP server.
-do_import_script("netwerk/test/httpserver/httpd.js");
+do_load_httpd_js();
 var testserver;
 
 var ADDON = {
@@ -79,7 +77,7 @@ var ADDON = {
 function run_test() {
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1.9");
 
-  const dataDir = do_get_file("toolkit/mozapps/extensions/test/unit/data");
+  const dataDir = do_get_file("data");
   const addonsDir = do_get_addon(ADDON.addon).parent;
 
   // Create and configure the HTTP server.

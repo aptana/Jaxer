@@ -89,7 +89,7 @@ var InlineSpellCheckerUI = {
     if (spellsel.rangeCount == 0)
       return; // easy case - no misspellings
 
-    var range = this.mInlineSpellChecker.getMispelledWord(rangeParent,
+    var range = this.mInlineSpellChecker.getMisspelledWord(rangeParent,
                                                           rangeOffset);
     if (! range)
       return; // not over a misspelled word
@@ -201,7 +201,7 @@ var InlineSpellCheckerUI = {
 
     for (var i = 0; i < list.length; i ++) {
       // get the display name for this dictionary
-      isoStrArray = list[i].split("-");
+      isoStrArray = list[i].split(/[-_]/);
       var displayName = "";
       if (this.mLanguageBundle && isoStrArray[0]) {
         try {

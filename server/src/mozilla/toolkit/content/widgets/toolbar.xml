@@ -25,6 +25,20 @@
         0
       </field>
       
+      <!-- Set by customizeToolbar.js -->
+      <property name="customizing">
+        <getter><![CDATA[
+          return this.getAttribute("customizing") == "true";
+        ]]></getter>
+        <setter><![CDATA[
+          if (val)
+            this.setAttribute("customizing", "true");
+          else
+            this.removeAttribute("customizing");
+          return val;
+        ]]></setter>
+      </property>
+
       <constructor>
         <![CDATA[
           // Look to see if there is a toolbarset.
@@ -89,9 +103,23 @@
       
       <constructor>
         <![CDATA[
+          if (this.hasAttribute("firstpermanentchild")) {
+            // The toolbar is being reconstructed. The original first and last
+            // permanent child nodes need to be restored, the rest of the
+            // constructor can be skipped.
+
+            this.firstPermanentChild =
+              this.childNodes.item(this.getAttribute("firstpermanentchild"));
+            this.lastPermanentChild =
+              this.childNodes.item(this.getAttribute("lastpermanentchild"));
+            return;
+          }
+
           this.firstPermanentChild = this.firstChild;
           this.lastPermanentChild = this.lastChild;
-          
+          this.setAttribute("firstpermanentchild", this.firstChild ? 0 : -1);
+          this.setAttribute("lastpermanentchild", this.childNodes.length -1);
+
           // Searching for the toolbox palette in the toolbar binding because
           // toolbars are constructed first.
           var toolbox = this.parentNode;
@@ -125,9 +153,13 @@
       <property name="currentSet">
         <getter>
           <![CDATA[
-            var node = this.firstChild;
             var currentSet = "";
-            while (node) {
+            for (let i = 0, node; node = this.childNodes.item(i); i++) {
+              if (node == this.firstPermanentChild)
+                this.setAttribute("firstpermanentchild", i);
+              if (node == this.lastPermanentChild)
+                this.setAttribute("lastpermanentchild", i);
+
               if (node.id &&
                   node.localName == "toolbaritem" || 
                   node.localName == "toolbarbutton" ||
@@ -147,30 +179,41 @@
                 else
                   currentSet += node.id;
               }
-              node = node.nextSibling;
             }
-            
+
+            if ("currentSetChanged" in this)
+              this.currentSetChanged(currentSet);
+
             return currentSet ? currentSet : "__empty";
           ]]>
         </getter>
         
         <setter>
           <![CDATA[
+            var palette = this.parentNode.palette;
             // Remove all items before the first permanent child and after the last permanent child.
-            while (this.lastChild) {
-              if (this.lastChild == this.lastPermanentChild ||
-                  (this.lastChild.localName == "toolbarpaletteitem" &&
-                  this.lastChild.firstChild == this.lastPermanentChild))
-                break;
-              this.removeChild(this.lastChild);
+            while (this.lastChild != this.lastPermanentChild) {
+              switch (this.lastChild.localName) {
+                case "toolbarseparator":
+                case "toolbarspring":
+                case "toolbarspacer":
+                  this.removeChild(this.lastChild);
+                  break;
+                default:
+                  palette.appendChild(this.lastChild);
+              }
             }
 
-            while (this.firstChild) {
-              if (this.firstChild == this.firstPermanentChild ||
-                  (this.firstChild.localName == "toolbarpaletteitem" &&
-                  this.firstChild.firstChild == this.firstPermanentChild))
-                break;
-              this.removeChild(this.firstChild);
+            while (this.firstChild != this.firstPermanentChild) {
+              switch (this.firstChild.localName) {
+                case "toolbarseparator":
+                case "toolbarspring":
+                case "toolbarspacer":
+                  this.removeChild(this.firstChild);
+                  break;
+                default:
+                  palette.appendChild(this.firstChild);
+              }
             }
 
             var firstChildID = this.firstPermanentChild ? this.firstPermanentChild.id : "";
@@ -179,15 +222,23 @@
             if (val && val != "__empty") {
               var itemIds = val.split(",");
               var before = true;
-              this._trackInserted = {};
               for (var i = 0; i < itemIds.length; i++) {
                 if (itemIds[i] == firstChildID || itemIds[i] == lastChildID)
                   before = false;
                 else
                   this.insertItem(itemIds[i], null, null, before);
               }
-              delete this._trackInserted;
             }
+
+            if (this.firstPermanentChild) {
+              this.setAttribute("firstpermanentchild",
+                                Array.indexOf(this.childNodes, this.firstPermanentChild));
+              this.setAttribute("lastpermanentchild",
+                                Array.indexOf(this.childNodes, this.lastPermanentChild));
+            }
+
+            if ("currentSetChanged" in this)
+              this.currentSetChanged(val);
 
             return val;
           ]]>
@@ -225,26 +276,17 @@
               newItem.id = "spacer" + uniqueId;
               newItem.className = "chromeclass-toolbar-additional";
             } else if (this.parentNode.localName == "toolbox") {
-              if (this._trackInserted) {
-                // Protect against creating an item with the given id more than once.
-                if (aId in this._trackInserted)
+              // Attempt to locate an item with a matching id within document.
+              newItem = document.getElementById(aId);
+              if (!newItem || newItem.parentNode.parentNode != this.parentNode) {
+                // Attempt to locate an item with a matching id within palette.
+                // The palette does not live in the document by default.
+                newItem = this.parentNode.palette
+                              .getElementsByAttribute("id", aId).item(0);
+                if (!newItem || newItem.parentNode != this.parentNode.palette)
                   return false;
-                this._trackInserted[aId] = null;
-              }
-              // Attempt to locate an item with a matching id within palette.
-              var paletteItem = this.parentNode.palette.firstChild;
-              while (paletteItem) {
-                var paletteId = paletteItem.id;
-                if (paletteId == aId) {
-                  newItem = paletteItem.cloneNode(true);
-                  break;
-                }
-                paletteItem = paletteItem.nextSibling;
               }
             }
-            
-            if (!newItem)
-              return false;
 
             var insertItem = newItem;
             
@@ -265,7 +307,139 @@
             return newItem;
           ]]>
         </body>
-      </method>      
+      </method>
+
+      <method name="hasCustomInteractiveItems">
+        <parameter name="aCurrentSet"/>
+        <body><![CDATA[
+          if (aCurrentSet == "__empty")
+            return false;
+
+          var defaultOrNoninteractive = (this.getAttribute("defaultset") || "")
+                                          .split(",")
+                                          .concat(["separator", "spacer", "spring"]);
+          return aCurrentSet.split(",").some(function (item) {
+            return defaultOrNoninteractive.indexOf(item) == -1;
+          });
+        ]]></body>
+      </method>
+    </implementation>
+  </binding>
+
+  <binding id="toolbar-menubar-autohide"
+           extends="chrome://global/content/bindings/toolbar.xml#toolbar">
+    <implementation>
+      <constructor>
+        this._setInactive();
+      </constructor>
+
+      <field name="_inactiveTimeout">null</field>
+
+      <field name="_contextMenuListener"><![CDATA[({
+        toolbar: this,
+        contextMenu: null,
+
+        get active () !!this.contextMenu,
+
+        init: function (event) {
+          var node = event.target;
+          while (node != this.toolbar) {
+            if (node.localName == "menupopup")
+              return;
+            node = node.parentNode;
+          }
+
+          var contextMenuId = this.toolbar.getAttribute("context");
+          if (!contextMenuId)
+            return;
+
+          this.contextMenu = document.getElementById(contextMenuId);
+          if (!this.contextMenu)
+            return;
+
+          this.contextMenu.addEventListener("popupshown", this, false);
+          this.contextMenu.addEventListener("popuphiding", this, false);
+          this.toolbar.addEventListener("mousemove", this, false);
+        },
+        handleEvent: function (event) {
+          switch (event.type) {
+            case "popupshown":
+              this.toolbar.removeEventListener("mousemove", this, false);
+              break;
+            case "popuphiding":
+            case "mousemove":
+              this.toolbar._setInactiveAsync();
+              this.toolbar.removeEventListener("mousemove", this, false);
+              this.contextMenu.removeEventListener("popuphiding", this, false);
+              this.contextMenu.removeEventListener("popupshown", this, false);
+              this.contextMenu = null;
+              break;
+          }
+        }
+      })]]></field>
+
+      <method name="currentSetChanged">
+        <parameter name="aCurrentSet"/>
+        <body><![CDATA[
+          if (this.hasCustomInteractiveItems(aCurrentSet))
+            this.setAttribute("customized", "true");
+          else
+            this.removeAttribute("customized");
+        ]]></body>
+      </method>
+
+      <method name="_setInactive">
+        <body><![CDATA[
+          this.setAttribute("inactive", "true");
+        ]]></body>
+      </method>
+
+      <method name="_setInactiveAsync">
+        <body><![CDATA[
+          this._inactiveTimeout = setTimeout(function (self) {
+            if (self.getAttribute("autohide") == "true") {
+              self._inactiveTimeout = null;
+              self._setInactive();
+            }
+          }, 0, this);
+        ]]></body>
+      </method>
+
+      <method name="_setActive">
+        <body><![CDATA[
+          if (this._inactiveTimeout) {
+            clearTimeout(this._inactiveTimeout);
+            this._inactiveTimeout = null;
+          }
+          this.removeAttribute("inactive");
+        ]]></body>
+      </method>
+    </implementation>
+
+    <handlers>
+      <handler event="DOMMenuBarActive"     action="this._setActive();"/>
+      <handler event="popupshowing"         action="this._setActive();"/>
+      <handler event="mousedown" button="2" action="this._contextMenuListener.init(event);"/>
+      <handler event="DOMMenuBarInactive"><![CDATA[
+        if (!this._contextMenuListener.active)
+          this._setInactiveAsync();
+      ]]></handler>
+    </handlers>
+  </binding>
+
+  <binding id="toolbar-drag"
+           extends="chrome://global/content/bindings/toolbar.xml#toolbar">
+    <implementation>
+      <constructor><![CDATA[
+        try {
+          Components.utils.import("resource://gre/modules/WindowDraggingUtils.jsm");
+          let draggableThis = new WindowDraggingElement(this, window);
+          draggableThis.mouseDownCheck = function(e) {
+            // Don't move while customizing or while in full screen mode.
+            return !this.parentNode.customizing && !window.fullScreen;
+          }
+        } catch (e) {}
+      ]]></constructor>
     </implementation>
   </binding>
 

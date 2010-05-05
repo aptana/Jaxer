@@ -1,7 +1,8 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
 notification {
-  min-height: 24px;
+  padding: 4px 3px 5px;
+  text-shadow: none;
 }
 
 notification[type="info"] {
@@ -28,45 +29,38 @@ notification[type="critical"] {
 .messageImage {
   width: 16px;
   height: 16px;
-  margin: 0px 1px 0px 6px;
+  margin: 0 4px;
 }
 
 /* Default icons for notifications */
 
 notification[type="info"] .messageImage {
-  list-style-image: url("chrome://global/skin/icons/information-16.png");
+  list-style-image: url("chrome://global/skin/notification/info-icon.png");
 }
 
 notification[type="warning"] .messageImage {
-  list-style-image: url("chrome://global/skin/icons/warning-16.png");
+  list-style-image: url("chrome://global/skin/notification/warning-icon.png");
 }
 
 notification[type="critical"] .messageImage {
-  list-style-image: url("chrome://global/skin/icons/error-16.png");
-}
-
-.messageText {
-  margin-top: 2px;
-  font-weight: bold;
-  -moz-margin-start: 5px;
-}
-
-.notification-inner > button {
-  -moz-appearance: none !important;
-}
-
-.messageButton {
-  margin: 0px 5px 0px 5px;
+  list-style-image: url("chrome://global/skin/notification/error-icon.png");
 }
 
 .notification-inner {
   border: 0 !important;
 }
 
+.messageText {
+  margin: 0 3px !important;
+  padding: 0;
+  font-weight: bold;
+}
+
 .messageCloseButton {
   -moz-appearance: none;
-  -moz-padding-end: 4px;
-  list-style-image: url("chrome://global/skin/icons/closetab.png") !important;
+  padding: 0;
+  margin: 0 2px;
+  list-style-image: url("chrome://global/skin/icons/closetab.png");
   border: none;
 }
 
@@ -74,12 +68,28 @@ notification[type="critical"] .messageImage {
   display: none;
 }
 
+.messageCloseButton > .toolbarbutton-icon {
+  padding: 0;
+}
+
 .messageCloseButton:hover {
-  list-style-image: url("chrome://global/skin/icons/closetab-hover.png") !important;
+  list-style-image: url("chrome://global/skin/icons/closetab-hover.png");
 }
 
 .messageCloseButton:hover:active {
-  list-style-image: url("chrome://global/skin/icons/closetab-active.png") !important;
+  list-style-image: url("chrome://global/skin/icons/closetab-active.png");
 }
 
+.messageCloseButton:focus > .toolbarbutton-icon {
+  -moz-border-radius: 100%;
+  -moz-box-shadow: 0 0 3px 1px -moz-mac-focusring,
+                   0 0 0 2px -moz-mac-focusring inset;
+}
+
+/* geolocation adds a text-link for a "Learn more..." link.
+   normal blue color of text-link is hard to read.
+*/
+notification[type="info"] .text-link {
+  color: rgba(255,255,255,0.95)  !important;
+}
 

@@ -48,8 +48,15 @@
         </setter>
       </property>
 
-      <property name="allNotifications" readonly="true"
-                onget="return this.getElementsByTagName('notification');"/>
+      <property name="allNotifications" readonly="true">
+        <getter>
+        <![CDATA[
+          var closedNotification = this._closedNotification;
+          var notifications = this.getElementsByTagName('notification');
+          return Array.filter(notifications, function(n) n != closedNotification);
+        ]]>
+        </getter>
+      </property>
 
       <method name="getNotificationWithValue">
         <parameter name="aValue"/>
@@ -57,7 +64,7 @@
           <![CDATA[
             var notifications = this.allNotifications;
             for (var n = notifications.length - 1; n >= 0; n--) {
-              if (aValue == notifications[n].value)
+              if (aValue == notifications[n].getAttribute("value"))
                 return notifications[n];
             }
             return null;
@@ -92,7 +99,7 @@
             newitem.setAttribute("label", aLabel);
             newitem.setAttribute("value", aValue);
             if (aImage)
-                newitem.setAttribute("image", aImage);
+              newitem.setAttribute("image", aImage);
             if (!insertPos) {
               newitem.style.position = "fixed";
               newitem.style.top = "100%";
@@ -138,7 +145,7 @@
           <![CDATA[
             if (aItem == this.currentNotification)
               this.removeCurrentNotification();
-            else
+            else if (aItem != this._closedNotification)
               this.removeChild(aItem);
             return aItem;
           ]]>
@@ -166,6 +173,15 @@
                 this.removeNotification(notifications[n]);
             }
             this.currentNotification = null;
+
+            if (aImmediate && this._timer) {
+              // Must clear up any currently animating notification
+              clearInterval(this._timer);
+              if (this._closedNotification) {
+                this.removeChild(this._closedNotification);
+                this._closedNotification = null;
+              }
+            }
           ]]>
         </body>
       </method>
@@ -196,74 +212,99 @@
                 this.currentNotification.style.marginTop = "0px";
                 this.currentNotification.style.opacity = 1;
               }
-              if (this._closedNotification)
-                this._closedNotification.parentNode.
-                  removeChild(this._closedNotification);
+              if (this._closedNotification) {
+                this.removeChild(this._closedNotification);
+                this._closedNotification = null;
+              }
               this._setBlockingState(this.currentNotification);
             }
 
             var height = aNotification.boxObject.height;
+            var skipAnimation = (height == 0);
             var change = height / this.slideSteps;
+            var margin;
             if (aSlideIn) {
               if (this.currentNotification &&
                   this.currentNotification.boxObject.height > height)
                 height = this.currentNotification.boxObject.height;
 
               this.currentNotification = aNotification;
-              this._closedNotification = null;
               aNotification.style.removeProperty("position");
               aNotification.style.removeProperty("top");
+
+              if (skipAnimation) {
+                this._setBlockingState(this.currentNotification);
+                return;
+              }
+
               aNotification.style.marginTop = -height + "px";
               aNotification.style.opacity = 0;
+              margin = -height;
             }
             else {
               change = -change;
               this._closedNotification = aNotification;
               var notifications = this.allNotifications;
-              var idx = notifications.length - 2;
-              if (idx >= 0)
-                this.currentNotification = notifications[idx];
-              else
-                this.currentNotification = null;
-            }
-            var opacitychange = change / height;
+              var idx = notifications.length - 1;
+              this.currentNotification = (idx >= 0) ? notifications[idx] : null;
 
-            var self = this;
-            var slide = function slideInFn()
-            {
-              var done = false;
+              if (skipAnimation) {
+                this.removeChild(this._closedNotification);
+                this._closedNotification = null;
+                this._setBlockingState(this.currentNotification);
+                return;
+              }
 
               var style = window.getComputedStyle(aNotification, null);
-              var margin = style.getPropertyCSSValue("margin-top").
-                             getFloatValue(CSSPrimitiveValue.CSS_PX);
+              margin = style.getPropertyCSSValue("margin-top").
+                         getFloatValue(CSSPrimitiveValue.CSS_PX);
+            }
+            var opacitychange = change / height;
+            const FRAME_LENGTH = 50;
 
-              if (change > 0 && margin + change >= 0) {
+            function slide(self, args, off) {
+              // If the notificationbox is disconnected then stop the timer
+              if (self.ownerDocument.compareDocumentPosition(self) &
+                  Node.DOCUMENT_POSITION_DISCONNECTED) {
+                clearInterval(args.timer);
+                return;
+              }
+
+              var framesToHandle = 1;
+
+              // Skip frames if we aren't getting the desired frame rate.
+              if (off > 0)
+                framesToHandle += Math.round(off / FRAME_LENGTH);
+
+              margin += framesToHandle * change;
+
+              if (change > 0 && margin >= 0) {
                 aNotification.style.marginTop = "0px";
                 aNotification.style.opacity = 1;
-                done = true;
               }
-              else if (change < 0 && margin + change <= -height) {
+              else if (change < 0 && margin <= -height) {
                 aNotification.style.marginTop = -height + "px";
-                done = true;
               }
               else {
-                aNotification.style.marginTop = (margin + change).toFixed(4) + "px";
+                aNotification.style.marginTop = margin.toFixed(4) + "px";
                 if (opacitychange)
                   aNotification.style.opacity =
-                    Number(aNotification.style.opacity) + opacitychange;
+                    Number(aNotification.style.opacity) + framesToHandle * opacitychange;
+                return;
               }
 
-              if (done) {
-                clearInterval(self._timer);
-                self._timer = null;
-                if (self._closedNotification)
-                  self._closedNotification.parentNode.
-                    removeChild(self._closedNotification);
-                self._setBlockingState(self.currentNotification);
+              clearInterval(self._timer);
+              self._timer = null;
+              if (self._closedNotification) {
+                self.removeChild(self._closedNotification);
+                self._closedNotification = null;
               }
+              self._setBlockingState(self.currentNotification);
             }
 
-            this._timer = setInterval(slide, 50);
+            var args = {};
+            this._timer = setInterval(slide, FRAME_LENGTH, this, args);
+            args.timer = this._timer;
           ]]>
         </body>
       </method>

@@ -25,6 +25,7 @@
  *   Shawn Wilsher <me@shawnwilsher.com>
  *   Srirang G Doddihal <brahmana@doddihal.com>
  *   Edward Lee <edward.lee@engineering.uiuc.edu>
+ *   Ehsan Akhgari <ehsan.akhgari@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -43,39 +44,33 @@
 #ifndef downloadmanager___h___
 #define downloadmanager___h___
 
+#if defined(XP_WIN) && (MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN)
+#define DOWNLOAD_SCANNER
+#endif
+
+#include "nsIDownload.h"
 #include "nsIDownloadManager.h"
 #include "nsIDownloadProgressListener.h"
-#include "nsIDownload.h"
-#include "nsIDOMDocument.h"
-#include "nsIDOMEventListener.h"
-#include "nsIWebProgressListener.h"
-#include "nsIWebProgressListener2.h"
-#include "nsIURI.h"
-#include "nsIWebBrowserPersist.h"
 #include "nsILocalFile.h"
-#include "nsIRequest.h"
+#include "nsIMIMEInfo.h"
+#include "nsINavHistoryService.h"
 #include "nsIObserver.h"
-#include "nsString.h"
+#include "nsIObserverService.h"
 #include "nsIStringBundle.h"
 #include "nsISupportsPrimitives.h"
-#include "nsIMIMEInfo.h"
-#include "mozIStorageConnection.h"
-#include "mozIStorageStatement.h"
-#include "mozStorageHelper.h"
-#include "nsCOMArray.h"
-#include "nsArrayEnumerator.h"
-#include "nsAutoPtr.h"
-#include "nsINavHistoryService.h"
-#include "nsIObserverService.h"
 #include "nsITimer.h"
+
+#include "mozStorageHelper.h"
+#include "nsAutoPtr.h"
+#include "nsCOMArray.h"
 
 typedef PRInt16 DownloadState;
 typedef PRInt16 DownloadType;
 
 class nsDownload;
 
-#if defined(XP_WIN) && !defined(__MINGW32__)
-class nsDownloadScanner;
+#ifdef DOWNLOAD_SCANNER
+#include "nsDownloadScanner.h"
 #endif
 
 class nsDownloadManager : public nsIDownloadManager,
@@ -93,16 +88,29 @@ public:
   static nsDownloadManager *GetSingleton();
 
   virtual ~nsDownloadManager();
-#if defined(XP_WIN) && !defined(__MINGW32__)
-  nsDownloadManager() : mScanner(nsnull) { };
-private:
-  nsDownloadScanner *mScanner;
+  nsDownloadManager() :
+      mDBType(DATABASE_DISK)
+    , mInPrivateBrowsing(PR_FALSE)
+#ifdef DOWNLOAD_SCANNER
+    , mScanner(nsnull)
 #endif
+  {
+  }
 
 protected:
-  nsresult InitDB(PRBool *aDoImport);
+  enum DatabaseType
+  {
+    DATABASE_DISK = 0, // default
+    DATABASE_MEMORY
+  };
+
+  nsresult InitDB();
+  nsresult InitFileDB();
+  nsresult InitMemoryDB();
+  already_AddRefed<mozIStorageConnection> GetFileDBConnection(nsIFile *dbFile) const;
+  already_AddRefed<mozIStorageConnection> GetMemoryDBConnection() const;
+  nsresult SwitchDatabaseTypeTo(enum DatabaseType aType);
   nsresult CreateTable();
-  nsresult ImportDownloadHistory();
 
   /**
    * Fix up the database after a crash such as dealing with previously-active
@@ -138,7 +146,6 @@ protected:
                           const nsAString &aTempPath,
                           PRInt64 aStartTime,
                           PRInt64 aEndTime,
-                          PRInt32 aState,
                           const nsACString &aMimeType,
                           const nsACString &aPreferredApp,
                           nsHandlerInfoAction aPreferredAction);
@@ -242,6 +249,15 @@ protected:
    */
   enum QuitBehavior GetQuitBehavior();
 
+  void OnEnterPrivateBrowsingMode();
+  void OnLeavePrivateBrowsingMode();
+
+  // Virus scanner for windows
+#ifdef DOWNLOAD_SCANNER
+private:
+  nsDownloadScanner* mScanner;
+#endif
+
 private:
   nsCOMArray<nsIDownloadProgressListener> mListeners;
   nsCOMPtr<nsIStringBundle> mBundle;
@@ -251,6 +267,9 @@ private:
   nsCOMPtr<mozIStorageStatement> mUpdateDownloadStatement;
   nsCOMPtr<mozIStorageStatement> mGetIdsForURIStatement;
   nsAutoPtr<mozStorageTransaction> mHistoryTransaction;
+
+  enum DatabaseType mDBType;
+  PRBool mInPrivateBrowsing;
 
   static nsDownloadManager *gDownloadManagerService;
 

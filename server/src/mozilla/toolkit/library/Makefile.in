@@ -168,13 +168,6 @@ GARBAGE += \
 	$(RDF_UTIL_SRC_LCPPSRCS) \
 	$(NULL)
 endif
-else
-ifdef NS_TRACE_MALLOC
-# In libxul builds, tracemalloc is part of libxul instead.
-ifndef MOZ_ENABLE_LIBXUL
-EXTRA_DSO_LIBS += tracemalloc
-endif
-endif
 endif
 
 ifneq (,$(filter OS2 WINCE WINNT,$(OS_ARCH)))
@@ -206,6 +199,7 @@ EXTRA_DSO_LDOPTS += $(NSPR_LIBS)
 ifeq ($(MOZ_WIDGET_TOOLKIT),cocoa)
 CXXFLAGS	+= $(TK_CFLAGS)
 EXTRA_DSO_LDOPTS += \
+	-framework SystemConfiguration \
 	-framework QuickTime \
 	-framework IOKit \
 	-lcrypto \
@@ -213,8 +207,40 @@ EXTRA_DSO_LDOPTS += \
 	$(NULL)
 endif
 
+ifeq ($(OS_ARCH),Darwin)
+ifdef MOZ_SYDNEYAUDIO
+EXTRA_DSO_LDOPTS += \
+	-framework Carbon \
+	-framework CoreAudio \
+	-framework AudioToolbox \
+	-framework AudioUnit \
+	$(NULL)
+endif
+endif
+
+ifdef MOZ_PLATFORM_MAEMO
+EXTRA_DSO_LDOPTS += $(MOZ_PLATFORM_MAEMO_LIBS)
+endif 
+
+ifdef MOZ_ENABLE_LIBCONIC
+EXTRA_DSO_LDOPTS += $(LIBCONIC_LIBS)
+endif
+
+ifdef MOZ_ENABLE_DBUS
+EXTRA_DSO_LDOPTS += $(MOZ_DBUS_GLIB_LIBS)
+endif
+
 ifeq (gtk2,$(MOZ_WIDGET_TOOLKIT))
-EXTRA_DSO_LDOPTS += $(XLDFLAGS) $(XLIBS) $(MOZ_XFT_LIBS) $(MOZ_GTK2_LIBS) $(XT_LIBS) -lgthread-2.0
+EXTRA_DSO_LDOPTS += $(XLDFLAGS) $(XLIBS) $(XEXT_LIBS) $(XCOMPOSITE_LIBS) $(MOZ_PANGO_LIBS) $(MOZ_GTK2_LIBS) $(XT_LIBS) -lgthread-2.0
+EXTRA_DSO_LDOPTS += $(FT2_LIBS)
+endif
+
+ifeq (qt,$(MOZ_WIDGET_TOOLKIT))
+EXTRA_DSO_LDOPTS += $(XLDFLAGS) $(XLIBS) $(XT_LIBS) $(MOZ_QT_LIBS) -lgthread-2.0
+EXTRA_DSO_LDOPTS += $(FT2_LIBS)
+endif
+
+ifdef MOZ_TREE_FREETYPE
 EXTRA_DSO_LDOPTS += $(FT2_LIBS)
 endif
 
@@ -237,12 +263,23 @@ EXTRA_DSO_LDOPTS += $(call EXPAND_LIBNAME,imagehlp)
 endif
 endif # WINNT
 ifeq ($(OS_ARCH),WINCE)
-EXTRA_DSO_LDOPTS += $(call EXPAND_LIBNAME, aygshell cellcore uuid ole32 oleaut32 )
+EXTRA_DSO_LDOPTS += $(call EXPAND_LIBNAME, aygshell uuid ole32 oleaut32 Ws2 ddraw)
+EXTRA_DSO_LDOPTS += $(call EXPAND_LIBNAME, ceosutil libcmt comsuppw)
+ifdef WINCE_WINDOWS_MOBILE
+EXTRA_DSO_LDOPTS += $(call EXPAND_LIBNAME, cellcore)
+endif
+ifdef HAS_OGLES
+EXTRA_DSO_LDOPTS += $(call EXPAND_LIBNAME, libGLESv2 libEGL)
+endif
 endif
 
 
 ifdef MOZ_JPROF
 EXTRA_DSO_LDOPTS += -ljprof
+endif
+
+ifdef MOZ_ENABLE_QT
+EXTRA_DSO_LDOPTS += $(MOZ_QT_LDFLAGS)
 endif
 
 ifdef MOZ_JAVAXPCOM

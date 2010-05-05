@@ -43,7 +43,6 @@ interface nsIDOMWindow;
 interface nsIRequest;
 interface nsIRequestObserver;
 interface nsISimpleEnumerator;
-interface nsITimerCallback;
 interface nsIXMLHttpRequest;
 
 /**
@@ -405,6 +404,29 @@ interface nsIApplicationUpdateService : nsISupports
 };
 
 /**
+ * A temporary interface to allow adding new methods without changing existing
+ * interfaces for Gecko 1.9.2. After the 1.9.2 release this interface will be
+ * removed.
+ */
+[scriptable, uuid(e22e4bf1-b18c-40cd-a2be-2d565723d056)]
+interface nsIApplicationUpdateService2 : nsIApplicationUpdateService
+{
+  /**
+   * Whether or not the Update Service can check for updates. This is a function
+   * of whether or not application update is disabled by the application and the
+   * platform the application is running on.
+   */
+  readonly attribute boolean canCheckForUpdates;
+
+  /**
+   * Whether or not the Update Service can download and install updates.
+   * This is a function of whether or not the current user has access
+   * privileges to the install directory.
+   */
+  readonly attribute boolean canApplyUpdates;
+};
+
+/**
  * An interface describing a global application service that maintains a list
  * of updates previously performed as well as the current active update.
  */
@@ -439,7 +461,7 @@ interface nsIUpdateManager : nsISupports
  * An interface describing an object that can show various kinds of Update
  * notification UI to the user.
  */
-[scriptable, uuid(6f145728-abc0-11dc-8314-0800200c9a66)]
+[scriptable, uuid(599fd3c6-ec68-4499-ada5-2997739c97a6)]
 interface nsIUpdatePrompt : nsISupports
 {
   /**
@@ -458,8 +480,7 @@ interface nsIUpdatePrompt : nsISupports
 
   /**
    * Show a message advising that an update has now been downloaded and that
-   * the user should restart their software should be restarted so that the
-   * update can be installed.
+   * a restart is necessary to complete the update.
    * @param   update
    *          The update that was downloaded
    * @param   background
@@ -469,11 +490,9 @@ interface nsIUpdatePrompt : nsISupports
                             [optional] in boolean background);
 
   /**
-   * Shows a message detailing the update which was installed.
-   * @param   update
-   *          The nsIUpdate object which was just installed
+   * Shows a message that an update was installed successfully.
    */
-  void showUpdateInstalled(in nsIUpdate update);
+  void showUpdateInstalled();
 
   /**
    * Shows an error message UI telling the user about some kind of update
@@ -489,30 +508,4 @@ interface nsIUpdatePrompt : nsISupports
    *          A parent window to anchor this window to. Can be null.
    */
   void showUpdateHistory(in nsIDOMWindow parent);
-};
-
-/**
- * An interface describing a global application service that allows long
- * duration (e.g. 1-7 or more days, weeks or months) timers to be registered
- * and then fired.
- */
-[scriptable, uuid(0765c92c-6145-4253-9db4-594d8023087e)]
-interface nsIUpdateTimerManager : nsISupports
-{
-  /**
-   * Register an interval with the timer manager. The timer manager
-   * periodically checks to see if the interval has expired and if it has
-   * calls the specified callback. This is persistent across application
-   * restarts and can handle intervals of long durations.
-   * @param   id
-   *          An id that identifies the interval, used for persistence
-   * @param   callback
-   *          A nsITimerCallback object that is notified when the interval
-   *          expires
-   * @param   interval
-   *          The length of time, in seconds, of the interval
-   */
-  void registerTimer(in AString id,
-                     in nsITimerCallback callback,
-                     in unsigned long interval);
 };

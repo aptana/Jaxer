@@ -43,27 +43,34 @@ const PREF_APP_DISTRIBUTION           = "distribution.id";
 const PREF_APP_DISTRIBUTION_VERSION   = "distribution.version";
 const PREF_APP_UPDATE_CHANNEL         = "app.update.channel";
 const PREF_GENERAL_USERAGENT_LOCALE   = "general.useragent.locale";
+const CATEGORY_UPDATE_TIMER           = "update-timer";
 
 // Get the HTTP server.
-do_import_script("netwerk/test/httpserver/httpd.js");
+do_load_httpd_js();
 var testserver;
 var gOSVersion;
+var gBlocklist;
 
 // This is a replacement for the timer service so we can trigger timers
 var timerService = {
 
-  timers: {},
-
-  registerTimer: function(id, callback, interval) {
-    this.timers[id] = callback;
-  },
-
   hasTimer: function(id) {
-    return id in this.timers;
+    var catMan = Components.classes["@mozilla.org/categorymanager;1"]
+                           .getService(Components.interfaces.nsICategoryManager);
+    var entries = catMan.enumerateCategory(CATEGORY_UPDATE_TIMER);
+    while (entries.hasMoreElements()) {
+      var entry = entries.getNext().QueryInterface(Components.interfaces.nsISupportsCString).data;
+      var value = catMan.getCategoryEntry(CATEGORY_UPDATE_TIMER, entry);
+      var timerID = value.split(",")[2];
+      if (id == timerID) {
+        return true;
+      }
+    }
+    return false;
   },
 
   fireTimer: function(id) {
-    this.timers[id].notify(null);
+    gBlocklist.QueryInterface(Components.interfaces.nsITimerCallback).notify(null);
   },
 
   QueryInterface: function(iid) {
@@ -91,11 +98,22 @@ function failHandler(metadata, response) {
 }
 
 function pathHandler(metadata, response) {
+  var ABI = "noarch-spidermonkey";
+  // the blacklist service special-cases ABI for Universal binaries,
+  // so do the same here.
+  if ("@mozilla.org/xpcom/mac-utils;1" in Components.classes) {
+    var macutils = Components.classes["@mozilla.org/xpcom/mac-utils;1"]
+                             .getService(Components.interfaces.nsIMacUtils);
+    if (macutils.isUniversalBinary)
+      ABI = "Universal-gcc3";
+  }
   do_check_eq(metadata.queryString,
               "xpcshell@tests.mozilla.org&1&XPCShell&1&2007010101&" +
-              "XPCShell_noarch-spidermonkey&locale&updatechannel&" + 
+              "XPCShell_" + ABI + "&locale&updatechannel&" +
               gOSVersion + "&1.9&distribution&distribution-version");
-  do_test_finished();
+  gBlocklist.observe(null, "quit-application", "");
+  gBlocklist.observe(null, "xpcom-shutdown", "");
+  testserver.stop(do_test_finished);
 }
 
 function run_test() {
@@ -116,7 +134,6 @@ function run_test() {
   catch (e) {
   }
 
-
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "1", "1.9");
 
   testserver = new nsHttpServer();
@@ -125,11 +142,10 @@ function run_test() {
   testserver.start(4444);
 
   // Initialise the blocklist service
-  var blocklist = Components.classes["@mozilla.org/extensions/blocklist;1"]
-                            .getService(Components.interfaces.nsIBlocklistService)
-                            .QueryInterface(Components.interfaces.nsIObserver);
-  blocklist.observe(null, "app-startup", "");
-  blocklist.observe(null, "profile-after-change", "");
+  gBlocklist = Components.classes["@mozilla.org/extensions/blocklist;1"]
+                         .getService(Components.interfaces.nsIBlocklistService)
+                         .QueryInterface(Components.interfaces.nsIObserver);
+  gBlocklist.observe(null, "profile-after-change", "");
 
   do_check_true(timerService.hasTimer(BLOCKLIST_TIMER));
 
@@ -149,9 +165,9 @@ function run_test() {
   defaults.setCharPref(PREF_GENERAL_USERAGENT_LOCALE, "locale");
 
   // This should correctly escape everything
-  gPrefs.setCharPref(PREF_BLOCKLIST_URL, "http://localhost:4444/2?" + 
+  gPrefs.setCharPref(PREF_BLOCKLIST_URL, "http://localhost:4444/2?" +
                      "%APP_ID%&%APP_VERSION%&%PRODUCT%&%VERSION%&%BUILD_ID%&" +
-                     "%BUILD_TARGET%&%LOCALE%&%CHANNEL%&" + 
+                     "%BUILD_TARGET%&%LOCALE%&%CHANNEL%&" +
                      "%OS_VERSION%&%PLATFORM_VERSION%&%DISTRIBUTION%&%DISTRIBUTION_VERSION%");
   gPrefs.setBoolPref(PREF_BLOCKLIST_ENABLED, true);
   timerService.fireTimer(BLOCKLIST_TIMER);

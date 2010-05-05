@@ -66,13 +66,10 @@
 #endif
 
 #ifndef JAXER
-#ifndef MOZ_SUITE
-// XXX Suite isn't ready to include this just yet
 #ifdef MOZ_RDF
 #include "nsDownloadManager.h"
 #include "nsDownloadProxy.h"
 #endif
-#endif // MOZ_SUITE
 
 #include "nsTypeAheadFind.h"
 
@@ -104,14 +101,11 @@ NS_GENERIC_FACTORY_CONSTRUCTOR(nsParentalControlsServiceWin)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsAlertsService)
 #endif
 
-#ifndef MOZ_SUITE
-// XXX Suite isn't ready to include this just yet
 #ifdef MOZ_RDF
 NS_GENERIC_FACTORY_SINGLETON_CONSTRUCTOR(nsDownloadManager,
                                          nsDownloadManager::GetSingleton) 
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsDownloadProxy)
 #endif
-#endif // MOZ_SUITE
 
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsTypeAheadFind)
 
@@ -171,8 +165,6 @@ static const nsModuleComponentInfo components[] =
     NS_PARENTALCONTROLSSERVICE_CONTRACTID,
     nsParentalControlsServiceWinConstructor },
 #endif
-#ifndef MOZ_SUITE
-// XXX Suite isn't ready to include this just yet
 #ifdef MOZ_RDF
   { "Download Manager",
     NS_DOWNLOADMANAGER_CID,
@@ -183,7 +175,6 @@ static const nsModuleComponentInfo components[] =
     NS_TRANSFER_CONTRACTID,
     nsDownloadProxyConstructor },
 #endif
-#endif // MOZ_SUITE
   { "TypeAheadFind Component",
     NS_TYPEAHEADFIND_CID,
     NS_TYPEAHEADFIND_CONTRACTID,

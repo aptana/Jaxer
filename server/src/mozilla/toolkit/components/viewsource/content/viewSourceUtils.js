@@ -20,6 +20,7 @@
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s):
+#   Simon Bünzli <zeniko@gmail.com>
 #
 # Alternatively, the contents of this file may be used under the terms of
 # either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -39,8 +40,9 @@
  * To keep the global namespace safe, don't define global variables and 
  * functions in this file.
  *
- * This file requires contentAreaUtils.js
-*/
+ * This file silently depends on contentAreaUtils.js for
+ * getDefaultFileName, getNormalizedLeafName and getDefaultExtension
+ */
 
 var gViewSourceUtils = {
 
@@ -48,8 +50,19 @@ var gViewSourceUtils = {
   mnsIWebProgress: Components.interfaces.nsIWebProgress,
   mnsIWebPageDescriptor: Components.interfaces.nsIWebPageDescriptor,
 
+  // Opens view source
+  viewSource: function(aURL, aPageDescriptor, aDocument, aLineNumber)
+  {
+    var prefs = Components.classes["@mozilla.org/preferences-service;1"]
+                          .getService(Components.interfaces.nsIPrefBranch);
+    if (prefs.getBoolPref("view_source.editor.external"))
+      this.openInExternalEditor(aURL, aPageDescriptor, aDocument, aLineNumber);
+    else
+      this.openInInternalViewer(aURL, aPageDescriptor, aDocument, aLineNumber);
+  },
+
   // Opens the interval view source viewer
-  openInInternalViewer: function(aURL, aPageDescriptor, aDocument)
+  openInInternalViewer: function(aURL, aPageDescriptor, aDocument, aLineNumber)
   {
     // try to open a view-source window while inheriting the charset (if any)
     var charset = null;
@@ -68,14 +81,15 @@ var gViewSourceUtils = {
     openDialog("chrome://global/content/viewSource.xul",
                "_blank",
                "all,dialog=no",
-               aURL, charset, aPageDescriptor, 0, isForcedCharset);
+               aURL, charset, aPageDescriptor, aLineNumber, isForcedCharset);
   },
 
   // aCallBack is a function accepting two arguments - result (true=success) and a data object
   // It defaults to openInInternalViewer if undefined.
-  openInExternalEditor: function(aURL, aPageDescriptor, aDocument, aCallBack)
+  openInExternalEditor: function(aURL, aPageDescriptor, aDocument, aLineNumber, aCallBack)
   {
-    var data = {url: aURL, pageDescriptor: aPageDescriptor, doc: aDocument};
+    var data = {url: aURL, pageDescriptor: aPageDescriptor, doc: aDocument,
+                lineNumber: aLineNumber};
 
     try {
       var editor = this.getExternalViewSourceEditor();    
@@ -115,10 +129,19 @@ var gViewSourceUtils = {
           webBrowserPersist.persistFlags = this.mnsIWebBrowserPersist.PERSIST_FLAGS_REPLACE_EXISTING_FILES;
           webBrowserPersist.progressListener = this.viewSourceProgressListener;
           webBrowserPersist.saveURI(uri, null, null, null, null, file);
+
+          // register the file to be deleted on app exit
+          Components.classes["@mozilla.org/uriloader/external-helper-app-service;1"]
+                    .getService(Components.interfaces.nsPIExternalAppLauncher)
+                    .deleteTemporaryFileOnExit(file);
         } else {
-          // we'll use nsIWebPageDescriptor to get the source because it may not have to refetch
-          // the file from the server
-          var webShell = Components.classes["@mozilla.org/webshell;1"].createInstance();
+          // we'll use nsIWebPageDescriptor to get the source because it may
+          // not have to refetch the file from the server
+          // XXXbz this is so broken...  This code doesn't set up this docshell
+          // at all correctly; if somehow the view-source stuff managed to
+          // execute script we'd be in big trouble here, I suspect.
+          var webShell = Components.classes["@mozilla.org/docshell;1"].createInstance();
+          webShell.QueryInterface(Components.interfaces.nsIBaseWindow).create();
           this.viewSourceProgressListener.webShell = webShell;
           var progress = webShell.QueryInterface(this.mnsIWebProgress);
           progress.addProgressListener(this.viewSourceProgressListener,
@@ -139,7 +162,7 @@ var gViewSourceUtils = {
   internalViewerFallback: function(result, data)
   {
     if (!result) {
-      this.openInInternalViewer(data.url, data.pageDescriptor, data.doc);
+      this.openInInternalViewer(data.url, data.pageDescriptor, data.doc, data.lineNumber);
     }
   },
 
@@ -157,28 +180,26 @@ var gViewSourceUtils = {
   // Returns nsIProcess of the external view source editor or null
   getExternalViewSourceEditor: function()
   {
-    var editor = null;
-    var viewSourceAppPath = null;
     try {
-      var prefs = Components.classes["@mozilla.org/preferences-service;1"]
-                            .getService(Components.interfaces.nsIPrefBranch);
-      var prefPath = prefs.getCharPref("view_source.editor.path");
-      if (prefPath.length > 0) {
-        viewSourceAppPath = Components.classes["@mozilla.org/file/local;1"]
-                                      .createInstance(Components.interfaces.nsILocalFile);
-        viewSourceAppPath.initWithPath(prefPath);
-        // it's gotta be executable
-        if (viewSourceAppPath.exists() && viewSourceAppPath.isExecutable()) {
-          editor = Components.classes['@mozilla.org/process/util;1']
+      let prefPath =
+          Components.classes["@mozilla.org/preferences-service;1"]
+                    .getService(Components.interfaces.nsIPrefBranch)
+                    .getCharPref("view_source.editor.path");
+      let viewSourceAppPath =
+              Components.classes["@mozilla.org/file/local;1"]
+                        .createInstance(Components.interfaces.nsILocalFile);
+      viewSourceAppPath.initWithPath(prefPath);
+      let editor = Components.classes['@mozilla.org/process/util;1']
                              .createInstance(Components.interfaces.nsIProcess);
-          editor.init(viewSourceAppPath);
-        }
-      }
+      editor.init(viewSourceAppPath);
+
+      return editor;
     }
     catch (ex) {
       Components.utils.reportError(ex);
     }
-    return editor;
+
+    return null;
   },
 
   viewSourceProgressListener: {
@@ -194,11 +215,12 @@ var gViewSourceUtils = {
     },
 
     destroy: function() {
-        this.webShell = null;
-        this.editor = null;
-        this.callBack = null;
-        this.data = null;
-        this.file = null;
+      this.webShell.QueryInterface(Components.interfaces.nsIBaseWindow).destroy();
+      this.webShell = null;
+      this.editor = null;
+      this.callBack = null;
+      this.data = null;
+      this.file = null;
     },
 
     onStateChange: function(aProgress, aRequest, aFlag, aStatus) {
@@ -228,9 +250,29 @@ var gViewSourceUtils = {
             // clean up
             coStream.close();
             foStream.close();
+
+            // register the file to be deleted on app exit
+            Components.classes["@mozilla.org/uriloader/external-helper-app-service;1"]
+                      .getService(Components.interfaces.nsPIExternalAppLauncher)
+                      .deleteTemporaryFileOnExit(this.file);
           }
-          // fire up the editor
-          this.editor.run(false, [this.file.path], 1);
+
+          // Determine the command line arguments to pass to the editor.
+          // We currently support a %LINE% placeholder which is set to the passed
+          // line number (or to 0 if there's none)
+          var editorArgs = [];
+          var prefs = Components.classes["@mozilla.org/preferences-service;1"]
+                                .getService(Components.interfaces.nsIPrefBranch);
+          var args = prefs.getCharPref("view_source.editor.args");
+          if (args) {
+            args = args.replace("%LINE%", this.data.lineNumber || "0");
+            // add the arguments to the array (keeping quoted strings intact)
+            const argumentRE = /"([^"]+)"|(\S+)/g;
+            while (argumentRE.test(args))
+              editorArgs.push(RegExp.$1 || RegExp.$2);
+          }
+          editorArgs.push(this.file.path);
+          this.editor.run(false, editorArgs, editorArgs.length);
 
           gViewSourceUtils.handleCallBack(this.callBack, true, this.data);
         } catch (ex) {
@@ -259,12 +301,20 @@ var gViewSourceUtils = {
 
   // returns an nsIFile for the passed document in the system temp directory
   getTemporaryFile: function(aURI, aDocument, aContentType) {
+    // include contentAreaUtils.js in our own context when we first need it
+    if (!this._caUtils) {
+      var scriptLoader = Components.classes["@mozilla.org/moz/jssubscript-loader;1"]
+                                   .getService(Components.interfaces.mozIJSSubScriptLoader);
+      this._caUtils = {};
+      scriptLoader.loadSubScript("chrome://global/content/contentAreaUtils.js", this._caUtils);
+    }
+
     var fileLocator = Components.classes["@mozilla.org/file/directory_service;1"]
                                 .getService(Components.interfaces.nsIProperties);
     var tempFile = fileLocator.get("TmpD", Components.interfaces.nsIFile);
-    var fileName = getDefaultFileName(null, aURI, aDocument, aContentType);
-    var extension = getDefaultExtension(fileName, aURI, aContentType);
-    var leafName = getNormalizedLeafName(fileName, extension);
+    var fileName = this._caUtils.getDefaultFileName(null, aURI, aDocument, aContentType);
+    var extension = this._caUtils.getDefaultExtension(fileName, aURI, aContentType);
+    var leafName = this._caUtils.getNormalizedLeafName(fileName, extension);
     tempFile.append(leafName);
     return tempFile;
   }

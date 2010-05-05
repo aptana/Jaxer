@@ -75,8 +75,10 @@ function prefillAlertInfo()
       gAlertCookie = window.arguments[4];
     case 4:
       gAlertTextClickable = window.arguments[3];
-      if (gAlertTextClickable)
+      if (gAlertTextClickable) {
+        document.getElementById('alertNotification').setAttribute('clickable', true);
         document.getElementById('alertTextLabel').setAttribute('clickable', true);
+      }
     case 3:
       document.getElementById('alertTextLabel').setAttribute('value', window.arguments[2]);
     case 2:
@@ -140,6 +142,7 @@ function onAlertLoad()
   if (window.innerWidth == contentDim.width + 1)
     --window.innerWidth;
 
+#ifndef WINCE
   // Start with a 1px width/height, because 0 causes trouble with gtk1/2
   gCurrentSize = 1;
 
@@ -154,6 +157,7 @@ function onAlertLoad()
     gFinalSize = window.outerHeight;
     window.outerHeight = gCurrentSize;
   }
+#endif
 
   // Determine position
   var x = gOrigin & NS_ALERT_LEFT ? screen.availLeft :
@@ -169,7 +173,11 @@ function onAlertLoad()
 
   window.moveTo(x, y);
 
+#ifndef WINCE
   setTimeout(animateAlert, gSlideTime);
+#else
+  setTimeout(closeAlert, gOpenTime);
+#endif
 }
 
 function animate(step)
@@ -198,26 +206,29 @@ function animateAlert()
     setTimeout(animateAlert, gSlideTime);
   }
   else
-    setTimeout(closeAlert, gOpenTime);  
+    setTimeout(animateCloseAlert, gOpenTime);  
 }
 
-function closeAlert()
+function animateCloseAlert()
 {
   if (gCurrentSize > 1)
   {
     animate(-gSlideIncrement);
-    setTimeout(closeAlert, gSlideTime);
+    setTimeout(animateCloseAlert, gSlideTime);
   }
   else
-  {
-    if (gAlertListener)
-      gAlertListener.observe(null, "alertfinished", gAlertCookie); 
-    window.close(); 
-  }
+    closeAlert();
+}
+
+function closeAlert() {
+  if (gAlertListener)
+    gAlertListener.observe(null, "alertfinished", gAlertCookie); 
+  window.close(); 
 }
 
 function onAlertClick()
 {
   if (gAlertListener && gAlertTextClickable)
     gAlertListener.observe(null, "alertclickcallback", gAlertCookie);
+  closeAlert();
 }

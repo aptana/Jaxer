@@ -2,7 +2,7 @@
 
 .findbar-closebutton {
   border: 1px solid transparent;
-  padding: 3px 2px 4px 2px !important;
+  padding: 2px !important;
   list-style-image: url("chrome://global/skin/icons/closeSidebar.png");
   -moz-appearance: none;
   -moz-image-region: rect(0px, 14px, 14px, 0px);
@@ -23,11 +23,9 @@
 }
 
 findbar {
-  -moz-appearance: none !important;
   border-top: 2px solid;
-  -moz-border-top-colors: ThreeDShadow ThreeDHighlight !important;
-  border-bottom: 1px solid;
-  -moz-border-bottom-colors: transparent;
+  -moz-border-top-colors: ThreeDShadow ThreeDHighlight;
+  padding-bottom: 1px;
   min-width: 1px;
 }
 
@@ -95,37 +93,25 @@ findbar {
 }
 
 .findbar-find-status {
-  margin-top: 0px;
-  margin-bottom: 0px;
-  -moz-margin-start: 3px;
-  -moz-margin-end: 0px;
-  padding: 2px;
+  margin: 0 !important;
+  -moz-margin-start: 3px !important;
+  padding: 2px !important;
 }
 
 .find-status-icon[status="notfound"] {
   list-style-image: url("chrome://global/skin/icons/notfound.png");
 }
 
-.findbar-textbox {
-  -moz-binding: url("chrome://global/content/bindings/findbar.xml#findbar-textbox");
-  -moz-appearance: none;
-  border: none;
-  margin: 0px;
-}
-
 .findbar-textbox[status="notfound"] {
-  background-color: #FF6666;
-  color: #FFFFFF;
+  -moz-box-shadow: 0 0 0 1em #f66 inset;
+  color: white;
 }
 
-findbar[flash="true"] > .findbar-container > .find-field-container > .findbar-textbox {
-  background-color: yellow;
+.findbar-textbox[flash="true"] {
+  -moz-box-shadow: 0 0 0 1em yellow inset;
+  color: black;
 }
 
 .find-status-icon[status="wrapped"] {
   list-style-image: url("chrome://global/skin/icons/wrap.png");
-}
-
-.find-field-container {
-  -moz-appearance: textfield;
 }

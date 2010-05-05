@@ -54,7 +54,7 @@ $(error toolkit-tiers.mk is not compatible with --enable-libxul-sdk=)
 endif
 
 include $(topsrcdir)/config/nspr/build.mk
-include $(topsrcdir)/js/src/build.mk
+include $(topsrcdir)/config/js/build.mk
 include $(topsrcdir)/xpcom/build.mk
 include $(topsrcdir)/netwerk/build.mk
 
@@ -82,35 +82,41 @@ ifndef MOZ_NATIVE_BZ2
 tier_external_dirs += modules/libbz2
 endif
 tier_external_dirs += modules/libmar
+tier_external_dirs += other-licenses/bsdiff
 endif
 
-ifndef MOZ_NATIVE_LCMS
-tier_external_dirs	+= modules/lcms
+tier_external_dirs	+= gfx/qcms
+
+ifeq ($(OS_ARCH),WINCE)
+tier_external_dirs += modules/lib7z
 endif
 
 #
 # tier "gecko" - core components
 #
 
-ifdef NS_TRACE_MALLOC
-tier_gecko_dirs += tools/trace-malloc/lib
-endif
-
 tier_gecko_dirs += \
 		js/src/xpconnect \
+		js/ctypes \
 		intl/chardet \
 		$(NULL)
+
+ifdef BUILD_CTYPES
+ifndef _MSC_VER
+tier_gecko_staticdirs += \
+		js/ctypes/libffi \
+		$(NULL)
+endif
+endif
 
 ifdef JAXER
 tier_gecko_dirs += aptana
 endif
 
 ifdef MOZ_ENABLE_GTK2
+ifdef MOZ_X11
 tier_gecko_dirs     += widget/src/gtkxtbin
 endif
-
-ifdef MOZ_IPCD
-tier_gecko_dirs += ipc/ipcd
 endif
 
 tier_gecko_dirs	+= \
@@ -138,16 +144,30 @@ ifdef MOZ_JSDEBUGGER
 tier_gecko_dirs += js/jsd
 endif
 
+ifdef MOZ_OGG
+tier_gecko_dirs += \
+		media/libfishsound \
+		media/libogg \
+		media/liboggplay \
+		media/liboggz \
+		media/libtheora \
+		media/libvorbis \
+		$(NULL)
+endif
+
+ifdef MOZ_SYDNEYAUDIO
+tier_gecko_dirs += \
+		media/libsydneyaudio \
+		$(NULL)
+endif
+
 tier_gecko_dirs	+= \
 		uriloader \
 		modules/libimg \
 		caps \
-		parser/expat \
-		parser/xml \
-		parser/htmlparser \
+		parser \
 		gfx \
 		modules/libpr0n \
-		sun-java \
 		modules/plugin \
 		dom \
 		view \
@@ -181,6 +201,7 @@ endif
 ifdef MOZ_OJI
 tier_gecko_dirs	+= \
 		js/src/liveconnect \
+		sun-java \
 		modules/oji \
 		$(NULL)
 endif
@@ -205,25 +226,11 @@ tier_toolkit_dirs += toolkit/crashreporter
 endif
 else
 
-ifdef MOZ_XUL_APP
-tier_toolkit_dirs += chrome
-else
-ifdef MOZ_XUL
-tier_toolkit_dirs += rdf/chrome
-else
-tier_toolkit_dirs += embedding/minimo/chromelite
-endif
-endif
-
-tier_toolkit_dirs += profile
+tier_toolkit_dirs += chrome profile
 
 # This must preceed xpfe
 ifdef MOZ_JPROF
 tier_toolkit_dirs        += tools/jprof
-endif
-
-ifneq (,$(filter mac cocoa,$(MOZ_WIDGET_TOOLKIT)))
-tier_toolkit_dirs       += xpfe/bootstrap/appleevents
 endif
 
 tier_toolkit_dirs	+= \
@@ -231,12 +238,6 @@ tier_toolkit_dirs	+= \
 	toolkit/components \
 	$(NULL)
 
-endif
-
-ifndef MOZ_XUL_APP
-ifndef JAXER
-tier_toolkit_dirs += themes
-endif
 endif
 
 ifdef MOZ_ENABLE_XREMOTE
@@ -247,12 +248,12 @@ ifdef MOZ_SPELLCHECK
 tier_toolkit_dirs	+= extensions/spellcheck
 endif
 
-ifdef MOZ_XUL_APP
-tier_toolkit_dirs	+= toolkit
-else
 ifdef JAXER
 tier_toolkit_dirs	+= toolkit/xre
-endif
+else
+
+tier_toolkit_dirs	+= toolkit
+
 endif
 
 ifdef MOZ_XPINSTALL
@@ -275,17 +276,13 @@ tier_toolkit_dirs += extensions/java/xpcom/src
 endif
 
 ifndef BUILD_STATIC_LIBS
-ifdef MOZ_XUL_APP
 ifneq (,$(MOZ_ENABLE_GTK2))
 tier_toolkit_dirs += embedding/browser/gtk
 endif
 endif
-endif
 
-ifdef MOZ_XUL_APP
 ifndef BUILD_STATIC_LIBS
 tier_toolkit_dirs += toolkit/library
-endif
 endif
 
 ifdef MOZ_ENABLE_LIBXUL
@@ -296,17 +293,15 @@ ifdef NS_TRACE_MALLOC
 tier_toolkit_dirs += tools/trace-malloc
 endif
 
-ifdef MOZ_LDAP_XPCOM
-tier_toolkit_staticdirs += directory/c-sdk
-tier_toolkit_dirs	+= directory/xpcom
-endif
-
 ifdef MOZ_ENABLE_GNOME_COMPONENT
 tier_toolkit_dirs    += toolkit/system/gnome
 endif
 
+ifndef MOZ_ENABLE_LIBCONIC
+# if libconic is present, it will do its own network monitoring
 ifdef MOZ_ENABLE_DBUS
 tier_toolkit_dirs    += toolkit/system/dbus
+endif
 endif
 
 ifdef MOZ_LEAKY
@@ -317,6 +312,10 @@ ifdef MOZ_MAPINFO
 tier_toolkit_dirs	+= tools/codesighs
 endif
 
-ifdef MOZ_MOCHITEST
+ifdef ENABLE_TESTS
 tier_toolkit_dirs	+= testing/mochitest
+endif
+
+ifdef MOZ_TREE_FREETYPE
+tier_external_dirs	+= modules/freetype2
 endif

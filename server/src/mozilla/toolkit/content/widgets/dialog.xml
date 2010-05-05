@@ -4,14 +4,11 @@
           xmlns="http://www.mozilla.org/xbl"
           xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
           xmlns:xbl="http://www.mozilla.org/xbl">
-
-  <binding id="dialog-base">
+  
+  <binding id="dialog" extends="chrome://global/content/bindings/general.xml#root-element">
     <resources>
       <stylesheet src="chrome://global/skin/dialog.css"/>
     </resources>
-  </binding>
-  
-  <binding id="dialog" extends="chrome://global/content/bindings/dialog.xml#dialog-base">
     <content>
       <xul:vbox class="box-inherit dialog-content-box" flex="1">
         <children/>
@@ -158,30 +155,40 @@
         <body>
         <![CDATA[
           function focusInit() {
+            const dialog = document.documentElement;
+            const defaultButton = dialog.getButton(dialog.defaultButton);
             // give focus to the first focusable element in the dialog
             if (!document.commandDispatcher.focusedElement) {
-              document.commandDispatcher.advanceFocusIntoSubtree(document.documentElement);
+              document.commandDispatcher.advanceFocusIntoSubtree(dialog);
+
               var focusedElt = document.commandDispatcher.focusedElement;
-              if (focusedElt) {
-                if (focusedElt.localName == 'tab') {
-                  // Move focus into the tab
-                  document.commandDispatcher.advanceFocusIntoSubtree(focusedElt);
-                  if (document.commandDispatcher.focusedElement.hasAttribute("dlgtype")) {
-                    // We don't want to focus on anonymous OK, Cancel, etc. buttons,
-                    // so return focus to the tab itself
-                    focusedElt.focus();
-                  }
-                }
-#ifndef XP_MACOSX
-                else {
-                  const dialog = document.documentElement;
-                  const defaultButton = dialog.getButton(dialog.defaultButton);
-                  if (focusedElt.hasAttribute("dlgtype") && focusedElt != defaultButton)
-                    defaultButton.focus();
-                }
-#endif
+              var initialFocusedElt = focusedElt;
+              while (focusedElt.localName == "tab" ||
+                     focusedElt.getAttribute("noinitialfocus") == "true") {
+                document.commandDispatcher.advanceFocusIntoSubtree(focusedElt);
+                focusedElt = document.commandDispatcher.focusedElement;
+                if (focusedElt == initialFocusedElt)
+                  break;
               }
+
+              if (initialFocusedElt.localName == "tab") {
+                if (focusedElt.hasAttribute("dlgtype")) {
+                  // We don't want to focus on anonymous OK, Cancel, etc. buttons,
+                  // so return focus to the tab itself
+                  initialFocusedElt.focus();
+                }
+              }
+#ifndef XP_MACOSX
+              else if (focusedElt.hasAttribute("dlgtype") && focusedElt != defaultButton) {
+                defaultButton.focus();
+              }
+#endif
             }
+
+            try {
+              if (defaultButton)
+                window.notifyDefaultButtonLoaded(defaultButton);
+            } catch (e) { }
           }
 
           // Give focus after onload completes, see bug 103197.
@@ -196,12 +203,9 @@
           if (!this._mStrBundle) {
             // need to create string bundle manually instead of using <xul:stringbundle/>
             // see bug 63370 for details
-            var localeService = Components.classes["@mozilla.org/intl/nslocaleservice;1"]
-                                  .getService(Components.interfaces.nsILocaleService);
-            var stringBundleService = Components.classes["@mozilla.org/intl/stringbundle;1"]
-                                  .getService(Components.interfaces.nsIStringBundleService);
-            var bundleURL = "chrome://global/locale/dialog.properties";
-            this._mStrBundle = stringBundleService.createBundle(bundleURL, localeService.getApplicationLocale());
+            this._mStrBundle = Components.classes["@mozilla.org/intl/stringbundle;1"]
+                                         .getService(Components.interfaces.nsIStringBundleService)
+                                         .createBundle("chrome://global/locale/dialog.properties");
           }
           return this._mStrBundle;
         ]]></getter>
@@ -419,7 +423,10 @@
 
   </binding>
 
-  <binding id="dialogheader" extends="chrome://global/content/bindings/dialog.xml#dialog-base">
+  <binding id="dialogheader">
+    <resources>
+      <stylesheet src="chrome://global/skin/dialog.css"/>
+    </resources>
     <content>
       <xul:label class="dialogheader-title" xbl:inherits="value=title,crop" crop="right" flex="1"/>
       <xul:label class="dialogheader-description" xbl:inherits="value=description"/>

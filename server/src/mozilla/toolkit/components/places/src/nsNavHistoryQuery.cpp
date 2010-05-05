@@ -22,6 +22,7 @@
  * Contributor(s):
  *   Brett Wilson <brettw@gmail.com> (original author)
  *   Shawn Wilsher <me@shawnwilsher.com>
+ *   Drew Willcoxon <adw@mozilla.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -168,9 +169,12 @@ static void SetOptionsKeyUint32(const nsCString& aValue,
 #define QUERYKEY_EXPAND_QUERIES "expandQueries"
 #define QUERYKEY_FORCE_ORIGINAL_TITLE "originalTitle"
 #define QUERYKEY_INCLUDE_HIDDEN "includeHidden"
+#define QUERYKEY_REDIRECTS_MODE "redirectsMode"
 #define QUERYKEY_SHOW_SESSIONS "showSessions"
 #define QUERYKEY_MAX_RESULTS "maxResults"
 #define QUERYKEY_QUERY_TYPE "queryType"
+#define QUERYKEY_TAG "tag"
+#define QUERYKEY_NOTTAGS "!tags"
 
 inline void AppendAmpersandIfNonempty(nsACString& aString)
 {
@@ -292,6 +296,10 @@ nsNavHistory::QueryStringToQueries(const nsACString& aQueryString,
                                    PRUint32* aResultCount,
                                    nsINavHistoryQueryOptions** aOptions)
 {
+  NS_ENSURE_ARG_POINTER(aQueries);
+  NS_ENSURE_ARG_POINTER(aResultCount);
+  NS_ENSURE_ARG_POINTER(aOptions);
+
   *aQueries = nsnull;
   *aResultCount = 0;
   nsCOMPtr<nsNavHistoryQueryOptions> options;
@@ -338,15 +346,12 @@ nsNavHistory::QueryStringToQueryArray(const nsACString& aQueryString,
   rv = TokenizeQueryString(aQueryString, &tokens);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  if (tokens.Length() > 0) {
-    rv = TokensToQueries(tokens, aQueries, options);
-    if (NS_FAILED(rv)) {
-      NS_WARNING("Unable to parse the query string: ");
-      NS_WARNING(PromiseFlatCString(aQueryString).get());
-    }
-    NS_ENSURE_SUCCESS(rv, rv);
+  rv = TokensToQueries(tokens, aQueries, options);
+  if (NS_FAILED(rv)) {
+    NS_WARNING("Unable to parse the query string: ");
+    NS_WARNING(PromiseFlatCString(aQueryString).get());
+    return rv;
   }
-  // when there are no tokens, leave the query array empty
 
   NS_ADDREF(*aOptions = options);
   return NS_OK;
@@ -361,12 +366,15 @@ nsNavHistory::QueriesToQueryString(nsINavHistoryQuery **aQueries,
                                    nsINavHistoryQueryOptions* aOptions,
                                    nsACString& aQueryString)
 {
+  NS_ENSURE_ARG(aQueries);
+  NS_ENSURE_ARG(aOptions);
+
   nsCOMPtr<nsNavHistoryQueryOptions> options = do_QueryInterface(aOptions);
   NS_ENSURE_TRUE(options, NS_ERROR_INVALID_ARG);
 
   nsCAutoString queryString;
   for (PRUint32 queryIndex = 0; queryIndex < aQueryCount;  queryIndex ++) {
-    nsINavHistoryQuery* query = aQueries[queryIndex];
+    nsCOMPtr<nsNavHistoryQuery> query = do_QueryInterface(aQueries[queryIndex]);
     if (queryIndex > 0) {
       AppendAmpersandIfNonempty(queryString);
       queryString += NS_LITERAL_CSTRING(QUERYKEY_SEPARATOR);
@@ -500,6 +508,22 @@ nsNavHistory::QueriesToQueryString(nsINavHistoryQuery **aQueries,
       PlacesFolderConversion::AppendFolder(queryString, folders[i]);
     }
     nsMemory::Free(folders);
+
+    // tags
+    const nsTArray<nsString> &tags = query->Tags();
+    for (PRUint32 i = 0; i < tags.Length(); ++i) {
+      nsCAutoString escapedTag;
+      if (!NS_Escape(NS_ConvertUTF16toUTF8(tags[i]), escapedTag, url_XAlphas))
+        return NS_ERROR_OUT_OF_MEMORY;
+
+      AppendAmpersandIfNonempty(queryString);
+      queryString += NS_LITERAL_CSTRING(QUERYKEY_TAG "=");
+      queryString += escapedTag;
+    }
+    AppendBoolKeyValueIfTrue(queryString,
+                             NS_LITERAL_CSTRING(QUERYKEY_NOTTAGS),
+                             query,
+                             &nsINavHistoryQuery::GetTagsAreNot);
   }
 
   // sorting
@@ -571,6 +595,13 @@ nsNavHistory::QueriesToQueryString(nsINavHistoryQuery **aQueries,
     queryString += NS_LITERAL_CSTRING(QUERYKEY_INCLUDE_HIDDEN "=1");
   }
 
+  // redirects mode
+  if (options->RedirectsMode() !=  nsINavHistoryQueryOptions::REDIRECTS_MODE_ALL) {
+    AppendAmpersandIfNonempty(queryString);
+    queryString += NS_LITERAL_CSTRING(QUERYKEY_REDIRECTS_MODE "=");
+    AppendInt16(queryString, options->RedirectsMode());
+  }
+
   // show sessions
   if (options->ShowSessions()) {
     AppendAmpersandIfNonempty(queryString);
@@ -605,7 +636,7 @@ TokenizeQueryString(const nsACString& aQuery,
   // Strip off the "place:" prefix
   const PRUint32 prefixlen = 6; // = strlen("place:");
   nsCString query;
-  if (aQuery.Length() > prefixlen &&
+  if (aQuery.Length() >= prefixlen &&
       Substring(aQuery, 0, prefixlen).EqualsLiteral("place:"))
     query = Substring(aQuery, prefixlen);
   else
@@ -644,16 +675,18 @@ nsNavHistory::TokensToQueries(const nsTArray<QueryKeyValuePair>& aTokens,
                               nsNavHistoryQueryOptions* aOptions)
 {
   nsresult rv;
-  if (aTokens.Length() == 0)
-    return NS_OK; // nothing to do
-
-  nsTArray<PRInt64> folders;
 
   nsCOMPtr<nsNavHistoryQuery> query(new nsNavHistoryQuery());
   if (! query)
     return NS_ERROR_OUT_OF_MEMORY;
   if (! aQueries->AppendObject(query))
     return NS_ERROR_OUT_OF_MEMORY;
+
+  if (aTokens.Length() == 0)
+    return NS_OK; // nothing to do
+
+  nsTArray<PRInt64> folders;
+  nsTArray<nsString> tags;
   for (PRUint32 i = 0; i < aTokens.Length(); i ++) {
     const QueryKeyValuePair& kvp = aTokens[i];
 
@@ -754,12 +787,31 @@ nsNavHistory::TokensToQueries(const nsTArray<QueryKeyValuePair>& aTokens,
       query->SetAnnotationIsNot(PR_FALSE);
       query->SetAnnotation(unescaped);
 
+    // tag
+    } else if (kvp.key.EqualsLiteral(QUERYKEY_TAG)) {
+      nsCAutoString unescaped(kvp.value);
+      NS_UnescapeURL(unescaped); // modifies input
+      nsString tag = NS_ConvertUTF8toUTF16(unescaped);
+      if (!tags.Contains(tag)) {
+        NS_ENSURE_TRUE(tags.AppendElement(tag), NS_ERROR_OUT_OF_MEMORY);
+      }
+
+    // not tags
+    } else if (kvp.key.EqualsLiteral(QUERYKEY_NOTTAGS)) {
+      SetQueryKeyBool(kvp.value, query, &nsINavHistoryQuery::SetTagsAreNot);
+
     // new query component
     } else if (kvp.key.EqualsLiteral(QUERYKEY_SEPARATOR)) {
 
       if (folders.Length() != 0) {
         query->SetFolders(folders.Elements(), folders.Length());
         folders.Clear();
+      }
+
+      if (tags.Length() > 0) {
+        rv = query->SetTags(tags);
+        NS_ENSURE_SUCCESS(rv, rv);
+        tags.Clear();
       }
 
       query = new nsNavHistoryQuery();
@@ -813,7 +865,10 @@ nsNavHistory::TokensToQueries(const nsTArray<QueryKeyValuePair>& aTokens,
     } else if (kvp.key.EqualsLiteral(QUERYKEY_INCLUDE_HIDDEN)) {
       SetOptionsKeyBool(kvp.value, aOptions,
                         &nsINavHistoryQueryOptions::SetIncludeHidden);
-
+    // query type
+    } else if (kvp.key.EqualsLiteral(QUERYKEY_REDIRECTS_MODE)) {
+      SetOptionsKeyUint16(kvp.value, aOptions,
+                          &nsINavHistoryQueryOptions::SetRedirectsMode);
     // show sessions
     } else if (kvp.key.EqualsLiteral(QUERYKEY_SHOW_SESSIONS)) {
       SetOptionsKeyBool(kvp.value, aOptions,
@@ -835,6 +890,11 @@ nsNavHistory::TokensToQueries(const nsTArray<QueryKeyValuePair>& aTokens,
 
   if (folders.Length() != 0)
     query->SetFolders(folders.Elements(), folders.Length());
+
+  if (tags.Length() > 0) {
+    rv = query->SetTags(tags);
+    NS_ENSURE_SUCCESS(rv, rv);
+  }
 
   return NS_OK;
 }
@@ -874,7 +934,8 @@ nsNavHistoryQuery::nsNavHistoryQuery()
     mEndTime(0), mEndTimeReference(TIME_RELATIVE_EPOCH),
     mOnlyBookmarked(PR_FALSE),
     mDomainIsHost(PR_FALSE), mUriIsPrefix(PR_FALSE),
-    mAnnotationIsNot(PR_FALSE)
+    mAnnotationIsNot(PR_FALSE),
+    mTagsAreNot(PR_FALSE)
 {
   // differentiate not set (IsVoid) from empty string (local files)
   mDomain.SetIsVoid(PR_TRUE);
@@ -1060,8 +1121,7 @@ NS_IMETHODIMP nsNavHistoryQuery::SetUriIsPrefix(PRBool aIsPrefix)
 /* attribute nsIURI uri; */
 NS_IMETHODIMP nsNavHistoryQuery::GetUri(nsIURI** aUri)
 {
-  *aUri = mUri;
-  NS_ADDREF(*aUri);
+  NS_IF_ADDREF(*aUri = mUri);
   return NS_OK;
 }
 NS_IMETHODIMP nsNavHistoryQuery::SetUri(nsIURI* aUri)
@@ -1101,6 +1161,142 @@ NS_IMETHODIMP nsNavHistoryQuery::SetAnnotation(const nsACString& aAnnotation)
 NS_IMETHODIMP nsNavHistoryQuery::GetHasAnnotation(PRBool* aHasIt)
 {
   *aHasIt = ! mAnnotation.IsEmpty();
+  return NS_OK;
+}
+
+/* attribute nsIVariant tags; */
+NS_IMETHODIMP nsNavHistoryQuery::GetTags(nsIVariant **aTags)
+{
+  NS_ENSURE_ARG_POINTER(aTags);
+
+  nsresult rv;
+  nsCOMPtr<nsIWritableVariant> out = do_CreateInstance(NS_VARIANT_CONTRACTID,
+                                                       &rv);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  PRUint32 arrayLen = mTags.Length();
+
+  if (arrayLen == 0)
+    rv = out->SetAsEmptyArray();
+  else {
+    // Note: The resulting nsIVariant dupes both the array and its elements.
+    const PRUnichar **array = reinterpret_cast<const PRUnichar **>
+                              (NS_Alloc(arrayLen * sizeof(PRUnichar *)));
+    NS_ENSURE_TRUE(array, NS_ERROR_OUT_OF_MEMORY);
+
+    for (PRUint32 i = 0; i < arrayLen; ++i) {
+      array[i] = mTags[i].get();
+    }
+
+    rv = out->SetAsArray(nsIDataType::VTYPE_WCHAR_STR,
+                         nsnull,
+                         arrayLen,
+                         reinterpret_cast<void *>(array));
+    NS_Free(array);
+  }
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  NS_ADDREF(*aTags = out);
+  return NS_OK;
+}
+
+NS_IMETHODIMP nsNavHistoryQuery::SetTags(nsIVariant *aTags)
+{
+  NS_ENSURE_ARG(aTags);
+
+  PRUint16 dataType;
+  aTags->GetDataType(&dataType);
+
+  // Caller passed in empty array.  Easy -- clear our mTags array and return.
+  if (dataType == nsIDataType::VTYPE_EMPTY_ARRAY) {
+    mTags.Clear();
+    return NS_OK;
+  }
+
+  // Before we go any further, make sure caller passed in an array.
+  NS_ENSURE_TRUE(dataType == nsIDataType::VTYPE_ARRAY, NS_ERROR_ILLEGAL_VALUE);
+
+  PRUint16 eltType;
+  nsIID eltIID;
+  PRUint32 arrayLen;
+  void *array;
+
+  // Convert the nsIVariant to an array.  We own the resulting buffer and its
+  // elements.
+  nsresult rv = aTags->GetAsArray(&eltType, &eltIID, &arrayLen, &array);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  // If element type is not wstring, thanks a lot.  Your memory die now.
+  if (eltType != nsIDataType::VTYPE_WCHAR_STR) {
+    switch (eltType) {
+    case nsIDataType::VTYPE_ID:
+    case nsIDataType::VTYPE_CHAR_STR:
+      {
+        char **charArray = reinterpret_cast<char **>(array);
+        for (PRUint32 i = 0; i < arrayLen; ++i) {
+          if (charArray[i])
+            NS_Free(charArray[i]);
+        }
+      }
+      break;
+    case nsIDataType::VTYPE_INTERFACE:
+    case nsIDataType::VTYPE_INTERFACE_IS:
+      {
+        nsISupports **supportsArray = reinterpret_cast<nsISupports **>(array);
+        for (PRUint32 i = 0; i < arrayLen; ++i) {
+          NS_IF_RELEASE(supportsArray[i]);
+        }
+      }
+      break;
+    // The other types are primitives that do not need to be freed.
+    }
+    NS_Free(array);
+    return NS_ERROR_ILLEGAL_VALUE;
+  }
+
+  PRUnichar **tags = reinterpret_cast<PRUnichar **>(array);
+  mTags.Clear();
+
+  // Finally, add each passed-in tag to our mTags array and then sort it.
+  for (PRUint32 i = 0; i < arrayLen; ++i) {
+
+    // Don't allow nulls.
+    if (!tags[i]) {
+      NS_Free(tags);
+      return NS_ERROR_ILLEGAL_VALUE;
+    }
+
+    nsDependentString tag(tags[i]);
+
+    // Don't store duplicate tags.  This isn't just to save memory or to be
+    // fancy; the SQL that's built from the tags relies on no dupes.
+    if (!mTags.Contains(tag)) {
+      if (!mTags.AppendElement(tag)) {
+        NS_Free(tags[i]);
+        NS_Free(tags);
+        return NS_ERROR_OUT_OF_MEMORY;
+      }
+    }
+    NS_Free(tags[i]);
+  }
+  NS_Free(tags);
+
+  mTags.Sort();
+
+  return NS_OK;
+}
+
+/* attribute boolean tagsAreNot; */
+NS_IMETHODIMP nsNavHistoryQuery::GetTagsAreNot(PRBool *aTagsAreNot)
+{
+  NS_ENSURE_ARG_POINTER(aTagsAreNot);
+  *aTagsAreNot = mTagsAreNot;
+  return NS_OK;
+}
+
+NS_IMETHODIMP nsNavHistoryQuery::SetTagsAreNot(PRBool aTagsAreNot)
+{
+  mTagsAreNot = aTagsAreNot;
   return NS_OK;
 }
 
@@ -1197,6 +1393,10 @@ nsNavHistoryQueryOptions::SetResultType(PRUint16 aType)
 {
   if (aType > RESULTS_AS_TAG_CONTENTS)
     return NS_ERROR_INVALID_ARG;
+  // Tag queries and containers are bookmarks related, so we set the QueryType
+  // accordingly.
+  if (aType == RESULTS_AS_TAG_QUERY || aType == RESULTS_AS_TAG_CONTENTS)
+    mQueryType = QUERY_TYPE_BOOKMARKS;
   mResultType = aType;
   return NS_OK;
 }
@@ -1284,6 +1484,20 @@ nsNavHistoryQueryOptions::SetIncludeHidden(PRBool aIncludeHidden)
   return NS_OK;
 }
 
+// redirectsMode
+NS_IMETHODIMP
+nsNavHistoryQueryOptions::GetRedirectsMode(PRUint16* _retval)
+{
+  *_retval = mRedirectsMode;
+  return NS_OK;
+}
+NS_IMETHODIMP
+nsNavHistoryQueryOptions::SetRedirectsMode(PRUint16 aRedirectsMode)
+{
+  mRedirectsMode = aRedirectsMode;
+  return NS_OK;
+}
+
 // showSessions
 NS_IMETHODIMP
 nsNavHistoryQueryOptions::GetShowSessions(PRBool* aShowSessions)
@@ -1322,6 +1536,11 @@ nsNavHistoryQueryOptions::GetQueryType(PRUint16* _retval)
 NS_IMETHODIMP
 nsNavHistoryQueryOptions::SetQueryType(PRUint16 aQueryType)
 {
+  // Tag query and containers are forced to QUERY_TYPE_BOOKMARKS when the
+  // resultType is set.
+  if (mResultType == RESULTS_AS_TAG_CONTENTS ||
+      mResultType == RESULTS_AS_TAG_QUERY)
+   return NS_OK;
   mQueryType = aQueryType;
   return NS_OK;
 }

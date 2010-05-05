@@ -51,20 +51,19 @@
 <window id="CustomizeToolbarWindow"
         title="&dialog.title;"
         onload="onLoad();"
-        onunload="finishToolbarCustomization();"
+        onunload="onUnload();"
         style="&dialog.style;"
         persist="width height"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
 <script type="application/javascript" src="chrome://global/content/customizeToolbar.js"/>
-<script type="application/javascript" src="chrome://global/content/nsDragAndDrop.js"/>
 
 <stringbundle id="stringBundle" src="chrome://global/locale/customizeToolbar.properties"/>
 
-<keyset>
-  <key id="cmd_close_sheet" keycode="VK_ESCAPE" oncommand="window.close();"/>
-  <key id="cmd_close_sheet" keycode="VK_RETURN" oncommand="window.close();"/>
-  <key id="cmd_close_sheet" keycode="VK_ENTER" oncommand="window.close();"/>
+<keyset id="CustomizeToolbarKeyset">
+  <key id="cmd_close1" keycode="VK_ESCAPE" oncommand="onClose();"/>
+  <key id="cmd_close2" keycode="VK_RETURN" oncommand="onClose();"/>
+  <key id="cmd_close3" keycode="VK_ENTER"  oncommand="onClose();"/>
 </keyset>
 
 <vbox id="main-box" flex="1">
@@ -73,9 +72,9 @@
   </description>
 
   <vbox flex="1" id="palette-box"
-        ondraggesture="nsDragAndDrop.startDrag(event, dragStartObserver);"
-        ondragover="nsDragAndDrop.dragOver(event, paletteDNDObserver);"
-        ondragdrop="nsDragAndDrop.drop(event, paletteDNDObserver);"/>
+        ondragstart="onToolbarDragStart(event)"
+        ondragover="onPaletteDragOver(event)"
+        ondrop="onPaletteDrop(event)"/>
 
   <box align="center">
     <label value="&show.label;"/>
@@ -86,17 +85,17 @@
         <menuitem value="text" label="&text.label;"/>
       </menupopup>
     </menulist>
-    
+
     <checkbox id="smallicons" oncommand="updateIconSize(this.checked);" label="&useSmallIcons.label;"/>
-    
+
     <button label="&addNewToolbar.label;" oncommand="addNewToolbar();" icon="add"/>
-    <button label="&restoreDefaultSet.label;" oncommand="restoreDefaultSet();" icon="refresh"/>
+    <button label="&restoreDefaultSet.label;" oncommand="restoreDefaultSet();" icon="revert"/>
   </box>
 
   <separator class="groove"/>
 
   <hbox align="center" pack="end">
-    <button id="donebutton" label="&saveChanges.label;" oncommand="window.close();"
+    <button id="donebutton" label="&saveChanges.label;" oncommand="onClose();"
             default="true" icon="close"/>
   </hbox>
 </vbox>

@@ -145,6 +145,10 @@ bucketPrefs.every(function(bucket) {
     }
     else {
       // visited
+      // visited bookmarks get the visited bookmark bonus twice
+      if (visitType == Ci.nsINavHistoryService.TRANSITION_BOOKMARK)
+        bonusValue = bonusValue * 2;
+
       var points = Math.ceil(1 * ((bonusValue / parseFloat(100.000000)).toFixed(6) * weight) / 1);
       if (!points) {
         if (!visitType ||
@@ -237,13 +241,17 @@ AutoCompleteInput.prototype = {
 
 function run_test() {
   var controller = Components.classes["@mozilla.org/autocomplete/controller;1"].
-                   getService(Components.interfaces.nsIAutoCompleteController);  
-  
+                   getService(Components.interfaces.nsIAutoCompleteController);
+
   // Make an AutoCompleteInput that uses our searches
   // and confirms results on search complete
   var input = new AutoCompleteInput(["history"]);
 
   controller.input = input;
+
+  // always search in history + bookmarks, no matter what the default is
+  prefs.setIntPref("browser.urlbar.search.sources", 3);
+  prefs.setIntPref("browser.urlbar.default.behavior", 0);
 
   // Search is asynchronous, so don't let the test finish immediately
   do_test_pending();
@@ -256,7 +264,7 @@ function run_test() {
 
   input.onSearchComplete = function() {
     do_check_eq(numSearchesStarted, 1);
-    do_check_eq(controller.searchStatus, 
+    do_check_eq(controller.searchStatus,
                 Ci.nsIAutoCompleteController.STATUS_COMPLETE_MATCH);
 
     // test that all records with non-zero frecency were matched
@@ -275,6 +283,8 @@ function run_test() {
         // undefined), so check if frecency matches. This is okay because we
         // can still ensure the correct number of expected frecencies.
         let getFrecency = function(aURL) aURL.match(/frecency:(-?\d+)$/)[1];
+        print("### checking for same frecency between '" + searchURL +
+              "' and '" + expectURL + "'");
         do_check_eq(getFrecency(searchURL), getFrecency(expectURL));
       }
     }

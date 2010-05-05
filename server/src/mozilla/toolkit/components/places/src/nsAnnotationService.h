@@ -46,12 +46,21 @@
 #include "mozIStorageService.h"
 #include "mozIStorageConnection.h"
 #include "nsServiceManagerUtils.h"
+#include "nsToolkitCompsCID.h"
 
 class nsAnnotationService : public nsIAnnotationService
 {
 public:
   nsAnnotationService();
 
+  /**
+   * Obtains the service's object.
+   */
+  static nsAnnotationService *GetSingleton();
+
+  /**
+   * Initializes the service's object.  This should only be called once.
+   */
   nsresult Init();
 
   static nsresult InitTables(mozIStorageConnection* aDBConn);
@@ -60,23 +69,22 @@ public:
    * Returns a cached pointer to the annotation service for consumers in the
    * places directory.
    */
-  static nsAnnotationService* GetAnnotationService()
+  static nsAnnotationService * GetAnnotationService()
   {
-    if (! gAnnotationService) {
-      // note that we actually have to set the service to a variable here
-      // because the work in do_GetService actually happens during assignment >:(
-      nsresult rv;
-      nsCOMPtr<nsIAnnotationService> serv(do_GetService("@mozilla.org/browser/annotation-service;1", &rv));
-      NS_ENSURE_SUCCESS(rv, nsnull);
-
-      // our constructor should have set the static variable. If it didn't,
-      // something is wrong.
-      NS_ASSERTION(gAnnotationService, "Annotation service creation failed");
+    if (!gAnnotationService) {
+      nsCOMPtr<nsIAnnotationService> serv =
+        do_GetService(NS_ANNOTATIONSERVICE_CONTRACTID);
+      NS_ENSURE_TRUE(serv, nsnull);
+      NS_ASSERTION(gAnnotationService,
+                   "Should have static instance pointer now");
     }
-    // the service manager will keep the pointer to our service around, so
-    // this should always be valid even if nobody currently has a reference.
     return gAnnotationService;
   }
+
+  /**
+   * Finalize all internal statements.
+   */
+  nsresult FinalizeStatements();
 
   NS_DECL_ISUPPORTS
   NS_DECL_NSIANNOTATIONSERVICE
@@ -106,7 +114,7 @@ protected:
 
   nsCOMArray<nsIAnnotationObserver> mObservers;
 
-  static nsAnnotationService* gAnnotationService;
+  static nsAnnotationService *gAnnotationService;
 
   static const int kAnnoIndex_ID;
   static const int kAnnoIndex_PageOrItem;
@@ -170,6 +178,8 @@ protected:
                                     const nsACString& aName);
   static nsresult GetPlaceIdForURI(nsIURI* aURI, PRInt64* _retval,
                                    PRBool aAutoCreate = PR_TRUE);
+
+  PRBool InPrivateBrowsingMode() const;
 
   void CallSetForPageObservers(nsIURI* aURI, const nsACString& aName);
   void CallSetForItemObservers(PRInt64 aItemId, const nsACString& aName);

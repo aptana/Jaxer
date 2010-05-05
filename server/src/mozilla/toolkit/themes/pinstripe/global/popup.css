@@ -49,13 +49,19 @@ menupopup,
 popup,
 panel {
   -moz-appearance: menupopup;
+  background-color: Menu;
+}
+
+menupopup > menu > menupopup,
+popup > menu > menupopup {
+  margin-top: -4px;
 }
 
 /* ::::: popup internal box ::::: */
 
 .popup-internal-box {
-        -moz-appearance: none;
-	padding: 4px 0px 4px 0px !important;
+  -moz-appearance: none;
+  padding: 4px 0;
 }
 
 /* ::::: tooltip ::::: */
@@ -67,10 +73,6 @@ tooltip {
   max-width: 40em;
   color: InfoText;
   font: message-box;
-}
-
-.tooltip-label {
-  margin: 0px !important;
 }
 
 tooltip[titletip="true"] {
@@ -85,4 +87,12 @@ tooltip[titletip="true"] {
 menulist > menupopup,
 .menulist-menupopup {
   min-width: 0px;
+}
+
+menulist[editable="true"] > menupopup {
+  -moz-appearance: none;
+}
+
+menulist[editable="true"] > menupopup > .popup-internal-box {
+  padding: 0;
 }

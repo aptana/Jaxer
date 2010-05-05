@@ -45,7 +45,6 @@
 
 <!DOCTYPE window [
   <!ENTITY % console SYSTEM "chrome://global/locale/console.dtd"> %console;
-  <!ENTITY % global SYSTEM "chrome://global/locale/global.dtd"> %global;
 ]>
 
 <window id="JSConsoleWindow"
@@ -59,6 +58,7 @@
 
   <script type="application/javascript" src="chrome://global/content/globalOverlay.js"/>
   <script type="application/javascript" src="chrome://global/content/console.js"/>
+  <script type="application/javascript" src="chrome://global/content/viewSourceUtils.js"/>
 
   <stringbundle id="ConsoleBundle" src="chrome://global/locale/console.properties"/>
 
@@ -92,26 +92,28 @@
     </popup>
   </popupset>
   
-  <toolbox id="console-toolbox" chromedir="&locale.dir;">
+  <toolbox id="console-toolbox">
     <toolbar class="chromeclass-toolbar" id="ToolbarMode">
-      <toolbarbutton type="radio" group="mode" id="Console:modeAll" 
-                     label="&all.label;" accesskey="&all.accesskey;"
-                     oncommand="changeMode('All');"/>
-      <toolbarbutton type="radio" group="mode" id="Console:modeErrors"
-                     label="&errors.label;" accesskey="&errors.accesskey;"
-                     oncommand="changeMode('Errors');"/>
-      <toolbarbutton type="radio" group="mode" id="Console:modeWarnings"
-                     label="&warnings.label;" accesskey="&warnings.accesskey;"
-                     oncommand="changeMode('Warnings');"/>
-      <toolbarbutton type="radio" group="mode" id="Console:modeMessages"
-                   label="&messages.label;" accesskey="&messages.accesskey;"
-                   oncommand="changeMode('Messages');"/>
+      <hbox id="viewGroup">
+        <toolbarbutton type="radio" group="mode" id="Console:modeAll" 
+                       label="&all.label;" accesskey="&all.accesskey;"
+                       oncommand="changeMode('All');"/>
+        <toolbarbutton type="radio" group="mode" id="Console:modeErrors"
+                       label="&errors.label;" accesskey="&errors.accesskey;"
+                       oncommand="changeMode('Errors');"/>
+        <toolbarbutton type="radio" group="mode" id="Console:modeWarnings"
+                       label="&warnings.label;" accesskey="&warnings.accesskey;"
+                       oncommand="changeMode('Warnings');"/>
+        <toolbarbutton type="radio" group="mode" id="Console:modeMessages"
+                     label="&messages.label;" accesskey="&messages.accesskey;"
+                     oncommand="changeMode('Messages');"/>
+      </hbox>
       <toolbarseparator/>
       <toolbarbutton id="Console:clear" oncommand="clearConsole();"
                      label="&clear.label;" accesskey="&clear.accesskey;"/>
     </toolbar>
   
-    <toolbar class="chromeclass-toolbar" id="ToolbarEval" align="center">
+    <toolbar class="chromeclass-toolbar" id="ToolbarEval" align="center" nowindowdrag="true">
       <label value="&codeEval.label;" accesskey="&codeEval.accesskey;" control="TextboxEval"/>
       <textbox id="TextboxEval" class="toolbar" value="" onkeypress="onEvalKeyPress(event)" flex="1"/>
       <toolbarbutton id="ButtonEval" label="&evaluate.label;"

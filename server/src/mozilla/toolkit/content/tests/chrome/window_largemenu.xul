@@ -2,10 +2,7 @@
 <?xml-stylesheet href="chrome://global/skin" type="text/css"?>
 
 <window title="Large Menu Tests"
-  onfocus="setTimeout(runTests, 0);"
-  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-
-  <title>Large Menu Tests</title>
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
   <script type="application/javascript"
           src="chrome://mochikit/content/tests/SimpleTest/EventUtils.js"/>
@@ -19,20 +16,36 @@
 <![CDATA[
 
 var gOverflowed = false, gUnderflowed = false;
+var gContextMenuTests = false;
 var gScreenY = -1;
 var gTestIndex = 0;
 var gTests = ["open normal", "open flipped position", "open with scrolling",
-              "open after scrolling", "open small again"];
+              "open after scrolling", "open small again",
+              "menu movement", "panel movement",
+              "context menu enough space below",
+              "context menu more space above",
+              "context menu too big either side",
+              "context menu larger than screen"];
+
+function getScreenXY(element)
+{
+  var screenX, screenY;
+  var mouseFn = function(event) {
+    screenX = event.screenX - 1;
+    screenY = event.screenY - 1;
+  }
+
+  // a hacky way to get the screen position of an element without using the box object
+  window.addEventListener("mousedown", mouseFn, false);
+  synthesizeMouse(element, 1, 1, { });
+  window.removeEventListener("mousedown", mouseFn, false);
+
+  return [screenX, screenY];
+}
 
 function runTests()
 {
-  var mouseFn = function(event) { gScreenY = event.screenY; }
-
-  // a hacky way to get the screen position of the document
-  window.addEventListener("mousedown", mouseFn, false);
-  synthesizeMouse(document.documentElement, 0, 0, { });
-  window.removeEventListener("mousedown", mouseFn, false);
-
+  [, gScreenY] = getScreenXY(document.documentElement);
   nextTest();
 }
 
@@ -65,14 +78,22 @@ function nextTest()
 
 function popupShown()
 {
+  if (gTests[gTestIndex] == "menu movement")
+    return testPopupMovement();
+
+  if (gContextMenuTests)
+    return contextMenuPopupShown();
+
   var popup = document.getElementById("popup");
   var rect = popup.getBoundingClientRect();
   var sbo = document.getAnonymousNodes(popup)[0].scrollBoxObject;
   var expectedScrollPos = 0;
 
   if (gTestIndex == 0) {
-    // the popup should be in the center of the screen 
-    is(Math.round(rect.top) + gScreenY, screen.height / 2,
+    // the popup should be in the center of the screen
+    // note that if the height is odd, the y-offset will have been rounded
+    // down when we pass the fractional value to openPopupAtScreen above.
+    is(Math.round(rect.top) + gScreenY, Math.floor(screen.height / 2),
                               gTests[gTestIndex] + " top");
     ok(Math.round(rect.bottom) + gScreenY < screen.height,
                                 gTests[gTestIndex] + " bottom");
@@ -100,7 +121,9 @@ function popupShown()
     expectedScrollPos = 40;
   }
   else if (gTestIndex == 4) {
-    is(Math.round(rect.top) + gScreenY, screen.height / 2,
+    // note that if the height is odd, the y-offset will have been rounded
+    // down when we pass the fractional value to openPopupAtScreen above.
+    is(Math.round(rect.top) + gScreenY, Math.floor(screen.height / 2),
                               gTests[gTestIndex] + " top");
     ok(Math.round(rect.bottom) + gScreenY < screen.height,
                                 gTests[gTestIndex] + " bottom");
@@ -117,6 +140,30 @@ function popupShown()
 function is(l, r, n) { window.opener.wrappedJSObject.SimpleTest.is(l,r,n); }
 function ok(v, n) { window.opener.wrappedJSObject.SimpleTest.ok(v,n); }
 
+var oldx, oldy, waitSteps = 0;
+function moveWindowTo(x, y, callback, arg)
+{
+  if (!waitSteps) {
+    oldx = window.screenX;
+    oldy = window.screenY;
+    window.moveTo(x, y);
+  }
+
+  if (window.screenX == oldx && window.screenY == oldy) {
+    if (waitSteps++ > 10) {
+      ok(false, "Window never moved properly to " + x + "," + y);
+      window.opener.wrappedJSObject.SimpleTest.finish();
+      window.close();
+    }
+
+    setTimeout(moveWindowTo, 100, x, y, callback, arg);
+  }
+  else {
+    waitSteps = 0;
+    callback(arg);
+  }
+}
+
 function popupHidden()
 {
   gTestIndex++;
@@ -124,17 +171,158 @@ function popupHidden()
     window.opener.wrappedJSObject.SimpleTest.finish();
     window.close();
   }
+  else if (gTests[gTestIndex] == "context menu enough space below") {
+    gContextMenuTests = true;
+    moveWindowTo(window.screenX, screen.availTop + 10,
+      function () synthesizeMouse(document.getElementById("label"), 4, 4, { type: "contextmenu", button: 2 }));
+  }
+  else if (gTests[gTestIndex] == "menu movement") {
+    document.getElementById("popup").openPopup(
+      document.getElementById("label"), "after_start", 0, 0, false, false);
+  }
+  else if (gTests[gTestIndex] == "panel movement") {
+    document.getElementById("panel").openPopup(
+      document.getElementById("label"), "after_start", 0, 0, false, false);
+  }
+  else if (gContextMenuTests) {
+    contextMenuPopupHidden();
+  }
   else {
     nextTest();
   }
 }
+
+function contextMenuPopupShown()
+{
+  var popup = document.getElementById("popup");
+  var rect = popup.getBoundingClientRect();
+  var labelrect = document.getElementById("label").getBoundingClientRect();
+
+  is(rect.left, labelrect.left + 6, gTests[gTestIndex] + " left");
+  switch (gTests[gTestIndex]) {
+    case "context menu enough space below":
+      is(rect.top, labelrect.top + 6, gTests[gTestIndex] + " top");
+      break;
+    case "context menu more space above":
+      is(rect.top, labelrect.top - rect.height + 2, gTests[gTestIndex] + " top");
+      break;
+    case "context menu too big either side":
+      [, gScreenY] = getScreenXY(document.documentElement);
+      // compare against the available size as well as the total size, as some
+      // platforms allow the menu to overlap os chrome and others do not
+      // the - 3 here is to account for 3 pixels that are subtracted from the
+      // screen size when sizing a popup for the popup shadow
+      var pos = (screen.availTop + screen.availHeight - 3 - rect.height) - gScreenY;
+      var availPos = (screen.top + screen.height - 3 - rect.height) - gScreenY;
+      ok(rect.top == pos || rect.top == availPos,
+         gTests[gTestIndex] + " top");
+      break;
+    case "context menu larger than screen":
+      ok(rect.top == -(gScreenY - screen.availTop) || rect.top == -(gScreenY - screen.top), gTests[gTestIndex] + " top");
+      break;
+  }
+
+  popup.hidePopup();
+}
+
+function contextMenuPopupHidden()
+{
+  var screenAvailBottom = screen.availTop + screen.availHeight;
+
+  if (gTests[gTestIndex] == "context menu more space above") {
+    moveWindowTo(window.screenX, screenAvailBottom - 80, nextContextMenuTest, -1);
+  }
+  else if (gTests[gTestIndex] == "context menu too big either side") {
+    moveWindowTo(window.screenX, screenAvailBottom / 2 - 80, nextContextMenuTest, screenAvailBottom / 2 + 120);
+  }
+  else if (gTests[gTestIndex] == "context menu larger than screen") {
+    nextContextMenuTest(screen.availHeight + 80);
+  }
+}
+
+function nextContextMenuTest(desiredHeight)
+{
+  if (desiredHeight >= 0) {
+    var popup = document.getElementById("popup");
+    var height = popup.getBoundingClientRect().height;
+    var itemheight = document.getElementById("firstitem").getBoundingClientRect().height;
+    while (height < desiredHeight) {
+      var menu = document.createElement("menuitem");
+      menu.setAttribute("label", "Item");
+      popup.appendChild(menu);
+      height += itemheight;
+    }
+  }
+
+  synthesizeMouse(document.getElementById("label"), 4, 4, { type: "contextmenu", button: 2 });
+}
+
+function testPopupMovement()
+{
+  var button = document.getElementById("label");
+  var popup = document.getElementById((gTests[gTestIndex] == "panel movement") ? "panel" : "popup");
+
+  var screenX, screenY, buttonScreenX, buttonScreenY;
+  var rect = popup.getBoundingClientRect();
+
+  var overlapOSChrome = (navigator.platform.indexOf("Mac") == -1);
+  popup.moveTo(1, 1);
+  [screenX, screenY] = getScreenXY(popup);
+
+  var expectedx = overlapOSChrome ? 1 : (screen.availLeft < 1 ? 1 : screen.availLeft);
+  var expectedy = overlapOSChrome ? 1 : (screen.availTop < 1 ? 1 : screen.availTop);
+  is(screenX, expectedx, gTests[gTestIndex] + " (1, 1) x");
+  is(screenY, expectedy, gTests[gTestIndex] + " (1, 1) y");
+
+  popup.moveTo(100, 8000);
+  var expectedy = (overlapOSChrome ? screen.height + screen.top : screen.availHeight + screen.availTop) -
+                  Math.round(rect.height) - 3;
+  [screenX, screenY] = getScreenXY(popup);
+  is(screenX, 100, gTests[gTestIndex] + " (100, 8000) x");
+  is(screenY, expectedy, gTests[gTestIndex] + " (100, 8000) y");
+
+  popup.moveTo(6000, 100);
+  expectedx = (overlapOSChrome ? screen.width + screen.left : screen.availWidth + screen.availLeft) -
+              Math.round(rect.width) - 3;
+
+  [screenX, screenY] = getScreenXY(popup);
+  is(screenX, expectedx, gTests[gTestIndex] + " (6000, 100) x");
+  is(screenY, 100, gTests[gTestIndex] + " (6000, 100) y");
+
+  is(popup.left, "", gTests[gTestIndex] + " left is empty after moving");
+  is(popup.top, "", gTests[gTestIndex] + " top is empty after moving");
+  popup.setAttribute("left", "80");
+  popup.setAttribute("top", "82");
+  [screenX, screenY] = getScreenXY(popup);
+  is(screenX, 80, gTests[gTestIndex] + " set left and top x");
+  is(screenY, 82, gTests[gTestIndex] + " set left and top y");
+  popup.moveTo(95, 98);
+  [screenX, screenY] = getScreenXY(popup);
+  is(screenX, 95, gTests[gTestIndex] + " move after set left and top x");
+  is(screenY, 98, gTests[gTestIndex] + " move after set left and top y");
+  is(popup.left, "95", gTests[gTestIndex] + " left is set after moving");
+  is(popup.top, "98", gTests[gTestIndex] + " top is set after moving");
+  popup.removeAttribute("left");
+  popup.removeAttribute("top");
+
+  popup.moveTo(-1, -1);
+  [screenX, screenY] = getScreenXY(popup);
+  [buttonScreenX, buttonScreenY] = getScreenXY(button);
+  is(screenX, buttonScreenX, gTests[gTestIndex] + " original x");
+  is(screenY, buttonScreenY + button.getBoundingClientRect().height, gTests[gTestIndex] + " original y");
+
+  popup.hidePopup();
+}
+
+window.opener.wrappedJSObject.SimpleTest.waitForFocus(runTests, window);
+
 ]]>
 </script>
 
-<label value="OK" popup="popup"/>
+<button id="label" label="OK" context="popup"/>
 <menupopup id="popup" onpopupshown="popupShown();" onpopuphidden="popupHidden();"
                       onoverflow="gOverflowed = true" onunderflow="gUnderflowed = true;">
-  <menuitem label="1"/>
+  <menuitem id="firstitem" label="1"/>
   <menuitem label="2"/>
   <menuitem label="3"/>
   <menuitem label="4"/>
@@ -150,5 +338,9 @@ function popupHidden()
   <menuitem label="14"/>
   <menuitem label="15"/>
 </menupopup>
+
+<panel id="panel" onpopupshown="testPopupMovement();" onpopuphidden="popupHidden();" style="margin: 0">
+  <button label="OK"/>
+</panel>
 
 </window>

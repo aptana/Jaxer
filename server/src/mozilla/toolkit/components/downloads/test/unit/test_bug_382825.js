@@ -73,23 +73,11 @@ var httpserv = null;
 function run_test()
 {
   httpserv = new nsHttpServer();
-  httpserv.registerDirectory("/", dirSvc.get("ProfD", Ci.nsILocalFile));
+  httpserv.registerDirectory("/", do_get_cwd());
   httpserv.start(4444);
-  
+
   dm.addListener(getDownloadListener());
-  
+
   for (var i = 0; i < tests.length; i++)
     tests[i]();
-  
-  cleanup();
-
-  var thread = Cc["@mozilla.org/thread-manager;1"]
-               .getService().currentThread;
-
-  while (!httpserv.isStopped())
-    thread.processNextEvent(true);
-
-  // get rid of any pending requests
-  while (thread.hasPendingEvents())
-    thread.processNextEvent(true);
 }

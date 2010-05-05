@@ -5,7 +5,6 @@
      unfocuses and refocuses the window on Windows -->
 
 <window title="Popup Tests"
-  onfocus="if(gTestIndex == -1) runTests()"
   xmlns:html="http://www.w3.org/1999/xhtml"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
@@ -84,13 +83,11 @@
 <script class="testbody" type="application/javascript">
 <![CDATA[
 
-function runTests()
-{
+window.opener.SimpleTest.waitForFocus(function () {
   gFilePopup = document.getElementById("filepopup");
   document.getElementById("filemenu").focus();
-
   startPopupTests(popupTests);
-}
+}, window);
 
 var popupTests = [
 {

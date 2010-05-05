@@ -10,6 +10,8 @@
 #define _GROWL_GROWLDEFINESINTERNAL_H
 
 #include <CoreFoundation/CoreFoundation.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #ifdef __OBJC__
 #define XSTR(x) (@x)
@@ -26,6 +28,48 @@
  *	 by applications that don't use GrowlApplicationBridge) are defined in
  *	 GrowlDefines.h.
  */
+
+/*!
+ * @defined NSInteger
+ * @abstract Typedef to int so Growl will compile on pre-10.5 SDKs.
+ */
+#ifndef NSINTEGER_DEFINED
+typedef int NSInteger;
+typedef unsigned int NSUInteger;
+#define NSINTEGER_DEFINED
+#endif
+
+/*!
+ * @defined CGFloat
+ * @abstract Typedef to float so Growl will compile on pre-10.5 SDKs.
+ */
+#ifndef CGFLOAT_DEFINED
+typedef float CGFloat;
+#define CGFLOAT_IS_DOUBLE 0
+#define CGFLOAT_DEFINED
+#endif
+
+/*!
+ * @defined GrowlCGFloatCeiling()
+ * @abstract Macro for the ceil() function that uses a different precision depending on the CPU architecture.
+ */
+/*!
+ * @defined GrowlCGFloatAbsoluteValue()
+ * @abstract Macro for the fabs() function that uses a different precision depending on the CPU architecture.
+ */
+/*!
+ * @defined GrowlCGFloatFloor()
+ * @abstract Macro for the floor() function that uses a different precision depending on the CPU architecture.
+ */
+#if CGFLOAT_IS_DOUBLE
+#define GrowlCGFloatCeiling(x) ceil(x)
+#define GrowlCGFloatAbsoluteValue(x) fabs(x)
+#define GrowlCGFloatFloor(x) floor(x)
+#else
+#define GrowlCGFloatCeiling(x) ceilf(x)
+#define GrowlCGFloatAbsoluteValue(x) fabsf(x)
+#define GrowlCGFloatFloor(x) floorf(x)
+#endif
 
 /*!	@defined	GROWL_TCP_PORT
  *	@abstract	The TCP listen port for Growl notification servers.
@@ -154,11 +198,17 @@ struct GrowlNetworkNotification {
 	 * @field sticky the sticky flag.
 	 */
 	struct GrowlNetworkNotificationFlags {
+#ifdef __BIG_ENDIAN__
 		unsigned reserved: 12;
 		signed   priority: 3;
 		unsigned sticky:   1;
+#else
+		unsigned sticky:   1;
+		signed   priority: 3;
+		unsigned reserved: 12;
+#endif
 	} ATTRIBUTE_PACKED flags; //size = 16 (12 + 3 + 1)
-	
+
 	/*	In addition to being unsigned, the notification name length
 	 *	 is in network byte order.
 	 */
@@ -212,15 +262,39 @@ struct GrowlNetworkNotification {
  */
 #define GROWL_APP_LOCATION				XSTR("AppLocation")
 
-#endif //ndef _GROWL_GROWLDEFINESINTERNAL_H
+/*!	@defined	GROWL_REMOTE_ADDRESS
+ *	@abstract	The address of the host who sent this notification/registration.
+ *	@discussion	Contains an NSData with the address of the remote host who
+ *    sent this notification/registration.
+ */
+#define GROWL_REMOTE_ADDRESS			XSTR("RemoteAddress")
+
+/*!
+ *	@defined    GROWL_PREFPANE_BUNDLE_IDENTIFIER
+ *	@discussion The bundle identifier for the Growl preference pane.
+ */
+#define GROWL_PREFPANE_BUNDLE_IDENTIFIER		XSTR("com.growl.prefpanel")
+/*!
+ *	@defined    GROWL_HELPERAPP_BUNDLE_IDENTIFIER
+ *	@discussion The bundle identifier for the Growl background application (GrowlHelperApp).
+ */
+#define GROWL_HELPERAPP_BUNDLE_IDENTIFIER	XSTR("com.Growl.GrowlHelperApp")
+
+/*!
+ *	@defined    GROWL_PREFPANE_NAME
+ *	@discussion The file name of the Growl preference pane.
+ */
+#define GROWL_PREFPANE_NAME						XSTR("Growl.prefPane")
+#define PREFERENCE_PANES_SUBFOLDER_OF_LIBRARY	XSTR("PreferencePanes")
+#define PREFERENCE_PANE_EXTENSION				XSTR("prefPane")
+
+//plug-in bundle filename extensions
+#define GROWL_PLUGIN_EXTENSION                  XSTR("growlPlugin")
+#define GROWL_PATHWAY_EXTENSION                 XSTR("growlPathway")
+#define GROWL_VIEW_EXTENSION					XSTR("growlView")
+#define GROWL_STYLE_EXTENSION					XSTR("growlStyle")
 
 /* --- These following macros are intended for plug-ins --- */
-
-/*Since anything that needs the include guards won't be using these macros, we
- *	don't need the include guards here.
- */
-
-#ifdef __OBJC__
 
 /*!	@function    SYNCHRONIZE_GROWL_PREFS
  *	@abstract    Synchronizes Growl prefs so they're up-to-date.
@@ -236,14 +310,16 @@ struct GrowlNetworkNotification {
  */
 #define UPDATE_GROWL_PREFS() do { \
 	SYNCHRONIZE_GROWL_PREFS(); \
-	NSNumber *pid = [[NSNumber alloc] initWithInt:[[NSProcessInfo processInfo] processIdentifier]];\
-	NSDictionary *userInfo = [[NSDictionary alloc] initWithObjectsAndKeys:\
-		pid,     @"pid",\
-		nil];\
-	[pid release];\
-	[[NSDistributedNotificationCenter defaultCenter]\
-		postNotificationName:@"GrowlPreferencesChanged" object:@"GrowlUserDefaults" userInfo:userInfo];\
-	[userInfo release];\
+	CFStringRef _key = CFSTR("pid"); \
+	int pid = getpid(); \
+	CFNumberRef _value = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &pid); \
+	CFDictionaryRef userInfo = CFDictionaryCreate(kCFAllocatorDefault, (const void **)&_key, (const void **)&_value, 1, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks); \
+	CFRelease(_value); \
+	CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), \
+										 CFSTR("GrowlPreferencesChanged"), \
+										 CFSTR("GrowlUserDefaults"), \
+										 userInfo, false); \
+	CFRelease(userInfo); \
 	} while(0)
 
 /*!	@function    READ_GROWL_PREF_VALUE
@@ -317,13 +393,7 @@ struct GrowlNetworkNotification {
  *	@param	domain	The bundle ID of the plug-in.
  */
 #define WRITE_GROWL_PREF_BOOL(key, value, domain) do {\
-	CFBooleanRef boolValue; \
-	if (value) {\
-		boolValue = kCFBooleanTrue; \
-	} else {\
-		boolValue = kCFBooleanFalse; \
-	}\
-	WRITE_GROWL_PREF_VALUE(key, boolValue, domain); } while(0)
+	WRITE_GROWL_PREF_VALUE(key, value ? kCFBooleanTrue : kCFBooleanFalse, domain); } while(0)
 
 /*!	@function    READ_GROWL_PREF_INT
  *	@abstract    Reads the given integer from the plug-in's preferences.
@@ -362,6 +432,15 @@ struct GrowlNetworkNotification {
  *	@param	domain	The bundle ID of the plug-in.
  *	@param	result	A pointer to a float. Leaves unchanged if the value doesn't exist.
  */
+#ifdef __LP64__
+#define READ_GROWL_PREF_FLOAT(key, domain, result) do {\
+	CFNumberRef floatValue = NULL; \
+	READ_GROWL_PREF_VALUE(key, domain, CFNumberRef, &floatValue); \
+	if (floatValue) {\
+		CFNumberGetValue(floatValue, kCFNumberCGFloatType, result); \
+		CFRelease(floatValue); \
+	} } while(0)
+#else
 #define READ_GROWL_PREF_FLOAT(key, domain, result) do {\
 	CFNumberRef floatValue = NULL; \
 	READ_GROWL_PREF_VALUE(key, domain, CFNumberRef, &floatValue); \
@@ -369,6 +448,7 @@ struct GrowlNetworkNotification {
 		CFNumberGetValue(floatValue, kCFNumberFloatType, result); \
 		CFRelease(floatValue); \
 	} } while(0)
+#endif
 
 /*!	@function    WRITE_GROWL_PREF_FLOAT
  *	@abstract    Writes the given float to the plug-in's preferences.
@@ -378,9 +458,32 @@ struct GrowlNetworkNotification {
  *	@param	value	The float value to write to the preferences.
  *	@param	domain	The bundle ID of the plug-in.
  */
+#ifdef __LP64__
+#define WRITE_GROWL_PREF_FLOAT(key, value, domain) do {\
+	CFNumberRef floatValue = CFNumberCreate(NULL, kCFNumberCGFloatType, &value); \
+	WRITE_GROWL_PREF_VALUE(key, floatValue, domain); \
+	CFRelease(floatValue); } while(0)
+#else
 #define WRITE_GROWL_PREF_FLOAT(key, value, domain) do {\
 	CFNumberRef floatValue = CFNumberCreate(NULL, kCFNumberFloatType, &value); \
 	WRITE_GROWL_PREF_VALUE(key, floatValue, domain); \
 	CFRelease(floatValue); } while(0)
+#endif
 
-#endif /* __OBJC__ */
+
+/*!	@defined	GROWL_CLOSE_ALL_NOTIFICATIONS
+ *	@abstract	Notification to close all Growl notifications
+ *	@discussion	Should be posted to the default notification center when a close widget is option+clicked.
+ *    All notifications should close in response. 
+ */
+#define GROWL_CLOSE_ALL_NOTIFICATIONS XSTR("GrowlCloseAllNotifications")
+
+#pragma mark Small utilities
+
+/*!
+ * @defined FLOAT_EQ(x,y)
+ * @abstract Compares two floats.
+ */
+#define FLOAT_EQ(x,y) (((y - FLT_EPSILON) < x) && (x < (y + FLT_EPSILON)))
+
+#endif //ndef _GROWL_GROWLDEFINESINTERNAL_H

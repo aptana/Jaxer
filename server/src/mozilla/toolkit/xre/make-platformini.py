@@ -8,11 +8,13 @@ import os
 o = OptionParser()
 o.add_option("--buildid", dest="buildid")
 o.add_option("--print-buildid", action="store_true", dest="print_buildid")
+o.add_option("--sourcestamp", dest="sourcestamp")
+o.add_option("--sourcerepo", dest="sourcerepo")
 
 (options, args) = o.parse_args()
 
 if options.print_buildid:
-    print datetime.now().strftime('%Y%m%d%H')
+    print datetime.now().strftime('%Y%m%d%H%M%S')
     sys.exit(0)
 
 if not options.buildid:
@@ -33,3 +35,7 @@ for line in open(milestoneFile, 'r'):
 print """[Build]
 BuildID=%s
 Milestone=%s""" % (options.buildid, milestone)
+if options.sourcestamp:
+    print "SourceStamp=%s" % options.sourcestamp
+if options.sourcerepo:
+    print "SourceRepository=%s" % options.sourcerepo

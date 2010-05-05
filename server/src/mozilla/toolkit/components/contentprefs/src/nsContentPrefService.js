@@ -19,6 +19,7 @@
  *
  * Contributor(s):
  *   Myk Melez <myk@mozilla.org>
+ *   Ehsan Akhgari <ehsan.akhgari@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -138,8 +139,21 @@ ContentPrefService.prototype = {
   setPref: function ContentPrefService_setPref(aURI, aName, aValue) {
     // If the pref is already set to the value, there's nothing more to do.
     var currentValue = this.getPref(aURI, aName);
-    if (typeof currentValue != "undefined" && currentValue == aValue)
-      return;
+    if (typeof currentValue != "undefined") {
+      if (currentValue == aValue)
+        return;
+    }
+    else {
+      // If we are in private browsing mode, refuse to set new prefs
+      var inPrivateBrowsing = false;
+      try { // The Private Browsing service might not be available.
+        var pbs = Cc["@mozilla.org/privatebrowsing;1"].
+                  getService(Ci.nsIPrivateBrowsingService);
+        inPrivateBrowsing = pbs.privateBrowsingEnabled;
+      } catch (e) {}
+      if (inPrivateBrowsing)
+        return;
+    }
 
     var settingID = this._selectSettingID(aName) || this._insertSetting(aName);
     var group, groupID, prefID;
@@ -201,13 +215,58 @@ ContentPrefService.prototype = {
     if (groupID)
       this._deleteGroupIfUnused(groupID);
 
-    for each (var observer in this._getObservers(aName)) {
-      try {
-        observer.onContentPrefRemoved(group, aName);
+    this._notifyPrefRemoved(group, aName);
+  },
+
+  removeGroupedPrefs: function ContentPrefService_removeGroupedPrefs() {
+    this._dbConnection.beginTransaction();
+    try {
+      this._dbConnection.executeSimpleSQL("DELETE FROM prefs WHERE groupID IS NOT NULL");
+      this._dbConnection.executeSimpleSQL("DELETE FROM groups");
+      this._dbConnection.commitTransaction();
+    }
+    catch(ex) {
+      this._dbConnection.rollbackTransaction();
+      throw ex;
+    }
+  },
+
+  removePrefsByName: function ContentPrefService_removePrefsByName(aName) {
+    var settingID = this._selectSettingID(aName);
+    if (!settingID) {
+      return;
+    }
+    
+    var selectGroupsStmt = this._dbCreateStatement(
+      "SELECT groups.name AS groupName " +
+      "FROM prefs " +
+      "JOIN groups ON prefs.groupID = groups.id " +
+      "WHERE prefs.settingID = :setting "
+    );
+    
+    try {
+      selectGroupsStmt.params.setting = settingID;
+    
+      var groups = [];
+      while (selectGroupsStmt.step()) {
+        groups.push(selectGroupsStmt.row["groupName"]);
       }
-      catch(ex) {
-        Cu.reportError(ex);
-      }
+    }
+    finally {
+      selectGroupsStmt.reset();
+    }
+    
+    if (this.hasPref(null, aName)) {
+      groups.push(null);
+    }
+
+    this._dbConnection.executeSimpleSQL("DELETE FROM prefs WHERE settingID = " + settingID);
+    this._dbConnection.executeSimpleSQL("DELETE FROM settings WHERE id = " + settingID);
+
+    for (var i = 0; i < groups.length; i++) {
+      this._notifyPrefRemoved(groups[i], aName);
+      if (groups[i])
+        this._deleteGroupIfUnused(groups[i]);
     }
   },
 
@@ -218,6 +277,10 @@ ContentPrefService.prototype = {
     }
 
     return this._selectGlobalPrefs();
+  },
+
+  getPrefsByName: function ContentPrefService_getPrefsByName(aName) {
+    return this._selectPrefsByName(aName);
   },
 
   // A hash of arrays of observers, indexed by setting name.
@@ -269,6 +332,17 @@ ContentPrefService.prototype = {
     observers = observers.concat(this._genericObservers);
 
     return observers;
+  },
+  
+  _notifyPrefRemoved: function ContentPrefService__notifyPrefRemoved(aGroup, aName) {
+    for each (var observer in this._getObservers(aName)) {
+      try {
+        observer.onContentPrefRemoved(aGroup, aName);
+      }
+      catch(ex) {
+        Cu.reportError(ex);
+      }
+    }
   },
 
   _grouper: null,
@@ -626,6 +700,43 @@ ContentPrefService.prototype = {
     }
     finally {
       this._stmtSelectGlobalPrefs.reset();
+    }
+
+    return prefs;
+  },
+
+  __stmtSelectPrefsByName: null,
+  get _stmtSelectPrefsByName ContentPrefService_get__stmtSelectPrefsByName() {
+    if (!this.__stmtSelectPrefsByName)
+      this.__stmtSelectPrefsByName = this._dbCreateStatement(
+        "SELECT groups.name AS groupName, prefs.value AS value " +
+        "FROM prefs " +
+        "JOIN groups ON prefs.groupID = groups.id " +
+        "JOIN settings ON prefs.settingID = settings.id " +
+        "WHERE settings.name = :setting "
+      );
+
+    return this.__stmtSelectPrefsByName;
+  },
+
+  _selectPrefsByName: function ContentPrefService__selectPrefsByName(aName) {
+    var prefs = Cc["@mozilla.org/hash-property-bag;1"].
+                createInstance(Ci.nsIWritablePropertyBag);
+
+    try {
+      this._stmtSelectPrefsByName.params.setting = aName;
+
+      while (this._stmtSelectPrefsByName.step())
+        prefs.setProperty(this._stmtSelectPrefsByName.row["groupName"],
+                          this._stmtSelectPrefsByName.row["value"]);
+    }
+    finally {
+      this._stmtSelectPrefsByName.reset();
+    }
+    
+    var global = this._selectGlobalPref(aName);
+    if (typeof global != "undefined") {
+      prefs.setProperty(null, global);
     }
 
     return prefs;

@@ -50,6 +50,9 @@ var gUpdateWizard = {
   // add-ons. When checking for compatible versions this contains only
   // incompatible add-ons.
   items: [],
+  // Contains a list of items that were disabled prior to the application
+  // upgrade.
+  inactiveItemIDs: [],
   // The items that we found updates available for
   itemsToUpdate: [],
   shouldSuggestAutoChecking: false,
@@ -63,6 +66,7 @@ var gUpdateWizard = {
                         .getService(nsIExtensionManager);
     // Retrieve all items in order to sync their app compatibility information
     this.items = em.getItemList(nsIUpdateItem.TYPE_ANY, { });
+    this.inactiveItemIDs = window.arguments[0];
     var pref =
         Components.classes["@mozilla.org/preferences-service;1"].
         getService(Components.interfaces.nsIPrefBranch);
@@ -127,7 +131,7 @@ var gUpdateWizard = {
   errorItems: [],
   showErrors: function (aState, aErrors)
   {
-    openDialog("chrome://mozapps/content/update/errors.xul", "",
+    openDialog("chrome://mozapps/content/extensions/errors.xul", "",
                "modal", { state: aState, errors: aErrors });
   },
 
@@ -187,7 +191,8 @@ var gVersionInfoPage = {
     var em = Components.classes["@mozilla.org/extensions/manager;1"]
                        .getService(nsIExtensionManager);
     // Synchronize the app compatibility info for all items.
-    em.update([], 0, nsIExtensionManager.UPDATE_SYNC_COMPATIBILITY, this);
+    em.update([], 0, nsIExtensionManager.UPDATE_SYNC_COMPATIBILITY, this,
+              nsIExtensionManager.UPDATE_WHEN_NEW_APP_INSTALLED);
   },
 
   /////////////////////////////////////////////////////////////////////////////
@@ -200,9 +205,13 @@ var gVersionInfoPage = {
     var em = Components.classes["@mozilla.org/extensions/manager;1"]
                        .getService(nsIExtensionManager);
     // Retrieve the remaining incompatible items.
-    gUpdateWizard.items = em.getIncompatibleItemList(null, null, null,
+    gUpdateWizard.items = em.getIncompatibleItemList(null, null,
                                                      nsIUpdateItem.TYPE_ANY,
                                                      true, { });
+    gUpdateWizard.items = gUpdateWizard.items.filter(function(item) {
+      return gUpdateWizard.inactiveItemIDs.indexOf(item.id) < 0;
+    });
+
     if (gUpdateWizard.items.length > 0) {
       // There are still incompatible addons, inform the user.
       document.documentElement.currentPage =
@@ -296,7 +305,8 @@ var gUpdatePage = {
     var em = Components.classes["@mozilla.org/extensions/manager;1"]
                        .getService(nsIExtensionManager);
     em.update(gUpdateWizard.items, this._totalCount,
-              nsIExtensionManager.UPDATE_CHECK_NEWVERSION, this);
+              nsIExtensionManager.UPDATE_CHECK_NEWVERSION, this,
+              nsIExtensionManager.UPDATE_WHEN_NEW_APP_INSTALLED);
   },
 
   /////////////////////////////////////////////////////////////////////////////
@@ -391,7 +401,7 @@ var gFoundPage = {
 
     var oneChecked = false;
     var foundUpdates = document.getElementById("found.updates");
-    var updates = foundUpdates.getElementsByTagName("listitem");;
+    var updates = foundUpdates.getElementsByTagName("listitem");
     for (var i = 0; i < updates.length; ++i) {
       if (!updates[i].checked)
         continue;
@@ -426,7 +436,7 @@ var gInstallingPage = {
     this._errors = [];
 
     var foundUpdates = document.getElementById("found.updates");
-    var updates = foundUpdates.getElementsByTagName("listitem");;
+    var updates = foundUpdates.getElementsByTagName("listitem");
     for (var i = 0; i < updates.length; ++i) {
       if (!updates[i].checked)
         continue;

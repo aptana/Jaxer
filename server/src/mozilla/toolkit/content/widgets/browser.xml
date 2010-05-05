@@ -254,8 +254,10 @@
                 onget="return this._docShell || (this._docShell = this.boxObject.QueryInterface(Components.interfaces.nsIContainerBoxObject).docShell);"
                 readonly="true"/>
 
+      <field name="_webNavigation">null</field>
+
       <property name="webNavigation"
-                onget="return this.docShell.QueryInterface(Components.interfaces.nsIWebNavigation);"
+                onget="return this._webNavigation || (this._webNavigation = this.docShell.QueryInterface(Components.interfaces.nsIWebNavigation));"
                 readonly="true"/>
 
       <field name="_webBrowserFind">null</field>
@@ -311,9 +313,11 @@
                 readonly="true"
                 onget="return this.docShell.QueryInterface(Components.interfaces.nsIInterfaceRequestor).getInterface(Components.interfaces.nsIWebProgress);"/>
 
+      <field name="_contentWindow">null</field>
+
       <property name="contentWindow"
                 readonly="true"
-                onget="return this.docShell.QueryInterface(Components.interfaces.nsIInterfaceRequestor).getInterface(Components.interfaces.nsIDOMWindow);"/>
+                onget="return this._contentWindow || (this._contentWindow = this.docShell.QueryInterface(Components.interfaces.nsIInterfaceRequestor).getInterface(Components.interfaces.nsIDOMWindow));"/>
 
       <property name="sessionHistory"
                 onget="return this.webNavigation.sessionHistory;"
@@ -366,12 +370,9 @@
           if (!this._mStrBundle) {
             // need to create string bundle manually instead of using <xul:stringbundle/>
             // see bug 63370 for details
-            var localeService = Components.classes["@mozilla.org/intl/nslocaleservice;1"]
-                                  .getService(Components.interfaces.nsILocaleService);
-            var stringBundleService = Components.classes["@mozilla.org/intl/stringbundle;1"]
-                                  .getService(Components.interfaces.nsIStringBundleService);
-            var bundleURL = "chrome://global/locale/browser.properties";
-            this._mStrBundle = stringBundleService.createBundle(bundleURL, localeService.getApplicationLocale());
+            this._mStrBundle = Components.classes["@mozilla.org/intl/stringbundle;1"]
+                                         .getService(Components.interfaces.nsIStringBundleService)
+                                         .createBundle("chrome://global/locale/browser.properties");
           }
           return this._mStrBundle;
         ]]></getter>
@@ -615,14 +616,6 @@
         false
       </field>
       
-      <field name="focusedWindow">
-        null
-      </field>
-
-      <field name="focusedElement">
-        null
-      </field>
-      
       <field name="isShowingMessage">
         false
       </field>
@@ -701,6 +694,9 @@
           
           this._fastFind = null;
           this._webBrowserFind = null;
+          
+          // The feeds cache can keep the document inside this browser alive.
+          this.feeds = null;
 
           this.removeEventListener("pageshow", this.onPageShow, true);
           this.removeEventListener("pagehide", this.onPageHide, true);
@@ -761,6 +757,9 @@
               window.removeEventListener("mousedown", this, true);
               window.removeEventListener("mouseup", this, true);
               window.removeEventListener("contextmenu", this, true);
+              window.removeEventListener("keydown", this, true);
+              window.removeEventListener("keypress", this, true);
+              window.removeEventListener("keyup", this, true);
               clearInterval(this._autoScrollTimer);
             }
          ]]>
@@ -771,8 +770,8 @@
         <body>
           <![CDATA[
             const XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
-            var popup = document.createElementNS(XUL_NS, "popup");
-            popup.id = "autoscroller";
+            var popup = document.createElementNS(XUL_NS, "panel");
+            popup.className = "autoscroller";
             return popup;
           ]]>
         </body>
@@ -832,6 +831,9 @@
             window.addEventListener("mousedown", this, true);
             window.addEventListener("mouseup", this, true);
             window.addEventListener("contextmenu", this, true);
+            window.addEventListener("keydown", this, true);
+            window.addEventListener("keypress", this, true);
+            window.addEventListener("keyup", this, true);
 
             this._scrollErrorX = 0;
             this._scrollErrorY = 0;
@@ -955,7 +957,61 @@
                 this.stopScroll();
                 break;
               }
+              case "keypress": {
+                if (aEvent.keyCode == aEvent.DOM_VK_ESCAPE) {
+                  // the escape key will be processed by
+                  // nsXULPopupManager::KeyPress and the panel will be closed.
+                  // So, nothing to do here.
+                  break;
+                }
+                // don't break here. we need to eat keypress events.
+              }
+              case "keydown":
+              case "keyup": {
+                // All keyevents should be eaten here during autoscrolling.
+                aEvent.stopPropagation();
+                aEvent.preventDefault();
+                break;
+              }
             }
+          }
+        ]]>
+        </body>
+      </method>
+
+      <method name="swapDocShells">
+        <parameter name="aOtherBrowser"/>
+        <body>
+        <![CDATA[
+          // We need to swap fields that are tied to our docshell or related to
+          // the loaded page
+          // Fields which are built as a result of notifactions (pageshow/hide,
+          // DOMLinkAdded/Removed, onStateChange) should not be swapped here,
+          // because these notifications are dispatched again once the docshells
+          // are swapped.
+          var fieldsToSwap = [ "_docShell", "_webBrowserFind", "_contentWindow", "_webNavigation"];
+
+          var ourTabBrowser = this.getTabBrowser();
+
+          // _fastFind is tied to the docshell if we don't have a tabbrowser
+          if ((ourTabBrowser != null) !=
+              (aOtherBrowser.getTabBrowser() != null))
+            throw "Unable to perform swap on <browsers> if one is in a <tabbrowser> and one is not";
+
+          if (!ourTabBrowser)
+            fieldsToSwap.push("_fastFind");
+
+          var ourFieldValues = {};
+          var otherFieldValues = {};
+          for each (var field in fieldsToSwap) {
+            ourFieldValues[field] = this[field];
+            otherFieldValues[field] = aOtherBrowser[field];
+          }
+          this.QueryInterface(Components.interfaces.nsIFrameLoaderOwner)
+              .swapFrameLoaders(aOtherBrowser);
+          for each (var field in fieldsToSwap) {
+            this[field] = otherFieldValues[field];
+            aOtherBrowser[field] = ourFieldValues[field];
           }
         ]]>
         </body>
@@ -966,6 +1022,10 @@
       <handler event="keypress" keycode="VK_F7" group="system">
         <![CDATA[
           if (event.getPreventDefault() || !event.isTrusted)
+            return;
+
+          var isEnabled = this.mPrefs.getBoolPref("accessibility.browsewithcaret_shortcut.enabled");
+          if (!isEnabled)
             return;
 
           // Toggle browse with caret mode

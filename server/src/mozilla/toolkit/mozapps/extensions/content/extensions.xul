@@ -63,7 +63,6 @@
   <script type="application/javascript" src="chrome://global/content/globalOverlay.js"/>
   <script type="application/javascript" src="chrome://global/content/contentAreaUtils.js"/>
   <script type="application/javascript" src="chrome://mozapps/content/extensions/extensions.js"/>
-  <script type="application/javascript" src="chrome://global/content/nsDragAndDrop.js"/>
 
   <stringbundleset id="extensionsSet">
     <stringbundle id="brandStrings" src="chrome://branding/locale/brand.properties"/>
@@ -159,49 +158,53 @@
 
   <popup id="addonContextMenu" onpopupshowing="return buildContextMenu(event);"/>
 
-  <stack id="topStackBar">
-    <radiogroup id="viewGroup" xhtml:role="listbox" persist="last-selected"
-                class="viewSelector chromeclass-toolbar" orient="horizontal">
-      <radio id="search-view" label="&search.label;" oncommand="showView('search');" persist="last-selected"/>
-      <radio id="extensions-view" label="&extensions.label;" oncommand="showView('extensions');" persist="last-selected"/>
-      <radio id="themes-view" label="&themes.label;" oncommand="showView('themes');" persist="last-selected"/>
-      <radio id="locales-view" label="&locales.label;" oncommand="showView('locales');" persist="last-selected"/>
-      <radio id="plugins-view" label="&plugins.label;" oncommand="showView('plugins');" persist="last-selected"/>
-      <radio id="updates-view" label="&update.label;" oncommand="showView('updates');"/>
-      <radio id="installs-view" label="&install.label;" oncommand="showView('installs');" hidden="true"/>
-    </radiogroup>
-    <vbox id="progressBox" hidden="true" class="viewSelector" flex="1">
-      <spacer flex="1"/>
-      <hbox>
-        <image class="addonThrobber"/>
-        <label id="progressStatus" value="&progressStatus.label;"/>
+  <windowdragbox id="topBar" class="chromeclass-toolbar">
+    <deck flex="1">
+      <hbox class="viewGroupWrapper">
+        <radiogroup id="viewGroup" xhtml:role="listbox" persist="last-selected"
+                    orient="horizontal">
+          <radio id="search-view" label="&search.label;" oncommand="showView('search');" persist="last-selected"/>
+          <radio id="extensions-view" label="&extensions.label;" oncommand="showView('extensions');" persist="last-selected"/>
+          <radio id="themes-view" label="&themes.label;" oncommand="showView('themes');" persist="last-selected"/>
+          <radio id="locales-view" label="&locales.label;" oncommand="showView('locales');" persist="last-selected"/>
+          <radio id="plugins-view" label="&plugins.label;" oncommand="showView('plugins');" persist="last-selected"/>
+          <radio id="updates-view" label="&update.label;" oncommand="showView('updates');"/>
+          <radio id="installs-view" label="&install.label;" oncommand="showView('installs');" hidden="true"/>
+        </radiogroup>
       </hbox>
-      <progressmeter id="addonsProgress" class="extension-item-progress" flex="1"/>
-      <spacer flex="1"/>
-    </vbox>
-  </stack>
+      <vbox id="progressBox" flex="1">
+        <spacer flex="1"/>
+        <hbox>
+          <image class="addonThrobber"/>
+          <label id="progressStatus" value="&progressStatus.label;"/>
+        </hbox>
+        <progressmeter id="addonsProgress" class="extension-item-progress" flex="1"/>
+        <spacer flex="1"/>
+      </vbox>
+    </deck>
+  </windowdragbox>
   <notificationbox id="addonsMsg" flex="1">
     <vbox id="extensionsBox" flex="1">
       <hbox id="searchPanel" align="center">
-        <textbox id="searchbox" emptytext="&searchAddons.label;"
-                 oncommand="retrieveRepositoryAddons(this.value);"
-                 persist="value"/>
+        <textbox id="searchfield" emptytext="&searchAddons.label;"
+                 type="search" searchbutton="true" class="compact"
+                 oncommand="retrieveRepositoryAddons(this.value);"/>
         <spacer flex="1"/>
         <label id="browseAddons" class="text-link" value="&browseAddons.label;"
-               onclick="openURL(this.getAttribute('homepageURL'));"/>
+               onclick="if (event.button == 0) { openURL(this.getAttribute('homepageURL')); }"/>
       </hbox>
       
       <hbox flex="1">
-        <richlistbox id="extensionsView" flex="1" 
+        <richlistbox id="extensionsView" flex="1" sort="?name"
                      datasources="rdf:null" context="addonContextMenu"
-                     ondragenter="nsDragAndDrop.dragEnter(event, gExtensionsDNDObserver);"
-                     ondragover="nsDragAndDrop.dragOver(event, gExtensionsDNDObserver);"
-                     ondragdrop="nsDragAndDrop.drop(event, gExtensionsDNDObserver);"
+                     ondragenter="gExtensionsDNDObserver.onDragOver(event)"
+                     ondragover="gExtensionsDNDObserver.onDragOver(event)"
+                     ondrop="gExtensionsDNDObserver.onDrop(event)"
                      ondblclick="onViewDoubleClick(event);"/>
   
-        <splitter id="themeSplitter" hidden="true" collapse="after" persist="state"/>
+        <splitter id="themeSplitter" hidden="true" collapse="none" persist="state"/>
   
-        <vbox id="themePreviewArea" hidden="true" width="220" persist="width">
+        <vbox id="themePreviewArea" hidden="true" width="220" flex="1" persist="width">
           <deck id="previewImageDeck" flex="1">
             <vbox id="noThemeSelected" pack="center" align="center">
               <label class="previewText">&previewNoThemeSelected.label;</label>
@@ -210,9 +213,9 @@
               <label class="previewText">&previewNoPreviewImage.label;</label>
             </vbox>
             <vbox id="previewImageContainer" align="center" pack="center">
-              <description>
-                <image id="previewImage"/>
-              </description>
+              <hbox>
+                <image id="previewImage" onerror="onPreviewImageError(event)"/>
+              </hbox>
             </vbox>
             <vbox id="infoNoAddonSelected" align="center" pack="center">
               <label class="previewText">&infoNoAddonSelected.label;</label>
@@ -235,15 +238,7 @@
   </notificationbox>
   <vbox>
     <hbox id="commandBarBottom" align="center">
-      <button id="installFileButton" label="&cmd.installLocalFile.label;"
-              accesskey="&cmd.installLocalFile.accesskey;"
-              tooltiptextaddons="&cmd.installFileAddon.tooltip;"
-              tooltiptextthemes="&cmd.installFileTheme.tooltip;"
-              command="cmd_installFile"/>
-      <button id="installUpdatesAllButton" label="&cmd.installUpdatesAll.label;"
-              accesskey="&cmd.installUpdatesAll.accesskey;"
-              tooltiptext="&cmd.installUpdatesAll.tooltip;"
-              command="cmd_installUpdatesAll"/>
+#ifdef XP_UNIX
       <button id="showUpdateInfoButton" label="&cmd.showUpdateInfo.label;"
               accesskey="&cmd.showUpdateInfo.accesskey;"
               tooltiptext="&cmd.showUpdateInfo.tooltip;"
@@ -252,29 +247,79 @@
               accesskey="&cmd.hideUpdateInfo.accesskey;"
               tooltiptext="&cmd.hideUpdateInfo.tooltip;"
               command="cmd_hideUpdateInfo"/>
+      <button id="installFileButton" label="&cmd.installLocalFile.label;"
+              accesskey="&cmd.installLocalFile.accesskey;"
+              tooltiptextaddons="&cmd.installFileAddon.tooltip;"
+              tooltiptextthemes="&cmd.installFileTheme.tooltip;"
+              command="cmd_installFile"/>
       <button id="checkUpdatesAllButton" label="&cmd.checkUpdatesAll.label;"
               accesskey="&cmd.checkUpdatesAll.accesskey;"
               tooltiptextaddons="&cmd.checkUpdatesAllAddon.tooltip;"
               tooltiptextthemes="&cmd.checkUpdatesAllTheme.tooltip;"
+              tooltiptextplugins="&cmd.checkUpdatesAllPlugin.tooltip;"
               command="cmd_checkUpdatesAll"/>
+      <label id="getMore" class="text-link"
+             onclick="if (event.button == 0) { openURL(this.getAttribute('getMoreURL')); }"
+             valuethemes="&getThemes.label;"
+             valueplugins="&getPlugins.label;"
+             valueextensions="&getExtensions.label;"/>
+      <spacer flex="1"/>
+      <button id="skipDialogButton" label="&cmd.skip.label;"
+              accesskey="&cmd.skip.accesskey;"
+              tooltiptext="&cmd.skip.tooltip;"
+              command="cmd_close"/>
+      <button id="continueDialogButton" label="&cmd.continue.label;"
+              accesskey="&cmd.continue.accesskey;"
+              tooltiptext="&cmd.continue.tooltip;"
+              command="cmd_continue"
+              hidden="true"/>
+      <button id="installUpdatesAllButton" label="&cmd.installUpdatesAll2.label;"
+              accesskey="&cmd.installUpdatesAll2.accesskey;"
+              tooltiptext="&cmd.installUpdatesAll2.tooltip;"
+              command="cmd_installUpdatesAll"/>
+#else
+      <button id="installFileButton" label="&cmd.installLocalFile.label;"
+              accesskey="&cmd.installLocalFile.accesskey;"
+              tooltiptextaddons="&cmd.installFileAddon.tooltip;"
+              tooltiptextthemes="&cmd.installFileTheme.tooltip;"
+              command="cmd_installFile"/>
       <spacer flex="1"/>
       <label id="getMore" class="text-link"
-             onclick="openURL(this.getAttribute('getMoreURL'));"
+             onclick="if (event.button == 0) { openURL(this.getAttribute('getMoreURL')); }"
              valuethemes="&getThemes.label;"
              valueplugins="&getPlugins.label;"
              valueextensions="&getExtensions.label;"/>
       <button id="continueDialogButton" label="&cmd.continue.label;"
               accesskey="&cmd.continue.accesskey;"
               tooltiptext="&cmd.continue.tooltip;"
-              command="cmd_continue"/>
+              command="cmd_continue"
+              hidden="true"/>
+      <button id="installUpdatesAllButton" label="&cmd.installUpdatesAll2.label;"
+              accesskey="&cmd.installUpdatesAll2.accesskey;"
+              tooltiptext="&cmd.installUpdatesAll2.tooltip;"
+              command="cmd_installUpdatesAll"/>
+      <button id="checkUpdatesAllButton" label="&cmd.checkUpdatesAll.label;"
+              accesskey="&cmd.checkUpdatesAll.accesskey;"
+              tooltiptextaddons="&cmd.checkUpdatesAllAddon.tooltip;"
+              tooltiptextthemes="&cmd.checkUpdatesAllTheme.tooltip;"
+              command="cmd_checkUpdatesAll"/>
       <button id="skipDialogButton" label="&cmd.skip.label;"
               accesskey="&cmd.skip.accesskey;"
               tooltiptext="&cmd.skip.tooltip;"
               command="cmd_close"/>
+      <button id="showUpdateInfoButton" label="&cmd.showUpdateInfo.label;"
+              accesskey="&cmd.showUpdateInfo.accesskey;"
+              tooltiptext="&cmd.showUpdateInfo.tooltip;"
+              command="cmd_showUpdateInfo"/>
+      <button id="hideUpdateInfoButton" label="&cmd.hideUpdateInfo.label;"
+              accesskey="&cmd.hideUpdateInfo.accesskey;"
+              tooltiptext="&cmd.hideUpdateInfo.tooltip;"
+              command="cmd_hideUpdateInfo"/>
+#endif
     </hbox>
     <hbox id="resizerBox" style="min-width:1px;">
       <spacer flex="1"/>
-      <resizer dir="bottomright"/>
+      <resizer dir="bottomend"/>
     </hbox>
   </vbox>
 </window>

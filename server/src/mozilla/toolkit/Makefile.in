@@ -49,22 +49,33 @@ DIRS	= \
 		obsolete \
 		profile \
 		themes \
+		spatial-navigation \
 		$(NULL)
 
 ifneq (,$(filter gtk2,$(MOZ_WIDGET_TOOLKIT)))
 DIRS += system/unixproxy
 endif
 
+ifneq (,$(filter cocoa,$(MOZ_WIDGET_TOOLKIT)))
+DIRS += system/osxproxy
+endif
+
+ifneq (,$(filter qt,$(MOZ_WIDGET_TOOLKIT)))
+DIRS += system/unixproxy
+endif
+
+ifneq (,$(filter windows,$(MOZ_WIDGET_TOOLKIT)))
+DIRS += system/windowsproxy
+endif
+
 ifdef MOZ_CRASHREPORTER
 DIRS += crashreporter
 endif
 
-ifndef MINIMO
 DIRS += \
 	xre \
-        mozapps \
-        $(NULL)
-endif
+	mozapps \
+	$(NULL)
 
 include $(topsrcdir)/config/rules.mk
 

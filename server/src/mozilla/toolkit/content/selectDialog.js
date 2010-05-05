@@ -98,6 +98,14 @@ function selectDialogOnLoad() {
   moveToAlertPosition();
   param.SetInt(0, 1 );
   centerWindowOnScreen();
+
+  // play sound
+  try {
+    const nsISound = Components.interfaces.nsISound;
+    Components.classes["@mozilla.org/sound;1"]
+              .createInstance(nsISound)
+              .playEventSound(nsISound.EVENT_SELECT_DIALOG_OPEN);
+  } catch (e) { }
 }
 
 function commonDialogOnOK() {

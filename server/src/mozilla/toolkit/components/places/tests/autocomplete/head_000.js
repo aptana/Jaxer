@@ -43,38 +43,28 @@ const Ci = Components.interfaces;
 const Cc = Components.classes;
 const Cr = Components.results;
 
-// If there's no location registered for the profile direcotry, register one now.
+var profDir = do_get_profile();
+
 let dirSvc = Cc["@mozilla.org/file/directory_service;1"].getService(Ci.nsIProperties);
-let profileDir = null;
-try {
-  profileDir = dirSvc.get(NS_APP_USER_PROFILE_50_DIR, Ci.nsIFile);
-} catch (e) {}
-if (!profileDir) {
-  // Register our own provider for the profile directory.
-  // It will simply return the current directory.
-  let provider = {
-    getFile: function(prop, persistent) {
-      persistent.value = true;
-      if (prop == NS_APP_USER_PROFILE_50_DIR) {
-        return dirSvc.get("CurProcD", Ci.nsIFile);
-      }
-      if (prop == NS_APP_HISTORY_50_FILE) {
-        let histFile = dirSvc.get("CurProcD", Ci.nsIFile);
-        histFile.append("history.dat");
-        return histFile;
-      }
-      throw Cr.NS_ERROR_FAILURE;
-    },
-    QueryInterface: function(iid) {
-      if (iid.equals(Ci.nsIDirectoryServiceProvider) ||
-          iid.equals(Ci.nsISupports)) {
-        return this;
-      }
-      throw Cr.NS_ERROR_NO_INTERFACE;
+let provider = {
+  getFile: function(prop, persistent) {
+    persistent.value = true;
+    if (prop == NS_APP_HISTORY_50_FILE) {
+      let histFile = profDir.clone();
+      histFile.append("history.dat");
+      return histFile;
     }
-  };
-  dirSvc.QueryInterface(Ci.nsIDirectoryService).registerProvider(provider);
-}
+    throw Cr.NS_ERROR_FAILURE;
+  },
+  QueryInterface: function(iid) {
+    if (iid.equals(Ci.nsIDirectoryServiceProvider) ||
+        iid.equals(Ci.nsISupports)) {
+      return this;
+    }
+    throw Cr.NS_ERROR_NO_INTERFACE;
+  }
+};
+dirSvc.QueryInterface(Ci.nsIDirectoryService).registerProvider(provider);
 
 // Delete a previously created sqlite file
 function clearDB() {
@@ -86,3 +76,66 @@ function clearDB() {
   } catch(ex) { dump("Exception: " + ex); }
 }
 clearDB();
+
+/**
+ * Dumps the rows of a table out to the console.
+ *
+ * @param aName
+ *        The name of the table or view to output.
+ */
+function dump_table(aName)
+{
+  let db = Cc["@mozilla.org/browser/nav-history-service;1"].
+           getService(Ci.nsPIPlacesDatabase).
+           DBConnection;
+  let stmt = db.createStatement("SELECT * FROM " + aName);
+
+  dump("\n*** Printing data from " + aName + ":\n");
+  let count = 0;
+  while (stmt.executeStep()) {
+    let columns = stmt.numEntries;
+
+    if (count == 0) {
+      // print the column names
+      for (let i = 0; i < columns; i++)
+        dump(stmt.getColumnName(i) + "\t");
+      dump("\n");
+    }
+
+    // print the row
+    for (let i = 0; i < columns; i++) {
+      switch (stmt.getTypeOfIndex(i)) {
+        case Ci.mozIStorageValueArray.VALUE_TYPE_NULL:
+          dump("NULL\t");
+          break;
+        case Ci.mozIStorageValueArray.VALUE_TYPE_INTEGER:
+          dump(stmt.getInt64(i) + "\t");
+          break;
+        case Ci.mozIStorageValueArray.VALUE_TYPE_FLOAT:
+          dump(stmt.getDouble(i) + "\t");
+          break;
+        case Ci.mozIStorageValueArray.VALUE_TYPE_TEXT:
+          dump(stmt.getString(i) + "\t");
+          break;
+      }
+    }
+    dump("\n");
+
+    count++;
+  }
+  dump("*** There were a total of " + count + " rows of data.\n\n");
+
+  stmt.reset();
+  stmt.finalize();
+  stmt = null;
+}
+
+/**
+ * Flushes any events in the event loop of the main thread.
+ */
+function flush_main_thread_events()
+{
+  let tm = Cc["@mozilla.org/thread-manager;1"].getService(Ci.nsIThreadManager);
+  while (tm.mainThread.hasPendingEvents())
+    tm.mainThread.processNextEvent(false);
+}

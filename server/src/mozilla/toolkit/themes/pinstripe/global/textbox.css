@@ -50,7 +50,7 @@
 textbox {
   -moz-appearance: textfield;
   cursor: text;
-  margin: 4px 4px;
+  margin: 4px;
   border: 3px solid;
   -moz-border-top-colors: transparent #888888 #000000;
   -moz-border-right-colors: transparent #FFFFFF #000000;
@@ -64,7 +64,7 @@ textbox {
   color: -moz-FieldText;
 }
 
-textbox[empty="true"] {
+textbox[isempty="true"] {
   color: GrayText;
 }
 
@@ -110,6 +110,7 @@ textbox[disabled="true"] {
 
 textbox.plain {
   -moz-appearance: none !important;
+  background-color: transparent;
   padding: 0px !important;
   margin: 0px !important;
   border: none !important;
@@ -118,23 +119,40 @@ textbox.plain {
 
 /* ::::: rounded search box ::::: */
 
-#search-box {
-  -moz-appearance: none;
-  border: 3px solid;
-  -moz-border-top-colors: #5F5F5F #CFCFCF -moz-Field;
-  -moz-border-bottom-colors: #9F9F9F #EEE -moz-Field;
-  -moz-border-right-colors: #7F7F7F #EEE -moz-Field;
-  -moz-border-left-colors: #7F7F7F #EFEFEF -moz-Field;
-  -moz-border-radius: 11px;
-  background: url("chrome://global/skin/icons/search-textbox.png") -moz-Field no-repeat 1px center;
-  -moz-background-clip: border !important;
-  padding: 0 8px;
-  -moz-padding-start: 17px;
+textbox[type="search"] {
+  -moz-appearance: searchfield;
+  padding: 1px;
+  font-size: 12px;
 }
 
-#search-box[focused="true"] {
-  outline: 2px solid #4A8BC7;
-  outline-offset: -2px;
-  -moz-outline-radius: 11px;
+.textbox-search-clear {
+  list-style-image: url(chrome://global/skin/icons/searchfield-regular-cancel.png);
+  -moz-image-region: rect(0, 14px, 14px, 0);
+  margin-bottom: 1px;
 }
 
+.textbox-search-clear:active:hover {
+  -moz-image-region: rect(0, 28px, 14px, 14px);
+}
+
+textbox[type="search"].compact {
+  padding: 0;
+  font-size: 11px;
+}
+
+textbox[type="search"].compact > .textbox-input-box > .textbox-search-icons > .textbox-search-clear {
+  list-style-image: url(chrome://global/skin/icons/searchfield-small-cancel.png);
+  -moz-image-region: rect(0, 11px, 11px, 0);
+}
+
+textbox[type="search"].compact > .textbox-input-box > .textbox-search-icons > .textbox-search-clear:active:hover {
+  -moz-image-region: rect(0, 22px, 11px, 11px);
+}
+
+.textbox-search-clear:not([disabled]) {
+  cursor: default;
+}
+ 
+.textbox-search-icons:not([selectedIndex="1"]) {
+  visibility: hidden;
+}

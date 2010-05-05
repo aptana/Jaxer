@@ -49,6 +49,7 @@ popup,
 panel {
   -moz-appearance: menupopup;
   min-width: 1px;
+  color: MenuText;
 }
 
 /* ::::: tooltip ::::: */
@@ -61,10 +62,6 @@ tooltip {
   max-width: 40em;
   color: InfoText;
   font: message-box;
-}
-
-.tooltip-label {
-  margin: 0px !important;
 }
 
 tooltip[titletip="true"] {

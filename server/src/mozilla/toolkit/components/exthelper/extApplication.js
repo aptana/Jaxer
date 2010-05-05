@@ -128,7 +128,7 @@ Events.prototype = {
     this._listeners = this._listeners.filter(hasFilter);
 
     function hasFilter(element) {
-      return element.event != aEvent && element.listener != aListener;
+      return (element.event != aEvent) || (element.listener != aListener);
     }
   },
 
@@ -616,7 +616,6 @@ extApplication.prototype = {
   // for nsIObserver
   observe: function app_observe(aSubject, aTopic, aData) {
     if (aTopic == "app-startup") {
-      this._extensions = new Extensions();
       this.events.dispatch("load", "application");
     }
     else if (aTopic == "final-ui-startup") {
@@ -675,6 +674,9 @@ extApplication.prototype = {
   },
 
   get extensions() {
+    if (this._extensions == null)
+      this._extensions = new Extensions();
+
     return this._extensions;
   },
 
@@ -683,6 +685,31 @@ extApplication.prototype = {
         this._events = new Events();
 
     return this._events;
+  },
+
+  // helper method for correct quitting/restarting
+  _quitWithFlags: function app__quitWithFlags(aFlags) {
+    let os = Components.classes["@mozilla.org/observer-service;1"]
+                       .getService(Components.interfaces.nsIObserverService);
+    let cancelQuit = Components.classes["@mozilla.org/supports-PRBool;1"]
+                               .createInstance(Components.interfaces.nsISupportsPRBool);
+    os.notifyObservers(cancelQuit, "quit-application-requested", null);
+    if (cancelQuit.data)
+      return false; // somebody canceled our quit request
+
+    let appStartup = Components.classes['@mozilla.org/toolkit/app-startup;1']
+                               .getService(Components.interfaces.nsIAppStartup);
+    appStartup.quit(aFlags);
+    return true;
+  },
+
+  quit: function app_quit() {
+    return this._quitWithFlags(Components.interfaces.nsIAppStartup.eAttemptQuit);
+  },
+
+  restart: function app_restart() {
+    return this._quitWithFlags(Components.interfaces.nsIAppStartup.eAttemptQuit |
+                               Components.interfaces.nsIAppStartup.eRestart);
   },
 
   QueryInterface : XPCOMUtils.generateQI([Ci.extIApplication, Ci.nsISupportsWeakReference])

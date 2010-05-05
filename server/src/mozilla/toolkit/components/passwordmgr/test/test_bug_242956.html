@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Test for Login Manager</title>
-  <script type="text/javascript" src="/MochiKit/MochiKit.js"></script>
+  <script type="text/javascript" src="/MochiKit/packed.js"></script>
   <script type="text/javascript" src="/tests/SimpleTest/SimpleTest.js"></script>  
   <script type="text/javascript" src="pwmgr_common.js"></script>
   <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
@@ -83,6 +83,7 @@ Login Manager test: 242956
 
 /** Test for Login Manager: 242956 (Stored password is inserted into a
     readable text input on a second page) **/
+commonInit();
 
 // Make sure that pwmgr only puts passwords into type=password <input>s.
 // Might as well test the converse, too (username in password field).

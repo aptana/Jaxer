@@ -38,7 +38,7 @@
 
 const PREF_GETADDONS_GETRECOMMENDED      = "extensions.getAddons.recommended.url";
 
-do_import_script("netwerk/test/httpserver/httpd.js");
+do_load_httpd_js();
 var server;
 var addonRepo;
 
@@ -63,13 +63,11 @@ var RecommendedCallback = {
       if (addons[i].rating != RESULTS[i])
         do_throw("Rating for " + addons[i].id + " was " + addons[i].rating + ", should have been " + RESULTS[i]);
     }
-    do_test_finished();
-    server.stop();
+    server.stop(do_test_finished);
   },
 
   searchFailed: function() {
-    do_test_finished();
-    server.stop();
+    server.stop(do_test_finished);
     do_throw("Recommended results failed");
   }
 };
@@ -81,7 +79,7 @@ function run_test()
   startupEM();
 
   server = new nsHttpServer();
-  server.registerDirectory("/", do_get_file("toolkit/mozapps/extensions/test/unit/data"));
+  server.registerDirectory("/", do_get_file("data"));
   server.start(4444);
 
   // Point the addons repository to the test server

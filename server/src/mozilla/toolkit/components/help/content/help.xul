@@ -46,8 +46,6 @@
     %brandDTD;
     <!ENTITY % helpDTD SYSTEM "chrome://help/locale/help.dtd">
     %helpDTD;
-    <!ENTITY % globalDTD SYSTEM "chrome://global/locale/global.dtd">
-    %globalDTD;
 ]>
 
 <window id="help"
@@ -67,7 +65,6 @@
         onunload="window.XULBrowserWindow.destroy();">
 
   <script type="application/javascript" src="chrome://help/content/help.js"/>
-  <script type="application/javascript" src="chrome://global/content/nsDragAndDrop.js"/>
   <script type="application/javascript" src="chrome://global/content/viewZoomOverlay.js"/>
   <script type="application/javascript" src="chrome://global/content/globalOverlay.js"/>
 
@@ -153,22 +150,19 @@
   <stringbundle id="bundle_help"
                 src="chrome://help/locale/help.properties"/>
 
-  <vbox flex="1">
     <toolbox id="help-toolbox" class="toolbox-top">
-      <toolbar id="HelpToolbar" class="chromeclass-toolbar" chromedir="&locale.dir;">
+      <toolbar id="HelpToolbar" class="chromeclass-toolbar">
         <toolbarbutton id="help-back-button" type="menu-button"
                        label="&backButton.label;"
                        oncommand="if (event.target == this) goBack(); else gotoHistoryIndex(event);"
                        observes="canGoBack" context="backMenu"
-                       tooltiptext="&backButton.tooltip;"
-                       chromedir="&locale.dir;">
+                       tooltiptext="&backButton.tooltip;">
           <menupopup context="" onpopupshowing="createBackMenu(event);"/>
         </toolbarbutton>
         <toolbarbutton id="help-forward-button" type="menu-button"
                        oncommand="if (event.target == this) goForward(); else gotoHistoryIndex(event);"
                        tooltiptext="&forwardButton.tooltip;"
-                       observes="canGoForward"
-                       chromedir="&locale.dir;">
+                       observes="canGoForward">
           <menupopup context="" onpopupshowing="createForwardMenu(event);"/>
         </toolbarbutton>
         <toolbarbutton id="help-home-button"
@@ -182,9 +176,8 @@
         <toolbarspring flex="1"/>
         <toolbaritem id="search-box"
                      align="center" pack="center">
-          <label value="&searchtab.label;" accesskey="&searchtab.accesskey;" 
-                 control="findText"/>
-          <textbox id="findText" type="timed" timeout="500"
+          <textbox id="findText" type="search" emptytext="&search.emptytext;"
+                   aria-controls="help-toc-panel"
                    oncommand="doFind();"/>
         </toolbaritem>
       </toolbar>
@@ -198,7 +191,7 @@
                    accesskey="&toctab.accesskey;" control="help-toc-panel"/>
           </sidebarheader>
           <tree id="help-toc-panel" class="focusring"
-                flex="1"  hidecolumnpicker="true"
+                flex="1" treelines="true" hidecolumnpicker="true"
                 datasources="rdf:null"
                 containment="http://home.netscape.com/NC-rdf#subheadings"
                 ref="urn:root" flags="dont-build-content"
@@ -235,10 +228,8 @@
         </vbox>
         <vbox id="help-search-sidebar" hidden="true" flex="1">
           <sidebarheader align="center">
-            <label id="help-search-sidebar-header" flex="1" crop="end" value="&searchtab.label;"/>
-            <toolbarbutton id="search-sidebar-closebutton"
-                           tooltiptext="&searchClose.tooltip;"
-                           oncommand="hideSearchSidebar();"/>
+            <label id="help-search-sidebar-header" flex="1" crop="end"
+                   value="&searchHeader.label;"/>
           </sidebarheader>
           <tree id="help-search-tree" class="focusring"
                 flex="1" hidecolumnpicker="true"
@@ -314,5 +305,5 @@
         <findbar id="FindToolbar" browserid="help-content"/>
       </vbox>
     </hbox>
-  </vbox>
+
 </window>

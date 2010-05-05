@@ -51,7 +51,7 @@ var observer =
   onBeginUpdateBatch: function(){},
   onEndUpdateBatch: function(){
   },
-  onItemAdded: function(itemId, folder, index) {
+  onItemAdded: function(itemId, folder, index, itemType) {
     var title = bmsvc.getItemTitle(itemId);
     if (title == "The First Title") {
       ok(true, "Item with title loaded");
@@ -59,14 +59,14 @@ var observer =
       SimpleTest.finish();
     }
   },
-  onItemRemoved: function(itemId, folder, index){},
-  onItemChanged: function(itemId, property, isAnnotationProperty, value){},
-  onItemVisited: function(itemId, aVisitID, time){},
-  onItemMoved: function(itemId, oldParent, oldIndex, newParent, newIndex){},
+  onBeforeItemRemoved: function(){},
+  onItemRemoved: function(){},
+  onItemChanged: function(){},
+  onItemVisited: function(){},
+  onItemMoved: function(){},
 
 };
 
-var root = bmsvc.bookmarksRoot;
 const FEEDSPEC = "http://localhost:8888/tests/toolkit/components/places/tests/chrome/rss_as_html.rss";
 
 gLivemarkId = lmsvc.createLivemarkFolderOnly(toolbarFolderId, "foo",

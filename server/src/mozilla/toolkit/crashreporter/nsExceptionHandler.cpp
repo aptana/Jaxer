@@ -20,6 +20,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
+ *  Josh Aas <josh@mozilla.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -81,6 +82,7 @@ namespace CrashReporter {
 #ifdef XP_WIN32
 typedef wchar_t XP_CHAR;
 #define CONVERT_UTF16_TO_XP_CHAR(x) x
+#define CONVERT_XP_CHAR_TO_UTF16(x) x
 #define XP_STRLEN(x) wcslen(x)
 #define CRASH_REPORTER_FILENAME "crashreporter.exe"
 #define PATH_SEPARATOR "\\"
@@ -97,6 +99,7 @@ typedef wchar_t XP_CHAR;
 #else
 typedef char XP_CHAR;
 #define CONVERT_UTF16_TO_XP_CHAR(x) NS_ConvertUTF16toUTF8(x)
+#define CONVERT_XP_CHAR_TO_UTF16(x) NS_ConvertUTF8toUTF16(x)
 #define XP_STRLEN(x) strlen(x)
 #define CRASH_REPORTER_FILENAME "crashreporter"
 #define PATH_SEPARATOR "/"
@@ -136,6 +139,7 @@ static const int kTimeSinceLastCrashParameterLen =
 // this holds additional data sent via the API
 static nsDataHashtable<nsCStringHashKey,nsCString>* crashReporterAPIData_Hash;
 static nsCString* crashReporterAPIData = nsnull;
+static nsCString* notesField = nsnull;
 
 static XP_CHAR*
 Concat(XP_CHAR* str, const XP_CHAR* toAppend, int* size)
@@ -311,8 +315,33 @@ bool MinidumpCallback(const XP_CHAR* dump_path,
  return returnValue;
 }
 
+#ifdef XP_WIN
+/**
+ * Filters out floating point exceptions which are handled by nsSigHandlers.cpp
+ * and should not be handled as crashes.
+ */
+static bool FPEFilter(void* context, EXCEPTION_POINTERS* exinfo,
+                      MDRawAssertionInfo* assertion)
+{
+  PEXCEPTION_RECORD e = (PEXCEPTION_RECORD)exinfo->ExceptionRecord;
+  switch (e->ExceptionCode) {
+    case STATUS_FLOAT_DENORMAL_OPERAND:
+    case STATUS_FLOAT_DIVIDE_BY_ZERO:
+    case STATUS_FLOAT_INEXACT_RESULT:
+    case STATUS_FLOAT_INVALID_OPERATION:
+    case STATUS_FLOAT_OVERFLOW:
+    case STATUS_FLOAT_STACK_CHECK:
+    case STATUS_FLOAT_UNDERFLOW:
+    case STATUS_FLOAT_MULTIPLE_FAULTS:
+    case STATUS_FLOAT_MULTIPLE_TRAPS:
+      return false; // Don't write minidump, continue exception search
+  }
+  return true;
+}
+#endif // XP_WIN
+
 nsresult SetExceptionHandler(nsILocalFile* aXREDirectory,
-                             const char* aServerURL)
+                             bool force/*=false*/)
 {
   nsresult rv;
 
@@ -320,7 +349,7 @@ nsresult SetExceptionHandler(nsILocalFile* aXREDirectory,
     return NS_ERROR_ALREADY_INITIALIZED;
 
   const char *envvar = PR_GetEnv("MOZ_CRASHREPORTER_DISABLE");
-  if (envvar && *envvar)
+  if (envvar && *envvar && !force)
     return NS_OK;
 
   // this environment variable prevents us from launching
@@ -339,6 +368,9 @@ nsresult SetExceptionHandler(nsILocalFile* aXREDirectory,
 
   rv = crashReporterAPIData_Hash->Init();
   NS_ENSURE_SUCCESS(rv, rv);
+
+  notesField = new nsCString();
+  NS_ENSURE_TRUE(notesField, NS_ERROR_OUT_OF_MEMORY);
 
   // locate crashreporter executable
   nsCOMPtr<nsIFile> exePath;
@@ -401,7 +433,11 @@ nsresult SetExceptionHandler(nsILocalFile* aXREDirectory,
   // now set the exception handler
   gExceptionHandler = new google_breakpad::
     ExceptionHandler(tempPath.get(),
+#ifdef XP_WIN
+                     FPEFilter,
+#else
                      nsnull,
+#endif
                      MinidumpCallback,
                      nsnull,
 #if defined(XP_WIN32)
@@ -412,11 +448,6 @@ nsresult SetExceptionHandler(nsILocalFile* aXREDirectory,
 
   if (!gExceptionHandler)
     return NS_ERROR_OUT_OF_MEMORY;
-
-  // store server URL with the API data
-  if (aServerURL)
-    AnnotateCrashReport(NS_LITERAL_CSTRING("ServerURL"),
-                        nsDependentCString(aServerURL));
 
   // store application start time
   char timeString[32];
@@ -432,6 +463,20 @@ nsresult SetExceptionHandler(nsILocalFile* aXREDirectory,
 #endif
 
   return NS_OK;
+}
+
+bool GetEnabled()
+{
+  return gExceptionHandler != nsnull;
+}
+
+bool GetMinidumpPath(nsAString& aPath)
+{
+  if (!gExceptionHandler)
+    return false;
+
+  aPath = CONVERT_XP_CHAR_TO_UTF16(gExceptionHandler->dump_path().c_str());
+  return true;
 }
 
 nsresult SetMinidumpPath(const nsAString& aPath)
@@ -531,46 +576,6 @@ GetOrInit(nsIFile* aDir, const nsACString& filename,
   return rv;
 }
 
-// Generate a unique user ID.  We're using a GUID form,
-// but not jumping through hoops to make it cryptographically
-// secure.  We just want it to distinguish unique users.
-static nsresult
-InitUserID(nsACString& aUserID)
-{
-  nsID id;
-
-  // copied shamelessly from nsUUIDGenerator.cpp
-#if defined(XP_WIN)
-  HRESULT hr = CoCreateGuid((GUID*)&id);
-  if (NS_FAILED(hr))
-    return NS_ERROR_FAILURE;
-#elif defined(XP_MACOSX)
-  CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
-  if (!uuid)
-    return NS_ERROR_FAILURE;
-
-  CFUUIDBytes bytes = CFUUIDGetUUIDBytes(uuid);
-  memcpy(&id, &bytes, sizeof(nsID));
-
-  CFRelease(uuid);
-#else
-  // UNIX or some such thing
-  id.m0 = random();
-  id.m1 = random();
-  id.m2 = random();
-  *reinterpret_cast<PRUint32*>(&id.m3[0]) = random();
-  *reinterpret_cast<PRUint32*>(&id.m3[4]) = random();
-#endif
-
-  char* id_cstr = id.ToString();
-  NS_ENSURE_TRUE(id_cstr, NS_ERROR_OUT_OF_MEMORY);
-  nsDependentCString id_str(id_cstr);
-  aUserID = Substring(id_str, 1, id_str.Length()-2);
-
-  PR_Free(id_cstr);
-  return NS_OK;
-}
-
 // Init the "install time" data.  We're taking an easy way out here
 // and just setting this to "the time when this version was first run".
 static nsresult
@@ -608,33 +613,33 @@ nsresult SetupExtraData(nsILocalFile* aAppDataDirectory,
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
-  // Save this path in the environment for the crash reporter application.
-  nsCAutoString dataDirEnv("MOZ_CRASHREPORTER_DATA_DIRECTORY=");
-
 #if defined(XP_WIN32)
+  nsAutoString dataDirEnv(NS_LITERAL_STRING("MOZ_CRASHREPORTER_DATA_DIRECTORY="));
+
   nsAutoString dataDirectoryPath;
   rv = dataDirectory->GetPath(dataDirectoryPath);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  AppendUTF16toUTF8(dataDirectoryPath, dataDirEnv);
+  dataDirEnv.Append(dataDirectoryPath);
+
+  _wputenv(dataDirEnv.get());
 #else
+  // Save this path in the environment for the crash reporter application.
+  nsCAutoString dataDirEnv("MOZ_CRASHREPORTER_DATA_DIRECTORY=");
+
   nsCAutoString dataDirectoryPath;
   rv = dataDirectory->GetNativePath(dataDirectoryPath);
   NS_ENSURE_SUCCESS(rv, rv);
 
   dataDirEnv.Append(dataDirectoryPath);
-#endif
 
   char* env = ToNewCString(dataDirEnv);
   NS_ENSURE_TRUE(env, NS_ERROR_OUT_OF_MEMORY);
 
   PR_SetEnv(env);
+#endif
 
   nsCAutoString data;
-  if(NS_SUCCEEDED(GetOrInit(dataDirectory, NS_LITERAL_CSTRING("UserID"),
-                            data, InitUserID)))
-    AnnotateCrashReport(NS_LITERAL_CSTRING("UserID"), data);
-
   if(NS_SUCCEEDED(GetOrInit(dataDirectory,
                             NS_LITERAL_CSTRING("InstallTime") + aBuildID,
                             data, InitInstallTime)))
@@ -680,6 +685,8 @@ nsresult SetupExtraData(nsILocalFile* aAppDataDirectory,
 
 nsresult UnsetExceptionHandler()
 {
+  delete gExceptionHandler;
+
   // do this here in the unlikely case that we succeeded in allocating
   // our strings but failed to allocate gExceptionHandler.
   if (crashReporterAPIData_Hash) {
@@ -692,6 +699,11 @@ nsresult UnsetExceptionHandler()
     crashReporterAPIData = nsnull;
   }
 
+  if (notesField) {
+    delete notesField;
+    notesField = nsnull;
+  }
+
   if (crashReporterPath) {
     NS_Free(crashReporterPath);
     crashReporterPath = nsnull;
@@ -700,7 +712,6 @@ nsresult UnsetExceptionHandler()
   if (!gExceptionHandler)
     return NS_ERROR_NOT_INITIALIZED;
 
-  delete gExceptionHandler;
   gExceptionHandler = nsnull;
 
   return NS_OK;
@@ -733,16 +744,16 @@ static PRBool DoFindInReadable(const nsACString& str, const nsACString& value)
   return FindInReadable(value, start, end);
 }
 
-static PLDHashOperator PR_CALLBACK EnumerateEntries(const nsACString& key,
-                                                    nsCString entry,
-                                                    void* userData)
+static PLDHashOperator EnumerateEntries(const nsACString& key,
+                                        nsCString entry,
+                                        void* userData)
 {
   crashReporterAPIData->Append(key + NS_LITERAL_CSTRING("=") + entry +
                                NS_LITERAL_CSTRING("\n"));
   return PL_DHASH_NEXT;
 }
 
-nsresult AnnotateCrashReport(const nsACString &key, const nsACString &data)
+nsresult AnnotateCrashReport(const nsACString& key, const nsACString& data)
 {
   if (!gExceptionHandler)
     return NS_ERROR_NOT_INITIALIZED;
@@ -774,8 +785,50 @@ nsresult AnnotateCrashReport(const nsACString &key, const nsACString &data)
   return NS_OK;
 }
 
+nsresult AppendAppNotesToCrashReport(const nsACString& data)
+{
+  if (!gExceptionHandler)
+    return NS_ERROR_NOT_INITIALIZED;
+
+  if (DoFindInReadable(data, NS_LITERAL_CSTRING("\0")))
+    return NS_ERROR_INVALID_ARG;
+
+  notesField->Append(data);
+  return AnnotateCrashReport(NS_LITERAL_CSTRING("Notes"), *notesField);
+}
+
+// Returns true if found, false if not found.
+bool GetAnnotation(const nsACString& key, nsACString& data)
+{
+  if (!gExceptionHandler)
+    return false;
+
+  nsCAutoString entry;
+  if (!crashReporterAPIData_Hash->Get(key, &entry))
+    return false;
+
+  data = entry;
+  return true;
+}
+
+bool GetServerURL(nsACString& aServerURL)
+{
+  if (!gExceptionHandler)
+    return false;
+
+  return GetAnnotation(NS_LITERAL_CSTRING("ServerURL"), aServerURL);
+}
+
+nsresult SetServerURL(const nsACString& aServerURL)
+{
+  // store server URL with the API data
+  // the client knows to handle this specially
+  return AnnotateCrashReport(NS_LITERAL_CSTRING("ServerURL"),
+                             aServerURL);
+}
+
 nsresult
-SetRestartArgs(int argc, char **argv)
+SetRestartArgs(int argc, char** argv)
 {
   if (!gExceptionHandler)
     return NS_OK;
@@ -843,6 +896,16 @@ nsresult WriteMinidumpForException(EXCEPTION_POINTERS* aExceptionInfo)
     return NS_ERROR_NOT_INITIALIZED;
 
   return gExceptionHandler->WriteMinidumpForException(aExceptionInfo) ? NS_OK : NS_ERROR_FAILURE;
+}
+#endif
+
+#ifdef XP_MACOSX
+nsresult AppendObjCExceptionInfoToAppNotes(void *inException)
+{
+  nsCAutoString excString;
+  GetObjCExceptionInfo(inException, excString);
+  AppendAppNotesToCrashReport(excString);
+  return NS_OK;
 }
 #endif
 

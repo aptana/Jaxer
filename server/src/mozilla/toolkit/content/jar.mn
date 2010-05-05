@@ -5,13 +5,20 @@ toolkit.jar:
 # provide the nsTransferable in nsDragAndDrop.js to extensions that have to
 # work with Geckos from before 1.9, when there was a separate file
 %  override chrome://global/content/nsTransferable.js chrome://global/content/nsDragAndDrop.js
+# Simplify migration from m-1.9.1 to (m-1.9.2 and) m-1.9.3.
+%  resource gre-resources resource://gre/res/
 *  content/global/license.html                (license.html)
    content/global/XPCNativeWrapper.js         (XPCNativeWrapper.js)
 *  content/global/xul.css                     (xul.css)
+   content/global/textbox.css                 (textbox.css)
+   content/global/menulist.css                (menulist.css)
 *  content/global/about.xhtml                 (about.xhtml)
+*  content/global/aboutRights.xhtml           (aboutRights.xhtml)
+*  content/global/aboutRights-unbranded.xhtml (aboutRights-unbranded.xhtml)
+   content/global/directionDetector.html
    content/global/plugins.html
    content/global/plugins.css
-+  content/global/buildconfig.html            (buildconfig.html)
+*+ content/global/buildconfig.html            (buildconfig.html)
 +  content/global/charsetOverlay.js           (charsetOverlay.js)
 +  content/global/charsetOverlay.xul          (charsetOverlay.xul)
 *+ content/global/commonDialog.js             (commonDialog.js)
@@ -44,6 +51,8 @@ toolkit.jar:
 *+ content/global/bindings/dialog.xml          (widgets/dialog.xml)
 *+ content/global/bindings/editor.xml          (widgets/editor.xml)
 *  content/global/bindings/expander.xml        (widgets/expander.xml)
+*  content/global/bindings/filefield.xml       (widgets/filefield.xml)
+*+ content/global/bindings/findbar.xml         (widgets/findbar.xml)
 *+ content/global/bindings/general.xml         (widgets/general.xml)
 *+ content/global/bindings/groupbox.xml        (widgets/groupbox.xml)
 *+ content/global/bindings/listbox.xml         (widgets/listbox.xml)
@@ -55,6 +64,7 @@ toolkit.jar:
 *+ content/global/bindings/preferences.xml     (widgets/preferences.xml)
 *+ content/global/bindings/progressmeter.xml   (widgets/progressmeter.xml)
 *+ content/global/bindings/radio.xml           (widgets/radio.xml)
+*+ content/global/bindings/resizer.xml         (widgets/resizer.xml)
 *+ content/global/bindings/richlistbox.xml     (widgets/richlistbox.xml)
 *+ content/global/bindings/scale.xml           (widgets/scale.xml)
 *+ content/global/bindings/scrollbar.xml       (widgets/scrollbar.xml)
@@ -68,8 +78,9 @@ toolkit.jar:
 *+ content/global/bindings/toolbar.xml         (widgets/toolbar.xml)
 *+ content/global/bindings/toolbarbutton.xml   (widgets/toolbarbutton.xml)
 *+ content/global/bindings/tree.xml            (widgets/tree.xml)
+*+ content/global/bindings/videocontrols.xml   (widgets/videocontrols.xml)
+*+ content/global/bindings/videocontrols.css   (widgets/videocontrols.css)
 *+ content/global/bindings/wizard.xml          (widgets/wizard.xml)
-*+ content/global/bindings/findbar.xml         (widgets/findbar.xml)
 #ifdef XP_MACOSX
 *  content/global/macWindowMenu.js             (macWindowMenu.js)
 #endif

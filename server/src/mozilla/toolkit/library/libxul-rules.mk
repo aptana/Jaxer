@@ -40,9 +40,10 @@ EXTRA_DSO_LDOPTS += \
 	$(LIBS_DIR) \
 	$(JPEG_LIBS) \
 	$(PNG_LIBS) \
-	$(LCMS_LIBS) \
+	$(QCMS_LIBS) \
 	$(MOZ_JS_LIBS) \
 	$(NSS_LIBS) \
+	$(MOZ_CAIRO_LIBS) \
 	$(NULL)
 
 ifdef MOZ_NATIVE_ZLIB
@@ -80,16 +81,7 @@ endif
 endif
 ifneq (,$(filter $(MOZ_WIDGET_TOOLKIT),mac cocoa))
 EXTRA_DSO_LDOPTS += -lcups
-ifdef MOZ_ENABLE_GLITZ
-EXTRA_DSO_LDOPTS += -lmozglitzagl -framework OpenGL -framework AGL
 endif
-endif
-
-ifeq ($(MOZ_WIDGET_TOOLKIT),gtk2)
-EXTRA_DSO_LDOPTS += $(MOZ_PANGO_LIBS)
-endif
-
-EXTRA_DSO_LDOPTS += $(MOZ_CAIRO_LIBS)
 
 export:: dlldeps.cpp
 

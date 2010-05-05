@@ -114,7 +114,7 @@
           var uppercaseVal = val.toUpperCase();
           // Translate standard HTML color strings:
           if (uppercaseVal[0] != "#") {
-            switch (val) {
+            switch (uppercaseVal) {
               case "GREEN":
                 uppercaseVal = "#008000";
                 break;
@@ -155,7 +155,7 @@
                 uppercaseVal = "#FFFFFF";
                 break;
               case "SILVER":
-                uppercaseVal = "#CC0C0C0";
+                uppercaseVal = "#C0C0C0";
                 break;
               case "GRAY":
                 uppercaseVal = "#808080";
@@ -419,7 +419,7 @@
       <xul:hbox class="colorpicker-button-colorbox" anonid="colorbox" flex="1" xbl:inherits="disabled"/>
 
       <xul:panel class="colorpicker-button-menupopup"
-                 anonid="colorpopup" noautofocus="true"
+                 anonid="colorpopup" noautofocus="true" level="top"
                  onmousedown="event.stopPropagation()"
                  onpopupshowing="this._colorPicker.onPopupShowing()"
                  onpopuphiding="this._colorPicker.onPopupHiding()"

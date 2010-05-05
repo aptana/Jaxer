@@ -2,18 +2,19 @@
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://global/content/commonDialog.css" type="text/css"?>
+<?xml-stylesheet href="chrome://global/skin/commonDialog.css" type="text/css"?>
 
 <!DOCTYPE dialog SYSTEM "chrome://global/locale/commonDialog.dtd">
 
 <dialog id="commonDialog"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" 
-        role="alert"
+        aria-describedby="info.body"
         onload="commonDialogOnLoad();"
+        onunload="commonDialogOnUnload();"
         ondialogaccept="return commonDialogOnAccept();"
         ondialogextra1="return commonDialogOnExtra1();"
         ondialogextra2="return commonDialogOnExtra2();"
-        buttonpack="center"
-        style="min-width: 29em; min-height: 8.5em; -moz-user-focus: ignore;"> 
+        buttonpack="center">
     
   <script type="application/javascript" src="chrome://global/content/commonDialog.js"/>
   <script type="application/x-javascript" src="chrome://global/content/globalOverlay.js"/>
@@ -38,6 +39,9 @@
     </popup>
   </popupset>
 
+  <hbox id="filler" style="min-width: 0%;">
+    <spacer style="width: 29em;"/>
+  </hbox>
 
   <grid>
     <columns>
@@ -56,7 +60,7 @@
           <description id="info.title" class="dialogTitle"/>
 #endif
           <description id="info.header" class="header"/>
-          <description id="info.body" context="contentAreaContextMenu" tabindex="-1"/>
+          <description id="info.body" context="contentAreaContextMenu" noinitialfocus="true"/>
         </vbox>
       </row>
       <row id="loginContainer" hidden="true" align="center">

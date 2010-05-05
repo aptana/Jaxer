@@ -39,6 +39,7 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
 richlistbox {
+  -moz-appearance: listbox;
   margin: 2px 4px;
   background-color: -moz-Field;
   color: -moz-FieldText;
@@ -60,7 +61,7 @@ richlistbox:focus > richlistitem[selected="true"] {
 
 richlistbox[seltype="multiple"]:focus > richlistitem[current="true"] {
   outline: 1px dotted Highlight;
-  -moz-outline-offset: -1px;
+  outline-offset: -1px;
 }
 
 richlistbox[seltype="multiple"]:focus > richlistitem[current="true"][selected="true"] {

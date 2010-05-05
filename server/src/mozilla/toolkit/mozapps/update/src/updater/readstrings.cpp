@@ -21,6 +21,7 @@
  *
  * Contributor(s):
  *  Darin Fisher <darin@meer.net>
+ *  Alex Pakhotin <alexp@mozilla.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -42,6 +43,19 @@
 #include "readstrings.h"
 #include "errors.h"
 
+// Defined bool stuff here to reduce external dependencies
+typedef int        PRBool;
+#define PR_TRUE    1
+#define PR_FALSE   0
+
+#ifdef XP_WIN
+# define NS_tfopen _wfopen
+# define OPEN_MODE L"rb"
+#else
+# define NS_tfopen fopen
+# define OPEN_MODE "r"
+#endif
+
 // stack based FILE wrapper to ensure that fclose is called.
 class AutoFILE {
 public:
@@ -52,40 +66,190 @@ private:
   FILE *fp_;
 };
 
-// very basic parser for updater.ini
-int
-ReadStrings(const char *path, StringTable *results)
+static const char kNL[] = "\r\n";
+static const char kEquals[] = "=";
+static const char kWhitespace[] = " \t";
+static const char kRBracket[] = "]";
+
+static const char*
+NS_strspnp(const char *delims, const char *str)
 {
-  AutoFILE fp = fopen(path, "r");
+  const char *d;
+  do {
+    for (d = delims; *d != '\0'; ++d) {
+      if (*str == *d) {
+        ++str;
+        break;
+      }
+    }
+  } while (*d);
+
+  return str;
+}
+
+static char*
+NS_strtok(const char *delims, char **str)
+{
+  if (!*str)
+    return NULL;
+
+  char *ret = (char*) NS_strspnp(delims, *str);
+
+  if (!*ret) {
+    *str = ret;
+    return NULL;
+  }
+
+  char *i = ret;
+  do {
+    for (const char *d = delims; *d != '\0'; ++d) {
+      if (*i == *d) {
+        *i = '\0';
+        *str = ++i;
+        return ret;
+      }
+    }
+    ++i;
+  } while (*i);
+
+  *str = NULL;
+  return ret;
+}
+
+/**
+ * Find a key in a keyList containing zero-delimited keys ending with "\0\0".
+ * Returns a zero-based index of the key in the list, or -1 if the key is not found.
+ */
+static int
+find_key(const char *keyList, char* key)
+{
+  if (!keyList)
+    return -1;
+
+  int index = 0;
+  const char *p = keyList;
+  while (*p)
+  {
+    if (strcmp(key, p) == 0)
+      return index;
+
+    p += strlen(p) + 1;
+    index++;
+  }
+
+  // The key was not found if we came here
+  return -1;
+}
+
+/**
+ * A very basic parser for updater.ini taken mostly from nsINIParser.cpp
+ * that can be used by standalone apps.
+ *
+ * @param path       Path to the .ini file to read
+ * @param keyList    List of zero-delimited keys ending with two zero characters
+ * @param numStrings Number of strings to read into results buffer - must be equal to the number of keys
+ * @param results    Two-dimensional array of strings to be filled in the same order as the keys provided
+ */
+int
+ReadStrings(const NS_tchar *path, const char *keyList, int numStrings, char results[][MAX_TEXT_LEN])
+{
+  AutoFILE fp = NS_tfopen(path, OPEN_MODE);
+
   if (!fp)
     return READ_ERROR;
 
-  // Trim leading junk -- this is a hack!
-  if (!fgets(results->title, MAX_TEXT_LEN, fp))
-    return READ_ERROR;
-  if (!fgets(results->title, MAX_TEXT_LEN, fp))
+  /* get file size */
+  if (fseek(fp, 0, SEEK_END) != 0)
     return READ_ERROR;
 
-  // Now, read the values we care about.
-  if (!fgets(results->title, MAX_TEXT_LEN, fp))
-    return READ_ERROR;
-  if (!fgets(results->info, MAX_TEXT_LEN, fp))
+  long flen = ftell(fp);
+  if (flen == 0)
     return READ_ERROR;
 
-  // Trim trailing newline character and leading 'key='
-  char *strings[] = {
-    results->title, results->info, NULL
-  };
-  for (char **p = strings; *p; ++p) {
-    int len = strlen(*p);
-    if (len)
-      (*p)[len - 1] = '\0';
+  char *fileContents = new char[flen + 1];
+  if (!fileContents)
+    return MEM_ERROR;
 
-    char *eq = strchr(*p, '=');
-    if (!eq)
-      return PARSE_ERROR;
-    memmove(*p, eq + 1, len - (eq - *p + 1));
+  /* read the file in one swoop */
+  if (fseek(fp, 0, SEEK_SET) != 0)
+    return READ_ERROR;
+
+  int rd = fread(fileContents, sizeof(char), flen, fp);
+  if (rd != flen)
+    return READ_ERROR;
+
+  fileContents[flen] = '\0';
+
+  char *buffer = fileContents;
+  PRBool inStringsSection = PR_FALSE;
+
+  unsigned read = 0;
+
+  while (char *token = NS_strtok(kNL, &buffer)) {
+    if (token[0] == '#' || token[0] == ';') // it's a comment
+      continue;
+
+    token = (char*) NS_strspnp(kWhitespace, token);
+    if (!*token) // empty line
+      continue;
+
+    if (token[0] == '[') { // section header!
+      ++token;
+      char const * currSection = token;
+
+      char *rb = NS_strtok(kRBracket, &token);
+      if (!rb || NS_strtok(kWhitespace, &token)) {
+        // there's either an unclosed [Section or a [Section]Moretext!
+        // we could frankly decide that this INI file is malformed right
+        // here and stop, but we won't... keep going, looking for
+        // a well-formed [section] to continue working with
+        inStringsSection = PR_FALSE;
+      }
+      else
+        inStringsSection = strcmp(currSection, "Strings") == 0;
+
+      continue;
+    }
+
+    if (!inStringsSection) {
+      // If we haven't found a section header (or we found a malformed
+      // section header), or this isn't the [Strings] section don't bother
+      // parsing this line.
+      continue;
+    }
+
+    char *key = token;
+    char *e = NS_strtok(kEquals, &token);
+    if (!e)
+      continue;
+
+    int keyIndex = find_key(keyList, key);
+    if (keyIndex >= 0 && keyIndex < numStrings)
+    {
+      strncpy(results[keyIndex], token, MAX_TEXT_LEN - 1);
+      results[keyIndex][MAX_TEXT_LEN - 1] = 0;
+      read++;
+    }
   }
 
-  return OK;
+  return (read == numStrings) ? OK : PARSE_ERROR;
+}
+
+// A wrapper function to read strings for the updater.
+// Added for compatibility with the original code.
+int
+ReadStrings(const NS_tchar *path, StringTable *results)
+{
+  const int kNumStrings = 2;
+  const char *kUpdaterKeys = "Title\0Info\0";
+  char updater_strings[kNumStrings][MAX_TEXT_LEN];
+
+  int result = ReadStrings(path, kUpdaterKeys, kNumStrings, updater_strings);
+
+  strncpy(results->title, updater_strings[0], MAX_TEXT_LEN - 1);
+  results->title[MAX_TEXT_LEN - 1] = 0;
+  strncpy(results->info, updater_strings[1], MAX_TEXT_LEN - 1);
+  results->info[MAX_TEXT_LEN - 1] = 0;
+
+  return result;
 }

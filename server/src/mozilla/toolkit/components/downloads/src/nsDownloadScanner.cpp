@@ -36,7 +36,9 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
- 
+
+#if MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN
+
 #include "nsDownloadScanner.h"
 #include <comcat.h>
 #include <process.h>
@@ -47,6 +49,8 @@
 #include "nsNetUtil.h"
 #include "nsDeque.h"
 #include "nsIFileURL.h"
+#include "nsIPrefBranch2.h"
+#include "nsXPCOMCIDInternal.h"
 
 /**
  * Code overview
@@ -134,8 +138,6 @@
  *  * Get antivirus scanner status via WMI/registry
  */
 
-#define PREF_BDA_DONTCLEAN "browser.download.antivirus.dontclean"
-
 // IAttachementExecute supports user definable settings for certain
 // security related prompts. This defines a general GUID for use in
 // all projects. Individual projects can define an individual guid
@@ -150,6 +152,9 @@ static const GUID GUID_MozillaVirusScannerPromptGeneric =
 
 // Initial timeout is 30 seconds
 #define WATCHDOG_TIMEOUT (30*PR_USEC_PER_SEC)
+
+// Maximum length for URI's passed into IAE
+#define MAX_IAEURILENGTH 1683
 
 class nsDownloadScannerWatchdog 
 {
@@ -171,8 +176,8 @@ private:
   HANDLE mQuitEvent;
 };
 
-nsDownloadScanner::nsDownloadScanner()
-  : mHaveAVScanner(PR_FALSE), mHaveAttachmentExecute(PR_FALSE)
+nsDownloadScanner::nsDownloadScanner() :
+  mAESExists(PR_FALSE)
 {
 }
  
@@ -192,19 +197,26 @@ nsDownloadScanner::Init()
   // codebase. All other COM calls/objects are made on different threads.
   nsresult rv = NS_OK;
   CoInitialize(NULL);
-  if (!IsAESAvailable() && ListCLSID() < 0)
-    rv = NS_ERROR_NOT_AVAILABLE;
-  CoUninitialize();
-  if (NS_SUCCEEDED(rv)) {
-    mWatchdog = new nsDownloadScannerWatchdog();
-    if (mWatchdog) {
-      rv = mWatchdog->Init();
-      if (FAILED(rv))
-        mWatchdog = nsnull;
-    } else {
-      rv = NS_ERROR_OUT_OF_MEMORY;
-    }
+
+  if (!IsAESAvailable()) {
+    CoUninitialize();
+    return NS_ERROR_NOT_AVAILABLE;
   }
+
+  mAESExists = PR_TRUE;
+
+  // Initialize scanning
+  mWatchdog = new nsDownloadScannerWatchdog();
+  if (mWatchdog) {
+    rv = mWatchdog->Init();
+    if (FAILED(rv))
+      mWatchdog = nsnull;
+  } else {
+    rv = NS_ERROR_OUT_OF_MEMORY;
+  }
+  
+  if (NS_FAILED(rv))
+    return rv;
 
   return rv;
 }
@@ -212,6 +224,7 @@ nsDownloadScanner::Init()
 PRBool
 nsDownloadScanner::IsAESAvailable()
 {
+  // Try to instantiate IAE to see if it's available.    
   nsRefPtr<IAttachmentExecute> ae;
   HRESULT hr;
   hr = CoCreateInstance(CLSID_AttachmentServices, NULL, CLSCTX_INPROC,
@@ -220,44 +233,7 @@ nsDownloadScanner::IsAESAvailable()
     NS_WARNING("Could not instantiate attachment execution service\n");
     return PR_FALSE;
   }
-
-  mHaveAVScanner = PR_TRUE;
-  mHaveAttachmentExecute = PR_TRUE;
   return PR_TRUE;
-}
-
-PRInt32
-nsDownloadScanner::ListCLSID()
-{
-  nsRefPtr<ICatInformation> catInfo;
-  HRESULT hr;
-  hr = CoCreateInstance(CLSID_StdComponentCategoriesMgr, NULL, CLSCTX_INPROC,
-                        IID_ICatInformation, getter_AddRefs(catInfo));
-  if (FAILED(hr)) {
-    NS_WARNING("Could not create category information class\n");
-    return -1;
-  }
-  nsRefPtr<IEnumCLSID> clsidEnumerator;
-  GUID guids [1] = { CATID_MSOfficeAntiVirus };
-  hr = catInfo->EnumClassesOfCategories(1, guids, 0, NULL,
-      getter_AddRefs(clsidEnumerator));
-  if (FAILED(hr)) {
-    NS_WARNING("Could not get class enumerator for category\n");
-    return -2;
-  }
-
-  ULONG nReceived;
-  CLSID clsid;
-  while(clsidEnumerator->Next(1, &clsid, &nReceived) == S_OK && nReceived == 1)
-    mScanCLSID.AppendElement(clsid);
-
-  if (mScanCLSID.Length() == 0) {
-    // No installed Anti Virus program
-    return -3;
-  }
-
-  mHaveAVScanner = PR_TRUE;
-  return 0;
 }
 
 // If IAttachementExecute is available, use the CheckPolicy call to find out
@@ -267,7 +243,7 @@ nsDownloadScanner::CheckPolicy(nsIURI *aSource, nsIURI *aTarget)
 {
   nsresult rv;
 
-  if (!aSource || !aTarget || !mHaveAttachmentExecute)
+  if (!mAESExists || !aSource || !aTarget)
     return AVPOLICY_DOWNLOAD;
 
   nsCAutoString source;
@@ -314,6 +290,9 @@ nsDownloadScanner::CheckPolicy(nsIURI *aSource, nsIURI *aTarget)
     return AVPOLICY_DOWNLOAD;
 
   if (hr == S_FALSE)
+    return AVPOLICY_PROMPT;
+
+  if (hr == E_INVALIDARG)
     return AVPOLICY_PROMPT;
 
   return AVPOLICY_BLOCKED;
@@ -384,14 +363,6 @@ nsDownloadScanner::Scan::Start()
 
   nsresult rv = NS_OK;
 
-  // Default is to try to clean downloads
-  mIsReadOnlyRequest = PR_FALSE;
-
-  nsCOMPtr<nsIPrefBranch> pref =
-    do_GetService(NS_PREFSERVICE_CONTRACTID);
-  if (pref)
-    rv = pref->GetBoolPref(PREF_BDA_DONTCLEAN, &mIsReadOnlyRequest);
-
   // Get the path to the file on disk
   nsCOMPtr<nsILocalFile> file;
   rv = mDownload->GetTargetFile(getter_AddRefs(file));
@@ -417,6 +388,13 @@ nsDownloadScanner::Scan::Start()
   nsCAutoString origin;
   rv = uri->GetSpec(origin);
   NS_ENSURE_SUCCESS(rv, rv);
+
+  // Certain virus interfaces do not like extremely long uris.
+  // Chop off the path and cgi data and just pass the base domain. 
+  if (origin.Length() > MAX_IAEURILENGTH) {
+    rv = uri->GetPrePath(origin);
+    NS_ENSURE_SUCCESS(rv, rv);
+  }
 
   CopyUTF8toUTF16(origin, mOrigin);
 
@@ -543,6 +521,10 @@ nsDownloadScanner::Scan::DoScanAES()
         NS_WARNING("Downloaded file disappeared before it could be scanned");
         newState = AVSCAN_FAILED;
       }
+      else if (hr == E_INVALIDARG) {
+        NS_WARNING("IAttachementExecute returned invalid argument error");
+        newState = AVSCAN_FAILED;
+      }
       else { 
         newState = AVSCAN_UGLY;
       }
@@ -556,97 +538,12 @@ nsDownloadScanner::Scan::DoScanAES()
 }
 #pragma warning(default: 4509)
 
-PRBool
-nsDownloadScanner::Scan::DoScanOAV()
-{
-  HRESULT hr;
-  MSOAVINFO info;
-  info.cbsize = sizeof(MSOAVINFO);
-  info.fPath = TRUE;
-  info.fInstalled = FALSE;
-  info.fReadOnlyRequest = mIsReadOnlyRequest;
-  info.fHttpDownload = mIsHttpDownload;
-  info.hwnd = NULL;
-
-  info.pwzHostName = mName.BeginWriting();
-  info.u.pwzFullPath = mPath.BeginWriting();
-  info.pwzOrigURL = mOrigin.BeginWriting();
-
-  AVScanState newState = AVSCAN_GOOD;
-  // If we (somehow) already timed out, then don't bother scanning
-  if (CheckAndSetState(AVSCAN_SCANNING, AVSCAN_NOTSTARTED)) {
-    // This warning is for the destructor of vScanner which will not be invoked
-    // in the event of a win32 exception
-#pragma warning(disable: 4509)
-    for (PRUint32 i = 0; i < mDLScanner->mScanCLSID.Length(); i++) {
-      nsRefPtr<IOfficeAntiVirus> vScanner;
-      __try {
-        hr = CoCreateInstance(mDLScanner->mScanCLSID[i], NULL, CLSCTX_ALL,
-                              IID_IOfficeAntiVirus, getter_AddRefs(vScanner));
-      } __except(ExceptionFilterFunction(GetExceptionCode())) {
-        newState = AVSCAN_FAILED;
-        // Try the next one if there is one
-        continue;
-      }
-      if (FAILED(hr)) {
-        NS_WARNING("Could not instantiate antivirus scanner");
-        newState = AVSCAN_FAILED;
-      } else {
-        PRBool gotException = PR_FALSE;
-        newState = AVSCAN_SCANNING;
-
-        __try {
-          hr = vScanner->Scan(&info);
-        } __except(ExceptionFilterFunction(GetExceptionCode())) {
-          gotException = PR_TRUE;
-        }
-
-        // Invoke destructor
-        __try {
-          vScanner = NULL;
-        } __except(ExceptionFilterFunction(GetExceptionCode())) {
-          gotException = PR_TRUE;
-        }
-
-        if(gotException) {
-          newState = AVSCAN_FAILED;
-          continue;
-        } else if (hr == S_OK) { // Passed the scan
-          newState = AVSCAN_GOOD;
-          continue;
-        }
-        else if (hr == S_FALSE) { // Failed but cleaned up
-          newState = AVSCAN_UGLY;
-          continue;
-        }
-        else if (hr == ERROR_FILE_NOT_FOUND) {
-          NS_WARNING("Downloaded file disappeared before it could be scanned");
-          newState = AVSCAN_FAILED;
-          break;
-        }
-        else if (hr == E_FAIL) { // Failed
-          newState = AVSCAN_BAD;
-          break;
-        }
-        else {
-          newState = AVSCAN_FAILED;
-          break;
-        }
-      }
-    }
-#pragma warning(default: 4509)
-  }
-
-  // If the previous CheckAndSetState call failed, then this one will too
-  return CheckAndSetState(newState, AVSCAN_SCANNING);
-}
-
 void
 nsDownloadScanner::Scan::DoScan()
 {
   CoInitialize(NULL);
 
-  if (mDLScanner->mHaveAttachmentExecute ? DoScanAES() : DoScanOAV()) {
+  if (DoScanAES()) {
     // We need to do a few more things on the main thread
     NS_DispatchToMainThread(this);
   } else {
@@ -702,7 +599,7 @@ nsDownloadScanner::Scan::CheckAndSetState(AVScanState newState, AVScanState expe
 nsresult
 nsDownloadScanner::ScanDownload(nsDownload *download)
 {
-  if (!mHaveAVScanner)
+  if (!mAESExists)
     return NS_ERROR_NOT_AVAILABLE;
 
   // No ref ptr, see comment below
@@ -863,3 +760,5 @@ nsDownloadScannerWatchdog::WatchdogThread(void *p) {
   _endthreadex(0);
   return 0;
 }
+
+#endif // MOZ_WINSDK_TARGETVER >= MOZ_NTDDI_LONGHORN

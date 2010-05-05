@@ -21,6 +21,7 @@
 # Contributor(s):
 #   Robert Strong <rstrong@mozilla.com> - Initial perl scripts (install_sub.pl)
 #   Benjamin Smedberg <benjamin@smedbergs.us> - Makefile-izing
+#   Ehsan Akhgari <ehsan.akhgari@gmail.com> - Unicode installer support
 #
 # Alternatively, the contents of this file may be used under the terms of
 # either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -44,24 +45,32 @@ ABS_CONFIG_DIR := $(shell pwd)/$(CONFIG_DIR)
 
 SFX_MODULE ?= $(error SFX_MODULE is not defined)
 
-TOOLKIT_NSIS_FILES = \
-	AppAssocReg.dll \
+# UTF-8 encoded files that need to be converted to UTF-16LE for NSIS
+TOOLKIT_NSIS_FILES_CONV = \
 	common.nsh \
 	locales.nsi \
-	nsProcess.dll \
 	overrides.nsh \
-	ShellLink.dll \
-	UAC.dll \
 	version.nsh \
 	$(NULL)
 
+TOOLKIT_NSIS_FILES = \
+	AppAssocReg.dll \
+	nsProcess.dll \
+	ShellLink.dll \
+	UAC.dll \
+	$(NULL)
+
 $(CONFIG_DIR)/setup.exe::
-	$(INSTALL) $(addprefix $(topsrcdir)/toolkit/mozapps/installer/windows/nsis/,$(TOOLKIT_NSIS_FILES)) $(CONFIG_DIR)
-	$(INSTALL) $(topsrcdir)/toolkit/mozapps/installer/windows/nsis/setup.ico $(CONFIG_DIR)
-	cd $(CONFIG_DIR) && makensis.exe installer.nsi
+	for i in $(TOOLKIT_NSIS_FILES_CONV); do \
+	  iconv -f UTF-8 -t UTF-16LE $(MOZILLA_DIR)/toolkit/mozapps/installer/windows/nsis/$$i | \
+	    cat $(MOZILLA_DIR)/toolkit/mozapps/installer/windows/nsis/utf16-le-bom.bin - > $(CONFIG_DIR)/$$i; \
+	done
+	$(INSTALL) $(addprefix $(MOZILLA_DIR)/toolkit/mozapps/installer/windows/nsis/,$(TOOLKIT_NSIS_FILES)) $(CONFIG_DIR)
+	$(INSTALL) $(MOZILLA_DIR)/toolkit/mozapps/installer/windows/nsis/setup.ico $(CONFIG_DIR)
+	cd $(CONFIG_DIR) && makensisu.exe installer.nsi
 # Support for building the uninstaller when repackaging locales
 ifeq ($(CONFIG_DIR),l10ngen)
-	cd $(CONFIG_DIR) && makensis.exe uninstaller.nsi
+	cd $(CONFIG_DIR) && makensisu.exe uninstaller.nsi
 endif
 
 $(CONFIG_DIR)/7zSD.sfx:
@@ -71,19 +80,19 @@ installer::
 	$(INSTALL) $(CONFIG_DIR)/removed-files.log $(CONFIG_DIR)/setup.exe $(DEPTH)/installer-stage
 	cd $(DEPTH)/installer-stage && $(CYGWIN_WRAPPER) 7z a -r -t7z $(ABS_CONFIG_DIR)/app.7z -mx -m0=BCJ2 -m1=LZMA:d24 -m2=LZMA:d19 -m3=LZMA:d19  -mb0:1 -mb0s1:2 -mb0s2:3
 	$(MAKE) $(CONFIG_DIR)/7zSD.sfx
-	$(NSINSTALL) -D $(DIST)/install/sea
-	cat $(CONFIG_DIR)/7zSD.sfx $(CONFIG_DIR)/app.tag $(CONFIG_DIR)/app.7z > $(DIST)/install/sea/$(PKG_BASENAME).installer.exe
-	chmod 0755 $(DIST)/install/sea/$(PKG_BASENAME).installer.exe
+	$(NSINSTALL) -D $(DIST)/$(PKG_INST_PATH)
+	cat $(CONFIG_DIR)/7zSD.sfx $(CONFIG_DIR)/app.tag $(CONFIG_DIR)/app.7z > "$(DIST)/$(PKG_INST_PATH)$(PKG_INST_BASENAME).exe"
+	chmod 0755 "$(DIST)/$(PKG_INST_PATH)$(PKG_INST_BASENAME).exe"
 
 # For building the uninstaller during the application build so it can be
 # included for mar file generation.
 uninstaller::
-	$(INSTALL) $(addprefix $(topsrcdir)/toolkit/mozapps/installer/windows/nsis/,$(TOOLKIT_NSIS_FILES)) $(CONFIG_DIR)
-	$(INSTALL) $(topsrcdir)/toolkit/mozapps/installer/windows/nsis/setup.ico $(CONFIG_DIR)
-	cd $(CONFIG_DIR) && makensis.exe uninstaller.nsi
+	for i in $(TOOLKIT_NSIS_FILES_CONV); do \
+	  iconv -f UTF-8 -t UTF-16LE $(MOZILLA_DIR)/toolkit/mozapps/installer/windows/nsis/$$i | \
+	    cat $(MOZILLA_DIR)/toolkit/mozapps/installer/windows/nsis/utf16-le-bom.bin - > $(CONFIG_DIR)/$$i; \
+	done
+	$(INSTALL) $(addprefix $(MOZILLA_DIR)/toolkit/mozapps/installer/windows/nsis/,$(TOOLKIT_NSIS_FILES)) $(CONFIG_DIR)
+	$(INSTALL) $(MOZILLA_DIR)/toolkit/mozapps/installer/windows/nsis/setup.ico $(CONFIG_DIR)
+	cd $(CONFIG_DIR) && makensisu.exe uninstaller.nsi
 	$(NSINSTALL) -D $(DIST)/bin/uninstall
-ifdef MOZ_SUNBIRD
-	cp $(CONFIG_DIR)/uninst.exe $(DIST)/bin/uninstall
-else
 	cp $(CONFIG_DIR)/helper.exe $(DIST)/bin/uninstall
-endif

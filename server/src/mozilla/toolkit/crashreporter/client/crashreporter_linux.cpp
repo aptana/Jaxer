@@ -41,6 +41,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <dlfcn.h>
@@ -49,10 +50,6 @@
 #include <cctype>
 
 #include <signal.h>
-
-#ifdef MOZ_ENABLE_GCONF
-#include <gconf/gconf-client.h>
-#endif
 
 #include <gtk/gtk.h>
 #include <glib.h>
@@ -199,10 +196,39 @@ static gboolean ReportCompleted(gpointer success)
 
 static void LoadProxyinfo()
 {
+  class GConfClient;
+  typedef GConfClient * (*_gconf_default_fn)();
+  typedef gboolean (*_gconf_bool_fn)(GConfClient *, const gchar *, GError **);
+  typedef gint (*_gconf_int_fn)(GConfClient *, const gchar *, GError **);
+  typedef gchar * (*_gconf_string_fn)(GConfClient *, const gchar *, GError **);
+
+  if (getenv ("http_proxy"))
+    return; // libcurl can use the value from the environment
+
+  static void* gconfLib = dlopen("libgconf-2.so.4", RTLD_LAZY);
+  if (!gconfLib)
+    return;
+
+  _gconf_default_fn gconf_client_get_default =
+    (_gconf_default_fn)dlsym(gconfLib, "gconf_client_get_default");
+  _gconf_bool_fn gconf_client_get_bool =
+    (_gconf_bool_fn)dlsym(gconfLib, "gconf_client_get_bool");
+  _gconf_int_fn gconf_client_get_int =
+    (_gconf_int_fn)dlsym(gconfLib, "gconf_client_get_int");
+  _gconf_string_fn gconf_client_get_string =
+    (_gconf_string_fn)dlsym(gconfLib, "gconf_client_get_string");
+
+  if(!(gconf_client_get_default &&
+       gconf_client_get_bool &&
+       gconf_client_get_int &&
+       gconf_client_get_string)) {
+    dlclose(gconfLib);
+    return;
+  }
+
   GConfClient *conf = gconf_client_get_default();
 
-  if (!getenv ("http_proxy") &&
-      gconf_client_get_bool(conf, HTTP_PROXY_DIR "/use_http_proxy", NULL)) {
+  if (gconf_client_get_bool(conf, HTTP_PROXY_DIR "/use_http_proxy", NULL)) {
     gint port;
     gchar *host = NULL, *httpproxy = NULL;
 
@@ -218,7 +244,7 @@ static void LoadProxyinfo()
     g_free(httpproxy);
 
     if(gconf_client_get_bool(conf, HTTP_PROXY_DIR "/use_authentication", NULL)) {
-      gchar *user, *password, *auth;
+      gchar *user, *password, *auth = NULL;
 
       user = gconf_client_get_string(conf,
                                      HTTP_PROXY_DIR "/authentication_user",
@@ -228,7 +254,7 @@ static void LoadProxyinfo()
                                          "/authentication_password",
                                          NULL);
 
-      if (user != "\0") {
+      if (user && password) {
         auth = g_strdup_printf("%s:%s", user, password);
         gAuth = auth;
       }
@@ -240,16 +266,14 @@ static void LoadProxyinfo()
   }
 
   g_object_unref(conf);
+
+  dlclose(gconfLib);
 }
 #endif
 
 static gpointer SendThread(gpointer args)
 {
   string response, error;
-
-#ifdef MOZ_ENABLE_GCONF
-  LoadProxyinfo();
-#endif
 
   bool success = google_breakpad::HTTPUpload::SendRequest
     (gSendURL,
@@ -269,7 +293,7 @@ static gpointer SendThread(gpointer args)
   SendCompleted(success, response);
   // Apparently glib is threadsafe, and will schedule this
   // on the main thread, see:
-  // http://library.gnome.org/devel/gtk-faq/stable/x500.html
+  // http://library.gnome.org/devel/gtk-faq/stable/x499.html
   g_idle_add(ReportCompleted, (gpointer)success);
 
   return NULL;
@@ -289,6 +313,10 @@ static void SendReport()
   gtk_widget_show_all(gThrobber);
   gtk_label_set_text(GTK_LABEL(gProgressLabel),
                      gStrings[ST_REPORTDURINGSUBMIT].c_str());
+
+#ifdef MOZ_ENABLE_GCONF
+  LoadProxyinfo();
+#endif
 
   // and spawn a thread to do the sending
   GError* err;
@@ -591,6 +619,11 @@ bool UIInit()
 
   if (gtk_init_check(&gArgc, &gArgv)) {
     gInitialized = true;
+
+    if (gStrings.find("isRTL") != gStrings.end() &&
+        gStrings["isRTL"] == "yes")
+      gtk_widget_set_default_direction(GTK_TEXT_DIR_RTL);
+
     TryInitGnome();
     return true;
   }
@@ -874,7 +907,35 @@ bool UIFileExists(const string& path)
 
 bool UIMoveFile(const string& file, const string& newfile)
 {
-  return (rename(file.c_str(), newfile.c_str()) != -1);
+  if (!rename(file.c_str(), newfile.c_str()))
+    return true;
+  if (errno != EXDEV)
+    return false;
+
+  // use system /bin/mv instead, time to fork
+  pid_t pID = vfork();
+  if (pID < 0) {
+    // Failed to fork
+    return false;
+  }
+  if (pID == 0) {
+    char* const args[4] = {
+      "mv",
+      strdup(file.c_str()),
+      strdup(newfile.c_str()),
+      0
+    };
+    if (args[1] && args[2])
+      execve("/bin/mv", args, 0);
+    if (args[1])
+      free(args[1]);
+    if (args[2])
+      free(args[2]);
+    exit(-1);
+  }
+  int status;
+  waitpid(pID, &status, 0);
+  return UIFileExists(newfile);
 }
 
 bool UIDeleteFile(const string& file)

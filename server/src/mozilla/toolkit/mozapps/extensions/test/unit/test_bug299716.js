@@ -36,20 +36,6 @@
  * ***** END LICENSE BLOCK *****
  */
 
-/* XXX ajvincent XPCOM_DEBUG_BREAK automatically causes a xpcshell test to crash
-   if a NS_ASSERTION fires.  However, the assertions this testcase triggers are
-   unrelated to the actual test, and the component this test runs against is
-   JavaScript-based - so assertions here do not apply against the tested
-   component.  I am (reluctantly) turning the assertions into stack warnings in
-   order to prevent test failures at this point which are not the fault of the
-   code being tested or the test script.
-
-   At present, the assertions fired are for calls which aren't thread-safe.
-*/
-var env = Components.classes["@mozilla.org/process/environment;1"]
-                    .getService(Components.interfaces.nsIEnvironment);
-env.set("XPCOM_DEBUG_BREAK", "stack");
-
 // Disables security checking our updates which haven't been signed
 gPrefs.setBoolPref("extensions.checkUpdateSecurity", false);
 
@@ -241,7 +227,7 @@ const checkListener = {
 }
 
 // Get the HTTP server.
-do_import_script("netwerk/test/httpserver/httpd.js");
+do_load_httpd_js();
 var testserver;
 var updateItems = [];
 
@@ -337,7 +323,7 @@ function do_check_item(aItem, aVersion, aAddonsEntry) {
 function run_test() {
   createAppInfo("xpcshell@tests.mozilla.org", "XPCShell", "5", "1.9");
 
-  const dataDir = do_get_file("toolkit/mozapps/extensions/test/unit/data");
+  const dataDir = do_get_file("data");
   const addonsDir = do_get_addon(ADDONS[0].addon).parent;
 
   // Make sure we can actually get our data files.
@@ -465,10 +451,6 @@ function run_test_pt4() {
     var item = gEM.getItemForID(ADDONS[i].id);
     do_check_item(item, "0.2", ADDONS[i]);
   }
-  do_test_finished();
 
-  testserver.stop();
-
-  // If we've gotten this far, then the test has passed.
-  env.set("XPCOM_DEBUG_BREAK", "abort");
+  testserver.stop(do_test_finished);
 }

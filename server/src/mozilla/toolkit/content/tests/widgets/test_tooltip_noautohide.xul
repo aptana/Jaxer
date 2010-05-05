@@ -3,8 +3,6 @@
 <?xml-stylesheet href="/tests/SimpleTest/test.css" type="text/css"?>
 
 <window title="Tooltip Noautohide Tests"
-  onload="window.focus();"
-  onfocus="if (!gDone) { gDone = true; setTimeout(runTests, 0); }"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
   <script type="application/javascript" src="/MochiKit/packed.js"></script>
@@ -22,17 +20,19 @@
 <script class="testbody" type="application/javascript">
 <![CDATA[
 
-var gDone = false;
 var gChecked = false;
-
-SimpleTest.waitForExplicitFinish();
 
 function runTests()
 {
+  netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
   var button = document.getElementById("button");
+  var windowUtils = window.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+                          .getInterface(Components.interfaces.nsIDOMWindowUtils);
+  windowUtils.disableNonTestMouseEvents(true);
   synthesizeMouse(button, 2, 2, { type: "mouseover" });
   synthesizeMouse(button, 4, 4, { type: "mousemove" });
   synthesizeMouse(button, 6, 6, { type: "mousemove" });
+  windowUtils.disableNonTestMouseEvents(false);
 }
 
 function tooltipStillShown()
@@ -40,6 +40,8 @@ function tooltipStillShown()
   gChecked = true;
   document.getElementById("thetooltip").hidePopup();
 }
+
+SimpleTest.waitForFocus(runTests);
 
 ]]>
 </script>
