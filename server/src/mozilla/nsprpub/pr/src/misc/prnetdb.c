@@ -596,6 +596,25 @@ static PRStatus CopyHostent(
 	return PR_SUCCESS;
 }
 
+#ifdef SYMBIAN
+/* Set p_aliases by hand because Symbian's getprotobyname() returns NULL. */
+static void AssignAliases(struct protoent *Protoent, char** aliases)
+{
+    if (NULL == Protoent->p_aliases) {
+        if (0 == strcmp(Protoent->p_name, "ip"))
+            aliases[0] = "IP";
+        else if (0 == strcmp(Protoent->p_name, "tcp"))
+            aliases[0] = "TCP";
+        else if (0 == strcmp(Protoent->p_name, "udp"))
+            aliases[0] = "UDP";
+        else
+            aliases[0] = "UNKNOWN";
+        aliases[1] = NULL;
+        Protoent->p_aliases = aliases;
+    }
+}
+#endif
+
 #if !defined(_PR_HAVE_GETPROTO_R)
 /*
 ** Copy a protoent, and all of the memory that it refers to into
@@ -700,11 +719,7 @@ PR_IMPLEMENT(PRStatus) PR_GetHostByName(
 
 	LOCK_DNS();
 
-#ifdef XP_OS2_VACPP
-	h = GETHOSTBYNAME((char *)name);
-#else
 	h = GETHOSTBYNAME(name);
-#endif
     
 	if (NULL == h)
 	{
@@ -745,15 +760,10 @@ _pr_find_getipnodebyname(void)
 {
     PRLibrary *lib;	
     PRStatus rv;
-#if defined(VMS)
-#define GETIPNODEBYNAME getenv("GETIPNODEBYNAME")
-#define GETIPNODEBYADDR getenv("GETIPNODEBYADDR")
-#define FREEHOSTENT     getenv("FREEHOSTENT")
-#else
 #define GETIPNODEBYNAME "getipnodebyname"
 #define GETIPNODEBYADDR "getipnodebyaddr"
 #define FREEHOSTENT     "freehostent"
-#endif
+
     _pr_getipnodebyname_fp = PR_FindSymbolAndLibrary(GETIPNODEBYNAME, &lib);
     if (NULL != _pr_getipnodebyname_fp) {
         _pr_freehostent_fp = PR_FindSymbol(lib, FREEHOSTENT);
@@ -933,11 +943,7 @@ PR_IMPLEMENT(PRStatus) PR_GetIPNodeByName(
     }
 #else /* _PR_INET6 */
     LOCK_DNS();
-#ifdef XP_OS2_VACPP
-    h = GETHOSTBYNAME((char *)name);
-#else
     h = GETHOSTBYNAME(name);
-#endif
 #endif /* _PR_INET6 */
     
 	if (NULL == h)
@@ -1101,11 +1107,7 @@ PR_IMPLEMENT(PRStatus) PR_GetHostByAddr(
     }
 #else	/* _PR_HAVE_GETIPNODEBYADDR */
     LOCK_DNS();
-#ifdef XP_OS2_VACPP
-	h = GETHOSTBYADDR((char *)addr, addrlen, af);
-#else
 	h = GETHOSTBYADDR(addr, addrlen, af);
-#endif
 #endif /* _PR_HAVE_GETIPNODEBYADDR */
 	if (NULL == h)
 	{
@@ -1185,11 +1187,7 @@ PR_IMPLEMENT(PRStatus) PR_GetHostByAddr(
 
 static struct protoent *getprotobyname_r(const char* name)
 {
-#ifdef XP_OS2_VACPP
-	return getprotobyname((char *)name);
-#else
 	return getprotobyname(name);
-#endif
 } /* getprotobyname_r */
 
 static struct protoent *getprotobynumber_r(PRInt32 number)
@@ -1269,6 +1267,10 @@ PR_IMPLEMENT(PRStatus) PR_GetProtoByName(
         }
 		else
 		{
+#if defined(SYMBIAN)
+			char* aliases[2];
+			AssignAliases(staticBuf, aliases);
+#endif
 			rv = CopyProtoent(staticBuf, buffer, buflen, result);
 			if (PR_FAILURE == rv)
 			    PR_SetError(PR_INSUFFICIENT_RESOURCES_ERROR, 0);
@@ -1349,6 +1351,10 @@ PR_IMPLEMENT(PRStatus) PR_GetProtoByNumber(
         }
 		else
 		{
+#if defined(SYMBIAN)
+			char* aliases[2];
+			AssignAliases(staticBuf, aliases);
+#endif
 			rv = CopyProtoent(staticBuf, buffer, buflen, result);
 			if (PR_FAILURE == rv)
 			    PR_SetError(PR_INSUFFICIENT_RESOURCES_ERROR, 0);
@@ -1380,7 +1386,7 @@ PRUintn _PR_NetAddrSize(const PRNetAddr* addr)
 #else
         addrsize = sizeof(addr->ipv6);
 #endif
-#if defined(XP_UNIX) || defined(XP_OS2_EMX)
+#if defined(XP_UNIX) || defined(XP_OS2)
     else if (AF_UNIX == addr->raw.family)
         addrsize = sizeof(addr->local);
 #endif
@@ -1882,15 +1888,9 @@ static FN_GETADDRINFO   _pr_getaddrinfo   = NULL;
 static FN_FREEADDRINFO  _pr_freeaddrinfo  = NULL;
 static FN_GETNAMEINFO   _pr_getnameinfo   = NULL;
 
-#if defined(VMS)
-#define GETADDRINFO_SYMBOL getenv("GETADDRINFO")
-#define FREEADDRINFO_SYMBOL getenv("FREEADDRINFO")
-#define GETNAMEINFO_SYMBOL getenv("GETNAMEINFO")
-#else
 #define GETADDRINFO_SYMBOL "getaddrinfo"
 #define FREEADDRINFO_SYMBOL "freeaddrinfo"
 #define GETNAMEINFO_SYMBOL "getnameinfo"
-#endif
 
 PRStatus
 _pr_find_getaddrinfo(void)
@@ -2223,11 +2223,7 @@ static PRStatus pr_StringToNetAddrFB(const char *string, PRNetAddr *addr)
     memset(&addr->ipv6.ip, 0, sizeof(addr->ipv6.ip));
 
     addr->inet.family = AF_INET;
-#ifdef XP_OS2_VACPP
-    addr->inet.ip = inet_addr((char *)string);
-#else
     addr->inet.ip = inet_addr(string);
-#endif
     if ((PRUint32) -1 == addr->inet.ip)
     {
         /*

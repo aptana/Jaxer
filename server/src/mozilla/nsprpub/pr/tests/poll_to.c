@@ -64,15 +64,12 @@
 #include "prprf.h"
 #include "prnetdb.h"
 
-#ifndef XP_MAC
 #include "private/pprio.h"
-#else
-#include "pprio.h"
-#endif
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
 PRIntn failed_already=0;
 PRIntn debug_mode;
 

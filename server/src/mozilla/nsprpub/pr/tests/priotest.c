@@ -40,11 +40,6 @@
  * Purpose:     testing priorities
  */
 
-#ifdef XP_MAC
-#error "This test does not run on Macintosh"
-#else
-
-
 #include "prcmon.h"
 #include "prinit.h"
 #include "prinrval.h"
@@ -160,7 +155,7 @@ static void CreateThreads(PRUint32 *lowCount, PRUint32 *highCount)
         PR_LOCAL_THREAD, PR_JOINABLE_THREAD, 0);
 } /* CreateThreads */
 
-PRIntn main(PRIntn argc, char **argv)
+int main(int argc, char **argv)
 {
     PLOptStatus os;
     PRIntn duration = DEFAULT_DURATION;
@@ -227,7 +222,5 @@ PRIntn main(PRIntn argc, char **argv)
 	return 1;  /* or here */
 
 }  /* main */
-
-#endif  /* ifdef XP_MAC */
 
 /* priotest.c */

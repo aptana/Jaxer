@@ -58,11 +58,7 @@
 #include "prprf.h"
 #include "gcint.h"
 
-#if defined(XP_MAC)
-#include "pprthred.h"
-#else
 #include "private/pprthred.h"
-#endif
 
 typedef void (*PRFileDumper)(FILE *out, PRBool detailed);
 
@@ -130,11 +126,7 @@ static PRInt32 _pr_pageSize;
 /* The minimum percentage of free heap space after a collection. If
    the amount of free space doesn't meet this criteria then we will
    attempt to grow the heap */
-#ifdef XP_MAC
-#define MIN_FREE_THRESHOLD_AFTER_GC 10L
-#else
 #define MIN_FREE_THRESHOLD_AFTER_GC 20L
-#endif
 
 static PRInt32 segmentSize = SEGMENT_SIZE;
 
@@ -297,7 +289,6 @@ static PRWord bigAllocBytes = 0;
 ** for empty objects).
 ** XXX tune: put subtract of _sp->base into _sp->hbits pointer?
 */
-#if !defined(WIN16)
 #define SET_HBIT(_sp,_ph) \
     SET_BIT((_sp)->hbits, (((PRWord*)(_ph)) - ((PRWord*) (_sp)->base)))
 
@@ -306,67 +297,6 @@ static PRWord bigAllocBytes = 0;
 
 #define IS_HBIT(_sp,_ph) \
     TEST_BIT((_sp)->hbits, (((PRWord*)(_ph)) - ((PRWord*) (_sp)->base)))
-#else
-
-#define SET_HBIT(_sp,_ph) set_hbit(_sp,_ph)
-
-#define CLEAR_HBIT(_sp,_ph) clear_hbit(_sp,_ph)
-
-#define IS_HBIT(_sp,_ph) is_hbit(_sp,_ph)
-
-static void
-set_hbit(GCSeg *sp, PRWord *p)
-{
-    unsigned int distance;
-    unsigned int index;
-    PRWord     mask;
-
-        PR_ASSERT( SELECTOROF(p) == SELECTOROF(sp->base) );
-        PR_ASSERT( OFFSETOF(p)   >= OFFSETOF(sp->base) );
-
-        distance = (OFFSETOF(p) - OFFSETOF(sp->base)) >> 2;
-    index    = distance >> PR_BITS_PER_WORD_LOG2;
-    mask     = 1L << (distance&(PR_BITS_PER_WORD-1));
-
-    sp->hbits[index] |= mask;
-}
-
-static void
-clear_hbit(GCSeg *sp, PRWord *p)
-{
-    unsigned int distance;
-    unsigned int index;
-    PRWord    mask;
-
-        PR_ASSERT( SELECTOROF(p) == SELECTOROF(sp->base) );
-        PR_ASSERT( OFFSETOF(p)   >= OFFSETOF(sp->base) );
-
-        distance = (OFFSETOF(p) - OFFSETOF(sp->base)) >> 2;
-    index    = distance >> PR_BITS_PER_WORD_LOG2;
-    mask     = 1L << (distance&(PR_BITS_PER_WORD-1));
-
-    sp->hbits[index] &= ~mask;
-}
-
-static int
-is_hbit(GCSeg *sp, PRWord *p)
-{
-    unsigned int distance;
-    unsigned int index;
-    PRWord    mask;
-
-        PR_ASSERT( SELECTOROF(p) == SELECTOROF(sp->base) );
-        PR_ASSERT( OFFSETOF(p)   >= OFFSETOF(sp->base) );
-
-        distance = (OFFSETOF(p) - OFFSETOF(sp->base)) >> 2;
-    index    = distance >> PR_BITS_PER_WORD_LOG2;
-    mask     = 1L << (distance&(PR_BITS_PER_WORD-1));
-
-    return ((sp->hbits[index] & mask) != 0);
-}
-
-
-#endif  /* WIN16 */
 
 /*
 ** Given a pointer into this segment, back it up until we are at the
@@ -383,9 +313,6 @@ static PRWord *FindObject(GCSeg *sp, PRWord *p)
     p = (PRWord*) ((PRWord)p & ~(PR_BYTES_PER_WORD-1L));
 
     base = (PRWord *) sp->base;
-#if defined(WIN16)
-    PR_ASSERT( SELECTOROF(p) == SELECTOROF(base));
-#endif
     do {
     if (IS_HBIT(sp, p)) {
         return (p);
@@ -404,15 +331,9 @@ static PRWord *FindObject(GCSeg *sp, PRWord *p)
 #define OutputDebugString(msg)
 #endif 
 
-#if !defined(WIN16)
 #define IN_SEGMENT(_sp, _p)             \
     ((((char *)(_p)) >= (_sp)->base) &&    \
      (((char *)(_p)) < (_sp)->limit))
-#else
-#define IN_SEGMENT(_sp, _p)                  \
-    ((((PRWord)(_p)) >= ((PRWord)(_sp)->base)) && \
-     (((PRWord)(_p)) < ((PRWord)(_sp)->limit)))
-#endif
 
 static GCSeg *InHeap(void *p)
 {
@@ -465,13 +386,6 @@ static GCSeg* DoGrowHeap(PRInt32 requestedSize, PRBool exactly)
     return 0;
     }
 
-#if defined(WIN16)
-    if (requestedSize > segmentSize) {
-    PR_DELETE(segInfo);
-    return 0;
-    }
-#endif
-
     /* Get more memory from the OS */
     if (exactly) {
     allocSize = requestedSize;
@@ -493,9 +407,6 @@ static GCSeg* DoGrowHeap(PRInt32 requestedSize, PRBool exactly)
     * sizeof(PRWord);
 
     /* Get bitmap memory from malloc heap */
-#if defined(WIN16)
-    PR_ASSERT( nhbytes < MAX_ALLOC_SIZE );
-#endif
     hbits = (PRWord *) PR_CALLOC((PRUint32)nhbytes);
     if (!hbits) {
     /* Loser! */
@@ -801,16 +712,8 @@ static void PR_CALLBACK ProcessRootBlock(void **base, PRInt32 count)
     high = _pr_gcData.highSeg;
     while (--count >= 0) {
         p0 = (PRWord*) *base++;
-        /*
-        ** XXX:  
-        ** Until Win16 maintains lowSeg and highSeg correctly,
-        ** (ie. lowSeg=MIN(all segs) and highSeg = MAX(all segs))
-        ** Allways scan through the segment list
-        */
-#if !defined(WIN16)
         if (p0 < low) continue;                  /* below gc heap */
         if (p0 >= high) continue;                /* above gc heap */
-#endif
         /* NOTE: inline expansion of InHeap */
         /* Find segment */
     sp = lastInHeap;
@@ -897,16 +800,8 @@ static void PR_CALLBACK ProcessRootPointer(void *ptr)
 
   p0 = (PRWord*) ptr;
 
-  /*
-  ** XXX:  
-  ** Until Win16 maintains lowSeg and highSeg correctly,
-  ** (ie. lowSeg=MIN(all segs) and highSeg = MAX(all segs))
-  ** Allways scan through the segment list
-  */
-#if !defined(WIN16)
   if (p0 < _pr_gcData.lowSeg) return;                  /* below gc heap */
   if (p0 >= _pr_gcData.highSeg) return;                /* above gc heap */
-#endif
 
   /* NOTE: inline expansion of InHeap */
   /* Find segment */
@@ -1384,9 +1279,6 @@ static void PrepareFinalize(void)
 */
 extern void PR_CALLBACK _PR_ScanFinalQueue(void *notused)
 {
-#ifdef XP_MAC
-#pragma unused (notused)
-#endif
     PRCList *qp;
     GCFinal *fp;
     PRWord *p;
@@ -1405,9 +1297,6 @@ extern void PR_CALLBACK _PR_ScanFinalQueue(void *notused)
 
 void PR_CALLBACK FinalizerLoop(void* unused)
 {
-#ifdef XP_MAC
-#pragma unused (unused)
-#endif
     GCFinal *fp;
     PRWord *p;
     PRWord h, tix;
@@ -1518,9 +1407,6 @@ PRCList _pr_freeWeakLinks = PR_INIT_STATIC_CLIST(&_pr_freeWeakLinks);
  * freed
  */
 static void PR_CALLBACK ScanWeakFreeList(void *notused) {
-#ifdef XP_MAC
-#pragma unused (notused)
-#endif
     PRCList *qp = _pr_freeWeakLinks.next;
     while (qp != &_pr_freeWeakLinks) {
     GCWeak *wp = WeakPtr(qp);
@@ -1858,16 +1744,8 @@ pr_ConservativeWalkPointer(void* ptr, PRWalkFun walkRootPointer, void* data)
 
   p0 = (PRWord*) ptr;
 
-  /*
-  ** XXX:  
-  ** Until Win16 maintains lowSeg and highSeg correctly,
-  ** (ie. lowSeg=MIN(all segs) and highSeg = MAX(all segs))
-  ** Allways scan through the segment list
-  */
-#if !defined(WIN16)
   if (p0 < _pr_gcData.lowSeg) return 0;                  /* below gc heap */
   if (p0 >= _pr_gcData.highSeg) return 0;                /* above gc heap */
-#endif
 
   /* NOTE: inline expansion of InHeap */
   /* Find segment */
@@ -2056,10 +1934,6 @@ pr_DumpUnknown(FILE *out, GCType* tp, PRWord tix, PRWord *p,
 static void PR_CALLBACK
 pr_DumpFree(FILE *out, PRWord *p, size_t size, PRBool detailed)
 {
-#if defined(XP_MAC) && XP_MAC
-# pragma unused( detailed )
-#endif
-
     fprintf(out, "0x%p: 0x%.6lX -  FREE\n", p, (long) size);
 }
 
@@ -2108,9 +1982,6 @@ PR_DumpMemory(PRBool detailed)
 static PRInt32 PR_CALLBACK
 pr_DumpRootPointer(PRWord* p, void* data)
 {
-#ifdef XP_MAC
-#pragma unused(data)
-#endif
     PRWord h = p[0];
     PRWord tix = GET_TYPEIX(h);
       size_t bytes = OBJ_BYTES(h);
@@ -2194,10 +2065,6 @@ static void PR_CALLBACK
 pr_SummarizeObject(FILE *out, GCType* tp, PRWord *p,
            size_t bytes, PRBool detailed)
 {
-#if defined(XP_MAC) && XP_MAC
-# pragma unused( out, detailed )
-#endif
-
     if (tp->summarize)
     (*tp->summarize)((void GCPTR*)(p + 1), bytes);
 }
@@ -2637,11 +2504,6 @@ static PRWord *BigAlloc(int cbix, PRInt32 bytes, int dub)
         }
 #endif
 
-#if defined(WIN16)
-            /* All memory MUST be aligned on 32bit boundaries */
-            PR_ASSERT( (((PRWord)p) & (PR_BYTES_PER_WORD-1)) == 0 );
-#endif
-
         /* Consume the *entire* segment with a single allocation */
         h = MAKE_HEADER(cbix, (chunkSize >> PR_BYTES_PER_WORD_LOG2));
         p[0] = h;
@@ -2802,7 +2664,6 @@ PR_IMPLEMENT(PRWord GCPTR *)PR_AllocMemory(
     **
     ** MSVC 1.52 crashed on the ff. code because of the "complex" shifting :-(
     */
-#if !defined(WIN16) 
     /* Check for possible overflow of bytes before performing add */
     if ((MAX_INT - PR_BYTES_PER_WORD) < bytes ) return NULL;
     bytes = (bytes + PR_BYTES_PER_WORD - 1) >> PR_BYTES_PER_WORD_LOG2;
@@ -2810,25 +2671,6 @@ PR_IMPLEMENT(PRWord GCPTR *)PR_AllocMemory(
     /* Check for possible overflow of bytes before performing add */
     if ((MAX_INT - sizeof(PRWord)) < bytes ) return NULL;
     bytes += sizeof(PRWord);
-#else 
-    /* 
-    ** For WIN16 the shifts have been broken out into separate statements
-    ** to prevent the compiler from crashing...
-    */
-    {
-        PRWord shiftVal;
-
-        /* Check for possible overflow of bytes before performing add */
-        if ((MAX_INT - PR_BYTES_PER_WORD) < bytes ) return NULL;
-        bytes += PR_BYTES_PER_WORD - 1L;
-        shiftVal = PR_BYTES_PER_WORD_LOG2;
-        bytes >>= shiftVal;
-        bytes <<= shiftVal;
-        /* Check for possible overflow of bytes before performing add */
-        if ((MAX_INT - sizeof(PRWord)) < bytes ) return NULL;
-        bytes += sizeof(PRWord);
-    }
-#endif
     /*
      * Add in an extra word of memory for double-aligned memory. Some
      * percentage of the time this will waste a word of memory (too
@@ -3070,25 +2912,9 @@ PR_AllocSimpleMemory(PRWord requestedBytes, PRInt32 tix)
     **
     ** MSVC 1.52 crashed on the ff. code because of the "complex" shifting :-(
     */
-#if !defined(WIN16) 
     bytes = (bytes + PR_BYTES_PER_WORD - 1) >> PR_BYTES_PER_WORD_LOG2;
     bytes <<= PR_BYTES_PER_WORD_LOG2;
     bytes += sizeof(PRWord);
-#else 
-    /* 
-    ** For WIN16 the shifts have been broken out into separate statements
-    ** to prevent the compiler from crashing...
-    */
-    {
-    PRWord shiftVal;
-
-    bytes += PR_BYTES_PER_WORD - 1L;
-    shiftVal = PR_BYTES_PER_WORD_LOG2;
-    bytes >>= shiftVal;
-    bytes <<= shiftVal;
-    bytes += sizeof(PRWord);
-    }
-#endif
     
     /*
      * Add in an extra word of memory for double-aligned memory. Some
@@ -3112,9 +2938,6 @@ PR_AllocSimpleMemory(PRWord requestedBytes, PRInt32 tix)
     bytes += sizeof(GCBlockEnd);
 #endif
 
-#if defined(WIN16)
-    PR_ASSERT( bytes < MAX_ALLOC_SIZE );
-#endif
     /* Java can ask for objects bigger than 4M, but it won't get them */
     /*
      * This check was added because there is a fundamental limit of
@@ -3288,10 +3111,6 @@ PR_IMPLEMENT(void) PR_InitGC(
     _pr_pageShift = PR_GetPageShift();
     _pr_pageSize = PR_GetPageSize();
 
-#if defined(WIN16)
-    PR_ASSERT( initialHeapSize < MAX_ALLOC_SIZE );
-#endif
-
   /* Setup initial heap size and initial segment size */
   if (0 != segSize) segmentSize = segSize;
 #ifdef DEBUG
@@ -3342,19 +3161,6 @@ PR_IMPLEMENT(void) PR_InitGC(
   GrowHeap(initialHeapSize);
     PR_RegisterRootFinder(ScanWeakFreeList, "scan weak free list", 0);
 }
-
-#if defined(WIN16)
-/*
-** For WIN16 the GC_IN_HEAP() macro must call the private InHeap function.
-** This public wrapper function makes this possible...
-*/
-PR_IMPLEMENT(PRBool)
-PR_GC_In_Heap(void *object)
-{
-    return InHeap( object ) != NULL;    
-}
-#endif
-
 
 /** Added by Vishy for sanity checking a few GC structures **/
 /** Can use SanityCheckGC to debug corrupted GC Heap situations **/

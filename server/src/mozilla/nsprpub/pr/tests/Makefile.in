@@ -104,6 +104,7 @@ CSRCS =             \
 	lltest.c        \
 	lock.c          \
 	lockfile.c      \
+	logfile.c       \
 	logger.c		\
 	makedir.c		\
 	mbcs.c			\
@@ -125,6 +126,7 @@ CSRCS =             \
 	op_nofil.c		\
 	openfile.c		\
 	parent.c    	\
+	parsetm.c    	\
 	peek.c    		\
 	perf.c    		\
 	pipeping.c		\
@@ -146,6 +148,7 @@ CSRCS =             \
 	prpollml.c		\
 	ranfile.c       \
 	randseed.c      \
+	reinit.c        \
 	rmdir.c			\
 	rwlocktest.c    \
 	sel_spd.c  		\
@@ -203,6 +206,12 @@ CSRCS =             \
 	zerolen.c       \
 	$(NULL)
 
+ifeq ($(OS_ARCH),WINCE)
+TESTPROGS =          \
+    wince_tester.cpp  \
+    $(NULL)
+endif
+
 ifeq ($(OS_TARGET),OS2)
 CSRCS +=            \
 	sleep.c			\
@@ -211,13 +220,19 @@ CSRCS +=            \
 	$(NULL)
 endif
 
-ifeq (,$(filter-out WINNT OS2,$(OS_ARCH)))
+ifeq (,$(filter-out WINCE WINNT OS2,$(OS_ARCH)))
 PROG_SUFFIX = .exe
+DLL_SUFFIX = .dll
 else
 PROG_SUFFIX =
+DLL_SUFFIX = 
 endif
 
+ifeq ($(OS_ARCH),WINCE)
+PROGS = $(addprefix $(OBJDIR)/, $(CSRCS:.c=$(DLL_SUFFIX))) $(addprefix $(OBJDIR)/, $(TESTPROGS:.cpp=$(PROG_SUFFIX)))
+else
 PROGS = $(addprefix $(OBJDIR)/, $(CSRCS:.c=$(PROG_SUFFIX)))
+endif
 
 TARGETS = $(PROGS)
 
@@ -229,19 +244,33 @@ ifdef NS_USE_GCC
 else
   EXTRA_LIBS += wsock32.lib
   LDOPTS = -NOLOGO -DEBUG -DEBUGTYPE:CV -INCREMENTAL:NO
-  ifdef PROFILE                                                                              
-    LDOPTS += -PROFILE -MAP                                                                  
+  ifdef PROFILE
+    LDOPTS += -PROFILE -MAP
   endif # profile
 endif # NS_USE_GCC
 endif
 
-ifeq ($(OS_ARCH),OS2)
-ifeq ($(MOZ_OS2_TOOLS),VACPP)
-  LDOPTS = -NOE -DEBUG -nologo -PMTYPE:VIO
+ifeq ($(OS_ARCH),WINCE)
+ifdef NS_USE_GCC
+  EXTRA_LIBS += -lws2 -lcoredll
 else
-  EXTRA_LIBS = $(OS_LIBS)
-  LDOPTS = -Zomf -Zlinker /PM:VIO -Zlinker /ST:0x64000
+  INCLUDES += -FInst_wince.h
+  EXTRA_LIBS += ws2.lib coredll.lib
+  LDOPTS = -NOLOGO -DEBUG -DEBUGTYPE:CV -INCREMENTAL:NO -PDB:$(@:.dll=.pdb)
+  EXE_EXTRA_LDOPTS = -SUBSYSTEM:CONSOLE
+  ifdef PROFILE
+    LDOPTS += -PROFILE -MAP
+  endif # profile
+endif # NS_USE_GCC
+
+# Use CC to compile all CPP files / also use all CC flags
+CCC = $(CC)
+CXXFLAGS = $(CFLAGS)
 endif
+
+ifeq ($(OS_ARCH),OS2)
+EXTRA_LIBS = $(OS_LIBS)
+LDOPTS = -Zomf -Zlinker /PM:VIO -Zlinker /ST:0x64000
 endif
 
 ifneq ($(OS_ARCH), WINNT)
@@ -332,13 +361,9 @@ ifeq ($(OS_ARCH), SunOS)
         endif
     endif
 
-    ifneq ($(LOCAL_THREADS_ONLY),1)
-        ifdef USE_PTHREADS
-            EXTRA_LIBS = -lpthread
-        else
-            EXTRA_LIBS = -lthread
-        endif
-    endif # LOCAL_THREADS_ONLY
+    ifdef USE_PTHREADS
+        EXTRA_LIBS = -lpthread
+    endif
 endif # SunOS
 
 ifeq ($(OS_ARCH), NEC)
@@ -431,6 +456,10 @@ EXTRA_LIBS = -ldl
 endif
 endif
 
+ifeq ($(OS_ARCH),RISCOS)
+EXTRA_LIBS = -ldl
+endif
+
 ifeq ($(USE_PTHREADS),1)
 LIBPTHREAD = -lpthread
 ifeq ($(OS_ARCH),AIX)
@@ -494,13 +523,35 @@ ifdef MT
 	fi
 endif
 else
-ifeq ($(MOZ_OS2_TOOLS),VACPP)
-	$(LD) $(EXEFLAGS) $(LDOPTS) $< $(LIBPLC) $(LIBNSPR) $(OS_LIBS) $(EXTRA_LIBS)
+ifeq ($(OS_ARCH),WINCE)
+	$(PURE) $(LD) $(XCFLAGS) $< $(LDOPTS:.exe=.pdb) $(EXE_EXTRA_LDOPTS) $(LIBPLC) $(LIBNSPR) $(EXTRA_LIBS) -OUT:$@
 else
 	$(PURE) $(CC) $(XCFLAGS) $< $(LDOPTS) $(LIBPLC) $(LIBNSPR) $(EXTRA_LIBS) -o $@
-endif # OS/2
+endif # wince
 endif # WINNT
 endif # AIX_PRE_4_2
+
+
+ifeq ($(OS_ARCH),WINCE)
+$(OBJS): $(OBJDIR)/%.$(OBJ_SUFFIX): nst_wince.h
+
+# WinCE HAS to be different.  Turns out that the OS swallows crashes
+#   and returns a result code of zero -- an indication of success for
+#   the shell script.  AND, WinCE does not really have a good shell 
+#   to use for testing, anyway.
+#
+# To combat both issues, we need to build the tests as stand-alone
+# DLLs, then dynamically load the DLLs one at a time inside a test
+# program.  Each DLL's test will be run inside a TRY/CATCH construct,
+# allowing the testing program to do what the shell script already
+# does naturally. 
+#
+# This section builds DLLs instead of EXEs for each of the tests.
+# - wolfe@lobo.us
+$(OBJDIR)/%$(DLL_SUFFIX): $(OBJDIR)/%.$(OBJ_SUFFIX)
+	@$(MAKE_OBJDIR)
+	$(PURE) $(LD) $(XCFLAGS) $(LDOPTS) $(LIBPLC) $(LIBNSPR) $(EXTRA_LIBS) -DLL -OUT:$@ $< 
+endif # wince
 
 export:: $(TARGETS)
 clean::

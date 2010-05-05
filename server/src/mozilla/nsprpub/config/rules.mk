@@ -106,13 +106,13 @@ endif
 #
 
 ifdef LIBRARY_NAME
-ifeq (,$(filter-out WINNT OS2,$(OS_ARCH)))
+ifeq (,$(filter-out WINNT WINCE OS2,$(OS_ARCH)))
 
 #
-# Win95, Win16, and OS/2 require library names conforming to the 8.3 rule.
+# Win95 and OS/2 require library names conforming to the 8.3 rule.
 # other platforms do not.
 #
-ifeq (,$(filter-out WIN95 OS2,$(OS_TARGET)))
+ifeq (,$(filter-out WIN95 WINCE OS2,$(OS_TARGET)))
 LIBRARY		= $(OBJDIR)/$(LIBRARY_NAME)$(LIBRARY_VERSION)_s.$(LIB_SUFFIX)
 SHARED_LIBRARY	= $(OBJDIR)/$(LIBRARY_NAME)$(LIBRARY_VERSION).$(DLL_SUFFIX)
 IMPORT_LIBRARY	= $(OBJDIR)/$(LIBRARY_NAME)$(LIBRARY_VERSION).$(LIB_SUFFIX)
@@ -139,7 +139,7 @@ endif
 endif
 
 ifndef TARGETS
-ifeq (,$(filter-out WINNT OS2,$(OS_ARCH)))
+ifeq (,$(filter-out WINNT WINCE OS2,$(OS_ARCH)))
 TARGETS		= $(LIBRARY) $(SHARED_LIBRARY) $(IMPORT_LIBRARY)
 ifndef BUILD_OPT
 ifdef MSC_VER
@@ -164,39 +164,21 @@ OBJS		= $(addprefix $(OBJDIR)/,$(CSRCS:.c=.$(OBJ_SUFFIX))) \
 		  $(addprefix $(OBJDIR)/,$(ASFILES:.$(ASM_SUFFIX)=.$(OBJ_SUFFIX)))
 endif
 
-ifeq ($(MOZ_OS2_TOOLS),VACPP)
-EXTRA_LIBS := $(patsubst -l%,$(DIST)/lib/%.$(LIB_SUFFIX),$(EXTRA_LIBS))
-endif
-
 ALL_TRASH		= $(TARGETS) $(OBJS) $(RES) $(filter-out . .., $(OBJDIR)) LOGS TAGS $(GARBAGE) \
 			  $(NOSUCHFILE) \
 			  so_locations
-
-ifeq ($(OS_ARCH),OpenVMS)
-ALL_TRASH		+= $(wildcard *.c*_defines)
-ifdef SHARED_LIBRARY
-VMS_SYMVEC_FILE		= $(SHARED_LIBRARY:.$(DLL_SUFFIX)=_symvec.opt)
-VMS_SYMVEC_FILE_MODULE	= $(srcdir)/$(LIBRARY_NAME)_symvec.opt
-ALL_TRASH		+= $(VMS_SYMVEC_FILE)
-endif
-endif
 
 ifndef RELEASE_LIBS_DEST
 RELEASE_LIBS_DEST	= $(RELEASE_LIB_DIR)
 endif
 
+define MAKE_IN_DIR
+	$(MAKE) -C $(dir) $@
+
+endef # do not remove the blank line!
+
 ifdef DIRS
-LOOP_OVER_DIRS		=					\
-	@for d in $(DIRS); do					\
-		if test -d $$d; then				\
-			set -e;					\
-			echo "cd $$d; $(MAKE) $@";		\
-			$(MAKE) -C $$d $@;			\
-			set +e;					\
-		else						\
-			echo "Skipping non-directory $$d...";	\
-		fi;						\
-	done
+LOOP_OVER_DIRS = $(foreach dir,$(DIRS),$(MAKE_IN_DIR))
 endif
 
 ################################################################################
@@ -306,11 +288,7 @@ ifdef MT
 	fi
 endif	# MSVC with manifest tool
 else	# WINNT && !GCC
-ifeq ($(MOZ_OS2_TOOLS),VACPP)
-	$(CC) $(OBJS) -Fe$@ $(LDFLAGS) $(OS_LIBS) $(EXTRA_LIBS)
-else
 	$(CC) -o $@ $(CFLAGS) $(OBJS) $(LDFLAGS)
-endif
 endif	# WINNT && !GCC
 ifdef ENABLE_STRIP
 	$(STRIP) $@
@@ -319,17 +297,17 @@ endif
 $(LIBRARY): $(OBJS)
 	@$(MAKE_OBJDIR)
 	rm -f $@
-ifeq ($(MOZ_OS2_TOOLS),VACPP)
-	$(AR) $(subst /,\\,$(OBJS)) $(AR_FLAGS)
-else
 	$(AR) $(AR_FLAGS) $(OBJS) $(AR_EXTRA_ARGS)
-endif
 	$(RANLIB) $@
 
 ifeq ($(OS_TARGET), OS2)
 $(IMPORT_LIBRARY): $(MAPFILE)
 	rm -f $@
 	$(IMPLIB) $@ $(MAPFILE)
+else
+ifeq (,$(filter-out WIN95 WINCE,$(OS_TARGET)))
+$(IMPORT_LIBRARY): $(SHARED_LIBRARY)
+endif
 endif
 
 $(SHARED_LIBRARY): $(OBJS) $(RES) $(MAPFILE)
@@ -353,19 +331,7 @@ ifdef MT
 	fi
 endif	# MSVC with manifest tool
 else	# WINNT && !GCC
-ifeq ($(MOZ_OS2_TOOLS),VACPP)
-	$(LINK_DLL) $(DLLBASE) $(OBJS) $(OS_LIBS) $(EXTRA_LIBS) $(MAPFILE)
-else	# !os2 vacpp
-ifeq ($(OS_TARGET), OpenVMS)
-	@if test ! -f $(VMS_SYMVEC_FILE); then \
-	  if test -f $(VMS_SYMVEC_FILE_MODULE); then \
-	    echo Creating component options file $(VMS_SYMVEC_FILE); \
-	    cp $(VMS_SYMVEC_FILE_MODULE) $(VMS_SYMVEC_FILE); \
-	  fi; \
-	fi
-endif	# OpenVMS
-	$(MKSHLIB) $(OBJS) $(RES) $(EXTRA_LIBS)
-endif   # OS2 vacpp
+	$(MKSHLIB) $(OBJS) $(RES) $(LDFLAGS) $(EXTRA_LIBS)
 endif	# WINNT && !GCC
 endif	# AIX 4.1
 ifdef ENABLE_STRIP
@@ -396,15 +362,10 @@ ifeq ($(OS_ARCH),OS2)
 	echo CODE    LOADONCALL MOVEABLE DISCARDABLE >> $@
 	echo DATA    PRELOAD MOVEABLE MULTIPLE NONSHARED >> $@
 	echo EXPORTS >> $@
-ifeq ($(MOZ_OS2_TOOLS),VACPP)
-	grep -v ';+' $< | grep -v ';-' | \
-	sed -e 's; DATA ;;' -e 's,;;,,' -e 's,;.*,,' >> $@
-else
 	grep -v ';+' $< | grep -v ';-' | \
 	sed -e 's; DATA ;;' -e 's,;;,,' -e 's,;.*,,' -e 's,\([\t ]*\),\1_,' | \
 	awk 'BEGIN {ord=1;} { print($$0 " @" ord " RESIDENTNAME"); ord++;}'	>> $@
 	$(ADD_TO_DEF_FILE)
-endif
 endif
 
 #
@@ -421,20 +382,20 @@ NEED_ABSOLUTE_PATH = 1
 endif
 
 ifdef NEED_ABSOLUTE_PATH
-PWD := $(shell pwd)
-abspath = $(if $(findstring :,$(1)),$(1),$(if $(filter /%,$(1)),$(1),$(PWD)/$(1)))
+# The quotes allow absolute paths to contain spaces.
+pr_abspath = "$(if $(findstring :,$(1)),$(1),$(if $(filter /%,$(1)),$(1),$(CURDIR)/$(1)))"
 endif
 
 $(OBJDIR)/%.$(OBJ_SUFFIX): %.cpp
 	@$(MAKE_OBJDIR)
 ifeq ($(NS_USE_GCC)_$(OS_ARCH),_WINNT)
-	$(CCC) -Fo$@ -c $(CCCFLAGS) $(call abspath,$<)
+	$(CCC) -Fo$@ -c $(CCCFLAGS) $(call pr_abspath,$<)
 else
-ifeq ($(MOZ_OS2_TOOLS),VACPP)
-	$(CCC) -Fo$@ -c $(CCCFLAGS) $(call abspath,$<)
+ifeq ($(NS_USE_GCC)_$(OS_ARCH),_WINCE)
+	$(CCC) -Fo$@ -c $(CCCFLAGS) $<
 else
 ifdef NEED_ABSOLUTE_PATH
-	$(CCC) -o $@ -c $(CCCFLAGS) $(call abspath,$<)
+	$(CCC) -o $@ -c $(CCCFLAGS) $(call pr_abspath,$<)
 else
 	$(CCC) -o $@ -c $(CCCFLAGS) $<
 endif
@@ -447,13 +408,13 @@ WCCFLAGS3 = $(subst -D,-d,$(WCCFLAGS2))
 $(OBJDIR)/%.$(OBJ_SUFFIX): %.c
 	@$(MAKE_OBJDIR)
 ifeq ($(NS_USE_GCC)_$(OS_ARCH),_WINNT)
-	$(CC) -Fo$@ -c $(CFLAGS) $(call abspath,$<)
+	$(CC) -Fo$@ -c $(CFLAGS) $(call pr_abspath,$<)
 else
-ifeq ($(MOZ_OS2_TOOLS),VACPP)
-	$(CC) -Fo$@ -c $(CFLAGS) $(call abspath,$<)
+ifeq ($(NS_USE_GCC)_$(OS_ARCH),_WINCE)
+	$(CC) -Fo$@ -c $(CFLAGS) $<
 else
 ifdef NEED_ABSOLUTE_PATH
-	$(CC) -o $@ -c $(CFLAGS) $(call abspath,$<)
+	$(CC) -o $@ -c $(CFLAGS) $(call pr_abspath,$<)
 else
 	$(CC) -o $@ -c $(CFLAGS) $<
 endif
@@ -464,12 +425,6 @@ endif
 $(OBJDIR)/%.$(OBJ_SUFFIX): %.s
 	@$(MAKE_OBJDIR)
 	$(AS) -o $@ $(ASFLAGS) -c $<
-
-ifeq ($(MOZ_OS2_TOOLS),VACPP)
-$(OBJDIR)/%.$(OBJ_SUFFIX): %.asm
-	@$(MAKE_OBJDIR)
-	$(AS) -Fdo:./$(OBJDIR) $(ASFLAGS) $<
-endif
 
 %.i: %.c
 	$(CC) -C -E $(CFLAGS) $< > $*.i

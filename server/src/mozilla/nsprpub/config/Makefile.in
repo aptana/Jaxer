@@ -102,16 +102,8 @@ ifeq ($(OS_ARCH), HP-UX)
     endif
 endif
 
-ifeq ($(MOZ_OS2_TOOLS),EMX)
+ifeq ($(OS_ARCH), OS2)
 XCFLAGS = $(OS_CFLAGS)
-ifeq ($(MOZ_OS2_EMX_OBJECTFORMAT),OMF)
-XLDOPTS = -Zlinker /PM:VIO
-endif
-endif
-
-ifeq ($(MOZ_OS2_TOOLS),PGCC)
-XCFLAGS = $(OS_CFLAGS)
-XLDOPTS = -Zlinker /PM:VIO
 endif
 
 include $(topsrcdir)/config/rules.mk
@@ -121,12 +113,16 @@ PROGS	= $(OBJDIR)/now$(PROG_SUFFIX)
 ifeq (,$(CROSS_COMPILE)$(filter-out OS2 WINNT,$(OS_ARCH)))
 TARGETS = $(PROGS)
 else
+ifeq (,$(filter-out SYMBIAN WINCE,$(OS_ARCH)))
+TARGETS = $(PROGS)
+else
 PROGS	+= $(OBJDIR)/nsinstall$(PROG_SUFFIX)
 TARGETS = $(PROGS) $(PLSRCS:.pl=)
 endif
+endif
 
 OUTOPTION = -o # end of the line
-ifeq (,$(filter-out WINNT WIN95,$(OS_TARGET)))
+ifeq (,$(filter-out WINNT WIN95 WINCE,$(OS_TARGET)))
 ifndef NS_USE_GCC
 OUTOPTION = -Fe
 endif
@@ -149,11 +145,7 @@ endif
 
 $(OBJDIR)/%$(PROG_SUFFIX): $(OBJDIR)/%.$(OBJ_SUFFIX)
 	@$(MAKE_OBJDIR)
-ifeq ($(MOZ_OS2_TOOLS),VACPP)
-	$(LD) $(EXEFLAGS) $<
-else
 	$(CC) $(XCFLAGS) $< $(LDFLAGS) $(XLDOPTS) $(OUTOPTION)$@
-endif
 
 install:: nspr.m4
 	$(NSINSTALL) -D $(DESTDIR)$(datadir)/aclocal

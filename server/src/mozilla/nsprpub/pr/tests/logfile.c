@@ -1,4 +1,4 @@
-/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* -*- Mode: C++; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -15,8 +15,8 @@
  * The Original Code is the Netscape Portable Runtime (NSPR).
  *
  * The Initial Developer of the Original Code is
- * Netscape Communications Corporation.
- * Portions created by the Initial Developer are Copyright (C) 1998-2000
+ * Google Inc.
+ * Portions created by the Initial Developer are Copyright (C) 2009
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -35,37 +35,36 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-	.text
-
 /*
- * sol_getsp()
+ * A regression test for bug 491441.  NSPR should not crash on startup in
+ * PR_SetLogFile when the NSPR_LOG_MODULES and NSPR_LOG_FILE environment
+ * variables are set.
  *
- * Return the current sp (for debugging)
+ * This test could be extended to be a full-blown test for NSPR_LOG_FILE.
  */
-	.global sol_getsp
-sol_getsp:
-	retl
-   	mov     %sp, %o0
 
+#include "prinit.h"
+#include "prlog.h"
 
-/*
- * sol_curthread()
- *
- * Return a unique identifier for the currently active thread.
- */
-	.global sol_curthread
-sol_curthread:
-    retl
-    mov %g7, %o0
-                  
+#include <stdio.h>
+#include <stdlib.h>
 
-	.global __MD_FlushRegisterWindows
-	.global _MD_FlushRegisterWindows
+int main()
+{
+    PRLogModuleInfo *test_lm;
 
-__MD_FlushRegisterWindows:
-_MD_FlushRegisterWindows:
+    if (putenv("NSPR_LOG_MODULES=all:5") != 0) {
+        fprintf(stderr, "putenv failed\n");
+        exit(1);
+    }
+    if (putenv("NSPR_LOG_FILE=logfile.log") != 0) {
+        fprintf(stderr, "putenv failed\n");
+        exit(1);
+    }
 
-	ta	3
-	ret
-	restore
-
+    PR_Init(PR_USER_THREAD, PR_PRIORITY_NORMAL, 0);
+    test_lm = PR_NewLogModule("test");
+    PR_LOG(test_lm, PR_LOG_MIN, ("logfile: test log message"));
+    PR_Cleanup();
+    return 0;
+}

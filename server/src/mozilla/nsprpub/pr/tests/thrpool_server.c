@@ -58,7 +58,7 @@
 #endif
 
 /* for getcwd */
-#if defined(XP_UNIX) || defined (XP_OS2_EMX) || defined(XP_BEOS)
+#if defined(XP_UNIX) || defined (XP_OS2) || defined(XP_BEOS)
 #include <unistd.h>
 #elif defined(XP_PC)
 #include <direct.h>
@@ -72,19 +72,7 @@ static int _debug_on = 0;
 static char *program_name = NULL;
 static void serve_client_write(void *arg);
 
-#ifdef XP_MAC
-#include "prlog.h"
-#include "prsem.h"
-int fprintf(FILE *stream, const char *fmt, ...)
-{
-    PR_LogPrint(fmt);
-    return 0;
-}
-#define printf PR_LogPrint
-extern void SetupMacPrintfLog(char *logFile);
-#else
 #include "obsolete/prsem.h"
-#endif
 
 #ifdef XP_PC
 #define mode_t int
@@ -396,7 +384,9 @@ TCP_Server(void *arg)
 		int index = 0;
 		char port[32];
         char path[1024 + sizeof("/thrpool_client")];
-        (void)getcwd(path, sizeof(path));
+
+        getcwd(path, sizeof(path));
+
         (void)strcat(path, "/thrpool_client");
 #ifdef XP_PC
         (void)strcat(path, ".exe");
@@ -545,8 +535,7 @@ exit:
 #define DEFAULT_MAX_THREADS			100
 #define DEFAULT_STACKSIZE			(512 * 1024)
 
-int
-main(int argc, char **argv)
+int main(int argc, char **argv)
 {
 	PRInt32 initial_threads = DEFAULT_INITIAL_THREADS;
 	PRInt32 max_threads = DEFAULT_MAX_THREADS;
@@ -580,9 +569,6 @@ main(int argc, char **argv)
     PR_Init(PR_USER_THREAD, PR_PRIORITY_NORMAL, 0);
     PR_STDIO_INIT();
 
-#ifdef XP_MAC
-    SetupMacPrintfLog("socket.log");
-#endif
     PR_SetConcurrency(4);
 
 	tp = PR_CreateThreadPool(initial_threads, max_threads, stacksize);

@@ -65,19 +65,7 @@ static int _debug_on = 0;
 static int server_port = -1;
 static char *program_name = NULL;
 
-#ifdef XP_MAC
-#include "prlog.h"
-#include "prsem.h"
-int fprintf(FILE *stream, const char *fmt, ...)
-{
-    PR_LogPrint(fmt);
-    return 0;
-}
-#define printf PR_LogPrint
-extern void SetupMacPrintfLog(char *logFile);
-#else
 #include "obsolete/prsem.h"
-#endif
 
 #ifdef XP_PC
 #define mode_t int
@@ -346,8 +334,7 @@ TCP_Socket_Client_Server_Test(void)
 
 /************************************************************************/
 
-int
-main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     /*
      * -d           debug mode
@@ -377,9 +364,6 @@ main(int argc, char **argv)
     PR_Init(PR_USER_THREAD, PR_PRIORITY_NORMAL, 0);
     PR_STDIO_INIT();
 
-#ifdef XP_MAC
-    SetupMacPrintfLog("socket.log");
-#endif
     PR_SetConcurrency(4);
 
 	TCP_Socket_Client_Server_Test();

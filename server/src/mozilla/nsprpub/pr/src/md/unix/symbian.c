@@ -1,4 +1,4 @@
-/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* -*- Mode: C++; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -35,17 +35,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#ifndef macio_h__
-#define macio_h__
+#include "primpl.h"
 
+void _MD_EarlyInit(void)
+{
+}
 
-PR_BEGIN_EXTERN_C
-
-OSErr ConvertUnixPathToMacPath(const char *, char **);
-OSErr ConvertUnixPathToFSSpec(const char *unixPath, FSSpec *fileSpec);
-
-PR_END_EXTERN_C
-
-
-#endif /* macio_h__ */
-
+PRWord *_MD_HomeGCRegisters(PRThread *t, int isCurrent, int *np)
+{
+    *np = 0;
+    return NULL;
+}

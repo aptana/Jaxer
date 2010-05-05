@@ -51,21 +51,15 @@ PR_BEGIN_EXTERN_C
 #ifdef WINNT
 #include "md/_winnt.h"
 #include "md/_win32_errors.h"
-#elif defined(WIN95)
+#elif defined(WIN95) || defined(WINCE)
 #include "md/_win95.h"
 #include "md/_win32_errors.h"
-#elif defined(WIN16)
-#include "md/_win16.h"
 #elif defined(OS2)
 #include "md/_os2.h"
 #include "md/_os2_errors.h"
 #else
 #error unknown Windows platform
 #endif
-
-#elif defined XP_MAC
-
-#include "_macos.h"
 
 #elif defined(XP_UNIX)
 
@@ -132,14 +126,14 @@ PR_BEGIN_EXTERN_C
 #elif defined(QNX)
 #include "md/_qnx.h"
 
-#elif defined(VMS)
-#include "md/_openvms.h"
-
 #elif defined(NTO)
 #include "md/_nto.h"
 
 #elif defined(RISCOS)
 #include "md/_riscos.h"
+
+#elif defined(SYMBIAN)
+#include "md/_symbian.h"
 
 #else
 #error unknown Unix flavor

@@ -70,7 +70,7 @@
 #include <netinet/in_systm.h>  /* n_short, n_long, n_time */
 #endif
 
-#if defined(XP_UNIX) || defined(OS2) || (defined(XP_BEOS) && defined(BONE_VERSION))
+#ifdef HAVE_NETINET_TCP_H
 #include <netinet/tcp.h>  /* TCP_NODELAY, TCP_MAXSEG */
 #endif
 
@@ -367,28 +367,6 @@ PRStatus PR_CALLBACK _PR_SocketSetSocketOption(PRFileDesc *fd, const PRSocketOpt
  *********************************************************************
  *********************************************************************
  */
-
-#if defined(VMS)
-/*
-** Sad but true. The DEC C header files define the following socket options
-** differently to what UCX is expecting. The values that UCX expects are
-** defined in SYS$LIBRARY:UCX$INETDEF.H. We redefine them here to the values
-** that UCX expects. Note that UCX V4.x will only accept these values while
-** UCX V5.x will accept either. So in theory this hack can be removed once
-** UCX V5 is the minimum.
-*/
-#undef IP_MULTICAST_IF
-#undef IP_MULTICAST_TTL
-#undef IP_MULTICAST_LOOP
-#undef IP_ADD_MEMBERSHIP
-#undef IP_DROP_MEMBERSHIP
-#include <ucx$inetdef.h>
-#define IP_MULTICAST_IF    UCX$C_IP_MULTICAST_IF
-#define IP_MULTICAST_TTL   UCX$C_IP_MULTICAST_TTL
-#define IP_MULTICAST_LOOP  UCX$C_IP_MULTICAST_LOOP
-#define IP_ADD_MEMBERSHIP  UCX$C_IP_ADD_MEMBERSHIP
-#define IP_DROP_MEMBERSHIP UCX$C_IP_DROP_MEMBERSHIP
-#endif
 
 /*
  * Not every platform has all the socket options we want to

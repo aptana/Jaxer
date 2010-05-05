@@ -226,12 +226,6 @@ PR_IMPLEMENT(PRInt32) PR_GetNumberOfProcessors( void )
 
     GetSystemInfo( &info );
     numCpus = info.dwNumberOfProcessors;
-#elif defined(XP_MAC)
-/* Hard-code the number of processors to 1 on the Mac
-** MacOS/9 will always be 1. The MPProcessors() call is for
-** MacOS/X, when issued. Leave it commented out for now. */
-/*  numCpus = MPProcessors(); */
-    numCpus = 1;
 #elif defined(BEOS)
     system_info sysInfo;
 
@@ -259,7 +253,7 @@ PR_IMPLEMENT(PRInt32) PR_GetNumberOfProcessors( void )
     }
 #elif defined(IRIX)
     numCpus = sysconf( _SC_NPROC_ONLN );
-#elif defined(RISCOS)
+#elif defined(RISCOS) || defined(SYMBIAN)
     numCpus = 1;
 #elif defined(XP_UNIX)
     numCpus = sysconf( _SC_NPROCESSORS_ONLN );
@@ -300,20 +294,20 @@ PR_IMPLEMENT(PRUint64) PR_GetPhysicalMemorySize(void)
 #elif defined(DARWIN)
 
     struct host_basic_info hInfo;
-    mach_msg_type_number_t count;
+    mach_msg_type_number_t count = HOST_BASIC_INFO_COUNT;
 
     int result = host_info(mach_host_self(),
                            HOST_BASIC_INFO,
                            (host_info_t) &hInfo,
                            &count);
     if (result == KERN_SUCCESS)
-        bytes = hInfo.memory_size;
+        bytes = hInfo.max_mem;
 
 #elif defined(WIN32)
 
     /* Try to use the newer GlobalMemoryStatusEx API for Windows 2000+. */
     GlobalMemoryStatusExFn globalMemory = (GlobalMemoryStatusExFn) NULL;
-    HMODULE module = GetModuleHandle("kernel32.dll");
+    HMODULE module = GetModuleHandleW(L"kernel32.dll");
 
     if (module) {
         globalMemory = (GlobalMemoryStatusExFn)GetProcAddress(module, "GlobalMemoryStatusEx");

@@ -63,6 +63,8 @@
 #define _PR_SI_ARCHITECTURE "x86-64"
 #elif defined(__mc68000__)
 #define _PR_SI_ARCHITECTURE "m68k"
+#elif defined(__sparc__) && defined(__arch64__)
+#define _PR_SI_ARCHITECTURE "sparc64"
 #elif defined(__sparc__)
 #define _PR_SI_ARCHITECTURE "sparc"
 #elif defined(__i386__)
@@ -77,6 +79,8 @@
 #define _PR_SI_ARCHITECTURE "s390x"
 #elif defined(__s390__)
 #define _PR_SI_ARCHITECTURE "s390"
+#elif defined(__sh__)
+#define _PR_SI_ARCHITECTURE "sh"
 #else
 #error "Unknown CPU architecture"
 #endif
@@ -415,13 +419,35 @@ extern void _MD_CleanupBeforeExit(void);
 #elif defined(__arm__)
 /* ARM/Linux */
 #if defined(__GLIBC__) && __GLIBC__ >= 2
+#ifdef __ARM_EABI__
+/* EABI */
+#define _MD_GET_SP(_t) (_t)->md.context[0].__jmpbuf[8]
+#define _MD_SET_FP(_t, val) ((_t)->md.context[0].__jmpbuf[7] = (val))
+#define _MD_GET_SP_PTR(_t) &(_MD_GET_SP(_t))
+#define _MD_GET_FP_PTR(_t) (&(_t)->md.context[0].__jmpbuf[7])
+#define _MD_SP_TYPE __ptr_t
+#else /* __ARM_EABI__ */
+/* old ABI */
 #define _MD_GET_SP(_t) (_t)->md.context[0].__jmpbuf[20]
 #define _MD_SET_FP(_t, val) ((_t)->md.context[0].__jmpbuf[19] = (val))
 #define _MD_GET_SP_PTR(_t) &(_MD_GET_SP(_t))
 #define _MD_GET_FP_PTR(_t) (&(_t)->md.context[0].__jmpbuf[19])
 #define _MD_SP_TYPE __ptr_t
+#endif /* __ARM_EABI__ */
 #else
 #error "ARM/Linux pre-glibc2 not supported yet"
+#endif /* defined(__GLIBC__) && __GLIBC__ >= 2 */
+
+#elif defined(__sh__)
+/* SH/Linux */
+#if defined(__GLIBC__) && __GLIBC__ >= 2
+#define _MD_GET_SP(_t) (_t)->md.context[0].__jmpbuf[7]
+#define _MD_SET_FP(_t, val) ((_t)->md.context[0].__jmpbuf[6] = (val))
+#define _MD_GET_SP_PTR(_t) &(_MD_GET_SP(_t))
+#define _MD_GET_FP_PTR(_t) (&(_t)->md.context[0].__jmpbuf[6])
+#define _MD_SP_TYPE __ptr_t
+#else
+#error "SH/Linux pre-glibc2 not supported yet"
 #endif /* defined(__GLIBC__) && __GLIBC__ >= 2 */
 
 #else

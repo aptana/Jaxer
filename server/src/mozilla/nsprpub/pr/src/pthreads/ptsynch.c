@@ -221,8 +221,12 @@ PR_IMPLEMENT(void) PR_Lock(PRLock *lock)
     PR_ASSERT(0 == lock->notified.length);
     PR_ASSERT(NULL == lock->notified.link);
     PR_ASSERT(PR_FALSE == lock->locked);
-    lock->locked = PR_TRUE;
+    /* Nb: the order of the next two statements is not critical to
+     * the correctness of PR_AssertCurrentThreadOwnsLock(), but 
+     * this particular order makes the assertion more likely to
+     * catch errors. */
     lock->owner = pthread_self();
+    lock->locked = PR_TRUE;
 #if defined(DEBUG)
     pt_debug.locks_acquired += 1;
 #endif
@@ -254,6 +258,14 @@ PR_IMPLEMENT(PRStatus) PR_Unlock(PRLock *lock)
     return PR_SUCCESS;
 }  /* PR_Unlock */
 
+PR_IMPLEMENT(void) PR_AssertCurrentThreadOwnsLock(PRLock *lock)
+{
+    /* Nb: the order of the |locked| and |owner==me| checks is not critical 
+     * to the correctness of PR_AssertCurrentThreadOwnsLock(), but 
+     * this particular order makes the assertion more likely to
+     * catch errors. */
+    PR_ASSERT(lock->locked && pthread_equal(lock->owner, pthread_self()));
+}
 
 /**************************************************************/
 /**************************************************************/
@@ -527,6 +539,11 @@ PR_IMPLEMENT(PRIntn) PR_GetMonitorEntryCount(PRMonitor *mon)
     if (pthread_equal(mon->owner, self))
         return mon->entryCount;
     return 0;
+}
+
+PR_IMPLEMENT(void) PR_AssertCurrentThreadInMonitor(PRMonitor *mon)
+{
+    PR_ASSERT_CURRENT_THREAD_OWNS_LOCK(&mon->lock);
 }
 
 PR_IMPLEMENT(void) PR_EnterMonitor(PRMonitor *mon)
@@ -831,7 +848,8 @@ PR_IMPLEMENT(PRStatus) PR_DeleteSemaphore(const char *name)
  * From the semctl(2) man page in glibc 2.0
  */
 #if (defined(__GNU_LIBRARY__) && !defined(_SEM_SEMUN_UNDEFINED)) \
-    || defined(FREEBSD) || defined(OPENBSD) || defined(BSDI)
+    || defined(FREEBSD) || defined(OPENBSD) || defined(BSDI) \
+    || defined(DARWIN) || defined(SYMBIAN)
 /* union semun is defined by including <sys/sem.h> */
 #else
 /* according to X/OPEN we have to define it ourselves */

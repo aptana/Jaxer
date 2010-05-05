@@ -65,40 +65,24 @@
 static void * PR_CALLBACK
 DefaultAllocTable(void *pool, PRSize size)
 {
-#if defined(XP_MAC)
-#pragma unused (pool)
-#endif
-
     return PR_MALLOC(size);
 }
 
 static void PR_CALLBACK
 DefaultFreeTable(void *pool, void *item)
 {
-#if defined(XP_MAC)
-#pragma unused (pool)
-#endif
-
     PR_Free(item);
 }
 
 static PLHashEntry * PR_CALLBACK
 DefaultAllocEntry(void *pool, const void *key)
 {
-#if defined(XP_MAC)
-#pragma unused (pool,key)
-#endif
-
     return PR_NEW(PLHashEntry);
 }
 
 static void PR_CALLBACK
 DefaultFreeEntry(void *pool, PLHashEntry *he, PRUintn flag)
 {
-#if defined(XP_MAC)
-#pragma unused (pool)
-#endif
-
     if (flag == HT_FREE_ENTRY)
         PR_Free(he);
 }
@@ -132,12 +116,6 @@ PL_NewHashTable(PRUint32 n, PLHashFunction keyHash,
     memset(ht, 0, sizeof *ht);
     ht->shift = PL_HASH_BITS - n;
     n = 1 << n;
-#if defined(WIN16)
-    if (n > 16000) {
-        (*allocOps->freeTable)(allocPriv, ht);
-        return 0;
-    }
-#endif  /* WIN16 */
     nb = n * sizeof(PLHashEntry *);
     ht->buckets = (PLHashEntry**)((*allocOps->allocTable)(allocPriv, nb));
     if (!ht->buckets) {
@@ -254,10 +232,6 @@ PL_HashTableRawAdd(PLHashTable *ht, PLHashEntry **hep,
     n = NBUCKETS(ht);
     if (ht->nentries >= OVERLOADED(n)) {
         oldbuckets = ht->buckets;
-#if defined(WIN16)
-        if (2 * n > 16000)
-            return 0;
-#endif  /* WIN16 */
         nb = 2 * n * sizeof(PLHashEntry *);
         ht->buckets = (PLHashEntry**)
             ((*ht->allocOps->allocTable)(ht->allocPriv, nb));

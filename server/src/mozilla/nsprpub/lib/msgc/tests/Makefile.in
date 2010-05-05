@@ -46,11 +46,6 @@ include $(MOD_DEPTH)/config/autoconf.mk
 
 include $(topsrcdir)/config/config.mk
 
-ifeq ($(OS_TARGET), WIN16)
-OS_CFLAGS = $(OS_EXE_CFLAGS)
-W16STDIO = $(MOD_DEPTH)/pr/src/md/windows/$(OBJDIR)/w16stdio.$(OBJ_SUFFIX)
-endif
-
 ifeq ($(OS_TARGET), OS2)
 OS_CFLAGS = $(OS_EXE_CFLAGS)
 endif
@@ -79,27 +74,14 @@ LIBPLC = -lplc$(NSPR_VERSION)
 LIBGC = -lmsgc$(GC_VERSION)
 
 ifeq ($(OS_ARCH), WINNT)
-ifeq ($(OS_TARGET), WIN16)
-  LIBPR = $(dist_libdir)/nspr$(NSPR_VERSION).lib
-  LIBPLC = $(dist_libdir)/plc$(NSPR_VERSION).lib
-  LIBGC= $(dist_libdir)/msgc$(GC_VERSION).lib
-else
   LDOPTS = -NOLOGO -DEBUG -INCREMENTAL:NO
   LIBPR = $(dist_libdir)/libnspr$(NSPR_VERSION).$(LIB_SUFFIX)
   LIBPLC = $(dist_libdir)/libplc$(NSPR_VERSION).$(LIB_SUFFIX)
   LIBGC= $(dist_libdir)/libmsgc$(GC_VERSION).$(LIB_SUFFIX)
 endif
-endif
 
 ifeq ($(OS_ARCH),OS2)
-ifeq ($(MOZ_OS2_TOOLS),VACPP)
-  LDOPTS = -NOE -DEBUG -nologo -PMTYPE:VIO
-  LIBPR = $(dist_libdir)/nspr$(NSPR_VERSION).lib
-  LIBPLC = $(dist_libdir)/plc$(NSPR_VERSION).lib
-  LIBGC= $(dist_libdir)/msgc$(GC_VERSION).lib
-else
   LDOPTS += -Zomf -Zlinker /PM:VIO
-endif
 endif
 
 ifneq ($(OS_ARCH), WINNT)
@@ -160,22 +142,13 @@ LDOPTS += -R $(PWD)/$(dist_libdir)
 endif
 endif
 
-ifneq ($(LOCAL_THREADS_ONLY),1)
-# SunOS 5.4 and 5.5 need to link with -lthread or -lpthread,
-# even though we already linked with these system libraries
-# when we built libnspr.so.
-ifeq ($(OS_RELEASE), 5.4)
-EXTRA_LIBS = -lthread
-endif
-
+# SunOS 5.5 needs to link with -lpthread, even though we already
+# linked with this system library when we built libnspr.so.
 ifeq ($(OS_RELEASE), 5.5)
 ifdef USE_PTHREADS
 EXTRA_LIBS = -lpthread
-else
-EXTRA_LIBS = -lthread
 endif
 endif
-endif # LOCAL_THREADS_ONLY
 endif # SunOS
 
 ifeq ($(OS_ARCH),NEC)
@@ -282,23 +255,6 @@ else
 $(OBJDIR)/%$(PROG_SUFFIX): $(OBJDIR)/%.$(OBJ_SUFFIX)
 	@$(MAKE_OBJDIR)
 ifeq ($(OS_ARCH), WINNT)
-ifeq ($(OS_TARGET),WIN16)
-	echo system windows >w16link
-	echo name $@  >>w16link
-	echo option map >>w16link
-#	echo option CASEEXACT >>w16link
-	echo option stack=16K >>w16link
-	echo debug $(DEBUGTYPE) all >>w16link
-	echo file >>w16link
-	echo $< ,  >>w16link
-	echo $(W16STDIO) >>w16link
-	echo library  >>w16link
-	echo $(LIBPR),	     >>w16link
-	echo $(LIBPLC),		>>w16link
-	echo $(LIBGC),		 >>w16link
-	echo winsock.lib     >>w16link
-	wlink @w16link.
-else
 	link $(LDOPTS) $< $(LIBGC) $(LIBPLC) $(LIBPR) wsock32.lib -out:$@
 else
 ifeq ($(OS_ARCH),OS2)

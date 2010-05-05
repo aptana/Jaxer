@@ -1,4 +1,4 @@
-/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* -*- Mode: C++; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -20,6 +20,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
+ *   Ludovico Cavedon <ludovico.cavedon@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -35,50 +36,33 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/*******************************************************************
-** w16mem.c -- Implement memory segment functions.
-**
-** 
-********************************************************************
-*/
-#include "primpl.h"
+/* This test verifies that NSPR can be cleaned up and reinitialized. */
 
+#include "nspr.h"
+#include <stdio.h>
 
-/*
-**	Allocate a new memory segment.
-**	
-**	Return the segment's access rights and size.  
-*/
-PRStatus _MD_AllocSegment(PRSegment *seg, PRUint32 size, void *vaddr)
+int main()
 {
-	PR_ASSERT(seg != 0);
-	PR_ASSERT(size != 0);
-	PR_ASSERT(vaddr == 0);
+    PRStatus rv;
 
-	/*	
-	** Take the actual memory for the segment out of our Figment heap.
-	*/
+    fprintf(stderr, "Init 1\n");
+    PR_Init(PR_USER_THREAD, PR_PRIORITY_NORMAL, 0);
+    fprintf(stderr, "Cleanup 1\n");
+    rv = PR_Cleanup();
+    if (rv != PR_SUCCESS) {
+        fprintf(stderr, "FAIL\n");
+        return 1;
+    }
 
-	seg->vaddr = (char *)malloc(size);
+    fprintf(stderr, "Init 2\n");
+    PR_Init(PR_USER_THREAD, PR_PRIORITY_NORMAL, 0);
+    fprintf(stderr, "Cleanup 2\n");
+    rv = PR_Cleanup();
+    if (rv != PR_SUCCESS) {
+        fprintf(stderr, "FAIL\n");
+        return 1;
+    }
 
-	if (seg->vaddr == NULL) {
-		return PR_FAILURE;
-	}
-
-	seg->size = size;	
-
-	return PR_SUCCESS;
-} /* --- end _MD_AllocSegment() --- */
-
-
-/*
-**	Free previously allocated memory segment.
-*/
-void _MD_FreeSegment(PRSegment *seg)
-{
-	PR_ASSERT((seg->flags & _PR_SEG_VM) == 0);
-
-	if (seg->vaddr != NULL)
-		free( seg->vaddr );
-    return;
-} /* --- end _MD_FreeSegment() --- */
+    fprintf(stderr, "PASS\n");
+    return 0;
+}

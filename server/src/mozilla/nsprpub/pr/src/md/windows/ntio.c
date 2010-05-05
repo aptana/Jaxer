@@ -100,17 +100,6 @@ static DWORD dirAccessTable[] = {
     FILE_GENERIC_EXECUTE
 };
 
-/*
- * The NSPR epoch (00:00:00 1 Jan 1970 UTC) in FILETIME.
- * We store the value in a PRTime variable for convenience.
- * This constant is used by _PR_FileTimeToPRTime().
- */
-#ifdef __GNUC__
-static const PRTime _pr_filetime_offset = 116444736000000000LL;
-#else
-static const PRTime _pr_filetime_offset = 116444736000000000i64;
-#endif
-
 static PRBool IsPrevCharSlash(const char *str, const char *current);
 
 #define _NEED_351_FILE_LOCKING_HACK
@@ -3653,7 +3642,10 @@ PRInt32 IsFileLocal(HANDLE hFile)
    _MD_LOCK(&cachedVolumeLock);
    while(dwIndex <= dwLastCachedDrive)
       if (dwCachedVolumeSerialNumbers[dwIndex++] == Info.dwVolumeSerialNumber)
+      {
+         _MD_UNLOCK(&cachedVolumeLock);
          return _PR_LOCAL_FILE;
+      }
    _MD_UNLOCK(&cachedVolumeLock);
 
    // volume serial number not found in the cache.  Check removable files.

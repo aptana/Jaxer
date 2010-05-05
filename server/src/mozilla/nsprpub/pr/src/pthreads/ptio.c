@@ -1,4 +1,4 @@
-/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -187,7 +187,10 @@ static ssize_t (*pt_aix_sendfile_fptr)() = NULL;
 
 #include "primpl.h"
 
+#ifdef HAVE_NETINET_TCP_H
 #include <netinet/tcp.h>  /* TCP_NODELAY, TCP_MAXSEG */
+#endif
+
 #ifdef LINUX
 /* TCP_CORK is not defined in <netinet/tcp.h> on Red Hat Linux 6.0 */
 #ifndef TCP_CORK
@@ -208,8 +211,8 @@ static PRBool _pr_ipv6_v6only_on_by_default;
     || defined(HPUX10_30) || defined(HPUX11) \
     || defined(LINUX) || defined(__GNU__) || defined(__GLIBC__) \
     || defined(FREEBSD) || defined(NETBSD) || defined(OPENBSD) \
-    || defined(BSDI) || defined(VMS) || defined(NTO) || defined(DARWIN) \
-    || defined(UNIXWARE) || defined(RISCOS)
+    || defined(BSDI) || defined(NTO) || defined(DARWIN) \
+    || defined(UNIXWARE) || defined(RISCOS) || defined(SYMBIAN)
 #define _PRSelectFdSetArg_t fd_set *
 #else
 #error "Cannot determine architecture"
@@ -292,8 +295,7 @@ static PRBool IsValidNetAddrLen(const PRNetAddr *addr, PRInt32 addr_len)
 #if defined(HAVE_SOCKLEN_T) \
     || (defined(__GLIBC__) && __GLIBC__ >= 2)
 typedef socklen_t pt_SockLen;
-#elif (defined(AIX) && !defined(AIX4_1)) \
-    || defined(VMS)
+#elif (defined(AIX) && !defined(AIX4_1)) 
 typedef PRSize pt_SockLen;
 #else
 typedef PRIntn pt_SockLen;
@@ -456,7 +458,7 @@ static void pt_poll_now_with_select(pt_Continuation *op)
 
 				rv = select(op->arg1.osfd + 1, rdp, wrp, NULL, &tv);
 
-				if (self->state & PT_THREAD_ABORTED)
+				if (_PT_THREAD_INTERRUPTED(self))
 				{
 					self->state &= ~PT_THREAD_ABORTED;
 					op->result.code = -1;
@@ -517,7 +519,7 @@ static void pt_poll_now_with_select(pt_Continuation *op)
 				tv.tv_usec = (msecs % PR_MSEC_PER_SEC) * PR_USEC_PER_MSEC;
 				rv = select(op->arg1.osfd + 1, rdp, wrp, NULL, &tv);
 
-				if (self->state & PT_THREAD_ABORTED)
+				if (_PT_THREAD_INTERRUPTED(self))
 				{
 					self->state &= ~PT_THREAD_ABORTED;
 					op->result.code = -1;
@@ -598,7 +600,7 @@ static void pt_poll_now(pt_Continuation *op)
 
 				rv = poll(&tmp_pfd, 1, msecs);
 				
-				if (self->state & PT_THREAD_ABORTED)
+				if (_PT_THREAD_INTERRUPTED(self))
 				{
 					self->state &= ~PT_THREAD_ABORTED;
 					op->result.code = -1;
@@ -656,7 +658,7 @@ static void pt_poll_now(pt_Continuation *op)
 				}
 				rv = poll(&tmp_pfd, 1, msecs);
 				
-				if (self->state & PT_THREAD_ABORTED)
+				if (_PT_THREAD_INTERRUPTED(self))
 				{
 					self->state &= ~PT_THREAD_ABORTED;
 					op->result.code = -1;
@@ -1015,7 +1017,7 @@ static PRBool pt_hpux_sendfile_cont(pt_Continuation *op, PRInt16 revents)
         if (count < hdtrl[0].iov_len) {
 			/* header not sent */
 
-            hdtrl[0].iov_base = ((char *) hdtrl[0].iov_len) + count;
+            hdtrl[0].iov_base = ((char *) hdtrl[0].iov_base) + count;
             hdtrl[0].iov_len -= count;
 
         } else if (count < (hdtrl[0].iov_len + op->arg3.file_spec.nbytes)) {
@@ -1656,8 +1658,17 @@ static PRFileDesc* pt_Accept(
     PRFileDesc *newfd = NULL;
     PRIntn syserrno, osfd = -1;
     pt_SockLen addr_len = sizeof(PRNetAddr);
+#ifdef SYMBIAN
+    PRNetAddr dummy_addr;
+#endif
 
     if (pt_TestAbort()) return newfd;
+
+#ifdef SYMBIAN
+    /* On Symbian OS, accept crashes if addr is NULL. */
+    if (!addr)
+        addr = &dummy_addr;
+#endif
 
 #ifdef _PR_STRICT_ADDR_LEN
     if (addr)
@@ -1826,7 +1837,15 @@ static PRInt32 pt_Recv(
     if (0 == flags)
         osflags = 0;
     else if (PR_MSG_PEEK == flags)
+    {
+#ifdef SYMBIAN
+        /* MSG_PEEK doesn't work as expected. */
+        PR_SetError(PR_NOT_IMPLEMENTED_ERROR, 0);
+        return bytes;
+#else
         osflags = MSG_PEEK;
+#endif
+    }
     else
     {
         PR_SetError(PR_INVALID_ARGUMENT_ERROR, 0);
@@ -2077,21 +2096,21 @@ static PRInt32 pt_RecvFrom(PRFileDesc *fd, void *buf, PRInt32 amount,
         bytes = pt_Continue(&op);
         syserrno = op.syserrno;
     }
-#ifdef _PR_HAVE_SOCKADDR_LEN
     if (bytes >= 0)
     {
+#ifdef _PR_HAVE_SOCKADDR_LEN
         /* ignore the sa_len field of struct sockaddr */
         if (addr)
         {
             addr->raw.family = ((struct sockaddr*)addr)->sa_family;
         }
-    }
 #endif /* _PR_HAVE_SOCKADDR_LEN */
 #ifdef _PR_INET6
-	if (addr && (AF_INET6 == addr->raw.family))
-        addr->raw.family = PR_AF_INET6;
+        if (addr && (AF_INET6 == addr->raw.family))
+            addr->raw.family = PR_AF_INET6;
 #endif
-    if (bytes < 0)
+    }
+    else
         pt_MapError(_PR_MD_MAP_RECVFROM_ERROR, syserrno);
     return bytes;
 }  /* pt_RecvFrom */
@@ -3250,8 +3269,9 @@ static PRIOMethods _pr_socketpollfd_methods = {
 #if defined(HPUX) || defined(OSF1) || defined(SOLARIS) || defined (IRIX) \
     || defined(LINUX) || defined(__GNU__) || defined(__GLIBC__) \
     || defined(AIX) || defined(FREEBSD) || defined(NETBSD) \
-    || defined(OPENBSD) || defined(BSDI) || defined(VMS) || defined(NTO) \
-    || defined(DARWIN) || defined(UNIXWARE) || defined(RISCOS)
+    || defined(OPENBSD) || defined(BSDI) || defined(NTO) \
+    || defined(DARWIN) || defined(UNIXWARE) || defined(RISCOS) \
+    || defined(SYMBIAN)
 #define _PR_FCNTL_FLAGS O_NONBLOCK
 #else
 #error "Can't determine architecture"
@@ -4354,6 +4374,84 @@ PR_IMPLEMENT(PRFileDesc*) PR_OpenTCPSocket(PRIntn af)
 
 PR_IMPLEMENT(PRStatus) PR_NewTCPSocketPair(PRFileDesc *fds[2])
 {
+#ifdef SYMBIAN
+    /*
+     * For the platforms that don't have socketpair.
+     *
+     * Copied from prsocket.c, with the parameter f[] renamed fds[] and the
+     * _PR_CONNECT_DOES_NOT_BIND code removed.
+     */
+    PRFileDesc *listenSock;
+    PRNetAddr selfAddr, peerAddr;
+    PRUint16 port;
+
+    fds[0] = fds[1] = NULL;
+    listenSock = PR_NewTCPSocket();
+    if (listenSock == NULL) {
+        goto failed;
+    }
+    PR_InitializeNetAddr(PR_IpAddrLoopback, 0, &selfAddr); /* BugZilla: 35408 */
+    if (PR_Bind(listenSock, &selfAddr) == PR_FAILURE) {
+        goto failed;
+    }
+    if (PR_GetSockName(listenSock, &selfAddr) == PR_FAILURE) {
+        goto failed;
+    }
+    port = ntohs(selfAddr.inet.port);
+    if (PR_Listen(listenSock, 5) == PR_FAILURE) {
+        goto failed;
+    }
+    fds[0] = PR_NewTCPSocket();
+    if (fds[0] == NULL) {
+        goto failed;
+    }
+    PR_InitializeNetAddr(PR_IpAddrLoopback, port, &selfAddr);
+
+    /*
+     * Only a thread is used to do the connect and accept.
+     * I am relying on the fact that PR_Connect returns
+     * successfully as soon as the connect request is put
+     * into the listen queue (but before PR_Accept is called).
+     * This is the behavior of the BSD socket code.  If
+     * connect does not return until accept is called, we
+     * will need to create another thread to call connect.
+     */
+    if (PR_Connect(fds[0], &selfAddr, PR_INTERVAL_NO_TIMEOUT)
+            == PR_FAILURE) {
+        goto failed;
+    }
+    /*
+     * A malicious local process may connect to the listening
+     * socket, so we need to verify that the accepted connection
+     * is made from our own socket fds[0].
+     */
+    if (PR_GetSockName(fds[0], &selfAddr) == PR_FAILURE) {
+        goto failed;
+    }
+    fds[1] = PR_Accept(listenSock, &peerAddr, PR_INTERVAL_NO_TIMEOUT);
+    if (fds[1] == NULL) {
+        goto failed;
+    }
+    if (peerAddr.inet.port != selfAddr.inet.port) {
+        /* the connection we accepted is not from fds[0] */
+        PR_SetError(PR_INSUFFICIENT_RESOURCES_ERROR, 0);
+        goto failed;
+    }
+    PR_Close(listenSock);
+    return PR_SUCCESS;
+
+failed:
+    if (listenSock) {
+        PR_Close(listenSock);
+    }
+    if (fds[0]) {
+        PR_Close(fds[0]);
+    }
+    if (fds[1]) {
+        PR_Close(fds[1]);
+    }
+    return PR_FAILURE;
+#else
     PRInt32 osfd[2];
 
     if (pt_TestAbort()) return PR_FAILURE;
@@ -4376,6 +4474,7 @@ PR_IMPLEMENT(PRStatus) PR_NewTCPSocketPair(PRFileDesc *fds[2])
         return PR_FAILURE;
     }
     return PR_SUCCESS;
+#endif
 }  /* PR_NewTCPSocketPair */
 
 PR_IMPLEMENT(PRStatus) PR_CreatePipe(
@@ -4431,6 +4530,7 @@ PR_IMPLEMENT(PRStatus) PR_SetFDInheritable(
         if (fcntl(fd->secret->md.osfd, F_SETFD,
         inheritable ? 0 : FD_CLOEXEC) == -1)
         {
+            _PR_MD_MAP_DEFAULT_ERROR(errno);
             return PR_FAILURE;
         }
         fd->secret->inheritable = (_PRTriStateBool) inheritable;
@@ -4603,21 +4703,23 @@ PR_IMPLEMENT(PRStatus) PR_UnlockFile(PRFileDesc *fd)
 
 PR_IMPLEMENT(PRInt32) PR_GetSysfdTableMax(void)
 {
-#if defined(XP_UNIX) && !defined(AIX) && !defined(VMS)
+#if defined(AIX) || defined(SYMBIAN)
+    return sysconf(_SC_OPEN_MAX);
+#else
     struct rlimit rlim;
 
     if ( getrlimit(RLIMIT_NOFILE, &rlim) < 0) 
        return -1;
 
     return rlim.rlim_max;
-#elif defined(AIX) || defined(VMS)
-    return sysconf(_SC_OPEN_MAX);
 #endif
 }
 
 PR_IMPLEMENT(PRInt32) PR_SetSysfdTableSize(PRIntn table_size)
 {
-#if defined(XP_UNIX) && !defined(AIX) && !defined(VMS)
+#if defined(AIX) || defined(SYMBIAN)
+    return -1;
+#else
     struct rlimit rlim;
     PRInt32 tableMax = PR_GetSysfdTableMax();
 
@@ -4634,8 +4736,6 @@ PR_IMPLEMENT(PRInt32) PR_SetSysfdTableSize(PRIntn table_size)
         return -1;
 
     return rlim.rlim_cur;
-#elif defined(AIX) || defined(VMS)
-    return -1;
 #endif
 }
 

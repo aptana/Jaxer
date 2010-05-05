@@ -65,8 +65,20 @@ NSPR_API(const PRIOMethods*)    PR_GetUDPMethods(void);
 NSPR_API(const PRIOMethods*)    PR_GetPipeMethods(void);
 
 /*
-** Convert a NSPR Socket Handle to a Native Socket handle.
-** This function will be obsoleted with the next release; avoid using it.
+** Convert a NSPR socket handle to a native socket handle.
+**
+** Using this function makes your code depend on the properties of the
+** current NSPR implementation, which may change (although extremely
+** unlikely because of NSPR's backward compatibility requirement).  Avoid
+** using it if you can.
+**
+** If you use this function, you need to understand what NSPR does to
+** the native handle.  For example, NSPR puts native socket handles in
+** non-blocking mode or associates them with an I/O completion port (the
+** WINNT build configuration only).  Your use of the native handle should
+** not interfere with NSPR's use of the native handle.  If your code
+** changes the configuration of the native handle, (e.g., changes it to
+** blocking or closes it), NSPR will not work correctly.
 */
 NSPR_API(PROsfd)       PR_FileDesc2NativeHandle(PRFileDesc *);
 NSPR_API(void)         PR_ChangeFileDescNativeHandle(PRFileDesc *, PROsfd);
@@ -256,15 +268,6 @@ NSPR_API(PRStatus) PR_NT_CancelIo(PRFileDesc *fd);
 
 
 #endif /* WIN32 */
-
-/*
-** Need external access to this on Mac so we can first set up our faux
-** environment vars
-*/
-#ifdef XP_MAC
-NSPR_API(void) PR_Init_Log(void);
-#endif
-
 
 PR_END_EXTERN_C
 

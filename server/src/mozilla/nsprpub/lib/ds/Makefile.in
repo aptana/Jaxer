@@ -162,11 +162,7 @@ $(OBJDIR)/plvrsion.$(OBJ_SUFFIX): plvrsion.c $(TINC)
 ifeq ($(NS_USE_GCC)_$(OS_ARCH),_WINNT)
 	$(CC) -Fo$@ -c $(CFLAGS) -I$(OBJDIR) $<
 else
-ifeq ($(MOZ_OS2_TOOLS), VACPP)
-	$(CC) -Fo$@ -c $(CFLAGS) -I$(OBJDIR) $<
-else
 	$(CC) -o $@ -c $(CFLAGS) -I$(OBJDIR) $<
-endif
 endif
 #
 # Version information generation (end)
@@ -188,10 +184,3 @@ else
 	$(INSTALL) -m 444 $(SHARED_LIBRARY) $(dist_bindir)
 endif
 endif
-ifeq ($(MOZ_BITS),16)
-	$(INSTALL) -m 444 $(HEADERS) $(MOZ_INCL)
-	$(INSTALL) -m 444 $(TARGETS) $(MOZ_DIST)/lib
-	$(INSTALL) -m 444 $(TARGETS) $(MOZ_DIST)/bin
-endif
-
-

@@ -47,7 +47,7 @@
 PRBool IsValidNetAddr(const PRNetAddr *addr)
 {
     if ((addr != NULL)
-#if defined(XP_UNIX) || defined(XP_OS2_EMX)
+#if defined(XP_UNIX) || defined(XP_OS2)
 	    && (addr->raw.family != PR_AF_LOCAL)
 #endif
 	    && (addr->raw.family != PR_AF_INET6)
@@ -64,7 +64,7 @@ static PRBool IsValidNetAddrLen(const PRNetAddr *addr, PRInt32 addr_len)
      * is not uniform, so we don't check it.
      */
     if ((addr != NULL)
-#if defined(XP_UNIX) || defined(XP_OS2_EMX)
+#if defined(XP_UNIX) || defined(XP_OS2)
             && (addr->raw.family != AF_UNIX)
 #endif
             && (PR_NETADDR_SIZE(addr) != addr_len)) {
@@ -355,14 +355,6 @@ static PRStatus PR_CALLBACK SocketConnectContinue(
     }
     return PR_SUCCESS;
 
-#elif defined(XP_MAC)
-
-    err = _MD_mac_get_nonblocking_connect_error(fd);
-    if (err == -1)
-        return PR_FAILURE;
-	else     
-		return PR_SUCCESS;
-
 #elif defined(XP_BEOS)
 
 #ifdef BONE_VERSION  /* bug 122364 */
@@ -459,11 +451,6 @@ PRIntervalTime timeout)
 	 * of the listening socket.  As an optimization, these
 	 * platforms can skip the following _PR_MD_MAKE_NONBLOCK
 	 * call.
-	 * 
-	 * On Mac, we MUST make this call, because _PR_MD_MAKE_NONBLOCK
-	 * (which maps to _MD_makenonblock, see macsockotpt.c)
-	 * installs the async notifier routine needed to make blocking
-	 * I/O work properly.
 	 */
 #if !defined(SOLARIS) && !defined(IRIX) && !defined(WINNT)
 	_PR_MD_MAKE_NONBLOCK(fd2);
@@ -770,10 +757,6 @@ static PRInt64 PR_CALLBACK SocketAvailable64(PRFileDesc *fd)
 
 static PRStatus PR_CALLBACK SocketSync(PRFileDesc *fd)
 {
-#if defined(XP_MAC)
-#pragma unused (fd)
-#endif
-
 	return PR_SUCCESS;
 }
 
@@ -1122,9 +1105,6 @@ static PRStatus PR_CALLBACK SocketGetPeerName(PRFileDesc *fd, PRNetAddr *addr)
 static PRInt16 PR_CALLBACK SocketPoll(
     PRFileDesc *fd, PRInt16 in_flags, PRInt16 *out_flags)
 {
-#ifdef XP_MAC
-#pragma unused( fd, in_flags )
-#endif
     *out_flags = 0;
     return in_flags;
 }  /* SocketPoll */
@@ -1293,7 +1273,7 @@ PR_IMPLEMENT(PRFileDesc*) PR_Socket(PRInt32 domain, PRInt32 type, PRInt32 proto)
 	if (!_pr_initialized) _PR_ImplicitInitialization();
 	if (PR_AF_INET != domain
 			&& PR_AF_INET6 != domain
-#if defined(XP_UNIX) || defined(XP_OS2_EMX)
+#if defined(XP_UNIX) || defined(XP_OS2)
 			&& PR_AF_LOCAL != domain
 #endif
 			) {
@@ -1689,11 +1669,7 @@ PR_IMPLEMENT(PRInt32) PR_FD_NISSET(PROsfd fd, PR_fd_set *set)
 
 
 #if !defined(NEED_SELECT)
-#if !defined(XP_MAC)
 #include "obsolete/probslet.h"
-#else
-#include "probslet.h"
-#endif
 
 #define PD_INCR 20
 

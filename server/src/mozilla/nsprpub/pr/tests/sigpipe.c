@@ -49,7 +49,7 @@
 
 int main(void)
 {
-    /* This test applies to Unix and OS/2 (emx build). */
+    /* This test applies to Unix and OS/2. */
     return 0;
 }
 
@@ -64,12 +64,7 @@ int main(void)
 #endif
 
 #include <stdio.h>
-#ifdef XP_OS2_VACPP
-#define EPIPE EBADF  /* IBM's write() doesn't return EPIPE */
-#include <io.h>
-#else
 #include <unistd.h>
-#endif
 #include <errno.h>
 
 static void Test(void *arg)
@@ -97,7 +92,12 @@ static void Test(void *arg)
         fprintf(stderr, "write to broken pipe should have failed with EPIPE but returned %d\n", rv);
         exit(1);
     }
+#ifdef SYMBIAN
+    /* Have mercy on the unknown 142 errno, it seems ok */
+    if (errno != EPIPE && errno != 142) {
+#else
     if (errno != EPIPE) {
+#endif
         fprintf(stderr, "write to broken pipe failed but with wrong errno: %d\n", errno);
         exit(1);
     }
@@ -105,7 +105,7 @@ static void Test(void *arg)
     printf("write to broken pipe failed with EPIPE, as expected\n");
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
     PRThread *thread;
 

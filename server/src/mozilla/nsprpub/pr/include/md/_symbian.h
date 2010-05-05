@@ -1,5 +1,4 @@
-/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
-
+/* -*- Mode: C++; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -35,43 +34,52 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
-#if defined(WIN16)
-#include <windows.h>
-#endif
-#include "prtypes.h"
-#include <stdlib.h>
 
-#define MAX_SEGMENT_SIZE (65536l - 4096l)
+#ifndef nspr_symbian_defs_h___
+#define nspr_symbian_defs_h___
 
-/************************************************************************/
+#include "prthread.h"
+
 /*
-** Machine dependent GC Heap management routines:
-**    _MD_GrowGCHeap
-*/
-/************************************************************************/
+ * Internal configuration macros
+ */
 
-void _MD_InitGC(void) {}
+#define _PR_SI_SYSNAME  "SYMBIAN"
+#if defined(__WINS__)
+#define _PR_SI_ARCHITECTURE "i386"
+#elif defined(__arm__)
+#define _PR_SI_ARCHITECTURE "arm"
+#else
+#error "Unknown CPU architecture"
+#endif
+#define PR_DLL_SUFFIX		".dll"
 
-extern void *
-_MD_GrowGCHeap(PRUint32 *sizep)
-{
-    void *addr;
+#undef	HAVE_STACK_GROWING_UP
 
-    if( *sizep > MAX_SEGMENT_SIZE ) {
-        *sizep = MAX_SEGMENT_SIZE;
-    }
+#ifdef DYNAMIC_LIBRARY
+#define HAVE_DLL
+#define USE_DLFCN
+#endif
 
-    addr = malloc((size_t)*sizep);
-    return addr;
-}
+#define _PR_STAT_HAS_ONLY_ST_ATIME
+#define _PR_NO_LARGE_FILES
+#define _PR_HAVE_SYSV_SEMAPHORES
+#define PR_HAVE_SYSV_NAMED_SHARED_MEMORY
 
-HINSTANCE _pr_hInstance;
+#ifndef _PR_PTHREADS
+#error "Classic NSPR is not implemented"
+#endif
 
-int CALLBACK LibMain( HINSTANCE hInst, WORD wDataSeg, 
-                      WORD cbHeapSize, LPSTR lpszCmdLine )
-{
-    _pr_hInstance = hInst;
-    return TRUE;
-}
+extern void _MD_EarlyInit(void);
+extern PRIntervalTime _PR_UNIX_GetInterval(void);
+extern PRIntervalTime _PR_UNIX_TicksPerSecond(void);
 
+#define _MD_EARLY_INIT                  _MD_EarlyInit
+#define _MD_FINAL_INIT                  _PR_UnixInit
+#define _MD_GET_INTERVAL                _PR_UNIX_GetInterval
+#define _MD_INTERVAL_PER_SEC            _PR_UNIX_TicksPerSecond
 
+/* For writev() */
+#include <sys/uio.h>
+
+#endif /* nspr_symbian_defs_h___ */

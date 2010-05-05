@@ -52,12 +52,7 @@
 #include "plerror.h"
 #include "plgetopt.h"
 
-#if defined(XP_MAC)
-#include "pprio.h"
-#define printf PR_LogPrint
-#else
 #include "private/pprio.h"
-#endif
 
 #include <stdlib.h>
 
@@ -263,7 +258,7 @@ PRIntn PR_CALLBACK Switch(PRIntn argc, char **argv)
     return ((failed) ? 1 : 0);
 }  /* Switch */
 
-PRIntn main(PRIntn argc, char **argv)
+int main(int argc, char **argv)
 {
     PRIntn result;
     PR_STDIO_INIT();
