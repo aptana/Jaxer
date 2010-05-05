@@ -47,8 +47,6 @@ LIBRARY_NAME	= imgicon
 IS_COMPONENT	= 1
 MODULE_NAME	= nsIconDecoderModule
 
-PACKAGE_FILE = imgicon.pkg
-
 ifneq (,$(filter gtk2,$(MOZ_WIDGET_TOOLKIT)))
 EXTRA_DSO_LDOPTS = $(MOZ_GTK2_LIBS)
 PLATFORM = gtk
@@ -58,7 +56,12 @@ LIBXUL_LIBRARY = 1
 EXPORT_LIBRARY = 1
 endif
 
-ifeq ($(OS_ARCH),WINNT)
+ifneq (,$(filter qt,$(MOZ_WIDGET_TOOLKIT)))
+EXTRA_DSO_LDOPTS = $(MOZ_QT_LIBS)
+PLATFORM = qt
+endif
+
+ifeq (,$(filter-out WINNT WINCE, $(OS_ARCH)))
 EXTRA_DSO_LIBS = gkgfx
 PLATFORM = win
 endif
@@ -67,7 +70,7 @@ ifeq ($(OS_ARCH),OS2)
 PLATFORM = os2
 endif
 
-ifeq ($(OS_ARCH),Darwin)
+ifeq (cocoa,$(MOZ_WIDGET_TOOLKIT))
 PLATFORM = mac
 endif
 
@@ -89,7 +92,7 @@ CPPSRCS		= \
 		nsIconProtocolHandler.cpp \
 		$(NULL)
 
-ifneq (,$(filter gtk2,$(MOZ_WIDGET_TOOLKIT)))
+ifneq (,$(filter qt gtk2,$(MOZ_WIDGET_TOOLKIT)))
 USE_ICON_DECODER = 1
 endif
 ifeq (,$(filter-out Darwin OS2 BeOS,$(OS_ARCH)))
@@ -119,7 +122,7 @@ endif
 
 LOCAL_INCLUDES	= -I$(srcdir)/$(PLATFORM)
 
-ifeq ($(OS_ARCH),WINNT)
+ifeq (,$(filter-out WINNT WINCE, $(OS_ARCH)))
 OS_LIBS		+= $(call EXPAND_LIBNAME,shell32 gdi32 comctl32)
 endif
 

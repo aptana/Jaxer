@@ -65,6 +65,31 @@ interface imgIRequest : nsIRequest
   /**
    * Bits set in the return value from imageStatus
    * @name statusflags
+   *
+   * Meanings:
+   *
+   * STATUS_NONE: Nothing to report.
+   *
+   * STATUS_SIZE_AVAILABLE: We received enough image data
+   * from the network or filesystem that we know the width
+   * and height of the image, and have thus called SetSize()
+   * on the container.
+   *
+   * STATUS_LOAD_PARTIAL: Used internally by imgRequest to
+   * flag that a request is being cancelled as a result of
+   * a failure of a proxy holder and not an internal failure.
+   * At least I think that's what it does. Regardless, there's
+   * no reason for this flag to be public, and it should either
+   * go away or become a private state flag within imgRequest.
+   * Don't rely on it.
+   *
+   * STATUS_LOAD_COMPLETE: The data has been fully loaded
+   * to memory, but not necessarily fully decoded.
+   *
+   * STATUS_ERROR: An error occured loading the image.
+   *
+   * STATUS_FRAME_COMPLETE: The first frame has been
+   * completely decoded.
    */
   //@{
   const long STATUS_NONE             = 0x0;
@@ -104,5 +129,16 @@ interface imgIRequest : nsIRequest
    * The principal gotten from the channel the image was loaded from.
    */
   readonly attribute nsIPrincipal imagePrincipal;
+
+  /**
+   * Cancels this request as in nsIRequest::Cancel(); further, also nulls out
+   * decoderObserver so it gets no further notifications from us.
+   *
+   * NOTE: You should not use this in any new code; instead, use cancel(). Note
+   * that cancel() is asynchronous, which means that some time after you call
+   * it, the listener/observer will get an OnStopRequest(). This means that, if
+   * you're the observer, you can't call cancel() from your destructor.
+   */
+  void cancelAndForgetObserver(in nsresult aStatus);
 };
 

@@ -1,6 +1,13 @@
 
 Changes made to pristine png source by mozilla.org developers.
 
+2010/02/28  -- Ported performance improvements to pngrutil.c and pngpread.c
+               from libpng-1.4.1 (bug #497056).
+
+2009/02/19  -- Synced with libpng-1.2.35 (bug #478901).
+
+2008/08/21  -- Synced with libpng-1.2.31 (bug #418900).
+
 2008/03/29  -- Initialize prev_row for each APNG frame, only when
                the frame size increases (bug #420416)
 

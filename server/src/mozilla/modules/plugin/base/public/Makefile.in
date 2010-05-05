@@ -46,19 +46,24 @@ MODULE		= plugin
 GRE_MODULE	= 1
 
 EXPORTS		= \
-		nsplugin.h \
 		nsplugindefs.h \
 		nsPluginLogging.h \
 		nsPluginError.h \
 		nsDefaultPlugin.h \
 		nsPluginNativeWindow.h \
 		nsPluginsCID.h \
+		$(NULL)
+
+ifdef MOZ_OJI
+EXPORTS		+= \
+		nsplugin.h \
 		nsIPluginInstanceInternal.h \
 		$(NULL)
+endif
 
 SDK_HEADERS	 = \
 		npapi.h \
-		npupp.h \
+		npfunctions.h \
 		nptypes.h \
 		npruntime.h \
 		$(NULL)
@@ -66,35 +71,36 @@ SDK_HEADERS	 = \
 XPIDLSRCS 	= \
 		nspluginroot.idl \
 		nsIPluginStreamInfo.idl \
-		nsIPluginManager.idl \
-		nsIPluginManager2.idl \
-		nsIPluginInstancePeer.idl \
-		nsIPluginInstancePeer2.idl \
 		nsIPluginInstanceOwner.idl \
 		nsIPlugin.idl \
 		nsIHTTPHeaderListener.idl \
-		nsIFileUtilities.idl \
-		nsIEventHandler.idl \
-		nsICookieStorage.idl \
-		nsIClassicPluginFactory.idl \
-		nsIWindowlessPlugInstPeer.idl \
-		nsIScriptablePlugin.idl \
 		nsIPluginTag.idl \
 		nsIPluginTagInfo.idl \
-		nsIPluginTagInfo2.idl \
-		nsIJRILiveConnectPIPeer.idl \
-		nsIJRILiveConnectPlugin.idl \
 		nsIPluginInputStream.idl \
 		nsIPluginStreamListener.idl \
 		nsIPluginInstance.idl \
-		nsPIPluginHost.idl \
-		nsPIPluginInstancePeer.idl \
 		nsIPluginHost.idl \
 		nsIPluginDocument.idl \
 		$(NULL)
 
-ifeq ($(OS_ARCH),OS2)
-XPIDLSRCS += nsILegacyPluginWrapperOS2.idl
+ifdef MOZ_OJI
+XPIDLSRCS	+= \
+		nsIPluginOld.idl \
+		nsIPluginHostOld.idl \
+		nsIFileUtilities.idl \
+		nsICookieStorage.idl \
+		nsIPluginManager.idl \
+		nsIPluginManager2.idl \
+		nsIPluginInstanceOld.idl \
+		nsIScriptablePlugin.idl \
+		nsIPluginInstancePeer.idl \
+		nsIPluginInstancePeer2.idl \
+		nsIWindowlessPlugInstPeer.idl \
+		nsPIPluginInstancePeer.idl \
+		nsIPluginTagInfoOld.idl \
+		nsIPluginTagInfo2.idl \
+		nsIJVMAuthTools.idl \
+		$(NULL)
 endif
 
 # Just build headers if we don't want plugins support

@@ -49,8 +49,6 @@ GRE_MODULE	= 1
 LIBXUL_LIBRARY = 1
 DIST_INSTALL = 1
 
-PACKAGE_FILE = zlib.pkg
-
 ifndef MOZ_ENABLE_LIBXUL
 ifeq (,$(filter-out WINNT WINCE,$(OS_ARCH)))
 ifndef GNU_CC
@@ -66,7 +64,7 @@ endif
 
 CSRCS		= $(MODULES_ZLIB_SRC_LCSRCS)
 
-EXPORTS		= $(MODULES_ZLIB_SRC_LEXPORTS)
+EXPORTS		= zlib.h zconf.h mozzconf.h
 
 # This library is used by other shared libs in a static build
 FORCE_USE_PIC = 1

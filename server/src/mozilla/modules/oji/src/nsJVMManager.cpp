@@ -60,6 +60,8 @@
 #include "nspr.h"
 #include "ProxyJNI.h"
 #include "nsIPluginHost.h"
+#include "nsIPluginHostOld.h"
+#define nsIPluginHost nsIPluginHostOld
 #include "nsIServiceManager.h"
 #include "nsIThreadManager.h"
 #include "nsIThread.h"
@@ -274,7 +276,7 @@ nsJVMManager::NotifyAll(void* address)
 	return (PR_CNotifyAll(address) == PR_SUCCESS ? NS_OK : NS_ERROR_FAILURE);
 }
 
-static void PR_CALLBACK thread_starter(void* arg)
+static void thread_starter(void* arg)
 {
 	nsIRunnable* runnable = (nsIRunnable*) arg;
 	if (runnable != NULL) {
@@ -396,24 +398,10 @@ nsJVMManager::nsJVMManager(nsISupports* outer)
             SetJVMEnabled(PR_TRUE);
         }
     }
-
-    nsCOMPtr<nsIObserverService>
-        obsService(do_GetService("@mozilla.org/observer-service;1"));
-    if (obsService) {
-        obsService->AddObserver(this, NS_XPCOM_CATEGORY_ENTRY_ADDED_OBSERVER_ID, PR_FALSE);
-        obsService->AddObserver(this, NS_XPCOM_CATEGORY_ENTRY_REMOVED_OBSERVER_ID, PR_FALSE);
-    }
 }
 
 nsJVMManager::~nsJVMManager()
 {
-    nsCOMPtr<nsIObserverService>
-        obsService(do_GetService("@mozilla.org/observer-service;1"));
-    if (obsService) {
-        obsService->RemoveObserver(this, NS_XPCOM_CATEGORY_ENTRY_ADDED_OBSERVER_ID);
-        obsService->RemoveObserver(this, NS_XPCOM_CATEGORY_ENTRY_REMOVED_OBSERVER_ID);
-    }
-
     int count = fClassPathAdditions->Count();
     for (int i = 0; i < count; i++) {
         PR_Free((*fClassPathAdditions)[i]);
@@ -467,6 +455,19 @@ nsJVMManager::AggregatedQueryInterface(const nsIID& aIID, void** aInstancePtr)
 #else
     return NS_NOINTERFACE;
 #endif
+}
+
+nsresult
+nsJVMManager::Init()
+{
+  nsCOMPtr<nsIObserverService> obsService(do_GetService("@mozilla.org/observer-service;1"));
+  if (!obsService)
+    return NS_ERROR_FAILURE;
+
+  obsService->AddObserver(this, NS_XPCOM_CATEGORY_ENTRY_ADDED_OBSERVER_ID, PR_FALSE);
+  obsService->AddObserver(this, NS_XPCOM_CATEGORY_ENTRY_REMOVED_OBSERVER_ID, PR_FALSE);
+
+  return NS_OK;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -886,7 +887,7 @@ nsJVMManager::MaybeStartupLiveConnect(void)
         return PR_TRUE;
 
 	do {
-		static PRBool registeredLiveConnectFactory = NS_SUCCEEDED(JSJ_RegisterLiveConnectFactory());
+    		JSJ_RegisterLiveConnectFactory();
         if (IsLiveConnectEnabled()) {
             JVM_InitLCGlue();
 #if 0

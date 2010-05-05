@@ -51,9 +51,6 @@ MODULE_NAME	= nsPluginModule
 GRE_MODULE	= 1
 LIBXUL_LIBRARY = 1
 
-PACKAGE_FILE = plugin.pkg
-PACKAGE_VARS += MOZ_ENABLE_GTK
-
 REQUIRES	= xpcom \
 		  xpconnect \
 		  string \
@@ -70,7 +67,6 @@ REQUIRES	= xpcom \
 		  content \
 		  widget \
 		  mimetype \
-		  oji \
 		  exthandler \
 		  docshell \
 		  windowwatcher \
@@ -80,18 +76,25 @@ REQUIRES	= xpcom \
 		  locale \
 		  $(NULL)
 
+ifdef MOZ_OJI
+REQUIRES	+= oji
+endif
+
 ifneq (,$(filter gtk2,$(MOZ_WIDGET_TOOLKIT)))
 REQUIRES	+= gtkxtbin
 endif
 
 CPPSRCS		= \
-		ns4xPlugin.cpp \
-		ns4xPluginInstance.cpp \
-		nsPluginHostImpl.cpp \
+		nsNPAPIPlugin.cpp \
+		nsNPAPIPluginInstance.cpp \
+		nsPluginHost.cpp \
 		nsPluginModule.cpp \
-		nsPluginInstancePeer.cpp \
 		nsJSNPRuntime.cpp \
 		$(NULL)
+
+ifdef MOZ_OJI
+CPPSRCS		+= nsJVMAuthTools.cpp
+endif
 
 ifeq ($(OS_ARCH), BeOS)
 	CPPSRCS += nsPluginsDirBeOS.cpp
@@ -154,12 +157,8 @@ DEFINES		+= -DGENERIC_MOTIF_REDEFINES
 OS_CXXFLAGS	+= -Wc,warn=disa=NOSIMPINT
 endif
 
-ifeq ($(OS_ARCH),OS2)
-ADD_TO_DEF_FILE = cat < $(srcdir)/extradefs.os2 >> $(DEF_FILE)
-endif
-
 ifdef MOZ_ENABLE_GTK2
 CXXFLAGS        += $(MOZ_GTK2_CFLAGS)
 CFLAGS          += $(MOZ_GTK2_CFLAGS)
-EXTRA_DSO_LDOPTS += -lgtkxtbin $(XLDFLAGS) $(XT_LIBS) $(MOZ_GTK2_LIBS) $(XLIBS)
+EXTRA_DSO_LDOPTS += -lgtkxtbin $(XLDFLAGS) $(XT_LIBS) $(MOZ_GTK2_LIBS) $(XLIBS) $(XEXT_LIBS) $(XCOMPOSITE_LIBS)
 endif           #MOZ_ENABLE_GTK2

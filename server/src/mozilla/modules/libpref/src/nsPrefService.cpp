@@ -21,6 +21,7 @@
  *
  * Contributor(s):
  *   Alec Flett <alecf@netscape.com>
+ *   Mats Palmgren <matspal@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -62,19 +63,10 @@
 
 #include "nsITimelineService.h"
 
-#ifdef MOZ_PROFILESHARING
-#include "nsIProfileSharingSetup.h"
-#include "nsSharedPrefHandler.h"
-#endif
-
 // Definitions
 #define INITIAL_PREF_FILES 10
 
 // Prototypes
-#ifdef MOZ_PROFILESHARING
-static PRBool isSharingEnabled();
-#endif
-
 static nsresult openPrefFile(nsIFile* aFile);
 static nsresult pref_InitInitialObjects(void);
 
@@ -85,20 +77,12 @@ static nsresult pref_InitInitialObjects(void);
  */
 
 nsPrefService::nsPrefService()
-: mDontWriteUserPrefs(PR_FALSE)
-#if MOZ_PROFILESHARING
-  , mDontWriteSharedUserPrefs(PR_FALSE)
-#endif
 {
 }
 
 nsPrefService::~nsPrefService()
 {
   PREF_Cleanup();
-
-#ifdef MOZ_PROFILESHARING
-  NS_IF_RELEASE(gSharedPrefHandler);
-#endif
 }
 
 
@@ -164,10 +148,6 @@ nsresult nsPrefService::Init()
     }
   }
 
-#ifdef MOZ_PROFILESHARING  
-  rv = NS_CreateSharedPrefHandler(this);
-#endif
-
   return(rv);
 }
 
@@ -183,22 +163,10 @@ NS_IMETHODIMP nsPrefService::Observe(nsISupports *aSubject, const char *aTopic, 
       }
     } else {
       rv = SavePrefFile(nsnull);
-#ifdef MOZ_PROFILESHARING
-      if (isSharingEnabled())
-        rv = gSharedPrefHandler->OnSessionEnd();
-#endif
     }
   } else if (!nsCRT::strcmp(aTopic, "profile-do-change")) {
-  
-#ifdef MOZ_PROFILESHARING
-    if (isSharingEnabled())
-      rv = gSharedPrefHandler->OnSessionBegin();
-    else
-#endif
-    {
-      ResetUserPrefs();
-      rv = ReadUserPrefs(nsnull);
-    }
+    ResetUserPrefs();
+    rv = ReadUserPrefs(nsnull);
   } else if (!nsCRT::strcmp(aTopic, "reload-default-prefs")) {
     // Reload the default prefs from file.
     pref_InitInitialObjects();
@@ -242,11 +210,6 @@ NS_IMETHODIMP nsPrefService::ResetUserPrefs()
 
 NS_IMETHODIMP nsPrefService::SavePrefFile(nsIFile *aFile)
 {
-#ifdef MOZ_PROFILESHARING
-  // sharing only applies to the default prefs file
-  if (aFile == nsnull && isSharingEnabled())
-    return gSharedPrefHandler->OnSavePrefs();
-#endif
   return SavePrefFileInternal(aFile);
 }
 
@@ -302,24 +265,6 @@ nsresult nsPrefService::UseDefaultPrefFile()
   nsresult rv, rv2;
   nsCOMPtr<nsIFile> aFile;
 
-#ifdef MOZ_PROFILESHARING
-  // First, read the shared file.
-  if (isSharingEnabled()) {
-    rv = NS_GetSpecialDirectory(NS_SHARED NS_APP_PREFS_50_FILE, getter_AddRefs(aFile));
-    if (NS_SUCCEEDED(rv)) {
-      rv = ReadAndOwnSharedUserPrefFile(aFile);
-      // Most likely cause of failure here is that the file didn't
-      // exist, so save a new one. mSharedUserPrefReadFailed will be
-      // used to catch an error in actually reading the file.
-      if (NS_FAILED(rv)) {
-        rv2 = SavePrefFileInternal(aFile);
-        NS_ASSERTION(NS_SUCCEEDED(rv2), "Failed to save new shared pref file");
-      }
-    }
-  }
-  // Continue on to read the nonshared file.
-#endif
-
   rv = NS_GetSpecialDirectory(NS_APP_PREFS_50_FILE, getter_AddRefs(aFile));
   if (NS_SUCCEEDED(rv)) {
     rv = ReadAndOwnUserPrefFile(aFile);
@@ -339,14 +284,7 @@ nsresult nsPrefService::UseUserPrefFile()
 {
   nsresult rv = NS_OK;
   nsCOMPtr<nsIFile> aFile;
-
-#ifdef MOZ_PROFILESHARING
-  nsCAutoString prefsDirProp(NS_APP_PREFS_50_DIR);
-  if (isSharingEnabled())
-    prefsDirProp.Insert(NS_SHARED, 0); // Prepend modifier so we get shared file
-#else
   nsDependentCString prefsDirProp(NS_APP_PREFS_50_DIR);
-#endif
 
   rv = NS_GetSpecialDirectory(prefsDirProp.get(), getter_AddRefs(aFile));
   if (NS_SUCCEEDED(rv) && aFile) {
@@ -367,10 +305,22 @@ nsresult nsPrefService::UseUserPrefFile()
 nsresult nsPrefService::MakeBackupPrefFile(nsIFile *aFile)
 {
   // Example: this copies "prefs.js" to "Invalidprefs.js" in the same directory.
+  // "Invalidprefs.js" is removed if it exists, prior to making the copy.
   nsAutoString newFilename;
   nsresult rv = aFile->GetLeafName(newFilename);
   NS_ENSURE_SUCCESS(rv, rv);
   newFilename.Insert(NS_LITERAL_STRING("Invalid"), 0);
+  nsCOMPtr<nsIFile> newFile;
+  rv = aFile->GetParent(getter_AddRefs(newFile));
+  NS_ENSURE_SUCCESS(rv, rv);
+  rv = newFile->Append(newFilename);
+  NS_ENSURE_SUCCESS(rv, rv);
+  PRBool exists = PR_FALSE;
+  newFile->Exists(&exists);
+  if (exists) {
+    rv = newFile->Remove(PR_FALSE);
+    NS_ENSURE_SUCCESS(rv, rv);
+  }
   rv = aFile->CopyTo(nsnull, newFilename);
   NS_ENSURE_SUCCESS(rv, rv);
   return rv;
@@ -384,56 +334,23 @@ nsresult nsPrefService::ReadAndOwnUserPrefFile(nsIFile *aFile)
     return NS_OK;
   mCurrentFile = aFile;
 
-#ifdef MOZ_PROFILESHARING
-  // We don't want prefs set here to cause transactions
-  gSharedPrefHandler->ReadingUserPrefs(PR_TRUE);
-#endif
-
   nsresult rv = NS_OK;
   PRBool exists = PR_FALSE;
   mCurrentFile->Exists(&exists);
   if (exists) {
     rv = openPrefFile(mCurrentFile);
     if (NS_FAILED(rv)) {
-      mDontWriteUserPrefs = NS_FAILED(MakeBackupPrefFile(mCurrentFile));
+      // Save a backup copy of the current (invalid) prefs file, since all prefs
+      // from the error line to the end of the file will be lost (bug 361102).
+      // TODO we should notify the user about it (bug 523725).
+      MakeBackupPrefFile(mCurrentFile);
     }
   } else {
     rv = NS_ERROR_FILE_NOT_FOUND;
   }
 
-#ifdef MOZ_PROFILESHARING
-  gSharedPrefHandler->ReadingUserPrefs(PR_FALSE);
-#endif
-
   return rv;
 }
-
-#ifdef MOZ_PROFILESHARING
-nsresult nsPrefService::ReadAndOwnSharedUserPrefFile(nsIFile *aFile)
-{
-  NS_ENSURE_ARG(aFile);
-
-  if (mCurrentSharedFile == aFile)
-    return NS_OK;
-  mCurrentSharedFile = aFile;
-
-#ifdef MOZ_PROFILESHARING
-  // We don't want prefs set here to cause transactions
-  gSharedPrefHandler->ReadingUserPrefs(PR_TRUE);
-#endif
-
-  nsresult rv = openPrefFile(mCurrentSharedFile);
-  if (NS_FAILED(rv) && rv != NS_ERROR_FILE_NOT_FOUND) {
-    mDontWriteSharedUserPrefs = NS_FAILED(MakeBackupPrefFile(mCurrentSharedFile));
-  }
-
-#ifdef MOZ_PROFILESHARING
-  gSharedPrefHandler->ReadingUserPrefs(PR_FALSE);
-#endif
-
-  return rv;
-}
-#endif
 
 nsresult nsPrefService::SavePrefFileInternal(nsIFile *aFile)
 {
@@ -447,14 +364,6 @@ nsresult nsPrefService::SavePrefFileInternal(nsIFile *aFile)
     nsresult rv = NS_OK;
     if (mCurrentFile)
       rv = WritePrefFile(mCurrentFile);
-
-#ifdef MOZ_PROFILESHARING
-    if (mCurrentSharedFile) {
-      nsresult rv2 = WritePrefFile(mCurrentSharedFile);
-      if (NS_SUCCEEDED(rv))
-        rv = rv2;
-    }
-#endif
 
     return rv;
   } else {
@@ -494,16 +403,6 @@ nsresult nsPrefService::WritePrefFile(nsIFile* aFile)
   if (!gHashTable.ops)
     return NS_ERROR_NOT_INITIALIZED;
 
-  // Don't save user prefs if there was an error reading them and we failed
-  // to make a backup copy, since all prefs from the error line to the end of
-  // the file would be lost (bug 361102).
-  if (mDontWriteUserPrefs && aFile == mCurrentFile)
-    return NS_OK;
-#if MOZ_PROFILESHARING
-  if (mDontWriteSharedUserPrefs && aFile == mCurrentSharedFile)
-    return NS_OK;
-#endif
-
   // execute a "safe" save by saving through a tempfile
   rv = NS_NewSafeLocalFileOutputStream(getter_AddRefs(outStreamSink),
                                        aFile,
@@ -523,15 +422,6 @@ nsresult nsPrefService::WritePrefFile(nsIFile* aFile)
   saveArgs.prefArray = valueArray;
   saveArgs.saveTypes = SAVE_ALL;
   
-#if MOZ_PROFILESHARING
-  if (isSharingEnabled()) {
-    if (aFile == mCurrentSharedFile)
-      saveArgs.saveTypes = SAVE_SHARED;
-    else if (aFile == mCurrentFile)
-      saveArgs.saveTypes = SAVE_NONSHARED;
-  }
-#endif
-  
   // get the lines that we're supposed to be writing to the file
   PL_DHashTableEnumerate(&gHashTable, pref_savePref, &saveArgs);
     
@@ -546,7 +436,7 @@ nsresult nsPrefService::WritePrefFile(nsIFile* aFile)
     if (*walker) {
       outStream->Write(*walker, strlen(*walker), &writeAmount);
       outStream->Write(NS_LINEBREAK, NS_LINEBREAK_LEN, &writeAmount);
-      PR_Free(*walker);
+      NS_Free(*walker);
     }
   }
   PR_Free(valueArray);
@@ -566,22 +456,6 @@ nsresult nsPrefService::WritePrefFile(nsIFile* aFile)
   gDirty = PR_FALSE;
   return NS_OK;
 }
-
-#ifdef MOZ_PROFILESHARING
-static PRBool isSharingEnabled()
-{
-  static PRBool gSharingEnabled = PR_FALSE;
-  
-  // If FALSE, query again. It may not have been set yet.
-  if (!gSharingEnabled) {
-    nsCOMPtr<nsIProfileSharingSetup> sharingSetup =
-        do_GetService("@mozilla.org/embedcomp/profile-sharing-setup;1");
-    if (sharingSetup)
-      sharingSetup->GetIsSharingEnabled(&gSharingEnabled);
-  }
-  return gSharingEnabled;
-}
-#endif
 
 static nsresult openPrefFile(nsIFile* aFile)
 {

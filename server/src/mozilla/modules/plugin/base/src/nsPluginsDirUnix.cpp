@@ -20,6 +20,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
+ *  Alex Musil
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -35,23 +36,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/*
-	nsPluginsDirUNIX.cpp
-	
-	UNIX implementation of the nsPluginsDir/nsPluginsFile classes.
-	
-	by Alex Musil
- */
-
-#include "nsplugin.h"
-#include "ns4xPlugin.h"
-#include "ns4xPluginInstance.h"
-#include "nsIServiceManager.h"
+#include "nsNPAPIPlugin.h"
+#include "nsNPAPIPluginInstance.h"
 #include "nsIMemory.h"
 #include "nsIPluginStreamListener.h"
 #include "nsPluginsDir.h"
 #include "nsPluginsDirUtils.h"
-#include "nsObsoleteModuleLoading.h"
 #include "prmem.h"
 #include "prenv.h"
 #include "prerror.h"
@@ -60,11 +50,6 @@
 #include "nsILocalFile.h"
 #include "nsIPrefBranch.h"
 #include "nsIPrefService.h"
-#ifdef AIX
-#include "nsPluginLogging.h"
-#include "prprf.h"
-#define LOG(args)  PLUGIN_LOG(PLUGIN_LOG_NORMAL, args)
-#endif
 
 #define LOCAL_PLUGIN_DLL_SUFFIX ".so"
 #if defined(__hpux)
@@ -79,6 +64,11 @@
 #define DEFAULT_X11_PATH "/usr/openwin/lib/"
 #elif defined(LINUX)
 #define DEFAULT_X11_PATH "/usr/X11R6/lib/"
+#elif defined(__APPLE__)
+#define DEFAULT_X11_PATH "/usr/X11R6/lib"
+#undef LOCAL_PLUGIN_DLL_SUFFIX
+#define LOCAL_PLUGIN_DLL_SUFFIX ".dylib"
+#define LOCAL_PLUGIN_DLL_ALT_SUFFIX ".so"
 #else
 #define DEFAULT_X11_PATH ""
 #endif
@@ -163,10 +153,9 @@ static void LoadExtraSharedLibs()
     nsresult res;
     nsCOMPtr<nsIPrefBranch> prefs(do_GetService(NS_PREFSERVICE_CONTRACTID, &res));
     if (NS_SUCCEEDED(res) && (prefs != nsnull)) {
-        char *sonamesListFromPref = PREF_PLUGINS_SONAME;
         char *sonameList = NULL;
         PRBool prefSonameListIsSet = PR_TRUE;
-        res = prefs->GetCharPref(sonamesListFromPref, &sonameList);
+        res = prefs->GetCharPref(PREF_PLUGINS_SONAME, &sonameList);
         if (!sonameList) {
             // pref is not set, lets use hardcoded list
             prefSonameListIsSet = PR_FALSE;
@@ -242,17 +231,13 @@ static void LoadExtraSharedLibs()
                 // if user specified some bogus soname I overwrite it here,
                 // otherwise it'll decrease performance by calling popen() in SearchForSoname
                 // every time for each bogus name
-                prefs->SetCharPref(sonamesListFromPref, (const char *)sonameListToSave);
+                prefs->SetCharPref(PREF_PLUGINS_SONAME, (const char *)sonameListToSave);
             }
             PL_strfree(sonameList);
         }
     }
 }
 #endif //MOZ_WIDGET_GTK2
-
-
-
-///////////////////////////////////////////////////////////////////////////
 
 /* nsPluginsDir implementation */
 
@@ -276,85 +261,17 @@ PRBool nsPluginsDir::IsPluginFile(nsIFile* file)
     return PR_FALSE;
 }
 
-///////////////////////////////////////////////////////////////////////////
-
 /* nsPluginFile implementation */
 
 nsPluginFile::nsPluginFile(nsIFile* file)
 : mPlugin(file)
 {
-    // nada
 }
 
 nsPluginFile::~nsPluginFile()
 {
-    // nada
 }
 
-#ifdef AIX
-/**
- * This code is necessary for Java 1.4.2 SR2 and later on AIX, as the
- * loadquery() function is no longer used to determine the path to the
- * installed JVM, so we need to manually set the LIBPATH variable to
- * include the proper directories needed to run the Java plug-in.
- *
- * See Bug 297807 for more information.
- */
-static char *javaLibPath = NULL;
-
-static void SetJavaLibPath(const nsCString& pluginPath)
-{
-    // If javaLibPath is non-NULL, that means we have already set the LIBPATH
-    // variable once this session, so we don't need to do it again.
-    if (javaLibPath)
-        return;
-
-    nsCAutoString javaDir, newLibPath;
-
-    PRInt32 pos = pluginPath.RFindChar('/');
-    if (pos == kNotFound || pos == 0)
-        return;
-
-    javaDir = Substring(pluginPath, 0, pos);
-    LOG(("AIX: Java dir is %s\n", javaDir.get()));
-
-    // Add jre/bin to new LIBPATH
-    newLibPath += javaDir;
-
-    // Check for existance of jre/bin/classic dir, and append it to
-    // LIBPATH if found
-    PRFileInfo info;
-    javaDir.AppendLiteral("/classic");
-    if (PR_GetFileInfo(javaDir.get(), &info) == PR_SUCCESS &&
-        info.type == PR_FILE_DIRECTORY)
-    {
-        newLibPath.Append(':');
-        newLibPath.Append(javaDir);
-    }
-
-    // Get the current LIBPATH, and append it to the new LIBPATH
-    const char *currentLibPath = PR_GetEnv("LIBPATH");
-    LOG(("AIX: current LIBPATH=%s\n", currentLibPath));
-    if (currentLibPath && *currentLibPath) {
-        newLibPath.Append(':');
-        newLibPath.Append(currentLibPath);
-    }
-
-    // Set the LIBPATH to include the path to the JRE directories.
-    // NOTE: We are leaking javaLibPath here, as it needs to remain in memory
-    // for PR_SetEnv to work properly.
-    javaLibPath = PR_smprintf("LIBPATH=%s", newLibPath.get());
-    if (javaLibPath) {
-        LOG(("AIX: new LIBPATH=%s\n", newLibPath.get()));
-        PR_SetEnv(javaLibPath);
-    }
-}
-#endif
-
-/**
- * Loads the plugin into memory using NSPR's shared-library loading
- * mechanism. Handles platform differences in loading shared libraries.
- */
 nsresult nsPluginFile::LoadPlugin(PRLibrary* &outLibrary)
 {
     PRLibSpec libSpec;
@@ -370,21 +287,10 @@ nsresult nsPluginFile::LoadPlugin(PRLibrary* &outLibrary)
     if (NS_FAILED(rv))
         return rv;
 
-#ifdef AIX
-    nsCAutoString leafName;
-    rv = mPlugin->GetNativeLeafName(leafName);
-    if (NS_FAILED(rv))
-        return rv;
-
-    if (StringBeginsWith(leafName, NS_LITERAL_CSTRING("libjavaplugin_oji")))
-        SetJavaLibPath(path);
-#endif
-
     libSpec.value.pathname = path.get();
 
 #if defined(MOZ_WIDGET_GTK2)
 
-    ///////////////////////////////////////////////////////////
     // Normally, Mozilla isn't linked against libXt and libXext
     // since it's a Gtk/Gdk application.  On the other hand,
     // legacy plug-ins expect the libXt and libXext symbols
@@ -423,71 +329,48 @@ nsresult nsPluginFile::LoadPlugin(PRLibrary* &outLibrary)
     return NS_OK;
 }
 
-/**
- * Obtains all of the information currently available for this plugin.
- */
 nsresult nsPluginFile::GetPluginInfo(nsPluginInfo& info)
 {
-    nsresult rv;
-    const char* mimedescr = 0, *name = 0, *description = 0;
+    info.fVersion = nsnull;
 
-    // No, this doesn't leak. GetGlobalServiceManager() doesn't addref
-    // it's out pointer. Maybe it should.
-    nsIServiceManagerObsolete* mgr;
-    nsServiceManager::GetGlobalServiceManager((nsIServiceManager**)&mgr);
-
-    nsFactoryProc nsGetFactory =
-        (nsFactoryProc) PR_FindFunctionSymbol(pLibrary, "NSGetFactory");
-
+    // Passing NULL for a file path will prevent a call to NP_Initialize.
     nsCOMPtr<nsIPlugin> plugin;
-
-    if (nsGetFactory) {
-        // It's an almost-new-style plugin. The "truly new" plugins
-        // are just XPCOM components, but there are some Mozilla
-        // Classic holdovers that live in the plugins directory but
-        // implement nsIPlugin and the factory stuff.
-        static NS_DEFINE_CID(kPluginCID, NS_PLUGIN_CID);
-
-        nsCOMPtr<nsIFactory> factory;
-        rv = nsGetFactory(mgr, kPluginCID, nsnull, nsnull, 
-			  getter_AddRefs(factory));
-
-        if (NS_FAILED(rv)) {
-            // HACK: The symbol lookup for "NSGetFactory" mistakenly returns
-            // a reference to an unrelated function when we have an NPAPI
-            // plugin linked to libxul.so.  Give this plugin another shot as
-            // an NPAPI plugin
-            rv = ns4xPlugin::CreatePlugin(mgr, 0, 0, pLibrary,
-                                          getter_AddRefs(plugin));
-            if (NS_FAILED(rv))
-                return rv;
-        } else {
-            plugin = do_QueryInterface(factory);
-        }
-    } else {
-        // It's old sk00l
-        // if fileName parameter == 0 ns4xPlugin::CreatePlugin() will not call NP_Initialize()
-        rv = ns4xPlugin::CreatePlugin(mgr, 0, 0, pLibrary, 
-				      getter_AddRefs(plugin));
-        if (NS_FAILED(rv)) return rv;
-    }
+    nsresult rv = nsNPAPIPlugin::CreatePlugin(NULL, pLibrary, getter_AddRefs(plugin));
+    if (NS_FAILED(rv))
+      return rv;
 
     if (plugin) {
+        const char* (*npGetPluginVersion)() =
+          (const char* (*)()) PR_FindFunctionSymbol(pLibrary, "NP_GetPluginVersion");
+        if (npGetPluginVersion)
+            info.fVersion = PL_strdup(npGetPluginVersion());
+
+        const char *mimedescr = NULL;
         plugin->GetMIMEDescription(&mimedescr);
 #ifdef NS_DEBUG
         printf("GetMIMEDescription() returned \"%s\"\n", mimedescr);
 #endif
         if (NS_FAILED(rv = ParsePluginMimeDescription(mimedescr, info)))
             return rv;
-        nsCAutoString filename;
-        if (NS_FAILED(rv = mPlugin->GetNativePath(filename)))
-            return rv;
-        info.fFileName = PL_strdup(filename.get());
-        plugin->GetValue(nsPluginVariable_NameString, &name);
-        if (!name)
-            name = PL_strrchr(info.fFileName, '/') + 1;
-        info.fName = PL_strdup(name);
 
+        nsCAutoString path;
+        if (NS_FAILED(rv = mPlugin->GetNativePath(path)))
+            return rv;
+        info.fFullPath = PL_strdup(path.get());
+
+        nsCAutoString fileName;
+        if (NS_FAILED(rv = mPlugin->GetNativeLeafName(fileName)))
+          return rv;
+        info.fFileName = PL_strdup(fileName.get());
+
+        const char *name = NULL;
+        plugin->GetValue(nsPluginVariable_NameString, &name);
+        if (name)
+          info.fName = PL_strdup(name);
+        else
+          info.fName = PL_strdup(fileName.get());
+
+        const char *description = NULL;
         plugin->GetValue(nsPluginVariable_DescriptionString, &description);
         if (!description)
             description = "";
@@ -495,7 +378,6 @@ nsresult nsPluginFile::GetPluginInfo(nsPluginInfo& info)
     }
     return NS_OK;
 }
-
 
 nsresult nsPluginFile::FreePluginInfo(nsPluginInfo& info)
 {
@@ -520,8 +402,14 @@ nsresult nsPluginFile::FreePluginInfo(nsPluginInfo& info)
     PR_FREEIF(info.fMimeDescriptionArray);
     PR_FREEIF(info.fExtensionArray);
 
+    if (info.fFullPath != nsnull)
+        PL_strfree(info.fFullPath);
+
     if (info.fFileName != nsnull)
         PL_strfree(info.fFileName);
+
+    if (info.fVersion != nsnull)
+        PL_strfree(info.fVersion);
 
     return NS_OK;
 }

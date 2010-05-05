@@ -23,6 +23,7 @@
  *   Andrei Volkov <av@netscape.com>
  *   Brian Stell <bstell@netscape.com>
  *   Peter Lubczynski <peterl@netscape.com>
+ *   Rich Walsh <dragtext@e-vertise.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -37,21 +38,26 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
+
+/*****************************************************************************/
+
 #define INCL_WIN
 #include "os2.h"
 
 #include "nsDebug.h"
-
-#include "nsIPluginInstancePeer.h"
+#include "nsGUIEvent.h"
 #include "nsPluginSafety.h"
 #include "nsPluginNativeWindow.h"
 #include "nsThreadUtils.h"
 #include "nsAutoPtr.h"
 #include "nsTWeakRef.h"
 
-static NS_DEFINE_CID(kCPluginManagerCID, NS_PLUGINMANAGER_CID); // needed for NS_TRY_SAFE_CALL
-
 #define NS_PLUGIN_WINDOW_PROPERTY_ASSOCIATION "MozillaPluginWindowPropertyAssociation"
+#define NS_PLUGIN_CUSTOM_MSG_ID "MozFlashUserRelay"
+#define WM_USER_FLASH WM_USER+1
+#ifndef WM_FOCUSCHANGED
+#define WM_FOCUSCHANGED 0x000E
+#endif
 
 typedef nsTWeakRef<class nsPluginNativeWindowOS2> PluginWindowWeakRef;
 
@@ -64,10 +70,17 @@ BOOL  APIENTRY WinSetProperty(HWND hwnd, PCSZ  pszNameOrAtom,
                               PVOID pvData, ULONG ulFlags);
 }
 
+/*****************************************************************************/
+
+static ULONG sWM_FLASHBOUNCEMSG = 0;
+
+/*****************************************************************************/
 /**
  *  PLEvent handling code
  */
-class PluginWindowEvent : public nsRunnable {
+
+class PluginWindowEvent : public nsRunnable
+{
 public:
   PluginWindowEvent();
   void Init(const PluginWindowWeakRef &ref, HWND hWnd, ULONG msg, MPARAM mp1, MPARAM mp2);
@@ -96,6 +109,9 @@ PluginWindowEvent::PluginWindowEvent()
 void PluginWindowEvent::Clear()
 {
   mWnd    = NULL;
+  mMsg    = 0;
+  mWParam = 0;
+  mLParam = 0;
 }
 
 void PluginWindowEvent::Init(const PluginWindowWeakRef &ref, HWND aWnd,
@@ -110,8 +126,30 @@ void PluginWindowEvent::Init(const PluginWindowWeakRef &ref, HWND aWnd,
   mLParam = mp2;
 }
 
+/*****************************************************************************/
+
+class nsDelayedPopupsEnabledEvent : public nsRunnable
+{
+public:
+  nsDelayedPopupsEnabledEvent(nsIPluginInstance *inst)
+    : mInst(inst)
+  {}
+
+  NS_DECL_NSIRUNNABLE
+
+private:
+  nsCOMPtr<nsIPluginInstance> mInst;
+};
+
+NS_IMETHODIMP nsDelayedPopupsEnabledEvent::Run()
+{
+  mInst->PushPopupsEnabledState(PR_FALSE);
+  return NS_OK;	
+}
+
+/*****************************************************************************/
 /**
- *  nsPluginNativeWindow Windows specific class declaration
+ *  nsPluginNativeWindow OS/2-specific class declaration
  */
 
 typedef enum {
@@ -121,7 +159,8 @@ typedef enum {
   nsPluginType_Other
 } nsPluginType;
 
-class nsPluginNativeWindowOS2 : public nsPluginNativeWindow {
+class nsPluginNativeWindowOS2 : public nsPluginNativeWindow
+{
 public: 
   nsPluginNativeWindowOS2();
   virtual ~nsPluginNativeWindowOS2();
@@ -149,12 +188,24 @@ public:
   nsPluginType mPluginType;
 };
 
-static PRBool ProcessFlashMessageDelayed(nsPluginNativeWindowOS2 * aWin, 
-                                         HWND hWnd, ULONG msg, MPARAM mp1, MPARAM mp2)
+/*****************************************************************************/
+
+static PRBool ProcessFlashMessageDelayed(nsPluginNativeWindowOS2 * aWin,
+                                         nsIPluginInstance * aInst,
+                                         HWND hWnd, ULONG msg,
+                                         MPARAM mp1, MPARAM mp2)
 {
   NS_ENSURE_TRUE(aWin, NS_ERROR_NULL_POINTER);
+  NS_ENSURE_TRUE(aInst, NS_ERROR_NULL_POINTER);
 
-  if (msg != WM_USER+1)
+  if (msg == sWM_FLASHBOUNCEMSG) {
+    // See PluginWindowEvent::Run() below.
+    NS_TRY_SAFE_CALL_VOID((aWin->GetWindowProc())(hWnd, WM_USER_FLASH, mp1, mp2),
+                           nsnull, inst);
+    return TRUE;
+  }
+
+  if (msg != WM_USER_FLASH)
     return PR_FALSE; // no need to delay
 
   // do stuff
@@ -166,35 +217,101 @@ static PRBool ProcessFlashMessageDelayed(nsPluginNativeWindowOS2 * aWin,
   return PR_FALSE;
 }
 
+/*****************************************************************************/
 /**
  *   New plugin window procedure
  */
-MRESULT EXPENTRY PluginWndProc(HWND hWnd, ULONG msg, MPARAM mp1, MPARAM mp2)
+
+static MRESULT EXPENTRY PluginWndProc(HWND hWnd, ULONG msg, MPARAM mp1, MPARAM mp2)
 {
-  nsPluginNativeWindowOS2 * win = (nsPluginNativeWindowOS2 *)::WinQueryProperty(hWnd, NS_PLUGIN_WINDOW_PROPERTY_ASSOCIATION);
+  nsPluginNativeWindowOS2 * win = (nsPluginNativeWindowOS2 *)
+            ::WinQueryProperty(hWnd, NS_PLUGIN_WINDOW_PROPERTY_ASSOCIATION);
   if (!win)
     return (MRESULT)TRUE;
 
-  // check plugin mime type and cache whether it is Flash or java-vm or not
+  // The DispatchEvent(NS_PLUGIN_ACTIVATE) below can trigger a reentrant focus
+  // event which might destroy us.  Hold a strong ref on the plugin instance
+  // to prevent that, bug 374229.
+  nsCOMPtr<nsIPluginInstance> inst;
+  win->GetPluginInstance(inst);
+
+  // check plugin mime type and cache whether it is Flash or java-vm or not;
   // flash and java-vm will need special treatment later
   if (win->mPluginType == nsPluginType_Unknown) {
-    nsCOMPtr<nsIPluginInstance> inst;
-    win->GetPluginInstance(inst);
     if (inst) {
-      nsCOMPtr<nsIPluginInstancePeer> pip;
-      inst->GetPeer(getter_AddRefs(pip));
-      if (pip) {
-        nsMIMEType mimetype = nsnull;
-        pip->GetMIMEType(&mimetype);
-        if (mimetype) { 
-          if (!strcmp(mimetype, "application/x-shockwave-flash"))
-            win->mPluginType = nsPluginType_Flash;
-          else if (!strcmp(mimetype, "application/x-java-vm"))
-            win->mPluginType = nsPluginType_Java_vm;
-          else
-            win->mPluginType = nsPluginType_Other;
+      const char* mimetype = nsnull;
+      inst->GetMIMEType(&mimetype);
+      if (mimetype) {
+        if (!strcmp(mimetype, "application/x-shockwave-flash"))
+          win->mPluginType = nsPluginType_Flash;
+        else if (!strcmp(mimetype, "application/x-java-vm"))
+          win->mPluginType = nsPluginType_Java_vm;
+        else
+          win->mPluginType = nsPluginType_Other;
+      }
+    }
+  }
+
+  PRBool enablePopups = PR_FALSE;
+
+  // Activate/deactivate mouse capture on the plugin widget
+  // here, before we pass the Windows event to the plugin
+  // because its possible our widget won't get paired events
+  // (see bug 131007) and we'll look frozen. Note that this
+  // is also done in ChildWindow::DispatchMouseEvent.
+  switch (msg) {
+    case WM_BUTTON1DOWN:
+    case WM_BUTTON2DOWN:
+    case WM_BUTTON3DOWN: {
+      nsCOMPtr<nsIWidget> widget;
+      win->GetPluginWidget(getter_AddRefs(widget));
+      if (widget)
+        widget->CaptureMouse(PR_TRUE);
+      break;
+    }
+
+    case WM_BUTTON1UP:
+    case WM_BUTTON2UP:
+    case WM_BUTTON3UP: {
+      if (msg == WM_BUTTON1UP)
+        enablePopups = PR_TRUE;
+
+      nsCOMPtr<nsIWidget> widget;
+      win->GetPluginWidget(getter_AddRefs(widget));
+      if (widget)
+        widget->CaptureMouse(PR_FALSE);
+      break;
+    }
+
+    case WM_CHAR:
+      // Ignore repeating keydown messages...
+      if (SHORT1FROMMP(mp1) & KC_PREVDOWN)
+        break;
+      enablePopups = PR_TRUE;
+      break;
+
+    // When the child of a plugin gets the focus, nsWindow doesn't get
+    // a WM_FOCUSCHANGED msg, so plugin and window activation events
+    // don't happen.  This fixes the problem by synthesizing a msg
+    // that makes it look like the plugin widget just got the focus.
+    case WM_FOCUSCHANGE: {
+
+      // Some plugins don't pass this msg on.  If the default window proc
+      // doesn't receive it, window activation/deactivation won't happen.
+      WinDefWindowProc(hWnd, msg, mp1, mp2);
+
+      // If focus is being gained, and the plugin widget neither lost
+      // nor gained the focus, then a child just got it from some other
+      // window.  Post a WM_FOCUSCHANGED msg that identifies the child
+      // as the window losing focus.  After nsWindow::ActivatePlugin()
+      // activates the plugin, it will restore the focus to the child.
+      if (SHORT1FROMMP(mp2) && (HWND)mp1 != hWnd) {
+        HWND hFocus = WinQueryFocus(HWND_DESKTOP);
+        if (hFocus != hWnd) {
+          WinPostMsg(hWnd, WM_FOCUSCHANGED, (MPARAM)hFocus, mp2);
         }
       }
+      break;
     }
   }
 
@@ -202,27 +319,51 @@ MRESULT EXPENTRY PluginWndProc(HWND hWnd, ULONG msg, MPARAM mp1, MPARAM mp2)
   // (WM_USER+1) causing 100% CPU consumption and GUI freeze, see mozilla bug 132759;
   // we can prevent this from happening by delaying the processing such messages;
   if (win->mPluginType == nsPluginType_Flash) {
-    if (ProcessFlashMessageDelayed(win, hWnd, msg, mp1, mp2))
+    if (ProcessFlashMessageDelayed(win, inst, hWnd, msg, mp1, mp2))
       return (MRESULT)TRUE;
   }
 
+  if (enablePopups && inst) {
+    PRUint16 apiVersion;
+    if (NS_SUCCEEDED(inst->GetPluginAPIVersion(&apiVersion)) &&
+        !nsVersionOK(apiVersion, NP_POPUP_API_VERSION))
+      inst->PushPopupsEnabledState(PR_TRUE);
+  }
+
   MRESULT res = (MRESULT)TRUE;
-
-  nsCOMPtr<nsIPluginInstance> inst;
-  win->GetPluginInstance(inst);
-
-  if (win->mPluginType == nsPluginType_Java_vm) {
-    NS_TRY_SAFE_CALL_RETURN(res, WinDefWindowProc(hWnd, msg, mp1, mp2), nsnull, inst);
-  } else {
+  if (win->mPluginType == nsPluginType_Java_vm)
+    NS_TRY_SAFE_CALL_RETURN(res, ::WinDefWindowProc(hWnd, msg, mp1, mp2), nsnull, inst);
+  else
     NS_TRY_SAFE_CALL_RETURN(res, (win->GetWindowProc())(hWnd, msg, mp1, mp2), nsnull, inst);
+
+  if (inst) {
+    // Popups are enabled (were enabled before the call to
+    // CallWindowProc()). Some plugins (at least the flash player)
+    // post messages from their key handlers etc that delay the actual
+    // processing, so we need to delay the disabling of popups so that
+    // popups remain enabled when the flash player ends up processing
+    // the actual key handlers. We do this by posting an event that
+    // does the disabling, this way our disabling will happen after
+    // the handlers in the plugin are done.
+
+    // Note that it's not fatal if any of this fails (which won't
+    // happen unless we're out of memory anyways) since the plugin
+    // code will pop any popup state pushed by this plugin on
+    // destruction.
+
+    nsCOMPtr<nsIRunnable> event = new nsDelayedPopupsEnabledEvent(inst);
+    if (event)
+      NS_DispatchToCurrentThread(event);
   }
 
   return res;
 }
 
+/*****************************************************************************/
 /**
  *   nsPluginNativeWindowOS2 implementation
  */
+
 nsPluginNativeWindowOS2::nsPluginNativeWindowOS2() : nsPluginNativeWindow()
 {
   // initialize the struct fields
@@ -234,6 +375,15 @@ nsPluginNativeWindowOS2::nsPluginNativeWindowOS2() : nsPluginNativeWindow()
 
   mPluginWinProc = NULL;
   mPluginType = nsPluginType_Unknown;
+
+  // once the atom has been added, it won't be deleted
+  if (!sWM_FLASHBOUNCEMSG) {
+    sWM_FLASHBOUNCEMSG = ::WinFindAtom(WinQuerySystemAtomTable(),
+                                       NS_PLUGIN_CUSTOM_MSG_ID);
+    if (!sWM_FLASHBOUNCEMSG)
+      sWM_FLASHBOUNCEMSG = ::WinAddAtom(WinQuerySystemAtomTable(),
+                                        NS_PLUGIN_CUSTOM_MSG_ID);
+  }
 }
 
 nsPluginNativeWindowOS2::~nsPluginNativeWindowOS2()
@@ -260,12 +410,18 @@ NS_IMETHODIMP PluginWindowEvent::Run()
 
   nsCOMPtr<nsIPluginInstance> inst;
   win->GetPluginInstance(inst);
-  NS_TRY_SAFE_CALL_VOID((win->GetWindowProc()) 
-                       (hWnd, 
-                        GetMsg(), 
-                        GetWParam(), 
-                        GetLParam()),
-                        nsnull, inst);
+
+  if (GetMsg() == WM_USER_FLASH)
+    // XXX Unwind issues related to runnable event callback depth for this
+    // event and destruction of the plugin. (Bug 493601)
+    ::WinPostMsg(hWnd, sWM_FLASHBOUNCEMSG, GetWParam(), GetLParam());
+  else
+    // Currently not used, but added so that processing events here
+    // is more generic.
+    NS_TRY_SAFE_CALL_VOID((win->GetWindowProc()) 
+                          (hWnd, GetMsg(), GetWParam(), GetLParam()),
+                          nsnull, inst);
+
   Clear();
   return NS_OK;
 }
@@ -284,21 +440,20 @@ nsPluginNativeWindowOS2::GetPluginWindowEvent(HWND aWnd, ULONG aMsg, MPARAM aMp1
   // We have the ability to alloc if needed in case in the future some plugin
   // should post multiple PostMessages. However, this could lead to many
   // alloc's per second which could become a performance issue. See bug 169247.
-  if (!mCachedPluginWindowEvent) 
-  {
+  if (!mCachedPluginWindowEvent) {
     event = new PluginWindowEvent();
-    if (!event) return nsnull;
+    if (!event)
+      return nsnull;
     mCachedPluginWindowEvent = event;
   }
-  else if (mCachedPluginWindowEvent->InUse())
-  {
+  else
+  if (mCachedPluginWindowEvent->InUse()) {
     event = new PluginWindowEvent();
-    if (!event) return nsnull;
+    if (!event)
+      return nsnull;
   }
   else
-  {
     event = mCachedPluginWindowEvent;
-  }
 
   event->Init(mWeakRef, aWnd, aMsg, aMp1, aMp2);
   return event;
@@ -308,8 +463,9 @@ nsresult nsPluginNativeWindowOS2::CallSetWindow(nsCOMPtr<nsIPluginInstance> &aPl
 {
   // check the incoming instance, null indicates that window is going away and we are
   // not interested in subclassing business any more, undo and don't subclass
-  if (!aPluginInstance)
+  if (!aPluginInstance) {
     UndoSubclassAndAssociateWindow();
+  }
 
   nsPluginNativeWindow::CallSetWindow(aPluginInstance);
 
@@ -333,13 +489,16 @@ nsresult nsPluginNativeWindowOS2::SubclassAndAssociateWindow()
   if (PluginWndProc == currentWndProc)
     return NS_OK;
 
-  mPluginWinProc = WinSubclassWindow(hWnd, PluginWndProc);
+  mPluginWinProc = ::WinSubclassWindow(hWnd, PluginWndProc);
   if (!mPluginWinProc)
     return NS_ERROR_FAILURE;
 
-  nsPluginNativeWindowOS2 * win = (nsPluginNativeWindowOS2 *)::WinQueryProperty(hWnd, NS_PLUGIN_WINDOW_PROPERTY_ASSOCIATION);
+#ifdef DEBUG
+  nsPluginNativeWindowOS2 * win = (nsPluginNativeWindowOS2 *)
+            ::WinQueryProperty(hWnd, NS_PLUGIN_WINDOW_PROPERTY_ASSOCIATION);
   NS_ASSERTION(!win || (win == this), "plugin window already has property and this is not us");
-  
+#endif
+
   if (!::WinSetProperty(hWnd, NS_PLUGIN_WINDOW_PROPERTY_ASSOCIATION, (PVOID)this, 0))
     return NS_ERROR_FAILURE;
 
@@ -353,7 +512,7 @@ nsresult nsPluginNativeWindowOS2::UndoSubclassAndAssociateWindow()
 
   // remove window property
   HWND hWnd = (HWND)window;
-  if (WinIsWindow(/*HAB*/0, hWnd))
+  if (::WinIsWindow(/*HAB*/0, hWnd))
     ::WinRemoveProperty(hWnd, NS_PLUGIN_WINDOW_PROPERTY_ASSOCIATION);
 
   // restore the original win proc
@@ -361,7 +520,7 @@ nsresult nsPluginNativeWindowOS2::UndoSubclassAndAssociateWindow()
   if (mPluginWinProc) {
     PFNWP currentWndProc = (PFNWP)::WinQueryWindowPtr(hWnd, QWP_PFNWP);
     if (currentWndProc == PluginWndProc)
-      WinSubclassWindow(hWnd, mPluginWinProc);
+      ::WinSubclassWindow(hWnd, mPluginWinProc);
   }
 
   return NS_OK;

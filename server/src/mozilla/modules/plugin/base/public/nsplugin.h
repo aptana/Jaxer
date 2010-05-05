@@ -101,11 +101,15 @@
  * global state of all plugins with the same implementation.      
  */                                                               
 #include "nsIPlugin.h"
+#include "nsIPluginOld.h"
+#define nsIPlugin nsIPluginOld
 
 /**
  * A plugin instance represents a particular activation of a plugin on a page.
  */
 #include "nsIPluginInstance.h"
+#include "nsIPluginInstanceOld.h"
+#define nsIPluginInstance nsIPluginInstanceOld
 
 ////////////////////////////////////////////////////////////////////////////////
 /**
@@ -134,6 +138,8 @@
  * To obtain: QueryInterface on nsIPluginInstancePeer
  */
 #include "nsIPluginTagInfo.h"
+#include "nsIPluginTagInfoOld.h"
+#define nsIPluginTagInfo nsIPluginTagInfoOld
 
 /**
  * The nsIWindowlessPluginInstancePeer provides additional operations for 

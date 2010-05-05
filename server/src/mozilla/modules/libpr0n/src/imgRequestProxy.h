@@ -39,6 +39,7 @@
 
 #include "imgIRequest.h"
 #include "imgIDecoderObserver.h"
+#include "nsISecurityInfoProvider.h"
 
 #include "imgIContainer.h"
 #include "imgIDecoder.h"
@@ -48,6 +49,7 @@
 #include "nsISupportsPriority.h"
 #include "nsCOMPtr.h"
 #include "nsAutoPtr.h"
+#include "nsThreadUtils.h"
 
 #include "imgRequest.h"
 
@@ -59,13 +61,14 @@
     {0x8f, 0x65, 0x9c, 0x46, 0x2e, 0xe2, 0xbc, 0x95} \
 }
 
-class imgRequestProxy : public imgIRequest, public nsISupportsPriority
+class imgRequestProxy : public imgIRequest, public nsISupportsPriority, public nsISecurityInfoProvider
 {
 public:
   NS_DECL_ISUPPORTS
   NS_DECL_IMGIREQUEST
   NS_DECL_NSIREQUEST
   NS_DECL_NSISUPPORTSPRIORITY
+  NS_DECL_NSISECURITYINFOPROVIDER
 
   imgRequestProxy();
   virtual ~imgRequestProxy();
@@ -83,17 +86,39 @@ public:
 protected:
   friend class imgRequest;
 
+  class imgCancelRunnable;
+  friend class imgCancelRunnable;
+
+  class imgCancelRunnable : public nsRunnable
+  {
+    public:
+      imgCancelRunnable(imgRequestProxy* owner, nsresult status)
+        : mOwner(owner), mStatus(status)
+      {}
+
+      NS_IMETHOD Run() {
+        mOwner->DoCancel(mStatus);
+        return NS_OK;
+      }
+
+    private:
+      nsRefPtr<imgRequestProxy> mOwner;
+      nsresult mStatus;
+  };
+
+
+
   /* non-virtual imgIDecoderObserver methods */
   void OnStartDecode   ();
   void OnStartContainer(imgIContainer *aContainer);
-  void OnStartFrame    (gfxIImageFrame *aFrame);
-  void OnDataAvailable (gfxIImageFrame *aFrame, const nsIntRect * aRect);
-  void OnStopFrame     (gfxIImageFrame *aFrame);
+  void OnStartFrame    (PRUint32 aFrame);
+  void OnDataAvailable (PRBool aCurrentFrame, const nsIntRect * aRect);
+  void OnStopFrame     (PRUint32 aFrame);
   void OnStopContainer (imgIContainer *aContainer);
   void OnStopDecode    (nsresult status, const PRUnichar *statusArg); 
 
   /* non-virtual imgIContainerObserver methods */
-  void FrameChanged(imgIContainer *aContainer, gfxIImageFrame *aFrame, nsIntRect * aDirtyRect);
+  void FrameChanged(imgIContainer *aContainer, nsIntRect * aDirtyRect);
 
   /* non-virtual nsIRequestObserver (plus some) methods */
   void OnStartRequest(nsIRequest *request, nsISupports *ctxt);
@@ -103,9 +128,15 @@ protected:
     return mListener != nsnull;
   }
 
+  /* Finish up canceling ourselves */
+  void DoCancel(nsresult status);
+
   /* Do the proper refcount management to null out mListener */
   void NullOutListener();
-  
+
+  void DoRemoveFromLoadGroup() {
+    RemoveFromLoadGroup(PR_TRUE);
+  }
 private:
   friend class imgCacheValidator;
 

@@ -26,6 +26,7 @@
  *   Mitch Stoltz <mstoltz@netscape.com>
  *   Jeroen Dobbelaere <jeroen.dobbelaere@acunia.com>
  *   Jeff Walden <jwalden+code@mit.edu>
+ *   Taras Glek <tglek@mozilla.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -48,62 +49,26 @@
  * or pointers to it across thread boundaries.
  */
 
-
-#ifndef STANDALONE
-
-#include "nsWildCard.h"
-#include "nscore.h"
-#include "prmem.h"
-#include "prio.h"
-#include "plstr.h"
-#include "prlog.h"
-#define ZFILE_CREATE    PR_WRONLY | PR_CREATE_FILE
 #define READTYPE  PRInt32
 #include "zlib.h"
 #include "nsISupportsUtils.h"
 #include "nsRecyclingAllocator.h"
+#include "prio.h"
+#include "plstr.h"
+#include "prlog.h"
+#include "stdlib.h"
+#include "nsWildCard.h"
+#include "nsZipArchive.h"
 
 /**
- * Globals
- *
  * Global allocator used with zlib. Destroyed in module shutdown.
  */
 #define NBUCKETS 6
-#define BY4ALLOC_ITEMS 320
 nsRecyclingAllocator *gZlibAllocator = NULL;
 
 // For placement new used for arena allocations of zip file list
 #include NEW_H
 #define ZIP_ARENABLOCKSIZE (1*1024)
-
-#else /* STANDALONE */
-
-#ifdef XP_WIN
-#include "windows.h"
-#endif
-
-#undef MOZILLA_CLIENT       // undoes prtypes damage in zlib.h
-#define ZFILE_CREATE  "wb"
-#define READTYPE  PRUint32
-#include "zlib.h"
-#undef PR_PUBLIC_API
-#include "zipstub.h"
-
-#ifdef XP_MAC
-#include <string.h>
-#include <stdlib.h>
-
-char * strdup(const char *src);
-char * strdup(const char *src)
-{
-    long len = strlen(src);
-    char *dup = (char *)malloc(len+1 * sizeof(char));
-    memcpy(dup, src, len+1);
-    return dup;
-}
-#endif
-
-#endif /* STANDALONE */
 
 #ifdef XP_UNIX
     #include <sys/types.h>
@@ -115,6 +80,11 @@ char * strdup(const char *src)
 #elif defined(XP_BEOS)
     #include <unistd.h>
 #endif
+
+#ifdef __SYMBIAN32__
+    #include <sys/syslimits.h>
+#endif /*__SYMBIAN32__*/
+
 
 #ifndef XP_UNIX /* we need some constants defined in limits.h and unistd.h */
 #  ifndef S_IFMT
@@ -132,336 +102,39 @@ char * strdup(const char *src)
 #include "zipstruct.h"
 #include "nsZipArchive.h"
 
-static PRUint16 xtoint(unsigned char *ii);
-static PRUint32 xtolong(unsigned char *ll);
-static PRUint16 ExtractMode(unsigned char *ll);
-static PRUint32 HashName(const char* aName);
+
+static const PRUint32 kMaxNameLength = PATH_MAX; /* Maximum name length */
+// For synthetic zip entries. Date/time corresponds to 1980-01-01 00:00.
+static const PRUint16 kSyntheticTime = 0;
+static const PRUint16 kSyntheticDate = (1 + (1 << 5) + (0 << 9));
+
+static PRUint16 xtoint(const unsigned char *ii);
+static PRUint32 xtolong(const unsigned char *ll);
+static PRUint32 HashName(const char* aName, PRUint16 nameLen);
 #if defined(XP_UNIX) || defined(XP_BEOS)
-static PRBool IsSymlink(unsigned char *ll);
 static nsresult ResolveSymlink(const char *path);
 #endif
-
-/*---------------------------------------------
- * C API wrapper for nsZipArchive
- *--------------------------------------------*/
-
-#ifdef STANDALONE
-
-/**
- * ZIP_OpenArchive
- *
- * opens the named zip/jar archive and returns a handle that
- * represents the archive in other ZIP_ calls.
- *
- * @param   zipname   archive filename
- * @param   hZip      receives handle if archive opened OK
- * @return  status code
- */
-PR_PUBLIC_API(PRInt32) ZIP_OpenArchive(const char * zipname, void** hZip)
-{
-  PRInt32 status;
-
-  /*--- error check args ---*/
-  if (hZip == 0)
-    return ZIP_ERR_PARAM;
-
-  /*--- NULL output to prevent use by bozos who don't check errors ---*/
-  *hZip = 0;
-
-  /*--- create and open the archive ---*/
-  nsZipArchive* zip = new nsZipArchive();
-  if (zip == 0)
-    return ZIP_ERR_MEMORY;
-
-  PRFileDesc * fd = PR_Open(zipname, PR_RDONLY, 0400);
-  if (!fd) {
-    delete zip;
-    return ZIP_ERR_DISK;
-  }
-
-  status = zip->OpenArchive(fd);
-  if (status == ZIP_OK)
-    *hZip = static_cast<void*>(zip);
-  else {
-    delete zip;
-    PR_Close(fd);
-  }
-
-  return status;
-}
-
-
-
-/**
- * ZIP_TestArchive
- *
- * Tests the integrity of this open zip archive by extracting each
- * item to memory and performing a CRC check.
- *
- * @param   hZip      handle obtained from ZIP_OpenArchive
- * @return  status code (success indicated by ZIP_OK)
- */
-PR_PUBLIC_API(PRInt32) ZIP_TestArchive(void *hZip)
-{
-  /*--- error check args ---*/
-  if (hZip == 0)
-    return ZIP_ERR_PARAM;
-
-  nsZipArchive* zip = static_cast<nsZipArchive*>(hZip);
-  if (zip->kMagic != ZIP_MAGIC)
-    return ZIP_ERR_PARAM;   /* whatever it is isn't one of ours! */
-
-  /*--- test the archive ---*/
-  return zip->Test(NULL);
-}
-
-
-/**
- * ZIP_CloseArchive
- *
- * closes zip archive and frees memory
- * @param   hZip  handle obtained from ZIP_OpenArchive
- * @return  status code
- */
-PR_PUBLIC_API(PRInt32) ZIP_CloseArchive(void** hZip)
-{
-  /*--- error check args ---*/
-  if (hZip == 0 || *hZip == 0)
-    return ZIP_ERR_PARAM;
-
-  nsZipArchive* zip = static_cast<nsZipArchive*>(*hZip);
-  if (zip->kMagic != ZIP_MAGIC)
-    return ZIP_ERR_PARAM;   /* whatever it is isn't one of ours! */
-
-  /*--- close the archive ---*/
-  *hZip = 0;
-  delete zip;
-
-  return ZIP_OK;
-}
-
-
-
-/**
- * ZIP_ExtractFile
- *
- * extracts named file from an opened archive
- *
- * @param   hZip      handle obtained from ZIP_OpenArchive
- * @param   filename  name of file in archive
- * @param   outname   filename to extract to
- */
-PR_PUBLIC_API(PRInt32) ZIP_ExtractFile(void* hZip, const char * filename, const char * outname)
-{
-  /*--- error check args ---*/
-  if (hZip == 0)
-    return ZIP_ERR_PARAM;
-
-  nsZipArchive* zip = static_cast<nsZipArchive*>(hZip);
-  if (zip->kMagic != ZIP_MAGIC)
-    return ZIP_ERR_PARAM;   /* whatever it is isn't one of ours! */
-
-  //-- Find item in archive
-  nsZipItem* item = zip->GetItem(filename);
-  if (!item)
-    return ZIP_ERR_FNF;
-
-  // Can't extract a directory
-  if (item->isDirectory)
-    return ZIP_ERR_PARAM;
-
-  // delete any existing file so that we overwrite the file permissions         
-  PR_Delete(outname);
-                                                                    
-  PRFileDesc* fOut = PR_Open(outname, ZFILE_CREATE, item->mode);
-  if (!fOut)
-    return ZIP_ERR_DISK;
-
-#if defined(XP_UNIX) && defined(STANDALONE)
-  // When STANDALONE is defined, PR_Open ignores its 3d argument.
-  mode_t msk = umask(0);
-  umask(msk);
-  chmod(outname, (item->mode | S_IRUSR) & ~msk);
-#endif
-
-  // ExtractFile also closes the fOut handle and resolves the symlink if needed
-  return zip->ExtractFile(item, outname, fOut);
-}
-
-
-
-/**
- * ZIP_FindInit
- *
- * Initializes an enumeration of files in the archive
- *
- * @param   hZip      handle obtained from ZIP_OpenArchive
- * @param   pattern   regexp to match files in archive, the usual shell expressions.
- *                    NULL pattern also matches all files, faster than "*"
- */
-PR_PUBLIC_API(void*) ZIP_FindInit(void* hZip, const char * pattern)
-{
-  /*--- error check args ---*/
-  if (hZip == 0)
-    return 0;
-
-  nsZipArchive* zip = static_cast<nsZipArchive*>(hZip);
-  if (zip->kMagic != ZIP_MAGIC)
-    return 0;   /* whatever it is isn't one of ours! */
-
-  /*--- initialize the pattern search ---*/
-  nsZipFind* find;
-  PRInt32 rv = zip->FindInit(pattern, &find);
-  if (rv != ZIP_OK)
-      find = NULL;
-
-  return find;
-}
-
-
-
-/**
- * ZIP_FindNext
- *
- * Puts the next name in the passed buffer. Returns ZIP_ERR_SMALLBUF when
- * the name is too large for the buffer, and ZIP_ERR_FNF when there are no
- * more files that match the pattern
- *
- * @param   hFind     handle obtained from ZIP_FindInit
- * @param   outbuf    buffer to receive next filename
- * @param   bufsize   size of allocated buffer
- */
-PR_PUBLIC_API(PRInt32) ZIP_FindNext(void* hFind, char * outbuf, PRUint16 bufsize)
-{
-  PRInt32 status;
-
-  /*--- error check args ---*/
-  if (hFind == 0)
-    return ZIP_ERR_PARAM;
-
-  nsZipFind* find = static_cast<nsZipFind*>(hFind);
-  if (find->kMagic != ZIPFIND_MAGIC)
-    return ZIP_ERR_PARAM;   /* whatever it is isn't one of ours! */
-
-  /*--- return next filename file ---*/
-  const char* itemName;
-  status = find->FindNext(&itemName);
-  if (status == ZIP_OK)
-  {
-    PRUint16 namelen = (PRUint16)PL_strlen(itemName);
-
-    if (bufsize > namelen)
-    {
-        PL_strcpy(outbuf, itemName);
-    }
-    else
-        status = ZIP_ERR_SMALLBUF;
-  }
-
-  return status;
-}
-
-
-
-/**
- * ZIP_FindFree
- *
- * Releases allocated memory associated with the find token
- *
- * @param   hFind     handle obtained from ZIP_FindInit
- */
-PR_PUBLIC_API(PRInt32) ZIP_FindFree(void* hFind)
-{
-  /*--- error check args ---*/
-  if (hFind == 0)
-    return ZIP_ERR_PARAM;
-
-  nsZipFind* find = static_cast<nsZipFind*>(hFind);
-  if (find->kMagic != ZIPFIND_MAGIC)
-    return ZIP_ERR_PARAM;   /* whatever it is isn't one of ours! */
-
-  /* free the find structure */
-  delete find;
-  return ZIP_OK;
-}
-
-#if defined XP_WIN
-void ProcessWindowsMessages()
-{
-  MSG msg;
-
-  while(PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
-  {
-    TranslateMessage(&msg);
-    DispatchMessage(&msg);
-  }
-}
-#endif /* XP_WIN */
-
-#else /* STANDALONE */
 
 //***********************************************************
 // Allocators for use with zlib
 //
-// These are allocators that are performance tuned for
-// use with zlib. Our use of zlib for every file we read from
-// the jar file when running navigator, we do these allocation.
-// alloc 24
-// alloc 64
-// alloc 11520
-// alloc 32768
-// alloc 1216 [304x4] max
-// alloc 76   [19x4]
-// free  76   [19x4]
-// alloc 1152 [288x4]
-// free  1152 [288x4]
-// free  1216 [304x4]
-// alloc 28
-// free  28
-// free  32768
-// free  11520
-// free  64
-// free  24
-//
-// The pool will allocate these as:
-//
-//          32,768
-//          11,520
-//           1,280 [320x4] - shared by first x4 alloc, 28
-//           1,280 [320x4] - shared by second and third x4 alloc
-//              64
-//              24
-//          ------
-//          46,936
-//
-// And almost all of the file reads happen serially. Hence this
-// allocator tries to keep one set of memory needed for one file around
-// and reused the same blocks for other file reads.
-//
-// The interesting question is when should be free this ?
-// - memory pressure should be one.
-// - after startup of navigator
-// - after startup of mail
-// In general, this allocator should be enabled before
-// we startup and disabled after we startup if memory is a concern.
+// Use a recycling allocator, for re-use of of the zlib buffers.
+// For every inflation the following allocations are done:
+// zlibAlloc(1, 9520)
+// zlibAlloc(32768, 1)
 //***********************************************************
 
-PR_STATIC_CALLBACK(void *)
+static void *
 zlibAlloc(void *opaque, uInt items, uInt size)
 {
   nsRecyclingAllocator *zallocator = (nsRecyclingAllocator *)opaque;
   if (zallocator) {
-    // Bump up x4 allocations
-    PRUint32 realitems = items;
-    if (size == 4 && items < BY4ALLOC_ITEMS)
-      realitems = BY4ALLOC_ITEMS;
-     return zallocator->Calloc(realitems, size);
+    return zallocator->Malloc(items * size);
   }
-  else
-    return calloc(items, size);
+  return malloc(items * size);
 }
 
-PR_STATIC_CALLBACK(void)
+static void
 zlibFree(void *opaque, void *ptr)
 {
   nsRecyclingAllocator *zallocator = (nsRecyclingAllocator *)opaque;
@@ -469,14 +142,11 @@ zlibFree(void *opaque, void *ptr)
     zallocator->Free(ptr);
   else
     free(ptr);
-  return;
 }
-#endif /* STANDALONE */
 
 nsresult gZlibInit(z_stream *zs)
 {
   memset(zs, 0, sizeof(z_stream));
-#ifndef STANDALONE
   //-- ensure we have our zlib allocator for better performance
   if (!gZlibAllocator) {
     gZlibAllocator = new nsRecyclingAllocator(NBUCKETS, NS_DEFAULT_RECYCLE_TIMEOUT, "libjar");
@@ -486,11 +156,71 @@ nsresult gZlibInit(z_stream *zs)
     zs->zfree = zlibFree;
     zs->opaque = gZlibAllocator;
   }
-#endif /* STANDALONE */
   int zerr = inflateInit2(zs, -MAX_WBITS);
-  if (zerr != Z_OK) return ZIP_ERR_MEMORY;
+  if (zerr != Z_OK) return NS_ERROR_OUT_OF_MEMORY;
 
-  return ZIP_OK;
+  return NS_OK;
+}
+
+nsZipHandle::nsZipHandle()
+  : mFd(nsnull)
+  , mFileData(nsnull)
+  , mLen(0)
+  , mMap(nsnull)
+  , mRefCnt(0)
+{
+  MOZ_COUNT_CTOR(nsZipHandle);
+}
+
+NS_IMPL_THREADSAFE_ADDREF(nsZipHandle)
+NS_IMPL_THREADSAFE_RELEASE(nsZipHandle)
+
+nsresult nsZipHandle::Init(PRFileDesc *fd, nsZipHandle **ret)
+{
+  PRInt64 size = PR_Available64(fd);
+  if (size >= PR_INT32_MAX)
+    return NS_ERROR_FILE_TOO_BIG;
+
+  PRFileMap *map = PR_CreateFileMap(fd, size, PR_PROT_READONLY);
+  if (!map)
+    return NS_ERROR_FAILURE;
+  
+  PRUint8 *buf = (PRUint8*) PR_MemMap(map, 0, (PRUint32) size);
+  // Bug 525755: PR_MemMap fails when fd points at something other than a normal file.
+  if (!buf) {
+    PR_CloseFileMap(map);
+    return NS_ERROR_FAILURE;
+  }
+
+  nsZipHandle *handle = new nsZipHandle();
+  if (!handle) {
+    PR_MemUnmap(buf, size);
+    PR_CloseFileMap(map);
+    return NS_ERROR_OUT_OF_MEMORY;
+  }
+
+  handle->mFd = fd;
+  handle->mMap = map;
+  handle->mLen = (PRUint32) size;
+  handle->mFileData = buf;
+  handle->AddRef();
+  *ret = handle;
+  return NS_OK;
+}
+
+nsZipHandle::~nsZipHandle()
+{
+  if (mFileData) {
+    PR_MemUnmap(mFileData, mLen);
+    PR_CloseFileMap(mMap);
+    mFileData = nsnull;
+    mMap = nsnull;
+  }
+  if (mFd) {
+    PR_Close(mFd);
+    mFd = nsnull;
+  }
+  MOZ_COUNT_DTOR(nsZipHandle);
 }
 
 //***********************************************************
@@ -503,16 +233,12 @@ nsresult gZlibInit(z_stream *zs)
 //---------------------------------------------
 nsresult nsZipArchive::OpenArchive(PRFileDesc * fd)
 {
-  if (!fd)
-    return ZIP_ERR_PARAM;
+  nsresult rv = nsZipHandle::Init(fd, getter_AddRefs(mFd));
+  if (NS_FAILED(rv))
+    return rv;
 
-#ifndef STANDALONE
   // Initialize our arena
   PL_INIT_ARENA_POOL(&mArena, "ZipArena", ZIP_ARENABLOCKSIZE);
-#endif
-
-  //-- Keep the filedescriptor for further reading...
-  mFd = fd;
 
   //-- get table of contents for archive
   return BuildFileList();
@@ -529,10 +255,10 @@ nsresult nsZipArchive::Test(const char *aEntryName)
   {
     currItem = GetItem(aEntryName);
     if (!currItem)
-      return ZIP_ERR_FNF;
+      return NS_ERROR_FILE_TARGET_DOES_NOT_EXIST;
     //-- don't test (synthetic) directory items
-    if (currItem->isDirectory)
-      return ZIP_OK;
+    if (currItem->IsDirectory())
+      return NS_OK;
     return ExtractFile(currItem, 0, 0);
   }
 
@@ -540,18 +266,15 @@ nsresult nsZipArchive::Test(const char *aEntryName)
   for (int i = 0; i < ZIP_TABSIZE; i++) {
     for (currItem = mFiles[i]; currItem; currItem = currItem->next) {
       //-- don't test (synthetic) directory items
-      if (currItem->isDirectory)
+      if (currItem->IsDirectory())
         continue;
       nsresult rv = ExtractFile(currItem, 0, 0);
-      if (rv != ZIP_OK)
+      if (rv != NS_OK)
         return rv;
-#if defined STANDALONE && defined XP_WIN
-      ProcessWindowsMessages();
-#endif
     }
   }
 
-  return ZIP_OK;
+  return NS_OK;
 }
 
 //---------------------------------------------
@@ -559,9 +282,9 @@ nsresult nsZipArchive::Test(const char *aEntryName)
 //---------------------------------------------
 nsresult nsZipArchive::CloseArchive()
 {
-#ifndef STANDALONE
   if (mFd) {
     PL_FinishArenaPool(&mArena);
+    mFd = NULL;
   }
 
   // CAUTION:
@@ -571,31 +294,9 @@ nsresult nsZipArchive::CloseArchive()
   // for all the nsZipItem in one shot. But if the ~nsZipItem is doing
   // anything more than cleaning up memory, we should start calling it.
   // Let us also cleanup the mFiles table for re-use on the next 'open' call
-  for (int i = 0; i < ZIP_TABSIZE; i++) {
-    mFiles[i] = 0;
-  }
-#else
-  // delete nsZipItems in table
-  nsZipItem* pItem;
-  for (int i = 0; i < ZIP_TABSIZE; ++i)
-  {
-    pItem = mFiles[i];
-    while (pItem != 0)
-    {
-      mFiles[i] = pItem->next;
-      free(pItem);
-      pItem = mFiles[i];
-    }
-    mFiles[i] = 0;              // make sure we don't double-delete
-  }
-#endif
-  
-  if (mFd) {
-    PR_Close(mFd);
-    mFd = 0;
-  }
-  mBuiltSynthetics = PR_FALSE;
-  return ZIP_OK;
+  memset(mFiles, 0, sizeof(mFiles));
+  mBuiltSynthetics = false;
+  return NS_OK;
 }
 
 //---------------------------------------------
@@ -604,19 +305,20 @@ nsresult nsZipArchive::CloseArchive()
 nsZipItem*  nsZipArchive::GetItem(const char * aEntryName)
 {
   if (aEntryName) {
+    PRUint32 len = strlen(aEntryName);
     //-- If the request is for a directory, make sure that synthetic entries 
     //-- are created for the directories without their own entry.
     if (!mBuiltSynthetics) {
-        PRUint32 len = strlen(aEntryName);
         if ((len > 0) && (aEntryName[len-1] == '/')) {
-            if (BuildSynthetics() != ZIP_OK)
+            if (BuildSynthetics() != NS_OK)
                 return 0;
         }
     }
 
-    nsZipItem* item = mFiles[ HashName(aEntryName) ];
+    nsZipItem* item = mFiles[ HashName(aEntryName, len) ];
     while (item) {
-      if (!strcmp(aEntryName, item->name))
+      if ((len == item->nameLength) && 
+         (!memcmp(aEntryName, item->Name(), len)))
         return item; //-- found it
       item = item->next;
     }
@@ -635,25 +337,21 @@ nsresult nsZipArchive::ExtractFile(nsZipItem *item, const char *outname,
                                    PRFileDesc* aFd)
 {
   if (!item)
-    return ZIP_ERR_PARAM;
+    return NS_ERROR_ILLEGAL_VALUE;
   if (!mFd)
-    return ZIP_ERR_GENERAL;
+    return NS_ERROR_FAILURE;
 
   // Directory extraction is handled in nsJAR::Extract,
   // so the item to be extracted should never be a directory
-  PR_ASSERT(!item->isDirectory);
-
-  //-- move to the start of file's data
-  if (SeekToItem(item, mFd) != ZIP_OK)
-    return ZIP_ERR_CORRUPT;
+  PR_ASSERT(!item->IsDirectory());
 
   nsresult rv;
 
   //-- extract the file using the appropriate method
-  switch(item->compression)
+  switch(item->Compression())
   {
     case STORED:
-      rv = CopyItemToDisk(item->size, item->crc32, aFd);
+      rv = CopyItemToDisk(item, aFd);
       break;
 
     case DEFLATED:
@@ -662,16 +360,16 @@ nsresult nsZipArchive::ExtractFile(nsZipItem *item, const char *outname,
 
     default:
       //-- unsupported compression type
-      rv = ZIP_ERR_UNSUPPORTED;
+      rv = NS_ERROR_NOT_IMPLEMENTED;
   }
 
   //-- delete the file on errors, or resolve symlink if needed
   if (aFd) {
     PR_Close(aFd);
-    if (rv != ZIP_OK)
+    if (rv != NS_OK)
       PR_Delete(outname);
 #if defined(XP_UNIX) || defined(XP_BEOS)
-    else if (item->isSymlink)
+    else if (item->IsSymlink())
       rv = ResolveSymlink(outname);
 #endif
   }
@@ -686,7 +384,7 @@ PRInt32
 nsZipArchive::FindInit(const char * aPattern, nsZipFind **aFind)
 {
   if (!aFind)
-    return ZIP_ERR_PARAM;
+    return NS_ERROR_ILLEGAL_VALUE;
 
   // null out param in case an error happens
   *aFind = NULL;
@@ -696,7 +394,7 @@ nsZipArchive::FindInit(const char * aPattern, nsZipFind **aFind)
 
   // Create synthetic directory entries on demand
   nsresult rv = BuildSynthetics();
-  if (rv != ZIP_OK)
+  if (rv != NS_OK)
     return rv;
 
   // validate the pattern
@@ -705,7 +403,7 @@ nsZipArchive::FindInit(const char * aPattern, nsZipFind **aFind)
     switch (NS_WildCardValid((char*)aPattern))
     {
       case INVALID_SXP:
-        return ZIP_ERR_PARAM;
+        return NS_ERROR_ILLEGAL_VALUE;
 
       case NON_SXP:
         regExp = PR_FALSE;
@@ -718,21 +416,21 @@ nsZipArchive::FindInit(const char * aPattern, nsZipFind **aFind)
       default:
         // undocumented return value from RegExpValid!
         PR_ASSERT(PR_FALSE);
-        return ZIP_ERR_PARAM;
+        return NS_ERROR_ILLEGAL_VALUE;
     }
 
     pattern = PL_strdup(aPattern);
     if (!pattern)
-      return ZIP_ERR_MEMORY;
+      return NS_ERROR_OUT_OF_MEMORY;
   }
 
   *aFind = new nsZipFind(this, pattern, regExp);
   if (!*aFind) {
-    PR_FREEIF(pattern);
-    return ZIP_ERR_MEMORY;
+    PL_strfree(pattern);
+    return NS_ERROR_OUT_OF_MEMORY;
   }
 
-  return ZIP_OK;
+  return NS_OK;
 }
 
 
@@ -740,12 +438,13 @@ nsZipArchive::FindInit(const char * aPattern, nsZipFind **aFind)
 //---------------------------------------------
 // nsZipFind::FindNext
 //---------------------------------------------
-nsresult nsZipFind::FindNext(const char ** aResult)
+nsresult nsZipFind::FindNext(const char ** aResult, PRUint16 *aNameLen)
 {
-  if (!mArchive || !aResult)
-    return ZIP_ERR_PARAM;
+  if (!mArchive || !aResult || !aNameLen)
+    return NS_ERROR_ILLEGAL_VALUE;
 
   *aResult = 0;
+  *aNameLen = 0;
 
   // we start from last match, look for next
   while (mSlot < ZIP_TABSIZE)
@@ -759,22 +458,24 @@ nsresult nsZipFind::FindNext(const char ** aResult)
     else if (!mPattern)
       found = PR_TRUE;            // always match
     else if (mRegExp)
-      found = (NS_WildCardMatch(mItem->name, mPattern, PR_FALSE) == MATCH);
+    {
+      char buf[kMaxNameLength+1];
+      memcpy(buf, mItem->Name(), mItem->nameLength);
+      buf[mItem->nameLength]='\0';
+      found = (NS_WildCardMatch(buf, mPattern, PR_FALSE) == MATCH);
+    }
     else
-#if defined(STANDALONE) && defined(XP_MAC)
-      // simulate <regexp>* matches
-      found = (strncmp(mItem->name, mPattern, strlen(mPattern)) == 0);
-#else
-      found = (PL_strcmp(mItem->name, mPattern) == 0);
-#endif
-
+      found = ((mItem->nameLength == strlen(mPattern)) &&
+               (memcmp(mItem->Name(), mPattern, mItem->nameLength) == 0));
     if (found) {
-      *aResult = mItem->name;
-      return ZIP_OK;
+      // Need also to return the name length, as it is NOT zero-terminatdd...
+      *aResult = mItem->Name();
+      *aNameLen = mItem->nameLength;
+      return NS_OK;
     }
   }
 
-  return ZIP_ERR_FNF;
+  return NS_ERROR_FILE_TARGET_DOES_NOT_EXIST;
 }
 
 #if defined(XP_UNIX) || defined(XP_BEOS)
@@ -785,7 +486,7 @@ static nsresult ResolveSymlink(const char *path)
 {
   PRFileDesc * fIn = PR_Open(path, PR_RDONLY, 0000);
   if (!fIn)
-    return ZIP_ERR_DISK;
+    return NS_ERROR_FILE_DISK_FULL;
 
   char buf[PATH_MAX+1];
   PRInt32 length = PR_Read(fIn, (void*)buf, PATH_MAX);
@@ -795,9 +496,9 @@ static nsresult ResolveSymlink(const char *path)
     || ((buf[length] = 0, PR_Delete(path)) != 0)
     || (symlink(buf, path) != 0))
   {
-     return ZIP_ERR_DISK;
+     return NS_ERROR_FILE_DISK_FULL;
   }
-  return ZIP_OK;
+  return NS_OK;
 }
 #endif
 
@@ -805,22 +506,15 @@ static nsresult ResolveSymlink(const char *path)
 //      nsZipArchive  --  private implementation
 //***********************************************************
 
-#define BR_BUF_SIZE 1024 /* backward read buffer size */
-
 //---------------------------------------------
 //  nsZipArchive::CreateZipItem
 //---------------------------------------------
-nsZipItem* nsZipArchive::CreateZipItem(PRUint16 namelen)
+nsZipItem* nsZipArchive::CreateZipItem()
 {
-  // sizeof(nsZipItem) includes space for name's null byte
-#ifndef STANDALONE
   // Arena allocate the nsZipItem
   void *mem;
-  PL_ARENA_ALLOCATE(mem, &mArena, sizeof(nsZipItem)+namelen);
+  PL_ARENA_ALLOCATE(mem, &mArena, sizeof(nsZipItem));
   return (nsZipItem*)mem;
-#else
-  return (nsZipItem*)malloc(sizeof(nsZipItem)+namelen);
-#endif
 }
 
 //---------------------------------------------
@@ -828,165 +522,65 @@ nsZipItem* nsZipArchive::CreateZipItem(PRUint16 namelen)
 //---------------------------------------------
 nsresult nsZipArchive::BuildFileList()
 {
-  PRUint8   buf[4*BR_BUF_SIZE];
+  // Get archive size using end pos
+  PRUint8* buf;
+  PRUint8* startp = mFd->mFileData;
+  PRUint8* endp = startp + mFd->mLen;
 
-  //-----------------------------------------------------------------------
-  // locate the central directory via the End record
-  //-----------------------------------------------------------------------
-
-  //-- get archive size using end pos
-  PRInt32  pos = PR_Seek(mFd, 0, PR_SEEK_END);
-#ifndef STANDALONE
-  if (pos <= 0)
-#else
-  if (pos || ((pos = ftell(mFd)) <= 0))
-#endif
-    return ZIP_ERR_CORRUPT;
-
-  PRBool bEndsigFound = PR_FALSE;
-  while (!bEndsigFound)
+  for (buf = endp - ZIPEND_SIZE; xtolong(buf) != ENDSIG; buf--)
   {
-    //-- read backwards in 1K-sized chunks (unless file is less than 1K)
-    PRInt32  bufsize = pos > BR_BUF_SIZE ? BR_BUF_SIZE : pos;
-    pos -= bufsize;
-
-    if (!ZIP_Seek(mFd, pos, PR_SEEK_SET))
-      return ZIP_ERR_CORRUPT;
-
-    if (PR_Read(mFd, buf, bufsize) != (READTYPE)bufsize)
-      return ZIP_ERR_CORRUPT;
-
-    //-- scan for ENDSIG
-    PRUint8 *endp = buf + bufsize;
-    for (endp -= ZIPEND_SIZE; endp >= buf; endp--)
-    {
-      if (xtolong(endp) == ENDSIG)
-      { 
-        //-- Seek to start of central directory
-        PRInt32 central = xtolong(((ZipEnd *) endp)->offset_central_dir);
-        if (!ZIP_Seek(mFd, central, PR_SEEK_SET))
-          return ZIP_ERR_CORRUPT;
-
-        bEndsigFound = PR_TRUE;
-        break;
-      }
+    if (buf == startp) {
+      // We're at the beginning of the file, and still no sign
+      // of the end signature.  File must be corrupted!
+      return NS_ERROR_FILE_CORRUPTED;
     }
+  }
+  PRUint32 centralOffset = xtolong(((ZipEnd *)buf)->offset_central_dir);
 
-    if (bEndsigFound)
-      break;
-
-    if (pos <= 0)
-      //-- We're at the beginning of the file, and still no sign
-      //-- of the end signature.  File must be corrupted!
-      return ZIP_ERR_CORRUPT;
-
-    //-- backward read must overlap ZipEnd length
-    pos += ZIPEND_SIZE;
-
-  } /* while looking for end signature */
-
-
-  //-------------------------------------------------------
-  // read the central directory headers
-  //-------------------------------------------------------
-  PRInt32 byteCount = PR_Read(mFd, &buf, sizeof(buf));
-  pos = 0;
+  //-- Read the central directory headers
+  buf = startp + centralOffset;
+  if (endp - buf < PRInt32(sizeof(PRUint32)))
+      return NS_ERROR_FILE_CORRUPTED;
   PRUint32 sig = xtolong(buf);
   while (sig == CENTRALSIG) {
-    //-- make sure we've read enough
-    if (byteCount - pos < ZIPCENTRAL_SIZE)
-      return ZIP_ERR_CORRUPT;
+    // Make sure there is enough data available.
+    if (endp - buf < ZIPCENTRAL_SIZE)
+      return NS_ERROR_FILE_CORRUPTED;
 
-    //-------------------------------------------------------
-    // read the fixed-size data
-    //-------------------------------------------------------
-    ZipCentral* central = (ZipCentral*)(buf+pos);
+    // Read the fixed-size data.
+    ZipCentral* central = (ZipCentral*)buf;
 
     PRUint16 namelen = xtoint(central->filename_len);
     PRUint16 extralen = xtoint(central->extrafield_len);
     PRUint16 commentlen = xtoint(central->commentfield_len);
 
-    //-- sanity check variable sizes and refuse to deal with
-    //-- anything too big: it's likely a corrupt archive
-    if (namelen > BR_BUF_SIZE || extralen > BR_BUF_SIZE || commentlen > 2*BR_BUF_SIZE)
-      return ZIP_ERR_CORRUPT;
+    // Point to the next item at the top of loop
+    buf += ZIPCENTRAL_SIZE + namelen + extralen + commentlen;
 
-    nsZipItem* item = CreateZipItem(namelen);
+    // Sanity check variable sizes and refuse to deal with
+    // anything too big: it's likely a corrupt archive.
+    if (namelen > kMaxNameLength || buf >= endp)
+      return NS_ERROR_FILE_CORRUPTED;
+
+    nsZipItem* item = CreateZipItem();
     if (!item)
-      return ZIP_ERR_MEMORY;
+      return NS_ERROR_OUT_OF_MEMORY;
 
-    item->headerOffset  = xtolong(central->localhdr_offset);
-    item->dataOffset    = 0;
-    item->size          = xtolong(central->size);
-    item->realsize      = xtolong(central->orglen);
-    item->crc32         = xtolong(central->crc32);
-    item->time          = xtoint(central->time);
-    item->date          = xtoint(central->date);
-    item->isSynthetic   = PR_FALSE;
-    item->hasDataOffset = PR_FALSE;
+    item->central = central;
+    item->nameLength = namelen;
+    item->isSynthetic = false;
 
-    PRUint16 compression = xtoint(central->method);
-    item->compression   = (compression < UNSUPPORTED) ? (PRUint8)compression
-                                                      : UNSUPPORTED;
-
-    item->mode = ExtractMode(central->external_attributes);
-#if defined(XP_UNIX) || defined(XP_BEOS)
-    // Check if item is a symlink
-    item->isSymlink = IsSymlink(central->external_attributes);
-#endif
-
-    pos += ZIPCENTRAL_SIZE;
-
-    //-------------------------------------------------------
-    // Make sure that remainder of this record (name, comments, extra)
-    // and the next ZipCentral is all in the buffer
-    //-------------------------------------------------------
-    PRInt32 leftover = byteCount - pos;
-    if (leftover < (namelen + extralen + commentlen + ZIPCENTRAL_SIZE)) {
-      //-- not enough data left to process at top of loop.
-      //-- move leftover and read more
-      memcpy(buf, buf+pos, leftover);
-      byteCount = leftover + PR_Read(mFd, buf+leftover, sizeof(buf)-leftover);
-      pos = 0;
-
-      if (byteCount < (namelen + extralen + commentlen + sizeof(sig))) {
-        // truncated file
-        return ZIP_ERR_CORRUPT;
-      }
-    }
-
-    //-------------------------------------------------------
-    // get the item name
-    //-------------------------------------------------------
-    memcpy(item->name, buf+pos, namelen);
-    item->name[namelen] = 0;
-
-    //-- an item whose name ends with '/' is a directory
-    item->isDirectory = ('/' == item->name[namelen - 1]);
-
-    //-- add item to file table
-    //-- note that an explicit entry for a directory will override
-    //-- a fake entry created for that directory (as in the case
-    //-- of processing foo/bar.txt and then foo/) -- this will
-    //-- preserve an explicit directory's metadata at the cost of
-    //-- an extra nsZipItem (and that only happens if we process a
-    //-- file inside that directory before processing the directory
-    //-- entry itself)
-    PRUint32 hash = HashName(item->name);
+    // Add item to file table
+    PRUint32 hash = HashName(item->Name(), namelen);
     item->next = mFiles[hash];
     mFiles[hash] = item;
 
-    //-------------------------------------------------------
-    // set up to process the next item at the top of loop
-    //-------------------------------------------------------
-    pos += namelen + extralen + commentlen;
-    sig = xtolong(buf+pos);
+    sig = xtolong(buf);
   } /* while reading central directory records */
 
   if (sig != ENDSIG)
-    return ZIP_ERR_CORRUPT;
-
-  return ZIP_OK;
+    return NS_ERROR_FILE_CORRUPTED;
+  return NS_OK;
 }
 
 //---------------------------------------------
@@ -995,8 +589,8 @@ nsresult nsZipArchive::BuildFileList()
 nsresult nsZipArchive::BuildSynthetics()
 {
   if (mBuiltSynthetics)
-    return ZIP_OK;
-  mBuiltSynthetics = PR_TRUE;
+    return NS_OK;
+  mBuiltSynthetics = true;
 
   // Create synthetic entries for any missing directories.
   // Do this when all ziptable has scanned to prevent double entries.
@@ -1013,64 +607,40 @@ nsresult nsZipArchive::BuildSynthetics()
       //-- create already exists
       //-- start just before the last char so as to not add the item
       //-- twice if it's a directory
-      PRUint16 namelen = strlen(item->name);
-      for (char* p = item->name + namelen - 2; p >= item->name; p--)
+      PRUint16 namelen = item->nameLength;
+      const char *name = item->Name();
+      for (PRUint16 dirlen = namelen - 1; dirlen > 0; dirlen--)
       {
-        if ('/' != *p)
+        if (name[dirlen-1] != '/')
           continue;
 
-        // See whether we need to create any more implicit directories,
-        // because if we don't we can avoid a lot of work.
-        // We can even avoid (de)allocating space for a bogus dirname with
-        // a little trickery -- save the char at item->name[dirnamelen],
-        // set it to 0, compare the strings, and restore the saved
-        // char when done
-        const PRUint32 dirnamelen = p + 1 - item->name;
-        const char savedChar = item->name[dirnamelen];
-        item->name[dirnamelen] = 0;
-
-        // Is the directory in the file table?
-        PRUint32 hash = HashName(item->name);
+        // Is the directory already in the file table?
+        PRUint32 hash = HashName(item->Name(), dirlen);
         PRBool found = PR_FALSE;
         for (nsZipItem* zi = mFiles[hash]; zi != NULL; zi = zi->next)
         {
-          if (0 == strcmp(item->name, zi->name))
+          if ((dirlen == zi->nameLength) &&
+              (0 == memcmp(item->Name(), zi->Name(), dirlen)))
           {
             // we've already added this dir and all its parents
             found = PR_TRUE;
             break;
           }
         }
-
-        // restore the char immediately
-        item->name[dirnamelen] = savedChar;
-
         // if the directory was found, break out of the directory
         // creation loop now that we know all implicit directories
         // are there -- otherwise, start creating the zip item
         if (found)
           break;
 
-        nsZipItem* diritem = CreateZipItem(dirnamelen);
+        nsZipItem* diritem = CreateZipItem();
         if (!diritem)
-          return ZIP_ERR_MEMORY;
+          return NS_ERROR_OUT_OF_MEMORY;
 
-        memcpy(diritem->name, item->name, dirnamelen);
-        diritem->name[dirnamelen] = 0;
-
-        diritem->isDirectory = PR_TRUE;
-        diritem->isSynthetic = PR_TRUE;
-        diritem->compression = STORED;
-        diritem->size = diritem->realsize = 0;
-        diritem->crc32 = 0;
-        diritem->mode = 0755;
-
-        // Set an obviously wrong last-modified date/time, because
-        // finding something more accurate like the most recent
-        // last-modified date/time of the dir's contents is a lot
-        // of effort.  The date/time corresponds to 1980-01-01 00:00.
-        diritem->time = 0;
-        diritem->date = 1 + (1 << 5) + (0 << 9);
+        // Point to the central record of the original item for the name part.
+        diritem->central =  item->central;
+        diritem->nameLength = dirlen;
+        diritem->isSynthetic = true;
 
         // add diritem to the file table
         diritem->next = mFiles[hash];
@@ -1078,212 +648,138 @@ nsresult nsZipArchive::BuildSynthetics()
       } /* end processing of dirs in item's name */
     }
   }
-  return ZIP_OK;
+  return NS_OK;
 }
 
+nsZipHandle* nsZipArchive::GetFD()
+{
+  if (!mFd)
+    return NULL;
+  return mFd.get();
+}
 
 //---------------------------------------------
-// nsZipArchive::SeekToItem
+// nsZipArchive::GetData
 //---------------------------------------------
-nsresult  nsZipArchive::SeekToItem(nsZipItem* aItem, PRFileDesc* aFd)
+PRUint8* nsZipArchive::GetData(nsZipItem* aItem)
 {
   PR_ASSERT (aItem);
 
-  //-- the first time an item is used we need to calculate its offset
-  if (!aItem->hasDataOffset)
-  {
-    //-- read local header to get variable length values and calculate
-    //-- the real data offset
-    //--
-    //-- NOTE: extralen is different in central header and local header
-    //--       for archives created using the Unix "zip" utility. To set
-    //--       the offset accurately we need the _local_ extralen.
-    if (!ZIP_Seek(aFd, aItem->headerOffset, PR_SEEK_SET))
-      return ZIP_ERR_CORRUPT;
+  //-- read local header to get variable length values and calculate
+  //-- the real data offset
+  PRUint32 len = mFd->mLen;
+  PRUint8* data = mFd->mFileData;
+  PRUint32 offset = aItem->LocalOffset();
+  if (offset + ZIPLOCAL_SIZE > len)
+    return nsnull;
 
-    ZipLocal   Local;
-    if ((PR_Read(aFd, (char*)&Local, ZIPLOCAL_SIZE) != (READTYPE) ZIPLOCAL_SIZE) || 
-        (xtolong(Local.signature) != LOCALSIG))
-    {
-      //-- read error or local header not found
-      return ZIP_ERR_CORRUPT;
-    }
+  // -- check signature before using the structure, in case the zip file is corrupt
+  ZipLocal* Local = (ZipLocal*)(data + offset);
+  if ((xtolong(Local->signature) != LOCALSIG))
+    return nsnull;
 
-    aItem->dataOffset = aItem->headerOffset +
-                        ZIPLOCAL_SIZE +
-                        xtoint(Local.filename_len) +
-                        xtoint(Local.extrafield_len);
-    aItem->hasDataOffset = PR_TRUE;
-  }
+  //-- NOTE: extralen is different in central header and local header
+  //--       for archives created using the Unix "zip" utility. To set
+  //--       the offset accurately we need the _local_ extralen.
+  offset += ZIPLOCAL_SIZE +
+            xtoint(Local->filename_len) +
+            xtoint(Local->extrafield_len);
 
-  //-- move to start of file in archive
-  if (!ZIP_Seek(aFd, aItem->dataOffset, PR_SEEK_SET))
-    return  ZIP_ERR_CORRUPT;
+  // -- check if there is enough source data in the file
+  if (offset + aItem->Size() > len)
+    return nsnull;
 
-  return ZIP_OK;
+  return data + offset;
 }
 
 //---------------------------------------------
 // nsZipArchive::CopyItemToDisk
 //---------------------------------------------
 nsresult
-nsZipArchive::CopyItemToDisk(PRUint32 itemSize, PRUint32 itemCrc, PRFileDesc* outFD)
-/*
- * This function copies an archive item to disk, to the
- * file specified by outFD. If outFD is zero, the extracted data is
- * not written, only checked for CRC, so this is in effect same as 'Test'.
- */
+nsZipArchive::CopyItemToDisk(nsZipItem *item, PRFileDesc* outFD)
 {
-  PRUint32    chunk, pos, crc;
-  char buf[ZIP_BUFLEN];
+  PR_ASSERT(item);
 
-  //-- initialize crc
-  crc = crc32(0L, Z_NULL, 0);
+  //-- get to the start of file's data
+  const PRUint8* itemData = GetData(item);
+  if (!itemData)
+    return NS_ERROR_FILE_CORRUPTED;
 
-  //-- copy chunks until file is done
-  for (pos = 0; pos < itemSize; pos += chunk)
+  if (outFD && PR_Write(outFD, itemData, item->Size()) < (READTYPE)item->Size())
   {
-    chunk = (itemSize - pos < ZIP_BUFLEN) ? (itemSize - pos) : ZIP_BUFLEN;
-    
-    if (PR_Read(mFd, buf, chunk) != (READTYPE)chunk)
-    {
-      //-- unexpected end of data in archive
-      return ZIP_ERR_CORRUPT;
-    }
-
-    //-- incrementally update crc32
-    crc = crc32(crc, (const unsigned char*)buf, chunk);
-
-    if (outFD && PR_Write(outFD, buf, chunk) < (READTYPE)chunk)
-    {
-      //-- Couldn't write all the data (disk full?)
-      return ZIP_ERR_DISK;
-    }
+    //-- Couldn't write all the data (disk full?)
+    return NS_ERROR_FILE_DISK_FULL;
   }
 
+  //-- Calculate crc
+  PRUint32 crc = crc32(0L, (const unsigned char*)itemData, item->Size());
   //-- verify crc32
-  if (crc != itemCrc)
-      return ZIP_ERR_CORRUPT;
+  if (crc != item->CRC32())
+      return NS_ERROR_FILE_CORRUPTED;
 
-  return ZIP_OK;
+  return NS_OK;
 }
 
 
 //---------------------------------------------
 // nsZipArchive::InflateItem
 //---------------------------------------------
-nsresult nsZipArchive::InflateItem(const nsZipItem* aItem, PRFileDesc* outFD)
+nsresult nsZipArchive::InflateItem(nsZipItem * item, PRFileDesc* outFD)
 /*
  * This function inflates an archive item to disk, to the
  * file specified by outFD. If outFD is zero, the extracted data is
  * not written, only checked for CRC, so this is in effect same as 'Test'.
  */
 {
-  PR_ASSERT(aItem);
-
+  PR_ASSERT(item);
   //-- allocate deflation buffers
-  Bytef inbuf[ZIP_BUFLEN];
   Bytef outbuf[ZIP_BUFLEN];
 
   //-- set up the inflate
   z_stream    zs;
   nsresult status = gZlibInit(&zs);
-  if (status != ZIP_OK)
-    return ZIP_ERR_GENERAL;
+  if (status != NS_OK)
+    return NS_ERROR_FAILURE;
 
   //-- inflate loop
-  zs.next_out = outbuf;
-  zs.avail_out = ZIP_BUFLEN;
+  zs.avail_in = item->Size();
+  zs.next_in = (Bytef*)GetData(item);
+  if (!zs.next_in)
+    return NS_ERROR_FILE_CORRUPTED;
 
-  PRUint32  size = aItem->size;
-  PRUint32  outpos = 0;
   PRUint32  crc = crc32(0L, Z_NULL, 0);
-  int       zerr = Z_OK;
+  int zerr = Z_OK;
   while (zerr == Z_OK)
   {
-    PRBool      bRead = PR_FALSE;
-    PRBool      bWrote= PR_FALSE;
+    zs.next_out = outbuf;
+    zs.avail_out = ZIP_BUFLEN;
 
-    if (zs.avail_in == 0 && zs.total_in < size)
+    zerr = inflate(&zs, Z_PARTIAL_FLUSH);
+    if (zerr != Z_OK && zerr != Z_STREAM_END)
     {
-      //-- no data to inflate yet still more in file:
-      //-- read another chunk of compressed data
-      PRUint32 chunk = (size-zs.total_in < ZIP_BUFLEN) ? size-zs.total_in : ZIP_BUFLEN;
-
-      if (PR_Read(mFd, inbuf, chunk) != (READTYPE)chunk)
-      {
-        //-- unexpected end of data
-        status = ZIP_ERR_CORRUPT;
-        break;
-      }
-
-      zs.next_in  = inbuf;
-      zs.avail_in = chunk;
-      bRead       = PR_TRUE;
+      status = (zerr == Z_MEM_ERROR) ? NS_ERROR_OUT_OF_MEMORY : NS_ERROR_FILE_CORRUPTED;
+      break;
     }
+    PRUint32 count = zs.next_out - outbuf;
 
-    if (zs.avail_out == 0)
+    //-- incrementally update crc32
+    crc = crc32(crc, (const unsigned char*)outbuf, count);
+
+    if (outFD && PR_Write(outFD, outbuf, count) < (READTYPE)count)
     {
-      //-- write inflated buffer to disk and make space
-      if (outFD && PR_Write(outFD, outbuf, ZIP_BUFLEN) < ZIP_BUFLEN)
-      {
-        //-- Couldn't write all the data (disk full?)
-        status = ZIP_ERR_DISK;
-        break;
-      }
-
-      outpos = zs.total_out;
-      zs.next_out  = outbuf;
-      zs.avail_out = ZIP_BUFLEN;
-      bWrote       = PR_TRUE;
+      status = NS_ERROR_FILE_DISK_FULL;
+      break;
     }
-
-    if(bRead || bWrote)
-    {
-      Bytef* old_next_out = zs.next_out;
-
-      zerr = inflate(&zs, Z_PARTIAL_FLUSH);
-
-      //-- incrementally update crc32
-      crc = crc32(crc, (const unsigned char*)old_next_out, zs.next_out - old_next_out);
-    }
-    else
-      zerr = Z_STREAM_END;
-
-#if defined STANDALONE && defined XP_WIN
-    ProcessWindowsMessages();
-#endif
   } // while
 
-  //-- verify crc32
-  if ((status == ZIP_OK) && (crc != aItem->crc32))
-  {
-      status = ZIP_ERR_CORRUPT;
-      goto cleanup;
-  }
-
-  //-- write last inflated bit to disk
-  if (zerr == Z_STREAM_END && outpos < zs.total_out)
-  {
-    PRUint32 chunk = zs.total_out - outpos;
-    if (outFD && PR_Write(outFD, outbuf, chunk) < (READTYPE)chunk)
-      status = ZIP_ERR_DISK;
-  }
-
-  //-- convert zlib error to return value
-  if (status == ZIP_OK && zerr != Z_OK && zerr != Z_STREAM_END)
-  {
-    status = (zerr == Z_MEM_ERROR) ? ZIP_ERR_MEMORY : ZIP_ERR_CORRUPT;
-  }
-
-  //-- if found no errors make sure we've converted the whole thing
-  PR_ASSERT(status != ZIP_OK || zs.total_in == aItem->size);
-  PR_ASSERT(status != ZIP_OK || zs.total_out == aItem->realsize);
-
-cleanup:
   //-- free zlib internal state
   inflateEnd(&zs);
 
+  //-- verify crc32
+  if ((status == NS_OK) && (crc != item->CRC32()))
+  {
+    status = NS_ERROR_FILE_CORRUPTED;
+  }
   return status;
 }
 
@@ -1292,16 +788,12 @@ cleanup:
 //------------------------------------------
 
 nsZipArchive::nsZipArchive() :
-#ifdef STANDALONE
-    kMagic(ZIP_MAGIC),
-#endif
-    mFd(0),
-    mBuiltSynthetics(PR_FALSE)
+  mBuiltSynthetics(false)
 {
   MOZ_COUNT_CTOR(nsZipArchive);
 
   // initialize the table to NULL
-  memset(mFiles, 0, sizeof mFiles);
+  memset(mFiles, 0, sizeof(mFiles));
 }
 
 nsZipArchive::~nsZipArchive()
@@ -1317,9 +809,6 @@ nsZipArchive::~nsZipArchive()
 //------------------------------------------
 
 nsZipFind::nsZipFind(nsZipArchive* aZip, char* aPattern, PRBool aRegExp) : 
-#ifdef STANDALONE
-  kMagic(ZIPFIND_MAGIC),
-#endif
   mArchive(aZip),
   mPattern(aPattern),
   mItem(0),
@@ -1331,7 +820,7 @@ nsZipFind::nsZipFind(nsZipArchive* aZip, char* aPattern, PRBool aRegExp) :
 
 nsZipFind::~nsZipFind()
 {
-  PR_FREEIF(mPattern);
+  PL_strfree(mPattern);
 
   MOZ_COUNT_DTOR(nsZipFind);
 }
@@ -1345,13 +834,15 @@ nsZipFind::~nsZipFind()
  *
  * returns a hash key for the entry name 
  */
-static PRUint32 HashName(const char* aName)
+static PRUint32 HashName(const char* aName, PRUint16 len)
 {
   PR_ASSERT(aName != 0);
 
+  const PRUint8* p = (const PRUint8*)aName;
+  const PRUint8* endp = p + len;
   PRUint32 val = 0;
-  for (PRUint8* c = (PRUint8*)aName; *c != 0; c++) {
-    val = val*37 + *c;
+  while (p != endp) {
+    val = val*37 + *p++;
   }
 
   return (val % ZIP_TABSIZE);
@@ -1363,7 +854,7 @@ static PRUint32 HashName(const char* aName)
  *  Converts a two byte ugly endianed integer
  *  to our platform's integer.
  */
-static PRUint16 xtoint (unsigned char *ii)
+static PRUint16 xtoint (const unsigned char *ii)
 {
   return (PRUint16) ((ii [0]) | (ii [1] << 8));
 }
@@ -1374,7 +865,7 @@ static PRUint16 xtoint (unsigned char *ii)
  *  Converts a four byte ugly endianed integer
  *  to our platform's integer.
  */
-static PRUint32 xtolong (unsigned char *ll)
+static PRUint32 xtolong (const unsigned char *ll)
 {
   return (PRUint32)( (ll [0] <<  0) |
                      (ll [1] <<  8) |
@@ -1382,29 +873,56 @@ static PRUint32 xtolong (unsigned char *ll)
                      (ll [3] << 24) );
 }
 
-/*
- * ExtractMode
- *
- * Extracts bits 17-24 from a 32-bit unsigned long
- * representation of the external attributes field.
- * Subsequently it tacks on the implicit user-read
- * bit.
- */
-static PRUint16 ExtractMode(unsigned char *ll)
+PRUint32 const nsZipItem::LocalOffset()
 {
-    return ((PRUint16)(ll[2])) | 0x0100;
+  return xtolong(central->localhdr_offset);
+}
+
+PRUint32 const nsZipItem::Size()
+{
+  return isSynthetic ? 0 : xtolong(central->size);
+}
+
+PRUint32 const nsZipItem::RealSize()
+{
+  return isSynthetic ? 0 : xtolong(central->orglen);
+}
+
+PRUint32 const nsZipItem::CRC32()
+{
+  return isSynthetic ? 0 : xtolong(central->crc32);
+}
+
+PRUint16 const nsZipItem::Date()
+{
+  return isSynthetic ? kSyntheticDate : xtoint(central->date);
+}
+
+PRUint16 const nsZipItem::Time()
+{
+  return isSynthetic ? kSyntheticTime : xtoint(central->time);
+}
+
+PRUint16 const nsZipItem::Compression()
+{
+  return isSynthetic ? STORED : xtoint(central->method);
+}
+
+bool const nsZipItem::IsDirectory()
+{
+  return isSynthetic || ((nameLength > 0) && ('/' == Name()[nameLength - 1]));
+}
+
+PRUint16 const nsZipItem::Mode()
+{
+  if (isSynthetic) return 0755;
+  return ((PRUint16)(central->external_attributes[2]) | 0x100);
 }
 
 #if defined(XP_UNIX) || defined(XP_BEOS)
-/*
- *
- *  Return true if the attributes are for a symbolic link
- *
- */
-
-static PRBool IsSymlink(unsigned char *ll)
+bool const nsZipItem::IsSymlink()
 {
-  return ((xtoint(ll+2) & S_IFMT) == S_IFLNK);
+  if (isSynthetic) return false;
+  return (xtoint(central->external_attributes+2) & S_IFMT) == S_IFLNK;
 }
 #endif
-

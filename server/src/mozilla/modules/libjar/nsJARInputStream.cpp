@@ -23,6 +23,7 @@
  *
  * Contributor(s):
  *   Mitch Stoltz <mstoltz@netscape.com>
+ *   Taras Glek <tglek@mozilla.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -45,6 +46,7 @@
 #include "nsNetUtil.h"
 #include "nsEscape.h"
 #include "nsIFile.h"
+#include "nsDebug.h"
 
 /*---------------------------------------------
  *  nsISupports implementation
@@ -57,68 +59,55 @@ NS_IMPL_THREADSAFE_ISUPPORTS1(nsJARInputStream, nsIInputStream)
  *--------------------------------------------------------*/
 
 nsresult
-nsJARInputStream::InitFile(nsZipArchive* aZip, nsZipItem *item, PRFileDesc *fd)
+nsJARInputStream::InitFile(nsJAR *aJar, nsZipItem *item)
 {
-    nsresult rv;
-
-    // Keep the file handle, even on failure
-    mFd = fd;
-      
-    NS_ENSURE_ARG_POINTER(aZip);
-    NS_ENSURE_ARG_POINTER(item);
-    NS_ENSURE_ARG_POINTER(fd);
+    nsresult rv = NS_OK;
+    NS_ABORT_IF_FALSE(aJar, "Argument may not be null");
+    NS_ABORT_IF_FALSE(item, "Argument may not be null");
 
     // Mark it as closed, in case something fails in initialisation
-    mClosed = PR_TRUE;
-
-    // Keep the important bits of nsZipItem only
-    mInSize = item->size;
- 
+    mMode = MODE_CLOSED;
     //-- prepare for the compression type
-    switch (item->compression) {
+    switch (item->Compression()) {
        case STORED: 
+           mMode = MODE_COPY;
            break;
 
        case DEFLATED:
-           mInflate = (InflateStruct *) PR_Malloc(sizeof(InflateStruct));
-           NS_ENSURE_TRUE(mInflate, NS_ERROR_OUT_OF_MEMORY);
+           rv = gZlibInit(&mZs);
+           NS_ENSURE_SUCCESS(rv, rv);
     
-           rv = gZlibInit(&(mInflate->mZs));
-           NS_ENSURE_SUCCESS(rv, NS_ERROR_OUT_OF_MEMORY);
-    
-           mInflate->mOutSize = item->realsize;
-           mInflate->mInCrc = item->crc32;
-           mInflate->mOutCrc = crc32(0L, Z_NULL, 0);
+           mMode = MODE_INFLATE;
+           mInCrc = item->CRC32();
+           mOutCrc = crc32(0L, Z_NULL, 0);
            break;
 
        default:
            return NS_ERROR_NOT_IMPLEMENTED;
     }
    
-    //-- Set filepointer to start of item
-    rv = aZip->SeekToItem(item, mFd);
-    NS_ENSURE_SUCCESS(rv, NS_ERROR_FILE_CORRUPTED);
-        
-    // Open for reading
-    mClosed = PR_FALSE;
-    mCurPos = 0;
+    // Must keep handle to filepointer and mmap structure as long as we need access to the mmapped data
+    mFd = aJar->mZip.GetFD();
+    mZs.next_in = aJar->mZip.GetData(item);
+    mZs.avail_in = item->Size();
+    mOutSize = item->RealSize();
+    mZs.total_out = 0;
     return NS_OK;
 }
 
 nsresult
-nsJARInputStream::InitDirectory(nsZipArchive* aZip,
+nsJARInputStream::InitDirectory(nsJAR* aJar,
                                 const nsACString& aJarDirSpec,
                                 const char* aDir)
 {
-    NS_ENSURE_ARG_POINTER(aZip);
-    NS_ENSURE_ARG_POINTER(aDir);
+    NS_ABORT_IF_FALSE(aJar, "Argument may not be null");
+    NS_ABORT_IF_FALSE(aDir, "Argument may not be null");
 
     // Mark it as closed, in case something fails in initialisation
-    mClosed = PR_TRUE;
-    mDirectory = PR_TRUE;
+    mMode = MODE_CLOSED;
     
     // Keep the zipReader for getting the actual zipItems
-    mZip = aZip;
+    mJar = aJar;
     nsZipFind *find;
     nsresult rv;
     // We can get aDir's contents as strings via FindEntries
@@ -156,13 +145,14 @@ nsJARInputStream::InitDirectory(nsZipArchive* aZip,
     }
     nsCAutoString pattern = escDirName + NS_LITERAL_CSTRING("?*~") +
                             escDirName + NS_LITERAL_CSTRING("?*/?*");
-    rv = aZip->FindInit(pattern.get(), &find);
+    rv = mJar->mZip.FindInit(pattern.get(), &find);
     if (NS_FAILED(rv)) return rv;
 
     const char *name;
-    while ((rv = find->FindNext( &name )) == NS_OK) {
-        // No need to copy string, just share the one from nsZipArchive
-        mArray.AppendCString(nsDependentCString(name));
+    PRUint16 nameLen;
+    while ((rv = find->FindNext( &name, &nameLen )) == NS_OK) {
+        // Must copy, to make it zero-terminated
+        mArray.AppendElement(nsCString(name,nameLen));
     }
     delete find;
 
@@ -178,8 +168,8 @@ nsJARInputStream::InitDirectory(nsZipArchive* aZip,
     mBuffer.AppendLiteral("\n200: filename content-length last-modified file-type\n");
 
     // Open for reading
-    mClosed = PR_FALSE;
-    mCurPos = 0;
+    mMode = MODE_DIRECTORY;
+    mZs.total_out = 0;
     mArrPos = 0;
     return NS_OK;
 }
@@ -187,15 +177,27 @@ nsJARInputStream::InitDirectory(nsZipArchive* aZip,
 NS_IMETHODIMP 
 nsJARInputStream::Available(PRUint32 *_retval)
 {
-    if (mClosed)
+    // A lot of callers don't check the error code.
+    // They just use the _retval value.
+    *_retval = 0;
+
+    switch (mMode) {
+      case MODE_NOTINITED:
+        break;
+
+      case MODE_CLOSED:
         return NS_BASE_STREAM_CLOSED;
 
-    if (mDirectory)
+      case MODE_DIRECTORY:
         *_retval = mBuffer.Length();
-    else if (mInflate) 
-        *_retval = mInflate->mOutSize - mInflate->mZs.total_out;
-    else 
-        *_retval = mInSize - mCurPos;
+        break;
+
+      case MODE_INFLATE:
+      case MODE_COPY:
+        *_retval = mOutSize - mZs.total_out;
+        break;
+    }
+
     return NS_OK;
 }
 
@@ -208,40 +210,43 @@ nsJARInputStream::Read(char* aBuffer, PRUint32 aCount, PRUint32 *aBytesRead)
     *aBytesRead = 0;
 
     nsresult rv = NS_OK;
-    if (mClosed)
-        return rv;
+    switch (mMode) {
+      case MODE_NOTINITED:
+        return NS_OK;
 
-    if (mDirectory) {
-        rv = ReadDirectory(aBuffer, aCount, aBytesRead);
-    } else {
-        if (mInflate) {
-            rv = ContinueInflate(aBuffer, aCount, aBytesRead);
-        } else {
-            PRInt32 bytesRead = 0;
-            aCount = PR_MIN(aCount, mInSize - mCurPos);
-            if (aCount) {
-                bytesRead = PR_Read(mFd, aBuffer, aCount);
-                if (bytesRead < 0)
-                    return NS_ERROR_FILE_CORRUPTED;
-                mCurPos += bytesRead;
-                if (bytesRead != aCount) {
-                    // file is truncated or was lying about size, we're done
-                    PR_Close(mFd);
-                    mFd = nsnull;
-                    return NS_ERROR_FILE_CORRUPTED;
-                }
-            }
-            *aBytesRead = bytesRead;
+      case MODE_CLOSED:
+        return NS_BASE_STREAM_CLOSED;
+
+      case MODE_DIRECTORY:
+        return ReadDirectory(aBuffer, aCount, aBytesRead);
+
+      case MODE_INFLATE:
+        if (mFd) {
+          rv = ContinueInflate(aBuffer, aCount, aBytesRead);
         }
-
-        // be aggressive about closing!
-        // note that sometimes, we will close mFd before we've finished
+        // be aggressive about releasing the file!
+        // note that sometimes, we will release  mFd before we've finished
         // deflating - this is because zlib buffers the input
-        // So, don't free the ReadBuf/InflateStruct yet.
-        if (mCurPos >= mInSize && mFd) {
-            PR_Close(mFd);
+        if (mZs.avail_in == 0) {
             mFd = nsnull;
         }
+        break;
+
+      case MODE_COPY:
+        if (mFd) {
+          PRUint32 count = PR_MIN(aCount, mOutSize - mZs.total_out);
+          if (count) {
+              memcpy(aBuffer, mZs.next_in + mZs.total_out, count);
+              mZs.total_out += count;
+          }
+          *aBytesRead = count;
+        }
+        // be aggressive about releasing the file!
+        // note that sometimes, we will release mFd before we've finished copying.
+        if (mZs.total_out >= mOutSize) {
+            mFd = nsnull;
+        }
+        break;
     }
     return rv;
 }
@@ -264,12 +269,8 @@ nsJARInputStream::IsNonBlocking(PRBool *aNonBlocking)
 NS_IMETHODIMP
 nsJARInputStream::Close()
 {
-    PR_FREEIF(mInflate);
-    if (mFd) {
-        PR_Close(mFd);
-        mFd = nsnull;
-    }
-    mClosed = PR_TRUE;
+    mMode = MODE_CLOSED;
+    mFd = nsnull;
     return NS_OK;
 }
 
@@ -278,57 +279,33 @@ nsJARInputStream::ContinueInflate(char* aBuffer, PRUint32 aCount,
                                   PRUint32* aBytesRead)
 {
     // No need to check the args, ::Read did that, but assert them at least
-    NS_ASSERTION(mInflate,"inflate data structure missing");
     NS_ASSERTION(aBuffer,"aBuffer parameter must not be null");
     NS_ASSERTION(aBytesRead,"aBytesRead parameter must not be null");
 
     // Keep old total_out count
-    const PRUint32 oldTotalOut = mInflate->mZs.total_out;
+    const PRUint32 oldTotalOut = mZs.total_out;
     
     // make sure we aren't reading too much
-    mInflate->mZs.avail_out = (mInflate->mOutSize-oldTotalOut > aCount) ? aCount : mInflate->mOutSize-oldTotalOut;
-    mInflate->mZs.next_out = (unsigned char*)aBuffer;
+    mZs.avail_out = PR_MIN(aCount, (mOutSize-oldTotalOut));
+    mZs.next_out = (unsigned char*)aBuffer;
 
-    int zerr = Z_OK;
-    //-- inflate loop
-    while (mInflate->mZs.avail_out > 0 && zerr == Z_OK) {
-
-        if (mInflate->mZs.avail_in == 0 && mCurPos < mInSize) {
-            // time to fill the buffer!
-            PRUint32 bytesToRead = PR_MIN(mInSize - mCurPos, ZIP_BUFLEN);
-
-            NS_ASSERTION(mFd, "File handle missing");
-            PRInt32 bytesRead = PR_Read(mFd, mInflate->mReadBuf, bytesToRead);
-            if (bytesRead < 0) {
-                zerr = Z_ERRNO;
-                break;
-            }
-            mCurPos += bytesRead;
-
-            // now set the state for 'inflate'
-            mInflate->mZs.next_in = mInflate->mReadBuf;
-            mInflate->mZs.avail_in = bytesRead;
-        }
-
-        // now inflate
-        zerr = inflate(&(mInflate->mZs), Z_SYNC_FLUSH);
-    }
-
+    // now inflate
+    int zerr = inflate(&mZs, Z_SYNC_FLUSH);
     if ((zerr != Z_OK) && (zerr != Z_STREAM_END))
         return NS_ERROR_FILE_CORRUPTED;
 
-    *aBytesRead = (mInflate->mZs.total_out - oldTotalOut);
+    *aBytesRead = (mZs.total_out - oldTotalOut);
 
     // Calculate the CRC on the output
-    mInflate->mOutCrc = crc32(mInflate->mOutCrc, (unsigned char*)aBuffer, *aBytesRead);
+    mOutCrc = crc32(mOutCrc, (unsigned char*)aBuffer, *aBytesRead);
 
     // be aggressive about ending the inflation
     // for some reason we don't always get Z_STREAM_END
-    if (zerr == Z_STREAM_END || mInflate->mZs.total_out == mInflate->mOutSize) {
-        inflateEnd(&(mInflate->mZs));
+    if (zerr == Z_STREAM_END || mZs.total_out == mOutSize) {
+        inflateEnd(&mZs);
 
         // stop returning valid data as soon as we know we have a bad CRC
-        if (mInflate->mOutCrc != mInflate->mInCrc) {
+        if (mOutCrc != mInCrc) {
             // asserting because while this rarely happens, you definitely
             // want to catch it in debug builds!
             NS_NOTREACHED(0);
@@ -353,21 +330,21 @@ nsJARInputStream::ReadDirectory(char* aBuffer, PRUint32 aCount, PRUint32 *aBytes
         // empty the buffer and start writing directory entry lines to it
         mBuffer.Truncate();
         mCurPos = 0;
-        const PRUint32 arrayLen = mArray.Count();
+        const PRUint32 arrayLen = mArray.Length();
 
         for ( ;aCount > mBuffer.Length(); mArrPos++) {
             // have we consumed all the directory contents?
             if (arrayLen <= mArrPos)
                 break;
 
-            const char * entryName = mArray[mArrPos]->get();
-            PRUint32 entryNameLen = mArray[mArrPos]->Length();
-            nsZipItem* ze = mZip->GetItem(entryName);
+            const char * entryName = mArray[mArrPos].get();
+            PRUint32 entryNameLen = mArray[mArrPos].Length();
+            nsZipItem* ze = mJar->mZip.GetItem(entryName);
             NS_ENSURE_TRUE(ze, NS_ERROR_FILE_TARGET_DOES_NOT_EXIST);
 
             // Last Modified Time
             PRExplodedTime tm;
-            PR_ExplodeTime(GetModTime(ze->date, ze->time), PR_GMTParameters, &tm);
+            PR_ExplodeTime(GetModTime(ze->Date(), ze->Time()), PR_GMTParameters, &tm);
             char itemLastModTime[65];
             PR_FormatTimeUSEnglish(itemLastModTime,
                                    sizeof(itemLastModTime),
@@ -387,9 +364,9 @@ nsJARInputStream::ReadDirectory(char* aBuffer, PRUint32 aCount, PRUint32 *aBytes
                          mBuffer);
 
             mBuffer.Append(' ');
-            mBuffer.AppendInt(ze->realsize, 10);
+            mBuffer.AppendInt(ze->RealSize(), 10);
             mBuffer.Append(itemLastModTime); // starts/ends with ' '
-            if (ze->isDirectory) 
+            if (ze->IsDirectory()) 
                 mBuffer.AppendLiteral("DIRECTORY\n");
             else
                 mBuffer.AppendLiteral("FILE\n");

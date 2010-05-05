@@ -35,65 +35,35 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/**
- * nsIPluginInstance
- *
- * @status DEPRECATED
- *
- * Originally published XPCOM Plugin API is now deprecated
- * Developers are welcome to use NPAPI, please refer to:
- * http://mozilla.org/projects/plugins/
- */
-
 #include "nsISupports.idl"
 #include "nsIPluginStreamListener.idl"
 
+interface nsIPluginInstanceOwner;
+interface nsIOutputStream;
+
 %{C++
 #include "nsplugindefs.h"
+#include "nsString.h"
+struct JSContext;
+struct JSObject;
+
+#define NPRUNTIME_JSCLASS_NAME "NPObject JS wrapper class"
 %}
 
-interface nsIPluginInstancePeer;
+[ptr] native JSContextPtr(JSContext);
+[ptr] native JSObjectPtr(JSObject);
 
-/**
- * The nsIPluginInstance interface is the minimum interface plugin developers
- * need to support in order to implement a plugin instance. The plugin manager
- * may QueryInterface for more specific types, e.g. nsILiveConnectPluginInstance. 
- *
- * (Corresponds to NPP object.)
- *
- * The old NPP_Destroy call has been factored into two plugin instance 
- * methods:
- *
- * Stop -- called when the plugin instance is to be stopped (e.g. by 
- * displaying another plugin manager window, causing the page containing 
- * the plugin to become removed from the display).
- *
- * Destroy -- called once, before the plugin instance peer is to be 
- * destroyed. This method is used to destroy the plugin instance.
- */
-[uuid(ebe00f40-0199-11d2-815b-006008119d7a)]
+[uuid(67D606F4-1D6D-4FE2-A2D6-10BDA65788E1)]
 interface nsIPluginInstance : nsISupports
 {
     /**
-     * Initializes a newly created plugin instance, passing to it the
-     * plugin instance peer which it should use for all communication
-     * back to the browser.
+     * Initializes a newly created plugin instance.
      * 
-     * @param aPeer - the corresponding plugin instance peer
+     * @param aOwner - the plugin instance owner
+     * @param aMime - the mime type for the instance
      * @result      - NS_OK if this operation was successful
      */
-    void initialize(in nsIPluginInstancePeer aPeer);
-
-    /**
-     * Returns a reference back to the plugin instance peer. This method is
-     * used whenever the browser needs to obtain the peer back from a plugin
-     * instance. The implementation of this method should be sure to increment
-     * the reference count on the peer by calling AddRef.
-     *
-     * @param aPeer - the resulting plugin instance peer
-     * @result      - NS_OK if this operation was successful
-     */
-    readonly attribute nsIPluginInstancePeer peer;
+    void initialize(in nsIPluginInstanceOwner aOwner, in string aMIMEType);
 
     /**
      * Called to instruct the plugin instance to start. This will be
@@ -117,17 +87,6 @@ interface nsIPluginInstance : nsISupports
     void stop();
 
     /**
-     * Called to instruct the plugin instance to destroy itself. This
-     * is called when it become no longer possible to return to the
-     * plugin instance, either because the browser window's history
-     * list of pages is being trimmed, or because the window
-     * containing this page in the history is being closed.
-     *
-     * @result - NS_OK if this operation was successful
-     */
-    void destroy();
-
-    /**
      * Called when the window containing the plugin instance changes.
      *
      * (Corresponds to NPP_SetWindow.)
@@ -139,14 +98,29 @@ interface nsIPluginInstance : nsISupports
 
     /**
      * Called to tell the plugin that the initial src/data stream is
-	 * ready.  Expects the plugin to return a nsIPluginStreamListener.
+     * ready.  Expects the plugin to return a nsIPluginStreamListener.
      *
      * (Corresponds to NPP_NewStream.)
      *
      * @param aListener - listener the browser will use to give the plugin the data
      * @result          - NS_OK if this operation was successful
      */
-    void newStream(out nsIPluginStreamListener aListener);
+    void newStreamToPlugin(out nsIPluginStreamListener aListener);
+
+    /**
+     * This operation is called by the plugin instance when it wishes to send
+     * a stream of data to the browser. It constructs a new output stream to which
+     * the plugin may send the data. When complete, the Close and Release methods
+     * should be called on the output stream.
+     *
+     * (Corresponds to NPN_NewStream.)
+     *
+     * @param aType   - MIME type of the stream to create
+     * @param aTarget - the target window name to receive the data
+     * @param aResult - the resulting output stream
+     * @result        - NS_OK if this operation was successful
+     */
+    void newStreamFromPlugin(in string aType, in string aTarget, out nsIOutputStream aResult);
 
     /**
      * Called to instruct the plugin instance to print itself to a printer.
@@ -168,9 +142,7 @@ interface nsIPluginInstance : nsISupports
     void getValue(in nsPluginInstanceVariable aVariable, in voidPtr aValue);
 
     /**
-     * Handles an event. An nsIEventHandler can also get registered with with
-     * nsIPluginManager2::RegisterWindow and will be called whenever an event
-     * comes in for that window.
+     * Handles an event.
      *
      * Note that for Unix and Mac the nsPluginEvent structure is different
      * from the old NPEvent structure -- it's no longer the native event
@@ -185,4 +157,66 @@ interface nsIPluginInstance : nsISupports
      * @result - NS_OK if this operation was successful
      */
     void handleEvent(in nsPluginEventPtr aEvent, out boolean aHandled);
+
+    /** 
+     * Corresponds to NPN_InvalidateRect
+     */
+    void invalidateRect(in nsPluginRectPtr aRect);
+
+    /** 
+     * Corresponds to NPN_InvalidateRegion
+     */
+    void invalidateRegion(in nsPluginRegion aRegion);
+
+    /** 
+     * Corresponds to NPN_ForceRedraw
+     */
+    void forceRedraw();
+    
+    /**
+     * Returns the MIME type of the plugin instance. 
+     *
+     * (Corresponds to NPP_New's MIMEType argument.)
+     *
+     * @param aMIMEType - resulting MIME type
+     * @result          - NS_OK if this operation was successful
+     */
+    void getMIMEType([const, shared] out string aValue);
+
+    /**
+     * Get the JavaScript context to this plugin instance.
+     *
+     * @param aJSContext - the resulting JavaScript context
+     * @result           - NS_OK if this operation was successful
+     */
+    readonly attribute JSContextPtr JSContext;
+
+    attribute nsIPluginInstanceOwner owner;
+    
+    /**
+     * This operation causes status information to be displayed on the window
+     * associated with the plugin instance. 
+     *
+     * (Corresponds to NPN_Status.)
+     *
+     * @param aMessage - the status message to display
+     * @result         - NS_OK if this operation was successful
+     */
+    void showStatus(in string aMessage);
+
+    /**
+     * Drop our reference to our owner.
+     */
+    void invalidateOwner();
+
+    JSObjectPtr GetJSObject(in JSContextPtr cx);
+
+    readonly attribute AString formValue;
+
+    void pushPopupsEnabledState(in boolean aEnabled);
+    void popPopupsEnabledState();
+
+    readonly attribute PRUint16 pluginAPIVersion;
+
+    void defineJavaProperties();
 };

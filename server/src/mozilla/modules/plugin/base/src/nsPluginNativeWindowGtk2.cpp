@@ -48,14 +48,19 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 #include <gdk/gdk.h>
-#include "gtk2xtbin.h"
-#ifdef OJI
-#include "plstr.h"
-#include "nsIPlugin.h"
-#include "nsIPluginHost.h"
 
-static NS_DEFINE_CID(kPluginManagerCID, NS_PLUGINMANAGER_CID);
+#if (MOZ_PLATFORM_MAEMO == 5)
+#define MOZ_COMPOSITED_PLUGINS
 #endif
+
+#ifdef MOZ_COMPOSITED_PLUGINS
+extern "C" {
+#include <X11/extensions/Xdamage.h>
+#include <X11/extensions/Xcomposite.h>
+}
+#endif
+
+#include "gtk2xtbin.h"
 
 class nsPluginNativeWindowGtk2 : public nsPluginNativeWindow {
 public: 
@@ -74,6 +79,15 @@ private:
   nsresult  CreateXtWindow();
   void      SetAllocation();
   PRBool    CanGetValueFromPlugin(nsCOMPtr<nsIPluginInstance> &aPluginInstance);
+#ifdef MOZ_COMPOSITED_PLUGINS
+  nsresult  CreateXCompositedWindow();
+  static GdkFilterReturn    plugin_composite_filter_func (GdkXEvent *xevent,
+    GdkEvent *event,
+    gpointer data);
+
+  Damage     mDamage;
+  GtkWidget* mParentWindow;
+#endif
 };
 
 static gboolean plug_removed_cb   (GtkWidget *widget, gpointer data);
@@ -95,6 +109,10 @@ nsPluginNativeWindowGtk2::nsPluginNativeWindowGtk2() : nsPluginNativeWindow()
   mWsInfo.visual = nsnull;
   mWsInfo.colormap = 0;
   mWsInfo.depth = 0;
+#ifdef MOZ_COMPOSITED_PLUGINS
+  mDamage = 0;
+  mParentWindow = 0;
+#endif
 }
 
 nsPluginNativeWindowGtk2::~nsPluginNativeWindowGtk2() 
@@ -102,6 +120,16 @@ nsPluginNativeWindowGtk2::~nsPluginNativeWindowGtk2()
   if(mSocketWidget) {
     gtk_widget_destroy(mSocketWidget);
   }
+
+#ifdef MOZ_COMPOSITED_PLUGINS
+  if (mParentWindow) {
+    gtk_widget_destroy(mParentWindow);
+  }
+
+  if (mDamage) {
+    gdk_window_remove_filter (nsnull, plugin_composite_filter_func, this);
+  }
+#endif
 }
 
 nsresult PLUG_NewPluginNativeWindow(nsPluginNativeWindow ** aPluginNativeWindow)
@@ -119,6 +147,38 @@ nsresult PLUG_DeletePluginNativeWindow(nsPluginNativeWindow * aPluginNativeWindo
   return NS_OK;
 }
 
+#ifdef MOZ_COMPOSITED_PLUGINS
+/* the base xdamage event number.*/
+static int xdamage_event_base;
+
+GdkFilterReturn
+nsPluginNativeWindowGtk2::plugin_composite_filter_func (GdkXEvent *xevent,
+    GdkEvent *event,
+    gpointer data)
+{
+  nsPluginNativeWindowGtk2 *native_window = (nsPluginNativeWindowGtk2*)data;
+  XDamageNotifyEvent *ev;
+  ev = (XDamageNotifyEvent *) xevent;
+  if (ev->type != xdamage_event_base + XDamageNotify)
+    return GDK_FILTER_CONTINUE;
+
+  //printf("Damage event %d %d %d %d\n",ev->area.x, ev->area.y, ev->area.width, ev->area.height);
+  XDamageSubtract (GDK_DISPLAY(), native_window->mDamage, None, None);
+
+  /* We try to do our area invalidation here */
+  nsPluginRect rect;
+  rect.top = ev->area.x;
+  rect.left = ev->area.y;
+  rect.right = ev->area.x + ev->area.width;
+  rect.bottom = ev->area.y + ev->area.height;
+
+  if (native_window->mPluginInstance)
+    native_window->mPluginInstance->InvalidateRect(&rect);
+
+  return GDK_FILTER_REMOVE;
+}
+#endif
+
 nsresult nsPluginNativeWindowGtk2::CallSetWindow(nsCOMPtr<nsIPluginInstance> &aPluginInstance)
 {
   if(aPluginInstance) {
@@ -133,12 +193,19 @@ nsresult nsPluginNativeWindowGtk2::CallSetWindow(nsCOMPtr<nsIPluginInstance> &aP
           printf("nsPluginNativeWindowGtk2: NPPVpluginNeedsXEmbed=%d\n", needXEmbed);
 #endif
         }
+        nsresult rv;
         if(needXEmbed) {
-          CreateXEmbedWindow();
+#ifdef MOZ_COMPOSITED_PLUGINS
+          rv = CreateXCompositedWindow();
+#else
+          rv = CreateXEmbedWindow();
+#endif
         }
         else {
-          CreateXtWindow();
+          rv = CreateXtWindow();
         }
+        if(NS_FAILED(rv))
+          return NS_ERROR_FAILURE;
       }
 
       if(!mSocketWidget)
@@ -186,7 +253,7 @@ nsresult nsPluginNativeWindowGtk2::CreateXEmbedWindow() {
                    G_CALLBACK(plug_removed_cb), NULL);
 
   g_signal_connect(mSocketWidget, "destroy",
-                   GTK_SIGNAL_FUNC(gtk_widget_destroyed), &mSocketWidget);
+                   G_CALLBACK(gtk_widget_destroyed), &mSocketWidget);
 
   gpointer user_data = NULL;
   gdk_window_get_user_data(parent_win, &user_data);
@@ -206,6 +273,9 @@ nsresult nsPluginNativeWindowGtk2::CreateXEmbedWindow() {
   // Fill out the ws_info structure.
   // (The windowless case is done in nsObjectFrame.cpp.)
   GdkWindow *gdkWindow = gdk_window_lookup((XID)window);
+  if(!gdkWindow)
+    return NS_ERROR_FAILURE;
+
   mWsInfo.display = GDK_WINDOW_XDISPLAY(gdkWindow);
   mWsInfo.colormap = GDK_COLORMAP_XCOLORMAP(gdk_drawable_get_colormap(gdkWindow));
   GdkVisual* gdkVisual = gdk_drawable_get_visual(gdkWindow);
@@ -214,6 +284,94 @@ nsresult nsPluginNativeWindowGtk2::CreateXEmbedWindow() {
 
   return NS_OK;
 }
+
+#ifdef MOZ_COMPOSITED_PLUGINS
+#include <dlfcn.h>
+nsresult nsPluginNativeWindowGtk2::CreateXCompositedWindow() {
+  NS_ASSERTION(!mSocketWidget,"Already created a socket widget!");
+
+  mParentWindow = gtk_window_new(GTK_WINDOW_POPUP);
+  mSocketWidget = gtk_socket_new();
+  GdkWindow *parent_win = mParentWindow->window;
+
+  //attach the socket to the container widget
+  gtk_widget_set_parent_window(mSocketWidget, parent_win);
+
+  // Make sure to handle the plug_removed signal.  If we don't the
+  // socket will automatically be destroyed when the plug is
+  // removed, which means we're destroying it more than once.
+  // SYNTAX ERROR.
+  g_signal_connect(mSocketWidget, "plug_removed",
+                   G_CALLBACK(plug_removed_cb), NULL);
+
+  g_signal_connect(mSocketWidget, "destroy",
+                   G_CALLBACK(gtk_widget_destroyed), &mSocketWidget);
+
+  /*gpointer user_data = NULL;
+  gdk_window_get_user_data(parent_win, &user_data);
+  */
+  GtkContainer *container = GTK_CONTAINER(mParentWindow);
+  gtk_container_add(container, mSocketWidget);
+  gtk_widget_realize(mSocketWidget);
+
+  // Resize before we show
+  SetAllocation();
+  gtk_widget_set_size_request (mSocketWidget, width, height);
+  /* move offscreen */
+  gtk_window_move (GTK_WINDOW(mParentWindow), width+1000, height+1000);
+
+
+  gtk_widget_show(mSocketWidget);
+  gtk_widget_show_all(mParentWindow);
+
+  /* store away a reference to the socketwidget */
+  mPlugWindow = (mSocketWidget);
+
+  gdk_flush();
+  window = (nsPluginPort *)gtk_socket_get_id(GTK_SOCKET(mSocketWidget));
+
+  /* This is useful if we still have the plugin window inline
+   * i.e. firefox vs. fennec */
+  // gdk_window_set_composited(mSocketWidget->window, TRUE);
+
+  if (!mDamage) {
+    /* we install a general handler instead of one specific to a particular window
+     * because we don't have a GdkWindow for the plugin window */
+    gdk_window_add_filter (parent_win, plugin_composite_filter_func, this);
+
+    int junk;
+    if (!XDamageQueryExtension (GDK_DISPLAY (), &xdamage_event_base, &junk))
+      printf ("This requires the XDamage extension");
+
+    mDamage = XDamageCreate(GDK_DISPLAY(), (Drawable)window, XDamageReportNonEmpty);
+    XCompositeRedirectWindow (GDK_DISPLAY(),
+        (Drawable)window,
+        CompositeRedirectManual);
+
+    /* this is a hack to avoid having flash causing a crash when it is unloaded.
+     * libplayback sets up dbus_connection_filters. When flash is unloaded it takes
+     * libplayback with it, however the connection filters are not removed
+     * which causes a crash when dbus tries to execute them. dlopening libplayback
+     * ensures that those functions stay around even after flash is gone. */
+    static void *libplayback_handle;
+    if (!libplayback_handle) {
+      libplayback_handle = dlopen("libplayback-1.so.0", RTLD_NOW);
+    }
+
+  }
+
+  // Fill out the ws_info structure.
+  // (The windowless case is done in nsObjectFrame.cpp.)
+  GdkWindow *gdkWindow = gdk_window_lookup((XID)window);
+  mWsInfo.display = GDK_WINDOW_XDISPLAY(gdkWindow);
+  mWsInfo.colormap = GDK_COLORMAP_XCOLORMAP(gdk_drawable_get_colormap(gdkWindow));
+  GdkVisual* gdkVisual = gdk_drawable_get_visual(gdkWindow);
+  mWsInfo.visual = GDK_VISUAL_XVISUAL(gdkVisual);
+  mWsInfo.depth = gdkVisual->depth;
+
+  return NS_OK;
+}
+#endif
 
 void nsPluginNativeWindowGtk2::SetAllocation() {
   if (!mSocketWidget)
@@ -241,6 +399,9 @@ nsresult nsPluginNativeWindowGtk2::CreateXtWindow() {
   if (!mSocketWidget)
     return NS_ERROR_FAILURE;
 
+  g_signal_connect(mSocketWidget, "destroy",
+                   G_CALLBACK(gtk_widget_destroyed), &mSocketWidget);
+
   gtk_widget_set_size_request(mSocketWidget, width, height);
 
 #ifdef NS_DEBUG
@@ -267,58 +428,6 @@ nsresult nsPluginNativeWindowGtk2::CreateXtWindow() {
 
 PRBool nsPluginNativeWindowGtk2::CanGetValueFromPlugin(nsCOMPtr<nsIPluginInstance> &aPluginInstance)
 {
-#ifdef OJI
-  if(aPluginInstance) {
-    nsresult rv;
-    nsCOMPtr<nsIPluginInstancePeer> peer;
-
-    rv = aPluginInstance->GetPeer(getter_AddRefs(peer));
-    if (NS_SUCCEEDED(rv) && peer) {
-      const char *aMimeType = nsnull;
-
-      peer->GetMIMEType((nsMIMEType*)&aMimeType);
-      if (aMimeType &&
-          (PL_strncasecmp(aMimeType, "application/x-java-vm", 21) == 0 ||
-           PL_strncasecmp(aMimeType, "application/x-java-applet", 25) == 0)) {
-        nsCOMPtr<nsIPluginHost> pluginHost = do_GetService(kPluginManagerCID, &rv);
-        if (NS_SUCCEEDED(rv) && pluginHost) {
-          nsIPlugin* pluginFactory = NULL;
-
-          rv = pluginHost->GetPluginFactory("application/x-java-vm", &pluginFactory);
-          if (NS_SUCCEEDED(rv) && pluginFactory) {
-            const char * jpiDescription = NULL;
-
-            pluginFactory->GetValue(nsPluginVariable_DescriptionString, (void*)&jpiDescription);
-            if (!jpiDescription)
-              return PR_FALSE;
-
-            /** 
-             * "Java(TM) Plug-in" is Sun's Java Plugin Trademark,
-             * so we are sure that this is Sun 's Java Plugin if 
-             * the description start with "Java(TM) Plug-in"
-             **/
-            if (PL_strncasecmp(jpiDescription, "Java(TM) Plug-in", 16) == 0) {
-              // Java Plugin support Xembed from JRE 1.5
-              if (PL_strcasecmp(jpiDescription + 17, "1.5") < 0)
-                return PR_FALSE;
-            }
-            if (PL_strncasecmp(jpiDescription, "<a href=\"http://www.blackdown.org/java-linux.html\">", 51) == 0) {
-              // Java Plugin support Xembed from JRE 1.5
-              if (PL_strcasecmp(jpiDescription + 92, "1.5") < 0)
-                return PR_FALSE;
-            }
-            if (PL_strncasecmp(jpiDescription, "IBM Java(TM) Plug-in", 20) == 0) {
-              // Java Plugin support Xembed from JRE 1.5
-              if (PL_strcasecmp(jpiDescription + 27, "1.5") < 0)
-                return PR_FALSE;
-            }
-          }
-        }
-      }
-    }
-  }
-#endif
-
   return PR_TRUE;
 }
 

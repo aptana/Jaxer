@@ -74,7 +74,6 @@ mailing address.
 #include <stddef.h>
 #include "prmem.h"
 
-#include "nsIImage.h"
 #include "nsIInterfaceRequestorUtils.h"
 
 #include "nsGIFDecoder2.h"
@@ -86,7 +85,7 @@ mailing address.
 
 #include "gfxColor.h"
 #include "gfxPlatform.h"
-#include "lcms.h"
+#include "qcms.h"
 
 /*
  * GETN(n, s) requests at least 'n' bytes available from 'q', at start of state 's'
@@ -118,6 +117,7 @@ nsGIFDecoder2::nsGIFDecoder2()
   , mLastFlushedRow(-1)
   , mImageData(nsnull)
   , mOldColor(0)
+  , mCurrentFrame(-1)
   , mCurrentPass(0)
   , mLastFlushedPass(0)
   , mGIFOpen(PR_FALSE)
@@ -142,7 +142,7 @@ NS_IMETHODIMP nsGIFDecoder2::Init(imgILoad *aLoad)
 {
   mObserver = do_QueryInterface(aLoad);
 
-  mImageContainer = do_CreateInstance("@mozilla.org/image/container;1");
+  mImageContainer = do_CreateInstance("@mozilla.org/image/container;2");
   aLoad->SetImage(mImageContainer);
   
   // Start with the version (GIF89a|GIF87a)
@@ -161,7 +161,7 @@ NS_IMETHODIMP nsGIFDecoder2::Init(imgILoad *aLoad)
 /* void close (); */
 NS_IMETHODIMP nsGIFDecoder2::Close()
 {
-  if (mImageFrame) 
+  if (mCurrentFrame == mGIFStruct.images_decoded)
     EndImageFrame();
   EndGIF();
 
@@ -174,7 +174,7 @@ NS_IMETHODIMP nsGIFDecoder2::Close()
 /* void flush (); */
 NS_IMETHODIMP nsGIFDecoder2::Flush()
 {
-    return NS_ERROR_NOT_IMPLEMENTED;
+    return NS_OK;
 }
 
 //******************************************************************************
@@ -199,40 +199,48 @@ static NS_METHOD ReadDataOut(nsIInputStream* in,
 // Push any new rows according to mCurrentPass/mLastFlushedPass and
 // mCurrentRow/mLastFlushedRow.  Note: caller is responsible for
 // updating mlastFlushed{Row,Pass}.
-void
+nsresult
 nsGIFDecoder2::FlushImageData(PRUint32 fromRow, PRUint32 rows)
 {
-  nsIntRect r(0, fromRow, mGIFStruct.screen_width, rows);
+  nsIntRect r(0, fromRow, mGIFStruct.width, rows);
 
   // Update image  
-  nsCOMPtr<nsIImage> img(do_GetInterface(mImageFrame));
-  img->ImageUpdated(nsnull, nsImageUpdateFlags_kBitsChanged, &r);
+  nsresult rv = mImageContainer->FrameUpdated(mGIFStruct.images_decoded, r);
+  if (NS_FAILED(rv)) {
+    return rv;
+  }
 
   // Offset to the frame position
   // Only notify observer(s) for first frame
   if (!mGIFStruct.images_decoded && mObserver) {
+    PRUint32 imgCurFrame;
+    mImageContainer->GetCurrentFrameIndex(&imgCurFrame);
     r.y += mGIFStruct.y_offset;
-    mObserver->OnDataAvailable(nsnull, mImageFrame, &r);
+    mObserver->OnDataAvailable(nsnull, imgCurFrame == PRUint32(mGIFStruct.images_decoded), &r);
   }
+  return NS_OK;
 }
 
-void
+nsresult
 nsGIFDecoder2::FlushImageData()
 {
+  nsresult rv = NS_OK;
+
   switch (mCurrentPass - mLastFlushedPass) {
     case 0:  // same pass
       if (mCurrentRow - mLastFlushedRow)
-        FlushImageData(mLastFlushedRow + 1, mCurrentRow - mLastFlushedRow);
+        rv = FlushImageData(mLastFlushedRow + 1, mCurrentRow - mLastFlushedRow);
       break;
   
     case 1:  // one pass on - need to handle bottom & top rects
-      FlushImageData(0, mCurrentRow + 1);
-      FlushImageData(mLastFlushedRow + 1, mGIFStruct.height - (mLastFlushedRow + 1));
+      rv = FlushImageData(0, mCurrentRow + 1);
+      rv |= FlushImageData(mLastFlushedRow + 1, mGIFStruct.height - (mLastFlushedRow + 1));
       break;
 
     default:   // more than one pass on - push the whole frame
-      FlushImageData(0, mGIFStruct.height);
+      rv = FlushImageData(0, mGIFStruct.height);
   }
+  return rv;
 }
 
 //******************************************************************************
@@ -244,15 +252,15 @@ nsresult nsGIFDecoder2::ProcessData(unsigned char *data, PRUint32 count, PRUint3
   NS_ENSURE_SUCCESS(rv, rv);
 
   // Flushing is only needed for first frame
-  if (!mGIFStruct.images_decoded && mImageFrame) {
-    FlushImageData();
+  if (!mGIFStruct.images_decoded) {
+    rv = FlushImageData();
     mLastFlushedRow = mCurrentRow;
     mLastFlushedPass = mCurrentPass;
   }
 
   *_retval = count;
 
-  return NS_OK;
+  return rv;
 }
 
 //******************************************************************************
@@ -315,10 +323,8 @@ void nsGIFDecoder2::EndGIF()
 }
 
 //******************************************************************************
-void nsGIFDecoder2::BeginImageFrame(gfx_depth aDepth)
+nsresult nsGIFDecoder2::BeginImageFrame(gfx_depth aDepth)
 {
-  mImageFrame = nsnull; // clear out our current frame reference
-
   if (!mGIFStruct.images_decoded) {
     // Send a onetime OnDataAvailable (Display Refresh) for the first frame
     // if it has a y-axis offset.  Otherwise, the area may never be refreshed
@@ -326,41 +332,47 @@ void nsGIFDecoder2::BeginImageFrame(gfx_depth aDepth)
     if (mGIFStruct.y_offset > 0) {
       PRInt32 imgWidth;
       mImageContainer->GetWidth(&imgWidth);
+      PRUint32 imgCurFrame;
+      mImageContainer->GetCurrentFrameIndex(&imgCurFrame);
       nsIntRect r(0, 0, imgWidth, mGIFStruct.y_offset);
-      mObserver->OnDataAvailable(nsnull, mImageFrame, &r);
+      mObserver->OnDataAvailable(nsnull, imgCurFrame == PRUint32(mGIFStruct.images_decoded), &r);
     }
   }
 
+  PRUint32 imageDataLength;
+  nsresult rv;
+  gfxASurface::gfxImageFormat format;
+  if (mGIFStruct.is_transparent)
+    format = gfxASurface::ImageFormatARGB32;
+  else
+    format = gfxASurface::ImageFormatRGB24;
+
   // Use correct format, RGB for first frame, PAL for following frames
   // and include transparency to allow for optimization of opaque images
-  gfx_format format;
   if (mGIFStruct.images_decoded) {
     // Image data is stored with original depth and palette
-    format = mGIFStruct.is_transparent ? gfxIFormats::PAL_A1 : gfxIFormats::PAL;
+    rv = mImageContainer->AppendPalettedFrame(mGIFStruct.x_offset, mGIFStruct.y_offset,
+                                              mGIFStruct.width, mGIFStruct.height,
+                                              format, aDepth, &mImageData, &imageDataLength,
+                                              &mColormap, &mColormapSize);
   } else {
     // Regardless of depth of input, image is decoded into 24bit RGB
-    format = mGIFStruct.is_transparent ? gfxIFormats::RGB_A1 : gfxIFormats::RGB;
-    aDepth = 24;
+    rv = mImageContainer->AppendFrame(mGIFStruct.x_offset, mGIFStruct.y_offset,
+                                      mGIFStruct.width, mGIFStruct.height,
+                                      format, &mImageData, &imageDataLength);
   }
 
-  // initialize the frame and append it to the container
-  mImageFrame = do_CreateInstance("@mozilla.org/gfx/image/frame;2");
-  if (!mImageFrame || NS_FAILED(mImageFrame->Init(
-        mGIFStruct.x_offset, mGIFStruct.y_offset, 
-        mGIFStruct.width, mGIFStruct.height, format, aDepth))) {
-    mImageFrame = 0;
-    return;
-  }
+  if (NS_FAILED(rv))
+    return rv;
 
-  mImageFrame->SetFrameDisposalMethod(mGIFStruct.disposal_method);
-  if (!mGIFStruct.images_decoded)
-    mImageContainer->AppendFrame(mImageFrame);
+  mImageContainer->SetFrameDisposalMethod(mGIFStruct.images_decoded,
+                                          mGIFStruct.disposal_method);
 
   if (mObserver)
-    mObserver->OnStartFrame(nsnull, mImageFrame);
+    mObserver->OnStartFrame(nsnull, mGIFStruct.images_decoded);
 
-  PRUint32 imageDataLength;
-  mImageFrame->GetImageData(&mImageData, &imageDataLength);
+  mCurrentFrame = mGIFStruct.images_decoded;
+  return NS_OK;
 }
 
 
@@ -370,26 +382,29 @@ void nsGIFDecoder2::EndImageFrame()
   // First flush all pending image data 
   if (!mGIFStruct.images_decoded) {
     // Only need to flush first frame
-    FlushImageData();
+    (void) FlushImageData();
 
     // If the first frame is smaller in height than the entire image, send a
     // OnDataAvailable (Display Refresh) for the area it does not have data for.
     // This will clear the remaining bits of the placeholder. (Bug 37589)
     const PRUint32 realFrameHeight = mGIFStruct.height + mGIFStruct.y_offset;
     if (realFrameHeight < mGIFStruct.screen_height) {
+      PRUint32 imgCurFrame;
+      mImageContainer->GetCurrentFrameIndex(&imgCurFrame);
       nsIntRect r(0, realFrameHeight, 
                   mGIFStruct.screen_width, 
 				  mGIFStruct.screen_height - realFrameHeight);
-      mObserver->OnDataAvailable(nsnull, mImageFrame, &r);
+      mObserver->OnDataAvailable(nsnull, imgCurFrame == PRUint32(mGIFStruct.images_decoded), &r);
     }
     // This transparency check is only valid for first frame
     if (mGIFStruct.is_transparent && !mSawTransparency) {
-      nsCOMPtr<nsIImage> img(do_GetInterface(mImageFrame));
-      img->SetHasNoAlpha();
+      mImageContainer->SetFrameHasNoAlpha(mGIFStruct.images_decoded);
     }
   }
   mCurrentRow = mLastFlushedRow = -1;
   mCurrentPass = mLastFlushedPass = 0;
+
+  PRUint32 curframe = mGIFStruct.images_decoded;
 
   // Only add frame if we have any rows at all
   if (mGIFStruct.rows_remaining != mGIFStruct.height) {
@@ -403,24 +418,26 @@ void nsGIFDecoder2::EndImageFrame()
     // image data, at least according to the spec, but we delay in setting the 
     // timeout for the image until here to help ensure that we have the whole 
     // image frame decoded before we go off and try to display another frame.
-    mImageFrame->SetTimeout(mGIFStruct.delay_time);
-    if (mGIFStruct.images_decoded)
-      mImageContainer->AppendFrame(mImageFrame);
-    mImageContainer->EndFrameDecode(mGIFStruct.images_decoded, mGIFStruct.delay_time);
-    mGIFStruct.images_decoded++; 
-
-    if (mObserver)
-      mObserver->OnStopFrame(nsnull, mImageFrame);
+    mImageContainer->SetFrameTimeout(mGIFStruct.images_decoded, mGIFStruct.delay_time);
+    mImageContainer->EndFrameDecode(mGIFStruct.images_decoded);
   }
 
-  // Release reference to this frame
-  mImageFrame = nsnull;
+  // Unconditionally increment images_decoded, because we unconditionally
+  // append frames in BeginImageFrame(). This ensures that images_decoded
+  // always refers to the frame in mImageContainer we're currently decoding,
+  // even if some of them weren't decoded properly and thus are blank.
+  mGIFStruct.images_decoded++;
+
+  if (mObserver)
+    mObserver->OnStopFrame(nsnull, curframe);
 
   // Reset the transparent pixel
   if (mOldColor) {
     mColormap[mGIFStruct.tpixel] = mOldColor;
     mOldColor = 0;
   }
+
+  mCurrentFrame = -1;
 }
 
 
@@ -471,8 +488,16 @@ PRUint32 nsGIFDecoder2::OutputRow()
     PRUint8 *from = rowp + mGIFStruct.width;
     PRUint32 *to = ((PRUint32*)rowp) + mGIFStruct.width;
     PRUint32 *cmap = mColormap;
-    for (PRUint32 c = mGIFStruct.width; c > 0; c--) {
-      *--to = cmap[*--from];
+    if (mColorMask == 0xFF) {
+      for (PRUint32 c = mGIFStruct.width; c > 0; c--) {
+        *--to = cmap[*--from];
+      }
+    } else {
+      // Make sure that pixels within range of colormap.
+      PRUint8 mask = mColorMask;
+      for (PRUint32 c = mGIFStruct.width; c > 0; c--) {
+        *--to = cmap[(*--from) & mask];
+      }
     }
   
     // check for alpha (only for first frame)
@@ -490,7 +515,7 @@ PRUint32 nsGIFDecoder2::OutputRow()
     if (drow_end > drow_start) {
       // irow is the current row filled
       for (int r = drow_start; r <= drow_end; r++) {
-        if (r != mGIFStruct.irow) {
+        if (r != int(mGIFStruct.irow)) {
           memcpy(mImageData + (r * bpr), rowp, bpr);
         }
       }
@@ -673,10 +698,10 @@ nsGIFDecoder2::DoLzw(const PRUint8 *q)
 static void ConvertColormap(PRUint32 *aColormap, PRUint32 aColors)
 {
   // Apply CMS transformation if enabled and available
-  if (gfxPlatform::IsCMSEnabled()) {
-    cmsHTRANSFORM transform = gfxPlatform::GetCMSRGBTransform();
+  if (gfxPlatform::GetCMSMode() == eCMSMode_All) {
+    qcms_transform *transform = gfxPlatform::GetCMSRGBTransform();
     if (transform)
-      cmsDoTransform(transform, aColormap, aColormap, aColors);
+      qcms_transform_data(transform, aColormap, aColormap, aColors);
   }
   // Convert from the GIF's RGB format to the Cairo format.
   // Work from end to begin, because of the in-place expansion
@@ -1045,15 +1070,14 @@ nsresult nsGIFDecoder2::GifWrite(const PRUint8 *buf, PRUint32 len)
       PRUint32 depth = mGIFStruct.global_colormap_depth;
       if (q[8] & 0x80)
         depth = (q[8]&0x07) + 1;
-      // Make sure the transparent pixel is within colormap space
       PRUint32 realDepth = depth;
       while (mGIFStruct.tpixel >= (1 << realDepth) && (realDepth < 8)) {
         realDepth++;
       } 
-      BeginImageFrame(realDepth);
-      
-      // handle allocation error
-      if (!mImageFrame) {
+      // Mask to limit the color values within the colormap
+      mColorMask = 0xFF >> (8 - realDepth);
+      nsresult rv = BeginImageFrame(realDepth);
+      if (NS_FAILED(rv) || !mImageData) {
         mGIFStruct.state = gif_error;
         break;
       }
@@ -1079,17 +1103,12 @@ nsresult nsGIFDecoder2::GifWrite(const PRUint8 *buf, PRUint32 len)
       if (q[8] & 0x80) /* has a local colormap? */
       {
         mGIFStruct.local_colormap_size = 1 << depth;
-        PRUint32 paletteSize;
-        if (mGIFStruct.images_decoded) {
-          // Copy directly into the palette of current frame,
-          // by pointing mColormap to that palette.
-          mImageFrame->GetPaletteData(&mColormap, &paletteSize);
-        } else {
+        if (!mGIFStruct.images_decoded) {
           // First frame has local colormap, allocate space for it
           // as the image frame doesn't have its own palette
-          paletteSize = sizeof(PRUint32) << realDepth;
+          mColormapSize = sizeof(PRUint32) << realDepth;
           if (!mGIFStruct.local_colormap) {
-            mGIFStruct.local_colormap = (PRUint32*)PR_MALLOC(paletteSize);
+            mGIFStruct.local_colormap = (PRUint32*)PR_MALLOC(mColormapSize);
             if (!mGIFStruct.local_colormap) {
               mGIFStruct.state = gif_oom;
               break;
@@ -1098,9 +1117,9 @@ nsresult nsGIFDecoder2::GifWrite(const PRUint8 *buf, PRUint32 len)
           mColormap = mGIFStruct.local_colormap;
         }
         const PRUint32 size = 3 << depth;
-        if (paletteSize > size) {
+        if (mColormapSize > size) {
           // Clear the notfilled part of the colormap
-          memset(((PRUint8*)mColormap) + size, 0, paletteSize - size);
+          memset(((PRUint8*)mColormap) + size, 0, mColormapSize - size);
         }
         if (len < size) {
           // Use 'hold' pattern to get the image colormap
@@ -1115,12 +1134,11 @@ nsresult nsGIFDecoder2::GifWrite(const PRUint8 *buf, PRUint32 len)
         break;
       } else {
         /* Switch back to the global palette */
-        mColormap = mGIFStruct.global_colormap;
         if (mGIFStruct.images_decoded) {
           // Copy global colormap into the palette of current frame
-          PRUint32 size;
-          mImageFrame->GetPaletteData(&mColormap, &size);
-          memcpy(mColormap, mGIFStruct.global_colormap, size);
+          memcpy(mColormap, mGIFStruct.global_colormap, mColormapSize);
+        } else {
+          mColormap = mGIFStruct.global_colormap;
         }
       }
       GETN(1, gif_lzw_start);

@@ -80,7 +80,7 @@ nsresult nsIconChannel::Init(nsIURI* uri)
 {
   NS_ASSERTION(uri, "no uri");
   mUrl = uri;
-  
+  mOriginalURI = uri;
   nsresult rv;
   mPump = do_CreateInstance(NS_INPUTSTREAMPUMP_CONTRACTID, &rv);
   return rv;
@@ -158,13 +158,14 @@ NS_IMETHODIMP nsIconChannel::OnDataAvailable(nsIRequest* aRequest,
 
 NS_IMETHODIMP nsIconChannel::GetOriginalURI(nsIURI* *aURI)
 {
-  *aURI = mOriginalURI ? mOriginalURI : mUrl;
+  *aURI = mOriginalURI;
   NS_ADDREF(*aURI);
   return NS_OK;
 }
 
 NS_IMETHODIMP nsIconChannel::SetOriginalURI(nsIURI* aURI)
 {
+  NS_ENSURE_ARG_POINTER(aURI);
   mOriginalURI = aURI;
   return NS_OK;
 }
@@ -268,25 +269,7 @@ nsresult nsIconChannel::MakeInputStream(nsIInputStream** _retval, PRBool nonBloc
     }
   }
 
-  // try by HFS type if we don't have an icon yet
-  if (!iconImage) {
-    nsCOMPtr<nsIMIMEService> mimeService (do_GetService(NS_MIMESERVICE_CONTRACTID, &rv));
-    NS_ENSURE_SUCCESS(rv, rv);
-
-    // if we were given an explicit content type, use it....
-    nsCOMPtr<nsIMIMEInfo> mimeInfo;
-    if (mimeService && (!contentType.IsEmpty() || !fileExt.IsEmpty()))
-      mimeService->GetFromTypeAndExtension(contentType, fileExt, getter_AddRefs(mimeInfo));
-
-    if (mimeInfo) {
-      // get the icon by HFS type
-      PRUint32 macType;
-      if (NS_SUCCEEDED(mimeInfo->GetMacType(&macType)))
-        iconImage = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(macType)];
-    }
-  }
-  
-  // if we still don't have an icon, try to get one by extension
+  // if we don't have an icon yet try to get one by extension
   if (!iconImage && !fileExt.IsEmpty()) {
     NSString* fileExtension = [NSString stringWithUTF8String:PromiseFlatCString(fileExt).get()];
     iconImage = [[NSWorkspace sharedWorkspace] iconForFileType:fileExtension];

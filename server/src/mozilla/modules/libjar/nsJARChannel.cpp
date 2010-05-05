@@ -46,6 +46,8 @@
 #include "nsEscape.h"
 #include "nsIPrefService.h"
 #include "nsIPrefBranch.h"
+#include "nsIViewSourceChannel.h"
+#include "nsChannelProperties.h"
 
 #include "nsIScriptSecurityManager.h"
 #include "nsIPrincipal.h"
@@ -89,11 +91,15 @@ public:
                     nsIZipReaderCache *jarCache)
         : mJarCache(jarCache)
         , mJarFile(jarFile)
-        , mFullJarURI(fullJarURI)
         , mJarEntry(jarEntry)
         , mContentLength(-1)
     {
         NS_ASSERTION(mJarFile, "no jar file");
+
+        if (fullJarURI) {
+            nsresult rv = fullJarURI->GetAsciiSpec(mJarDirSpec);
+            NS_ASSERTION(NS_SUCCEEDED(rv), "this shouldn't fail");
+        }
     }
 
     virtual ~nsJARInputThunk()
@@ -119,7 +125,7 @@ private:
     nsCOMPtr<nsIZipReaderCache> mJarCache;
     nsCOMPtr<nsIZipReader>      mJarReader;
     nsCOMPtr<nsIFile>           mJarFile;
-    nsCOMPtr<nsIURI>            mFullJarURI;
+    nsCString                   mJarDirSpec;
     nsCOMPtr<nsIInputStream>    mJarStream;
     nsCString                   mJarEntry;
     PRInt32                     mContentLength;
@@ -149,11 +155,9 @@ nsJARInputThunk::EnsureJarStream()
         // A directory stream also needs the Spec of the FullJarURI
         // because is included in the stream data itself.
 
-        nsCAutoString jarDirSpec;
-        rv = mFullJarURI->GetAsciiSpec(jarDirSpec);
-        if (NS_FAILED(rv)) return rv;
+        NS_ENSURE_STATE(!mJarDirSpec.IsEmpty());
 
-        rv = mJarReader->GetInputStreamWithSpec(jarDirSpec,
+        rv = mJarReader->GetInputStreamWithSpec(mJarDirSpec,
                                                 mJarEntry.get(),
                                                 getter_AddRefs(mJarStream));
     }
@@ -170,7 +174,8 @@ nsJARInputThunk::EnsureJarStream()
     }
 
     // ask the JarStream for the content length
-    mJarStream->Available((PRUint32 *) &mContentLength);
+    rv = mJarStream->Available((PRUint32 *) &mContentLength);
+    if (NS_FAILED(rv)) return rv;
 
     return NS_OK;
 }
@@ -218,6 +223,9 @@ nsJARInputThunk::IsNonBlocking(PRBool *nonBlocking)
 }
 
 //-----------------------------------------------------------------------------
+// nsJARChannel
+//-----------------------------------------------------------------------------
+
 
 nsJARChannel::nsJARChannel()
     : mContentLength(-1)
@@ -246,21 +254,28 @@ nsJARChannel::~nsJARChannel()
     NS_RELEASE(handler); // NULL parameter
 }
 
-NS_IMPL_ISUPPORTS6(nsJARChannel,
-                   nsIRequest,
-                   nsIChannel,
-                   nsIStreamListener,
-                   nsIRequestObserver,
-                   nsIDownloadObserver,
-                   nsIJARChannel)
+NS_IMPL_ISUPPORTS_INHERITED6(nsJARChannel,
+                             nsHashPropertyBag,
+                             nsIRequest,
+                             nsIChannel,
+                             nsIStreamListener,
+                             nsIRequestObserver,
+                             nsIDownloadObserver,
+                             nsIJARChannel)
 
 nsresult 
 nsJARChannel::Init(nsIURI *uri)
 {
     nsresult rv;
+    rv = nsHashPropertyBag::Init();
+    if (NS_FAILED(rv))
+        return rv;
+
     mJarURI = do_QueryInterface(uri, &rv);
     if (NS_FAILED(rv))
         return rv;
+
+    mOriginalURI = mJarURI;
 
     // Prevent loading jar:javascript URIs (see bug 290982).
     nsCOMPtr<nsIURI> innerURI;
@@ -441,17 +456,15 @@ nsJARChannel::SetLoadGroup(nsILoadGroup *aLoadGroup)
 NS_IMETHODIMP
 nsJARChannel::GetOriginalURI(nsIURI **aURI)
 {
-    if (mOriginalURI)
-        *aURI = mOriginalURI;
-    else
-        *aURI = mJarURI;
-    NS_IF_ADDREF(*aURI);
+    *aURI = mOriginalURI;
+    NS_ADDREF(*aURI);
     return NS_OK;
 }
 
 NS_IMETHODIMP
 nsJARChannel::SetOriginalURI(nsIURI *aURI)
 {
+    NS_ENSURE_ARG_POINTER(aURI);
     mOriginalURI = aURI;
     return NS_OK;
 }
@@ -683,21 +696,30 @@ nsJARChannel::AsyncOpen(nsIStreamListener *listener, nsISupports *ctx)
     nsresult rv = EnsureJarInput(PR_FALSE);
     if (NS_FAILED(rv)) return rv;
 
+    // These variables must only be set if we're going to trigger an
+    // OnStartRequest, either from AsyncRead or OnDownloadComplete.
+    mListener = listener;
+    mListenerContext = ctx;
+    mIsPending = PR_TRUE;
     if (mJarInput) {
-        // create input stream pump
+        // create input stream pump and call AsyncRead as a block
         rv = NS_NewInputStreamPump(getter_AddRefs(mPump), mJarInput);
-        if (NS_FAILED(rv)) return rv;
+        if (NS_SUCCEEDED(rv))
+            rv = mPump->AsyncRead(this, nsnull);
 
-        rv = mPump->AsyncRead(this, nsnull);
-        if (NS_FAILED(rv)) return rv;
+        // If we failed to create the pump or initiate the AsyncRead,
+        // then we need to clear these variables.
+        if (NS_FAILED(rv)) {
+            mIsPending = PR_FALSE;
+            mListenerContext = nsnull;
+            mListener = nsnull;
+            return rv;
+        }
     }
 
     if (mLoadGroup)
         mLoadGroup->AddRequest(this, nsnull);
 
-    mListener = listener;
-    mListenerContext = ctx;
-    mIsPending = PR_TRUE;
     return NS_OK;
 }
 
@@ -752,6 +774,7 @@ nsJARChannel::OnDownloadComplete(nsIDownloader *downloader,
     }
 
     if (NS_SUCCEEDED(status) && channel) {
+        nsCAutoString header;
         // Grab the security info from our base channel
         channel->GetSecurityInfo(getter_AddRefs(mSecurityInfo));
 
@@ -760,16 +783,20 @@ nsJARChannel::OnDownloadComplete(nsIDownloader *downloader,
             // We only want to run scripts if the server really intended to
             // send us a JAR file.  Check the server-supplied content type for
             // a JAR type.
-            nsCAutoString header;
             httpChannel->GetResponseHeader(NS_LITERAL_CSTRING("Content-Type"),
                                            header);
-
             nsCAutoString contentType;
             nsCAutoString charset;
             NS_ParseContentType(header, contentType, charset);
-
-            mIsUnsafe = !contentType.EqualsLiteral("application/java-archive") &&
-                        !contentType.EqualsLiteral("application/x-jar");
+            nsCAutoString channelContentType;
+            channel->GetContentType(channelContentType);
+            mIsUnsafe = !(contentType.Equals(channelContentType) &&
+                          (contentType.EqualsLiteral("application/java-archive") ||
+                           contentType.EqualsLiteral("application/x-jar")));
+            rv = httpChannel->GetResponseHeader(NS_LITERAL_CSTRING("Content-Disposition"),
+                                                header);
+            if (NS_SUCCEEDED(rv))
+                SetPropertyAsACString(NS_CHANNEL_PROP_CONTENT_DISPOSITION, header);
         } else {
             nsCOMPtr<nsIJARChannel> innerJARChannel(do_QueryInterface(channel));
             if (innerJARChannel) {
@@ -777,6 +804,10 @@ nsJARChannel::OnDownloadComplete(nsIDownloader *downloader,
                 innerJARChannel->GetIsUnsafe(&unsafe);
                 mIsUnsafe = unsafe;
             }
+            // Soon-to-be common way to get Disposition: right now only nsIJARChannel
+            rv = NS_GetContentDisposition(request, header);
+            if (NS_SUCCEEDED(rv))
+                SetPropertyAsACString(NS_CHANNEL_PROP_CONTENT_DISPOSITION, header);
         }
     }
 
@@ -790,6 +821,14 @@ nsJARChannel::OnDownloadComplete(nsIDownloader *downloader,
         }
 
         if (!allowUnpack) {
+            status = NS_ERROR_UNSAFE_CONTENT_TYPE;
+        }
+    }
+
+    if (NS_SUCCEEDED(status)) {
+        // Refuse to unpack view-source: jars even if open-unsafe-types is set.
+        nsCOMPtr<nsIViewSourceChannel> viewSource = do_QueryInterface(channel);
+        if (viewSource) {
             status = NS_ERROR_UNSAFE_CONTENT_TYPE;
         }
     }
@@ -875,8 +914,8 @@ nsJARChannel::OnDataAvailable(nsIRequest *req, nsISupports *ctx,
     // nsITransportEventSink implementation.
     // XXX do the 64-bit stuff for real
     if (mProgressSink && NS_SUCCEEDED(rv) && !(mLoadFlags & LOAD_BACKGROUND))
-        mProgressSink->OnProgress(this, nsnull, nsUint64(offset + count),
-                                  nsUint64(mContentLength));
+        mProgressSink->OnProgress(this, nsnull, PRUint64(offset + count),
+                                  PRUint64(mContentLength));
 
     return rv; // let the pump cancel on failure
 }

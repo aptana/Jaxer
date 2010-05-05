@@ -204,7 +204,7 @@ public:
     PRBool      MaybeShutdownLiveConnect(void);
     PRBool      IsLiveConnectEnabled(void);
     JSJavaVM*   GetJSJavaVM(void) { return fJSJavaVM; }
-
+    nsresult    Init();
 
     nsJVMManager(nsISupports* outer);
     virtual ~nsJVMManager(void);

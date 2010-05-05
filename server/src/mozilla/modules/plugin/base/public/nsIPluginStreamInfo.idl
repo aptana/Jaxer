@@ -52,10 +52,10 @@
 #include "nsplugindefs.h"
 %}
 
-[uuid(ed7d4ca0-b005-11d2-adaa-00805f6dec49)]
+[uuid(3a5fa31d-1ac1-4ea7-b7a6-dc9db0000b79)]
 interface nsIPluginStreamInfo : nsISupports
 {
-  readonly attribute nsMIMEType contentType;
+  readonly attribute string contentType;
 
   void isSeekable(out boolean aSeekable);
 

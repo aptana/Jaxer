@@ -48,8 +48,6 @@ MODULE_NAME	= nsCJVMManagerModule
 GRE_MODULE	= 1
 LIBXUL_LIBRARY	= 1
 
-PACKAGE_FILE = oji.pkg
-
 REQUIRES	= xpcom \
 		  string \
 		  liveconnect \
@@ -93,7 +91,6 @@ CPPSRCS		= \
 		nsCJVMManagerFactory.cpp \
 		nsJVMConfigManager.cpp \
 		lcglue.cpp \
-		nsJVMAuthTools.cpp \
 		$(NULL)
 
 ifeq ($(TARGET_MD_ARCH), unix)

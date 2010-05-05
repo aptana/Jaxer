@@ -50,20 +50,6 @@ ifdef MOZ_ZIPWRITER
 DIRS  += zipwriter
 endif
 
-ifdef MOZ_INSTALLER
-# Linux and Solaris installer needs standalone libjar
-DIRS  += standalone
-
-# Make this a true dynamic component even in static builds because
-# this component is shared by installer
-ifndef MINIMO
-# we don't care about the installer for MINIMO
-ifndef MOZ_ENABLE_LIBXUL
-BUILD_STATIC_LIBS=
-endif
-endif
-endif
-
 ifdef ENABLE_TESTS
 TOOL_DIRS += test
 endif
@@ -76,8 +62,6 @@ IS_COMPONENT	= 1
 MODULE_NAME	= nsJarModule
 GRE_MODULE	= 1
 LIBXUL_LIBRARY = 1
-
-PACKAGE_FILE = libjar.pkg
 
 REQUIRES	= xpcom \
 		  string \

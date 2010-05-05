@@ -44,16 +44,15 @@
 #define IMG_BUILD_bmp 1
 #define IMG_BUILD_png 1
 #define IMG_BUILD_jpeg 1
-#define IMG_BUILD_xbm 1
 #endif
 
+#include "nsIDeviceContext.h"
 #include "nsIGenericFactory.h"
 #include "nsIModule.h"
 #include "nsICategoryManager.h"
 #include "nsXPCOMCID.h"
 #include "nsServiceManagerUtils.h"
 
-#include "imgCache.h"
 #include "imgContainer.h"
 #include "imgLoader.h"
 #include "imgRequest.h"
@@ -81,12 +80,6 @@
 #include "nsJPEGDecoder.h"
 #endif
 
-#ifdef IMG_BUILD_DECODER_xbm
-// xbm
-#include "nsXBMDecoder.h"
-#endif
-
-
 #ifdef IMG_BUILD_ENCODER_png
 // png
 #include "nsPNGEncoder.h"
@@ -99,9 +92,8 @@
 
 // objects that just require generic constructors
 
-NS_GENERIC_FACTORY_CONSTRUCTOR(imgCache)
 NS_GENERIC_FACTORY_CONSTRUCTOR(imgContainer)
-NS_GENERIC_FACTORY_CONSTRUCTOR(imgLoader)
+NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(imgLoader, Init)
 NS_GENERIC_FACTORY_CONSTRUCTOR(imgRequestProxy)
 NS_GENERIC_FACTORY_CONSTRUCTOR(imgTools)
 
@@ -134,11 +126,6 @@ NS_GENERIC_FACTORY_CONSTRUCTOR(nsPNGDecoder)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsPNGEncoder)
 #endif
 
-#ifdef IMG_BUILD_DECODER_xbm
-// xbm
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsXBMDecoder)
-#endif
-
 static const char* gImageMimeTypes[] = {
 #ifdef IMG_BUILD_DECODER_gif
   "image/gif",
@@ -157,11 +144,6 @@ static const char* gImageMimeTypes[] = {
 #ifdef IMG_BUILD_DECODER_png
   "image/png",
   "image/x-png",
-#endif
-#ifdef IMG_BUILD_DECODER_xbm
-  "image/x-xbitmap",
-  "image/x-xbm",
-  "image/xbm"
 #endif
 };
 
@@ -203,12 +185,12 @@ static NS_METHOD ImageUnregisterProc(nsIComponentManager *aCompMgr,
 static const nsModuleComponentInfo components[] =
 {
   { "image cache",
-    NS_IMGCACHE_CID,
+    NS_IMGLOADER_CID,
     "@mozilla.org/image/cache;1",
-    imgCacheConstructor, },
+    imgLoaderConstructor, },
   { "image container",
     NS_IMGCONTAINER_CID,
-    "@mozilla.org/image/container;1",
+    "@mozilla.org/image/container;2",
     imgContainerConstructor, },
   { "image loader",
     NS_IMGLOADER_CID,
@@ -294,35 +276,25 @@ static const nsModuleComponentInfo components[] =
     "@mozilla.org/image/encoder;2?type=image/png",
     nsPNGEncoderConstructor, },
 #endif
-
-#ifdef IMG_BUILD_DECODER_xbm
-  // xbm
-  { "XBM Decoder",
-     NS_XBMDECODER_CID,
-     "@mozilla.org/image/decoder;2?type=image/x-xbitmap",
-     nsXBMDecoderConstructor, },
-  { "XBM Decoder",
-     NS_XBMDECODER_CID,
-     "@mozilla.org/image/decoder;2?type=image/x-xbm",
-     nsXBMDecoderConstructor, },
-  { "XBM Decoder",
-     NS_XBMDECODER_CID,
-     "@mozilla.org/image/decoder;2?type=image/xbm",
-     nsXBMDecoderConstructor, },
-#endif
 };
 
-PR_STATIC_CALLBACK(nsresult)
+static nsresult
 imglib_Initialize(nsIModule* aSelf)
 {
-  imgCache::Init();
+  // Hack: We need the gfx module to be initialized because we use gfxPlatform
+  // in imgFrame. Request something from the gfx module to ensure that
+  // everything's set up for us.
+  nsCOMPtr<nsIDeviceContext> devctx = 
+    do_CreateInstance("@mozilla.org/gfx/devicecontext;1");
+
+  imgLoader::InitCache();
   return NS_OK;
 }
 
-PR_STATIC_CALLBACK(void)
+static void
 imglib_Shutdown(nsIModule* aSelf)
 {
-  imgCache::Shutdown();
+  imgLoader::Shutdown();
 }
 
 NS_IMPL_NSGETMODULE_WITH_CTOR_DTOR(nsImageLib2Module, components,

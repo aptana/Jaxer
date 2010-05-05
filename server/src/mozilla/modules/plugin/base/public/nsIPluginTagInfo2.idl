@@ -46,20 +46,10 @@
  */
 
 #include "nsIPluginTagInfo.idl"
-
-%{C++
-enum nsPluginTagType {
-  nsPluginTagType_Unknown,
-  nsPluginTagType_Embed,
-  nsPluginTagType_Object,
-  nsPluginTagType_Applet
-};
-%}
-
-native nsPluginTagType(nsPluginTagType);
+#include "nsIPluginTagInfoOld.idl"
 
 [uuid(6a49c9a0-019b-11d2-815b-006008119d7a)]
-interface nsIPluginTagInfo2 : nsIPluginTagInfo
+interface nsIPluginTagInfo2 : nsIPluginTagInfoOld
 {
     /**
      * Get the type of the HTML tag that was used ot instantiate this

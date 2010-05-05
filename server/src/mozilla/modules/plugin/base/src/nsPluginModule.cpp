@@ -37,24 +37,37 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "nsIGenericFactory.h"
-#include "nsIPluginManager.h"
+#include "nsPluginHost.h"
 #include "nsPluginsCID.h"
-#include "nsPluginHostImpl.h"
-#include "ns4xPlugin.h"
+#ifdef OJI
+#include "nsJVMAuthTools.h"
+#endif
 
-NS_GENERIC_FACTORY_SINGLETON_CONSTRUCTOR(nsPluginHostImpl,
-                                         nsPluginHostImpl::GetInst)
+NS_GENERIC_FACTORY_SINGLETON_CONSTRUCTOR(nsPluginHost, nsPluginHost::GetInst)
+#ifdef OJI
+NS_GENERIC_AGGREGATED_CONSTRUCTOR(nsJVMAuthTools)
+#endif
 
 static const nsModuleComponentInfo gComponentInfo[] = {
   { "Plugin Host",
     NS_PLUGIN_HOST_CID,
-    "@mozilla.org/plugin/host;1",
-    nsPluginHostImplConstructor },
-
+    MOZ_PLUGIN_HOST_CONTRACTID,
+    nsPluginHostConstructor
+#ifdef OJI
+  },
   { "Plugin Manager",
     NS_PLUGINMANAGER_CID,
     "@mozilla.org/plugin/manager;1",
-    nsPluginHostImplConstructor },
+    nsPluginHostConstructor
+  },
+  { "JVM Authentication Service", 
+    NS_JVMAUTHTOOLS_CID,  
+    "@mozilla.org/oji/jvm-auth-tools;1", 
+    nsJVMAuthToolsConstructor
+  }
+#else
+  }
+#endif
 };
 
 NS_IMPL_NSGETMODULE(nsPluginModule, gComponentInfo)

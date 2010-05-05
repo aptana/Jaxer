@@ -447,7 +447,8 @@ NS_IMETHODIMP nsPref::SetUnicharPref(const char *pref, const PRUnichar *value)
   if (NS_SUCCEEDED(rv)) {
     nsCOMPtr<nsISupportsString> theString = do_CreateInstance(NS_SUPPORTS_STRING_CONTRACTID, &rv);
     if (NS_SUCCEEDED(rv)) {
-      theString->SetData(nsDependentString(value));
+      nsAutoString val(value);
+      theString->SetData(val);
       rv = prefBranch->SetComplexValue(pref, NS_GET_IID(nsISupportsString), theString);
     }
   }
@@ -460,7 +461,8 @@ NS_IMETHODIMP nsPref::SetDefaultUnicharPref(const char *pref, const PRUnichar *v
 
   nsCOMPtr<nsISupportsString> theString = do_CreateInstance(NS_SUPPORTS_STRING_CONTRACTID, &rv);
   if (NS_SUCCEEDED(rv)) {
-    theString->SetData(nsDependentString(value));
+    nsAutoString val(value);
+    theString->SetData(val);
     rv = mDefaultBranch->SetComplexValue(pref, NS_GET_IID(nsISupportsString), theString);
   }
   return rv;
@@ -709,10 +711,13 @@ NS_IMETHODIMP nsPref::SecurityClearUserPref(const char *pref_name)
 nsPref* nsPref::GetInstance()
 //----------------------------------------------------------------------------------------
 {
+  if (gInstance)
+    return gInstance;
+  NS_NEWXPCOM(gInstance, nsPref);
   if (!gInstance)
-  {
-    NS_NEWXPCOM(gInstance, nsPref);
-  }
+    return nsnull;
+  if (!gInstance->mPrefService)
+    NS_RELEASE(gInstance);
   return gInstance;
 } // nsPref::GetInstance
 

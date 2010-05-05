@@ -22,6 +22,7 @@
  *
  * Contributor(s):
  *   Stuart Parmenter <pavlov@netscape.com>
+ *   Ehsan Akhgari <ehsan.akhgari@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -38,7 +39,15 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "imgILoader.h"
+#include "imgICache.h"
+#include "nsWeakReference.h"
 #include "nsIContentSniffer.h"
+#include "nsRefPtrHashtable.h"
+#include "nsExpirationTracker.h"
+#include "nsAutoPtr.h"
+#include "prtypes.h"
+#include "imgRequest.h"
+#include "nsIObserverService.h"
 
 #ifdef LOADER_THREADSAFE
 #include "prlock.h"
@@ -49,6 +58,129 @@ class imgRequestProxy;
 class imgIRequest;
 class imgIDecoderObserver;
 class nsILoadGroup;
+class nsIPrefBranch;
+
+class imgCacheEntry
+{
+public:
+  imgCacheEntry(imgRequest *request, PRBool mustValidateIfExpired = PR_FALSE);
+  ~imgCacheEntry();
+
+  nsrefcnt AddRef()
+  {
+    NS_PRECONDITION(PRInt32(mRefCnt) >= 0, "illegal refcnt");
+    NS_ABORT_IF_FALSE(_mOwningThread.GetThread() == PR_GetCurrentThread(), "imgCacheEntry addref isn't thread-safe!");
+    ++mRefCnt;
+    NS_LOG_ADDREF(this, mRefCnt, "imgCacheEntry", sizeof(*this));
+    return mRefCnt;
+  }
+ 
+  nsrefcnt Release()
+  {
+    NS_PRECONDITION(0 != mRefCnt, "dup release");
+    NS_ABORT_IF_FALSE(_mOwningThread.GetThread() == PR_GetCurrentThread(), "imgCacheEntry release isn't thread-safe!");
+    --mRefCnt;
+    NS_LOG_RELEASE(this, mRefCnt, "imgCacheEntry");
+    if (mRefCnt == 0) {
+      mRefCnt = 1; /* stabilize */
+      delete this;
+      return 0;
+    }
+    return mRefCnt;                              
+  }
+
+  PRUint32 GetDataSize() const
+  {
+    return mDataSize;
+  }
+  void SetDataSize(PRUint32 aDataSize)
+  {
+    PRInt32 oldsize = mDataSize;
+    mDataSize = aDataSize;
+    TouchWithSize(mDataSize - oldsize);
+  }
+
+  PRInt32 GetTouchedTime() const
+  {
+    return mTouchedTime;
+  }
+  void SetTouchedTime(PRInt32 time)
+  {
+    mTouchedTime = time;
+    Touch(/* updateTime = */ PR_FALSE);
+  }
+
+  PRInt32 GetExpiryTime() const
+  {
+    return mExpiryTime;
+  }
+  void SetExpiryTime(PRInt32 aExpiryTime)
+  {
+    mExpiryTime = aExpiryTime;
+    Touch();
+  }
+
+  PRBool GetMustValidateIfExpired() const
+  {
+    return mMustValidateIfExpired;
+  }
+  void SetMustValidateIfExpired(PRBool aValidate)
+  {
+    mMustValidateIfExpired = aValidate;
+    Touch();
+  }
+
+  already_AddRefed<imgRequest> GetRequest() const
+  {
+    imgRequest *req = mRequest;
+    NS_ADDREF(req);
+    return req;
+  }
+
+  PRBool Evicted() const
+  {
+    return mEvicted;
+  }
+
+  nsExpirationState *GetExpirationState()
+  {
+    return &mExpirationState;
+  }
+
+  PRBool HasNoProxies() const
+  {
+    return mHasNoProxies;
+  }
+
+private: // methods
+  friend class imgLoader;
+  friend class imgCacheQueue;
+  void Touch(PRBool updateTime = PR_TRUE);
+  void TouchWithSize(PRInt32 diff);
+  void SetEvicted(PRBool evict)
+  {
+    mEvicted = evict;
+  }
+  void SetHasNoProxies(PRBool hasNoProxies);
+
+  // Private, unimplemented copy constructor.
+  imgCacheEntry(const imgCacheEntry &);
+
+private: // data
+  nsAutoRefCnt mRefCnt;
+  NS_DECL_OWNINGTHREAD
+
+  nsRefPtr<imgRequest> mRequest;
+  PRUint32 mDataSize;
+  PRInt32 mTouchedTime;
+  PRInt32 mExpiryTime;
+  nsExpirationState mExpirationState;
+  PRPackedBool mMustValidateIfExpired : 1;
+  PRPackedBool mEvicted : 1;
+  PRPackedBool mHasNoProxies : 1;
+};
+
+#include <vector>
 
 #define NS_IMGLOADER_CID \
 { /* 9f6a0d2e-1dd1-11b2-a5b8-951f13c846f7 */         \
@@ -58,23 +190,156 @@ class nsILoadGroup;
     {0xa5, 0xb8, 0x95, 0x1f, 0x13, 0xc8, 0x46, 0xf7} \
 }
 
-class imgLoader : public imgILoader, public nsIContentSniffer
+class imgCacheQueue
+{
+public: 
+  imgCacheQueue();
+  void Remove(imgCacheEntry *);
+  void Push(imgCacheEntry *);
+  void MarkDirty();
+  PRBool IsDirty();
+  already_AddRefed<imgCacheEntry> Pop();
+  void Refresh();
+  PRUint32 GetSize() const;
+  void UpdateSize(PRInt32 diff);
+  PRUint32 GetNumElements() const;
+  typedef std::vector<nsRefPtr<imgCacheEntry> > queueContainer;  
+  typedef queueContainer::iterator iterator;
+  typedef queueContainer::const_iterator const_iterator;
+
+  iterator begin();
+  const_iterator begin() const;
+  iterator end();
+  const_iterator end() const;
+
+private:
+  queueContainer mQueue;
+  PRBool mDirty;
+  PRUint32 mSize;
+};
+
+class imgLoader : public imgILoader,
+                  public nsIContentSniffer,
+                  public imgICache,
+                  public nsSupportsWeakReference,
+                  public nsIObserver
 {
 public:
   NS_DECL_ISUPPORTS
   NS_DECL_IMGILOADER
   NS_DECL_NSICONTENTSNIFFER
+  NS_DECL_IMGICACHE
+  NS_DECL_NSIOBSERVER
 
   imgLoader();
   virtual ~imgLoader();
 
+  nsresult Init();
+
   static nsresult GetMimeTypeFromContent(const char* aContents, PRUint32 aLength, nsACString& aContentType);
 
-private:
+  static void Shutdown(); // for use by the factory
+
+  static nsresult ClearChromeImageCache();
+  static nsresult ClearImageCache();
+  static void MinimizeCaches();
+
+  static nsresult InitCache();
+
+  static PRBool RemoveFromCache(nsIURI *aKey);
+  static PRBool RemoveFromCache(imgCacheEntry *entry);
+
+  static PRBool PutIntoCache(nsIURI *key, imgCacheEntry *entry);
+
+  // Returns true if we should prefer evicting cache entry |two| over cache
+  // entry |one|.
+  // This mixes units in the worst way, but provides reasonable results.
+  inline static bool CompareCacheEntries(const nsRefPtr<imgCacheEntry> &one,
+                                         const nsRefPtr<imgCacheEntry> &two)
+  {
+    if (!one)
+      return false;
+    if (!two)
+      return true;
+
+    const double sizeweight = 1.0 - sCacheTimeWeight;
+
+    // We want large, old images to be evicted first (depending on their
+    // relative weights). Since a larger time is actually newer, we subtract
+    // time's weight, so an older image has a larger weight.
+    double oneweight = double(one->GetDataSize()) * sizeweight -
+                       double(one->GetTouchedTime()) * sCacheTimeWeight;
+    double twoweight = double(two->GetDataSize()) * sizeweight -
+                       double(two->GetTouchedTime()) * sCacheTimeWeight;
+
+    return oneweight < twoweight;
+  }
+
+  static void VerifyCacheSizes();
+
+  // The image loader maintains a hash table of all imgCacheEntries. However,
+  // only some of them will be evicted from the cache: those who have no
+  // imgRequestProxies watching their imgRequests. 
+  //
+  // Once an imgRequest has no imgRequestProxies, it should notify us by
+  // calling HasNoObservers(), and null out its cache entry pointer.
+  // 
+  // Upon having a proxy start observing again, it should notify us by calling
+  // HasObservers(). The request's cache entry will be re-set before this
+  // happens, by calling imgRequest::SetCacheEntry() when an entry with no
+  // observers is re-requested.
+  static PRBool SetHasNoProxies(nsIURI *key, imgCacheEntry *entry);
+  static PRBool SetHasProxies(nsIURI *key);
+
+private: // methods
+
+
+  PRBool ValidateEntry(imgCacheEntry *aEntry, nsIURI *aKey,
+                       nsIURI *aInitialDocumentURI, nsIURI *aReferrerURI, 
+                       nsILoadGroup *aLoadGroup,
+                       imgIDecoderObserver *aObserver, nsISupports *aCX,
+                       nsLoadFlags aLoadFlags, PRBool aCanMakeNewChannel,
+                       imgIRequest *aExistingRequest,
+                       imgIRequest **aProxyRequest);
+  PRBool ValidateRequestWithNewChannel(imgRequest *request, nsIURI *aURI,
+                                       nsIURI *aInitialDocumentURI,
+                                       nsIURI *aReferrerURI,
+                                       nsILoadGroup *aLoadGroup,
+                                       imgIDecoderObserver *aObserver,
+                                       nsISupports *aCX, nsLoadFlags aLoadFlags,
+                                       imgIRequest *aExistingRequest,
+                                       imgIRequest **aProxyRequest);
+
   nsresult CreateNewProxyForRequest(imgRequest *aRequest, nsILoadGroup *aLoadGroup,
                                     imgIDecoderObserver *aObserver,
                                     nsLoadFlags aLoadFlags, imgIRequest *aRequestProxy,
                                     imgIRequest **_retval);
+
+  void ReadAcceptHeaderPref(nsIPrefBranch *aBranch);
+
+
+  typedef nsRefPtrHashtable<nsCStringHashKey, imgCacheEntry> imgCacheTable;
+
+  static nsresult EvictEntries(imgCacheTable &aCacheToClear);
+  static nsresult EvictEntries(imgCacheQueue &aQueueToClear);
+
+  static imgCacheTable &GetCache(nsIURI *aURI);
+  static imgCacheQueue &GetCacheQueue(nsIURI *aURI);
+  static void CacheEntriesChanged(nsIURI *aURI, PRInt32 sizediff = 0);
+  static void CheckCacheLimits(imgCacheTable &cache, imgCacheQueue &queue);
+
+private: // data
+  friend class imgCacheEntry;
+
+  static imgCacheTable sCache;
+  static imgCacheQueue sCacheQueue;
+
+  static imgCacheTable sChromeCache;
+  static imgCacheQueue sChromeCacheQueue;
+  static PRFloat64 sCacheTimeWeight;
+  static PRUint32 sCacheMaxSize;
+
+  nsCString mAcceptHeader;
 };
 
 
@@ -124,8 +389,10 @@ public:
 private:
   nsCOMPtr<nsIStreamListener> mDestListener;
 
-  imgRequest *mRequest;
+  nsRefPtr<imgRequest> mRequest;
   nsCOMArray<imgIRequest> mProxies;
 
   void *mContext;
+
+  static imgLoader sImgLoader;
 };

@@ -57,12 +57,15 @@ public:
 
   virtual nsresult GetFormValue(nsAString& aValue) = 0;
 
-  virtual void PushPopupsEnabledState(PRBool aEnabled) = 0;
-  virtual void PopPopupsEnabledState() = 0;
+  //virtual void PushPopupsEnabledState(PRBool aEnabled) = 0;
+  virtual nsresult PushPopupsEnabledState(PRBool aEnabled) = 0;
+  //virtual void PopPopupsEnabledState() = 0;
+  virtual nsresult PopPopupsEnabledState() = 0;
 
   virtual PRUint16 GetPluginAPIVersion() = 0;
 
-  virtual void DefineJavaProperties() = 0;
+  //virtual void DefineJavaProperties() = 0;
+  virtual nsresult DefineJavaProperties() = 0;
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsIPluginInstanceInternal,

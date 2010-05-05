@@ -44,7 +44,6 @@
 #include "imgIDecoder.h"
 #include "imgIContainer.h"
 #include "imgIDecoderObserver.h"
-#include "gfxIImageFrame.h"
 
 #include "GIF2.h"
 
@@ -76,10 +75,10 @@ private:
 
   void      BeginGIF();
   void      EndGIF();
-  void      BeginImageFrame(gfx_depth aDepth);
+  nsresult  BeginImageFrame(gfx_depth aDepth);
   void      EndImageFrame();
-  void      FlushImageData();
-  void      FlushImageData(PRUint32 fromRow, PRUint32 rows);
+  nsresult  FlushImageData();
+  nsresult  FlushImageData(PRUint32 fromRow, PRUint32 rows);
 
   nsresult  GifWrite(const PRUint8 * buf, PRUint32 numbytes);
   PRUint32  OutputRow();
@@ -88,16 +87,22 @@ private:
   inline int ClearCode() const { return 1 << mGIFStruct.datasize; }
 
   nsCOMPtr<imgIContainer> mImageContainer;
-  nsCOMPtr<gfxIImageFrame> mImageFrame;
   nsCOMPtr<imgIDecoderObserver> mObserver; // this is just qi'd from mRequest for speed
   PRInt32 mCurrentRow;
   PRInt32 mLastFlushedRow;
 
   PRUint8 *mImageData;       // Pointer to image data in either Cairo or 8bit format
   PRUint32 *mColormap;       // Current colormap to be used in Cairo format
+  PRUint32 mColormapSize;
   PRUint32 mOldColor;        // The old value of the transparent pixel
+
+  // The frame number of the currently-decoding frame when we're in the middle
+  // of decoding it, and -1 otherwise.
+  PRInt32 mCurrentFrame;
+
   PRUint8 mCurrentPass;
   PRUint8 mLastFlushedPass;
+  PRUint8 mColorMask;        // Apply this to the pixel to keep within colormap
   PRPackedBool mGIFOpen;
   PRPackedBool mSawTransparency;
 

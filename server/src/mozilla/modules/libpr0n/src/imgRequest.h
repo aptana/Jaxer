@@ -46,8 +46,9 @@
 #include "imgIDecoder.h"
 #include "imgIDecoderObserver.h"
 
-#include "nsICacheEntryDescriptor.h"
+#include "nsIChannelEventSink.h"
 #include "nsIContentSniffer.h"
+#include "nsIInterfaceRequestor.h"
 #include "nsIRequest.h"
 #include "nsIProperties.h"
 #include "nsIStreamListener.h"
@@ -63,6 +64,7 @@
 class imgCacheValidator;
 
 class imgRequestProxy;
+class imgCacheEntry;
 
 enum {
   onStartRequest   = PR_BIT(0),
@@ -76,7 +78,9 @@ enum {
 class imgRequest : public imgILoad,
                    public imgIDecoderObserver,
                    public nsIStreamListener,
-                   public nsSupportsWeakReference
+                   public nsSupportsWeakReference,
+                   public nsIChannelEventSink,
+                   public nsIInterfaceRequestor
 {
 public:
   imgRequest();
@@ -85,8 +89,10 @@ public:
   NS_DECL_ISUPPORTS
 
   nsresult Init(nsIURI *aURI,
+                nsIURI *aKeyURI,
                 nsIRequest *aRequest,
-                nsICacheEntryDescriptor *aCacheEntry,
+                nsIChannel *aChannel,
+                imgCacheEntry *aCacheEntry,
                 void *aCacheId,
                 void *aLoadId);
 
@@ -104,15 +110,17 @@ public:
   // being made...
   PRBool IsReusable(void *aCacheId) { return !mLoading || (aCacheId == mCacheId); }
 
-  // get the current or last network status from our
-  // internal nsIChannel.
-  nsresult GetNetworkStatus();
+  // Cancel, but also ensure that all work done in Init() is undone. Call this
+  // only when the channel has failed to open, and so calling Cancel() on it
+  // won't be sufficient.
+  void CancelAndAbort(nsresult aStatus);
 
 private:
+  friend class imgCacheEntry;
   friend class imgRequestProxy;
   friend class imgLoader;
   friend class imgCacheValidator;
-  friend class imgCache;
+  friend class imgCacheExpirationTracker;
 
   inline void SetLoadId(void *aLoadId) {
     mLoadId = aLoadId;
@@ -122,7 +130,9 @@ private:
   inline nsresult GetResultFromImageStatus(PRUint32 aStatus) const;
   void Cancel(nsresult aStatus);
   nsresult GetURI(nsIURI **aURI);
+  nsresult GetKeyURI(nsIURI **aURI);
   nsresult GetPrincipal(nsIPrincipal **aPrincipal);
+  nsresult GetSecurityInfo(nsISupports **aSecurityInfo);
   void RemoveFromCache();
   inline const char *GetMimeType() const {
     return mContentType.get();
@@ -130,6 +140,14 @@ private:
   inline nsIProperties *Properties() {
     return mProperties;
   }
+
+  // Reset the cache entry after we've dropped our reference to it. Used by the
+  // imgLoader when our cache entry is re-requested after we've dropped our
+  // reference to it.
+  void SetCacheEntry(imgCacheEntry *entry);
+
+  // Returns whether we've got a reference to the cache entry.
+  PRBool HasCacheEntry() const;
 
   // Return true if at least one of our proxies, excluding
   // aProxyToIgnore, has an observer.  aProxyToIgnore may be null.
@@ -143,32 +161,44 @@ private:
   // on behalf of the given proxy.
   void AdjustPriority(imgRequestProxy *aProxy, PRInt32 aDelta);
 
+  // Return whether we've seen some data at this point
+  PRBool HasTransferredData() const { return mGotData; }
+
+  // Set whether this request is stored in the cache. If it isn't, regardless
+  // of whether this request has a non-null mCacheEntry, this imgRequest won't
+  // try to update or modify the image cache.
+  void SetIsInCache(PRBool cacheable);
+
 public:
   NS_DECL_IMGILOAD
   NS_DECL_IMGIDECODEROBSERVER
   NS_DECL_IMGICONTAINEROBSERVER
   NS_DECL_NSISTREAMLISTENER
   NS_DECL_NSIREQUESTOBSERVER
+  NS_DECL_NSICHANNELEVENTSINK
+  NS_DECL_NSIINTERFACEREQUESTOR
 
 private:
   nsCOMPtr<nsIRequest> mRequest;
+  // The original URI we were loaded with.
   nsCOMPtr<nsIURI> mURI;
+  // The URI we are keyed on in the cache.
+  nsCOMPtr<nsIURI> mKeyURI;
   nsCOMPtr<nsIPrincipal> mPrincipal;
   nsCOMPtr<imgIContainer> mImage;
   nsCOMPtr<imgIDecoder> mDecoder;
   nsCOMPtr<nsIProperties> mProperties;
+  nsCOMPtr<nsISupports> mSecurityInfo;
+  nsCOMPtr<nsIChannel> mChannel;
+  nsCOMPtr<nsIInterfaceRequestor> mPrevChannelSink;
 
   nsTObserverArray<imgRequestProxy*> mObservers;
 
-  PRPackedBool mLoading;
-  PRPackedBool mProcessing;
-  PRPackedBool mHadLastPart;
-  PRUint32 mNetworkStatus;
   PRUint32 mImageStatus;
   PRUint32 mState;
   nsCString mContentType;
 
-  nsCOMPtr<nsICacheEntryDescriptor> mCacheEntry; /* we hold on to this to this so long as we have observers */
+  nsRefPtr<imgCacheEntry> mCacheEntry; /* we hold on to this to this so long as we have observers */
 
   void *mCacheId;
 
@@ -176,9 +206,14 @@ private:
   PRTime mLoadTime;
 
   imgCacheValidator *mValidator;
-  PRBool   mIsMultiPartChannel;
-
   nsCategoryCache<nsIContentSniffer> mImageSniffers;
+
+  PRPackedBool mIsMultiPartChannel : 1;
+  PRPackedBool mLoading : 1;
+  PRPackedBool mProcessing : 1;
+  PRPackedBool mHadLastPart : 1;
+  PRPackedBool mGotData : 1;
+  PRPackedBool mIsInCache : 1;
 };
 
 #endif
