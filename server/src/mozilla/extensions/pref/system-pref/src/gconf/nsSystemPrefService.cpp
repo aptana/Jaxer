@@ -44,7 +44,8 @@
 
 #include "plstr.h"
 #include "nsCOMPtr.h"
-#include "nsIPref.h"
+#include "nsIPrefBranch.h"
+#include "nsIPrefService.h"
 #include "nsIServiceManager.h"
 #include "nsIObserver.h"
 #include "nsWeakReference.h"
@@ -209,7 +210,7 @@ struct SysPrefCallbackData {
     PRUint32 prefAtom;
 };
 
-PRBool PR_CALLBACK
+PRBool
 sysPrefDeleteObserver(void *aElement, void *aData) {
     SysPrefCallbackData *pElement =
         static_cast<SysPrefCallbackData *>(aElement);
@@ -586,7 +587,7 @@ static const PrefNamePair sPrefNameMapping[] = {
     {nsnull, nsnull},
 };
 
-PRBool PR_CALLBACK
+PRBool
 gconfDeleteObserver(void *aElement, void *aData) {
     nsMemory::Free(aElement);
     return PR_TRUE;
@@ -624,7 +625,8 @@ GConfProxy::Init()
     if (mInitialized)
         return PR_TRUE;
 
-    nsCOMPtr<nsIPref> pref = do_GetService(NS_PREF_CONTRACTID);
+    nsCOMPtr<nsIPrefBranch> pref = do_GetService(NS_PREFSERVICE_CONTRACTID); 
+
     if (!pref)
         return PR_FALSE;
 

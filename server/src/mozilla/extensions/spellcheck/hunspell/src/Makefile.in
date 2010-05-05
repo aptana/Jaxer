@@ -54,21 +54,22 @@ REQUIRES         = xpcom \
                    $(NULL)
 
 CPPSRCS          = mozHunspell.cpp \
+                   mozHunspellDirProvider.cpp \
                    $(NULL)
 
 ifndef MOZ_NATIVE_HUNSPELL
 CPPSRCS         += affentry.cpp \
                    affixmgr.cpp \
                    csutil.cpp \
+                   dictmgr.cpp \
+                   filemgr.cpp \
                    hashmgr.cpp \
                    hunspell.cpp \
+                   hunzip.cpp \
                    phonet.cpp \
+                   replist.cpp \
                    suggestmgr.cpp \
                    $(NULL)
-endif
-
-ifdef MOZ_XUL_APP
-CPPSRCS += mozHunspellDirProvider.cpp
 endif
 
 EXTRA_DSO_LDOPTS = \

@@ -48,11 +48,13 @@
 // The nsHttpNegotiateAuth class provides responses for the GSS-API Negotiate method
 // as specified by Microsoft in draft-brezak-spnego-http-04.txt
 
-class nsHttpNegotiateAuth : public nsIHttpAuthenticator
+class nsHttpNegotiateAuth : public nsIHttpAuthenticator,
+                                   nsIHttpAuthenticator_1_9_2
 {
 public:
     NS_DECL_ISUPPORTS
     NS_DECL_NSIHTTPAUTHENTICATOR
+    NS_DECL_NSIHTTPAUTHENTICATOR_1_9_2
 
 private:
     // returns the value of the given boolean pref

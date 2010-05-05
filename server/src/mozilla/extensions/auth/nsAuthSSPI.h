@@ -45,6 +45,7 @@
 #include <windows.h>
 
 #define SECURITY_WIN32 1
+#include <ntsecapi.h>
 #include <security.h>
 #include <rpc.h>
 
@@ -77,6 +78,9 @@ private:
     PRUint32     mServiceFlags;
     PRUint32     mMaxTokenLen;
     pType        mPackage;
+    nsString     mDomain;
+    nsString     mUsername;
+    nsString     mPassword;
 };
 
 #endif /* nsAuthSSPI_h__ */

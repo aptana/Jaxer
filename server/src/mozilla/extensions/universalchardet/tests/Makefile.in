@@ -43,35 +43,14 @@ VPATH		= @srcdir@
 
 include $(DEPTH)/config/autoconf.mk
 
-MODULE		= universalchardet
-MOZILLA_INTERNAL_API = 1
-
-REQUIRES	= xpcom \
-		  $(NULL)
-
-CPPSRCS		= \
-		UniversalChardetTest.cpp \
-		$(NULL)
-
-LOCAL_INCLUDES = -I$(srcdir)/../src/base
-
-SIMPLE_PROGRAMS	= $(CPPSRCS:.cpp=$(BIN_SUFFIX))
-
-include $(topsrcdir)/config/config.mk
-
-LIBS		+= \
-		$(LIBS_DIR) \
-		../src/base/$(LIB_PREFIX)universalchardet_s.$(LIB_SUFFIX) \
-		$(NSPR_LIBS) \
-		$(NULL)
-
 include $(topsrcdir)/config/rules.mk
 
-ifdef MOZ_MOCHITEST
 relativesrcdir = extensions/universalchardet/tests
 
 _TEST_FILES =	\
 		CharsetDetectionTests.js \
+		bug9357_text.html \
+		test_bug9357.html \
 		bug171813_text.html \
 		test_bug171813.html \
 		bug306272_text.html \
@@ -82,9 +61,14 @@ _TEST_FILES =	\
 		test_bug426271-euc-jp.html \
 		bug426271_text-utf-8.html \
 		test_bug426271-utf-8.html \
+		bug431054_text.html \
+		test_bug431054.html \
+		test_bug431054-japanese.html \
+		bug488426_text.html \
+		test_bug488426.html \
+		bug547487_text.html \
+		test_bug547487.html \
 		$(NULL)
 
 libs:: $(_TEST_FILES)
 	$(INSTALL) $(foreach f,$^,"$f") $(DEPTH)/_tests/testing/mochitest/tests/$(relativesrcdir)
-
-endif # MOZ_MOCHITEST
