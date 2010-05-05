@@ -1,5 +1,6 @@
-/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
-/* ***** BEGIN LICENSE BLOCK *****
+/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*-
+ * vim: sw=2 ts=2 et lcs=trail\:.,tab\:>~ :
+ * ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * The contents of this file are subject to the Mozilla Public License Version
@@ -40,69 +41,144 @@
 #ifndef _MOZSTORAGECONNECTION_H_
 #define _MOZSTORAGECONNECTION_H_
 
+#include "nsAutoPtr.h"
 #include "nsCOMPtr.h"
+#include "mozilla/Mutex.h"
 
 #include "nsString.h"
-#include "nsDataHashtable.h"
+#include "nsInterfaceHashtable.h"
 #include "mozIStorageProgressHandler.h"
 #include "mozIStorageConnection.h"
+#include "mozStorageService.h"
 
 #include "nsIMutableArray.h"
 
-#include <sqlite3.h>
+#include "sqlite3.h"
 
+struct PRLock;
 class nsIFile;
-class mozIStorageService;
+class nsIEventTarget;
+class nsIThread;
 
-class mozStorageConnection : public mozIStorageConnection
+namespace mozilla {
+namespace storage {
+
+class Connection : public mozIStorageConnection
 {
 public:
+  NS_DECL_ISUPPORTS
+  NS_DECL_MOZISTORAGECONNECTION
 
-    mozStorageConnection(mozIStorageService* aService);
+  Connection(Service *aService);
 
-    NS_IMETHOD Initialize(nsIFile *aDatabaseFile);
+  /**
+   * Creates the connection to the database.
+   *
+   * @param aDatabaseFile
+   *        The nsIFile of the location of the database to open, or create if it
+   *        does not exist.  Passing in nsnull here creates an in-memory
+   *        database.
+   */
+  nsresult initialize(nsIFile *aDatabaseFile);
 
-    // interfaces
-    NS_DECL_ISUPPORTS
-    NS_DECL_MOZISTORAGECONNECTION
+  // fetch the native handle
+  sqlite3 *GetNativeConnection() { return mDBConn; }
 
-    // fetch the native handle
-    sqlite3 *GetNativeConnection() { return mDBConn; }
+  /**
+   * Lazily creates and returns a background execution thread.  In the future,
+   * the thread may be re-claimed if left idle, so you should call this
+   * method just before you dispatch and not save the reference.
+   *
+   * @returns an event target suitable for asynchronous statement execution.
+   */
+  already_AddRefed<nsIEventTarget> getAsyncExecutionTarget();
+
+  /**
+   * Mutex used by asynchronous statements to protect state.  The mutex is
+   * declared on the connection object because there is no contention between
+   * asynchronous statements (they are serialized on mAsyncExecutionThread).
+   */
+  Mutex sharedAsyncExecutionMutex;
+
+  /**
+   * References the thread this database was opened on.
+   */
+  const nsCOMPtr<nsIThread> threadOpenedOn;
 
 private:
-    ~mozStorageConnection();
+  ~Connection();
 
-protected:
-    struct FindFuncEnumArgs {
-        nsISupports *mTarget;
-        PRBool       mFound;
-    };
+  /**
+   * Describes a certain primitive type in the database.
+   *
+   * Possible Values Are:
+   *  INDEX - To check for the existence of an index
+   *  TABLE - To check for the existence of a table
+   */
+  enum DatabaseElementType {
+    INDEX,
+    TABLE
+  };
 
-    void HandleSqliteError(const char *aSqlStatement);
-    static PLDHashOperator s_FindFuncEnum(const nsACString &aKey,
-                                          nsISupports* aData, void* userArg);
-    static PLDHashOperator s_ReleaseFuncEnum(const nsACString &aKey,
-                                             nsISupports* aData, void* userArg);
-    PRBool FindFunctionByInstance(nsISupports *aInstance);
+  /**
+   * Determines if the specified primitive exists.
+   *
+   * @param aElementType
+   *        The type of element to check the existence of
+   * @param aElementName
+   *        The name of the element to check for
+   * @returns true if element exists, false otherwise
+   */
+  nsresult databaseElementExists(enum DatabaseElementType aElementType,
+                                 const nsACString& aElementName,
+                                 PRBool *_exists);
 
-    static int s_ProgressHelper(void *arg);
-    // Generic progress handler
-    // Dispatch call to registered progress handler,
-    // if there is one. Do nothing in other cases.
-    int ProgressHandler();
+  bool findFunctionByInstance(nsISupports *aInstance);
 
-    sqlite3 *mDBConn;
-    nsCOMPtr<nsIFile> mDatabaseFile;
-    PRBool mTransactionInProgress;
+  static int sProgressHelper(void *aArg);
+  // Generic progress handler
+  // Dispatch call to registered progress handler,
+  // if there is one. Do nothing in other cases.
+  int progressHandler();
 
-    nsDataHashtable<nsCStringHashKey, nsISupports*> mFunctions;
+  sqlite3 *mDBConn;
+  nsCOMPtr<nsIFile> mDatabaseFile;
 
-    nsCOMPtr<mozIStorageProgressHandler> mProgressHandler;
+  /**
+   * Protects access to mAsyncExecutionThread.
+   */
+  PRLock *mAsyncExecutionMutex;
 
-    // This isn't accessed but is used to make sure that the connections do
-    // not outlive the service. The service, for example, owns certain locks
-    // in mozStorageAsyncIO file that the connections depend on.
-    nsCOMPtr<mozIStorageService> mStorageService;
+  /**
+   * Lazily created thread for asynchronous statement execution.  Consumers
+   * should use getAsyncExecutionTarget rather than directly accessing this
+   * field.
+   */
+  nsCOMPtr<nsIThread> mAsyncExecutionThread;
+  /**
+   * Set to true by Close() prior to actually shutting down the thread.  This
+   * lets getAsyncExecutionTarget() know not to hand out any more thread
+   * references (or to create the thread in the first place).  This variable
+   * should be accessed while holding the mAsyncExecutionMutex.
+   */
+  PRBool mAsyncExecutionThreadShuttingDown;
+
+  PRLock *mTransactionMutex;
+  PRBool mTransactionInProgress;
+
+  PRLock *mFunctionsMutex;
+  nsInterfaceHashtable<nsCStringHashKey, nsISupports> mFunctions;
+
+  PRLock *mProgressHandlerMutex;
+  nsCOMPtr<mozIStorageProgressHandler> mProgressHandler;
+
+  // This is here for two reasons: 1) It's used to make sure that the
+  // connections do not outlive the service.  2) Our custom collating functions
+  // call its localeCompareStrings() method.
+  nsRefPtr<Service> mStorageService;
 };
+
+} // namespace storage
+} // namespace mozilla
 
 #endif /* _MOZSTORAGECONNECTION_H_ */

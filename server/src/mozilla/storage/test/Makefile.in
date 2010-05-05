@@ -44,13 +44,28 @@ VPATH		= @srcdir@
 
 include $(DEPTH)/config/autoconf.mk
 
-PROGRAM = teststorage1$(BIN_SUFFIX)
-
 MODULE = test_storage
 
 XPCSHELL_TESTS = unit
 
-CPPSRCS = storage1.cpp
+CPP_UNIT_TESTS = \
+  test_transaction_helper.cpp \
+  test_statement_scoper.cpp \
+  test_mutex.cpp \
+  test_binding_params.cpp \
+  $(NULL)
+
+ifdef MOZ_DEBUG
+# Testing assertion failures is fragile, and test_deadlock_detector doesn't like
+# windows.
+ifneq ($(OS_ARCH), WINNT)
+ifneq ($(OS_ARCH), WINCE)
+CPP_UNIT_TESTS += \
+  test_deadlock_detector.cpp \
+  $(NULL)
+endif
+endif
+endif
 
 REQUIRES = \
 	xpcom \
@@ -58,10 +73,19 @@ REQUIRES = \
 	storage \
 	$(NULL)
 
+LOCAL_INCLUDES = \
+  -I$(srcdir)/../src \
+  $(NULL)
+
 LIBS = \
 	$(LIBS_DIR) \
-	$(XPCOM_GLUE_LDOPTS) \
-	$(NSPR_LIBS) \
+	$(LIBXUL_DIST)/lib/$(LIB_PREFIX)xpcomglue_s.$(LIB_SUFFIX) \
+	$(MOZ_COMPONENT_LIBS) \
+	$(SQLITE_LIBS) \
 	$(NULL)
 
 include $(topsrcdir)/config/rules.mk
+
+ifdef SOLARIS_SUNPRO_CXX
+CXXFLAGS += -features=extensions -D__FUNCTION__=__func__
+endif

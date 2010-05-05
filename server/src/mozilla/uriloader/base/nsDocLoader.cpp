@@ -63,6 +63,9 @@
 #include "nsITransport.h"
 #include "nsISocketTransport.h"
 
+#include "nsIDOMDocument.h"
+#include "nsIDocument.h"
+
 static NS_DEFINE_CID(kThisImplCID, NS_THIS_DOCLOADER_IMPL_CID);
 
 #if defined(PR_LOGGING)
@@ -95,17 +98,26 @@ struct nsRequestInfo : public PLDHashEntryHdr
 {
   nsRequestInfo(const void *key)
     : mKey(key), mCurrentProgress(0), mMaxProgress(0), mUploading(PR_FALSE)
+   , mIsDone(PR_FALSE)
   {
+  }
+
+  nsIRequest* Request() {
+    return static_cast<nsIRequest*>(const_cast<void*>(mKey));
   }
 
   const void* mKey; // Must be first for the pldhash stubs to work
   nsInt64 mCurrentProgress;
   nsInt64 mMaxProgress;
   PRBool mUploading;
+
+  PRBool mIsDone;
+  nsString mLastStatus;
+  nsresult mLastStatusCode;
 };
 
 
-PR_STATIC_CALLBACK(PRBool)
+static PRBool
 RequestInfoHashInitEntry(PLDHashTable *table, PLDHashEntryHdr *entry,
                          const void *key)
 {
@@ -114,6 +126,12 @@ RequestInfoHashInitEntry(PLDHashTable *table, PLDHashEntryHdr *entry,
   return PR_TRUE;
 }
 
+static void
+RequestInfoHashClearEntry(PLDHashTable *table, PLDHashEntryHdr *entry)
+{
+  nsRequestInfo* info = static_cast<nsRequestInfo *>(entry);
+  info->~nsRequestInfo();
+}
 
 struct nsListenerInfo {
   nsListenerInfo(nsIWeakReference *aListener, unsigned long aNotifyMask) 
@@ -131,18 +149,17 @@ struct nsListenerInfo {
 
 
 nsDocLoader::nsDocLoader()
-  : mListenerInfoList(8)
+  : mParent(nsnull),
+    mListenerInfoList(8),
+    mIsLoadingDocument(PR_FALSE),
+    mIsRestoringDocument(PR_FALSE),
+    mIsFlushingLayout(PR_FALSE)
 {
 #if defined(PR_LOGGING)
   if (nsnull == gDocLoaderLog) {
       gDocLoaderLog = PR_NewLogModule("DocLoader");
   }
 #endif /* PR_LOGGING */
-
-  mParent    = nsnull;
-
-  mIsLoadingDocument = PR_FALSE;
-  mIsRestoringDocument = PR_FALSE;
 
   static PLDHashTableOps hash_table_ops =
   {
@@ -151,7 +168,7 @@ nsDocLoader::nsDocLoader()
     PL_DHashVoidPtrKeyStub,
     PL_DHashMatchEntryStub,
     PL_DHashMoveEntryStub,
-    PL_DHashClearEntryStub,
+    RequestInfoHashClearEntry,
     PL_DHashFinalizeStub,
     RequestInfoHashInitEntry
   };
@@ -327,7 +344,7 @@ nsDocLoader::Stop(void)
   // we wouldn't need the call here....
 
   NS_ASSERTION(!IsBusy(), "Shouldn't be busy here");
-  DocLoaderIsEmpty();
+  DocLoaderIsEmpty(PR_FALSE);
   
   return rv;
 }       
@@ -345,9 +362,10 @@ nsDocLoader::IsBusy()
   //      the handler may have already removed this child from mChildList!
   //   2. It is currently loading a document and either has parts of it still
   //      loading, or has a busy child docloader.
+  //   3. It's currently flushing layout in DocLoaderIsEmpty().
   //
 
-  if (mChildrenInOnload.Count()) {
+  if (mChildrenInOnload.Count() || mIsFlushingLayout) {
     return PR_TRUE;
   }
 
@@ -493,17 +511,17 @@ nsDocLoader::OnStartRequest(nsIRequest *request, nsISupports *aCtxt)
   }
 
   //
-  // Only fire an OnStartDocumentLoad(...) if the document loader
+  // Create a new nsRequestInfo for the request that is starting to
+  // load...
+  //
+  AddRequestInfo(request);
+
+  //
+  // Only fire a doStartDocumentLoad(...) if the document loader
   // has initiated a load...  Otherwise, this notification has
   // resulted from a request being added to the load group.
   //
   if (mIsLoadingDocument) {
-    //
-    // Create a new nsRequestInfo for the request that is starting to
-    // load...
-    //
-    AddRequestInfo(request);
-
     if (loadFlags & nsIChannel::LOAD_DOCUMENT_URI) {
       //
       // Make sure that the document channel is null at this point...
@@ -530,10 +548,6 @@ nsDocLoader::OnStartRequest(nsIRequest *request, nsISupports *aCtxt)
       }
     } 
   }
-  else {
-    // The DocLoader is not busy, so clear out any cached information...
-    ClearRequestInfoHash();
-  }
 
   NS_ASSERTION(!mIsLoadingDocument || mDocumentRequest,
                "mDocumentRequest MUST be set for the duration of a page load!");
@@ -545,8 +559,8 @@ nsDocLoader::OnStartRequest(nsIRequest *request, nsISupports *aCtxt)
 
 NS_IMETHODIMP
 nsDocLoader::OnStopRequest(nsIRequest *aRequest, 
-                               nsISupports *aCtxt, 
-                               nsresult aStatus)
+                           nsISupports *aCtxt,
+                           nsresult aStatus)
 {
   nsresult rv = NS_OK;
 
@@ -567,120 +581,120 @@ nsDocLoader::OnStopRequest(nsIRequest *aRequest,
   }
 #endif
 
+  PRBool bFireTransferring = PR_FALSE;
+
   //
-  // Only fire the OnEndDocumentLoad(...) if the document loader 
-  // has initiated a load...
+  // Set the Maximum progress to the same value as the current progress.
+  // Since the URI has finished loading, all the data is there.  Also,
+  // this will allow a more accurate estimation of the max progress (in case
+  // the old value was unknown ie. -1)
   //
-  if (mIsLoadingDocument) {
-    PRUint32 count;
-    PRBool bFireTransferring = PR_FALSE;
+  nsRequestInfo *info = GetRequestInfo(aRequest);
+  if (info) {
+    info->mIsDone = PR_TRUE;
 
+    nsInt64 oldMax = info->mMaxProgress;
+
+    info->mMaxProgress = info->mCurrentProgress;
+    
     //
-    // Set the Maximum progress to the same value as the current progress.
-    // Since the URI has finished loading, all the data is there.  Also,
-    // this will allow a more accurate estimation of the max progress (in case
-    // the old value was unknown ie. -1)
+    // If a request whose content-length was previously unknown has just
+    // finished loading, then use this new data to try to calculate a
+    // mMaxSelfProgress...
     //
-    nsRequestInfo *info = GetRequestInfo(aRequest);
-    if (info) {
-      nsInt64 oldMax = info->mMaxProgress;
+    if ((oldMax < nsInt64(0)) && (mMaxSelfProgress < nsInt64(0))) {
+      mMaxSelfProgress = CalculateMaxProgress();
+    }
 
-      info->mMaxProgress = info->mCurrentProgress;
-      //
-      // If a request whose content-length was previously unknown has just
-      // finished loading, then use this new data to try to calculate a
-      // mMaxSelfProgress...
-      //
-      if ((oldMax < nsInt64(0)) && (mMaxSelfProgress < nsInt64(0))) {
-        mMaxSelfProgress = CalculateMaxProgress();
-      }
+    // As we know the total progress of this request now, save it to be part
+    // of CalculateMaxProgress() result. We need to remove the info from the
+    // hash, see bug 480713.
+    mCompletedTotalProgress += info->mMaxProgress;
+    
+    //
+    // Determine whether a STATE_TRANSFERRING notification should be
+    // 'synthesized'.
+    //
+    // If nsRequestInfo::mMaxProgress (as stored in oldMax) and
+    // nsRequestInfo::mCurrentProgress are both 0, then the
+    // STATE_TRANSFERRING notification has not been fired yet...
+    //
+    if ((oldMax == LL_ZERO) && (info->mCurrentProgress == LL_ZERO)) {
+      nsCOMPtr<nsIChannel> channel(do_QueryInterface(aRequest));
 
+      // Only fire a TRANSFERRING notification if the request is also a
+      // channel -- data transfer requires a nsIChannel!
       //
-      // Determine whether a STATE_TRANSFERRING notification should be 
-      // 'synthesized'.
-      //
-      // If nsRequestInfo::mMaxProgress (as stored in oldMax) and
-      // nsRequestInfo::mCurrentProgress are both 0, then the
-      // STATE_TRANSFERRING notification has not been fired yet...
-      //
-      if ((oldMax == LL_ZERO) && (info->mCurrentProgress == LL_ZERO)) {
-        nsCOMPtr<nsIChannel> channel(do_QueryInterface(aRequest));
-
-        // Only fire a TRANSFERRING notification if the request is also a
-        // channel -- data transfer requires a nsIChannel!
+      if (channel) {
+        if (NS_SUCCEEDED(aStatus)) {
+          bFireTransferring = PR_TRUE;
+        }
         //
-        if (channel) {
-          if (NS_SUCCEEDED(aStatus)) {
-            bFireTransferring = PR_TRUE;
-          } 
+        // If the request failed (for any reason other than being
+        // redirected or retargeted), the TRANSFERRING notification can
+        // still be fired if a HTTP connection was established to a server.
+        //
+        else if (aStatus != NS_BINDING_REDIRECTED &&
+                 aStatus != NS_BINDING_RETARGETED) {
           //
-          // If the request failed (for any reason other than being
-          // redirected or retargeted), the TRANSFERRING notification can
-          // still be fired if a HTTP connection was established to a server.
+          // Only if the load has been targeted (see bug 268483)...
           //
-          else if (aStatus != NS_BINDING_REDIRECTED &&
-                   aStatus != NS_BINDING_RETARGETED) {
-            //
-            // Only if the load has been targeted (see bug 268483)...
-            //
-            PRUint32 lf;
-            channel->GetLoadFlags(&lf);
-            if (lf & nsIChannel::LOAD_TARGETED) {
-              nsCOMPtr<nsIHttpChannel> httpChannel(do_QueryInterface(aRequest));
-              if (httpChannel) {
-                PRUint32 responseCode;
-                rv = httpChannel->GetResponseStatus(&responseCode);
-                if (NS_SUCCEEDED(rv)) {
-                  //
-                  // A valid server status indicates that a connection was
-                  // established to the server... So, fire the notification
-                  // even though a failure occurred later...
-                  //
-                  bFireTransferring = PR_TRUE;
-                }
+          PRUint32 lf;
+          channel->GetLoadFlags(&lf);
+          if (lf & nsIChannel::LOAD_TARGETED) {
+            nsCOMPtr<nsIHttpChannel> httpChannel(do_QueryInterface(aRequest));
+            if (httpChannel) {
+              PRUint32 responseCode;
+              rv = httpChannel->GetResponseStatus(&responseCode);
+              if (NS_SUCCEEDED(rv)) {
+                //
+                // A valid server status indicates that a connection was
+                // established to the server... So, fire the notification
+                // even though a failure occurred later...
+                //
+                bFireTransferring = PR_TRUE;
               }
             }
           }
         }
       }
     }
-
-    if (bFireTransferring) {
-      // Send a STATE_TRANSFERRING notification for the request.
-      PRInt32 flags;
-    
-      flags = nsIWebProgressListener::STATE_TRANSFERRING | 
-              nsIWebProgressListener::STATE_IS_REQUEST;
-      //
-      // Move the WebProgress into the STATE_TRANSFERRING state if necessary...
-      //
-      if (mProgressStateFlags & nsIWebProgressListener::STATE_START) {
-        mProgressStateFlags = nsIWebProgressListener::STATE_TRANSFERRING;
-
-        // Send STATE_TRANSFERRING for the document too...
-        flags |= nsIWebProgressListener::STATE_IS_DOCUMENT;
-      }
-
-      FireOnStateChange(this, aRequest, flags, NS_OK);
-    }
-
-    //
-    // Fire the OnStateChange(...) notification for stop request
-    //
-    doStopURLLoad(aRequest, aStatus);
-    
-    rv = mLoadGroup->GetActiveCount(&count);
-    if (NS_FAILED(rv)) return rv;
-
-    //
-    // The load group for this DocumentLoader is idle...
-    //
-    if (0 == count) {
-      DocLoaderIsEmpty();
-    }
   }
-  else {
-    doStopURLLoad(aRequest, aStatus); 
+
+  if (bFireTransferring) {
+    // Send a STATE_TRANSFERRING notification for the request.
+    PRInt32 flags;
+    
+    flags = nsIWebProgressListener::STATE_TRANSFERRING |
+            nsIWebProgressListener::STATE_IS_REQUEST;
+    //
+    // Move the WebProgress into the STATE_TRANSFERRING state if necessary...
+    //
+    if (mProgressStateFlags & nsIWebProgressListener::STATE_START) {
+      mProgressStateFlags = nsIWebProgressListener::STATE_TRANSFERRING;
+
+      // Send STATE_TRANSFERRING for the document too...
+      flags |= nsIWebProgressListener::STATE_IS_DOCUMENT;
+    }
+
+    FireOnStateChange(this, aRequest, flags, NS_OK);
+  }
+
+  //
+  // Fire the OnStateChange(...) notification for stop request
+  //
+  doStopURLLoad(aRequest, aStatus);
+  
+  // Clear this request out of the hash to avoid bypass of FireOnStateChange
+  // when address of the request is reused.
+  RemoveRequestInfo(aRequest);
+  
+  //
+  // Only fire the DocLoaderIsEmpty(...) if the document loader has initiated a
+  // load.  This will handle removing the request from our hashtable as needed.
+  //
+  if (mIsLoadingDocument) {
+    DocLoaderIsEmpty(PR_TRUE);
   }
   
   return NS_OK;
@@ -716,7 +730,7 @@ NS_IMETHODIMP nsDocLoader::GetDocumentChannel(nsIChannel ** aChannel)
 }
 
 
-void nsDocLoader::DocLoaderIsEmpty()
+void nsDocLoader::DocLoaderIsEmpty(PRBool aFlushLayout)
 {
   if (mIsLoadingDocument) {
     /* In the unimagineably rude circumstance that onload event handlers
@@ -725,7 +739,32 @@ void nsDocLoader::DocLoaderIsEmpty()
        alive long enough to survive this function call. */
     nsCOMPtr<nsIDocumentLoader> kungFuDeathGrip(this);
 
+    // Don't flush layout if we're still busy.
+    if (IsBusy()) {
+      return;
+    }
+
+    NS_ASSERTION(!mIsFlushingLayout, "Someone screwed up");
+
+    // The load group for this DocumentLoader is idle.  Flush layout if we need
+    // to.
+    if (aFlushLayout) {
+      nsCOMPtr<nsIDOMDocument> domDoc = do_GetInterface(GetAsSupports(this));
+      nsCOMPtr<nsIDocument> doc = do_QueryInterface(domDoc);
+      if (doc) {
+        mIsFlushingLayout = PR_TRUE;
+        doc->FlushPendingNotifications(Flush_Layout);
+        mIsFlushingLayout = PR_FALSE;
+      }
+    }
+
+    // And now check whether we're really busy; that might have changed with
+    // the layout flush.
     if (!IsBusy()) {
+      // Clear out our request info hash, now that our load really is done and
+      // we don't need it anymore to CalculateMaxProgress().
+      ClearInternalProgress();
+
       PR_LOG(gDocLoaderLog, PR_LOG_DEBUG, 
              ("DocLoader:%p: Is now idle...\n", this));
 
@@ -815,6 +854,24 @@ void nsDocLoader::doStartURLLoad(nsIRequest *request)
                     NS_OK);
 }
 
+// PLDHashTable enumeration callback that finds a RequestInfo that's not done
+// yet.
+static PLDHashOperator
+FindUnfinishedRequestCallback(PLDHashTable *table, PLDHashEntryHdr *hdr,
+                              PRUint32 number, void *arg)
+{
+  nsRequestInfo* info = static_cast<nsRequestInfo *>(hdr);
+  nsRequestInfo** retval = static_cast<nsRequestInfo**>(arg);
+
+  if (!info->mIsDone && !info->mLastStatus.IsEmpty()) {
+    *retval = info;
+    return PL_DHASH_STOP;
+  }
+
+  return PL_DHASH_NEXT;
+}
+
+
 void nsDocLoader::doStopURLLoad(nsIRequest *request, nsresult aStatus)
 {
 #if defined(DEBUG)
@@ -832,6 +889,17 @@ void nsDocLoader::doStopURLLoad(nsIRequest *request, nsresult aStatus)
                     nsIWebProgressListener::STATE_STOP |
                     nsIWebProgressListener::STATE_IS_REQUEST,
                     aStatus);
+
+  // Fire a status change message for a random unfinished request to make sure
+  // that the displayed status is not outdated.
+  nsRequestInfo* unfinishedRequest = nsnull;
+  PL_DHashTableEnumerate(&mRequestInfoHash, FindUnfinishedRequestCallback,
+                         &unfinishedRequest);
+  if (unfinishedRequest) {
+    FireOnStatusChange(this, unfinishedRequest->Request(),
+                       unfinishedRequest->mLastStatusCode,
+                       unfinishedRequest->mLastStatus.get());
+  }
 }
 
 void nsDocLoader::doStopDocumentLoad(nsIRequest *request,
@@ -1000,7 +1068,7 @@ NS_IMETHODIMP nsDocLoader::OnProgress(nsIRequest *aRequest, nsISupports* ctxt,
       // so update mMaxSelfProgress...  Otherwise, set it to -1 to indicate
       // that the content-length is no longer known.
       //
-      if (nsUint64(aProgressMax) != LL_MAXUINT) {
+      if (PRUint64(aProgressMax) != LL_MAXUINT) {
         mMaxSelfProgress  += PRInt64(aProgressMax);
         info->mMaxProgress = PRInt64(aProgressMax);
       } else {
@@ -1031,7 +1099,7 @@ NS_IMETHODIMP nsDocLoader::OnProgress(nsIRequest *aRequest, nsISupports* ctxt,
     mCurrentSelfProgress += progressDelta;
 
     info->mCurrentProgress = PRInt64(aProgress);
-  } 
+  }
   //
   // The request is not part of the load group, so ignore its progress
   // information...
@@ -1078,6 +1146,7 @@ NS_IMETHODIMP nsDocLoader::OnStatus(nsIRequest* aRequest, nsISupports* ctxt,
       if (info->mUploading != uploading) {
         mCurrentSelfProgress  = mMaxSelfProgress  = LL_ZERO;
         mCurrentTotalProgress = mMaxTotalProgress = LL_ZERO;
+        mCompletedTotalProgress = LL_ZERO;
         info->mUploading = uploading;
         info->mCurrentProgress = LL_ZERO;
         info->mMaxProgress = LL_ZERO;
@@ -1090,6 +1159,15 @@ NS_IMETHODIMP nsDocLoader::OnStatus(nsIRequest* aRequest, nsISupports* ctxt,
     nsXPIDLString msg;
     rv = sbs->FormatStatusMessage(aStatus, aStatusArg, getter_Copies(msg));
     if (NS_FAILED(rv)) return rv;
+
+    // Keep around the message. In case a request finishes, we need to make sure
+    // to send the status message of another request to our user to that we
+    // don't display, for example, "Transferring" messages for requests that are
+    // already done.
+    if (info) {
+      info->mLastStatus = msg;
+      info->mLastStatusCode = aStatus;
+    }
     FireOnStatusChange(this, aRequest, aStatus, msg);
   }
   return NS_OK;
@@ -1101,6 +1179,7 @@ void nsDocLoader::ClearInternalProgress()
 
   mCurrentSelfProgress  = mMaxSelfProgress  = LL_ZERO;
   mCurrentTotalProgress = mMaxTotalProgress = LL_ZERO;
+  mCompletedTotalProgress = LL_ZERO;
 
   mProgressStateFlags = nsIWebProgressListener::STATE_STOP;
 }
@@ -1417,6 +1496,11 @@ nsresult nsDocLoader::AddRequestInfo(nsIRequest *aRequest)
   return NS_OK;
 }
 
+void nsDocLoader::RemoveRequestInfo(nsIRequest *aRequest)
+{
+  PL_DHashTableOperate(&mRequestInfoHash, aRequest, PL_DHASH_REMOVE);
+}
+
 nsRequestInfo * nsDocLoader::GetRequestInfo(nsIRequest *aRequest)
 {
   nsRequestInfo *info =
@@ -1437,7 +1521,7 @@ nsRequestInfo * nsDocLoader::GetRequestInfo(nsIRequest *aRequest)
 
 // PLDHashTable enumeration callback that just removes every entry
 // from the hash.
-PR_STATIC_CALLBACK(PLDHashOperator)
+static PLDHashOperator
 RemoveInfoCallback(PLDHashTable *table, PLDHashEntryHdr *hdr, PRUint32 number,
                    void *arg)
 {
@@ -1456,7 +1540,7 @@ void nsDocLoader::ClearRequestInfoHash(void)
 }
 
 // PLDHashTable enumeration callback that calculates the max progress.
-PR_STATIC_CALLBACK(PLDHashOperator)
+static PLDHashOperator
 CalcMaxProgressCallback(PLDHashTable *table, PLDHashEntryHdr *hdr,
                         PRUint32 number, void *arg)
 {
@@ -1476,7 +1560,7 @@ CalcMaxProgressCallback(PLDHashTable *table, PLDHashEntryHdr *hdr,
 
 PRInt64 nsDocLoader::CalculateMaxProgress()
 {
-  nsInt64 max = 0;
+  nsInt64 max = mCompletedTotalProgress;
   PL_DHashTableEnumerate(&mRequestInfoHash, CalcMaxProgressCallback, &max);
   return max;
 }
@@ -1487,15 +1571,6 @@ NS_IMETHODIMP nsDocLoader::OnChannelRedirect(nsIChannel *aOldChannel,
 {
   if (aOldChannel)
   {
-    nsresult rv;
-    nsCOMPtr<nsIURI> oldURI, newURI;
-
-    rv = aOldChannel->GetOriginalURI(getter_AddRefs(oldURI));
-    if (NS_FAILED(rv)) return rv;
-
-    rv = aNewChannel->GetURI(getter_AddRefs(newURI));
-    if (NS_FAILED(rv)) return rv;
-
     nsLoadFlags loadFlags = 0;
     PRInt32 stateFlags = nsIWebProgressListener::STATE_REDIRECTING |
                          nsIWebProgressListener::STATE_IS_REQUEST;
@@ -1676,4 +1751,3 @@ void nsDocLoader::DumpChannelInfo()
   printf("\nCurrent=%d   Total=%d\n====\n", current, max);
 }
 #endif /* 0 */
-

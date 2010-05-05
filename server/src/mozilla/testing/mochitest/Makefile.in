@@ -51,12 +51,16 @@ DIRS =	MochiKit \
 	$(NULL)
 
 include $(topsrcdir)/config/rules.mk
+# We're installing to _tests/testing/mochitest, so this is the depth
+# necessary for relative objdir paths.
+TARGET_DEPTH = ../../..
+include $(topsrcdir)/build/automation-build.mk
 
 # files that get copied into $objdir/_tests/
 _SERV_FILES = 	\
-		runtests.pl \
 		runtests.py \
 		automation.py \
+		$(topsrcdir)/build/automationutils.py \
 		gen_template.pl \
 		server.js \
 		harness-a11y.xul \
@@ -68,67 +72,65 @@ _SERV_FILES = 	\
 		redirect-a11y.html \
 		redirect.html \
 		redirect.js \
+		$(topsrcdir)/build/pgo/server-locations.txt \
 		$(topsrcdir)/netwerk/test/httpserver/httpd.js \
+		mozprefs.js \
 		$(NULL)	
 
 
 _DEST_DIR = $(DEPTH)/_tests/$(relativesrcdir)
 
-ifeq ($(USE_SHORT_LIBNAME), 1)
-PROGRAM = $(MOZ_APP_NAME)$(BIN_SUFFIX)
-else
-PROGRAM = $(MOZ_APP_NAME)-bin$(BIN_SUFFIX)
-endif
-
-ifeq ($(MOZ_BUILD_APP),camino)
-browser_path = \"../$(DIST)/Camino.app/Contents/MacOS/Camino\"
-else
-ifeq ($(OS_ARCH),Darwin)
-ifdef MOZ_DEBUG
-browser_path = \"../$(DIST)/$(MOZ_APP_DISPLAYNAME)Debug.app/Contents/MacOS/$(PROGRAM)\"
-else
-browser_path = \"../$(DIST)/$(MOZ_APP_DISPLAYNAME).app/Contents/MacOS/$(PROGRAM)\"
-endif
-else
-browser_path = \"../$(DIST)/bin/$(PROGRAM)\"
-endif
-endif
-
-# These go in _tests/ so they need to go up an extra path segement
-TEST_DRIVER_PPARGS = 	\
-			-DBROWSER_PATH=$(browser_path) \
-			-DXPC_BIN_PATH=\"../$(DIST)/bin\" \
-			$(NULL)
-
-ifeq ($(OS_ARCH),Darwin)
-TEST_DRIVER_PPARGS += -DIS_MAC=1
-else
-TEST_DRIVER_PPARGS += -DIS_MAC=0
-endif
-
-ifeq ($(MOZ_BUILD_APP),camino)
-TEST_DRIVER_PPARGS += -DIS_CAMINO=1
-else
-TEST_DRIVER_PPARGS += -DIS_CAMINO=0
-endif
-
-ifeq ($(host_os), cygwin)
-TEST_DRIVER_PPARGS += -DIS_CYGWIN=1
-endif
-
-runtests.pl: runtests.pl.in
-	$(PYTHON) $(topsrcdir)/config/Preprocessor.py \
-	$(TEST_DRIVER_PPARGS) $(DEFINES) $(ACDEFINES) $^ > $@
-
 runtests.py: runtests.py.in
 	$(PYTHON) $(topsrcdir)/config/Preprocessor.py \
-	$(TEST_DRIVER_PPARGS) $(DEFINES) $(ACDEFINES) $^ > $@
+	$(DEFINES) $(ACDEFINES) $^ > $@
 
-automation.py: $(topsrcdir)/build/pgo/automation.py.in
-	$(PYTHON) $(topsrcdir)/config/Preprocessor.py \
-	$(TEST_DRIVER_PPARGS) $(DEFINES) $(ACDEFINES) $^ > $@
-
-GARBAGE += runtests.pl runtests.py automation.py
+GARBAGE += runtests.py
 
 libs:: $(_SERV_FILES)
 	$(INSTALL) $^ $(_DEST_DIR)
+
+# Binaries that don't get packaged with the build,
+# but that we need for the test harness
+TEST_HARNESS_BINS := \
+  xpcshell$(BIN_SUFFIX) \
+  ssltunnel$(BIN_SUFFIX) \
+  certutil$(BIN_SUFFIX) \
+  pk12util$(BIN_SUFFIX) \
+  $(NULL)
+
+ifeq ($(OS_ARCH),Darwin)
+TEST_HARNESS_BINS += fix-macosx-stack.pl
+endif
+
+ifeq ($(OS_ARCH),Linux)
+TEST_HARNESS_BINS += fix-linux-stack.pl
+endif
+
+# Components / typelibs that don't get packaged with
+# the build, but that we need for the test harness.
+TEST_HARNESS_COMPONENTS := \
+  test_necko.xpt \
+  $(NULL)
+
+# We need the test plugin as some tests rely on it
+ifeq (Darwin,$(OS_TARGET))
+TEST_HARNESS_PLUGINS := \
+  Test.plugin/
+else
+TEST_HARNESS_PLUGINS := \
+  $(DLL_PREFIX)nptest$(DLL_SUFFIX)
+endif
+
+# Rules for staging the necessary harness bits for a test package
+PKG_STAGE = $(DIST)/test-package-stage
+DIST_BIN = $(DIST)/bin
+
+stage-package:
+	$(NSINSTALL) -D $(PKG_STAGE)/mochitest && $(NSINSTALL) -D $(PKG_STAGE)/bin/plugins
+	@(cd $(DEPTH)/_tests/testing/mochitest/ && tar $(TAR_CREATE_FLAGS) - *) | (cd $(PKG_STAGE)/mochitest && tar -xf -)
+	@(cd $(DIST_BIN) && tar $(TAR_CREATE_FLAGS) - $(TEST_HARNESS_BINS)) | (cd $(PKG_STAGE)/bin && tar -xf -)
+	@(cd $(DIST_BIN)/components && tar $(TAR_CREATE_FLAGS) - $(TEST_HARNESS_COMPONENTS)) | (cd $(PKG_STAGE)/bin/components && tar -xf -)
+	@(cd $(topsrcdir)/build/pgo/certs && tar $(TAR_CREATE_FLAGS) - *) | (cd $(PKG_STAGE)/certs && tar -xf -)
+ifdef MOZ_PLUGINS
+	@(cd $(DIST_BIN)/plugins && tar $(TAR_CREATE_FLAGS) - $(TEST_HARNESS_PLUGINS)) | (cd $(PKG_STAGE)/bin/plugins && tar -xf -)
+endif

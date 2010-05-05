@@ -47,8 +47,14 @@
 #include "nsIGConfService.h"
 #include "nsIGnomeVFSService.h"
 
+#ifdef MOZ_WIDGET_GTK2
 #include <glib.h>
 #include <glib-object.h>
+
+#ifdef MOZ_PLATFORM_MAEMO
+#include <libintl.h>
+#endif
+#endif
 
 /* static */ PRBool
 nsGNOMERegistry::HandlerExists(const char *aProtocolScheme)
@@ -151,7 +157,18 @@ nsGNOMERegistry::GetFromType(const nsACString& aMIMEType)
 
   nsCAutoString name;
   handlerApp->GetName(name);
+#ifdef MOZ_PLATFORM_MAEMO
+  // On Maemo/Hildon, GetName ends up calling gnome_vfs_mime_application_get_name,
+  // which happens to return a non-localized message-id for the application. To
+  // get the localized name for the application, we have to call dgettext with 
+  // the default maemo domain-name to try and translate the string into the operating 
+  // system's native language.
+  const char kDefaultTextDomain [] = "maemo-af-desktop";
+  nsCAutoString realName (dgettext(kDefaultTextDomain, PromiseFlatCString(name).get()));
+  mimeInfo->SetDefaultDescription(NS_ConvertUTF8toUTF16(realName));
+#else
   mimeInfo->SetDefaultDescription(NS_ConvertUTF8toUTF16(name));
+#endif
   mimeInfo->SetPreferredAction(nsIMIMEInfo::useSystemDefault);
 
   nsMIMEInfoBase* retval;

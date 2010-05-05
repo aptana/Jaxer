@@ -97,8 +97,6 @@ REQUIRES		+= windowwatcher \
 	             $(NULL)
 
 CMMSRCS	= nsOSHelperAppService.mm \
-			nsInternetConfig.mm \
-			nsInternetConfigService.mm \
 			nsMIMEInfoMac.mm \
 			nsLocalHandlerAppMac.mm \
 			$(NULL)
@@ -111,6 +109,11 @@ LOCAL_INCLUDES = -I$(srcdir)
 ifeq ($(MOZ_WIDGET_TOOLKIT),gtk2)
 OSHELPER	+= nsGNOMERegistry.cpp
 OSHELPER  += nsMIMEInfoUnix.cpp
+endif
+
+ifeq ($(MOZ_WIDGET_TOOLKIT),qt)
+OSHELPER += nsGNOMERegistry.cpp
+OSHELPER += nsMIMEInfoUnix.cpp
 endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),beos)
@@ -140,10 +143,6 @@ XPIDLSRCS = \
 	nsIHandlerService.idl	\
 	$(NULL)
 
-ifeq ($(MOZ_WIDGET_TOOLKIT),cocoa)
-XPIDLSRCS		+= nsIInternetConfigService.idl
-endif
-
 CPPSRCS	= \
 	nsExternalHelperAppService.cpp	\
 	nsExternalProtocolHandler.cpp \
@@ -151,6 +150,19 @@ CPPSRCS	= \
 	nsLocalHandlerApp.cpp \
 	$(OSHELPER) \
 	$(NULL)
+
+ifdef MOZ_ENABLE_DBUS
+CPPSRCS += nsDBusHandlerApp.cpp
+LOCAL_INCLUDES   += $(TK_CFLAGS) $(MOZ_DBUS_GLIB_CFLAGS)
+EXTRA_DSO_LDOPTS += $(MOZ_DBUS_GLIB_LIBS)
+endif
+
+ifdef MOZ_PLATFORM_MAEMO
+ifdef MOZ_ENABLE_GNOMEVFS
+LOCAL_INCLUDES   += $(MOZ_GNOMEVFS_CFLAGS)
+EXTRA_DSO_LDOPTS += $(MOZ_GNOMEVFS_LIBS)
+endif
+endif
 
 ifeq ($(OS_ARCH),WINNT WINCE)
 OS_LIBS		+= shell32.lib

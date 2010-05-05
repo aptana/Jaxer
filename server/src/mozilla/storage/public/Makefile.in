@@ -56,12 +56,23 @@ XPIDLSRCS = \
 	mozIStorageProgressHandler.idl \
 	mozIStorageStatement.idl \
 	mozIStorageStatementWrapper.idl \
-	mozIStorageDataSet.idl \
 	mozIStorageValueArray.idl \
+	mozIStorageResultSet.idl \
+	mozIStorageRow.idl \
+  mozIStorageError.idl \
+  mozIStorageStatementCallback.idl \
+  mozIStoragePendingStatement.idl \
+  mozIStorageBindingParamsArray.idl \
+  mozIStorageBindingParams.idl \
 	$(NULL)
+
+EXPORTS_NAMESPACES = mozilla
 
 EXPORTS = \
 	mozStorageHelper.h \
+	mozStorage.h \
 	$(NULL)
+
+EXPORTS_mozilla = storage.h
 
 include $(topsrcdir)/config/rules.mk

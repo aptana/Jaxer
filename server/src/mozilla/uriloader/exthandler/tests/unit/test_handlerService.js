@@ -54,6 +54,9 @@ function run_test() {
   const ioService = Cc["@mozilla.org/network/io-service;1"].
                     getService(Ci.nsIIOService);
 
+  const env = Cc["@mozilla.org/process/environment;1"].
+              getService(Components.interfaces.nsIEnvironment);
+
   const rootPrefBranch = prefSvc.getBranch("");
   
   //**************************************************************************//
@@ -165,7 +168,7 @@ function run_test() {
   prefSvc.setBoolPref(kExternalWarningPrefPrefix + "mailto", false);
   protoInfo = protoSvc.getProtocolHandlerInfo("mailto");
   if (haveDefaultHandlersVersion)
-    do_check_eq(1, protoInfo.possibleApplicationHandlers.length);
+    do_check_eq(2, protoInfo.possibleApplicationHandlers.length);
   else
     do_check_eq(0, protoInfo.possibleApplicationHandlers.length);
   do_check_false(protoInfo.alwaysAskBeforeHandling);
@@ -174,7 +177,7 @@ function run_test() {
   prefSvc.setBoolPref(kExternalWarningPrefPrefix + "mailto", true);
   protoInfo = protoSvc.getProtocolHandlerInfo("mailto");
   if (haveDefaultHandlersVersion) {
-    do_check_eq(1, protoInfo.possibleApplicationHandlers.length);
+    do_check_eq(2, protoInfo.possibleApplicationHandlers.length);
     // alwaysAskBeforeHandling is expected to be false here, because although
     // the pref is true, the value in RDF is false. The injected mailto handler
     // carried over the default pref value, and so when we set the pref above
@@ -193,7 +196,7 @@ function run_test() {
     protoInfo.alwaysAskBeforeHandling = true;
     handlerSvc.store(protoInfo);
     protoInfo = protoSvc.getProtocolHandlerInfo("mailto");
-    do_check_eq(1, protoInfo.possibleApplicationHandlers.length);
+    do_check_eq(2, protoInfo.possibleApplicationHandlers.length);
     do_check_true(protoInfo.alwaysAskBeforeHandling);
   }
 
@@ -233,6 +236,8 @@ function run_test() {
   if (haveDefaultHandlersVersion) {
     handlerTypes.push("webcal");
     handlerTypes.push("mailto");
+    handlerTypes.push("irc");
+    handlerTypes.push("ircs");
   }
   var handlers = handlerSvc.enumerate();
   while (handlers.hasMoreElements()) {
@@ -383,4 +388,10 @@ function run_test() {
   // test now-existent extension
   lolType = handlerSvc.getTypeFromExtension("lolcat");
   do_check_eq(lolType, "application/lolcat");
+
+  if (env.get("PERSONAL_MAILCAP")) {
+    handlerInfo = mimeSvc.getFromTypeAndExtension("text/plain", null);
+    do_check_eq(handlerInfo.preferredAction, Ci.nsIHandlerInfo.useSystemDefault);
+    do_check_eq(handlerInfo.defaultDescription, "sed");
+  }
 }

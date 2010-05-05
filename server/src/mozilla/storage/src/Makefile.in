@@ -58,16 +58,35 @@ REQUIRES = xpcom \
            sqlite3 \
            js \
            xpconnect \
+           necko \
            $(NULL)
 
+EXPORTS_NAMESPACES = mozilla/storage
+
+EXPORTS_mozilla/storage = \
+  Variant.h \
+  Variant_inl.h \
+  $(NULL)
+
 CPPSRCS = \
-	mozStorageService.cpp \
-	mozStorageConnection.cpp \
-	mozStorageStatement.cpp \
-	mozStorageStatementWrapper.cpp \
-	mozStorageValueArray.cpp \
-	mozStorageUnicodeFunctions.cpp \
-	$(NULL)
+  mozStorageService.cpp \
+  mozStorageConnection.cpp \
+  mozStorageStatement.cpp \
+  mozStorageStatementWrapper.cpp \
+  mozStorageStatementParams.cpp \
+  mozStorageStatementRow.cpp \
+  mozStorageArgValueArray.cpp \
+  mozStorageSQLFunctions.cpp \
+  mozStorageRow.cpp \
+  mozStorageResultSet.cpp \
+  mozStorageError.cpp \
+  mozStorageAsyncStatementExecution.cpp \
+  mozStorageStatementJSHelper.cpp \
+  mozStoragePrivateHelpers.cpp \
+  mozStorageBindingParamsArray.cpp \
+  mozStorageBindingParams.cpp \
+  SQLCollations.cpp \
+  $(NULL)
 
 LOCAL_INCLUDES = \
 	$(SQLITE_CFLAGS)

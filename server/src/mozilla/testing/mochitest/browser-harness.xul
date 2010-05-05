@@ -23,6 +23,7 @@
    -
    - Contributor(s):
    -      Gavin Sharp <gavin@gavinsharp.com> (original author)
+   -      Ehsan Akhgari <ehsan.akhgari@gmail.com>
    -
    - Alternatively, the contents of this file may be used under the terms of
    - either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -41,11 +42,83 @@
 <window id="browserTestHarness"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         onload="TestStart();"
-        title="Browser chrome tests">
+        title="Browser chrome tests"
+        width="1024">
   <script src="chrome://mochikit/content/tests/SimpleTest/MozillaFileLogger.js"/>
   <script src="chrome://mochikit/content/tests/SimpleTest/quit.js"/>
+  <style xmlns="http://www.w3.org/1999/xhtml"><![CDATA[
+    #results {
+      margin: 5px;
+      background-color: window;
+      -moz-user-select: text;
+    }
+
+    #summary {
+      color: white;
+      border: 2px solid black;
+    }
+
+    #summary.success {
+      background-color: #0d0;
+    }
+
+    #summary.failure {
+      background-color: red;
+    }
+
+    #summary.todo {
+      background-color: orange;
+    }
+
+    .info {
+      color: grey;
+    }
+
+    .failed {
+      color: red;
+      font-weight: bold;
+    }
+
+    .testHeader {
+      margin-top: 1em;
+    }
+
+    p {
+      margin: 0.1em;
+    }
+  ]]></style>
   <script type="application/javascript;version=1.7"><![CDATA[
     var gConfig;
+
+    var gDumper = {
+      get fileLogger() {
+        let logger = null;
+        if (gConfig.logPath) {
+          try {
+            MozillaFileLogger.init(gConfig.logPath);
+            logger = MozillaFileLogger;
+          } catch (ex) {
+            dump("TEST-UNEXPECTED-FAIL | (browser-harness.xul) | " +
+                 "Error trying to log to " + gConfig.logPath + ": " + ex + "\n");
+          }
+        }
+        delete this.fileLogger;
+        return this.fileLogger = logger;
+      },
+
+      dump: function (str) {
+        dump(str);
+
+        if (this.fileLogger)
+          this.fileLogger._foStream.write(str, str.length);
+      },
+
+      done: function () {
+        if (this.fileLogger)
+          this.fileLogger.close();
+      }
+    }
+
     function TestStart() {
       gConfig = readConfig();
 
@@ -54,10 +127,10 @@
       // so the tester knows which tests will run when they press that button.
       if (gConfig.testPath)
         document.getElementById("runTestsButton").label =
-          "Run " + gConfig.testPath + " Tests";
+          "Run " + gConfig.testPath + " tests";
 
       if (gConfig.autoRun)
-        setTimeout(runAllTests, 0);
+        setTimeout(runTests, 0);
     }
 
     function readConfig() {
@@ -107,32 +180,45 @@
       return chromeDir.parent.QueryInterface(Ci.nsILocalFile);
     }
 
-    function browserTestFile(aTestFile) {
+    function browserTest(aTestFile) {
       this.path = aTestFile;
-      this.tests = [];
+      this.dumper = gDumper;
+      this.results = [];
       this.scope = null;
     }
-    browserTestFile.prototype = {
+    browserTest.prototype = {
       get passCount() {
-        return this.tests.filter(function (t) !t.todo && t.pass).length;
+        return this.results.filter(function (t) !t.info && !t.todo && t.pass).length;
       },
       get todoCount() {
-        return this.tests.filter(function (t) t.todo && t.pass).length;
+        return this.results.filter(function (t) !t.info && t.todo && t.pass).length;
       },
       get failCount() {
-        return this.tests.filter(function (t) !t.pass).length;
+        return this.results.filter(function (t) !t.info && !t.pass).length;
       },
-      get log() {
-        var path = this.path;
-        return this.tests.map(function (t) {
-                                if (!t.pass)
-                                  return t.msg + " - " + path;
-                                return t.msg;
-                              }).join("\n");
+
+      addResult: function addResult(result) {
+        this.results.push(result);
+
+        this.dumper.dump(result.result + " | " + this.path + " | " + result.msg + "\n");
+      },
+
+      get htmlLog() {
+        let txtToHTML = Cc["@mozilla.org/txttohtmlconv;1"].
+                        getService(Ci.mozITXTToHTMLConv);
+        function _entityEncode(str) {
+          return txtToHTML.scanTXT(str, Ci.mozITXTToHTMLConv.kEntities);
+        }
+        var path = _entityEncode(this.path);
+        return this.results.map(function (t) {
+          var class = t.info ? "info" : "result " + (t.pass ? "passed" : "failed");
+          return "<p class=\"" + class + "\">" + t.result + " | " + path +
+                 " | " + _entityEncode(t.msg) + "</p>";
+        }).join("\n");
       }
     };
 
-    // Returns an array of chrome:// URLs to all the test files
+    // Returns an array of browserTest objects for all the selected tests
     function listTests() {
       const Cc = Components.classes; const Ci = Components.interfaces;
 
@@ -141,34 +227,50 @@
 
       var testsDir = getChromeDir();
       testsDir.appendRelativePath("browser");
+
+      var requestPath = "chrome://mochikit/content/browser";
+      var fileNameRegexp = /browser_.+\.js$/;
+
       if (gConfig.testPath) {
         var testsDirURI = ioSvc.newFileURI(testsDir);
         testsDir = ioSvc.newURI(gConfig.testPath, null, testsDirURI)
                         .QueryInterface(Ci.nsIFileURL).file;
+
+        // Invalid testPath...
+        if (!testsDir.exists())
+          return [];
+
+        // If we were passed a specific file, run only that test.
+        if (testsDir.isFile()) {
+          if (fileNameRegexp.test(testsDir.leafName))
+            return [new browserTest(requestPath + "/" + gConfig.testPath)];
+
+          // We were passed a file that's not a test...
+          return [];
+        }
+
+        // otherwise, we were passed a directory of tests
+        requestPath += "/" + gConfig.testPath;
       }
 
-      /** load server.js in so we can share template functions **/
+      // load server.js in so we can share template functions
       var scriptLoader = Cc["@mozilla.org/moz/jssubscript-loader;1"].
                          getService(Ci.mozIJSSubScriptLoader);
       var srvScope = {};
       scriptLoader.loadSubScript("chrome://mochikit/content/server.js", srvScope);
 
-      var requestPath = "chrome://mochikit/content/browser";
-      if (gConfig.testPath)
-        requestPath += "/" + gConfig.testPath;
-
-      var [links, count] = srvScope.list(requestPath, testsDir, true);
+      var [links, ] = srvScope.list(requestPath, testsDir, true);
       var fileNames = [];
-      srvScope.arrayOfTestFiles(links, fileNames, /browser_.+\.js$/);
+      srvScope.arrayOfTestFiles(links, fileNames, fileNameRegexp);
 
-      return fileNames.map(function (f) new browserTestFile(f));;
+      return fileNames.map(function (f) new browserTest(f));
     }
 
     function setStatus(aStatusString) {
       document.getElementById("status").value = aStatusString;
     }
 
-    function runAllTests() {
+    function runTests() {
       var windowMediator = Cc['@mozilla.org/appshell/window-mediator;1'].
                              getService(Ci.nsIWindowMediator);
       var testWin = windowMediator.getMostRecentWindow("navigator:browser");
@@ -176,47 +278,39 @@
       setStatus("Running...");
       testWin.focus();
 
-      var Tester = new testWin.Tester(listTests(), testsFinished);
+      var Tester = new testWin.Tester(listTests(), gDumper, testsFinished);
       Tester.start();
     }
 
-    function getLogFromTests(aTests) {
-      if (!aTests.length)
-        return "PASS - No tests to run";
+    function sum(a, b) {
+      return a + b;
+    }
 
-      var log = aTests.map(function (f) {
-                             var output = f.path + "\n";
-                             if (f.log)
-                               output += f.log + "\n";
-                             return output;
-                           }).join("");
-      log += "\nBrowser Chrome Test Summary\n";
-      function sum(a, b){ return a + b; }
+    function getHTMLLogFromTests(aTests) {
+      if (!aTests.length)
+        return "<div id=\"summary\" class=\"failure\">No tests to run." +
+                 " Did you pass an invalid --test-path?</div>";
+
+      var log = "";
+
       var passCount = aTests.map(function (f) f.passCount).reduce(sum);
       var failCount = aTests.map(function (f) f.failCount).reduce(sum);
       var todoCount = aTests.map(function (f) f.todoCount).reduce(sum);
-      log += "\tPass: " + passCount + "\n\tFail: " + failCount + "\n\tTodo: " + todoCount + "\n";
+      log += "<div id=\"summary\" class=\"";
+      log += failCount != 0 ? "failure" :
+               passCount == 0 ? "todo" : "success";
+      log += "\">\n<p>Passed: " + passCount + "</p>\n" +
+             "<p>Failed: " + failCount + "</p>\n" +
+             "<p>Todo: " + todoCount + "</p>\n</div>\n<div id=\"log\">\n";
 
-      return log;
+      return log + aTests.map(function (f) {
+                                return "<p class=\"testHeader\">Running " + f.path + "...</p>\n" + f.htmlLog;
+                              }).join("\n") + "</div>";
     }
 
     function testsFinished(aTests) {
       // Focus our window, to display the results
       window.focus();
-
-      var start = "*** Start BrowserChrome Test Results ***\n";
-      var end = "\n*** End BrowserChrome Test Results ***\n";
-      var output = start + getLogFromTests(aTests) + end;
-
-      // Output to stdout
-      dump(output);
-
-      // Output to file
-      if (gConfig.logPath) {
-        MozillaFileLogger.init(gConfig.logPath);
-        MozillaFileLogger._foStream.write(output, output.length);
-        MozillaFileLogger.close();
-      }
 
       if (gConfig.closeWhenDone) {
         goQuitApplication();
@@ -224,11 +318,13 @@
       }
 
       // UI
-      document.getElementById("results").value = output;
+      document.getElementById("results").innerHTML = getHTMLLogFromTests(aTests);
       setStatus("Done.");
     }
   ]]></script>
-  <button id="runTestsButton" onclick="runAllTests();" label="Run All Tests"/>
+  <button id="runTestsButton" oncommand="runTests();" label="Run All Tests"/>
   <label id="status"/>
-  <textbox flex="1" multiline="true" id="results"/>
+  <scrollbox flex="1" style="overflow: auto" align="stretch">
+    <div id="results" xmlns="http://www.w3.org/1999/xhtml" flex="1"/>
+  </scrollbox>
 </window>

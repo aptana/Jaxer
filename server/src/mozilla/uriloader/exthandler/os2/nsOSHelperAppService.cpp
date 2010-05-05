@@ -1461,7 +1461,7 @@ WpsMimeInfoFromExtension(const char *aFileExt, nsMIMEInfoOS2 *aMI)
     if (NS_FAILED(GetNLSString(NS_LITERAL_STRING("fileType").get(), fileType)))
       ustr.Assign(NS_LITERAL_STRING("%S file"));
     int pos = -1;
-    if ((pos = fileType.Find("%S")) > -1);
+    if ((pos = fileType.Find("%S")) > -1)
       fileType.Replace(pos, 2, ustr);
     aMI->SetDescription(fileType);
   }
@@ -1482,8 +1482,7 @@ nsOSHelperAppService::GetFromTypeAndExtension(const nsACString& aMIMEType,
   // let the existing code do its thing
   nsresult rv = nsExternalHelperAppService::GetFromTypeAndExtension(
                                             aMIMEType, aFileExt, _retval);
-  if (!(*_retval))
-    return rv;
+  NS_ENSURE_SUCCESS(rv, rv);
 
   // this is needed for Get/SetDefaultApplication()
   nsMIMEInfoOS2 *mi = static_cast<nsMIMEInfoOS2*>(*_retval);
@@ -1496,7 +1495,7 @@ nsOSHelperAppService::GetFromTypeAndExtension(const nsACString& aMIMEType,
   else {
     mi->GetPrimaryExtension(ext);
     if (ext.IsEmpty())
-      return rv;
+      return NS_OK;
   }
 
   nsCOMPtr<nsIFile> defApp;
@@ -1509,7 +1508,7 @@ nsOSHelperAppService::GetFromTypeAndExtension(const nsACString& aMIMEType,
   // create a default entry using the WPS handler
   if (!defApp && !locPrefApp) {
     WpsMimeInfoFromExtension(ext.get(), mi);
-    return rv;
+    return NS_OK;
   }
 
   PRBool gotPromoted = PR_FALSE;
@@ -1520,9 +1519,10 @@ nsOSHelperAppService::GetFromTypeAndExtension(const nsACString& aMIMEType,
     PRBool sameFile;
     nsCOMPtr<nsIFile> app;
     rv = locPrefApp->GetExecutable(getter_AddRefs(app));
+    NS_ENSURE_SUCCESS(rv, rv);
     defApp->Equals(app, &sameFile);
     if (!sameFile)
-      return rv;
+      return NS_OK;
 
     defApp = 0;
     mi->SetDefaultApplication(0);
@@ -1558,7 +1558,7 @@ nsOSHelperAppService::GetFromTypeAndExtension(const nsACString& aMIMEType,
   mi->SetDefaultApplication(0);
   mi->SetDefaultAppHandle(handle);
 
-  return rv;
+  return NS_OK;
 }
 
 //------------------------------------------------------------------------

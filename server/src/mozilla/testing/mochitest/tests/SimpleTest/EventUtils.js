@@ -134,20 +134,22 @@ function __doEventDispatch(aTarget, aCharCode, aKeyCode, aHasShift) {
                      aKeyCode, 0);
   var accepted = $(aTarget).dispatchEvent(event);
 
-  // Cancelling keydown cancels keypress too
-  if (accepted) {
-    event = document.createEvent("KeyEvents");
-    if (aCharCode) {
-      event.initKeyEvent("keypress", true, true, document.defaultView,
-                         false, false, aHasShift, false,
-                         0, aCharCode);
-    } else {
-      event.initKeyEvent("keypress", true, true, document.defaultView,
-                         false, false, aHasShift, false,
-                         aKeyCode, 0);
-    }
-    accepted = $(aTarget).dispatchEvent(event);
+  // Preventing the default keydown action also prevents the default
+  // keypress action.
+  event = document.createEvent("KeyEvents");
+  if (aCharCode) {
+    event.initKeyEvent("keypress", true, true, document.defaultView,
+                       false, false, aHasShift, false,
+                       0, aCharCode);
+  } else {
+    event.initKeyEvent("keypress", true, true, document.defaultView,
+                       false, false, aHasShift, false,
+                       aKeyCode, 0);
   }
+  if (!accepted) {
+    event.preventDefault();
+  }
+  accepted = $(aTarget).dispatchEvent(event);
 
   // Always send keyup
   var event = document.createEvent("KeyEvents");
@@ -187,7 +189,7 @@ function _parseModifiers(aEvent)
  * aOffsetY. This allows mouse clicks to be simulated by calling this method.
  *
  * aEvent is an object which may contain the properties:
- *   shiftKey, ctrlKey, altKey, metaKey, accessKey, type
+ *   shiftKey, ctrlKey, altKey, metaKey, accessKey, clickCount, button, type
  *
  * If the type is specified, an mouse event of that type is fired. Otherwise,
  * a mousedown followed by a mouse up is performed.
@@ -208,16 +210,73 @@ function synthesizeMouse(aTarget, aOffsetX, aOffsetY, aEvent, aWindow)
     var clickCount = aEvent.clickCount || 1;
     var modifiers = _parseModifiers(aEvent);
 
-    var left = aTarget.boxObject.x;
-    var top = aTarget.boxObject.y;
+    var rect = aTarget.getBoundingClientRect();
+
+    var left = rect.left + aOffsetX;
+    var top = rect.top + aOffsetY;
 
     if (aEvent.type) {
-      utils.sendMouseEvent(aEvent.type, left + aOffsetX, top + aOffsetY, button, clickCount, modifiers);
+      utils.sendMouseEvent(aEvent.type, left, top, button, clickCount, modifiers);
     }
     else {
-      utils.sendMouseEvent("mousedown", left + aOffsetX, top + aOffsetY, button, clickCount, modifiers);
-      utils.sendMouseEvent("mouseup", left + aOffsetX, top + aOffsetY, button, clickCount, modifiers);
+      utils.sendMouseEvent("mousedown", left, top, button, clickCount, modifiers);
+      utils.sendMouseEvent("mouseup", left, top, button, clickCount, modifiers);
     }
+  }
+}
+
+/**
+ * Synthesize a mouse scroll event on a target. The actual client point is determined
+ * by taking the aTarget's client box and offseting it by aOffsetX and
+ * aOffsetY.
+ *
+ * aEvent is an object which may contain the properties:
+ *   shiftKey, ctrlKey, altKey, metaKey, accessKey, button, type, axis, delta, hasPixels
+ *
+ * If the type is specified, a mouse scroll event of that type is fired. Otherwise,
+ * "DOMMouseScroll" is used.
+ *
+ * If the axis is specified, it must be one of "horizontal" or "vertical". If not specified,
+ * "vertical" is used.
+ * 
+ * 'delta' is the amount to scroll by (can be positive or negative). It must
+ * be specified.
+ *
+ * 'hasPixels' specifies whether kHasPixels should be set in the scrollFlags.
+ *
+ * aWindow is optional, and defaults to the current window object.
+ */
+function synthesizeMouseScroll(aTarget, aOffsetX, aOffsetY, aEvent, aWindow)
+{
+  netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+
+  if (!aWindow)
+    aWindow = window;
+
+  var utils = aWindow.QueryInterface(Components.interfaces.nsIInterfaceRequestor).
+                      getInterface(Components.interfaces.nsIDOMWindowUtils);
+  if (utils) {
+    // See nsMouseScrollFlags in nsGUIEvent.h
+    const kIsVertical = 0x02;
+    const kIsHorizontal = 0x04;
+    const kHasPixels = 0x08;
+
+    var button = aEvent.button || 0;
+    var modifiers = _parseModifiers(aEvent);
+
+    var rect = aTarget.getBoundingClientRect();
+
+    var left = rect.left;
+    var top = rect.top;
+
+    var type = aEvent.type || "DOMMouseScroll";
+    var axis = aEvent.axis || "vertical";
+    var scrollFlags = (axis == "horizontal") ? kIsHorizontal : kIsVertical;
+    if (aEvent.hasPixels) {
+      scrollFlags |= kHasPixels;
+    }
+    utils.sendMouseScrollEvent(type, left + aOffsetX, top + aOffsetY, button,
+                               scrollFlags, aEvent.delta, modifiers);
   }
 }
 
@@ -258,8 +317,10 @@ function synthesizeKey(aKey, aEvent, aWindow)
       utils.sendKeyEvent(aEvent.type, keyCode, charCode, modifiers);
     }
     else {
-      utils.sendKeyEvent("keydown", keyCode, charCode, modifiers);
-      utils.sendKeyEvent("keypress", keyCode, charCode, modifiers);
+      var keyDownDefaultHappened =
+          utils.sendKeyEvent("keydown", keyCode, charCode, modifiers);
+      utils.sendKeyEvent("keypress", keyCode, charCode, modifiers,
+                         !keyDownDefaultHappened);
       utils.sendKeyEvent("keyup", keyCode, charCode, modifiers);
     }
   }
@@ -353,4 +414,118 @@ function synthesizeKeyExpectEvent(key, aEvent, aExpectedTarget, aExpectedEvent,
   var eventHandler = _expectEvent(aExpectedTarget, aExpectedEvent, aTestName);
   synthesizeKey(key, aEvent, aWindow);
   _checkExpectedEvent(aExpectedTarget, aExpectedEvent, eventHandler, aTestName);
+}
+
+/**
+ * Emulate a dragstart event.
+ *  element - element to fire the dragstart event on
+ *  expectedDragData - the data you expect the data transfer to contain afterwards
+ *                     This data is in the format:
+ *                       [ [ "type: data", "type: data" ], ... ]
+ * Returns the expected data in the same format if it is not correct. Returns null
+ * if successful.
+ */
+function synthesizeDragStart(element, expectedDragData)
+{
+  var failed = null;
+
+  var trapDrag = function(event) {
+    try {
+      var dataTransfer = event.dataTransfer;
+      if (dataTransfer.mozItemCount != expectedDragData.length)
+        throw "Failed";
+
+      for (var t = 0; t < dataTransfer.mozItemCount; t++) {
+        var types = dataTransfer.mozTypesAt(t);
+        var expecteditem = expectedDragData[t];
+        if (types.length != expecteditem.length)
+          throw "Failed";
+
+        for (var f = 0; f < types.length; f++) {
+          if (types[f] != expecteditem[f].substring(0, types[f].length) ||
+              dataTransfer.mozGetDataAt(types[f], t) != expecteditem[f].substring(types[f].length + 2))
+          throw "Failed";
+        }
+      }
+    } catch(ex) {
+      failed = dataTransfer;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  window.addEventListener("dragstart", trapDrag, false);
+  synthesizeMouse(element, 2, 2, { type: "mousedown" });
+  synthesizeMouse(element, 9, 9, { type: "mousemove" });
+  synthesizeMouse(element, 10, 10, { type: "mousemove" });
+  window.removeEventListener("dragstart", trapDrag, false);
+  synthesizeMouse(element, 10, 10, { type: "mouseup" });
+
+  return failed;
+}
+
+/**
+ * Emulate a drop by firing a dragover, dragexit and a drop event.
+ *  element - the element to fire the dragover, dragexit and drop events on
+ *  dragData - the data to supply for the data transfer
+ *                     This data is in the format:
+ *                       [ [ "type: data", "type: data" ], ... ]
+ * effectAllowed - the allowed effects that the dragstart event would have set
+ *
+ * Returns the drop effect that was desired.
+ */
+function synthesizeDrop(element, dragData, effectAllowed)
+{
+  var dataTransfer;
+  var trapDrag = function(event) {
+    dataTransfer = event.dataTransfer;
+    for (var t = 0; t < dragData.length; t++) {
+      var item = dragData[t];
+      for (var v = 0; v < item.length; v++) {
+        var idx = item[v].indexOf(":");
+        dataTransfer.mozSetDataAt(item[v].substring(0, idx), item[v].substring(idx + 2), t);
+      }
+    }
+
+    dataTransfer.dropEffect = "move";
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  // need to use a real 
+  window.addEventListener("dragstart", trapDrag, true);
+  synthesizeMouse(element, 2, 2, { type: "mousedown" });
+  synthesizeMouse(element, 9, 9, { type: "mousemove" });
+  synthesizeMouse(element, 10, 10, { type: "mousemove" });
+  window.removeEventListener("dragstart", trapDrag, true);
+  synthesizeMouse(element, 10, 10, { type: "mouseup" });
+
+  var event = document.createEvent("DragEvents");
+  event.initDragEvent("dragover", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null, dataTransfer);
+  if (element.dispatchEvent(event))
+    return "none";
+
+  event = document.createEvent("DragEvents");
+  event.initDragEvent("dragexit", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null, dataTransfer);
+  element.dispatchEvent(event);
+
+  if (dataTransfer.dropEffect != "none") {
+    event = document.createEvent("DragEvents");
+    event.initDragEvent("drop", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null, dataTransfer);
+    element.dispatchEvent(event);
+  }
+
+  return dataTransfer.dropEffect;
+}
+
+function disableNonTestMouseEvents(aDisable)
+{
+  netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+
+  var utils =
+    window.QueryInterface(Components.interfaces.nsIInterfaceRequestor).
+           getInterface(Components.interfaces.nsIDOMWindowUtils);
+  if (utils)
+    utils.disableNonTestMouseEvents(aDisable);
 }
