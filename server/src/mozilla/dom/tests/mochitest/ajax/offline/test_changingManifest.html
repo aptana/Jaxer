@@ -5,6 +5,7 @@
 <script type="text/javascript" src="/MochiKit/packed.js"></script>
 <script type="text/javascript" src="/tests/SimpleTest/SimpleTest.js"></script>
 <script type="text/javascript" src="/tests/dom/tests/mochitest/ajax/offline/offlineTests.js"></script>
+<link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
 
 <script type="text/javascript">
 
@@ -16,10 +17,28 @@ var g1HourUrl = "http://localhost:8888/tests/dom/tests/mochitest/ajax/offline/ch
 
 var gCacheContents = null;
 
+function finish()
+{
+  OfflineTest.teardown();
+  OfflineTest.finish();
+}
+
 function manifestUpdatedAgain()
 {
   OfflineTest.ok(gGotChecking, "Should get a checking event on the second update");
   OfflineTest.ok(gGotDownloading, "Should get a downloading event on the second update");
+
+  // The second manifest has no NETWORK entry, but we are still
+  // associated with the first version of the manifest, so we should
+  // be able to access the whitelisted entry.
+  try {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "onwhitelist.html", false);
+    xhr.send();
+    OfflineTest.ok(true, "Fetched from the initial cache's whitelist.");
+  } catch (e) {
+    OfflineTest.ok(false, "Failed to fetch from the initial cache's whitelist.");
+  }
 
   // Get the initial contents of the first two files.
   fetcher = new OfflineCacheContents([g1SecUrl, g1HourUrl]);
@@ -29,15 +48,13 @@ function manifestUpdatedAgain()
     OfflineTest.isnot(gCacheContents[g1SecUrl], contents[g1SecUrl], "1-second expiration should have changed");
     OfflineTest.is(gCacheContents[g1HourUrl], contents[g1HourUrl], "1-hour expiration should not have changed");
 
-    OfflineTest.teardown();
-    OfflineTest.finish();
+    finish();
   });
 }
 
 function failAndFinish(e) {
   OfflineTest.ok(false, "Unexpected event: " + e.type);
-  OfflineTest.teardown();
-  OfflineTest.finish();
+  finish();
 }
 
 function manifestUpdated()
@@ -45,14 +62,29 @@ function manifestUpdated()
   OfflineTest.ok(gGotChecking, "Should get a checking event");
   OfflineTest.ok(gGotDownloading, "Should get a downloading event");
 
+  // Replace this manifest with a new one.
+  OfflineTest.setSJSState("changingManifest.sjs", "2");
+
   // Get the initial contents of the first two files.
   fetcher = new OfflineCacheContents([g1SecUrl, g1HourUrl]);
   fetcher.fetch(function(contents) {
     gCacheContents = contents;
 
-     // Now make sure applicationCache.update() does what we expect.
-    applicationCache.oncached = OfflineTest.priv(manifestUpdatedAgain);
+    // Now make sure applicationCache.update() does what we expect.
+    applicationCache.onchecking = function() {
+      OfflineTest.is(applicationCache.status, applicationCache.CHECKING,
+                     "CHECKING state during update");
+      gGotChecking = true;
+    };
+    applicationCache.ondownloading = function() {
+      OfflineTest.is(applicationCache.status, applicationCache.DOWNLOADING,
+                     "DOWNLOADING state during update");
+      gGotDownloading = true;
+    };
+
+    applicationCache.onupdateready = OfflineTest.priv(manifestUpdatedAgain);
     applicationCache.onnoupdate = failAndFinish;
+    applicationCache.oncached = failAndFinish;
 
     gGotChecking = false;
     gGotDownloading = false;

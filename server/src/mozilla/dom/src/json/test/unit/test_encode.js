@@ -1,3 +1,4 @@
+
 // returns a list of [string, object] pairs to test encoding
 function getTestPairs() {
   var testPairs = [
@@ -18,7 +19,10 @@ function getTestPairs() {
     ['{"x":{"a":"b","c":{"y":"z"},"f":"g"}}',
      {"x":{"a":"b","c":{"y":"z"},"f":"g"}}],
     ['{"x":[1,{"y":"z"},3]}', {"x":[1,{"y":"z"},3]}],
-    //['{"0":"h","1":"m","2":"m"}', new String("hmm")],
+    ['["hmm"]', [new String("hmm")]],
+    ['[true]', [new Boolean(true)]],
+    ['[42]', [new Number(42)]],
+    ['["1978-09-13T12:24:34.023Z"]', [new Date(Date.UTC(1978, 8, 13, 12, 24, 34, 23))]],
     ['[1,null,3]',[1,,3]],
     [null, function test(){}],
     [null, dump],
@@ -79,10 +83,10 @@ function getTestPairs() {
   //testPairs.push(['[1]', x]);
 
   // prototype
-  var X = function() { this.a = "b" }
+  var X = function() { this.foo = "b" }
   X.prototype = {c:"d"}
   var y = new X();
-  testPairs.push(['{"a":"b","c":"d"}', y]);
+  testPairs.push(['{"foo":"b"}', y]);
 
   // useless roots will be dropped
   testPairs.push([null, null]);
@@ -90,6 +94,10 @@ function getTestPairs() {
   testPairs.push([null, undefined]);
   testPairs.push([null, 5]);
 
+  return testPairs;
+}
+
+function testIterator() {
   // custom iterator: JS 1.7+
   var x = {
    "a": "foo",
@@ -99,8 +107,6 @@ function getTestPairs() {
    __iterator__: function() { return (function() { yield "a"; yield "c"; yield 4; })() }
   }
   do_check_eq('{"a":"foo","c":"bar","4":"qux"}', nativeJSON.encode(x));
-
-  return testPairs;
 }
 
 function testStringEncode() {
@@ -110,7 +116,7 @@ function testStringEncode() {
   var pairs = getTestPairs();
   for each(pair in pairs) {
     var nativeResult = nativeJSON.encode(pair[1]);
-    var crockfordResult = JSON.stringify(pair[1]);
+    var crockfordResult = crockfordJSON.stringify(pair[1]);
     do_check_eq(pair[0], nativeResult);
     
     // Don't follow json2.js handling of non-objects
@@ -230,6 +236,7 @@ function deleteDuringEncode() {
 
 function run_test() {
   testStringEncode();
+  testIterator();
   throwingToJSON();
   throwingIterator();
   deleteDuringEncode();

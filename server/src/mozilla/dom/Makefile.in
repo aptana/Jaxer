@@ -43,7 +43,47 @@ VPATH		= @srcdir@
 include $(DEPTH)/config/autoconf.mk
 
 MODULE		= dom
-DIRS		= public src locales tests
+DIRS = \
+  interfaces/base \
+  interfaces/canvas \
+  interfaces/core \
+  interfaces/html \
+  interfaces/events \
+  interfaces/stylesheets \
+  interfaces/views \
+  interfaces/sidebar \
+  interfaces/css \
+  interfaces/traversal \
+  interfaces/range \
+  interfaces/xbl \
+  interfaces/xpath \
+  interfaces/load-save \
+  interfaces/xul \
+  interfaces/storage \
+  interfaces/json \
+  interfaces/offline \
+  interfaces/geolocation \
+  interfaces/threads \
+  $(NULL)
+
+ifdef MOZ_SVG
+DIRS += interfaces/svg
+endif
+
+ifdef MOZ_SMIL
+DIRS += interfaces/smil
+endif
+
+DIRS += \
+  public/coreEvents \
+  base \
+  src \
+  locales \
+  $(NULL)
+
+ifdef ENABLE_TESTS
+DIRS += tests
+endif
 
 include $(topsrcdir)/config/rules.mk
 

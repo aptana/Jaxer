@@ -1,3 +1,6 @@
+ok(globalStorage === this["globalStorage"], "globalStorage is global check 1")
+ok(globalStorage === window["globalStorage"], "globalStorage is global check 2")
+
 function test_DOMStorage_global()
 {
   var currentDomain = "mozilla.com";
@@ -6,10 +9,10 @@ function test_DOMStorage_global()
   is(globalStorage instanceof StorageList, true, "globalStorage property");
 
   var storage = globalStorage.namedItem(currentDomain);
-  is(storage instanceof Storage, true, "StorageList namedItem");
+  is(storage instanceof StorageObsolete, true, "StorageList namedItem");
 
   var storage2 = globalStorage[currentDomain];
-  is(storage2 instanceof Storage, true, "StorageList property syntax");
+  is(storage2 instanceof StorageObsolete, true, "StorageList property syntax");
 
   is(storage, storage2, "StorageList namedItem and array return same value");
 
@@ -157,4 +160,9 @@ function test_DOMStorage_global_Item(storage, key, expectedvalue, expectedlength
 function is(left, right, str)
 {
   window.opener.wrappedJSObject.SimpleTest.is(left, right, str);
+}
+
+function ok(val, str)
+{
+  window.opener.wrappedJSObject.SimpleTest.ok(val, str);
 }
