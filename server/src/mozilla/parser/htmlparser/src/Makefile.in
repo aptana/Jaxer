@@ -63,8 +63,6 @@ SHORT_LIBNAME  = gkparser
 GRE_MODULE	= 1
 LIBXUL_LIBRARY = 1
 
-PACKAGE_FILE = parser.pkg
-
 REQUIRES	= xpcom \
 		  string \
 		  necko \

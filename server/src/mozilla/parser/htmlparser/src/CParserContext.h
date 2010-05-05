@@ -60,49 +60,45 @@
  */
 
 class CParserContext {
-
 public:
+   enum eContextType {eCTNone,eCTURL,eCTString,eCTStream};
 
-    enum {eTransferBufferSize=4096};
-    enum eContextType {eCTNone,eCTURL,eCTString,eCTStream};
+   CParserContext(CParserContext* aPrevContext,
+                  nsScanner* aScanner,
+                  void* aKey = 0,
+                  eParserCommands aCommand = eViewNormal,
+                  nsIRequestObserver* aListener = 0,
+                  eAutoDetectResult aStatus = eUnknownDetect,
+                  PRBool aCopyUnused = PR_FALSE);
 
-   CParserContext(  nsScanner* aScanner,
-                    void* aKey=0, 
-                    eParserCommands aCommand=eViewNormal,
-                    nsIRequestObserver* aListener=0, 
-                    nsIDTD *aDTD=0, 
-                    eAutoDetectResult aStatus=eUnknownDetect, 
-                    PRBool aCopyUnused=PR_FALSE); 
-    
     ~CParserContext();
 
-    nsresult GetTokenizer(PRInt32 aType,
+    nsresult GetTokenizer(nsIDTD* aDTD,
                           nsIContentSink* aSink,
                           nsITokenizer*& aTokenizer);
     void  SetMimeType(const nsACString& aMimeType);
 
     nsCOMPtr<nsIRequest> mRequest; // provided by necko to differnciate different input streams
                                    // why is mRequest strongly referenced? see bug 102376.
-    nsCOMPtr<nsIDTD>	 mDTD;
     nsCOMPtr<nsIRequestObserver> mListener;
-    nsAutoArrayPtr<char> mTransferBuffer;
-    void*                mKey;
+    void* const          mKey;
     nsCOMPtr<nsITokenizer> mTokenizer;
-    CParserContext*      mPrevContext;
+    CParserContext* const mPrevContext;
     nsAutoPtr<nsScanner> mScanner;
-    
+
     nsCString            mMimeType;
     nsDTDMode            mDTDMode;
-    
+
     eParserDocType       mDocType;
-    eStreamState         mStreamListenerState; //this is really only here for debug purposes.
+    eStreamState         mStreamListenerState;
     eContextType         mContextType;
     eAutoDetectResult    mAutoDetectStatus;
-    eParserCommands      mParserCommand;   //tells us to viewcontent/viewsource/viewerrors...
+    eParserCommands      mParserCommand;
 
     PRPackedBool         mMultipart;
     PRPackedBool         mCopyUnused;
-    PRUint32             mTransferBufferSize;
+
+    PRUint32             mNumConsumed;
 };
 
 #endif

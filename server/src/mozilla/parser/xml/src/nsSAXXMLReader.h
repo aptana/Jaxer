@@ -72,13 +72,13 @@ public:
   nsSAXXMLReader();
 
   //nsIContentSink
-  NS_IMETHOD WillTokenize()
+  NS_IMETHOD WillParse()
   {
     return NS_OK;
   }
 
-  NS_IMETHOD WillBuildModel();
-  NS_IMETHOD DidBuildModel();
+  NS_IMETHOD WillBuildModel(nsDTDMode aDTDMode);
+  NS_IMETHOD DidBuildModel(PRBool aTerminated);
   NS_IMETHOD SetParser(nsIParser* aParser);
   
   NS_IMETHOD WillInterrupt()

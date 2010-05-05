@@ -97,12 +97,19 @@ nsScanner::nsScanner(const nsAString& anHTMLString, const nsACString& aCharset,
   mSlidingBuffer = nsnull;
   mCountRemaining = 0;
   mFirstNonWhitespacePosition = -1;
-  AppendToBuffer(anHTMLString);
-  mSlidingBuffer->BeginReading(mCurrentPosition);
+  if (AppendToBuffer(anHTMLString)) {
+    mSlidingBuffer->BeginReading(mCurrentPosition);
+  } else {
+    /* XXX see hack below, re: bug 182067 */
+    memset(&mCurrentPosition, 0, sizeof(mCurrentPosition));
+    mEndPosition = mCurrentPosition;
+  }
   mMarkPosition = mCurrentPosition;
   mIncremental = PR_FALSE;
   mUnicodeDecoder = 0;
   mCharsetSource = kCharsetUninitialized;
+  mHasInvalidCharacter = PR_FALSE;
+  mReplacementCharacter = PRUnichar(0x0);
 }
 
 /**
@@ -138,19 +145,20 @@ nsScanner::nsScanner(nsString& aFilename,PRBool aCreateStream,
 
   mUnicodeDecoder = 0;
   mCharsetSource = kCharsetUninitialized;
+  mHasInvalidCharacter = PR_FALSE;
+  mReplacementCharacter = PRUnichar(0x0);
   SetDocumentCharset(aCharset, aSource);
 }
 
-nsresult nsScanner::SetDocumentCharset(const nsACString& aCharset , PRInt32 aSource) {
-
-  nsresult res = NS_OK;
-
-  if( aSource < mCharsetSource) // priority is lower the the current one , just
-    return res;
+nsresult nsScanner::SetDocumentCharset(const nsACString& aCharset , PRInt32 aSource)
+{
+  if (aSource < mCharsetSource) // priority is lower the the current one , just
+    return NS_OK;
 
   nsICharsetAlias* calias = nsParser::GetCharsetAliasService();
   NS_ASSERTION(calias, "Must have the charset alias service!");
 
+  nsresult res = NS_OK;
   if (!mCharset.IsEmpty())
   {
     PRBool same;
@@ -180,14 +188,13 @@ nsresult nsScanner::SetDocumentCharset(const nsACString& aCharset , PRInt32 aSou
   NS_ASSERTION(nsParser::GetCharsetConverterManager(),
                "Must have the charset converter manager!");
 
-  nsIUnicodeDecoder * decoder = nsnull;
   res = nsParser::GetCharsetConverterManager()->
-    GetUnicodeDecoderRaw(mCharset.get(), &decoder);
-  if(NS_SUCCEEDED(res) && (nsnull != decoder))
+    GetUnicodeDecoderRaw(mCharset.get(), getter_AddRefs(mUnicodeDecoder));
+  if (NS_SUCCEEDED(res) && mUnicodeDecoder)
   {
-     NS_IF_RELEASE(mUnicodeDecoder);
-
-     mUnicodeDecoder = decoder;
+     // We need to detect conversion error of character to support XML
+     // encoding error.
+     mUnicodeDecoder->SetInputErrorBehavior(nsIUnicodeDecoder::kOnError_Signal);
   }
 
   return res;
@@ -208,8 +215,6 @@ nsScanner::~nsScanner() {
   }
 
   MOZ_COUNT_DTOR(nsScanner);
-
-  NS_IF_RELEASE(mUnicodeDecoder);
 }
 
 /**
@@ -239,14 +244,21 @@ void nsScanner::RewindToMark(void){
  *  @param   
  *  @return  
  */
-void nsScanner::Mark() {
+PRInt32 nsScanner::Mark() {
+  PRInt32 distance = 0;
   if (mSlidingBuffer) {
+    nsScannerIterator oldStart;
+    mSlidingBuffer->BeginReading(oldStart);
+
+    distance = Distance(oldStart, mCurrentPosition);
+
     mSlidingBuffer->DiscardPrefix(mCurrentPosition);
     mSlidingBuffer->BeginReading(mCurrentPosition);
     mMarkPosition = mCurrentPosition;
   }
+
+  return distance;
 }
- 
 
 /** 
  * Insert data to our underlying input buffer as
@@ -277,7 +289,8 @@ PRBool nsScanner::UngetReadable(const nsAString& aBuffer) {
  * @return  error code 
  */
 nsresult nsScanner::Append(const nsAString& aBuffer) {
-  AppendToBuffer(aBuffer);
+  if (!AppendToBuffer(aBuffer))
+    return NS_ERROR_OUT_OF_MEMORY;
   return NS_OK;
 }
 
@@ -302,6 +315,8 @@ nsresult nsScanner::Append(const char* aBuffer, PRUint32 aLen,
 
     PRInt32 totalChars = 0;
     PRInt32 unicharLength = unicharBufLen;
+    PRInt32 errorPos = -1;
+
     do {
       PRInt32 srcLength = aLen;
       res = mUnicodeDecoder->Convert(aBuffer, &srcLength, unichars, &unicharLength);
@@ -309,8 +324,8 @@ nsresult nsScanner::Append(const char* aBuffer, PRUint32 aLen,
       totalChars += unicharLength;
       // Continuation of failure case
       if(NS_FAILED(res)) {
-        // if we failed, we consume one byte, replace it with U+FFFD
-        // and try the conversion again.
+        // if we failed, we consume one byte, replace it with the replacement
+        // character and try the conversion again.
 
         // This is only needed because some decoders don't follow the
         // nsIUnicodeDecoder contract: they return a failure when *aDestLength
@@ -320,7 +335,13 @@ nsresult nsScanner::Append(const char* aBuffer, PRUint32 aLen,
           break;
         }
 
-        unichars[unicharLength++] = (PRUnichar)0xFFFD;
+        if (mReplacementCharacter == 0x0 && errorPos == -1) {
+          errorPos = totalChars;
+        }
+        unichars[unicharLength++] = mReplacementCharacter == 0x0 ?
+                                    mUnicodeDecoder->GetCharacterForUnMapped() :
+                                    mReplacementCharacter;
+
         unichars = unichars + unicharLength;
         unicharLength = unicharBufLen - (++totalChars);
 
@@ -339,12 +360,12 @@ nsresult nsScanner::Append(const char* aBuffer, PRUint32 aLen,
     } while (NS_FAILED(res) && (aLen > 0));
 
     buffer->SetDataLength(totalChars);
-    AppendToBuffer(buffer, aRequest);
-
     // Don't propagate return code of unicode decoder
     // since it doesn't reflect on our success or failure
     // - Ref. bug 87110
     res = NS_OK; 
+    if (!AppendToBuffer(buffer, aRequest, errorPos))
+      res = NS_ERROR_OUT_OF_MEMORY;
   }
   else {
     NS_WARNING("No decoder found.");
@@ -1003,6 +1024,7 @@ nsresult nsScanner::ReadUntil(nsScannerIterator& aStart,
   }
   
   while (current != mEndPosition) {
+    theChar = *current;
     if (theChar == '\0') {
       ReplaceCharacter(current, sInvalid);
       theChar = sInvalid;
@@ -1026,9 +1048,8 @@ nsresult nsScanner::ReadUntil(nsScannerIterator& aStart,
         ++setcurrent;
       }
     }
-    
+
     ++current;
-    theChar = *current;
   }
 
   // If we are here, we didn't find any terminator in the string and
@@ -1067,6 +1088,7 @@ nsresult nsScanner::ReadUntil(nsAString& aString,
   }
 
   while (current != mEndPosition) {
+    theChar = *current;
     if (theChar == '\0') {
       ReplaceCharacter(current, sInvalid);
       theChar = sInvalid;
@@ -1080,7 +1102,6 @@ nsresult nsScanner::ReadUntil(nsAString& aString,
       return NS_OK;
     }
     ++current;
-    theChar = *current;
   }
 
   // If we are here, we didn't find any terminator in the string and
@@ -1141,19 +1162,22 @@ void nsScanner::ReplaceCharacter(nsScannerIterator& aPosition,
   }
 }
 
-void nsScanner::AppendToBuffer(nsScannerString::Buffer* aBuf,
-                               nsIRequest *aRequest)
+PRBool nsScanner::AppendToBuffer(nsScannerString::Buffer* aBuf,
+                                 nsIRequest *aRequest,
+                                 PRInt32 aErrorPos)
 {
   if (nsParser::sParserDataListeners && mParser &&
       NS_FAILED(mParser->DataAdded(Substring(aBuf->DataStart(),
                                              aBuf->DataEnd()), aRequest))) {
     // Don't actually append on failure.
 
-    return;
+    return mSlidingBuffer != nsnull;
   }
 
   if (!mSlidingBuffer) {
     mSlidingBuffer = new nsScannerString(aBuf);
+    if (!mSlidingBuffer)
+      return PR_FALSE;
     mSlidingBuffer->BeginReading(mCurrentPosition);
     mMarkPosition = mCurrentPosition;
     mSlidingBuffer->EndReading(mEndPosition);
@@ -1166,6 +1190,12 @@ void nsScanner::AppendToBuffer(nsScannerString::Buffer* aBuf,
     }
     mSlidingBuffer->EndReading(mEndPosition);
     mCountRemaining += aBuf->DataLength();
+  }
+
+  if (aErrorPos != -1 && !mHasInvalidCharacter) {
+    mHasInvalidCharacter = PR_TRUE;
+    mFirstInvalidPosition = mCurrentPosition;
+    mFirstInvalidPosition.advance(aErrorPos);
   }
 
   if (mFirstNonWhitespacePosition == -1) {
@@ -1182,6 +1212,7 @@ void nsScanner::AppendToBuffer(nsScannerString::Buffer* aBuf,
       ++iter;
     }
   }
+  return PR_TRUE;
 }
 
 /**
@@ -1231,5 +1262,12 @@ void nsScanner::SelfTest(void) {
 #endif
 }
 
+void nsScanner::OverrideReplacementCharacter(PRUnichar aReplacementCharacter)
+{
+  mReplacementCharacter = aReplacementCharacter;
 
+  if (mHasInvalidCharacter) {
+    ReplaceCharacter(mFirstInvalidPosition, mReplacementCharacter);
+  }
+}
 

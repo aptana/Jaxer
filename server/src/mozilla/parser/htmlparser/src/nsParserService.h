@@ -52,7 +52,6 @@
 
 #include "nsIParserService.h"
 #include "nsDTDUtils.h"
-#include "nsVoidArray.h"
 
 extern "C" int MOZ_XMLIsLetter(const char* ptr);
 extern "C" int MOZ_XMLIsNCNameChar(const char* ptr);
@@ -102,11 +101,11 @@ public:
 
   PRBool IsXMLLetter(PRUnichar aChar)
   {
-    return MOZ_XMLIsLetter(reinterpret_cast<const char*>(&aChar));
+    return !!MOZ_XMLIsLetter(reinterpret_cast<const char*>(&aChar));
   }
   PRBool IsXMLNCNameChar(PRUnichar aChar)
   {
-    return MOZ_XMLIsNCNameChar(reinterpret_cast<const char*>(&aChar));
+    return !!MOZ_XMLIsNCNameChar(reinterpret_cast<const char*>(&aChar));
   }
   PRUint32 DecodeEntity(const PRUnichar* aStart, const PRUnichar* aEnd,
                         const PRUnichar** aNext, PRUnichar* aResult)

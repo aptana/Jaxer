@@ -1042,11 +1042,6 @@ nsObserverEntry::nsObserverEntry(const nsAString& aTopic) : mTopic(aTopic)
 nsObserverEntry::~nsObserverEntry() {
   for (PRInt32 i = 0; i <= NS_HTML_TAG_MAX; ++i){
     if (mObservers[i]) {
-      PRInt32 count = mObservers[i]->Count();
-      for (PRInt32 j = 0; j < count; ++j) {
-        nsISupports* obs = (nsISupports*)mObservers[i]->ElementAt(j);
-        NS_IF_RELEASE(obs);
-      }
       delete mObservers[i];
     }
   }
@@ -1055,7 +1050,7 @@ nsObserverEntry::~nsObserverEntry() {
 NS_IMETHODIMP
 nsObserverEntry::Notify(nsIParserNode* aNode,
                         nsIParser* aParser,
-                        nsISupports* aWebShell,
+                        nsISupports* aDocShell,
                         const PRUint32 aFlags) 
 {
   NS_ENSURE_ARG_POINTER(aNode);
@@ -1065,7 +1060,7 @@ nsObserverEntry::Notify(nsIParserNode* aNode,
   eHTMLTags theTag = (eHTMLTags)aNode->GetNodeType();
  
   if (theTag <= NS_HTML_TAG_MAX) {
-    nsVoidArray*  theObservers = mObservers[theTag];
+    nsCOMArray<nsIElementObserver>* theObservers = mObservers[theTag];
     if (theObservers) {
       PRInt32   theCharsetSource;
       nsCAutoString      charset;
@@ -1073,9 +1068,9 @@ nsObserverEntry::Notify(nsIParserNode* aNode,
       NS_ConvertASCIItoUTF16 theCharsetValue(charset);
 
       PRInt32 theAttrCount = aNode->GetAttributeCount(); 
-      PRInt32 theObserversCount = theObservers->Count(); 
+      PRInt32 theObserversCount = theObservers->Count();
       if (0 < theObserversCount){
-        nsStringArray keys(theAttrCount+4), values(theAttrCount+4);
+        nsTArray<nsString> keys(theAttrCount + 4), values(theAttrCount + 4);
 
         // XXX this and the following code may be a performance issue.
         // Every key and value is copied and added to an voidarray (causing at
@@ -1083,29 +1078,29 @@ nsObserverEntry::Notify(nsIParserNode* aNode,
         // string (total = 2*(keys+3) + 2(or more) array allocations )).
         PRInt32 index;
         for (index = 0; index < theAttrCount; ++index) {
-          keys.AppendString(aNode->GetKeyAt(index));
-          values.AppendString(aNode->GetValueAt(index));
+          keys.AppendElement(aNode->GetKeyAt(index));
+          values.AppendElement(aNode->GetValueAt(index));
         } 
 
         nsAutoString intValue;
 
-        keys.AppendString(NS_LITERAL_STRING("charset")); 
-        values.AppendString(theCharsetValue);       
+        keys.AppendElement(NS_LITERAL_STRING("charset")); 
+        values.AppendElement(theCharsetValue);       
       
-        keys.AppendString(NS_LITERAL_STRING("charsetSource")); 
+        keys.AppendElement(NS_LITERAL_STRING("charsetSource")); 
         intValue.AppendInt(PRInt32(theCharsetSource),10);
-        values.AppendString(intValue); 
+        values.AppendElement(intValue); 
 
-        keys.AppendString(NS_LITERAL_STRING("X_COMMAND"));
-        values.AppendString(NS_LITERAL_STRING("text/html")); 
+        keys.AppendElement(NS_LITERAL_STRING("X_COMMAND"));
+        values.AppendElement(NS_LITERAL_STRING("text/html")); 
 
         nsCOMPtr<nsIChannel> channel;
         aParser->GetChannel(getter_AddRefs(channel));
 
         for (index=0;index<theObserversCount;++index) {
-          nsIElementObserver* observer = static_cast<nsIElementObserver*>(theObservers->ElementAt(index));
+          nsIElementObserver* observer = theObservers->ObjectAt(index);
           if (observer) {
-            result = observer->Notify(aWebShell, channel,
+            result = observer->Notify(aDocShell, channel,
                                       nsHTMLTags::GetStringValue(theTag),
                                       &keys, &values, aFlags);
             if (NS_FAILED(result)) {
@@ -1138,13 +1133,12 @@ nsObserverEntry::AddObserver(nsIElementObserver *aObserver,
 {
   if (aObserver) {
     if (!mObservers[aTag]) {
-      mObservers[aTag] = new nsAutoVoidArray();
+      mObservers[aTag] = new nsCOMArray<nsIElementObserver>();
       if (!mObservers[aTag]) {
         return NS_ERROR_OUT_OF_MEMORY;
       }
     }
-    NS_ADDREF(aObserver);
-    mObservers[aTag]->AppendElement(aObserver);
+    mObservers[aTag]->AppendObject(aObserver);
   }
   return NS_OK;
 }
@@ -1154,11 +1148,7 @@ nsObserverEntry::RemoveObserver(nsIElementObserver *aObserver)
 {
   for (PRInt32 i=0; i <= NS_HTML_TAG_MAX; ++i){
     if (mObservers[i]) {
-      nsISupports* obs = aObserver;
-      PRBool removed = mObservers[i]->RemoveElement(obs);
-      if (removed) {
-        NS_RELEASE(obs);
-      }
+      mObservers[i]->RemoveObject(aObserver);
     }
   }
 }

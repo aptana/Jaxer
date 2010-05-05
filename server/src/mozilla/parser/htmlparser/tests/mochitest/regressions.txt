@@ -119,7 +119,7 @@ x { content:"</style" } "
 |         <tr>
 |           <td>
 |           <input>
-|             type="hidden"
+|             type="hiDDen"
 |           <td>
 
 #data
@@ -382,6 +382,36 @@ x { content:"</style" } "
 |     <frame>
 
 #data
+<!DOCTYPE html><html><body><table><link><tr><td>Hi!</td></tr></table></html>
+#errors
+#document
+| <!DOCTYPE HTML>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <link>
+|       <tbody>
+|         <tr>
+|           <td>
+|             "Hi!"
+
+#data
+<!DOCTYPE html><html><body><table><style>td { color: green }</style><tr><td>Hi!</tr></td></table>
+#errors
+#document
+| <!DOCTYPE HTML>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <style>
+|         "td { color: green }"
+|       <tbody>
+|         <tr>
+|           <td>
+|             "Hi!"
+#data
 <!DOCTYPE html><html><head></head><form><input type=" hidden"></form><frameset rows="*"><frame></frameset></html>
 #errors
 #document
@@ -393,3 +423,24 @@ x { content:"</style" } "
 |       <input>
 |         type=" hidden"
 
+#data
+<html><head><source>text<body><link>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <source>
+|     "text"
+|     <link>
+
+#data
+<html><head></head><body><div><param><div></div></div></body></html>
+#errors
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       <param>
+|       <div>

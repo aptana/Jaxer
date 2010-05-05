@@ -48,7 +48,7 @@
 #include "nsISupports.h"
 #include "prtypes.h"
 #include "nsHTMLTags.h"
-#include "nsVoidArray.h"
+#include "nsTArray.h"
 
 
 // {4672AA04-F6AE-11d2-B3B7-00805F8A6670}
@@ -77,11 +77,11 @@ public:
                     PRUint32 numOfAttributes, const PRUnichar* nameArray[], 
                     const PRUnichar* valueArray[]) = 0;
   
-  NS_IMETHOD Notify(nsISupports* aWebShell, 
+  NS_IMETHOD Notify(nsISupports* aDocShell, 
                     nsISupports* aChannel,
                     const PRUnichar* aTag, 
-                    const nsStringArray* aKeys, 
-                    const nsStringArray* aValues,
+                    const nsTArray<nsString>* aKeys, 
+                    const nsTArray<nsString>* aValues,
                     const PRUint32 aFlags) = 0;
 
 };

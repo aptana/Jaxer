@@ -47,26 +47,15 @@
  */
 #define NS_VIEWSOURCE_TOKENS_PER_BLOCK 16
 
-#ifdef RAPTOR_PERF_METRICS
-#  define START_TIMER()                    \
-    if(mParser) mParser->mParseTime.Start(PR_FALSE); \
-    if(mParser) mParser->mDTDTime.Start(PR_FALSE); 
-
-#  define STOP_TIMER()                     \
-    if(mParser) mParser->mParseTime.Stop(); \
-    if(mParser) mParser->mDTDTime.Stop(); 
-
-#else
-#  define STOP_TIMER() 
-#  define START_TIMER()
-#endif
+// TODO get rid of these unused macros
+#define STOP_TIMER()
+#define START_TIMER()
 
 #include "nsIAtom.h"
 #include "nsViewSourceHTML.h"
 #include "nsCRT.h"
 #include "nsParser.h"
 #include "nsScanner.h"
-#include "nsIParser.h"
 #include "nsDTDUtils.h"
 #include "nsIContentSink.h"
 #include "nsIHTMLContentSink.h"
@@ -75,6 +64,8 @@
 #include "nsIPrefBranch.h"
 #include "nsUnicharUtils.h"
 #include "nsPrintfCString.h"
+#include "nsNetUtil.h"
+#include "nsHTMLEntities.h"
 
 #include "nsIServiceManager.h"
 
@@ -138,7 +129,7 @@ static const char* const kElementClasses[] = {
   "text",
   "attribute-name",
   "attribute-value",
-  "markupdeclaration"  
+  "markupdeclaration"
 };
 
 static const char* const kBeforeText[] = {
@@ -201,10 +192,10 @@ static const char* const kDumpFileAfterText[] = {
 
 /**
  *  Default constructor
- *  
+ *
  *  @update  gess 4/9/98
- *  @param   
- *  @return  
+ *  @param
+ *  @return
  */
 CViewSourceHTML::CViewSourceHTML()
 {
@@ -221,11 +212,10 @@ CViewSourceHTML::CViewSourceHTML()
     mWrapLongLines = NS_SUCCEEDED(rv) ? temp : PR_FALSE;
   }
 
-  mParser = 0;
   mSink = 0;
   mLineNumber = 1;
   mTokenizer = 0;
-  mDocType=eHTML3_Quirks; // why?
+  mDocType=eHTML_Quirks;
   mHasOpenRoot=PR_FALSE;
   mHasOpenBody=PR_FALSE;
 
@@ -241,34 +231,35 @@ CViewSourceHTML::CViewSourceHTML()
 
 /**
  *  Default destructor
- *  
+ *
  *  @update  gess 4/9/98
- *  @param   
- *  @return  
+ *  @param
+ *  @return
  */
 CViewSourceHTML::~CViewSourceHTML(){
-  mParser=0; //just to prove we destructed...
+  mSink=0; //just to prove we destructed...
 }
 
 /**
   * The parser uses a code sandwich to wrap the parsing process. Before
   * the process begins, WillBuildModel() is called. Afterwards the parser
-  * calls DidBuildModel(). 
-  * @update	rickg 03.20.2000
-  * @param	aParserContext
-  * @param	aSink
-  * @return	error code (almost always 0)
+  * calls DidBuildModel().
+  * @update rickg 03.20.2000
+  * @param  aParserContext
+  * @param  aSink
+  * @return error code (almost always 0)
   */
-nsresult CViewSourceHTML::WillBuildModel(const CParserContext& aParserContext,
-                                         nsITokenizer* aTokenizer,
-                                         nsIContentSink* aSink){
-
+NS_IMETHODIMP
+CViewSourceHTML::WillBuildModel(const CParserContext& aParserContext,
+                                nsITokenizer* aTokenizer,
+                                nsIContentSink* aSink)
+{
   nsresult result=NS_OK;
 
 #ifdef RAPTOR_PERF_METRICS
   vsTimer.Reset();
   NS_START_STOPWATCH(vsTimer);
-#endif 
+#endif
 
   STOP_TIMER();
   mSink=(nsIHTMLContentSink*)aSink;
@@ -279,7 +270,7 @@ nsresult CViewSourceHTML::WillBuildModel(const CParserContext& aParserContext,
     mFilename = Substring(contextFilename,
                           12, // The length of "view-source:"
                           contextFilename.Length() - 12);
-    
+
     mDocType=aParserContext.mDocType;
     mMimeType=aParserContext.mMimeType;
     mDTDMode=aParserContext.mDTDMode;
@@ -310,36 +301,28 @@ nsresult CViewSourceHTML::WillBuildModel(const CParserContext& aParserContext,
   else mDocType=aParserContext.mDocType;
 
   mLineNumber = 1;
-  // Munge the DTD mode so that the document will be in standards mode even if
-  // the original source was quirks.  The CONST_CAST is evil, but the other
-  // options seem to be:
-  // 1) Change the WillBuildModel signature to take an nsIParser so that we can
-  //    push a new parser context right here.
-  // 2) Make some assumptions about the exact class of mSink and get at the
-  //    document that way.
-  // #1 doesn't seem worth it, and #2 is even more evil, since we plan to reset
-  // the DTD mode right back to what it was before, let's risk this.
-  CParserContext& parserContext = const_cast<CParserContext&>(aParserContext);
-  parserContext.mDTDMode = eDTDMode_full_standards;
-  result = mSink->WillBuildModel();
-  // And reset the DTD mode back to the right one
-  parserContext.mDTDMode = mDTDMode;
+
   START_TIMER();
+
   return result;
 }
 
 /**
   * The parser uses a code sandwich to wrap the parsing process. Before
   * the process begins, WillBuildModel() is called. Afterwards the parser
-  * calls DidBuildModel(). 
-  * @update	gess5/18/98
-  * @param	aFilename is the name of the file being parsed.
-  * @return	error code (almost always 0)
+  * calls DidBuildModel().
+  * @update gess5/18/98
+  * @param  aFilename is the name of the file being parsed.
+  * @return error code (almost always 0)
   */
-NS_IMETHODIMP CViewSourceHTML::BuildModel(nsIParser* aParser,nsITokenizer* aTokenizer,nsITokenObserver* anObserver,nsIContentSink* aSink) {
+NS_IMETHODIMP CViewSourceHTML::BuildModel(nsITokenizer* aTokenizer,
+                                          PRBool aCanInterrupt,
+                                          PRBool aCountLines,
+                                          const nsCString* aCharsetPtr)
+{
   nsresult result=NS_OK;
 
-  if(aTokenizer && aParser) {
+  if(aTokenizer) {
 
     nsITokenizer*  oldTokenizer=mTokenizer;
     mTokenizer=aTokenizer;
@@ -396,7 +379,7 @@ NS_IMETHODIMP CViewSourceHTML::BuildModel(nsIParser* aParser,nsITokenizer* aToke
           AddAttrToNode(theNode, theAllocator,
                         NS_LITERAL_STRING("href"),
                         NS_LITERAL_STRING("resource://gre/res/viewsource.css"));
-          
+
           mSink->AddLeaf(theNode);
         }
         IF_FREE(theToken, theAllocator);
@@ -420,7 +403,7 @@ NS_IMETHODIMP CViewSourceHTML::BuildModel(nsIParser* aParser,nsITokenizer* aToke
           AddAttrToNode(bodyNode, theAllocator,
                         NS_LITERAL_STRING("id"),
                         NS_ConvertASCIItoUTF16(kBodyId));
-          
+
           if (mWrapLongLines) {
             AddAttrToNode(bodyNode, theAllocator,
                           NS_LITERAL_STRING("class"),
@@ -430,7 +413,7 @@ NS_IMETHODIMP CViewSourceHTML::BuildModel(nsIParser* aParser,nsITokenizer* aToke
           if(NS_SUCCEEDED(result)) mHasOpenBody=PR_TRUE;
         }
         IF_FREE(bodyToken, theAllocator);
-        
+
         if (NS_SUCCEEDED(result)) {
           CStartToken* preToken =
             static_cast<CStartToken*>
@@ -451,16 +434,20 @@ NS_IMETHODIMP CViewSourceHTML::BuildModel(nsIParser* aParser,nsITokenizer* aToke
       }
     }
 
-    mSink->WillProcessTokens();
+    NS_ASSERTION(aCharsetPtr, "CViewSourceHTML::BuildModel expects a charset!");
+    mCharset = *aCharsetPtr;
+
+    NS_ASSERTION(aCanInterrupt, "CViewSourceHTML can't run scripts, so "
+                 "document.write should not forbid interruptions. Why is "
+                 "the parser telling us not to interrupt?");
 
     while(NS_SUCCEEDED(result)){
       CToken* theToken=mTokenizer->PopToken();
       if(theToken) {
-        result=HandleToken(theToken,aParser);
+        result=HandleToken(theToken);
         if(NS_SUCCEEDED(result)) {
           IF_FREE(theToken, mTokenizer->GetTokenAllocator());
-          if (mParser->CanInterrupt() &&
-              mSink->DidProcessAToken() == NS_ERROR_HTMLPARSER_INTERRUPTED) {
+          if (mSink->DidProcessAToken() == NS_ERROR_HTMLPARSER_INTERRUPTED) {
             result = NS_ERROR_HTMLPARSER_INTERRUPTED;
             break;
           }
@@ -470,7 +457,7 @@ NS_IMETHODIMP CViewSourceHTML::BuildModel(nsIParser* aParser,nsITokenizer* aToke
       }
       else break;
     }//while
-   
+
     mTokenizer=oldTokenizer;
   }
   else result=NS_ERROR_HTMLPARSER_BADTOKENIZER;
@@ -490,7 +477,7 @@ void CViewSourceHTML::StartNewPreBlock(void){
   if (!theAllocator) {
     return;
   }
-  
+
   CStartToken* theToken =
     static_cast<CStartToken*>
                (theAllocator->CreateTokenOfType(eToken_start,
@@ -506,7 +493,7 @@ void CViewSourceHTML::StartNewPreBlock(void){
                 NS_ConvertASCIItoUTF16(nsPrintfCString("line%d", mLineNumber)));
   mSink->OpenContainer(startNode);
   IF_FREE(theToken, theAllocator);
-  
+
 #ifdef DUMP_TO_FILE
   if (gDumpFile) {
     fprintf(gDumpFile, "</pre>\n");
@@ -523,7 +510,7 @@ void CViewSourceHTML::AddAttrToNode(nsCParserStartNode& aNode,
                                     const nsAString& aAttrValue)
 {
   NS_PRECONDITION(aAllocator, "Must have a token allocator!");
-  
+
   CAttributeToken* theAttr =
     (CAttributeToken*) aAllocator->CreateTokenOfType(eToken_attribute,
                                                      eHTMLTag_unknown,
@@ -542,52 +529,46 @@ void CViewSourceHTML::AddAttrToNode(nsCParserStartNode& aNode,
 }
 
 /**
- * 
- * @update	gess5/18/98
- * @param 
+ *
+ * @update  gess5/18/98
+ * @param
  * @return
  */
-NS_IMETHODIMP CViewSourceHTML::DidBuildModel(nsresult anErrorCode,PRBool aNotifySink,nsIParser* aParser,nsIContentSink* aSink){
+NS_IMETHODIMP CViewSourceHTML::DidBuildModel(nsresult anErrorCode)
+{
   nsresult result= NS_OK;
 
   //ADD CODE HERE TO CLOSE OPEN CONTAINERS...
 
-  if(aParser){
+  STOP_TIMER();
 
-    mParser=(nsParser*)aParser;  //debug XXX
-    STOP_TIMER();
-
-    mSink=(nsIHTMLContentSink*)aParser->GetContentSink();
-    if((aNotifySink) && (mSink)) {
-        //now let's close automatically auto-opened containers...
+  if (mSink) {
+      //now let's close automatically auto-opened containers...
 
 #ifdef DUMP_TO_FILE
-      if(gDumpFile) {
-        fprintf(gDumpFile, "</pre>\n");
-        fprintf(gDumpFile, "</body>\n");
-        fprintf(gDumpFile, "</html>\n");
-        fclose(gDumpFile);
-      }
+    if(gDumpFile) {
+      fprintf(gDumpFile, "</pre>\n");
+      fprintf(gDumpFile, "</body>\n");
+      fprintf(gDumpFile, "</html>\n");
+      fclose(gDumpFile);
+    }
 #endif // DUMP_TO_FILE
 
-      if(ePlainText!=mDocType) {
-        mSink->CloseContainer(eHTMLTag_pre);
-        mSink->CloseContainer(eHTMLTag_body);
-        mSink->CloseContainer(eHTMLTag_html);
-      }
-      result = mSink->DidBuildModel();
+    if(ePlainText!=mDocType) {
+      mSink->CloseContainer(eHTMLTag_pre);
+      mSink->CloseContainer(eHTMLTag_body);
+      mSink->CloseContainer(eHTMLTag_html);
     }
-
-    START_TIMER();
-
   }
+
+  START_TIMER();
 
 #ifdef RAPTOR_PERF_METRICS
   NS_STOP_STOPWATCH(vsTimer);
   printf("viewsource timer: ");
   vsTimer.Print();
   printf("\n");
-#endif 
+#endif
 
   return result;
 }
@@ -598,52 +579,32 @@ NS_IMETHODIMP CViewSourceHTML::DidBuildModel(nsresult anErrorCode,PRBool aNotify
  * It's recommended to use this method in accordance with
  * the parser's terminate() method.
  *
- * @update	harishd 07/22/99
- * @param 
+ * @update  harishd 07/22/99
+ * @param
  * @return
  */
-NS_IMETHODIMP_(void)  
+NS_IMETHODIMP_(void)
 CViewSourceHTML::Terminate() {
 }
 
-NS_IMETHODIMP_(PRInt32)  
+NS_IMETHODIMP_(PRInt32)
 CViewSourceHTML::GetType() {
   return NS_IPARSER_FLAG_HTML;
 }
 
-/**
- * 
- * @update	gess5/18/98
- * @param 
- * @return
- */
-NS_IMETHODIMP CViewSourceHTML::WillResumeParse(nsIContentSink* aSink){
-  nsresult result = NS_OK;
-  if(mSink) {
-    result = mSink->WillResume();
-  }
-  return result;
-}
-
-/**
- * 
- * @update	gess5/18/98
- * @param 
- * @return
- */
-NS_IMETHODIMP CViewSourceHTML::WillInterruptParse(nsIContentSink* aSink){
-  nsresult result = NS_OK;
-  if(mSink) {
-    result = mSink->WillInterrupt();
-  }
-  return result;
+NS_IMETHODIMP_(nsDTDMode)
+CViewSourceHTML::GetMode() const
+{
+  // Quirks mode needn't affect how the source is viewed, so parse the source
+  // view in full standards mode no matter what:
+  return eDTDMode_full_standards;
 }
 
 /**
  * Called by the parser to enable/disable dtd verification of the
  * internal context stack.
- * @update	gess 7/23/98
- * @param 
+ * @update  gess 7/23/98
+ * @param
  * @return
  */
 void CViewSourceHTML::SetVerification(PRBool aEnabled)
@@ -653,40 +614,46 @@ void CViewSourceHTML::SetVerification(PRBool aEnabled)
 /**
  *  This method is called to determine whether or not a tag
  *  of one type can contain a tag of another type.
- *  
+ *
  *  @update  gess 3/25/98
  *  @param   aParent -- int tag of parent container
  *  @param   aChild -- int tag of child container
  *  @return  PR_TRUE if parent can contain child
  */
-PRBool CViewSourceHTML::CanContain(PRInt32 aParent,PRInt32 aChild) const{
+NS_IMETHODIMP_(PRBool)
+CViewSourceHTML::CanContain(PRInt32 aParent, PRInt32 aChild) const
+{
   PRBool result=PR_TRUE;
   return result;
 }
 
 /**
- *  This method gets called to determine whether a given 
+ *  This method gets called to determine whether a given
  *  tag is itself a container
  *  
  *  @update  gess 3/25/98
  *  @param   aTag -- tag to test for containership
  *  @return  PR_TRUE if given tag can contain other tags
  */
-PRBool CViewSourceHTML::IsContainer(PRInt32 aTag) const{
+NS_IMETHODIMP_(PRBool)
+CViewSourceHTML::IsContainer(PRInt32 aTag) const
+{
   PRBool result=PR_TRUE;
   return result;
 }
 
 /**
  *  This method gets called when a tag needs to write it's attributes
- *  
+ *
  *  @update  gess 3/25/98
- *  @param   
+ *  @param
  *  @return  result status
  */
-nsresult CViewSourceHTML::WriteAttributes(PRInt32 attrCount, PRBool aOwnerInError) {
+nsresult CViewSourceHTML::WriteAttributes(const nsAString& tagName, 
+                                          nsTokenAllocator* allocator, 
+                                          PRInt32 attrCount, PRBool aOwnerInError) {
   nsresult result=NS_OK;
-  
+
   if(attrCount){ //go collect the attributes...
     int attr = 0;
     for(attr = 0; attr < attrCount; ++attr){
@@ -699,7 +666,7 @@ nsresult CViewSourceHTML::WriteAttributes(PRInt32 attrCount, PRBool aOwnerInErro
 
           CAttributeToken* theAttrToken = (CAttributeToken*)theToken;
           const nsSubstring& theKey = theAttrToken->GetKey();
-          
+
           // The attribute is only in error if its owner is NOT in error.
           const PRBool attributeInError =
             !aOwnerInError && theAttrToken->IsInError();
@@ -708,9 +675,13 @@ nsresult CViewSourceHTML::WriteAttributes(PRInt32 attrCount, PRBool aOwnerInErro
           const nsSubstring& theValue = theAttrToken->GetValue();
 
           if(!theValue.IsEmpty() || theAttrToken->mHasEqualWithoutValue){
-            result = WriteTag(kAttributeValue,theValue,0,attributeInError);
+            if (IsUrlAttribute(tagName, theKey, theValue)) {
+              WriteHrefAttribute(allocator, theValue);
+            } else {
+              WriteTag(kAttributeValue,theValue,0,attributeInError);
+            }
           }
-        } 
+        }
       }
       else return kEOF;
     }
@@ -721,9 +692,9 @@ nsresult CViewSourceHTML::WriteAttributes(PRInt32 attrCount, PRBool aOwnerInErro
 
 /**
  *  This method gets called when a tag needs to be sent out
- *  
+ *
  *  @update  gess 3/25/98
- *  @param   
+ *  @param
  *  @return  result status
  */
 nsresult CViewSourceHTML::WriteTag(PRInt32 aTagType,const nsSubstring & aText,PRInt32 attrCount,PRBool aTagInError) {
@@ -735,6 +706,8 @@ nsresult CViewSourceHTML::WriteTag(PRInt32 aTagType,const nsSubstring & aText,PR
   // On the other hand, the parser messes up newline counting in some token
   // types (bug 137315).  So our line numbers will disagree with the parser's
   // in some cases...
+  // XXXbenjamn Shouldn't we be paying attention to the aCountLines BuildModel
+  // parameter here?
   mLineNumber += aText.CountChar(PRUnichar('\n'));
 
   nsTokenAllocator* theAllocator=mTokenizer->GetTokenAllocator();
@@ -773,7 +746,7 @@ nsresult CViewSourceHTML::WriteTag(PRInt32 aTagType,const nsSubstring & aText,PR
   if (gDumpFile && kDumpFileBeforeText[aTagType][0])
     fprintf(gDumpFile, kDumpFileBeforeText[aTagType]);
 #endif // DUMP_TO_FILE
-  
+
   if (mSyntaxHighlight && aTagType != kText) {
     CStartToken* theTagToken=
       static_cast<CStartToken*>
@@ -809,7 +782,7 @@ nsresult CViewSourceHTML::WriteTag(PRInt32 aTagType,const nsSubstring & aText,PR
 #endif // DUMP_TO_FILE
 
   if (mSyntaxHighlight && aTagType != kText) {
-    mStartNode.ReleaseAll(); 
+    mStartNode.ReleaseAll();
     mSink->CloseContainer(eHTMLTag_span);  //emit </endtag>...
 #ifdef DUMP_TO_FILE
     if (gDumpFile)
@@ -818,10 +791,10 @@ nsresult CViewSourceHTML::WriteTag(PRInt32 aTagType,const nsSubstring & aText,PR
   }
 
   if(attrCount){
-    result=WriteAttributes(attrCount, aTagInError);
+    result=WriteAttributes(aText, theAllocator, attrCount, aTagInError);
   }
 
-  // Tokens are set in error if their ending > is not there, so don't output 
+  // Tokens are set in error if their ending > is not there, so don't output
   // the after-text
   if (!aTagInError && kAfterText[aTagType][0] != 0) {
     NS_ConvertASCIItoUTF16 afterText(kAfterText[aTagType]);
@@ -835,7 +808,7 @@ nsresult CViewSourceHTML::WriteTag(PRInt32 aTagType,const nsSubstring & aText,PR
 #endif // DUMP_TO_FILE
 
   if (mSyntaxHighlight && aTagInError) {
-    mErrorNode.ReleaseAll(); 
+    mErrorNode.ReleaseAll();
     mSink->CloseContainer(eHTMLTag_span);  //emit </endtag>...
 #ifdef DUMP_TO_FILE
     if (gDumpFile)
@@ -849,30 +822,30 @@ nsresult CViewSourceHTML::WriteTag(PRInt32 aTagType,const nsSubstring & aText,PR
 }
 
 /**
- *  
+ *
  *  @update  gess 3/25/98
  *  @param   aToken -- token object to be put into content model
  *  @return  0 if all is well; non-zero is an error
  */
-NS_IMETHODIMP CViewSourceHTML::HandleToken(CToken* aToken,nsIParser* aParser)
+nsresult
+CViewSourceHTML::HandleToken(CToken* aToken)
 {
   nsresult        result=NS_OK;
   CHTMLToken*     theToken= (CHTMLToken*)(aToken);
   eHTMLTokenTypes theType= (eHTMLTokenTypes)theToken->GetTokenType();
- 
-  mParser=(nsParser*)aParser;
-  mSink=(nsIHTMLContentSink*)aParser->GetContentSink();
- 
+
+  NS_ASSERTION(mSink, "No sink in CViewSourceHTML::HandleToken? Was WillBuildModel called?");
+
   mTokenNode.Init(theToken, mTokenizer->GetTokenAllocator());
 
   switch(theType) {
-    
+
     case eToken_start:
       {
         const nsSubstring& startValue = aToken->GetStringValue();
         result = WriteTag(kStartTag,startValue,aToken->GetAttributeCount(),aToken->IsInError());
 
-        if((ePlainText!=mDocType) && mParser && (NS_OK==result)) {
+        if((ePlainText!=mDocType) && (NS_OK==result)) {
           result = mSink->NotifyTagObservers(&mTokenNode);
         }
       }
@@ -909,7 +882,7 @@ NS_IMETHODIMP CViewSourceHTML::HandleToken(CToken* aToken,nsIParser* aParser)
       }
       break;
 
-    case eToken_comment: 
+    case eToken_comment:
       {
         nsAutoString theStr;
         aToken->AppendSourceTo(theStr);
@@ -953,7 +926,7 @@ NS_IMETHODIMP CViewSourceHTML::HandleToken(CToken* aToken,nsIParser* aParser)
 
     case eToken_text:
       {
-        const nsSubstring& str = aToken->GetStringValue();         
+        const nsSubstring& str = aToken->GetStringValue();
         result=WriteTag(kText,str,aToken->GetAttributeCount(),aToken->IsInError());
         ++mTokenCount;
         if (NS_VIEWSOURCE_TOKENS_PER_BLOCK > 0 &&
@@ -978,8 +951,431 @@ NS_IMETHODIMP CViewSourceHTML::HandleToken(CToken* aToken,nsIParser* aParser)
       result=NS_OK;
   }//switch
 
-  mTokenNode.ReleaseAll(); 
+  mTokenNode.ReleaseAll();
 
   return result;
+}
+
+PRBool CViewSourceHTML::IsUrlAttribute(const nsAString& tagName,
+                                       const nsAString& attrName, 
+                                       const nsAString& attrValue) {
+  const nsSubstring &trimmedAttrName = TrimTokenValue(attrName);
+
+  PRBool isHref = trimmedAttrName.LowerCaseEqualsLiteral("href");
+  PRBool isSrc = !isHref && trimmedAttrName.LowerCaseEqualsLiteral("src");
+
+  // If this is the HREF attribute of a BASE element, then update the base URI.
+  // This doesn't feel like the ideal place for this, but the alternatives don't
+  // seem all that nice either.
+  if (isHref && tagName.LowerCaseEqualsLiteral("base")) {
+    const nsAString& baseSpec = TrimTokenValue(attrValue);
+    nsAutoString expandedBaseSpec;
+    ExpandEntities(baseSpec, expandedBaseSpec);
+    SetBaseURI(expandedBaseSpec);
+  }
+
+  return isHref || isSrc;
+}
+
+void CViewSourceHTML::WriteHrefAttribute(nsTokenAllocator* allocator,
+                                         const nsAString& href) {
+  // The "href" will typically contain not only the href proper, but the single
+  // or double quotes and often some surrounding whitespace as well.  Find the
+  // location of the href proper inside the string.
+  nsAString::const_iterator startProper, endProper;
+  href.BeginReading(startProper);
+  href.EndReading(endProper);
+  TrimTokenValue(startProper, endProper);
+
+  // Break the href into three parts, the preceding text, the href proper, and
+  // the succeeding text.
+  nsAString::const_iterator start, end;
+  href.BeginReading(start);
+  href.EndReading(end);  
+  const nsAString &precedingText = Substring(start, startProper);
+  const nsAString &hrefProper = Substring(startProper, endProper);
+  const nsAString &succeedingText = Substring(endProper, end);
+
+  nsAutoString fullPrecedingText;
+  fullPrecedingText.Assign(kEqual);
+  fullPrecedingText.Append(precedingText);
+
+  // Regular URLs and view-source URLs work the same way for .js and .css files.
+  // However, if the user follows a link in the view source window to a .html
+  // file (i.e. the HREF in an A tag), then presumably they will expect to see
+  // the *source* of that new page, not the rendered version.  So for now we
+  // just slap a "view-source:" at the beginning of each URL.  There are two
+  // big downsides to doing it this way -- we must make relative URLs into
+  // absolute URLs before we can turn them into view-source URLs, and links
+  // to images don't work right -- nobody wants to see the bytes constituting a
+  // PNG rendered as text.  A smarter view-source handler might be able to deal
+  // with the latter problem.
+
+  // Construct a "view-source" URL for the HREF.
+  nsAutoString viewSourceUrl;
+  CreateViewSourceURL(hrefProper, viewSourceUrl);
+
+  // Construct the HTML that will represent the HREF.
+  if (viewSourceUrl.IsEmpty()) {
+    nsAutoString equalsHref(kEqual);
+    equalsHref.Append(href);
+    WriteTextInSpan(equalsHref, allocator, EmptyString(), EmptyString());
+  } else {
+    NS_NAMED_LITERAL_STRING(HREF, "href");
+    if (fullPrecedingText.Length() > 0) {
+      WriteTextInSpan(fullPrecedingText, allocator, EmptyString(), EmptyString());
+    }
+    WriteTextInAnchor(hrefProper, allocator, HREF, viewSourceUrl);
+    if (succeedingText.Length() > 0) {
+      WriteTextInSpan(succeedingText, allocator, EmptyString(), EmptyString());
+    }
+  }
+}
+
+nsresult CViewSourceHTML::CreateViewSourceURL(const nsAString& linkUrl,
+                                              nsString& viewSourceUrl) {
+  nsCOMPtr<nsIURI> baseURI;
+  nsCOMPtr<nsIURI> hrefURI;
+  nsresult rv;
+
+  // Default the view source URL to the empty string in case we fail.
+  viewSourceUrl.Truncate();
+
+  // Get the BaseURI.
+  rv = GetBaseURI(getter_AddRefs(baseURI));
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  // Use the link URL and the base URI to build a URI for the link.  Note that
+  // the link URL may have untranslated entities in it.
+  nsAutoString expandedLinkUrl;
+  ExpandEntities(linkUrl, expandedLinkUrl);
+  rv = NS_NewURI(getter_AddRefs(hrefURI), expandedLinkUrl, mCharset.get(), baseURI);
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  // Get the absolute URL from the link URI.
+  nsCString absoluteLinkUrl;
+  hrefURI->GetSpec(absoluteLinkUrl);
+
+  // URLs that execute script (e.g. "javascript:" URLs) should just be
+  // ignored.  There's nothing reasonable we can do with them, and allowing
+  // them to execute in the context of the view-source window presents a
+  // security risk.  Just return the empty string in this case.
+  PRBool openingExecutesScript = PR_FALSE;
+  rv = NS_URIChainHasFlags(hrefURI, nsIProtocolHandler::URI_OPENING_EXECUTES_SCRIPT,
+                           &openingExecutesScript);
+  NS_ENSURE_SUCCESS(rv, NS_OK); // if there's an error, return the empty string
+  if (openingExecutesScript) {
+    return NS_OK;
+  }
+
+  // URLs that return data (e.g. "http:" URLs) should be prefixed with
+  // "view-source:".  URLs that don't return data should just be returned
+  // undecorated.
+  PRBool doesNotReturnData = PR_FALSE;
+  rv = NS_URIChainHasFlags(hrefURI, nsIProtocolHandler::URI_DOES_NOT_RETURN_DATA,
+                           &doesNotReturnData);
+  NS_ENSURE_SUCCESS(rv, NS_OK);  // if there's an error, return the empty string
+  if (!doesNotReturnData) {
+    viewSourceUrl.AssignLiteral("view-source:");    
+  }
+
+  viewSourceUrl.AppendWithConversion(absoluteLinkUrl);
+
+  return NS_OK;
+}
+
+void CViewSourceHTML::WriteTextInSpan(const nsAString& text, 
+                                      nsTokenAllocator* allocator, 
+                                      const nsAString& attrName, 
+                                      const nsAString& attrValue) {
+  NS_NAMED_LITERAL_STRING(SPAN, "SPAN");
+  WriteTextInElement(SPAN, eHTMLTag_span, text, allocator, attrName, attrValue);
+}
+
+void CViewSourceHTML::WriteTextInAnchor(const nsAString& text, 
+                                        nsTokenAllocator* allocator, 
+                                        const nsAString& attrName, 
+                                        const nsAString& attrValue) {
+  NS_NAMED_LITERAL_STRING(ANCHOR, "A");
+  WriteTextInElement(ANCHOR, eHTMLTag_a, text, allocator, attrName, attrValue);
+}
+
+void CViewSourceHTML::WriteTextInElement(const nsAString& tagName, 
+                                         eHTMLTags tagType, const nsAString& text,
+                                         nsTokenAllocator* allocator,
+                                         const nsAString& attrName, 
+                                         const nsAString& attrValue) {
+  // Open the element, supplying the attribute, if any.
+  nsTokenAllocator* theAllocator = mTokenizer->GetTokenAllocator();
+  if (!theAllocator) {
+    return;
+  }
+
+  CStartToken* startToken =
+    static_cast<CStartToken*>
+      (theAllocator->CreateTokenOfType(eToken_start, tagType, tagName));
+  if (!startToken) {
+    return;
+  }
+
+  nsCParserStartNode startNode(startToken, theAllocator);
+  if (!attrName.IsEmpty()) {
+    AddAttrToNode(startNode, allocator, attrName, attrValue);
+  }
+  mSink->OpenContainer(startNode);
+  IF_FREE(startToken, theAllocator);
+
+  // Add the text node.
+  CTextToken textToken(text);
+  nsCParserNode textNode(&textToken, 0/*stack token*/);
+  mSink->AddLeaf(textNode);
+
+  // Close the element.
+  mSink->CloseContainer(tagType);
+}
+
+const nsDependentSubstring CViewSourceHTML::TrimTokenValue(const nsAString& tokenValue) {
+  nsAString::const_iterator start, end;
+  tokenValue.BeginReading(start);
+  tokenValue.EndReading(end);
+  TrimTokenValue(start, end);
+  return Substring(start, end);
+}
+
+void CViewSourceHTML::TrimTokenValue(nsAString::const_iterator& start,
+                                     nsAString::const_iterator& end) {
+  // Token values -- tag names, attribute names, and attribute values --
+  // generally contain adjacent whitespace and, in the case of attribute values,
+  // the surrounding double or single quotes.  Return a new string with this
+  // adjacent text stripped off, so only the value proper remains.
+        
+  // Skip past any whitespace or quotes on the left.
+  while (start != end) {
+    if (!IsTokenValueTrimmableCharacter(*start)) break;
+    ++start;
+  }
+
+  // Skip past any whitespace or quotes on the right.  Note that the interval 
+  // start..end is half-open.  That means the last character of the interval is
+  // at *(end - 1).
+  while (end != start) {      
+    --end;
+    if (!IsTokenValueTrimmableCharacter(*end)) {
+      ++end; // we've actually gone one too far at this point, so adjust.
+      break;
+    }
+  }
+}
+
+PRBool CViewSourceHTML::IsTokenValueTrimmableCharacter(PRUnichar ch) {
+  if (ch == ' ') return PR_TRUE;
+  if (ch == '\t') return PR_TRUE;
+  if (ch == '\r') return PR_TRUE;
+  if (ch == '\n') return PR_TRUE;
+  if (ch == '\'') return PR_TRUE;
+  if (ch == '"') return PR_TRUE;
+  return PR_FALSE;
+}
+
+nsresult CViewSourceHTML::GetBaseURI(nsIURI **result) {
+  nsresult rv = NS_OK;
+  if (!mBaseURI) {
+    rv = SetBaseURI(mFilename);
+  }
+  NS_IF_ADDREF(*result = mBaseURI);
+  return rv;
+}
+
+nsresult CViewSourceHTML::SetBaseURI(const nsAString& baseSpec) {
+  // Create a new base URI and store it in mBaseURI.
+  nsCOMPtr<nsIURI> baseURI;
+  nsresult rv = NS_NewURI(getter_AddRefs(baseURI), baseSpec, mCharset.get());
+  NS_ENSURE_SUCCESS(rv, rv);
+  mBaseURI = baseURI;
+  return NS_OK;
+}
+
+void CViewSourceHTML::ExpandEntities(const nsAString& textIn, nsString& textOut)
+{  
+  nsAString::const_iterator iter, end;
+  textIn.BeginReading(iter);
+  textIn.EndReading(end);
+
+  // The outer loop treats the input as a sequence of pairs of runs.  The first
+  // run of each pair is just a run of regular characters.  The second run is
+  // something that looks like it might be an entity reference, e.g. "&amp;".
+  // Any regular run may be empty, and the entity run can be skipped at the end
+  // of the text.  Apparent entities that can't be translated are copied
+  // verbatim.  In particular this allows for raw ampersands in the input.
+  // Special care is taken to handle the end of the text at any point inside
+  // the loop.
+  while (iter != end) {
+    // Copy characters to textOut until but not including the first ampersand.
+    for (; iter != end; ++iter) {
+      PRUnichar ch = *iter;
+      if (ch == kAmpersand) {
+        break;
+      }
+      textOut.Append(ch);
+    }
+
+    // We have a possible entity.  If the entity is well-formed (or well-enough
+    // formed) copy the entity value to "textOut".  Otherwise, copy the "entity"
+    // source characters to "textOut" verbatim.  Either way, advance "iter" to
+    // the first position after the entity/entity-like-thing.
+    CopyPossibleEntity(iter, end, textOut);
+  }
+}
+
+static PRBool InRange(PRUnichar ch, unsigned char chLow, unsigned char chHigh)
+{
+  return (chLow <= ch) && (ch <= chHigh);
+}
+
+static PRBool IsDigit(PRUnichar ch)
+{ 
+  return InRange(ch, '0', '9');
+}
+
+static PRBool IsHexDigit(PRUnichar ch)
+{
+  return IsDigit(ch) || InRange(ch, 'A', 'F') || InRange(ch, 'a', 'f');
+}
+
+static PRBool IsAlphaNum(PRUnichar ch)
+{
+  return InRange(ch, 'A', 'Z') || InRange(ch, 'a', 'z') || IsDigit(ch);
+}
+
+static PRBool IsAmpersand(PRUnichar ch)
+{
+  return ch == kAmpersand;
+}
+
+static PRBool IsHashsign(PRUnichar ch)
+{
+  return ch == kHashsign;
+}
+
+static PRBool IsXx(PRUnichar ch)
+{
+  return (ch == 'X') || (ch == 'x');
+}
+
+static PRBool IsSemicolon(PRUnichar ch)
+{
+  return ch == kSemicolon;
+}
+
+static PRBool ConsumeChar(nsAString::const_iterator& start,
+                          const nsAString::const_iterator &end,
+                          PRBool (*testFun)(PRUnichar ch))
+{
+  if (start == end) {
+    return PR_FALSE;
+  }
+  if (!testFun(*start)) {
+    return PR_FALSE;
+  }
+  ++start;
+  return PR_TRUE;
+}
+
+void CViewSourceHTML::CopyPossibleEntity(nsAString::const_iterator& iter,
+                                         const nsAString::const_iterator& end,
+                                         nsAString& textBuffer)
+{
+  // Note that "iter" is passed by reference, and we need to make sure that
+  // we update its position as we parse characters, so the caller will know
+  // how much text we processed.
+
+  // Remember where we started.
+  const nsAString::const_iterator start(iter);
+  
+  // Our possible entity must at least start with an '&' -- bail if it doesn't.
+  if (!ConsumeChar(iter, end, IsAmpersand)) {
+    return;
+  }
+
+  // Identify the entity "body" and classify it.
+  nsAString::const_iterator startBody, endBody;
+  enum {TYPE_ID, TYPE_DECIMAL, TYPE_HEXADECIMAL} entityType;
+  if (ConsumeChar(iter, end, IsHashsign)) {
+    if (ConsumeChar(iter, end, IsXx)) {
+      startBody = iter;
+      entityType = TYPE_HEXADECIMAL;
+      while (ConsumeChar(iter, end, IsHexDigit)) {
+        // empty
+      }
+    } else {
+      startBody = iter;
+      entityType = TYPE_DECIMAL;
+      while (ConsumeChar(iter, end, IsDigit)) {
+        // empty
+      }
+    }
+  } else {
+    startBody = iter;
+    entityType = TYPE_ID;
+    // The parser seems to allow some other characters, such as ":" and "_".
+    // However, all of the entities that we know about (see nsHTMLEntityList.h)
+    // are strictly alphanumeric.
+    while (ConsumeChar(iter, end, IsAlphaNum)) {
+      // empty
+    }
+  }
+
+  // Record the end of the entity body.
+  endBody = iter;
+  
+  // If the entity body is terminated with a semicolon, consume that too.
+  PRBool properlyTerminated = ConsumeChar(iter, end, IsSemicolon);
+
+  // If the entity body is empty, then it's not really an entity.  Copy what
+  // we've parsed verbatim, and return immediately.
+  if (startBody == endBody) {
+    textBuffer.Append(Substring(start, iter));
+    return;
+  }
+
+  // Construct a string from the body range.  Note that we need a regular
+  // string since substrings don't provide ToInteger().
+  nsAutoString entityBody(Substring(startBody, endBody));
+
+  // Decode the entity to a Unicode character.
+  PRInt32 entityCode = -1;
+  switch (entityType) {
+  case TYPE_ID:
+    entityCode = nsHTMLEntities::EntityToUnicode(entityBody);
+    break;
+  case TYPE_DECIMAL:
+    entityCode = ToUnicode(entityBody, 10, -1);
+    break;
+  case TYPE_HEXADECIMAL:
+    entityCode = ToUnicode(entityBody, 16, -1);
+    break;
+  default:
+    NS_NOTREACHED("Unknown entity type!");
+    break;
+  }
+
+  // Note that the parser does not require terminating semicolons for entities
+  // with eight bit values.  We want to allow the same here.
+  if (properlyTerminated || ((0 <= entityCode) && (entityCode < 256))) {
+    textBuffer.Append((PRUnichar) entityCode);
+  } else {
+    // If the entity is malformed in any way, just copy the source text verbatim.
+    textBuffer.Append(Substring(start, iter));
+  }
+}
+
+PRInt32 CViewSourceHTML::ToUnicode(const nsString &strNum, PRInt32 radix, PRInt32 fallback)
+{
+  PRInt32 result;
+  PRInt32 code = strNum.ToInteger(&result, radix);
+  if (result == NS_OK) {
+    return code;
+  }
+  return fallback;
 }
 

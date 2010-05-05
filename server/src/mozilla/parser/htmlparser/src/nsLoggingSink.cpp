@@ -94,26 +94,26 @@ void WriteTabs(PRFileDesc * out,int aTabCount) {
 }
 
 NS_IMETHODIMP
-nsLoggingSink::WillTokenize() {
+nsLoggingSink::WillParse() {
   return NS_OK;
 }
 
 NS_IMETHODIMP
-nsLoggingSink::WillBuildModel() {
+nsLoggingSink::WillBuildModel(nsDTDMode aDTDMode) {
   
   WriteTabs(mOutput,++mLevel);
   PR_fprintf(mOutput, "<begin>\n");
   
   //proxy the call to the real sink if you have one.
   if(mSink) {
-    mSink->WillBuildModel();
+    mSink->WillBuildModel(aDTDMode);
   }
 
   return NS_OK;
 }
 
 NS_IMETHODIMP
-nsLoggingSink::DidBuildModel() {
+nsLoggingSink::DidBuildModel(PRBool aTerminated) {
   
   WriteTabs(mOutput,--mLevel);
   PR_fprintf(mOutput, "</begin>\n");
@@ -121,7 +121,7 @@ nsLoggingSink::DidBuildModel() {
   //proxy the call to the real sink if you have one.
   nsresult theResult=NS_OK;
   if(mSink) {
-    theResult=mSink->DidBuildModel();
+    theResult=mSink->DidBuildModel(aTerminated);
   }
 
   return theResult;

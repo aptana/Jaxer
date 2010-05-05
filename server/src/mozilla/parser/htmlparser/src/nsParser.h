@@ -107,7 +107,8 @@ class nsICharsetConverterManager;
 class nsICharsetAlias;
 class nsIDTD;
 class nsScanner;
-class nsIProgressEventSink;
+class nsSpeculativeScriptThread;
+class nsIThreadPool;
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4275 )
@@ -115,11 +116,9 @@ class nsIProgressEventSink;
 
 
 class nsParser : public nsIParser,
-                 public nsIStreamListener{
-
-  
+                 public nsIStreamListener
+{
   public:
-    friend class CTokenHandler;
     /**
      * Called on module init
      */
@@ -195,14 +194,6 @@ class nsParser : public nsIParser,
     NS_IMETHOD_(void) SetParserFilter(nsIParserFilter* aFilter);
 
     /**
-     *  Retrieve the scanner from the topmost parser context
-     *  
-     *  @update  gess 6/9/98
-     *  @return  ptr to scanner
-     */
-    NS_IMETHOD_(nsDTDMode) GetParseMode(void);
-
-    /**
      * Cause parser to parse input from given URL 
      * @update	gess5/11/98
      * @param   aURL is a descriptor for source document
@@ -238,7 +229,12 @@ class nsParser : public nsIParser,
                              const nsACString& aContentType,
                              nsDTDMode aMode = eDTDMode_autodetect);
 
-
+    NS_IMETHOD ParseFragment(const nsAString& aSourceBuffer,
+                             nsISupports* aTargetNode,
+                             nsIAtom* aContextLocalName,
+                             PRInt32 aContextNamespace,
+                             PRBool aQuirks);
+                             
     /**
      * This method gets called when the tokens have been consumed, and it's time
      * to build the model via the content sink.
@@ -363,7 +359,7 @@ class nsParser : public nsIParser,
      *  @return PR_TRUE if parser can be interrupted, PR_FALSE if it can not be interrupted.
      *  @update  kmcclusk 5/18/98
      */
-    PRBool CanInterrupt(void);
+    virtual PRBool CanInterrupt();
 
     /**  
      *  Set to parser state to indicate whether parsing tokens can be interrupted
@@ -409,6 +405,14 @@ class nsParser : public nsIParser,
       Initialize();
     }
 
+    nsIThreadPool* ThreadPool() {
+      return sSpeculativeThreadPool;
+    }
+
+    PRBool IsScriptExecuting() {
+      return mSink && mSink->IsScriptExecuting();
+    }
+
  protected:
 
     void Initialize(PRBool aConstructor = PR_FALSE);
@@ -429,7 +433,9 @@ class nsParser : public nsIParser,
      * @return
      */
     nsresult DidBuildModel(nsresult anErrorCode);
-    
+
+    void SpeculativelyParse();
+
 private:
 
     /*******************************************
@@ -469,7 +475,6 @@ private:
      */
     PRBool DidTokenize(PRBool aIsFinalChunk = PR_FALSE);
 
-  
 protected:
     //*********************************************
     // And now, some data members...
@@ -477,9 +482,11 @@ protected:
     
       
     CParserContext*              mParserContext;
+    nsCOMPtr<nsIDTD>             mDTD;
     nsCOMPtr<nsIRequestObserver> mObserver;
     nsCOMPtr<nsIContentSink>     mSink;
     nsIRunnable*                 mContinueEvent;  // weak ref
+    nsRefPtr<nsSpeculativeScriptThread> mSpeculativeScriptThread;
    
     nsCOMPtr<nsIParserFilter> mParserFilter;
     nsTokenAllocator          mTokenAllocator;
@@ -497,7 +504,14 @@ protected:
 
     static nsICharsetAlias*            sCharsetAliasService;
     static nsICharsetConverterManager* sCharsetConverterManager;
-   
+    static nsIThreadPool*              sSpeculativeThreadPool;
+
+    enum {
+      kSpeculativeThreadLimit = 15,
+      kIdleThreadLimit = 0,
+      kIdleThreadTimeout = 50
+    };
+
 public:  
    
     MOZ_TIMER_DECLARE(mParseTime)

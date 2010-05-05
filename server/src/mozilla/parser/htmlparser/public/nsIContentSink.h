@@ -52,12 +52,14 @@
 #include "nsISupports.h"
 #include "nsStringGlue.h"
 #include "mozFlushType.h"
+#include "nsIDTD.h"
 
 class nsIParser;
 
+// 57b395ad-4276-408c-9f98-7044b5025c3d
 #define NS_ICONTENT_SINK_IID \
-{ 0x94ec4df1, 0x6885, 0x4b1f, \
- { 0x85, 0x10, 0xe3, 0x5f, 0x4f, 0x36, 0xea, 0xaa } }
+{ 0x57b395ad, 0x4276, 0x408c, \
+  { 0x9f, 0x98, 0x70, 0x44, 0xb5, 0x02, 0x5c, 0x3d } }
 
 class nsIContentSink : public nsISupports {
 public:
@@ -65,31 +67,38 @@ public:
   NS_DECLARE_STATIC_IID_ACCESSOR(NS_ICONTENT_SINK_IID)
 
   /**
-   * This method gets called before the nsParser calls tokenize.
-   * This is needed because the XML side actually builds
-   * the content model as part of the tokenization and
-   * not on BuildModel(). The XML side can use this call
-   * to do stuff that the HTML side does in WillProcessTokens().
-   *
-   * @update 2006-10-17 hsivonen
+   * This method is called by the parser when it is entered from
+   * the event loop. The content sink wants to know how long the
+   * parser has been active since we last processed events on the
+   * main event loop and this call calibrates that measurement.
    */
-  NS_IMETHOD WillTokenize(void)=0;
+  NS_IMETHOD WillParse(void)=0;
 
   /**
    * This method gets called when the parser begins the process
    * of building the content model via the content sink.
    *
+   * Default implementation provided since the sink should have the option of
+   * doing nothing in response to this call.
+   *
    * @update 5/7/98 gess
-   */     
-  NS_IMETHOD WillBuildModel(void)=0;
+   */
+  NS_IMETHOD WillBuildModel(nsDTDMode aDTDMode) {
+    return NS_OK;
+  }
 
   /**
    * This method gets called when the parser concludes the process
    * of building the content model via the content sink.
    *
+   * Default implementation provided since the sink should have the option of
+   * doing nothing in response to this call.
+   *
    * @update 5/7/98 gess
-   */     
-  NS_IMETHOD DidBuildModel()=0;
+   */
+  NS_IMETHOD DidBuildModel(PRBool aTerminated) {
+    return NS_OK;
+  }
 
   /**
    * This method gets called when the parser gets i/o blocked,
@@ -97,7 +106,7 @@ public:
    * more data is available.
    *
    * @update 5/7/98 gess
-   */     
+   */
   NS_IMETHOD WillInterrupt(void)=0;
 
   /**
@@ -105,7 +114,7 @@ public:
    * and we're about to start dumping content again to the sink.
    *
    * @update 5/7/98 gess
-   */     
+   */
   NS_IMETHOD WillResume(void)=0;
 
   /**
@@ -136,6 +145,16 @@ public:
    * (IOW, may return null).
    */
   virtual nsISupports *GetTarget()=0;
+  
+  /**
+   * Returns true if there's currently script executing that we need to hold
+   * parsing for.
+   */
+  virtual PRBool IsScriptExecuting()
+  {
+    return PR_FALSE;
+  }
+  
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsIContentSink, NS_ICONTENT_SINK_IID)

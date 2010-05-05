@@ -58,7 +58,7 @@
 #include "nsString.h"
 #include "nsIParserNode.h"
 #include "nsFixedSizeAllocator.h"
-#include "nsVoidArray.h"
+#include "nsCOMArray.h"
 #include "nsIParserService.h"
 #include "nsReadableUtils.h"
 #include "nsIHTMLContentSink.h"
@@ -435,7 +435,7 @@ public:
 
   NS_IMETHOD Notify(nsIParserNode* aNode,
                     nsIParser* aParser,
-                    nsISupports* aWebShell,
+                    nsISupports* aDocShell,
                     const PRUint32 aFlags);
 
   nsresult   AddObserver(nsIElementObserver* aObserver,eHTMLTags aTag);
@@ -443,8 +443,8 @@ public:
   PRBool     Matches(const nsAString& aTopic);
 
 protected:
-  nsAutoString mTopic; // This will rarely be empty, so make it an auto string
-  nsVoidArray* mObservers[NS_HTML_TAG_MAX + 1];
+  nsString mTopic;
+  nsCOMArray<nsIElementObserver>* mObservers[NS_HTML_TAG_MAX + 1];
   friend class nsMatchesTopic;
 };
 

@@ -100,7 +100,6 @@
 #include "nsISupports.h"
 #include "nsIParser.h"
 #include "nsHTMLTags.h"
-#include "nsVoidArray.h"
 #include "nsDeque.h"
 #include "nsParserCIID.h"
 #include "nsTime.h"
@@ -259,6 +258,8 @@ private:
      */
     PRInt32 LastOf(eHTMLTags aTagSet[], PRInt32 aCount) const;
 
+    nsresult HandleToken(CToken* aToken);
+
     /**
      *  This method gets called when a start token has been
      *  encountered in the parse process. If the current container
@@ -295,8 +296,7 @@ private:
     nsresult    HandleAttributeToken(CToken* aToken);
     nsresult    HandleProcessingInstructionToken(CToken* aToken);
     nsresult    HandleDocTypeDeclToken(CToken* aToken);
-    nsresult    BuildNeglectedTarget(eHTMLTags aTarget, eHTMLTokenTypes aType,
-                                     nsIParser* aParser, nsIContentSink* aSink);
+    nsresult    BuildNeglectedTarget(eHTMLTags aTarget, eHTMLTokenTypes aType);
 
     nsresult OpenHTML(const nsCParserNode *aNode);
     nsresult OpenBody(const nsCParserNode *aNode);
@@ -310,6 +310,8 @@ private:
     nsresult CloseContainersTo(eHTMLTags aTag, PRBool aClosedByStartTag);
     nsresult CloseContainersTo(PRInt32 anIndex, eHTMLTags aTag,
                                PRBool aClosedByStartTag);
+    nsresult CloseResidualStyleTags(const eHTMLTags aTag,
+                                    PRBool aClosedByStartTag);
 
     /**
      * Causes leaf to be added to sink at current vector pos.
@@ -374,21 +376,13 @@ protected:
     PRBool          IsBlockElement(PRInt32 aTagID, PRInt32 aParentID) const;
     PRBool          IsInlineElement(PRInt32 aTagID, PRInt32 aParentID) const;
 
-    PRBool          IsParserInDocWrite() const
-    {
-      NS_ASSERTION(mParser && mParser->PeekContext(),
-                   "Parser must be parsing to use this function");
-
-      return mParser->PeekContext()->mPrevContext != nsnull;
-    }
-    
     nsDeque             mMisplacedContent;
     
     nsCOMPtr<nsIHTMLContentSink> mSink;
     nsTokenAllocator*   mTokenAllocator;
     nsDTDContext*       mBodyContext;
     nsDTDContext*       mTempContext;
-    nsParser*           mParser;
+    PRBool              mCountLines;
     nsITokenizer*       mTokenizer; // weak
    
     nsString            mFilename; 

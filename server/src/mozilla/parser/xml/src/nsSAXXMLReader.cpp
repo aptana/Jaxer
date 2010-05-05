@@ -89,7 +89,7 @@ nsSAXXMLReader::nsSAXXMLReader() : mIsAsyncParse(PR_FALSE)
 
 // nsIContentSink
 NS_IMETHODIMP
-nsSAXXMLReader::WillBuildModel()
+nsSAXXMLReader::WillBuildModel(nsDTDMode)
 {
   if (mContentHandler)
     return mContentHandler->StartDocument();
@@ -98,7 +98,7 @@ nsSAXXMLReader::WillBuildModel()
 }
 
 NS_IMETHODIMP
-nsSAXXMLReader::DidBuildModel()
+nsSAXXMLReader::DidBuildModel(PRBool aTerminated)
 {
   if (mContentHandler)
     return mContentHandler->EndDocument();
@@ -627,11 +627,7 @@ nsSAXXMLReader::InitParser(nsIRequestObserver *aObserver, nsIChannel *aChannel)
   TryChannelCharset(aChannel, charsetSource, charset);
   parser->SetDocumentCharset(charset, charsetSource);
 
-#ifdef MOZILLA_1_8_BRANCH
-  rv = parser->Parse(mBaseURI, aObserver, PR_FALSE);
-#else
   rv = parser->Parse(mBaseURI, aObserver);
-#endif
   NS_ENSURE_SUCCESS(rv, rv);
 
   mListener = do_QueryInterface(parser, &rv);

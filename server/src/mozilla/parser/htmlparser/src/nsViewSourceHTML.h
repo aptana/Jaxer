@@ -38,8 +38,8 @@
 /**
  * MODULE NOTES:
  * @update  gess 4/8/98
- * 
- *         
+ *
+ *
  */
 
 #ifndef __NS_VIEWSOURCE_HTML_
@@ -62,7 +62,7 @@ public:
   CIndirectTextToken() : CTextToken() {
     mIndirectString=0;
   }
-  
+
   void SetIndirectString(const nsSubstring& aString) {
     mIndirectString=&aString;
   }
@@ -81,26 +81,29 @@ public:
 
     NS_DECL_ISUPPORTS
     NS_DECL_NSIDTD
-    
+
     CViewSourceHTML();
     virtual ~CViewSourceHTML();
 
     /**
      * Set this to TRUE if you want the DTD to verify its
      * context stack.
-     * @update	gess 7/23/98
-     * @param 
+     * @update  gess 7/23/98
+     * @param
      * @return
      */
     virtual void SetVerification(PRBool aEnable);
 
 private:
+    nsresult HandleToken(CToken* aToken);
+
     nsresult WriteTag(PRInt32 tagType,
                       const nsSubstring &aText,
                       PRInt32 attrCount,
                       PRBool aTagInError);
-    
-    nsresult WriteAttributes(PRInt32 attrCount, PRBool aOwnerInError);
+
+    nsresult WriteAttributes(const nsAString& tagName, 
+        nsTokenAllocator* allocator, PRInt32 attrCount, PRBool aOwnerInError);
     void StartNewPreBlock(void);
     // Utility method for adding attributes to the nodes we generate
     void AddAttrToNode(nsCParserStartNode& aNode,
@@ -108,9 +111,32 @@ private:
                        const nsAString& aAttrName,
                        const nsAString& aAttrValue);
 
+    PRBool IsUrlAttribute(const nsAString& tagName,
+                          const nsAString& attrName, const nsAString& attrValue);
+    void WriteHrefAttribute(nsTokenAllocator* allocator, const nsAString& href);
+    nsresult CreateViewSourceURL(const nsAString& linkUrl, nsString& viewSourceUrl);
+    void WriteTextInSpan(const nsAString& text, nsTokenAllocator* allocator,
+                         const nsAString& attrName, const nsAString& attrValue);
+    void WriteTextInAnchor(const nsAString& text, nsTokenAllocator* allocator,
+                           const nsAString& attrName, const nsAString &attrValue);
+    void WriteTextInElement(const nsAString& tagName, eHTMLTags tagType,
+                            const nsAString& text, nsTokenAllocator* allocator,
+                            const nsAString& attrName, const nsAString& attrValue);
+    const nsDependentSubstring TrimTokenValue(const nsAString& tokenValue);
+    void TrimTokenValue(nsAString::const_iterator& start, 
+                        nsAString::const_iterator& end);
+    PRBool IsTokenValueTrimmableCharacter(PRUnichar ch);
+    nsresult GetBaseURI(nsIURI **result);
+    nsresult SetBaseURI(const nsAString& baseSpec);
+    static void ExpandEntities(const nsAString& textIn, nsString& textOut);
+    static void CopyPossibleEntity(nsAString::const_iterator& iter,
+                                   const nsAString::const_iterator& end,
+                                   nsAString& textBuffer);
+    static PRInt32 ToUnicode(const nsString &strNum, PRInt32 radix, PRInt32 fallback);
+
 protected:
 
-    nsParser*           mParser;
+    nsCString           mCharset;
     nsIHTMLContentSink* mSink;
     PRInt32             mLineNumber;
     nsITokenizer*       mTokenizer; // weak
@@ -123,9 +149,10 @@ protected:
     nsDTDMode           mDTDMode;
     eParserCommands     mParserCommand;   //tells us to viewcontent/viewsource/viewerrors...
     eParserDocType      mDocType;
-    nsCString           mMimeType;  
+    nsCString           mMimeType;
 
     nsString            mFilename;
+    nsCOMPtr<nsIURI>    mBaseURI; // lazy -- always use GetBaseURI().
 
     PRUint32            mTokenCount;
 
@@ -135,4 +162,4 @@ protected:
     nsCParserStartNode  mErrorNode;
 };
 
-#endif 
+#endif

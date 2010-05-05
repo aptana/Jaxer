@@ -207,7 +207,7 @@ class nsScanner {
        *  @param   
        *  @return  
        */
-      void Mark(void);
+      PRInt32 Mark(void);
 
       /**
        *  Resets current offset position of input stream to marked position. 
@@ -315,27 +315,47 @@ class nsScanner {
         mParser = aParser;
       }
 
+
+      /**
+       * Override replacement character used by nsIUnicodeDecoder.
+       * Default behavior is that it uses nsIUnicodeDecoder's mapping.
+       *
+       * @param aReplacementCharacter the replacement character
+       *        XML (expat) parser uses 0xffff
+       */
+      void OverrideReplacementCharacter(PRUnichar aReplacementCharacter);
+
   protected:
 
-      void AppendToBuffer(nsScannerString::Buffer *, nsIRequest *aRequest);
-      void AppendToBuffer(const nsAString& aStr)
+      PRBool AppendToBuffer(nsScannerString::Buffer *, nsIRequest *aRequest, PRInt32 aErrorPos = -1);
+      PRBool AppendToBuffer(const nsAString& aStr)
       {
-        AppendToBuffer(nsScannerString::AllocBufferFromString(aStr), nsnull);
+        nsScannerString::Buffer* buf = nsScannerString::AllocBufferFromString(aStr);
+        if (!buf)
+          return PR_FALSE;
+        AppendToBuffer(buf, nsnull);
+        return PR_TRUE;
       }
 
       nsScannerString*             mSlidingBuffer;
       nsScannerIterator            mCurrentPosition; // The position we will next read from in the scanner buffer
       nsScannerIterator            mMarkPosition;    // The position last marked (we may rewind to here)
       nsScannerIterator            mEndPosition;     // The current end of the scanner buffer
+      nsScannerIterator            mFirstInvalidPosition; // The position of the first invalid character that was detected
       nsString        mFilename;
       PRUint32        mCountRemaining; // The number of bytes still to be read
                                        // from the scanner buffer
       PRPackedBool    mIncremental;
+      PRPackedBool    mHasInvalidCharacter;
+      PRUnichar       mReplacementCharacter;
       PRInt32         mFirstNonWhitespacePosition;
       PRInt32         mCharsetSource;
       nsCString       mCharset;
-      nsIUnicodeDecoder *mUnicodeDecoder;
+      nsCOMPtr<nsIUnicodeDecoder> mUnicodeDecoder;
       nsParser        *mParser;
+
+  private:
+      nsScanner &operator =(const nsScanner &); // Not implemented.
 };
 
 #endif
