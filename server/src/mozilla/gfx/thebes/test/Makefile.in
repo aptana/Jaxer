@@ -51,7 +51,10 @@ REQUIRES = \
 	thebes \
 	cairo \
 	pref \
+	necko \
 	unicharutil \
+	nspr \
+	qcms \
 	$(NULL)
 
 # All platforms
@@ -61,6 +64,7 @@ CPPSRCS = \
 	gfxTextRunPerfTest.cpp \
 	gfxWordCacheTest.cpp \
 	$(NULL)
+#	gfxColorManagementTest.cpp \
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),cocoa)
 CMMSRCS = gfxTestCocoaHelper.mm
@@ -82,7 +86,6 @@ LIBS =  $(HELPER_OBJS) \
 	$(NSPR_LIBS) \
 	$(TK_LIBS) \
 	$(ZLIB_LIBS) \
-	$(LCMS_LIBS) \
 	$(NULL)
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),windows)
@@ -95,7 +98,7 @@ OS_LIBS += -framework Cocoa
 endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),gtk2)
-OS_LIBS += $(MOZ_PANGO_LIBS) $(MOZ_XFT_LIBS) $(XLIBS)
+OS_LIBS += $(MOZ_PANGO_LIBS) $(XLIBS)
 CXXFLAGS += $(MOZ_PANGO_CFLAGS)
 endif
 

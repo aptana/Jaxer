@@ -30,10 +30,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "pixman-private.h"
 #include "pixman-mmx.h"
-#include "pixman-sse.h"
+#include "pixman-vmx.h"
+#include "pixman-sse2.h"
+#include "pixman-arm-neon.h"
+#include "pixman-arm-simd.h"
+#include "pixman-combine32.h"
+
+#if defined(USE_ARM_SIMD) && defined(_MSC_VER)
+/* Needed for EXCEPTION_ILLEGAL_INSTRUCTION */
+#include <windows.h>
+#endif
 
 #define FbFullMask(n)   ((n) == 32 ? (uint32_t)-1 : ((((uint32_t) 1) << n) - 1))
 
@@ -47,21 +55,17 @@ typedef void (* CompositeFunc) (pixman_op_t,
 				int16_t, int16_t, int16_t, int16_t, int16_t, int16_t,
 				uint16_t, uint16_t);
 
-uint32_t
-fbOver (uint32_t x, uint32_t y)
+static force_inline uint32_t
+fbOver (uint32_t src, uint32_t dest)
 {
-    uint16_t  a = ~x >> 24;
-    uint16_t  t;
-    uint32_t  m,n,o,p;
+    // dest = (dest * (255 - alpha)) / 255 + src
+    uint32_t a = ~src >> 24; // 255 - alpha == 255 + (~alpha + 1) == ~alpha
+    FbByteMulAdd(dest, a, src);
 
-    m = FbOverU(x,y,0,a,t);
-    n = FbOverU(x,y,8,a,t);
-    o = FbOverU(x,y,16,a,t);
-    p = FbOverU(x,y,24,a,t);
-    return m|n|o|p;
+    return dest;
 }
 
-uint32_t
+static uint32_t
 fbOver24 (uint32_t x, uint32_t y)
 {
     uint16_t  a = ~x >> 24;
@@ -74,7 +78,7 @@ fbOver24 (uint32_t x, uint32_t y)
     return m|n|o;
 }
 
-uint32_t
+static uint32_t
 fbIn (uint32_t x, uint8_t y)
 {
     uint16_t  a = y;
@@ -757,6 +761,46 @@ fbCompositeSrc_8888x0565 (pixman_op_t op,
     }
 }
 
+
+void
+fbCompositeSrc_x888x0565 (pixman_op_t op,
+                          pixman_image_t * pSrc,
+                          pixman_image_t * pMask,
+                          pixman_image_t * pDst,
+                          int16_t      xSrc,
+                          int16_t      ySrc,
+                          int16_t      xMask,
+                          int16_t      yMask,
+                          int16_t      xDst,
+                          int16_t      yDst,
+                          uint16_t     width,
+                          uint16_t     height)
+{
+    uint16_t	*dstLine, *dst;
+    uint32_t	*srcLine, *src, s;
+    int	dstStride, srcStride;
+    uint16_t	w;
+
+    fbComposeGetStart (pSrc, xSrc, ySrc, uint32_t, srcStride, srcLine, 1);
+    fbComposeGetStart (pDst, xDst, yDst, uint16_t, dstStride, dstLine, 1);
+
+    while (height--)
+    {
+	dst = dstLine;
+	dstLine += dstStride;
+	src = srcLine;
+	srcLine += srcStride;
+	w = width;
+
+	while (w--)
+	{
+	    s = READ(pSrc, src++);
+	    WRITE(pDst, dst, cvt8888to0565(s));
+	    dst++;
+	}
+    }
+}
+
 void
 fbCompositeSrcAdd_8000x8000 (pixman_op_t	op,
 			     pixman_image_t * pSrc,
@@ -1107,7 +1151,7 @@ pixman_image_composite_rect  (pixman_op_t                   op,
 			      int16_t                       dest_y,
 			      uint16_t                      width,
 			      uint16_t                      height);
-void
+static void
 fbCompositeSolidFill (pixman_op_t op,
 		      pixman_image_t * pSrc,
 		      pixman_image_t * pMask,
@@ -1170,6 +1214,93 @@ fbCompositeSrc_8888xx888 (pixman_op_t op,
 }
 
 static void
+fbCompositeSrcScaleNearest (pixman_op_t op,
+		      pixman_image_t * pSrc,
+		      pixman_image_t * pMask,
+		      pixman_image_t * pDst,
+		      int16_t      xSrc,
+		      int16_t      ySrc,
+		      int16_t      xMask,
+		      int16_t      yMask,
+		      int16_t      xDst,
+		      int16_t      yDst,
+		      uint16_t     width,
+		      uint16_t     height)
+{
+    uint32_t       *dst;
+    uint32_t       *src;
+    int             dstStride, srcStride;
+    int             i, j;
+    pixman_vector_t v;
+
+    fbComposeGetStart (pDst, xDst, yDst, uint32_t, dstStride, dst, 1);
+    /* pass in 0 instead of xSrc and ySrc because xSrc and ySrc need to be
+     * transformed from destination space to source space */
+    fbComposeGetStart (pSrc, 0, 0, uint32_t, srcStride, src, 1);
+
+    /* reference point is the center of the pixel */
+    v.vector[0] = pixman_int_to_fixed(xSrc) + pixman_fixed_1 / 2;
+    v.vector[1] = pixman_int_to_fixed(ySrc) + pixman_fixed_1 / 2;
+    v.vector[2] = pixman_fixed_1;
+
+    if (!pixman_transform_point_3d (pSrc->common.transform, &v))
+        return;
+
+    /* Round down to closest integer, ensuring that 0.5 rounds to 0, not 1 */
+    v.vector[0] -= pixman_fixed_e;
+    v.vector[1] -= pixman_fixed_e;
+
+    for (j = 0; j < height; j++) {
+        pixman_fixed_t vx = v.vector[0];
+        pixman_fixed_t vy = v.vector[1];
+        for (i = 0; i < width; ++i) {
+            pixman_bool_t inside_bounds;
+            uint32_t result;
+            int x, y;
+            x = vx >> 16;
+            y = vy >> 16;
+
+            /* apply the repeat function */
+            switch (pSrc->common.repeat) {
+                case PIXMAN_REPEAT_NORMAL:
+                    x = MOD (x, pSrc->bits.width);
+                    y = MOD (y, pSrc->bits.height);
+                    inside_bounds = TRUE;
+                    break;
+
+                case PIXMAN_REPEAT_PAD:
+                    x = CLIP (x, 0, pSrc->bits.width-1);
+                    y = CLIP (y, 0, pSrc->bits.height-1);
+                    inside_bounds = TRUE;
+                    break;
+
+                case PIXMAN_REPEAT_REFLECT:
+                case PIXMAN_REPEAT_NONE:
+                default:
+                    inside_bounds = (x >= 0 && x < pSrc->bits.width && y >= 0 && y < pSrc->bits.height);
+                    break;
+            }
+
+            if (inside_bounds) {
+                //XXX: we should move this multiplication out of the loop
+                result = READ(pSrc, src + y * srcStride + x);
+            } else {
+                result = 0;
+            }
+            WRITE(pDst, dst + i, result);
+
+            /* adjust the x location by a unit vector in the x direction:
+             * this is equivalent to transforming x+1 of the destination point to source space */
+            vx += pSrc->common.transform->matrix[0][0];
+        }
+        /* adjust the y location by a unit vector in the y direction
+         * this is equivalent to transforming y+1 of the destination point to source space */
+        v.vector[1] += pSrc->common.transform->matrix[1][1];
+        dst += dstStride;
+    }
+}
+
+static void
 pixman_walk_composite_region (pixman_op_t op,
 			      pixman_image_t * pSrc,
 			      pixman_image_t * pMask,
@@ -1187,22 +1318,22 @@ pixman_walk_composite_region (pixman_op_t op,
 			      CompositeFunc compositeRect)
 {
     int		    n;
-    const pixman_box16_t *pbox;
+    const pixman_box32_t *pbox;
     int		    w, h, w_this, h_this;
     int		    x_msk, y_msk, x_src, y_src, x_dst, y_dst;
-    pixman_region16_t reg;
-    pixman_region16_t *region;
+    pixman_region32_t reg;
+    pixman_region32_t *region;
 
-    pixman_region_init (&reg);
-    if (!pixman_compute_composite_region (&reg, pSrc, pMask, pDst,
-					  xSrc, ySrc, xMask, yMask, xDst, yDst, width, height))
+    pixman_region32_init (&reg);
+    if (!pixman_compute_composite_region32 (&reg, pSrc, pMask, pDst,
+					    xSrc, ySrc, xMask, yMask, xDst, yDst, width, height))
     {
 	return;
     }
 
     region = &reg;
 
-    pbox = pixman_region_rectangles (region, &n);
+    pbox = pixman_region32_rectangles (region, &n);
     while (n--)
     {
 	h = pbox->y2 - pbox->y1;
@@ -1258,10 +1389,8 @@ pixman_walk_composite_region (pixman_op_t op,
 	}
 	pbox++;
     }
-    pixman_region_fini (&reg);
+    pixman_region32_fini (&reg);
 }
-
-#define SCANLINE_BUFFER_LENGTH 2048
 
 static void
 pixman_image_composite_rect  (pixman_op_t                   op,
@@ -1278,19 +1407,9 @@ pixman_image_composite_rect  (pixman_op_t                   op,
 			      uint16_t                      height)
 {
     FbComposeData compose_data;
-    uint32_t _scanline_buffer[SCANLINE_BUFFER_LENGTH * 3];
-    uint32_t *scanline_buffer = _scanline_buffer;
 
     return_if_fail (src != NULL);
     return_if_fail (dest != NULL);
-
-    if (width > SCANLINE_BUFFER_LENGTH)
-    {
-	scanline_buffer = (uint32_t *)pixman_malloc_abc (width, 3, sizeof (uint32_t));
-
-	if (!scanline_buffer)
-	    return;
-    }
 
     compose_data.op = op;
     compose_data.src = src;
@@ -1305,10 +1424,7 @@ pixman_image_composite_rect  (pixman_op_t                   op,
     compose_data.width = width;
     compose_data.height = height;
 
-    pixman_composite_rect_general (&compose_data, scanline_buffer);
-
-    if (scanline_buffer != _scanline_buffer)
-	free (scanline_buffer);
+    pixman_composite_rect_general (&compose_data);
 }
 
 /* These "formats" both have depth 0, so they
@@ -1401,7 +1517,7 @@ static const FastPathInfo mmx_fast_paths[] =
     { PIXMAN_OP_SRC, PIXMAN_x8r8g8b8,  PIXMAN_null,	PIXMAN_x8r8g8b8, fbCompositeCopyAreammx, 0 },
     { PIXMAN_OP_SRC, PIXMAN_x8b8g8r8,  PIXMAN_null,	PIXMAN_x8b8g8r8, fbCompositeCopyAreammx, 0 },
     { PIXMAN_OP_SRC, PIXMAN_r5g6b5,    PIXMAN_null,     PIXMAN_r5g6b5,   fbCompositeCopyAreammx, 0 },
-    { PIXMAN_OP_SRC, PIXMAN_b5g6r5,    PIXMAN_null,     PIXMAN_b5g6r5,   fbCompositeCopyAreammx, 0 },
+    { PIXMAN_OP_SRC, PIXMAN_b5g6r5,    PIXMAN_null,     PIXMAN_b5g6r5,   fbCompositeCopyAreammx, 0 },    
     { PIXMAN_OP_IN,  PIXMAN_a8,        PIXMAN_null,     PIXMAN_a8,       fbCompositeIn_8x8mmx,   0 },
     { PIXMAN_OP_IN,  PIXMAN_solid,     PIXMAN_a8,	PIXMAN_a8,	 fbCompositeIn_nx8x8mmx, 0 },
     { PIXMAN_OP_NONE },
@@ -1409,8 +1525,138 @@ static const FastPathInfo mmx_fast_paths[] =
 #endif
 
 #ifdef USE_SSE2
-static const FastPathInfo sse_fast_paths[] =
+static const FastPathInfo sse2_fast_paths[] =
 {
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_r5g6b5,   fbCompositeSolidMask_nx8x0565sse2,     0 },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_b5g6r5,   fbCompositeSolidMask_nx8x0565sse2,     0 },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_null,     PIXMAN_a8r8g8b8, fbCompositeSolid_nx8888sse2,           0 },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_null,     PIXMAN_x8r8g8b8, fbCompositeSolid_nx8888sse2,           0 },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_null,     PIXMAN_r5g6b5,   fbCompositeSolid_nx0565sse2,           0 },
+    { PIXMAN_OP_OVER, PIXMAN_a8r8g8b8, PIXMAN_null,     PIXMAN_a8r8g8b8, fbCompositeSrc_8888x8888sse2,          0 },
+    { PIXMAN_OP_OVER, PIXMAN_a8r8g8b8, PIXMAN_null,     PIXMAN_x8r8g8b8, fbCompositeSrc_8888x8888sse2,          0 },
+    { PIXMAN_OP_OVER, PIXMAN_a8b8g8r8, PIXMAN_null,     PIXMAN_a8b8g8r8, fbCompositeSrc_8888x8888sse2,          0 },
+    { PIXMAN_OP_OVER, PIXMAN_a8b8g8r8, PIXMAN_null,     PIXMAN_x8b8g8r8, fbCompositeSrc_8888x8888sse2,          0 },
+    { PIXMAN_OP_OVER, PIXMAN_a8r8g8b8, PIXMAN_null,     PIXMAN_r5g6b5,   fbCompositeSrc_8888x0565sse2,          0 },
+    { PIXMAN_OP_OVER, PIXMAN_a8b8g8r8, PIXMAN_null,     PIXMAN_b5g6r5,   fbCompositeSrc_8888x0565sse2,          0 },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_a8r8g8b8, fbCompositeSolidMask_nx8x8888sse2,     0 },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_x8r8g8b8, fbCompositeSolidMask_nx8x8888sse2,     0 },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_a8b8g8r8, fbCompositeSolidMask_nx8x8888sse2,     0 },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_x8b8g8r8, fbCompositeSolidMask_nx8x8888sse2,     0 },
+#if 0
+    /* FIXME: This code are buggy in MMX version, now the bug was translated to SSE2 version */
+    { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_a8,       PIXMAN_x8r8g8b8, fbCompositeOver_x888x8x8888sse2,       0 },
+    { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_a8,       PIXMAN_a8r8g8b8, fbCompositeOver_x888x8x8888sse2,       0 },
+    { PIXMAN_OP_OVER, PIXMAN_x8b8g8r8, PIXMAN_a8,       PIXMAN_x8b8g8r8, fbCompositeOver_x888x8x8888sse2,       0 },
+    { PIXMAN_OP_OVER, PIXMAN_x8b8g8r8, PIXMAN_a8,       PIXMAN_a8r8g8b8, fbCompositeOver_x888x8x8888sse2,       0 },
+#endif
+    { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_a8,       PIXMAN_a8r8g8b8, fbCompositeSrc_x888xnx8888sse2,        NEED_SOLID_MASK },
+    { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_a8,       PIXMAN_x8r8g8b8, fbCompositeSrc_x888xnx8888sse2,        NEED_SOLID_MASK },
+    { PIXMAN_OP_OVER, PIXMAN_x8b8g8r8, PIXMAN_a8,       PIXMAN_a8b8g8r8, fbCompositeSrc_x888xnx8888sse2,        NEED_SOLID_MASK },
+    { PIXMAN_OP_OVER, PIXMAN_x8b8g8r8, PIXMAN_a8,       PIXMAN_x8b8g8r8, fbCompositeSrc_x888xnx8888sse2,        NEED_SOLID_MASK },
+    { PIXMAN_OP_OVER, PIXMAN_a8r8g8b8, PIXMAN_a8,       PIXMAN_a8r8g8b8, fbCompositeSrc_8888x8x8888sse2,        NEED_SOLID_MASK },
+    { PIXMAN_OP_OVER, PIXMAN_a8r8g8b8, PIXMAN_a8,       PIXMAN_x8r8g8b8, fbCompositeSrc_8888x8x8888sse2,        NEED_SOLID_MASK },
+    { PIXMAN_OP_OVER, PIXMAN_a8b8g8r8, PIXMAN_a8,       PIXMAN_a8b8g8r8, fbCompositeSrc_8888x8x8888sse2,        NEED_SOLID_MASK },
+    { PIXMAN_OP_OVER, PIXMAN_a8b8g8r8, PIXMAN_a8,       PIXMAN_x8b8g8r8, fbCompositeSrc_8888x8x8888sse2,        NEED_SOLID_MASK },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8r8g8b8, PIXMAN_a8r8g8b8, fbCompositeSolidMask_nx8888x8888Csse2, NEED_COMPONENT_ALPHA },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8r8g8b8, PIXMAN_x8r8g8b8, fbCompositeSolidMask_nx8888x8888Csse2, NEED_COMPONENT_ALPHA },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8b8g8r8, PIXMAN_a8b8g8r8, fbCompositeSolidMask_nx8888x8888Csse2, NEED_COMPONENT_ALPHA },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8b8g8r8, PIXMAN_x8b8g8r8, fbCompositeSolidMask_nx8888x8888Csse2, NEED_COMPONENT_ALPHA },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8r8g8b8, PIXMAN_r5g6b5,   fbCompositeSolidMask_nx8888x0565Csse2, NEED_COMPONENT_ALPHA },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8b8g8r8, PIXMAN_b5g6r5,   fbCompositeSolidMask_nx8888x0565Csse2, NEED_COMPONENT_ALPHA },
+    { PIXMAN_OP_OVER, PIXMAN_x8b8g8r8, PIXMAN_a8r8g8b8, PIXMAN_a8r8g8b8, fbCompositeSrc_8888RevNPx8888sse2,     NEED_PIXBUF },
+    { PIXMAN_OP_OVER, PIXMAN_x8b8g8r8, PIXMAN_a8b8g8r8, PIXMAN_a8r8g8b8, fbCompositeSrc_8888RevNPx8888sse2,     NEED_PIXBUF },
+    { PIXMAN_OP_OVER, PIXMAN_x8b8g8r8, PIXMAN_a8r8g8b8, PIXMAN_x8r8g8b8, fbCompositeSrc_8888RevNPx8888sse2,     NEED_PIXBUF },
+    { PIXMAN_OP_OVER, PIXMAN_x8b8g8r8, PIXMAN_a8b8g8r8, PIXMAN_x8r8g8b8, fbCompositeSrc_8888RevNPx8888sse2,     NEED_PIXBUF },
+    { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_a8r8g8b8, PIXMAN_a8b8g8r8, fbCompositeSrc_8888RevNPx8888sse2,     NEED_PIXBUF },
+    { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_a8b8g8r8, PIXMAN_a8b8g8r8, fbCompositeSrc_8888RevNPx8888sse2,     NEED_PIXBUF },
+    { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_a8r8g8b8, PIXMAN_x8b8g8r8, fbCompositeSrc_8888RevNPx8888sse2,     NEED_PIXBUF },
+    { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_a8b8g8r8, PIXMAN_x8b8g8r8, fbCompositeSrc_8888RevNPx8888sse2,     NEED_PIXBUF },
+    { PIXMAN_OP_OVER, PIXMAN_x8b8g8r8, PIXMAN_a8r8g8b8, PIXMAN_r5g6b5,   fbCompositeSrc_8888RevNPx0565sse2,     NEED_PIXBUF },
+    { PIXMAN_OP_OVER, PIXMAN_x8b8g8r8, PIXMAN_a8b8g8r8, PIXMAN_r5g6b5,   fbCompositeSrc_8888RevNPx0565sse2,     NEED_PIXBUF },
+    { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_a8r8g8b8, PIXMAN_b5g6r5,   fbCompositeSrc_8888RevNPx0565sse2,     NEED_PIXBUF },
+    { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_a8b8g8r8, PIXMAN_b5g6r5,   fbCompositeSrc_8888RevNPx0565sse2,     NEED_PIXBUF },
+    { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_null,     PIXMAN_x8r8g8b8, fbCompositeCopyAreasse2,               0 },
+    { PIXMAN_OP_OVER, PIXMAN_x8b8g8r8, PIXMAN_null,     PIXMAN_x8b8g8r8, fbCompositeCopyAreasse2,               0 },
+
+    { PIXMAN_OP_ADD,  PIXMAN_a8,       PIXMAN_null,     PIXMAN_a8,       fbCompositeSrcAdd_8000x8000sse2,       0 },
+    { PIXMAN_OP_ADD,  PIXMAN_a8r8g8b8, PIXMAN_null,     PIXMAN_a8r8g8b8, fbCompositeSrcAdd_8888x8888sse2,       0 },
+    { PIXMAN_OP_ADD,  PIXMAN_a8b8g8r8, PIXMAN_null,     PIXMAN_a8b8g8r8, fbCompositeSrcAdd_8888x8888sse2,       0 },
+    { PIXMAN_OP_ADD,  PIXMAN_solid,    PIXMAN_a8,       PIXMAN_a8,       fbCompositeSrcAdd_8888x8x8sse2,        0 },
+
+    { PIXMAN_OP_SRC, PIXMAN_solid,     PIXMAN_a8,       PIXMAN_a8r8g8b8, fbCompositeSolidMaskSrc_nx8x8888sse2,  0 },
+    { PIXMAN_OP_SRC, PIXMAN_solid,     PIXMAN_a8,       PIXMAN_x8r8g8b8, fbCompositeSolidMaskSrc_nx8x8888sse2,  0 },
+    { PIXMAN_OP_SRC, PIXMAN_solid,     PIXMAN_a8,       PIXMAN_a8b8g8r8, fbCompositeSolidMaskSrc_nx8x8888sse2,  0 },
+    { PIXMAN_OP_SRC, PIXMAN_solid,     PIXMAN_a8,       PIXMAN_x8b8g8r8, fbCompositeSolidMaskSrc_nx8x8888sse2,  0 },
+
+    { PIXMAN_OP_SRC, PIXMAN_a8r8g8b8,  PIXMAN_null,     PIXMAN_a8r8g8b8, fbCompositeCopyAreasse2,               0 },
+    { PIXMAN_OP_SRC, PIXMAN_a8b8g8r8,  PIXMAN_null,     PIXMAN_a8b8g8r8, fbCompositeCopyAreasse2,               0 },
+    { PIXMAN_OP_SRC, PIXMAN_a8r8g8b8,  PIXMAN_null,     PIXMAN_x8r8g8b8, fbCompositeCopyAreasse2,		0 },
+    { PIXMAN_OP_SRC, PIXMAN_a8b8g8r8,  PIXMAN_null,	PIXMAN_x8b8g8r8, fbCompositeCopyAreasse2,		0 },
+    { PIXMAN_OP_SRC, PIXMAN_x8r8g8b8,  PIXMAN_null,     PIXMAN_x8r8g8b8, fbCompositeCopyAreasse2,               0 },
+    { PIXMAN_OP_SRC, PIXMAN_x8b8g8r8,  PIXMAN_null,     PIXMAN_x8b8g8r8, fbCompositeCopyAreasse2,               0 },
+    { PIXMAN_OP_SRC, PIXMAN_r5g6b5,    PIXMAN_null,     PIXMAN_r5g6b5,   fbCompositeCopyAreasse2,               0 },
+    { PIXMAN_OP_SRC, PIXMAN_b5g6r5,    PIXMAN_null,     PIXMAN_b5g6r5,   fbCompositeCopyAreasse2,               0 },
+
+    { PIXMAN_OP_IN,  PIXMAN_a8,        PIXMAN_null,     PIXMAN_a8,       fbCompositeIn_8x8sse2,                 0 },
+    { PIXMAN_OP_IN,  PIXMAN_solid,     PIXMAN_a8,       PIXMAN_a8,       fbCompositeIn_nx8x8sse2,               0 },
+
+    { PIXMAN_OP_NONE },
+};
+#endif
+
+#ifdef USE_VMX
+static const FastPathInfo vmx_fast_paths[] =
+{
+    { PIXMAN_OP_NONE },
+};
+#endif
+
+#ifdef USE_ARM_NEON
+static const FastPathInfo arm_neon_fast_paths[] =
+{
+    { PIXMAN_OP_ADD,  PIXMAN_solid,    PIXMAN_a8,       PIXMAN_a8,       fbCompositeSrcAdd_8888x8x8neon,        0 },
+    { PIXMAN_OP_ADD,  PIXMAN_a8,       PIXMAN_null,     PIXMAN_a8,       fbCompositeSrcAdd_8000x8000neon,       0 },
+    { PIXMAN_OP_SRC,  PIXMAN_a8r8g8b8, PIXMAN_null,     PIXMAN_r5g6b5,   fbCompositeSrc_x888x0565neon,          0 },
+    { PIXMAN_OP_SRC,  PIXMAN_x8r8g8b8, PIXMAN_null,     PIXMAN_r5g6b5,   fbCompositeSrc_x888x0565neon,          0 },
+    { PIXMAN_OP_SRC,  PIXMAN_a8b8g8r8, PIXMAN_null,     PIXMAN_b5g6r5,   fbCompositeSrc_x888x0565neon,          0 },
+    { PIXMAN_OP_SRC,  PIXMAN_x8b8g8r8, PIXMAN_null,     PIXMAN_b5g6r5,   fbCompositeSrc_x888x0565neon,          0 },
+    { PIXMAN_OP_OVER, PIXMAN_a8r8g8b8, PIXMAN_null,     PIXMAN_a8r8g8b8, fbCompositeSrc_8888x8888neon,          0 },
+    { PIXMAN_OP_OVER, PIXMAN_a8r8g8b8, PIXMAN_null,     PIXMAN_x8r8g8b8, fbCompositeSrc_8888x8888neon,          0 },
+    { PIXMAN_OP_OVER, PIXMAN_a8b8g8r8, PIXMAN_null,     PIXMAN_a8b8g8r8, fbCompositeSrc_8888x8888neon,          0 },
+    { PIXMAN_OP_OVER, PIXMAN_a8b8g8r8, PIXMAN_null,     PIXMAN_x8b8g8r8, fbCompositeSrc_8888x8888neon,          0 },
+    { PIXMAN_OP_OVER, PIXMAN_a8r8g8b8, PIXMAN_a8,       PIXMAN_a8r8g8b8, fbCompositeSrc_8888x8x8888neon,        NEED_SOLID_MASK },
+    { PIXMAN_OP_OVER, PIXMAN_a8r8g8b8, PIXMAN_a8,       PIXMAN_x8r8g8b8, fbCompositeSrc_8888x8x8888neon,        NEED_SOLID_MASK },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_r5g6b5,   fbCompositeSolidMask_nx8x0565neon,     0 },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_b5g6r5,   fbCompositeSolidMask_nx8x0565neon,     0 },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_a8r8g8b8, fbCompositeSolidMask_nx8x8888neon,     0 },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_x8r8g8b8, fbCompositeSolidMask_nx8x8888neon,     0 },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_a8b8g8r8, fbCompositeSolidMask_nx8x8888neon,     0 },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_x8b8g8r8, fbCompositeSolidMask_nx8x8888neon,     0 },
+    { PIXMAN_OP_NONE },
+};
+#endif
+
+#ifdef USE_ARM_SIMD
+static const FastPathInfo arm_simd_fast_paths[] =
+{
+    { PIXMAN_OP_OVER, PIXMAN_a8r8g8b8, PIXMAN_null,     PIXMAN_a8r8g8b8, fbCompositeSrc_8888x8888arm,      0 },
+    { PIXMAN_OP_OVER, PIXMAN_a8r8g8b8, PIXMAN_null,	PIXMAN_x8r8g8b8, fbCompositeSrc_8888x8888arm,	   0 },
+    { PIXMAN_OP_OVER, PIXMAN_a8b8g8r8, PIXMAN_null,	PIXMAN_a8b8g8r8, fbCompositeSrc_8888x8888arm,	   0 },
+    { PIXMAN_OP_OVER, PIXMAN_a8b8g8r8, PIXMAN_null,	PIXMAN_x8b8g8r8, fbCompositeSrc_8888x8888arm,	   0 },
+    { PIXMAN_OP_OVER, PIXMAN_a8r8g8b8, PIXMAN_a8,       PIXMAN_a8r8g8b8, fbCompositeSrc_8888x8x8888arm,    NEED_SOLID_MASK },
+    { PIXMAN_OP_OVER, PIXMAN_a8r8g8b8, PIXMAN_a8,       PIXMAN_x8r8g8b8, fbCompositeSrc_8888x8x8888arm,	   NEED_SOLID_MASK },
+    { PIXMAN_OP_OVER, PIXMAN_x8r8g8b8, PIXMAN_null,     PIXMAN_r5g6b5,   fbCompositeSrc_x888x0565arm,	   0 },
+    { PIXMAN_OP_OVER, PIXMAN_x8b8g8r8, PIXMAN_null,     PIXMAN_b5g6r5,   fbCompositeSrc_x888x0565arm,	   0 },
+    { PIXMAN_OP_SRC,  PIXMAN_x8r8g8b8, PIXMAN_null,     PIXMAN_r5g6b5,   fbCompositeSrc_x888x0565arm,	   0 },
+    { PIXMAN_OP_SRC,  PIXMAN_x8b8g8r8, PIXMAN_null,     PIXMAN_b5g6r5,   fbCompositeSrc_x888x0565arm,	   0 },
+
+    { PIXMAN_OP_ADD, PIXMAN_a8,        PIXMAN_null,     PIXMAN_a8,       fbCompositeSrcAdd_8000x8000arm,   0 },
+
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_a8r8g8b8, fbCompositeSolidMask_nx8x8888arm,     0 },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_x8r8g8b8, fbCompositeSolidMask_nx8x8888arm,     0 },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_a8b8g8r8, fbCompositeSolidMask_nx8x8888arm,     0 },
+    { PIXMAN_OP_OVER, PIXMAN_solid,    PIXMAN_a8,       PIXMAN_x8b8g8r8, fbCompositeSolidMask_nx8x8888arm,     0 },
+
     { PIXMAN_OP_NONE },
 };
 #endif
@@ -1482,6 +1728,10 @@ static const FastPathInfo c_fast_paths[] =
     { PIXMAN_OP_SRC, PIXMAN_r5g6b5,    PIXMAN_null,     PIXMAN_r5g6b5,   fbCompositeSrcSrc_nxn, 0 },
     { PIXMAN_OP_SRC, PIXMAN_b5g6r5,    PIXMAN_null,     PIXMAN_b5g6r5,   fbCompositeSrcSrc_nxn, 0 },
 #endif
+    { PIXMAN_OP_SRC, PIXMAN_a8r8g8b8,  PIXMAN_null,     PIXMAN_r5g6b5,   fbCompositeSrc_x888x0565, 0 },
+    { PIXMAN_OP_SRC, PIXMAN_x8r8g8b8,  PIXMAN_null,     PIXMAN_r5g6b5,   fbCompositeSrc_x888x0565, 0 },
+    { PIXMAN_OP_SRC, PIXMAN_a8b8g8r8,  PIXMAN_null,     PIXMAN_b5g6r5,   fbCompositeSrc_x888x0565, 0 },
+    { PIXMAN_OP_SRC, PIXMAN_x8b8g8r8,  PIXMAN_null,     PIXMAN_b5g6r5,   fbCompositeSrc_x888x0565, 0 },
     { PIXMAN_OP_IN,  PIXMAN_a8,        PIXMAN_null,     PIXMAN_a8,       fbCompositeSrcIn_8x8,   0 },
     { PIXMAN_OP_IN,  PIXMAN_solid,     PIXMAN_a8,	PIXMAN_a8,	 fbCompositeSolidMaskIn_nx8x8, 0 },
     { PIXMAN_OP_NONE },
@@ -1591,7 +1841,6 @@ static const OptimizedOperatorInfo optimized_operators[] =
     { PIXMAN_OP_NONE }
 };
 
-
 /*
  * Check if the current operator could be optimized
  */
@@ -1639,8 +1888,27 @@ pixman_optimize_operator(pixman_op_t op, pixman_image_t *pSrc, pixman_image_t *p
 
 }
 
+#if defined(USE_SSE2) && defined(__GNUC__) && !defined(__x86_64__) && !defined(__amd64__)
 
-void
+/*
+ * Work around GCC bug causing crashes in Mozilla with SSE2
+ * 
+ * When using SSE2 intrinsics, gcc assumes that the stack is 16 byte
+ * aligned. Unfortunately some code, such as Mozilla and Mono contain
+ * code that aligns the stack to 4 bytes.
+ *
+ * The __force_align_arg_pointer__ makes gcc generate a prologue that
+ * realigns the stack pointer to 16 bytes.
+ *
+ * On x86-64 this is not necessary because the standard ABI already
+ * calls for a 16 byte aligned stack.
+ *
+ * See https://bugs.freedesktop.org/show_bug.cgi?id=15693
+ */
+
+__attribute__((__force_align_arg_pointer__))
+#endif
+PIXMAN_EXPORT void
 pixman_image_composite (pixman_op_t      op,
 			pixman_image_t * pSrc,
 			pixman_image_t * pMask,
@@ -1663,12 +1931,16 @@ pixman_image_composite (pixman_op_t      op,
     pixman_bool_t dstAlphaMap = pDst->common.alpha_map != NULL;
     CompositeFunc func = NULL;
 
-#ifdef USE_SSE2
-    fbComposeSetupSSE();
-#endif
-    
 #ifdef USE_MMX
     fbComposeSetupMMX();
+#endif
+
+#ifdef USE_VMX
+    fbComposeSetupVMX();
+#endif
+
+#ifdef USE_SSE2
+    fbComposeSetupSSE2();
 #endif
 
     if (srcRepeat && srcTransform &&
@@ -1704,7 +1976,27 @@ pixman_image_composite (pixman_op_t      op,
     if(op == PIXMAN_OP_DST)
         return;
 
-    if ((pSrc->type == BITS || pixman_image_can_get_solid (pSrc)) && (!pMask || pMask->type == BITS)
+    if (pSrc->type == BITS
+        && srcTransform
+        && !pMask
+        && op == PIXMAN_OP_SRC
+        && !maskAlphaMap && !srcAlphaMap && !dstAlphaMap
+        && (pSrc->common.filter == PIXMAN_FILTER_NEAREST)
+        && PIXMAN_FORMAT_BPP(pDst->bits.format) == 32
+        && pSrc->bits.format == pDst->bits.format
+        && pSrc->common.src_clip == &(pSrc->common.full_region)
+        && !pSrc->common.read_func && !pSrc->common.write_func
+        && !pDst->common.read_func && !pDst->common.write_func)
+    {
+        /* ensure that the transform matrix only has a scale */
+        if (pSrc->common.transform->matrix[0][1] == 0 &&
+            pSrc->common.transform->matrix[1][0] == 0 &&
+            pSrc->common.transform->matrix[2][0] == 0 &&
+            pSrc->common.transform->matrix[2][1] == 0 &&
+            pSrc->common.transform->matrix[2][2] == pixman_fixed_1) {
+            func = fbCompositeSrcScaleNearest;
+        }
+    } else if ((pSrc->type == BITS || pixman_image_can_get_solid (pSrc)) && (!pMask || pMask->type == BITS)
         && !srcTransform && !maskTransform
         && !maskAlphaMap && !srcAlphaMap && !dstAlphaMap
         && (pSrc->common.filter != PIXMAN_FILTER_CONVOLUTION)
@@ -1728,17 +2020,32 @@ pixman_image_composite (pixman_op_t      op,
 	info = NULL;
 	
 #ifdef USE_SSE2
-	if (pixman_have_sse ())
-	    info = get_fast_path (sse_fast_paths, op, pSrc, pMask, pDst, pixbuf);
-	if (!info)
+	if (pixman_have_sse2 ())
+	    info = get_fast_path (sse2_fast_paths, op, pSrc, pMask, pDst, pixbuf);
 #endif
 
 #ifdef USE_MMX
-
-	if (pixman_have_mmx())
+	if (!info && pixman_have_mmx())
 	    info = get_fast_path (mmx_fast_paths, op, pSrc, pMask, pDst, pixbuf);
-	if (!info)
 #endif
+
+#ifdef USE_VMX
+
+	if (!info && pixman_have_vmx())
+	    info = get_fast_path (vmx_fast_paths, op, pSrc, pMask, pDst, pixbuf);
+#endif
+
+#ifdef USE_ARM_NEON
+        if (!info && pixman_have_arm_neon())
+            info = get_fast_path (arm_neon_fast_paths, op, pSrc, pMask, pDst, pixbuf);
+#endif
+
+#ifdef USE_ARM_SIMD
+	if (!info && pixman_have_arm_simd())
+	    info = get_fast_path (arm_simd_fast_paths, op, pSrc, pMask, pDst, pixbuf);
+#endif
+
+        if (!info)
 	    info = get_fast_path (c_fast_paths, op, pSrc, pMask, pDst, pixbuf);
 
 	if (info)
@@ -1805,6 +2112,245 @@ pixman_image_composite (pixman_op_t      op,
 }
 
 
+#ifdef USE_VMX
+/* The CPU detection code needs to be in a file not compiled with
+ * "-maltivec -mabi=altivec", as gcc would try to save vector register
+ * across function calls causing SIGILL on cpus without Altivec/vmx.
+ */
+static pixman_bool_t initialized = FALSE;
+static volatile pixman_bool_t have_vmx = TRUE;
+
+#ifdef __APPLE__
+#include <sys/sysctl.h>
+
+pixman_bool_t pixman_have_vmx (void) {
+    if(!initialized) {
+        size_t length = sizeof(have_vmx);
+        int error =
+            sysctlbyname("hw.optional.altivec", &have_vmx, &length, NULL, 0);
+        if(error) have_vmx = FALSE;
+        initialized = TRUE;
+    }
+    return have_vmx;
+}
+
+#elif defined (__linux__)
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <linux/auxvec.h>
+#include <asm/cputable.h>
+
+pixman_bool_t pixman_have_vmx (void)
+{
+    if (!initialized) {
+	char fname[64];
+	unsigned long buf[64];
+	ssize_t count = 0;
+	pid_t pid;
+	int fd, i;
+
+	pid = getpid();
+	snprintf(fname, sizeof(fname)-1, "/proc/%d/auxv", pid);
+
+	fd = open(fname, O_RDONLY);
+	if (fd >= 0) {
+	    for (i = 0; i <= (count / sizeof(unsigned long)); i += 2) {
+		/* Read more if buf is empty... */
+		if (i == (count / sizeof(unsigned long))) {
+		    count = read(fd, buf, sizeof(buf));
+		    if (count <= 0)
+			break;
+		    i = 0;
+		}
+
+		if (buf[i] == AT_HWCAP) {
+		    have_vmx = !!(buf[i+1] & PPC_FEATURE_HAS_ALTIVEC);
+		    initialized = TRUE;
+		    break;
+		} else if (buf[i] == AT_NULL) {
+		    break;
+		}
+	    }
+	    close(fd);
+	}
+    }
+    if (!initialized) {
+	/* Something went wrong. Assume 'no' rather than playing
+	   fragile tricks with catching SIGILL. */
+	have_vmx = FALSE;
+	initialized = TRUE;
+    }
+
+    return have_vmx;
+}
+#else /* !__APPLE__ && !__linux__ */
+#include <signal.h>
+#include <setjmp.h>
+
+static jmp_buf jump_env;
+
+static void vmx_test(int sig, siginfo_t *si, void *unused) {
+    longjmp (jump_env, 1);
+}
+
+pixman_bool_t pixman_have_vmx (void) {
+    struct sigaction sa, osa;
+    int jmp_result;
+    if (!initialized) {
+        sa.sa_flags = SA_SIGINFO;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_sigaction = vmx_test;
+        sigaction(SIGILL, &sa, &osa);
+	jmp_result = setjmp (jump_env);
+	if (jmp_result == 0) {
+	    asm volatile ( "vor 0, 0, 0" );
+	}
+        sigaction(SIGILL, &osa, NULL);
+	have_vmx = (jmp_result == 0);
+        initialized = TRUE;
+    }
+    return have_vmx;
+}
+#endif /* __APPLE__ */
+#endif /* USE_VMX */
+
+#if defined(USE_ARM_SIMD) || defined(USE_ARM_NEON)
+
+#if defined(_MSC_VER)
+
+#if defined(USE_ARM_SIMD)
+extern int pixman_msvc_try_arm_simd_op();
+
+pixman_bool_t
+pixman_have_arm_simd (void)
+{
+    static pixman_bool_t initialized = FALSE;
+    static pixman_bool_t have_arm_simd = FALSE;
+
+    if (!initialized) {
+        __try {
+            pixman_msvc_try_arm_simd_op();
+            have_arm_simd = TRUE;
+        } __except(GetExceptionCode() == EXCEPTION_ILLEGAL_INSTRUCTION) {
+            have_arm_simd = FALSE;
+        }
+	initialized = TRUE;
+    }
+
+    return have_arm_simd;
+}
+#endif /* USE_ARM_SIMD */
+
+#if defined(USE_ARM_NEON)
+extern int pixman_msvc_try_arm_neon_op();
+
+pixman_bool_t
+pixman_have_arm_neon (void)
+{
+    static pixman_bool_t initialized = FALSE;
+    static pixman_bool_t have_arm_neon = FALSE;
+
+    if (!initialized) {
+        __try {
+            pixman_msvc_try_arm_neon_op();
+            have_arm_neon = TRUE;
+        } __except(GetExceptionCode() == EXCEPTION_ILLEGAL_INSTRUCTION) {
+            have_arm_neon = FALSE;
+        }
+	initialized = TRUE;
+    }
+
+    return have_arm_neon;
+}
+#endif /* USE_ARM_NEON */
+
+#else /* linux ELF */
+
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <string.h>
+#include <elf.h>
+
+static pixman_bool_t arm_has_v7 = FALSE;
+static pixman_bool_t arm_has_v6 = FALSE;
+static pixman_bool_t arm_has_vfp = FALSE;
+static pixman_bool_t arm_has_neon = FALSE;
+static pixman_bool_t arm_has_iwmmxt = FALSE;
+static pixman_bool_t arm_tests_initialized = FALSE;
+
+static void
+pixman_arm_read_auxv() {
+    int fd;
+    Elf32_auxv_t aux;
+
+    fd = open("/proc/self/auxv", O_RDONLY);
+    if (fd > 0) {
+        while (read(fd, &aux, sizeof(Elf32_auxv_t)) == sizeof(Elf32_auxv_t)) {
+            if (aux.a_type == AT_HWCAP) {
+		uint32_t hwcap = aux.a_un.a_val;
+		if (getenv("ARM_FORCE_HWCAP"))
+		    hwcap = strtoul(getenv("ARM_FORCE_HWCAP"), NULL, 0);
+		// hardcode these values to avoid depending on specific versions
+		// of the hwcap header, e.g. HWCAP_NEON
+		arm_has_vfp = (hwcap & 64) != 0;
+		arm_has_iwmmxt = (hwcap & 512) != 0;
+		// this flag is only present on kernel 2.6.29
+		arm_has_neon = (hwcap & 4096) != 0;
+            } else if (aux.a_type == AT_PLATFORM) {
+		const char *plat = (const char*) aux.a_un.a_val;
+		if (getenv("ARM_FORCE_PLATFORM"))
+		    plat = getenv("ARM_FORCE_PLATFORM");
+		if (strncmp(plat, "v7l", 3) == 0) {
+		    arm_has_v7 = TRUE;
+		    arm_has_v6 = TRUE;
+		} else if (strncmp(plat, "v6l", 3) == 0) {
+		    arm_has_v6 = TRUE;
+		}
+            }
+        }
+        close (fd);
+
+	// if we don't have 2.6.29, we have to do this hack; set
+	// the env var to trust HWCAP.
+	if (!getenv("ARM_TRUST_HWCAP") && arm_has_v7)
+	    arm_has_neon = TRUE;
+    }
+
+    arm_tests_initialized = TRUE;
+}
+
+#if defined(USE_ARM_SIMD)
+pixman_bool_t
+pixman_have_arm_simd (void)
+{
+    if (!arm_tests_initialized)
+	pixman_arm_read_auxv();
+
+    return arm_has_v6;
+}
+#endif /* USE_ARM_SIMD */
+
+#if defined(USE_ARM_NEON)
+pixman_bool_t
+pixman_have_arm_neon (void)
+{
+    if (!arm_tests_initialized)
+	pixman_arm_read_auxv();
+
+    return arm_has_neon;
+}
+#endif /* USE_ARM_NEON */
+
+#endif /* linux */
+
+#endif /* USE_ARM_SIMD || USE_ARM_NEON */
 
 #ifdef USE_MMX
 /* The CPU detection code needs to be in a file not compiled with
@@ -2006,19 +2552,19 @@ pixman_have_mmx (void)
 
 #ifdef USE_SSE2
 pixman_bool_t
-pixman_have_sse (void)
+pixman_have_sse2 (void)
 {
     static pixman_bool_t initialized = FALSE;
-    static pixman_bool_t sse_present;
+    static pixman_bool_t sse2_present;
 
     if (!initialized)
     {
         unsigned int features = detectCPUFeatures();
-        sse_present = (features & (MMX|MMX_Extensions|SSE|SSE2)) == (MMX|MMX_Extensions|SSE|SSE2);
+        sse2_present = (features & (MMX|MMX_Extensions|SSE|SSE2)) == (MMX|MMX_Extensions|SSE|SSE2);
         initialized = TRUE;
     }
 
-    return sse_present;
+    return sse2_present;
 }
 #endif
 

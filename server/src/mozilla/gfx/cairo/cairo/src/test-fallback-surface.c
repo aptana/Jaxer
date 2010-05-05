@@ -79,7 +79,7 @@ _cairo_test_fallback_surface_create (cairo_content_t	content,
 	return backing;
 
     surface = malloc (sizeof (test_fallback_surface_t));
-    if (surface == NULL) {
+    if (unlikely (surface == NULL)) {
 	cairo_surface_destroy (backing);
 	return _cairo_surface_create_in_error (_cairo_error (CAIRO_STATUS_NO_MEMORY));
     }
@@ -172,15 +172,20 @@ _test_fallback_surface_release_dest_image (void			   *abstract_surface,
 static cairo_status_t
 _test_fallback_surface_clone_similar (void		  *abstract_surface,
 				      cairo_surface_t     *src,
+				      cairo_content_t      content,
 				      int                  src_x,
 				      int                  src_y,
 				      int                  width,
 				      int                  height,
+				      int                 *clone_offset_x,
+				      int                 *clone_offset_y,
 				      cairo_surface_t    **clone_out)
 {
     test_fallback_surface_t *surface = abstract_surface;
 
     if (src->backend == surface->base.backend) {
+	*clone_offset_x = 0;
+	*clone_offset_y = 0;
 	*clone_out = cairo_surface_reference (src);
 
 	return CAIRO_STATUS_SUCCESS;
@@ -210,6 +215,8 @@ static const cairo_surface_backend_t test_fallback_surface_backend = {
     NULL, /* composite */
     NULL, /* fill_rectangles */
     NULL, /* composite_trapezoids */
+    NULL, /* create_span_renderer */
+    NULL, /* check_span_renderer */
     NULL, /* copy_page */
     NULL, /* show_page */
     NULL, /* set_clip_region */

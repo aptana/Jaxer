@@ -38,7 +38,11 @@
 #ifndef CAIRO_COMPILER_PRIVATE_H
 #define CAIRO_COMPILER_PRIVATE_H
 
-CAIRO_BEGIN_DECLS
+#include "cairo.h"
+
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #if __GNUC__ >= 3 && defined(__ELF__) && !defined(__sun)
 # define slim_hidden_proto(name)		slim_hidden_proto1(name, slim_hidden_int_name(name)) cairo_private
@@ -107,12 +111,61 @@ CAIRO_BEGIN_DECLS
 # define CAIRO_FUNCTION_ALIAS(old, new)
 #endif
 
+/*
+ * Cairo uses the following function attributes in order to improve the
+ * generated code (effectively by manual inter-procedural analysis).
+ *
+ *   'cairo_pure': The function is only allowed to read from its arguments
+ *                 and global memory (i.e. following a pointer argument or
+ *                 accessing a shared variable). The return value should
+ *                 only depend on its arguments, and for an identical set of
+ *                 arguments should return the same value.
+ *
+ *   'cairo_const': The function is only allowed to read from its arguments.
+ *                  It is not allowed to access global memory. The return
+ *                  value should only depend its arguments, and for an
+ *                  identical set of arguments should return the same value.
+ *                  This is currently the most strict function attribute.
+ *
+ * Both these function attributes allow gcc to perform CSE and
+ * constant-folding, with 'cairo_const 'also guaranteeing that pointer contents
+ * do not change across the function call.
+ */
+#if __GNUC__ >= 3
+#define cairo_pure __attribute__((pure))
+#define cairo_const __attribute__((const))
+#else
+#define cairo_pure
+#define cairo_const
+#endif
+
+#if defined(__GNUC__) && (__GNUC__ > 2) && defined(__OPTIMIZE__)
+#define _CAIRO_BOOLEAN_EXPR(expr)                   \
+ __extension__ ({                               \
+   int _cairo_boolean_var_;                         \
+   if (expr)                                    \
+      _cairo_boolean_var_ = 1;                      \
+   else                                         \
+      _cairo_boolean_var_ = 0;                      \
+   _cairo_boolean_var_;                             \
+})
+#define likely(expr) (__builtin_expect (_CAIRO_BOOLEAN_EXPR(expr), 1))
+#define unlikely(expr) (__builtin_expect (_CAIRO_BOOLEAN_EXPR(expr), 0))
+#else
+#define likely(expr) (expr)
+#define unlikely(expr) (expr)
+#endif
+
 #ifndef __GNUC__
+#undef __attribute__
 #define __attribute__(x)
 #endif
 
-#if defined(__WIN32__) || defined(_MSC_VER)
+#if (defined(__WIN32__) && !defined(__WINE__)) || defined(_MSC_VER)
 #define snprintf _snprintf
+#define popen _popen
+#define pclose _pclose
+#define hypot _hypot
 #endif
 
 #ifdef _MSC_VER
@@ -120,11 +173,33 @@ CAIRO_BEGIN_DECLS
 #define inline __inline
 #endif
 
+#if defined(_MSC_VER) && defined(_M_IX86)
+/* When compiling with /Gy and /OPT:ICF identical functions will be folded in together.
+   The CAIRO_ENSURE_UNIQUE macro ensures that a function is always unique and
+   will never be folded into another one. Something like this might eventually
+   be needed for GCC but it seems fine for now. */
+#define CAIRO_ENSURE_UNIQUE                       \
+    do {                                          \
+	char func[] = __FUNCTION__;               \
+	char file[] = __FILE__;                   \
+	__asm {                                   \
+	    __asm jmp __internal_skip_line_no     \
+	    __asm _emit (__LINE__ & 0xff)         \
+	    __asm _emit ((__LINE__>>8) & 0xff)    \
+	    __asm _emit ((__LINE__>>16) & 0xff)   \
+	    __asm _emit ((__LINE__>>24) & 0xff)   \
+	    __asm lea eax, func                   \
+	    __asm lea eax, file                   \
+	    __asm __internal_skip_line_no:        \
+	};                                        \
+    } while (0)
+#else
+#define CAIRO_ENSURE_UNIQUE    do { } while (0)
+#endif
+
 #ifdef __STRICT_ANSI__
 #undef inline
 #define inline __inline__
 #endif
-
-CAIRO_END_DECLS
 
 #endif

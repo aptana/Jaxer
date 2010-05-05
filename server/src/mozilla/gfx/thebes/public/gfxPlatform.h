@@ -40,21 +40,28 @@
 #define GFX_PLATFORM_H
 
 #include "prtypes.h"
-#include "nsVoidArray.h"
+#include "nsTArray.h"
+
+#include "nsIObserver.h"
 
 #include "gfxTypes.h"
 #include "gfxASurface.h"
+#include "gfxColor.h"
 
+#include "qcms.h"
 #ifdef XP_OS2
 #undef OS2EMX_PLAIN_CHAR
 #endif
 
-typedef void* cmsHPROFILE;
-typedef void* cmsHTRANSFORM;
-
 class gfxImageSurface;
+class gfxFont;
 class gfxFontGroup;
 struct gfxFontStyle;
+class gfxUserFontSet;
+class gfxFontEntry;
+class gfxProxyFontEntry;
+class gfxPlatformFontList;
+class nsIURI;
 
 // pref lang id's for font prefs
 // !!! needs to match the list of pref font.default.xx entries listed in all.js !!!
@@ -99,6 +106,13 @@ enum eFontPrefLang {
     eFontPrefLang_AllCount    = 32
 };
 
+enum eCMSMode {
+    eCMSMode_Off          = 0,     // No color management
+    eCMSMode_All          = 1,     // Color manage everything
+    eCMSMode_TaggedOnly   = 2,     // Color manage tagged Images Only
+    eCMSMode_AllCount     = 3
+};
+
 // when searching through pref langs, max number of pref langs
 const PRUint32 kMaxLenPrefLangList = 32;
 
@@ -122,16 +136,6 @@ public:
     static void Shutdown();
 
     /**
-     * Return PR_TRUE if we're to use Glitz for acceleration.
-     */
-    static PRBool UseGlitz();
-
-    /**
-     * Force the glitz state to on or off
-     */
-    static void SetUseGlitz(PRBool use);
-
-    /**
      * Create an offscreen surface of the given dimensions
      * and image format.
      */
@@ -153,12 +157,20 @@ public:
      */
     virtual nsresult GetFontList(const nsACString& aLangGroup,
                                  const nsACString& aGenericFamily,
-                                 nsStringArray& aListOfFonts);
+                                 nsTArray<nsString>& aListOfFonts);
 
     /**
      * Rebuilds the any cached system font lists
      */
     virtual nsresult UpdateFontList();
+
+    /**
+     * Create the platform font-list object (gfxPlatformFontList concrete subclass)
+     */
+    virtual gfxPlatformFontList *CreatePlatformFontList() {
+        NS_NOTREACHED("oops, this platform doesn't have a gfxPlatformFontList implementation");
+        return nsnull;
+    }
 
     /**
      * Font name resolver, this returns actual font name(s) by the callback
@@ -183,7 +195,39 @@ public:
      * Create the appropriate platform font group
      */
     virtual gfxFontGroup *CreateFontGroup(const nsAString& aFamilies,
-                                          const gfxFontStyle *aStyle) = 0;
+                                          const gfxFontStyle *aStyle,
+                                          gfxUserFontSet *aUserFontSet) = 0;
+                                          
+                                          
+    /**
+     * Look up a local platform font using the full font face name.
+     * (Needed to support @font-face src local().)
+     * Ownership of the returned gfxFontEntry is passed to the caller,
+     * who must either AddRef() or delete.
+     */
+    virtual gfxFontEntry* LookupLocalFont(const gfxProxyFontEntry *aProxyEntry,
+                                          const nsAString& aFontName)
+    { return nsnull; }
+
+    /**
+     * Activate a platform font.  (Needed to support @font-face src url().)
+     * aFontData is a NS_Malloc'ed block that must be freed by this function
+     * (or responsibility passed on) when it is no longer needed; the caller
+     * will NOT free it.
+     * Ownership of the returned gfxFontEntry is passed to the caller,
+     * who must either AddRef() or delete.
+     */
+    virtual gfxFontEntry* MakePlatformFont(const gfxProxyFontEntry *aProxyEntry,
+                                           const PRUint8 *aFontData,
+                                           PRUint32 aLength);
+
+    /**
+     * Whether to allow downloadable fonts via @font-face rules
+     */
+    virtual PRBool DownloadableFontsEnabled();
+
+    // check whether format is supported on a platform or not (if unclear, returns true)
+    virtual PRBool IsFontFormatSupported(nsIURI *aFontURI, PRUint32 aFormatFlags) { return PR_FALSE; }
 
     void GetPrefFonts(const char *aLangGroup, nsString& array, PRBool aAppendUnicode = PR_TRUE);
 
@@ -213,34 +257,77 @@ public:
     /**
      * Are we going to try color management?
      */
-    static PRBool IsCMSEnabled();
+    static eCMSMode GetCMSMode();
+
+    /**
+     * Determines the rendering intent for color management.
+     *
+     * If the value in the pref gfx.color_management.rendering_intent is a
+     * valid rendering intent as defined in gfx/qcms/qcms.h, that
+     * value is returned. Otherwise, -1 is returned and the embedded intent
+     * should be used.
+     *
+     * See bug 444014 for details.
+     */
+    static int GetRenderingIntent();
+
+    /**
+     * Convert a pixel using a cms transform in an endian-aware manner.
+     *
+     * Sets 'out' to 'in' if transform is NULL.
+     */
+    static void TransformPixel(const gfxRGBA& in, gfxRGBA& out, qcms_transform *transform);
 
     /**
      * Return the output device ICC profile.
      */
-    static cmsHPROFILE GetCMSOutputProfile();
+    static qcms_profile* GetCMSOutputProfile();
+
+    /**
+     * Return the sRGB ICC profile.
+     */
+    static qcms_profile* GetCMSsRGBProfile();
 
     /**
      * Return sRGB -> output device transform.
      */
-    static cmsHTRANSFORM GetCMSRGBTransform();
+    static qcms_transform* GetCMSRGBTransform();
 
     /**
      * Return output -> sRGB device transform.
      */
-    static cmsHTRANSFORM GetCMSInverseRGBTransform();
+    static qcms_transform* GetCMSInverseRGBTransform();
 
     /**
      * Return sRGBA -> output device transform.
      */
-    static cmsHTRANSFORM GetCMSRGBATransform();
+    static qcms_transform* GetCMSRGBATransform();
+
+    /**
+     * Return display DPI
+     */
+    static PRInt32 GetDPI() {
+        if (sDPI < 0) {
+            gfxPlatform::GetPlatform()->InitDisplayCaps();
+        }
+        NS_ASSERTION(sDPI > 0, "Something is wrong");
+        return sDPI;
+    }
 
 protected:
     gfxPlatform() { }
     virtual ~gfxPlatform();
 
+    /**
+     * Initialize any needed display metrics (such as DPI)
+     */
+    virtual void InitDisplayCaps();
+    static PRInt32 sDPI;
+
 private:
-    virtual cmsHPROFILE GetPlatformCMSOutputProfile();
+    virtual qcms_profile* GetPlatformCMSOutputProfile();
+
+    nsCOMPtr<nsIObserver> overrideObserver;
 };
 
 #endif /* GFX_PLATFORM_H */

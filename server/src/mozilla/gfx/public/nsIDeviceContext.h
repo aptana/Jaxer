@@ -42,7 +42,6 @@
 #include "nsISupports.h"
 #include "nsCoord.h"
 #include "nsRect.h"
-#include "nsIWidget.h"
 #include "nsIRenderingContext.h"
 // XXX we need only gfxTypes.h, but we cannot include it directly.
 #include "gfxPoint.h"
@@ -52,6 +51,7 @@ class nsIFontMetrics;
 class nsIWidget;
 class nsIDeviceContextSpec;
 class nsIAtom;
+class gfxUserFontSet;
 
 struct nsFont;
 
@@ -168,21 +168,10 @@ const PRUint8 kUseAltDCFor_CREATERC_PAINT  = 0x04; // Use when creating Renderin
 const PRUint8 kUseAltDCFor_SURFACE_DIM     = 0x08; // Use it for getting the Surface Dimensions
 #endif
 
-// 92a1e76c-adbd-441e-aae6-243d6004e0ee
+// 40aebd88-a82b-48b0-8a44-be51510064a7
 #define NS_IDEVICE_CONTEXT_IID   \
-{ 0x92a1e76c, 0xadbd, 0x441e, \
- { 0xaa, 0xe6, 0x24, 0x3d, 0x60, 0x4, 0xe0, 0xee } }
-
-//a cross platform way of specifying a native palette handle
-typedef void * nsPalette;
-
-  //structure used to return information about a device's palette capabilities
-  struct nsPaletteInfo {
-     PRPackedBool  isPaletteDevice;
-     PRUint16      sizePalette;  // number of entries in the palette
-     PRUint16      numReserved;  // number of reserved palette entries
-     nsPalette     palette;      // native palette handle
-  };
+{ 0x40aebd88, 0xa82b, 0x48b0, \
+  { 0x8a, 0x44, 0xbe, 0x51, 0x51, 0x00, 0x64, 0xa7 } }
 
   typedef enum {
     eSystemFont_Caption,         // css2
@@ -214,10 +203,10 @@ public:
 
   /**
    * Initialize the device context from a widget
-   * @param aWidget a native widget to initialize the device context from
+   * @param aWidget a widget to initialize the device context from
    * @return error status
    */
-  NS_IMETHOD  Init(nsNativeWidget aWidget) = 0;
+  NS_IMETHOD  Init(nsIWidget* aWidget) = 0;
 
   /**
    * Initialize the device context from a device context spec
@@ -330,9 +319,11 @@ public:
    * @param aFont font description to obtain metrics for
    * @param aLangGroup the language group of the document
    * @param aMetrics out parameter for font metrics
+   * @param aUserFontSet user font set
    * @return error status
    */
   NS_IMETHOD  GetMetricsFor(const nsFont& aFont, nsIAtom* aLangGroup,
+                            gfxUserFontSet* aUserFontSet,
                             nsIFontMetrics*& aMetrics) = 0;
 
   /**
@@ -340,9 +331,11 @@ public:
    * an nsFont.
    * @param aFont font description to obtain metrics for
    * @param aMetrics out parameter for font metrics
+   * @param aUserFontSet user font set
    * @return error status
    */
-  NS_IMETHOD  GetMetricsFor(const nsFont& aFont, nsIFontMetrics*& aMetrics) = 0;
+  NS_IMETHOD  GetMetricsFor(const nsFont& aFont, gfxUserFontSet* aUserFontSet,
+                            nsIFontMetrics*& aMetrics) = 0;
 
   /**
    * Check to see if a particular named font exists.
@@ -372,11 +365,6 @@ public:
    * Return the bit depth of the device.
    */
   NS_IMETHOD GetDepth(PRUint32& aDepth) = 0;
-
-  /**
-   * Returns information about the device's palette capabilities.
-   */
-  NS_IMETHOD GetPaletteInfo(nsPaletteInfo& aPaletteInfo) = 0;
 
   /**
    * Get the size of the displayable area of the output device

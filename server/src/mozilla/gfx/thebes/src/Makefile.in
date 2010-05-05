@@ -17,12 +17,15 @@ REQUIRES = \
 	pref \
 	xpcom \
 	unicharutil \
+	uconv \
 	$(LCMS_REQUIRES) \
+	qcms \
 	$(NULL)
 
 CPPSRCS	= \
 	gfxASurface.cpp \
 	gfxAlphaRecovery.cpp \
+	gfxBlur.cpp \
 	gfxContext.cpp \
 	gfxImageSurface.cpp \
 	gfxFont.cpp \
@@ -33,10 +36,12 @@ CPPSRCS	= \
 	gfxPath.cpp \
 	gfxPattern.cpp \
 	gfxPlatform.cpp \
+	gfxPlatformFontList.cpp \
 	gfxRect.cpp \
 	gfxSkipChars.cpp \
 	gfxTextRunCache.cpp \
 	gfxTextRunWordCache.cpp \
+	gfxUserFontSet.cpp \
 	$(NULL)
 
 EXTRA_DSO_LDOPTS += \
@@ -45,17 +50,28 @@ EXTRA_DSO_LDOPTS += \
 	$(XPCOM_LIBS) \
 	$(NSPR_LIBS) \
 	$(ZLIB_LIBS) \
-	$(LCMS_LIBS) \
+	$(QCMS_LIBS) \
 	$(NULL)
 
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),windows)
-CPPSRCS	+= 	gfxWindowsFonts.cpp \
-		gfxWindowsPlatform.cpp \
+CPPSRCS	+= 	gfxWindowsPlatform.cpp \
 		gfxWindowsSurface.cpp \
 		gfxWindowsNativeDrawing.cpp \
 		nsUnicodeRange.cpp \
 		$(NULL)
+
+ifdef WINCE
+CPPSRCS	+= gfxFT2Fonts.cpp \
+	   gfxFT2FontBase.cpp \
+	   gfxFT2Utils.cpp \
+	   gfxDDrawSurface.cpp \
+	   $(NULL)
+EXTRA_DSO_LDOPTS += ddraw.lib
+else
+CPPSRCS	+= gfxWindowsFonts.cpp 
+endif
+
 CPPSRCS +=	gfxPDFSurface.cpp
 
 _OS_LIBS	= usp10 msimg32
@@ -75,27 +91,67 @@ CPPSRCS	+=	gfxOS2Fonts.cpp \
 		gfxFontconfigUtils.cpp \
 		$(NULL)
 CPPSRCS +=	gfxPDFSurface.cpp
-EXTRA_DSO_LDOPTS += $(MOZ_CAIRO_LIBS)
-REQUIRES += uconv
+REQUIRES += uconv locale
 endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),gtk2)
-CPPSRCS +=      gfxXlibSurface.cpp gfxPlatformGtk.cpp gfxXlibNativeRenderer.cpp
-CPPSRCS +=	gfxPangoFonts.cpp 
+
+ifdef MOZ_PANGO
+CPPSRCS += gfxPangoFonts.cpp
+else
+CPPSRCS += gfxFT2Fonts.cpp
+endif
+
+ifdef MOZ_X11
+CPPSRCS += gfxXlibSurface.cpp
+endif
+
+REQUIRES += locale
+CPPSRCS +=  gfxPlatformGtk.cpp gfxGdkNativeRenderer.cpp
 CPPSRCS +=	gfxPDFSurface.cpp gfxPSSurface.cpp
 CPPSRCS +=	gfxFontconfigUtils.cpp
+CPPSRCS +=  gfxFT2FontBase.cpp
+CPPSRCS +=  gfxFT2Utils.cpp
 CPPSRCS +=	nsUnicodeRange.cpp
+
+ifdef MOZ_X11
 CSRCS = cairo-xlib-utils.c
-EXTRA_DSO_LDOPTS += $(MOZ_PANGO_LIBS) $(ZLIB_LIBS) $(MOZ_XFT_LIBS) $(XLDFLAGS) $(XLIBS)
+endif
+
+ifdef MOZ_DFB
+CSRCS = cairo-gdk-utils.c
+endif
+
+EXTRA_DSO_LDOPTS += $(MOZ_PANGO_LIBS) $(ZLIB_LIBS) $(XLDFLAGS) $(XLIBS)
+endif
+
+ifdef MOZ_DFB
+CPPSRCS += gfxDirectFBSurface.cpp
+endif
+
+ifeq ($(MOZ_WIDGET_TOOLKIT),qt)
+REQUIRES += locale
+CPPSRCS += gfxQtPlatform.cpp gfxQPainterSurface.cpp
+CPPSRCS += gfxXlibSurface.cpp gfxQtNativeRenderer.cpp
+CPPSRCS +=	gfxFT2Fonts.cpp
+CPPSRCS +=  gfxFT2FontBase.cpp
+CPPSRCS +=  gfxFT2Utils.cpp
+CPPSRCS +=	gfxFontconfigUtils.cpp
+CPPSRCS +=	nsUnicodeRange.cpp
+#CSRCS = cairo-xlib-utils.c
+EXTRA_DSO_LDOPTS += $(ZLIB_LIBS) $(XLDFLAGS) $(XLIBS) $(CAIRO_FT_LIBS)
 endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),beos)
+REQUIRES += locale
 CPPSRCS	+= 	gfxBeOSSurface.cpp gfxBeOSPlatform.cpp
 CPPSRCS +=	gfxPangoFonts.cpp 
+CPPSRCS +=  gfxFT2FontBase.cpp
+CPPSRCS +=  gfxFT2Utils.cpp
 #CPPSRCS +=	gfxPDFSurface.cpp
 CPPSRCS +=	gfxFontconfigUtils.cpp
 CPPSRCS +=	nsUnicodeRange.cpp
-EXTRA_DSO_LDOPTS += $(MOZ_PANGO_LIBS) $(CAIRO_FT_LIBS) -lfontconfig -lpangocairo-1.0
+EXTRA_DSO_LDOPTS += $(MOZ_PANGO_LIBS) $(CAIRO_FT_LIBS) -lfontconfig
 endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),cocoa)
@@ -110,44 +166,32 @@ CPPSRCS	+= \
 CPPSRCS +=      nsUnicodeRange.cpp
 CPPSRCS +=      gfxQuartzNativeDrawing.cpp
 
-CMMSRCS = gfxQuartzFontCache.mm
+ifdef MOZ_CORETEXT
+CPPSRCS += gfxCoreTextFonts.cpp
+endif
+
+CMMSRCS = gfxMacPlatformFontList.mm
 
 # Always link with OpenGL/AGL
 EXTRA_DSO_LDOPTS += -framework OpenGL -framework AGL -framework QuickTime
 endif
 
-ifdef MOZ_ENABLE_GLITZ
-REQUIRES += 	glitz
-CPPSRCS +=	gfxGlitzSurface.cpp
-
-SHARED_LIBRARY_LIBS += $(DIST)/lib/$(LIB_PREFIX)mozglitz.$(LIB_SUFFIX)
-
-ifeq ($(MOZ_WIDGET_TOOLKIT),windows)
-REQUIRES +=	glitzwgl
-SHARED_LIBRARY_LIBS += $(DIST)/lib/$(LIB_PREFIX)mozglitzwgl.$(LIB_SUFFIX)
-OS_LIBS += opengl32.lib 
-endif
-
-ifeq ($(MOZ_WIDGET_TOOLKIT),gtk2)
-REQUIRES +=	glitzglx
-SHARED_LIBRARY_LIBS += $(DIST)/lib/$(LIB_PREFIX)mozglitzglx.$(LIB_SUFFIX)
-endif
-
-ifeq ($(MOZ_WIDGET_TOOLKIT),cocoa)
-REQUIRES +=	glitzagl
-SHARED_LIBRARY_LIBS += $(DIST)/lib/$(LIB_PREFIX)mozglitzagl.$(LIB_SUFFIX)
-endif
-endif
+CSRCS += woff.c
 
 EXTRA_DSO_LDOPTS += $(TK_LIBS)
 
-DEFINES += -DIMPL_THEBES
+DEFINES += -DIMPL_THEBES -DWOFF_MOZILLA_CLIENT
 
 include $(topsrcdir)/config/rules.mk
 
-
 CXXFLAGS += $(MOZ_CAIRO_CFLAGS) $(TK_CFLAGS)
 CFLAGS += $(MOZ_CAIRO_CFLAGS) $(TK_CFLAGS)
+
+ifeq ($(MOZ_WIDGET_TOOLKIT),windows)
+ifdef WINCE
+CXXFLAGS += $(CAIRO_FT_CFLAGS)
+endif
+endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),gtk2)
 CXXFLAGS += $(MOZ_PANGO_CFLAGS)
@@ -160,3 +204,8 @@ endif
 ifeq ($(MOZ_WIDGET_TOOLKIT),os2)
 CXXFLAGS += $(CAIRO_FT_CFLAGS)
 endif
+
+ifeq ($(MOZ_WIDGET_TOOLKIT),qt)
+CXXFLAGS += $(CAIRO_FT_CFLAGS)
+endif
+

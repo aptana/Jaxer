@@ -57,16 +57,21 @@ REQUIRES =  xpcom \
             string \
             thebes \
             widget \
+            locale \
             view \
             pref \
             unicharutil \
             imglib2 \
             $(ZLIB_REQUIRES) \
+            qcms \
             $(NULL)
+
+ifeq (,$(filter windows,$(MOZ_WIDGET_TOOLKIT)))
+REQUIRES += uconv
+endif
 
 CPPSRCS		= \
 		nsThebesDeviceContext.cpp \
-		nsThebesImage.cpp \
 		nsThebesRegion.cpp \
 		nsThebesGfxFactory.cpp \
 		nsThebesRenderingContext.cpp \
@@ -77,12 +82,12 @@ CPPSRCS		= \
 
 EXTRA_DSO_LIBS	= gkgfx thebes
 
+ifeq ($(MOZ_WIDGET_TOOLKIT),qt)
+CPPSRCS += nsSystemFontsQt.cpp
+endif
+
 ifeq ($(MOZ_WIDGET_TOOLKIT),gtk2)
 CPPSRCS		+= nsSystemFontsGTK2.cpp
-
-ifdef MOZ_ENABLE_GLITZ
-REQUIRES        += glitzglx
-endif
 
 endif
 
@@ -91,16 +96,13 @@ CPPSRCS		+= nsSystemFontsWin.cpp \
 		   $(NULL)
 
 REQUIRES	+= \
-		glitzwgl \
 		cairo \
+		qcms \
 		$(NULL)
 
 _OS_LIBS	= usp10
 OS_LIBS		+= $(call EXPAND_LIBNAME,$(_OS_LIBS))
 
-ifdef MOZ_ENABLE_GLITZ
-OS_LIBS += opengl32.lib 
-endif
 endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),os2)
@@ -112,12 +114,8 @@ ifeq ($(MOZ_WIDGET_TOOLKIT),beos)
 CPPSRCS		+= nsSystemFontsBeOS.cpp
 endif
 
-ifneq (,$(filter $(MOZ_WIDGET_TOOLKIT),mac cocoa))
-CPPSRCS          += nsSystemFontsMac.cpp
- ifdef MOZ_ENABLE_GLITZ
-  REQUIRES         += glitzagl
-  EXTRA_DSO_LDOPTS += -lmozglitzagl -framework OpenGL -framework AGL
- endif
+ifeq ($(MOZ_WIDGET_TOOLKIT),cocoa)
+CMMSRCS		= nsSystemFontsMac.mm
 endif
 
 EXPORTS         += nsIThebesFontMetrics.h
@@ -129,7 +127,6 @@ LOCAL_INCLUDES	= \
 		$(NULL)
 
 EXTRA_DSO_LDOPTS += \
-		../shared/$(LIB_PREFIX)gfxshared_s.$(LIB_SUFFIX) \
 		$(LIBS_DIR) \
 		$(EXTRA_DSO_LIBS) \
 		$(DEPTH)/modules/libutil/src/$(LIB_PREFIX)mozutil_s.$(LIB_SUFFIX) \
@@ -145,8 +142,7 @@ endif
 
 include $(topsrcdir)/config/rules.mk
 
-CXXFLAGS  += $(TK_CFLAGS)
-CFLAGS    += $(TK_CFLAGS)
+CXXFLAGS  += $(TK_CFLAGS) $(MOZ_CAIRO_CFLAGS)
 
 ifdef MOZ_ENABLE_GTK2
 DEFINES += -DMOZ_ENABLE_GTK2

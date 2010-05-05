@@ -127,170 +127,26 @@ struct _cairo_quartz_font_face {
     CGFontRef cgFont;
 };
 
-/**
- ** font face backend
- **/
-
-static void
-_cairo_quartz_font_face_destroy (void *abstract_face)
-{
-    cairo_quartz_font_face_t *font_face = (cairo_quartz_font_face_t*) abstract_face;
-
-    CGFontRelease (font_face->cgFont);
-}
-
-static cairo_status_t
-_cairo_quartz_font_face_scaled_font_create (void *abstract_face,
-					    const cairo_matrix_t *font_matrix,
-					    const cairo_matrix_t *ctm,
-					    const cairo_font_options_t *options,
-					    cairo_scaled_font_t **font_out)
-{
-    cairo_quartz_font_face_t *font_face = abstract_face;
-    cairo_quartz_scaled_font_t *font = NULL;
-    cairo_status_t status;
-    cairo_font_extents_t fs_metrics;
-    double ems;
-    CGRect bbox;
-
-    quartz_font_ensure_symbols();
-    if (!_cairo_quartz_font_symbols_present)
-	return _cairo_error (CAIRO_STATUS_NO_MEMORY);
-
-    font = malloc(sizeof(cairo_quartz_scaled_font_t));
-    if (font == NULL)
-	return _cairo_error (CAIRO_STATUS_NO_MEMORY);
-
-    memset (font, 0, sizeof(cairo_quartz_scaled_font_t));
-
-    status = _cairo_scaled_font_init (&font->base,
-				      &font_face->base, font_matrix, ctm, options,
-				      &cairo_quartz_scaled_font_backend);
-    if (status)
-	goto FINISH;
-
-    ems = CGFontGetUnitsPerEmPtr (font_face->cgFont);
-
-    /* initialize metrics */
-    if (CGFontGetFontBBoxPtr && CGFontGetAscentPtr) {
-	fs_metrics.ascent = (CGFontGetAscentPtr (font_face->cgFont) / ems);
-	fs_metrics.descent = - (CGFontGetDescentPtr (font_face->cgFont) / ems);
-	fs_metrics.height = fs_metrics.ascent + fs_metrics.descent +
-	    (CGFontGetLeadingPtr (font_face->cgFont) / ems);
-
-	bbox = CGFontGetFontBBoxPtr (font_face->cgFont);
-	fs_metrics.max_x_advance = CGRectGetMaxX(bbox) / ems;
-	fs_metrics.max_y_advance = 0.0;
-    } else {
-	CGGlyph wGlyph;
-	UniChar u;
-
-	quartz_CGFontMetrics *m;
-	m = CGFontGetHMetricsPtr (font_face->cgFont);
-
-	fs_metrics.ascent = (m->ascent / ems);
-	fs_metrics.descent = - (m->descent / ems);
-	fs_metrics.height = fs_metrics.ascent + fs_metrics.descent + (m->leading / ems);
-
-	/* We kind of have to guess here; W's big, right? */
-	u = (UniChar) 'W';
-	CGFontGetGlyphsForUnicharsPtr (font_face->cgFont, &u, &wGlyph, 1);
-	if (wGlyph && CGFontGetGlyphBBoxesPtr (font_face->cgFont, &wGlyph, 1, &bbox)) {
-	    fs_metrics.max_x_advance = CGRectGetMaxX(bbox) / ems;
-	    fs_metrics.max_y_advance = 0.0;
-	} else {
-	    fs_metrics.max_x_advance = 0.0;
-	    fs_metrics.max_y_advance = 0.0;
-	}
-    }
-
-    status = _cairo_scaled_font_set_metrics (&font->base, &fs_metrics);
-
-FINISH:
-    if (status != CAIRO_STATUS_SUCCESS) {
-	free (font);
-    } else {
-	*font_out = (cairo_scaled_font_t*) font;
-    }
-
-    return status;
-}
-
-static const cairo_font_face_backend_t _cairo_quartz_font_face_backend = {
-    CAIRO_FONT_TYPE_QUARTZ,
-    _cairo_quartz_font_face_destroy,
-    _cairo_quartz_font_face_scaled_font_create
-};
-
-/**
- * cairo_quartz_font_face_create_for_cgfont
- * @font: a #CGFontRef obtained through a method external to cairo.
- *
- * Creates a new font for the Quartz font backend based on a
- * #CGFontRef.  This font can then be used with
- * cairo_set_font_face() or cairo_scaled_font_create().
- *
- * Return value: a newly created #cairo_font_face_t. Free with
- *  cairo_font_face_destroy() when you are done using it.
- *
- * Since: 1.6
+/*
+ * font face backend
  */
-cairo_font_face_t *
-cairo_quartz_font_face_create_for_cgfont (CGFontRef font)
-{
-    cairo_quartz_font_face_t *font_face;
-
-    quartz_font_ensure_symbols();
-
-    font_face = malloc (sizeof (cairo_quartz_font_face_t));
-    if (!font_face) {
-	_cairo_error (CAIRO_STATUS_NO_MEMORY);
-	return (cairo_font_face_t *)&_cairo_font_face_nil;
-    }
-
-    font_face->cgFont = CGFontRetain (font);
-
-    _cairo_font_face_init (&font_face->base, &_cairo_quartz_font_face_backend);
-
-    return &font_face->base;
-}
-
-/**
- ** scaled font backend
- **/
-
-static cairo_quartz_font_face_t *
-_cairo_quartz_scaled_to_face (void *abstract_font)
-{
-    cairo_quartz_scaled_font_t *sfont = (cairo_quartz_scaled_font_t*) abstract_font;
-    cairo_font_face_t *font_face = cairo_scaled_font_get_font_face (&sfont->base);
-    if (!font_face || font_face->backend->type != CAIRO_FONT_TYPE_QUARTZ)
-	return NULL;
-
-    return (cairo_quartz_font_face_t*) font_face;
-}
 
 static cairo_status_t
-_cairo_quartz_font_create_toy(cairo_toy_font_face_t *toy_face,
-			      const cairo_matrix_t *font_matrix,
-			      const cairo_matrix_t *ctm,
-			      const cairo_font_options_t *options,
-			      cairo_scaled_font_t **font_out)
+_cairo_quartz_font_face_create_for_toy (cairo_toy_font_face_t   *toy_face,
+					cairo_font_face_t      **font_face)
 {
-    const char *family = toy_face->family;
-    char *full_name = malloc(strlen(family) + 64); // give us a bit of room to tack on Bold, Oblique, etc.
+    const char *family;
+    char *full_name;
     CFStringRef cgFontName = NULL;
     CGFontRef cgFont = NULL;
     int loop;
 
-    cairo_status_t status;
-    cairo_font_face_t *face;
-    cairo_scaled_font_t *scaled_font;
-
     quartz_font_ensure_symbols();
-    if (!_cairo_quartz_font_symbols_present)
+    if (! _cairo_quartz_font_symbols_present)
 	return _cairo_error (CAIRO_STATUS_NO_MEMORY);
 
+    family = toy_face->family;
+    full_name = malloc (strlen (family) + 64); // give us a bit of room to tack on Bold, Oblique, etc.
     /* handle CSS-ish faces */
     if (!strcmp(family, "serif") || !strcmp(family, "Times Roman"))
 	family = "Times";
@@ -339,30 +195,165 @@ _cairo_quartz_font_create_toy(cairo_toy_font_face_t *toy_face,
 
     if (!cgFont) {
 	/* Give up */
-	return CAIRO_STATUS_NO_MEMORY;
+	return _cairo_error (CAIRO_STATUS_NO_MEMORY);
     }
 
-    face = cairo_quartz_font_face_create_for_cgfont (cgFont);
+    *font_face = cairo_quartz_font_face_create_for_cgfont (cgFont);
     CGFontRelease (cgFont);
-
-    if (face->status)
-	return face->status;
-
-    status = _cairo_quartz_font_face_scaled_font_create (face,
-							 font_matrix, ctm,
-							 options,
-							 &scaled_font);
-    cairo_font_face_destroy (face);
-    if (status)
-	return status;
-
-    *font_out = scaled_font;
 
     return CAIRO_STATUS_SUCCESS;
 }
 
 static void
-_cairo_quartz_font_fini(void *abstract_font)
+_cairo_quartz_font_face_destroy (void *abstract_face)
+{
+    cairo_quartz_font_face_t *font_face = (cairo_quartz_font_face_t*) abstract_face;
+
+    CGFontRelease (font_face->cgFont);
+}
+
+static const cairo_scaled_font_backend_t _cairo_quartz_scaled_font_backend;
+
+static cairo_status_t
+_cairo_quartz_font_face_scaled_font_create (void *abstract_face,
+					    const cairo_matrix_t *font_matrix,
+					    const cairo_matrix_t *ctm,
+					    const cairo_font_options_t *options,
+					    cairo_scaled_font_t **font_out)
+{
+    cairo_quartz_font_face_t *font_face = abstract_face;
+    cairo_quartz_scaled_font_t *font = NULL;
+    cairo_status_t status;
+    cairo_font_extents_t fs_metrics;
+    double ems;
+    CGRect bbox;
+
+    quartz_font_ensure_symbols();
+    if (!_cairo_quartz_font_symbols_present)
+	return _cairo_error (CAIRO_STATUS_NO_MEMORY);
+
+    font = malloc(sizeof(cairo_quartz_scaled_font_t));
+    if (font == NULL)
+	return _cairo_error (CAIRO_STATUS_NO_MEMORY);
+
+    memset (font, 0, sizeof(cairo_quartz_scaled_font_t));
+
+    status = _cairo_scaled_font_init (&font->base,
+				      &font_face->base, font_matrix, ctm, options,
+				      &_cairo_quartz_scaled_font_backend);
+    if (status)
+	goto FINISH;
+
+    ems = CGFontGetUnitsPerEmPtr (font_face->cgFont);
+
+    /* initialize metrics */
+    if (CGFontGetFontBBoxPtr && CGFontGetAscentPtr) {
+	fs_metrics.ascent = (CGFontGetAscentPtr (font_face->cgFont) / ems);
+	fs_metrics.descent = - (CGFontGetDescentPtr (font_face->cgFont) / ems);
+	fs_metrics.height = fs_metrics.ascent + fs_metrics.descent +
+	    (CGFontGetLeadingPtr (font_face->cgFont) / ems);
+
+	bbox = CGFontGetFontBBoxPtr (font_face->cgFont);
+	fs_metrics.max_x_advance = CGRectGetMaxX(bbox) / ems;
+	fs_metrics.max_y_advance = 0.0;
+    } else {
+	CGGlyph wGlyph;
+	UniChar u;
+
+	quartz_CGFontMetrics *m;
+	m = CGFontGetHMetricsPtr (font_face->cgFont);
+
+	/* On OX 10.4, GetHMetricsPtr sometimes returns NULL for unknown reasons */
+	if (!m) {
+	    status = _cairo_error(CAIRO_STATUS_NULL_POINTER);
+	    goto FINISH;
+	}
+
+	fs_metrics.ascent = (m->ascent / ems);
+	fs_metrics.descent = - (m->descent / ems);
+	fs_metrics.height = fs_metrics.ascent + fs_metrics.descent + (m->leading / ems);
+
+	/* We kind of have to guess here; W's big, right? */
+	u = (UniChar) 'W';
+	CGFontGetGlyphsForUnicharsPtr (font_face->cgFont, &u, &wGlyph, 1);
+	if (wGlyph && CGFontGetGlyphBBoxesPtr (font_face->cgFont, &wGlyph, 1, &bbox)) {
+	    fs_metrics.max_x_advance = CGRectGetMaxX(bbox) / ems;
+	    fs_metrics.max_y_advance = 0.0;
+	} else {
+	    fs_metrics.max_x_advance = 0.0;
+	    fs_metrics.max_y_advance = 0.0;
+	}
+    }
+
+    status = _cairo_scaled_font_set_metrics (&font->base, &fs_metrics);
+
+FINISH:
+    if (status != CAIRO_STATUS_SUCCESS) {
+	free (font);
+    } else {
+	*font_out = (cairo_scaled_font_t*) font;
+    }
+
+    return status;
+}
+
+const cairo_font_face_backend_t _cairo_quartz_font_face_backend = {
+    CAIRO_FONT_TYPE_QUARTZ,
+    _cairo_quartz_font_face_create_for_toy,
+    _cairo_quartz_font_face_destroy,
+    _cairo_quartz_font_face_scaled_font_create
+};
+
+/**
+ * cairo_quartz_font_face_create_for_cgfont
+ * @font: a #CGFontRef obtained through a method external to cairo.
+ *
+ * Creates a new font for the Quartz font backend based on a
+ * #CGFontRef.  This font can then be used with
+ * cairo_set_font_face() or cairo_scaled_font_create().
+ *
+ * Return value: a newly created #cairo_font_face_t. Free with
+ *  cairo_font_face_destroy() when you are done using it.
+ *
+ * Since: 1.6
+ */
+cairo_font_face_t *
+cairo_quartz_font_face_create_for_cgfont (CGFontRef font)
+{
+    cairo_quartz_font_face_t *font_face;
+
+    quartz_font_ensure_symbols();
+
+    font_face = malloc (sizeof (cairo_quartz_font_face_t));
+    if (!font_face) {
+	_cairo_error (CAIRO_STATUS_NO_MEMORY);
+	return (cairo_font_face_t *)&_cairo_font_face_nil;
+    }
+
+    font_face->cgFont = CGFontRetain (font);
+
+    _cairo_font_face_init (&font_face->base, &_cairo_quartz_font_face_backend);
+
+    return &font_face->base;
+}
+
+/*
+ * scaled font backend
+ */
+
+static cairo_quartz_font_face_t *
+_cairo_quartz_scaled_to_face (void *abstract_font)
+{
+    cairo_quartz_scaled_font_t *sfont = (cairo_quartz_scaled_font_t*) abstract_font;
+    cairo_font_face_t *font_face = cairo_scaled_font_get_font_face (&sfont->base);
+    if (!font_face || font_face->backend->type != CAIRO_FONT_TYPE_QUARTZ)
+	return NULL;
+
+    return (cairo_quartz_font_face_t*) font_face;
+}
+
+static void
+_cairo_quartz_scaled_font_fini(void *abstract_font)
 {
 }
 
@@ -384,7 +375,7 @@ _cairo_matrix_to_unit_quartz_matrix (const cairo_matrix_t *m, CGAffineTransform 
     double xscale, yscale;
     cairo_status_t status;
 
-    status = _cairo_matrix_compute_scale_factors (m, &xscale, &yscale, 1);
+    status = _cairo_matrix_compute_basis_scale_factors (m, &xscale, &yscale, 1);
     if (status)
 	return status;
 
@@ -429,7 +420,7 @@ _cairo_quartz_init_glyph_metrics (cairo_quartz_scaled_font_t *font,
 	!CGFontGetGlyphBBoxesPtr (font_face->cgFont, &glyph, 1, &bbox))
 	goto FAIL;
 
-    status = _cairo_matrix_compute_scale_factors (&font->base.scale,
+    status = _cairo_matrix_compute_basis_scale_factors (&font->base.scale,
 						  &xscale, &yscale, 1);
     if (status)
 	goto FAIL;
@@ -626,7 +617,7 @@ _cairo_quartz_init_glyph_surface (cairo_quartz_scaled_font_t *font,
 	return CAIRO_INT_STATUS_UNSUPPORTED;
     }
 
-    status = _cairo_matrix_compute_scale_factors (&font->base.scale,
+    status = _cairo_matrix_compute_basis_scale_factors (&font->base.scale,
 						  &xscale, &yscale, 1);
     if (status)
 	return status;
@@ -702,9 +693,9 @@ _cairo_quartz_init_glyph_surface (cairo_quartz_scaled_font_t *font,
 }
 
 static cairo_int_status_t
-_cairo_quartz_font_scaled_glyph_init (void *abstract_font,
-				      cairo_scaled_glyph_t *scaled_glyph,
-				      cairo_scaled_glyph_info_t info)
+_cairo_quartz_scaled_glyph_init (void *abstract_font,
+				 cairo_scaled_glyph_t *scaled_glyph,
+				 cairo_scaled_glyph_info_t info)
 {
     cairo_quartz_scaled_font_t *font = (cairo_quartz_scaled_font_t *) abstract_font;
     cairo_int_status_t status = CAIRO_STATUS_SUCCESS;
@@ -735,11 +726,10 @@ _cairo_quartz_ucs4_to_index (void *abstract_font,
     return glyph;
 }
 
-const cairo_scaled_font_backend_t cairo_quartz_scaled_font_backend = {
+static const cairo_scaled_font_backend_t _cairo_quartz_scaled_font_backend = {
     CAIRO_FONT_TYPE_QUARTZ,
-    _cairo_quartz_font_create_toy,
-    _cairo_quartz_font_fini,
-    _cairo_quartz_font_scaled_glyph_init,
+    _cairo_quartz_scaled_font_fini,
+    _cairo_quartz_scaled_glyph_init,
     NULL, /* text_to_glyphs */
     _cairo_quartz_ucs4_to_index,
     NULL, /* show_glyphs */

@@ -20,6 +20,8 @@
  *
  * Contributor(s):
  *   Vladimir Vukicevic <vladimir@pobox.com>
+ *   Ehsan Akhgari <ehsan.akhgari@gmail.com>
+ *   Jonathan Kew <jfkthame@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -46,16 +48,32 @@
   */
 class THEBES_API gfxTextRunWordCache {
 public:
-    enum { TEXT_IN_CACHE = 0x10000000 };
+    enum {
+      TEXT_IN_CACHE = 0x10000000,
+
+      /**
+       * nsTextFrameThebes sets these, but they're defined here rather than in
+       * nsTextFrameUtils.h because the cache also needs to check the _INCOMING flag
+       */
+      TEXT_TRAILING_ARABICCHAR = 0x20000000,
+      /**
+       * When set, the previous character for this textrun was an Arabic
+       * character.  This is used for the context detection necessary for
+       * bidi.numeral implementation.
+       */
+      TEXT_INCOMING_ARABICCHAR = 0x40000000,
+
+      TEXT_UNUSED_FLAGS = 0x80000000
+    };
 
     /**
      * Create a textrun using cached words.
      * Invalid characters (see gfxFontGroup::IsInvalidChar) will be automatically
      * treated as invisible missing.
-     * @param aFlags the flags TEXT_IS_ASCII and TEXT_HAS_SURROGATES must be set
-     * by the caller, if applicable; TEXT_IN_CACHE is added if we
-     * have a reference to the textrun in the cache and RemoveTextRun must
-     * be called when the textrun dies.
+     * @param aFlags the flag TEXT_IS_ASCII must be set by the caller,
+     * if applicable; TEXT_IN_CACHE is added if we have a reference to
+     * the textrun in the cache and RemoveTextRun must be called when the
+     * textrun dies.
      */
     static gfxTextRun *MakeTextRun(const PRUnichar *aText, PRUint32 aLength,
                                    gfxFontGroup *aFontGroup,
@@ -65,10 +83,10 @@ public:
      * Create a textrun using cached words.
      * Invalid characters (see gfxFontGroup::IsInvalidChar) will be automatically
      * treated as invisible missing.
-     * @param aFlags the flags TEXT_IS_ASCII and TEXT_HAS_SURROGATES must be set
-     * by the caller, if applicable; TEXT_IN_CACHE is added if we
-     * have a reference to the textrun in the cache and RemoveTextRun must
-     * be called when the textrun dies.
+     * @param aFlags the flag TEXT_IS_ASCII must be set by the caller,
+     * if applicable; TEXT_IN_CACHE is added if we have a reference to
+     * the textrun in the cache and RemoveTextRun must be called when the
+     * textrun dies.
      */
     static gfxTextRun *MakeTextRun(const PRUint8 *aText, PRUint32 aLength,
                                    gfxFontGroup *aFontGroup,

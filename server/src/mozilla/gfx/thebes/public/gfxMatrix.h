@@ -41,6 +41,8 @@
 #include "gfxPoint.h"
 #include "gfxTypes.h"
 #include "gfxRect.h"
+#include "gfxUtils.h"
+#include "nsMathUtils.h"
 
 // XX - I don't think this class should use gfxFloat at all,
 // but should use 'double' and be called gfxDoubleMatrix;
@@ -51,9 +53,9 @@
  * A matrix that represents an affine transformation. Projective
  * transformations are not supported. This matrix looks like:
  *
- * / a b tx \
- * | c d ty |
- * \ 0 0  1 /
+ * / a  b  0 \
+ * | c  d  0 |
+ * \ tx ty 1 /
  *
  * So, transforming a point (x, y) results in:
  *
@@ -149,6 +151,13 @@ public:
     const gfxMatrix& Multiply(const gfxMatrix& m);
 
     /**
+     * Multiplies the current matrix with m.
+     * This is a pre-multiplication, i.e. the transformations of m are
+     * applied _before_ the existing transformations.
+     */
+    const gfxMatrix& PreMultiply(const gfxMatrix& m);
+
+    /**
      * Transforms a point according to this matrix.
      */
     gfxPoint Transform(const gfxPoint& point) const;
@@ -175,21 +184,32 @@ public:
     }
 
     /**
+     * Returns true if the matrix is anything other than a straight
+     * translation by integers.
+     */
+    PRBool HasNonIntegerTranslation() const {
+        return HasNonTranslation() ||
+            !gfxUtils::FuzzyEqual(x0, NS_floor(x0 + 0.5)) ||
+            !gfxUtils::FuzzyEqual(y0, NS_floor(y0 + 0.5));
+    }
+
+    /**
      * Returns true if the matrix has any transform other
      * than a straight translation
      */
-    bool HasNonTranslation() const {
-        return ((xx != 1.0) || (yy != 1.0) ||
-                (xy != 0.0) || (yx != 0.0));
+    PRBool HasNonTranslation() const {
+        return !gfxUtils::FuzzyEqual(xx, 1.0) || !gfxUtils::FuzzyEqual(yy, 1.0) ||
+               !gfxUtils::FuzzyEqual(xy, 0.0) || !gfxUtils::FuzzyEqual(yx, 0.0);
     }
 
     /**
      * Returns true if the matrix has any transform other
      * than a translation or a -1 y scale (y axis flip)
      */
-    bool HasNonTranslationOrFlip() const {
-        return ((xx != 1.0) || ((yy != 1.0) && (yy != -1.0)) ||
-                (xy != 0.0) || (yx != 0.0));
+    PRBool HasNonTranslationOrFlip() const {
+        return !gfxUtils::FuzzyEqual(xx, 1.0) ||
+               (!gfxUtils::FuzzyEqual(yy, 1.0) && !gfxUtils::FuzzyEqual(yy, -1.0)) ||
+               !gfxUtils::FuzzyEqual(xy, 0.0) || !gfxUtils::FuzzyEqual(yx, 0.0);
     }
 
     /**
@@ -197,8 +217,8 @@ public:
      * than a translation or scale; this is, if there is
      * no rotation.
      */
-    bool HasNonAxisAlignedTransform() const {
-        return ((xy != 0.0) || (yx != 0.0));
+    PRBool HasNonAxisAlignedTransform() const {
+        return !gfxUtils::FuzzyEqual(xy, 0.0) || !gfxUtils::FuzzyEqual(yx, 0.0);
     }
 
     /**

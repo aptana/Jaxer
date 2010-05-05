@@ -36,8 +36,10 @@
 #ifndef CAIRO_CLIP_PRIVATE_H
 #define CAIRO_CLIP_PRIVATE_H
 
+#include "cairo-types-private.h"
 #include "cairo-compiler-private.h"
 #include "cairo-path-fixed-private.h"
+#include "cairo-reference-count-private.h"
 
 extern const cairo_private cairo_rectangle_list_t _cairo_rectangles_nil;
 
@@ -75,8 +77,7 @@ struct _cairo_clip {
     /*
      * A clip region that can be placed in the surface
      */
-    cairo_region_t region;
-    cairo_bool_t has_region;
+    cairo_region_t *region;
     /*
      * If the surface supports path clipping, we store the list of
      * clipping paths that has been set here as a linked list.

@@ -41,7 +41,6 @@
 #include "gfxPlatform.h"
 
 #include "cairo.h"
-#include "lcms.h"
 
 gfxPattern::gfxPattern(cairo_pattern_t *aPattern)
 {
@@ -87,28 +86,17 @@ gfxPattern::CairoPattern()
 void
 gfxPattern::AddColorStop(gfxFloat offset, const gfxRGBA& c)
 {
-    if (gfxPlatform::IsCMSEnabled()) {
-        cmsHTRANSFORM transform = gfxPlatform::GetCMSRGBTransform();
-        if (transform) {
-#ifdef IS_LITTLE_ENDIAN
-            PRUint32 packed = c.Packed(gfxRGBA::PACKED_ABGR);
-            cmsDoTransform(transform,
-                           (PRUint8 *)&packed, (PRUint8 *)&packed,
-                           1);
-            gfxRGBA cms(packed, gfxRGBA::PACKED_ABGR);
-#else
-            PRUint32 packed = c.Packed(gfxRGBA::PACKED_ARGB);
-            cmsDoTransform(transform,
-                           (PRUint8 *)&packed + 1, (PRUint8 *)&packed + 1,
-                           1);
-            gfxRGBA cms(packed, gfxRGBA::PACKED_ARGB);
-#endif
-            cairo_pattern_add_color_stop_rgba(mPattern, offset,
-                                              cms.r, cms.g, cms.b, cms.a);
-            return;
-        }
+    if (gfxPlatform::GetCMSMode() == eCMSMode_All) {
+        gfxRGBA cms;
+        gfxPlatform::TransformPixel(c, cms, gfxPlatform::GetCMSRGBTransform());
+
+        // Use the original alpha to avoid unnecessary float->byte->float
+        // conversion errors
+        cairo_pattern_add_color_stop_rgba(mPattern, offset,
+                                          cms.r, cms.g, cms.b, c.a);
     }
-    cairo_pattern_add_color_stop_rgba(mPattern, offset, c.r, c.g, c.b, c.a);
+    else
+        cairo_pattern_add_color_stop_rgba(mPattern, offset, c.r, c.g, c.b, c.a);
 }
 
 void
@@ -129,6 +117,32 @@ gfxPattern::GetMatrix() const
 void
 gfxPattern::SetExtend(GraphicsExtend extend)
 {
+    if (extend == EXTEND_PAD_EDGE) {
+        if (cairo_pattern_get_type(mPattern) == CAIRO_PATTERN_TYPE_SURFACE) {
+            cairo_surface_t *surf = NULL;
+
+            cairo_pattern_get_surface (mPattern, &surf);
+            if (surf) {
+                switch (cairo_surface_get_type(surf)) {
+                    case CAIRO_SURFACE_TYPE_WIN32_PRINTING:
+                    case CAIRO_SURFACE_TYPE_QUARTZ:
+                        extend = EXTEND_NONE;
+                        break;
+
+                    case CAIRO_SURFACE_TYPE_WIN32:
+                    case CAIRO_SURFACE_TYPE_XLIB:
+                    default:
+                        extend = EXTEND_PAD;
+                        break;
+                }
+            }
+        }
+
+        // if something went wrong, or not a surface pattern, use PAD
+        if (extend == EXTEND_PAD_EDGE)
+            extend = EXTEND_PAD;
+    }
+
     cairo_pattern_set_extend(mPattern, (cairo_extend_t)extend);
 }
 
@@ -139,15 +153,15 @@ gfxPattern::Extend() const
 }
 
 void
-gfxPattern::SetFilter(int filter)
+gfxPattern::SetFilter(GraphicsFilter filter)
 {
     cairo_pattern_set_filter(mPattern, (cairo_filter_t)filter);
 }
 
-int
+gfxPattern::GraphicsFilter
 gfxPattern::Filter() const
 {
-    return (int)cairo_pattern_get_filter(mPattern);
+    return (GraphicsFilter)cairo_pattern_get_filter(mPattern);
 }
 
 PRBool

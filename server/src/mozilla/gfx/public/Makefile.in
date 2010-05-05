@@ -60,10 +60,8 @@ EXPORTS		= \
 		nsIRenderingContext.h \
 		nsIFontMetrics.h \
 		nsIDeviceContext.h \
-		nsIImage.h \
 		nsGfxCIID.h \
 		nsIRegion.h \
-		nsDeviceContext.h \
 		nsITheme.h \
 		nsThemeConstants.h \
 		$(NULL)

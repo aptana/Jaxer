@@ -73,6 +73,20 @@ gfxRect::Union(const gfxRect& aRect) const
   return gfxRect(x, y, xmost - x, ymost - y);
 }
 
+PRBool
+gfxRect::Contains(const gfxRect& aRect) const
+{
+  return aRect.X() >= X() && aRect.XMost() <= XMost() &&
+         aRect.Y() >= Y() && aRect.YMost() <= YMost();
+}
+
+PRBool
+gfxRect::Contains(const gfxPoint& aPoint) const
+{
+  return aPoint.x >= X() && aPoint.x <= XMost() &&
+         aPoint.y >= Y() && aPoint.y <= YMost();
+}
+
 void
 gfxRect::Round()
 {

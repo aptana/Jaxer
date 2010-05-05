@@ -45,6 +45,56 @@
 #include "nsIServiceManager.h"
 #include <math.h>
 #include "prprf.h"
+#include "nsStaticNameTable.h"
+
+// define an array of all color names
+#define GFX_COLOR(_name, _value) #_name,
+static const char* const kColorNames[] = {
+#include "nsColorNameList.h"
+};
+#undef GFX_COLOR
+
+// define an array of all color name values
+#define GFX_COLOR(_name, _value) _value,
+static const nscolor kColors[] = {
+#include "nsColorNameList.h"
+};
+#undef GFX_COLOR
+
+#define eColorName_COUNT (NS_ARRAY_LENGTH(kColorNames))
+#define eColorName_UNKNOWN (-1)
+
+static nsStaticCaseInsensitiveNameTable* gColorTable = nsnull;
+
+void nsColorNames::AddRefTable(void) 
+{
+  NS_ASSERTION(!gColorTable, "pre existing array!");
+  if (!gColorTable) {
+    gColorTable = new nsStaticCaseInsensitiveNameTable();
+    if (gColorTable) {
+#ifdef DEBUG
+    {
+      // let's verify the table...
+      for (PRUint32 index = 0; index < eColorName_COUNT; ++index) {
+        nsCAutoString temp1(kColorNames[index]);
+        nsCAutoString temp2(kColorNames[index]);
+        ToLowerCase(temp1);
+        NS_ASSERTION(temp1.Equals(temp2), "upper case char in table");
+      }
+    }
+#endif      
+      gColorTable->Init(kColorNames, eColorName_COUNT); 
+    }
+  }
+}
+
+void nsColorNames::ReleaseTable(void)
+{
+  if (gColorTable) {
+    delete gColorTable;
+    gColorTable = nsnull;
+  }
+}
 
 static int ComponentValue(const PRUnichar* aColorSpec, int aLen, int color, int dpc)
 {
@@ -151,46 +201,52 @@ NS_GFX_(PRBool) NS_LooseHexToRGB(const nsString& aColorSpec, nscolor* aResult)
   return PR_TRUE;
 }
 
-NS_GFX_(void) NS_RGBToHex(nscolor aColor, nsAString& aResult)
-{
-  char buf[10];
-  PR_snprintf(buf, sizeof(buf), "#%02x%02x%02x",
-              NS_GET_R(aColor), NS_GET_G(aColor), NS_GET_B(aColor));
-  CopyASCIItoUTF16(buf, aResult);
-}
-
 NS_GFX_(PRBool) NS_ColorNameToRGB(const nsAString& aColorName, nscolor* aResult)
 {
-  nsColorName id = nsColorNames::LookupName(aColorName);
+  if (!gColorTable) return PR_FALSE;
+
+  PRInt32 id = gColorTable->Lookup(aColorName);
   if (eColorName_UNKNOWN < id) {
     NS_ASSERTION(id < eColorName_COUNT, "LookupName mess up");
-    if (nsnull != aResult) {
-      *aResult = nsColorNames::kColors[id];
+    if (aResult) {
+      *aResult = kColors[id];
     }
     return PR_TRUE;
   }
   return PR_FALSE;
 }
 
+// Macro to blend two colors
+//
+// equivalent to target = (bg*(255-fgalpha) + fg*fgalpha)/255
+#define MOZ_BLEND(target, bg, fg, fgalpha)       \
+  FAST_DIVIDE_BY_255(target, (bg)*(255-fgalpha) + (fg)*(fgalpha))
+
 NS_GFX_(nscolor)
 NS_ComposeColors(nscolor aBG, nscolor aFG)
 {
-  PRIntn bgAlpha = NS_GET_A(aBG);
+  // This function uses colors that are non premultiplied alpha.
   PRIntn r, g, b, a;
 
-  // First compute what we get drawing aBG onto RGBA(0,0,0,0)
-  MOZ_BLEND(r, 0, NS_GET_R(aBG), bgAlpha);
-  MOZ_BLEND(g, 0, NS_GET_G(aBG), bgAlpha);
-  MOZ_BLEND(b, 0, NS_GET_B(aBG), bgAlpha);
-  a = bgAlpha;
-
-  // Now draw aFG on top of that
+  PRIntn bgAlpha = NS_GET_A(aBG);
   PRIntn fgAlpha = NS_GET_A(aFG);
-  MOZ_BLEND(r, r, NS_GET_R(aFG), fgAlpha);
-  MOZ_BLEND(g, g, NS_GET_G(aFG), fgAlpha);
-  MOZ_BLEND(b, b, NS_GET_B(aFG), fgAlpha);
-  MOZ_BLEND(a, a, 255, fgAlpha);
-  
+
+  // Compute the final alpha of the blended color
+  // a = fgAlpha + bgAlpha*(255 - fgAlpha)/255;
+  FAST_DIVIDE_BY_255(a, bgAlpha*(255-fgAlpha));
+  a = fgAlpha + a;
+  PRIntn blendAlpha;
+  if (a == 0) {
+    // In this case the blended color is totally trasparent,
+    // we preserve the color information of the foreground color.
+    blendAlpha = 255;
+  } else {
+    blendAlpha = (fgAlpha*255)/a;
+  }
+  MOZ_BLEND(r, NS_GET_R(aBG), NS_GET_R(aFG), blendAlpha);
+  MOZ_BLEND(g, NS_GET_G(aBG), NS_GET_G(aFG), blendAlpha);
+  MOZ_BLEND(b, NS_GET_B(aBG), NS_GET_B(aFG), blendAlpha);
+
   return NS_RGBA(r, g, b, a);
 }
 

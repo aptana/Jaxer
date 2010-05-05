@@ -42,6 +42,8 @@
 #include "gfxImageSurface.h"
 #include "gfxBeOSSurface.h"
 
+#include "nsTArray.h"
+
 gfxFontconfigUtils *gfxPlatformGtk::sFontconfigUtils = nsnull;
 
 gfxBeOSPlatform::gfxBeOSPlatform()
@@ -55,7 +57,7 @@ gfxBeOSPlatform::~gfxBeOSPlatform()
     gfxFontconfigUtils::Shutdown();
     sFontconfigUtils = nsnull;
 
-    gfxPangoFont::Shutdown();
+    gfxPangoFontGroup::Shutdown();
 
 #if 0
     // It would be nice to do this (although it might need to be after
@@ -88,7 +90,7 @@ gfxBeOSPlatform::CreateOffscreenSurface (PRUint32 width,
 nsresult
 gfxBeOSPlatform::GetFontList(const nsACString& aLangGroup,
                              const nsACString& aGenericFamily,
-                             nsStringArray& aListOfFonts)
+                             nsTArray<nsString>& aListOfFonts)
 {
     return sFontconfigUtils->GetFontList(aLangGroup, aGenericFamily,
                                          aListOfFonts);

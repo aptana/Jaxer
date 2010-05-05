@@ -77,7 +77,7 @@ _cairo_test_meta_surface_create (cairo_content_t	content,
     cairo_status_t status;
 
     surface = malloc (sizeof (test_meta_surface_t));
-    if (surface == NULL) {
+    if (unlikely (surface == NULL)) {
 	status = _cairo_error (CAIRO_STATUS_NO_MEMORY);
 	goto FAIL;
     }
@@ -194,38 +194,41 @@ _test_meta_surface_get_extents (void			*abstract_surface,
 static cairo_int_status_t
 _test_meta_surface_paint (void			*abstract_surface,
 			  cairo_operator_t	 op,
-			  cairo_pattern_t	*source)
+			  const cairo_pattern_t	*source,
+			  cairo_rectangle_int_t *extents)
 {
     test_meta_surface_t *surface = abstract_surface;
 
     surface->image_reflects_meta = FALSE;
 
-    return _cairo_surface_paint (surface->meta, op, source);
+    return _cairo_surface_paint (surface->meta, op, source, extents);
 }
 
 static cairo_int_status_t
 _test_meta_surface_mask (void			*abstract_surface,
 			 cairo_operator_t	 op,
-			 cairo_pattern_t	*source,
-			 cairo_pattern_t	*mask)
+			 const cairo_pattern_t	*source,
+			 const cairo_pattern_t	*mask,
+			 cairo_rectangle_int_t  *extents)
 {
     test_meta_surface_t *surface = abstract_surface;
 
     surface->image_reflects_meta = FALSE;
 
-    return _cairo_surface_mask (surface->meta, op, source, mask);
+    return _cairo_surface_mask (surface->meta, op, source, mask, extents);
 }
 
 static cairo_int_status_t
-_test_meta_surface_stroke (void			*abstract_surface,
-			   cairo_operator_t	 op,
-			   cairo_pattern_t	*source,
-			   cairo_path_fixed_t	*path,
-			   cairo_stroke_style_t	*style,
-			   cairo_matrix_t	*ctm,
-			   cairo_matrix_t	*ctm_inverse,
-			   double		 tolerance,
-			   cairo_antialias_t	 antialias)
+_test_meta_surface_stroke (void				*abstract_surface,
+			   cairo_operator_t		 op,
+			   const cairo_pattern_t	*source,
+			   cairo_path_fixed_t		*path,
+			   cairo_stroke_style_t		*style,
+			   cairo_matrix_t		*ctm,
+			   cairo_matrix_t		*ctm_inverse,
+			   double			 tolerance,
+			   cairo_antialias_t		 antialias,
+			   cairo_rectangle_int_t 	*extents)
 {
     test_meta_surface_t *surface = abstract_surface;
 
@@ -234,17 +237,18 @@ _test_meta_surface_stroke (void			*abstract_surface,
     return _cairo_surface_stroke (surface->meta, op, source,
 				  path, style,
 				  ctm, ctm_inverse,
-				  tolerance, antialias);
+				  tolerance, antialias, extents);
 }
 
 static cairo_int_status_t
 _test_meta_surface_fill (void			*abstract_surface,
 			 cairo_operator_t	 op,
-			 cairo_pattern_t	*source,
+			 const cairo_pattern_t	*source,
 			 cairo_path_fixed_t	*path,
 			 cairo_fill_rule_t	 fill_rule,
 			 double			 tolerance,
-			 cairo_antialias_t	 antialias)
+			 cairo_antialias_t	 antialias,
+			 cairo_rectangle_int_t  *extents)
 {
     test_meta_surface_t *surface = abstract_surface;
 
@@ -252,82 +256,49 @@ _test_meta_surface_fill (void			*abstract_surface,
 
     return _cairo_surface_fill (surface->meta, op, source,
 				path, fill_rule,
-				tolerance, antialias);
+				tolerance, antialias, extents);
+}
+
+static cairo_bool_t
+_test_meta_surface_has_show_text_glyphs (void *abstract_surface)
+{
+    test_meta_surface_t *surface = abstract_surface;
+
+    return cairo_surface_has_show_text_glyphs (surface->meta);
 }
 
 static cairo_int_status_t
-_test_meta_surface_show_glyphs (void			*abstract_surface,
-				cairo_operator_t	 op,
-				cairo_pattern_t		*source,
-				cairo_glyph_t		*glyphs,
-				int			 num_glyphs,
-				cairo_scaled_font_t	*scaled_font)
+_test_meta_surface_show_text_glyphs (void		    *abstract_surface,
+				     cairo_operator_t	     op,
+				     const cairo_pattern_t  *source,
+				     const char		    *utf8,
+				     int		     utf8_len,
+				     cairo_glyph_t	    *glyphs,
+				     int		     num_glyphs,
+				     const cairo_text_cluster_t *clusters,
+				     int		     num_clusters,
+				     cairo_text_cluster_flags_t cluster_flags,
+				     cairo_scaled_font_t    *scaled_font,
+				     cairo_rectangle_int_t  *extents)
 {
     test_meta_surface_t *surface = abstract_surface;
-    cairo_int_status_t status;
 
     surface->image_reflects_meta = FALSE;
 
-    /* Since this is a "wrapping" surface, we're calling back into
-     * _cairo_surface_show_glyphs from within a call to the same.
-     * Since _cairo_surface_show_glyphs acquires a mutex, we release
-     * and re-acquire the mutex around this nested call.
-     *
-     * Yes, this is ugly, but we consider it pragmatic as compared to
-     * adding locking code to all 18 surface-backend-specific
-     * show_glyphs functions, (which would get less testing and likely
-     * lead to bugs).
-     */
-    CAIRO_MUTEX_UNLOCK (scaled_font->mutex);
-    status = _cairo_surface_show_glyphs (surface->meta, op, source,
-					 glyphs, num_glyphs,
-					 scaled_font);
-    CAIRO_MUTEX_LOCK (scaled_font->mutex);
-
-    return status;
+    return _cairo_surface_show_text_glyphs (surface->meta, op, source,
+					    utf8, utf8_len,
+					    glyphs, num_glyphs,
+					    clusters, num_clusters, cluster_flags,
+					    scaled_font, extents);
 }
+
 
 static cairo_surface_t *
 _test_meta_surface_snapshot (void *abstract_other)
 {
     test_meta_surface_t *other = abstract_other;
-    cairo_status_t status;
 
-    /* XXX: Just making a snapshot of other->meta is what we really
-     * want. But this currently triggers a bug somewhere (the "mask"
-     * test from the test suite segfaults).
-     *
-     * For now, we'll create a new image surface and replay onto
-     * that. It would be tempting to replay into other->image and then
-     * return a snapshot of that, but that will cause the self-copy
-     * test to fail, (since our replay will be affected by a clip that
-     * should not have any effect on the use of the resulting snapshot
-     * as a source).
-     */
-
-#if 0
     return _cairo_surface_snapshot (other->meta);
-#else
-    cairo_rectangle_int_t extents;
-    cairo_surface_t *surface;
-
-    status = _cairo_surface_get_extents (other->image, &extents);
-    if (status)
-	return _cairo_surface_create_in_error (status);
-
-    surface = cairo_surface_create_similar (other->image,
-					    CAIRO_CONTENT_COLOR_ALPHA,
-					    extents.width,
-					    extents.height);
-
-    status = _cairo_meta_surface_replay (other->meta, surface);
-    if (status) {
-	cairo_surface_destroy (surface);
-	surface = _cairo_surface_create_in_error (status);
-    }
-
-    return surface;
-#endif
 }
 
 static const cairo_surface_backend_t test_meta_surface_backend = {
@@ -342,6 +313,8 @@ static const cairo_surface_backend_t test_meta_surface_backend = {
     NULL, /* composite */
     NULL, /* fill_rectangles */
     NULL, /* composite_trapezoids */
+    NULL, /* create_span_renderer */
+    NULL, /* check_span_renderer */
     NULL, /* copy_page */
     _test_meta_surface_show_page,
     NULL, /* set_clip_region */
@@ -357,6 +330,13 @@ static const cairo_surface_backend_t test_meta_surface_backend = {
     _test_meta_surface_mask,
     _test_meta_surface_stroke,
     _test_meta_surface_fill,
-    _test_meta_surface_show_glyphs,
-    _test_meta_surface_snapshot
+    NULL, /* show_glyphs */
+    _test_meta_surface_snapshot,
+    NULL, /* is_similar */
+    NULL, /* reset */
+    NULL, /* fill_stroke */
+    NULL, /* create_solid_pattern_surface */
+    NULL, /* can_repaint_solid_pattern_surface */
+    _test_meta_surface_has_show_text_glyphs,
+    _test_meta_surface_show_text_glyphs
 };

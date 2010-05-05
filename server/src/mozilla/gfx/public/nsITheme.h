@@ -46,9 +46,9 @@
 #include "nsColor.h"
 
 struct nsRect;
-struct nsSize;
+struct nsIntSize;
 struct nsFont;
-struct nsMargin;
+struct nsIntMargin;
 class nsPresContext;
 class nsIRenderingContext;
 class nsIDeviceContext;
@@ -57,13 +57,19 @@ class nsIContent;
 class nsIAtom;
 
 // IID for the nsITheme interface
-// {df8baf21-5ea7-49eb-a2bc-f2fd4a9fd896}
-#define NS_ITHEME_IID     \
-{ 0xdf8baf21, 0x5ea7, 0x49eb, { 0xa2, 0xbc, 0xf2, 0xfd, 0x4a, 0x9f, 0xd8, 0x96 } }
+// {887e8902-db6b-41b4-8481-a80f49c5a93a}
+ #define NS_ITHEME_IID     \
+{ 0x887e8902, 0xdb6b, 0x41b4, { 0x84, 0x81, 0xa8, 0x0f, 0x49, 0xc5, 0xa9, 0x3a } }
 
 // {D930E29B-6909-44e5-AB4B-AF10D6923705}
 #define NS_THEMERENDERER_CID \
 { 0xd930e29b, 0x6909, 0x44e5, { 0xab, 0x4b, 0xaf, 0x10, 0xd6, 0x92, 0x37, 0x5 } }
+
+enum nsTransparencyMode {
+  eTransparencyOpaque = 0,  // Fully opaque
+  eTransparencyTransparent, // Parts of the window may be transparent
+  eTransparencyGlass        // Transparent parts of the window have Vista AeroGlass effect applied
+};
 
 /**
  * nsITheme is a service that provides platform-specific native
@@ -83,7 +89,7 @@ public:
                                   nsIFrame* aFrame,
                                   PRUint8 aWidgetType,
                                   const nsRect& aRect,
-                                  const nsRect& aClipRect)=0;
+                                  const nsRect& aDirtyRect)=0;
 
   /**
    * Get the computed CSS border for the widget, in pixels.
@@ -91,7 +97,7 @@ public:
   NS_IMETHOD GetWidgetBorder(nsIDeviceContext* aContext, 
                              nsIFrame* aFrame,
                              PRUint8 aWidgetType,
-                             nsMargin* aResult)=0;
+                             nsIntMargin* aResult)=0;
 
   /**
    * This method can return PR_FALSE to indicate that the CSS padding
@@ -105,7 +111,7 @@ public:
   virtual PRBool GetWidgetPadding(nsIDeviceContext* aContext,
                                   nsIFrame* aFrame,
                                   PRUint8 aWidgetType,
-                                  nsMargin* aResult) = 0;
+                                  nsIntMargin* aResult) = 0;
 
   /**
    * On entry, *aResult is positioned at 0,0 and sized to the new size
@@ -130,8 +136,10 @@ public:
   NS_IMETHOD GetMinimumWidgetSize(nsIRenderingContext* aContext,
                                   nsIFrame* aFrame,
                                   PRUint8 aWidgetType,
-                                  nsSize* aResult,
+                                  nsIntSize* aResult,
                                   PRBool* aIsOverridable)=0;
+
+  virtual nsTransparencyMode GetWidgetTransparency(PRUint8 aWidgetType)=0;
 
   NS_IMETHOD WidgetStateChanged(nsIFrame* aFrame, PRUint8 aWidgetType, 
                                 nsIAtom* aAttribute, PRBool* aShouldRepaint)=0;

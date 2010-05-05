@@ -90,13 +90,14 @@ void
 RunTest (TestEntry *test, gfxContext *ctx) {
     if (!lastFamilies || strcmp(lastFamilies, test->mFamilies)) {
         gfxFontStyle style_western_normal_16 (FONT_STYLE_NORMAL,
+                                              NS_FONT_STRETCH_NORMAL,
                                               400,
                                               16.0,
                                               nsDependentCString("x-western"),
                                               0.0,
-                                              PR_FALSE, PR_FALSE);
+                                              PR_FALSE, PR_FALSE, PR_FALSE);
 
-        fontGroup = gfxPlatform::GetPlatform()->CreateFontGroup(NS_ConvertUTF8toUTF16(test->mFamilies), &style_western_normal_16);
+        fontGroup = gfxPlatform::GetPlatform()->CreateFontGroup(NS_ConvertUTF8toUTF16(test->mFamilies), &style_western_normal_16, nsnull);
     }
 
     nsAutoPtr<gfxTextRun> textRun;
@@ -118,7 +119,6 @@ RunTest (TestEntry *test, gfxContext *ctx) {
         length = strlen(test->mString);
         textRun = fontGroup->MakeTextRun(reinterpret_cast<const PRUint8*>(test->mString), length, &params, flags);
     } else {
-        flags |= gfxTextRunFactory::TEXT_HAS_SURROGATES; // just in case
         NS_ConvertUTF8toUTF16 str(nsDependentCString(test->mString));
         length = str.Length();
         textRun = fontGroup->MakeTextRun(str.get(), length, &params, flags);

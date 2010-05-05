@@ -10,12 +10,6 @@
 // A checkbox element. 
 #define NS_THEME_CHECKBOX                                  3
 
-// A small radio button, for HTML forms
-#define NS_THEME_RADIO_SMALL                               4
-
-// A small checkbox, for HTML forms
-#define NS_THEME_CHECKBOX_SMALL                            5
-
 // A rectangular button that contains complex content
 // like images (e.g. HTML <button> elements)
 #define NS_THEME_BUTTON_BEVEL                              7
@@ -105,12 +99,6 @@
 // A single pane (inside the tabpanels container)
 #define NS_THEME_TAB_PANEL                                 62
 
-// The tab just before the selection
-#define NS_THEME_TAB_LEFT_EDGE                             63
-
-// The tab just after the selection
-#define NS_THEME_TAB_RIGHT_EDGE                            64
-
 // The tab panels container.
 #define NS_THEME_TAB_PANELS                                65
 
@@ -153,10 +141,6 @@
 #define NS_THEME_SCROLLBAR_THUMB_HORIZONTAL                88
 #define NS_THEME_SCROLLBAR_THUMB_VERTICAL                  89
 
-// The gripper that goes on the thumb
-#define NS_THEME_SCROLLBAR_GRIPPER_HORIZONTAL              90
-#define NS_THEME_SCROLLBAR_GRIPPER_VERTICAL                91
-
 // A textfield or text area
 #define NS_THEME_TEXTFIELD                                 95
 
@@ -165,6 +149,9 @@
 
 // A multiline text field
 #define NS_THEME_TEXTFIELD_MULTILINE                       97
+
+// A searchfield
+#define NS_THEME_SEARCHFIELD                               98
 
 // A dropdown list.
 #define NS_THEME_DROPDOWN                                  101
@@ -238,3 +225,9 @@
 #define NS_THEME_WIN_COMMUNICATIONS_TOOLBOX                221
 #define NS_THEME_WIN_MEDIA_TOOLBOX                         222
 #define NS_THEME_WIN_BROWSER_TAB_BAR_TOOLBOX               223
+
+// Unified toolbar on the Mac
+#define NS_THEME_MOZ_MAC_UNIFIED_TOOLBAR                   224
+
+// Vista glass
+#define NS_THEME_WIN_GLASS                                 230

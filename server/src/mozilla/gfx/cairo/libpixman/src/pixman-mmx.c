@@ -36,9 +36,6 @@
 #ifdef USE_MMX
 
 #include <mmintrin.h>
-#ifdef USE_SSE
-#include <xmmintrin.h> /* for _mm_shuffle_pi16 and _MM_SHUFFLE */
-#endif
 
 #include "pixman-mmx.h"
 
@@ -142,37 +139,41 @@ static const MMXData c =
 #endif
 };
 
-#ifdef _MSC_VER
-#undef inline
-#define inline __forceinline
-#endif
-
 #ifdef __GNUC__
-#define MC(x) ((__m64) c.mmx_##x)
-#endif
-#ifdef _MSC_VER
-#define MC(x) c.mmx_##x
+#    ifdef __ICC
+#        define MC(x)  M64(c.mmx_##x)
+#    else
+#        define MC(x) ((__m64)c.mmx_##x)
+#    endif
 #endif
 
-static inline __m64
+#ifdef _MSC_VER
+#    define MC(x) c.mmx_##x
+#endif
+
+static force_inline __m64
 M64 (ullong x)
 {
-#ifdef __GNUC__
+#ifdef __ICC
+    return _mm_cvtsi64_m64 (x);
+#elif defined (__GNUC__)
     return (__m64)x;
 #endif
 
 #ifdef _MSC_VER
     __m64 res;
-    
+
     res.m64_u64 = x;
     return res;
 #endif
 }
 
-static inline ullong
+static force_inline ullong
 ULLONG (__m64 x)
 {
-#ifdef __GNUC__
+#ifdef __ICC
+    return _mm_cvtm64_si64 (x);
+#elif defined (__GNUC__)
     return (ullong)x;
 #endif
 
@@ -184,7 +185,7 @@ ULLONG (__m64 x)
 #endif
 }
 
-static inline __m64
+static force_inline __m64
 shift (__m64 v, int s)
 {
     if (s > 0)
@@ -195,13 +196,13 @@ shift (__m64 v, int s)
 	return v;
 }
 
-static inline __m64
+static force_inline __m64
 negate (__m64 mask)
 {
     return _mm_xor_si64 (mask, MC(4x00ff));
 }
 
-static inline __m64
+static force_inline __m64
 pix_multiply (__m64 a, __m64 b)
 {
     __m64 res;
@@ -214,35 +215,13 @@ pix_multiply (__m64 a, __m64 b)
     return res;
 }
 
-static inline __m64
+static force_inline __m64
 pix_add (__m64 a, __m64 b)
 {
     return  _mm_adds_pu8 (a, b);
 }
 
-#ifdef USE_SSE
-
-static inline __m64
-expand_alpha (__m64 pixel)
-{
-    return _mm_shuffle_pi16 (pixel, _MM_SHUFFLE(3, 3, 3, 3));
-}
-
-static inline __m64
-expand_alpha_rev (__m64 pixel)
-{
-    return _mm_shuffle_pi16 (pixel, _MM_SHUFFLE(0, 0, 0, 0));
-}
-
-static inline __m64
-invert_colors (__m64 pixel)
-{
-    return _mm_shuffle_pi16 (pixel, _MM_SHUFFLE(3, 0, 1, 2));
-}
-
-#else
-
-static inline __m64
+static force_inline __m64
 expand_alpha (__m64 pixel)
 {
     __m64 t1, t2;
@@ -256,7 +235,7 @@ expand_alpha (__m64 pixel)
     return t1;
 }
 
-static inline __m64
+static force_inline __m64
 expand_alpha_rev (__m64 pixel)
 {
     __m64 t1, t2;
@@ -273,7 +252,7 @@ expand_alpha_rev (__m64 pixel)
     return t1;
 }
 
-static inline __m64
+static force_inline __m64
 invert_colors (__m64 pixel)
 {
     __m64 x, y, z;
@@ -293,15 +272,13 @@ invert_colors (__m64 pixel)
     return x;
 }
 
-#endif
-
-static inline __m64
+static force_inline __m64
 over (__m64 src, __m64 srca, __m64 dest)
 {
     return  _mm_adds_pu8 (src, pix_multiply(dest, negate(srca)));
 }
 
-static inline __m64
+static force_inline __m64
 over_rev_non_pre (__m64 src, __m64 dest)
 {
     __m64 srca = expand_alpha (src);
@@ -310,14 +287,14 @@ over_rev_non_pre (__m64 src, __m64 dest)
     return over(pix_multiply(invert_colors(src), srcfaaa), srca, dest);
 }
 
-static inline __m64
+static force_inline __m64
 in (__m64 src,
     __m64 mask)
 {
     return pix_multiply (src, mask);
 }
 
-static inline __m64
+static force_inline __m64
 in_over_full_src_alpha (__m64 src, __m64 mask, __m64 dest)
 {
     src = _mm_or_si64 (src, MC(full_alpha));
@@ -326,7 +303,7 @@ in_over_full_src_alpha (__m64 src, __m64 mask, __m64 dest)
 }
 
 #ifndef _MSC_VER
-static inline __m64
+static force_inline __m64
 in_over (__m64 src,
 	 __m64 srca,
 	 __m64 mask,
@@ -338,19 +315,19 @@ in_over (__m64 src,
 #define in_over(src, srca, mask, dest) over(in(src, mask), pix_multiply(srca, mask), dest)
 #endif
 
-static inline __m64
+static force_inline __m64
 load8888 (uint32_t v)
 {
     return _mm_unpacklo_pi8 (_mm_cvtsi32_si64 (v), _mm_setzero_si64());
 }
 
-static inline __m64
+static force_inline __m64
 pack8888 (__m64 lo, __m64 hi)
 {
     return _mm_packs_pu16 (lo, hi);
 }
 
-static inline uint32_t
+static force_inline uint32_t
 store8888 (__m64 v)
 {
     return _mm_cvtsi64_si32(pack8888(v, _mm_setzero_si64()));
@@ -370,7 +347,7 @@ store8888 (__m64 v)
  * Note the trick here - the top word is shifted by another nibble to
  * avoid it bumping into the middle word
  */
-static inline __m64
+static force_inline __m64
 expand565 (__m64 pixel, int pos)
 {
     __m64 p = pixel;
@@ -390,7 +367,7 @@ expand565 (__m64 pixel, int pos)
     return _mm_srli_pi16 (pixel, 8);
 }
 
-static inline __m64
+static force_inline __m64
 expand8888 (__m64 in, int pos)
 {
     if (pos == 0)
@@ -399,7 +376,13 @@ expand8888 (__m64 in, int pos)
 	return _mm_unpackhi_pi8 (in, _mm_setzero_si64());
 }
 
-static inline __m64
+static force_inline __m64
+expandx888 (__m64 in, int pos)
+{
+    return _mm_or_si64 (expand8888 (in, pos), MC(full_alpha));
+}
+
+static force_inline __m64
 pack565 (__m64 pixel, __m64 target, int pos)
 {
     __m64 p = pixel;
@@ -430,7 +413,7 @@ pack565 (__m64 pixel, __m64 target, int pos)
 }
 
 #ifndef _MSC_VER
-static inline __m64
+static force_inline __m64
 pix_add_mul (__m64 x, __m64 a, __m64 y, __m64 b)
 {
     x = _mm_mullo_pi16 (x, a);
@@ -1379,36 +1362,36 @@ fbCompositeSrc_x888xnx8888mmx (pixman_op_t op,
 	    __m64 vs7 = *(__m64 *)(src + 14);
 
 	    vd0 = pack8888 (
-		in_over (expand8888 (vs0, 0), srca, vmask, expand8888 (vd0, 0)),
-		in_over (expand8888 (vs0, 1), srca, vmask, expand8888 (vd0, 1)));
+		in_over (expandx888 (vs0, 0), srca, vmask, expand8888 (vd0, 0)),
+		in_over (expandx888 (vs0, 1), srca, vmask, expand8888 (vd0, 1)));
 
 	    vd1 = pack8888 (
-		in_over (expand8888 (vs1, 0), srca, vmask, expand8888 (vd1, 0)),
-		in_over (expand8888 (vs1, 1), srca, vmask, expand8888 (vd1, 1)));
+		in_over (expandx888 (vs1, 0), srca, vmask, expand8888 (vd1, 0)),
+		in_over (expandx888 (vs1, 1), srca, vmask, expand8888 (vd1, 1)));
 
 	    vd2 = pack8888 (
-		in_over (expand8888 (vs2, 0), srca, vmask, expand8888 (vd2, 0)),
-		in_over (expand8888 (vs2, 1), srca, vmask, expand8888 (vd2, 1)));
+		in_over (expandx888 (vs2, 0), srca, vmask, expand8888 (vd2, 0)),
+		in_over (expandx888 (vs2, 1), srca, vmask, expand8888 (vd2, 1)));
 
 	    vd3 = pack8888 (
-		in_over (expand8888 (vs3, 0), srca, vmask, expand8888 (vd3, 0)),
-		in_over (expand8888 (vs3, 1), srca, vmask, expand8888 (vd3, 1)));
+		in_over (expandx888 (vs3, 0), srca, vmask, expand8888 (vd3, 0)),
+		in_over (expandx888 (vs3, 1), srca, vmask, expand8888 (vd3, 1)));
 
 	    vd4 = pack8888 (
-		in_over (expand8888 (vs4, 0), srca, vmask, expand8888 (vd4, 0)),
-		in_over (expand8888 (vs4, 1), srca, vmask, expand8888 (vd4, 1)));
+		in_over (expandx888 (vs4, 0), srca, vmask, expand8888 (vd4, 0)),
+		in_over (expandx888 (vs4, 1), srca, vmask, expand8888 (vd4, 1)));
 
 	    vd5 = pack8888 (
-		in_over (expand8888 (vs5, 0), srca, vmask, expand8888 (vd5, 0)),
-		in_over (expand8888 (vs5, 1), srca, vmask, expand8888 (vd5, 1)));
+		in_over (expandx888 (vs5, 0), srca, vmask, expand8888 (vd5, 0)),
+		in_over (expandx888 (vs5, 1), srca, vmask, expand8888 (vd5, 1)));
 
             vd6 = pack8888 (
-		in_over (expand8888 (vs6, 0), srca, vmask, expand8888 (vd6, 0)),
-		in_over (expand8888 (vs6, 1), srca, vmask, expand8888 (vd6, 1)));
+		in_over (expandx888 (vs6, 0), srca, vmask, expand8888 (vd6, 0)),
+		in_over (expandx888 (vs6, 1), srca, vmask, expand8888 (vd6, 1)));
 
 	    vd7 = pack8888 (
-		in_over (expand8888 (vs7, 0), srca, vmask, expand8888 (vd7, 0)),
-		in_over (expand8888 (vs7, 1), srca, vmask, expand8888 (vd7, 1)));
+		in_over (expandx888 (vs7, 0), srca, vmask, expand8888 (vd7, 0)),
+		in_over (expandx888 (vs7, 1), srca, vmask, expand8888 (vd7, 1)));
 
 	    *(__m64 *)(dst + 0) = vd0;
 	    *(__m64 *)(dst + 2) = vd1;
@@ -1726,13 +1709,27 @@ pixman_fill_mmx (uint32_t *bits,
     __m64	v1, v2, v3, v4, v5, v6, v7;
 #endif
 
+    if (bpp != 16 && bpp != 32 && bpp != 8)
+	return FALSE;
+
     if (bpp == 16 && (xor >> 16 != (xor & 0xffff)))
 	return FALSE;
 
-    if (bpp != 16 && bpp != 32)
+    if (bpp == 8 &&
+	((xor >> 16 != (xor & 0xffff)) ||
+	 (xor >> 24 != (xor & 0x00ff) >> 16)))
+    {
 	return FALSE;
-
-    if (bpp == 16)
+    }
+    
+    if (bpp == 8)
+    {
+	stride = stride * (int) sizeof (uint32_t) / 1;
+	byte_line = (uint8_t *)(((uint8_t *)bits) + stride * y + x);
+	byte_width = width;
+	stride *= 1;
+    }
+    else if (bpp == 16)
     {
 	stride = stride * (int) sizeof (uint32_t) / 2;
 	byte_line = (uint8_t *)(((uint16_t *)bits) + stride * y + x);
@@ -1771,6 +1768,13 @@ pixman_fill_mmx (uint32_t *bits,
 	byte_line += stride;
 	w = byte_width;
 
+	while (w >= 1 && ((unsigned long)d & 1))
+	{
+	    *(uint8_t *)d = (xor & 0xff);
+	    w--;
+	    d++;
+	}
+	
 	while (w >= 2 && ((unsigned long)d & 3))
 	{
 	    *(uint16_t *)d = xor;
@@ -1824,12 +1828,19 @@ pixman_fill_mmx (uint32_t *bits,
 	    w -= 4;
 	    d += 4;
 	}
-	if (w >= 2)
+	while (w >= 2)
 	{
 	    *(uint16_t *)d = xor;
 	    w -= 2;
 	    d += 2;
 	}
+	while (w >= 1)
+	{
+	    *(uint8_t *)d = (xor & 0xff);
+	    w--;
+	    d++;
+	}
+	
     }
 
     _mm_empty();

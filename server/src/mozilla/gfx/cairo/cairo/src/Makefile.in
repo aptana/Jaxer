@@ -85,11 +85,14 @@ CSRCS   = \
         cairo-deflate-stream.c \
         cairo-fixed.c \
 	cairo-font-face.c \
+	cairo-font-face-twin.c \
+	cairo-font-face-twin-data.c \
         cairo-font-options.c \
         cairo-freelist.c \
         cairo-gstate.c \
         cairo-hash.c \
         cairo-hull.c \
+	cairo-image-info.c \
         cairo-image-surface.c \
         cairo-lzw.c \
         cairo-matrix.c \
@@ -102,6 +105,7 @@ CSRCS   = \
         cairo-path-bounds.c \
         cairo-path-fill.c \
         cairo-path-fixed.c \
+        cairo-path-in-fill.c \
         cairo-path-stroke.c \
         cairo-pattern.c \
         cairo-pen.c \
@@ -112,22 +116,30 @@ CSRCS   = \
         cairo-scaled-font-subsets.c \
         cairo-skiplist.c \
         cairo-slope.c \
+        cairo-spans.c \
         cairo-spline.c \
         cairo-stroke-style.c \
         cairo-surface.c \
         cairo-surface-fallback.c \
+        cairo-tor-scan-converter.c \
+        cairo-toy-font-face.c \
         cairo-traps.c \
         cairo-unicode.c \
+	cairo-user-font.c \
+	cairo-version.c \
         cairo-wideint.c \
         $(NULL)
 
-EXPORTS = cairo.h cairo-features.h cairo-platform.h cairo-deprecated.h cairo-rename.h
+EXPORTS_NAMESPACES = cairo
+
+EXPORTS_cairo = cairo.h cairo-version.h cairo-features.h cairo-platform.h cairo-deprecated.h cairo-rename.h
 
 # cairo-type1-subset.c should be here, but it's only supported on freetype platforms
 
 PSPDF_BASE_CSRCS = \
 	cairo-base85-stream.c \
 	cairo-type1-fallback.c \
+	cairo-type3-glyph-surface.c \
 	cairo-truetype-subset.c \
 	cairo-cff-subset.c \
 	$(NULL)
@@ -143,13 +155,24 @@ PDF_EXPORTS = cairo-pdf.h
 PS_EXPORTS = cairo-ps.h
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),windows)
-CSRCS	+= cairo-win32.c \
-	   cairo-win32-font.c \
-	   cairo-win32-surface.c \
-	   cairo-win32-printing-surface.c
-EXPORTS += cairo-win32.h
+CSRCS	+=	cairo-win32-surface.c
+
+ifndef WINCE
+CSRCS	+=	cairo-win32-font.c
+else
+CSRCS	+=	cairo-ddraw-surface.c
+EXPORTS_cairo +=	cairo-ddraw.h
+endif
+
+ifdef NS_PRINTING
+CSRCS   += cairo-win32-printing-surface.c
+else
+DEFINES += -DCAIRO_OMIT_WIN32_PRINTING
+endif
+
+EXPORTS_cairo += cairo-win32.h
 CSRCS   += $(PSPDF_BASE_CSRCS) $(PDF_CSRCS)
-EXPORTS += $(PDF_EXPORTS)
+EXPORTS_cairo += $(PDF_EXPORTS)
 endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),os2)
@@ -158,29 +181,35 @@ ifdef MOZ_OS2_HIGH_MEMORY
 DEFINES += -DOS2_HIGH_MEMORY
 endif
 CSRCS   += cairo-os2-surface.c
-EXPORTS += cairo-os2.h cairo-os2-private.h
+EXPORTS_cairo += cairo-os2.h cairo-os2-private.h
 CSRCS   += $(PSPDF_BASE_CSRCS) $(PDF_CSRCS)
-EXPORTS += $(PDF_EXPORTS)
+EXPORTS_cairo += $(PDF_EXPORTS)
 endif
 
 ifneq (,$(filter mac cocoa,$(MOZ_WIDGET_TOOLKIT)))
 CSRCS   += cairo-quartz-surface.c cairo-quartz-image-surface.c cairo-quartz-font.c
-EXPORTS += cairo-quartz.h cairo-quartz-image.h
+EXPORTS_cairo += cairo-quartz.h cairo-quartz-image.h
 endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),beos)
 CPPSRCS += cairo-beos-surface.cpp
-EXPORTS += cairo-beos.h
+EXPORTS_cairo += cairo-beos.h
 endif
 
 ifeq ($(MOZ_WIDGET_TOOLKIT),gtk2)
 CSRCS   += $(PSPDF_BASE_CSRCS) $(PDF_CSRCS) $(PS_CSRCS)
-EXPORTS += $(PDF_EXPORTS) $(PS_EXPORTS)
+EXPORTS_cairo += $(PDF_EXPORTS) $(PS_EXPORTS)
+endif
+
+ifeq ($(MOZ_WIDGET_TOOLKIT),qt)
+CPPSRCS += cairo-qpainter-surface.cpp
+EXPORTS_cairo += cairo-qpainter.h
+OS_INCLUDES += $(MOZ_QT_CFLAGS)
 endif
 
 ifdef BUILD_CAIRO_SVG
 CSRCS	+= cairo-svg-surface.c
-EXPORTS += cairo-svg.h
+EXPORTS_cairo += cairo-svg.h
 endif
 
 ifdef MOZ_X11
@@ -188,22 +217,14 @@ CSRCS   += cairo-xlib-surface.c \
 	   cairo-xlib-screen.c \
 	   cairo-xlib-visual.c \
 	   cairo-xlib-display.c
-EXPORTS += cairo-xlib.h cairo-xlib-xrender.h
+EXPORTS_cairo += cairo-xlib.h cairo-xlib-xrender.h
 endif
 
 ifdef MOZ_ENABLE_CAIRO_FT
 CSRCS   += cairo-ft-font.c cairo-type1-subset.c
-EXPORTS += cairo-ft.h
+EXPORTS_cairo += cairo-ft.h
 OS_INCLUDES += $(CAIRO_FT_CFLAGS)
 endif
-
-
-ifdef MOZ_ENABLE_GLITZ
-REQUIRES += glitz
-CSRCS    += cairo-glitz-surface.c
-EXPORTS  += cairo-glitz.h
-endif
-
 
 LOCAL_INCLUDES  += -I$(srcdir)
 

@@ -41,6 +41,7 @@
 #include "gfxOS2Surface.h"
 #include "gfxImageSurface.h"
 #include "gfxOS2Fonts.h"
+#include "nsTArray.h"
 
 #include "gfxFontconfigUtils.h"
 //#include <fontconfig/fontconfig.h>
@@ -111,7 +112,7 @@ gfxOS2Platform::CreateOffscreenSurface(const gfxIntSize& aSize,
 nsresult
 gfxOS2Platform::GetFontList(const nsACString& aLangGroup,
                             const nsACString& aGenericFamily,
-                            nsStringArray& aListOfFonts)
+                            nsTArray<nsString>& aListOfFonts)
 {
 #ifdef DEBUG_thebes
     char *langgroup = ToNewCString(aLangGroup),
@@ -123,12 +124,21 @@ gfxOS2Platform::GetFontList(const nsACString& aLangGroup,
 #endif
     return sFontconfigUtils->GetFontList(aLangGroup, aGenericFamily,
                                          aListOfFonts);
-    //return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 nsresult gfxOS2Platform::UpdateFontList()
 {
-    return sFontconfigUtils->UpdateFontList();
+#ifdef DEBUG_thebes
+    printf("gfxOS2Platform::UpdateFontList()\n");
+#endif
+    mCodepointsWithNoFonts.reset();
+
+    nsresult rv = sFontconfigUtils->UpdateFontList();
+
+    // initialize ranges of characters for which system-wide font search should be skipped
+    mCodepointsWithNoFonts.SetRange(0,0x1f);     // C0 controls
+    mCodepointsWithNoFonts.SetRange(0x7f,0x9f);  // C1 controls
+    return rv;
 }
 
 nsresult
@@ -143,8 +153,6 @@ gfxOS2Platform::ResolveFontName(const nsAString& aFontName,
 #endif
     return sFontconfigUtils->ResolveFontName(aFontName, aCallback, aClosure,
                                              aAborted);
-    //aAborted = !(*aCallback)(aFontName, aClosure);
-    //return NS_OK;
 }
 
 nsresult
@@ -155,7 +163,78 @@ gfxOS2Platform::GetStandardFamilyName(const nsAString& aFontName, nsAString& aFa
 
 gfxFontGroup *
 gfxOS2Platform::CreateFontGroup(const nsAString &aFamilies,
-				const gfxFontStyle *aStyle)
+                const gfxFontStyle *aStyle,
+                gfxUserFontSet *aUserFontSet)
 {
-    return new gfxOS2FontGroup(aFamilies, aStyle);
+    return new gfxOS2FontGroup(aFamilies, aStyle, aUserFontSet);
+}
+
+already_AddRefed<gfxOS2Font>
+gfxOS2Platform::FindFontForChar(PRUint32 aCh, gfxOS2Font *aFont)
+{
+#ifdef DEBUG_thebes
+    printf("gfxOS2Platform::FindFontForChar(%d, ...)\n", aCh);
+#endif
+
+    // is codepoint with no matching font? return null immediately
+    if (mCodepointsWithNoFonts.test(aCh)) {
+        return nsnull;
+    }
+
+    // the following is not very clever but it's a quick fix to search all fonts
+    // (one should instead cache the charmaps as done on Mac and Win)
+
+    // just continue to append all fonts known to the system
+    nsTArray<nsString> fontList;
+    nsCAutoString generic;
+    nsresult rv = GetFontList(aFont->GetStyle()->langGroup, generic, fontList);
+    if (NS_SUCCEEDED(rv)) {
+        // start at 3 to skip over the generic entries
+        for (PRUint32 i = 3; i < fontList.Length(); i++) {
+#ifdef DEBUG_thebes
+            printf("searching in entry i=%d (%s)\n",
+                   i, NS_LossyConvertUTF16toASCII(fontList[i]).get());
+#endif
+            nsRefPtr<gfxOS2Font> font =
+                gfxOS2Font::GetOrMakeFont(fontList[i], aFont->GetStyle());
+            if (!font)
+                continue;
+            FT_Face face = cairo_ft_scaled_font_lock_face(font->CairoScaledFont());
+            if (!face || !face->charmap) {
+                if (face)
+                    cairo_ft_scaled_font_unlock_face(font->CairoScaledFont());
+                continue;
+            }
+
+            FT_UInt gid = FT_Get_Char_Index(face, aCh); // find the glyph id
+            if (gid != 0) {
+                // this is the font
+                cairo_ft_scaled_font_unlock_face(font->CairoScaledFont());
+                return font.forget();
+            }
+        }
+    }
+
+    // no match found, so add to the set of non-matching codepoints
+    mCodepointsWithNoFonts.set(aCh);
+    return nsnull;
+}
+
+void
+gfxOS2Platform::InitDisplayCaps()
+{
+    // create DC compatible with the screen
+    HDC dc = DevOpenDC((HAB)1, OD_MEMORY,"*",0L, NULL, NULLHANDLE);
+    if (dc > 0) {
+        // we do have a DC and we can query the DPI setting from it
+        LONG lDPI;
+        if (DevQueryCaps(dc, CAPS_VERTICAL_FONT_RES, 1, &lDPI))
+            gfxPlatform::sDPI = lDPI;
+        DevCloseDC(dc);
+    }
+
+    if (gfxPlatform::sDPI <= 0) {
+        // Fall back to something sane
+        gfxPlatform::sDPI = 96;
+    }
 }

@@ -77,20 +77,13 @@ typedef PRUint32 nscolor;
     target = ((tmp_ << 8) + tmp_ + 255) >> 16;     \
   PR_END_MACRO
 
-// Blending macro
-//
-// equivalent to target=(bg*(255-alpha)+fg*alpha)/255
-#define MOZ_BLEND(target, bg, fg, alpha) \
-        FAST_DIVIDE_BY_255(target, (bg)*(255-(alpha)) + (fg)*(alpha))
-
 // Translate a hex string to a color. Return true if it parses ok,
 // otherwise return false.
 // This accepts only 3 or 6 digits
 NS_GFX_(PRBool) NS_HexToRGB(const nsString& aBuf, nscolor* aResult);
 
-// Compose one NS_RGB color onto another. The result is what you get
-// if you draw aBG onto RGBA(0,0,0,0) and then aFG on top of that,
-// with operator OVER.
+// Compose one NS_RGB color onto another. The result is what
+// you get if you draw aFG on top of aBG with operator OVER.
 NS_GFX_(nscolor) NS_ComposeColors(nscolor aBG, nscolor aFG);
 
 // Translate a hex string to a color. Return true if it parses ok,
@@ -98,9 +91,8 @@ NS_GFX_(nscolor) NS_ComposeColors(nscolor aBG, nscolor aFG);
 // This version accepts 1 to 9 digits (missing digits are 0)
 NS_GFX_(PRBool) NS_LooseHexToRGB(const nsString& aBuf, nscolor* aResult);
 
-// Translate a color to a hex string and prepend a '#'.
-// The returned string is always 7 characters including a '#' character.
-NS_GFX_(void) NS_RGBToHex(nscolor aColor, nsAString& aResult);
+// There is no function to translate a color to a hex string, because
+// the hex-string syntax does not support transparency.
 
 // Translate a color name to a color. Return true if it parses ok,
 // otherwise return false.

@@ -52,6 +52,9 @@ cairo_status_t
 _cairo_stroke_style_init_copy (cairo_stroke_style_t *style,
 			       cairo_stroke_style_t *other)
 {
+    if (CAIRO_INJECT_FAULT ())
+	return _cairo_error (CAIRO_STATUS_NO_MEMORY);
+
     style->line_width = other->line_width;
     style->line_cap = other->line_cap;
     style->line_join = other->line_join;
@@ -63,7 +66,7 @@ _cairo_stroke_style_init_copy (cairo_stroke_style_t *style,
 	style->dash = NULL;
     } else {
 	style->dash = _cairo_malloc_ab (style->num_dashes, sizeof (double));
-	if (style->dash == NULL)
+	if (unlikely (style->dash == NULL))
 	    return _cairo_error (CAIRO_STATUS_NO_MEMORY);
 
 	memcpy (style->dash, other->dash,
@@ -95,9 +98,19 @@ _cairo_stroke_style_max_distance_from_path (const cairo_stroke_style_t *style,
                                             const cairo_matrix_t *ctm,
                                             double *dx, double *dy)
 {
-    double style_expansion = MAX(style->line_cap == CAIRO_LINE_CAP_SQUARE ? M_SQRT1_2 : 0.5,
-                                 style->line_join == CAIRO_LINE_JOIN_MITER ? style->miter_limit : 0.5);
+    double style_expansion = 0.5;
 
-    *dx = style->line_width * style_expansion * (fabs(ctm->xx) + fabs(ctm->xy));
-    *dy = style->line_width * style_expansion * (fabs(ctm->yy) + fabs(ctm->yx));
+    if (style->line_cap == CAIRO_LINE_CAP_SQUARE)
+	style_expansion = M_SQRT1_2;
+
+    if (style->line_join == CAIRO_LINE_JOIN_MITER &&
+	style_expansion < style->miter_limit)
+    {
+	style_expansion = style->miter_limit;
+    }
+
+    style_expansion *= style->line_width;
+
+    *dx = style_expansion * (fabs (ctm->xx) + fabs (ctm->xy));
+    *dy = style_expansion * (fabs (ctm->yy) + fabs (ctm->yx));
 }

@@ -57,12 +57,13 @@ gfxWindowsSurface::gfxWindowsSurface(HDC dc, PRUint32 flags) :
     if (flags & FLAG_TAKE_DC)
         mOwnsDC = PR_TRUE;
 
+#ifdef NS_PRINTING
     if (flags & FLAG_FOR_PRINTING) {
         Init(cairo_win32_printing_surface_create(mDC));
         mForPrinting = PR_TRUE;
-    } else {
+    } else
+#endif
         Init(cairo_win32_surface_create(mDC));
-    }
 }
 
 gfxWindowsSurface::gfxWindowsSurface(const gfxIntSize& size, gfxImageFormat imageFormat) :
@@ -165,97 +166,100 @@ gfxWindowsSurface::OptimizeToDDB(HDC dc, const gfxIntSize& size, gfxImageFormat 
 
     gfxWindowsSurface *raw = (gfxWindowsSurface*) (wsurf.get());
     NS_ADDREF(raw);
+
+    // we let the new DDB surfaces be converted back to dibsections if
+    // acquire_source_image is called on them
+    cairo_win32_surface_set_can_convert_to_dib(raw->CairoSurface(), TRUE);
+
     return raw;
 }
 
-static char*
-GetACPString(const nsAString& aStr)
+nsresult
+gfxWindowsSurface::BeginPrinting(const nsAString& aTitle,
+                                 const nsAString& aPrintToFileName)
 {
-    int acplen = aStr.Length() * 2 + 1;
-    char * acp = new char[acplen];
-    if(acp) {
-        int outlen = ::WideCharToMultiByte(CP_ACP, 0, 
-                                           PromiseFlatString(aStr).get(),
-                                           aStr.Length(),
-                                           acp, acplen, NULL, NULL);
-        if (outlen > 0)
-            acp[outlen] = '\0';  // null terminate
-    }
-    return acp;
-}
-
-nsresult gfxWindowsSurface::BeginPrinting(const nsAString& aTitle,
-                                          const nsAString& aPrintToFileName)
-{
+#ifdef NS_PRINTING
 #define DOC_TITLE_LENGTH 30
-    DOCINFO docinfo;
+    DOCINFOW docinfo;
 
-    nsString titleStr;
-    titleStr = aTitle;
+    nsString titleStr(aTitle);
     if (titleStr.Length() > DOC_TITLE_LENGTH) {
         titleStr.SetLength(DOC_TITLE_LENGTH-3);
         titleStr.AppendLiteral("...");
     }
-    char *title = GetACPString(titleStr);
 
-    char *docName = nsnull;
-    if (!aPrintToFileName.IsEmpty()) {
-        docName = ToNewCString(aPrintToFileName);
-    }
-
+    nsString docName(aPrintToFileName);
     docinfo.cbSize = sizeof(docinfo);
-    docinfo.lpszDocName = title ? title : "Mozilla Document";
-    docinfo.lpszOutput = docName;
+    docinfo.lpszDocName = titleStr.Length() > 0 ? titleStr.get() : L"Mozilla Document";
+    docinfo.lpszOutput = docName.Length() > 0 ? docName.get() : nsnull;
     docinfo.lpszDatatype = NULL;
     docinfo.fwType = 0;
 
-    int result = ::StartDoc(mDC, &docinfo);
-        
-    delete [] title;
-    if (docName != nsnull) nsMemory::Free(docName);
-
-    if (result <= 0)
-        return NS_ERROR_FAILURE;
+    ::StartDocW(mDC, &docinfo);
 
     return NS_OK;
+#else
+    return NS_ERROR_FAILURE;
+#endif
 }
 
-nsresult gfxWindowsSurface::EndPrinting()
+nsresult
+gfxWindowsSurface::EndPrinting()
 {
+#ifdef NS_PRINTING
     int result = ::EndDoc(mDC);
     if (result <= 0)
         return NS_ERROR_FAILURE;
 
     return NS_OK;
+#else
+    return NS_ERROR_FAILURE;
+#endif
 }
 
-nsresult gfxWindowsSurface::AbortPrinting()
+nsresult
+gfxWindowsSurface::AbortPrinting()
 {
+#ifdef NS_PRINTING
     int result = ::AbortDoc(mDC);
     if (result <= 0)
         return NS_ERROR_FAILURE;
     return NS_OK;
+#else
+    return NS_ERROR_FAILURE;
+#endif
 }
 
-nsresult gfxWindowsSurface::BeginPage()
+nsresult
+gfxWindowsSurface::BeginPage()
 {
+#ifdef NS_PRINTING
     int result = ::StartPage(mDC);
     if (result <= 0)
         return NS_ERROR_FAILURE;
     return NS_OK;
+#else
+    return NS_ERROR_FAILURE;
+#endif
 }
 
-nsresult gfxWindowsSurface::EndPage()
+nsresult
+gfxWindowsSurface::EndPage()
 {
+#ifdef NS_PRINTING
     if (mForPrinting)
         cairo_surface_show_page(CairoSurface());
     int result = ::EndPage(mDC);
     if (result <= 0)
         return NS_ERROR_FAILURE;
     return NS_OK;
+#else
+    return NS_ERROR_FAILURE;
+#endif
 }
 
-PRInt32 gfxWindowsSurface::GetDefaultContextFlags() const
+PRInt32
+gfxWindowsSurface::GetDefaultContextFlags() const
 {
     if (mForPrinting)
         return gfxContext::FLAG_SIMPLIFY_OPERATORS |

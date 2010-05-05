@@ -20,6 +20,8 @@
  *
  * Contributor(s):
  *   Vladimir Vukicevic <vladimir@pobox.com>
+ *   Ehsan Akhgari <ehsan.akhgari@gmail.com>
+ *   Jonathan Kew <jfkthame@gmail.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -36,6 +38,16 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "gfxTextRunWordCache.h"
+
+#include "nsWeakReference.h"
+#include "nsCRT.h"
+#include "nsServiceManagerUtils.h"
+#include "nsIPrefBranch.h"
+#include "nsIPrefBranch2.h"
+#include "nsIPrefService.h"
+#include "nsIObserver.h"
+
+#include "nsBidiUtils.h"
 
 #ifdef DEBUG
 #include <stdio.h>
@@ -60,21 +72,29 @@
  * are also kept out of the cache.
  */
 
-class TextRunWordCache {
+class TextRunWordCache :
+    public nsIObserver,
+    public nsSupportsWeakReference {
 public:
-    TextRunWordCache() {
+    TextRunWordCache() :
+        mBidiNumeral(0) {
         mCache.Init(100);
     }
     ~TextRunWordCache() {
+        Uninit();
         NS_WARN_IF_FALSE(mCache.Count() == 0, "Textrun cache not empty!");
     }
+    void Init();
+
+    NS_DECL_ISUPPORTS
+    NS_DECL_NSIOBSERVER
 
     /**
      * Create a textrun using cached words.
      * Invalid characters (see gfxFontGroup::IsInvalidChar) will be automatically
      * treated as invisible missing.
-     * @param aFlags the flags TEXT_IS_ASCII and TEXT_HAS_SURROGATES must be set
-     * by the caller, if applicable
+     * @param aFlags the flag TEXT_IS_ASCII must be set by the caller,
+     * if applicable
      * @param aIsInCache if true is returned, then RemoveTextRun must be called
      * before the textrun changes or dies.
      */
@@ -103,6 +123,7 @@ public:
     void RemoveTextRun(gfxTextRun *aTextRun);
 
 #ifdef DEBUG
+    PRUint32 mGeneration;
     void Dump();
 #endif
 
@@ -113,6 +134,7 @@ protected:
         PRUint32     mLength;
         PRUint32     mAppUnitsPerDevUnit;
         PRUint32     mStringHash;
+        PRUint64     mUserFontSetGeneration;
         PRPackedBool mIsDoubleByteText;
         PRPackedBool mIsRTL;
         PRPackedBool mEnabledOptionalLigatures;
@@ -124,6 +146,7 @@ protected:
               mLength(aLength),
               mAppUnitsPerDevUnit(aBaseTextRun->GetAppUnitsPerDevUnit()),
               mStringHash(aHash),
+              mUserFontSetGeneration(aBaseTextRun->GetUserFontSetGeneration()),
               mIsDoubleByteText((aBaseTextRun->GetFlags() & gfxTextRunFactory::TEXT_IS_8BIT) == 0),
               mIsRTL(aBaseTextRun->IsRightToLeft()),
               mEnabledOptionalLigatures((aBaseTextRun->GetFlags() & gfxTextRunFactory::TEXT_DISABLE_OPTIONAL_LIGATURES) == 0),
@@ -178,16 +201,80 @@ protected:
                        const nsTArray<DeferredWord>& aDeferredWords,
                        PRBool aSuccessful);
     void RemoveWord(gfxTextRun *aTextRun, PRUint32 aStart,
-                    PRUint32 aEnd, PRUint32 aHash);    
+                    PRUint32 aEnd, PRUint32 aHash);
+    void Uninit();
 
     nsTHashtable<CacheHashEntry> mCache;
-    
+
+    PRInt32 mBidiNumeral;
+    nsCOMPtr<nsIPrefBranch2> mPrefBranch;
+    nsCOMPtr<nsIPrefBranch2> mFontPrefBranch;
+
 #ifdef DEBUG
-    static PLDHashOperator PR_CALLBACK CacheDumpEntry(CacheHashEntry* aEntry, void* userArg);
+    static PLDHashOperator CacheDumpEntry(CacheHashEntry* aEntry, void* userArg);
 #endif
 };
 
+NS_IMPL_ISUPPORTS2(TextRunWordCache, nsIObserver, nsISupportsWeakReference)
+
+static TextRunWordCache *gTextRunWordCache = nsnull;
+
 static PRLogModuleInfo *gWordCacheLog = PR_NewLogModule("wordCache");
+
+void
+TextRunWordCache::Init()
+{
+#ifdef DEBUG
+    mGeneration = 0;
+#endif
+
+    nsCOMPtr<nsIPrefService> prefService = do_GetService(NS_PREFSERVICE_CONTRACTID);
+    if (!prefService)
+        return;
+
+    nsCOMPtr<nsIPrefBranch> branch;
+    prefService->GetBranch("bidi.", getter_AddRefs(branch));
+    mPrefBranch = do_QueryInterface(branch);
+    if (!mPrefBranch)
+        return;
+
+    mPrefBranch->AddObserver("", this, PR_TRUE);
+    mPrefBranch->GetIntPref("numeral", &mBidiNumeral);
+
+    nsCOMPtr<nsIPrefBranch> fontBranch;
+    prefService->GetBranch("font.", getter_AddRefs(fontBranch));
+    mFontPrefBranch = do_QueryInterface(fontBranch);
+    if (mFontPrefBranch)
+      mFontPrefBranch->AddObserver("", this, PR_TRUE);
+}
+
+void
+TextRunWordCache::Uninit()
+{
+    if (mPrefBranch)
+        mPrefBranch->RemoveObserver("", this);
+    if (mFontPrefBranch)
+        mFontPrefBranch->RemoveObserver("", this);
+}
+
+NS_IMETHODIMP
+TextRunWordCache::Observe(nsISupports     *aSubject,
+                          const char      *aTopic,
+                          const PRUnichar *aData)
+{
+    if (!nsCRT::strcmp(aTopic, NS_PREFBRANCH_PREFCHANGE_TOPIC_ID)) {
+        if (!nsCRT::strcmp(aData, NS_LITERAL_STRING("numeral").get())) {
+          mPrefBranch->GetIntPref("numeral", &mBidiNumeral);
+        }
+        mCache.Clear();
+        PR_LOG(gWordCacheLog, PR_LOG_DEBUG, ("flushing the textrun cache"));
+#ifdef DEBUG
+        mGeneration++;
+#endif
+    }
+
+    return NS_OK;
+}
 
 static inline PRUint32
 HashMix(PRUint32 aHash, PRUnichar aCh)
@@ -197,14 +284,17 @@ HashMix(PRUint32 aHash, PRUnichar aCh)
 
 // If the substring of the textrun is rendered entirely in the first font
 // of the textrun's fontgroup, then return that font. Otherwise return the
-// fontgroup.
+// fontgroup.  When a user font set is in use, always return the font group.
 static void *GetWordFontOrGroup(gfxTextRun *aTextRun, PRUint32 aOffset,
                                 PRUint32 aLength)
 {
+    gfxFontGroup *fontGroup = aTextRun->GetFontGroup();
+    if (fontGroup->GetUserFontSet() != nsnull)
+        return fontGroup;
+        
     PRUint32 glyphRunCount;
     const gfxTextRun::GlyphRun *glyphRuns = aTextRun->GetGlyphRuns(&glyphRunCount);
     PRUint32 glyphRunIndex = aTextRun->FindFirstGlyphRunContaining(aOffset);
-    gfxFontGroup *fontGroup = aTextRun->GetFontGroup();
     gfxFont *firstFont = fontGroup->GetFontAt(0);
     if (glyphRuns[glyphRunIndex].mFont != firstFont)
         return fontGroup;
@@ -260,8 +350,11 @@ TextRunWordCache::LookupWord(gfxTextRun *aTextRun, gfxFont *aFirstFont,
 {
     if (aEnd <= aStart)
         return PR_TRUE;
+        
+    gfxFontGroup *fontGroup = aTextRun->GetFontGroup();
 
-    CacheHashKey key(aTextRun, aFirstFont, aStart, aEnd - aStart, aHash);
+    PRBool useFontGroup = (fontGroup->GetUserFontSet() != nsnull);
+    CacheHashKey key(aTextRun, (useFontGroup ? (void*)fontGroup : (void*)aFirstFont), aStart, aEnd - aStart, aHash);
     CacheHashEntry *fontEntry = mCache.PutEntry(key);
     if (!fontEntry)
         return PR_FALSE;
@@ -269,7 +362,10 @@ TextRunWordCache::LookupWord(gfxTextRun *aTextRun, gfxFont *aFirstFont,
 
     if (fontEntry->mTextRun) {
         existingEntry = fontEntry;
+    } else if (useFontGroup) {
+        PR_LOG(gWordCacheLog, PR_LOG_DEBUG, ("%p(%d-%d,%d): added using font group", aTextRun, aStart, aEnd - aStart, aHash));
     } else {
+        // test to see if this can be found using the font group instead
         PR_LOG(gWordCacheLog, PR_LOG_DEBUG, ("%p(%d-%d,%d): added using font", aTextRun, aStart, aEnd - aStart, aHash));
         key.mFontOrGroup = aTextRun->GetFontGroup();
         CacheHashEntry *groupEntry = mCache.GetEntry(key);
@@ -304,7 +400,8 @@ TextRunWordCache::LookupWord(gfxTextRun *aTextRun, gfxFont *aFirstFont,
     // entry, we'll copy within our own textrun
     fontEntry->mTextRun = aTextRun;
     fontEntry->mWordOffset = aStart;
-    fontEntry->mHashedByFont = PR_TRUE;
+    if (!useFontGroup)
+        fontEntry->mHashedByFont = PR_TRUE;
     return PR_FALSE;
 }
 
@@ -331,6 +428,11 @@ TextRunWordCache::FinishTextRun(gfxTextRun *aTextRun, gfxTextRun *aNewRun,
     PRUint32 i;
     gfxFontGroup *fontGroup = aTextRun->GetFontGroup();
     gfxFont *font = fontGroup->GetFontAt(0);
+    
+    // need to use the font group when user font set is around, since
+    // the first font may change as the result of a font download
+    PRBool useFontGroup = (fontGroup->GetUserFontSet() != nsnull);
+
     // copy deferred words from various sources into destination textrun
     for (i = 0; i < aDeferredWords.Length(); ++i) {
         const DeferredWord *word = &aDeferredWords[i];
@@ -350,11 +452,11 @@ TextRunWordCache::FinishTextRun(gfxTextRun *aTextRun, gfxTextRun *aNewRun,
             // we need to remove that cache entry and replace it with an entry
             // keyed off the fontgroup.
             PRBool rekeyWithFontGroup =
-                GetWordFontOrGroup(aNewRun, word->mSourceOffset, word->mLength) != font;
+                GetWordFontOrGroup(aNewRun, word->mSourceOffset, word->mLength) != font && !useFontGroup;
             if (!aSuccessful || rekeyWithFontGroup ||
                 wordStartsInsideCluster || wordStartsInsideLigature) {
                 // We need to remove the current placeholder cache entry
-                CacheHashKey key(aTextRun, font, word->mDestOffset, word->mLength,
+                CacheHashKey key(aTextRun, (useFontGroup ? (void*)fontGroup : (void*)font), word->mDestOffset, word->mLength,
                                  word->mHash);
                 NS_ASSERTION(mCache.GetEntry(key),
                              "This entry should have been added previously!");
@@ -450,6 +552,10 @@ MakeBlankTextRun(const void* aText, PRUint32 aLength,
         return nsnull;
     gfxFont *font = aFontGroup->GetFontAt(0);
     textRun->AddGlyphRun(font, 0);
+#ifdef DEBUG
+    textRun->mCachedWords = 0;
+    textRun->mCacheGeneration = gTextRunWordCache ? gTextRunWordCache->mGeneration : 0;
+#endif
     return textRun.forget();
 }
 
@@ -459,6 +565,9 @@ TextRunWordCache::MakeTextRun(const PRUnichar *aText, PRUint32 aLength,
                               const gfxFontGroup::Parameters *aParams,
                               PRUint32 aFlags)
 {
+    // update font list when using user fonts (assures generation is current)
+    aFontGroup->UpdateFontList();
+
     if (aFontGroup->GetStyle()->size == 0) {
         // Short-circuit for size-0 fonts, as Windows and ATSUI can't handle
         // them, and always create at least size 1 fonts, i.e. they still
@@ -472,6 +581,7 @@ TextRunWordCache::MakeTextRun(const PRUnichar *aText, PRUint32 aLength,
         return nsnull;
 #ifdef DEBUG
     textRun->mCachedWords = 0;
+    textRun->mCacheGeneration = mGeneration;
 #endif
 
     gfxFont *font = aFontGroup->GetFontAt(0);
@@ -480,35 +590,73 @@ TextRunWordCache::MakeTextRun(const PRUnichar *aText, PRUint32 aLength,
 
     nsAutoTArray<PRUnichar,200> tempString;
     nsAutoTArray<DeferredWord,50> deferredWords;
+    nsAutoTArray<nsAutoPtr<gfxTextRun>,10> transientRuns;
     PRUint32 i;
     PRUint32 wordStart = 0;
     PRUint32 hash = 0;
+    PRBool seenDigitToModify = PR_FALSE;
+    PRBool needsNumeralProcessing =
+        mBidiNumeral != IBMBIDI_NUMERAL_NOMINAL;
     for (i = 0; i <= aLength; ++i) {
         PRUnichar ch = i < aLength ? aText[i] : ' ';
+        if (!seenDigitToModify && needsNumeralProcessing) {
+            // check if there is a digit that needs to be transformed
+            if (HandleNumberInChar(ch, !!(i > 0 ?
+                                       IS_ARABIC_CHAR(aText[i-1]) :
+                                       (aFlags & gfxTextRunWordCache::TEXT_INCOMING_ARABICCHAR)),
+                                   mBidiNumeral) != ch)
+                seenDigitToModify = PR_TRUE;
+        }
         if (IsWordBoundary(ch)) {
-            PRBool hit = LookupWord(textRun, font, wordStart, i, hash,
-                                    deferredWords.Length() == 0 ? nsnull : &deferredWords);
-            if (!hit) {
-                // Always put a space before the word so we can detect
-                // combining characters at the start of a word
-                tempString.AppendElement(' ');
-                PRUint32 offset = tempString.Length();
+            if (seenDigitToModify) {
+                // the word included at least one digit that is modified by the current
+                // bidi.numerals setting, so we must not use the cache for this word;
+                // instead, we'll create a new textRun and a DeferredWord entry pointing to it
                 PRUint32 length = i - wordStart;
-                PRUnichar *chars = tempString.AppendElements(length);
-                if (!chars) {
-                    FinishTextRun(textRun, nsnull, nsnull, deferredWords, PR_FALSE);
-                    return nsnull;
+                nsAutoArrayPtr<PRUnichar> numString;
+                numString = new PRUnichar[length];
+                for (PRUint32 j = 0; j < length; ++j) {
+                    numString[j] = HandleNumberInChar(aText[wordStart+j],
+                                                      !!(j > 0 ?
+                                                          IS_ARABIC_CHAR(numString[j-1]) :
+                                                          (aFlags & gfxTextRunWordCache::TEXT_INCOMING_ARABICCHAR)),
+                                                      mBidiNumeral);
                 }
-                memcpy(chars, aText + wordStart, length*sizeof(PRUnichar));
-                DeferredWord word = { nsnull, offset, wordStart, length, hash };
+                // now we make a transient textRun for the transformed word; this will not be cached
+                gfxTextRun *numRun;
+                numRun =
+                    aFontGroup->MakeTextRun(numString.get(), length, aParams,
+                                            aFlags & ~(gfxTextRunFactory::TEXT_IS_PERSISTENT |
+                                                       gfxTextRunFactory::TEXT_IS_8BIT));
+                DeferredWord word = { numRun, 0, wordStart, length, hash };
                 deferredWords.AppendElement(word);
-            }
-            
-            if (deferredWords.Length() == 0) {
-                if (IsBoundarySpace(ch) && i < aLength) {
-                    textRun->SetSpaceGlyph(font, aParams->mContext, i);
-                } // else we should set this character to be invisible missing,
-                  // but it already is because the textrun is blank!
+                transientRuns.AppendElement(numRun);
+                seenDigitToModify = PR_FALSE;
+            } else {
+                PRBool hit = LookupWord(textRun, font, wordStart, i, hash,
+                                        deferredWords.Length() == 0 ? nsnull : &deferredWords);
+                if (!hit) {
+                    // Always put a space before the word so we can detect
+                    // combining characters at the start of a word
+                    tempString.AppendElement(' ');
+                    PRUint32 offset = tempString.Length();
+                    PRUint32 length = i - wordStart;
+                    PRUnichar *chars = tempString.AppendElements(length);
+                    if (!chars) {
+                        FinishTextRun(textRun, nsnull, nsnull, deferredWords, PR_FALSE);
+                        return nsnull;
+                    }
+                    memcpy(chars, aText + wordStart, length*sizeof(PRUnichar));
+                    DeferredWord word = { nsnull, offset, wordStart, length, hash };
+                    deferredWords.AppendElement(word);
+                }
+
+                if (deferredWords.Length() == 0) {
+                    if (IsBoundarySpace(ch) && i < aLength) {
+                        textRun->SetSpaceGlyph(font, aParams->mContext, i);
+                    } // else we should set this character to be invisible missing,
+                      // but it already is because the textrun is blank!
+                }
             }
             hash = 0;
             wordStart = i + 1;
@@ -528,9 +676,12 @@ TextRunWordCache::MakeTextRun(const PRUnichar *aText, PRUint32 aLength,
     gfxTextRunFactory::Parameters params =
         { aParams->mContext, nsnull, nsnull, nsnull, 0, aParams->mAppUnitsPerDevUnit };
     nsAutoPtr<gfxTextRun> newRun;
-    newRun = aFontGroup->MakeTextRun(tempString.Elements(), tempString.Length(),
-                                     &params, aFlags | gfxTextRunFactory::TEXT_IS_PERSISTENT);
-
+    if (tempString.Length() == 0) {
+        newRun = aFontGroup->MakeEmptyTextRun(&params, aFlags);
+    } else {
+        newRun = aFontGroup->MakeTextRun(tempString.Elements(), tempString.Length(),
+                                         &params, aFlags | gfxTextRunFactory::TEXT_IS_PERSISTENT);
+    }
     FinishTextRun(textRun, newRun, aParams, deferredWords, newRun != nsnull);
     return textRun.forget();
 }
@@ -541,6 +692,9 @@ TextRunWordCache::MakeTextRun(const PRUint8 *aText, PRUint32 aLength,
                               const gfxFontGroup::Parameters *aParams,
                               PRUint32 aFlags)
 {
+    // update font list when using user fonts (assures generation is current)
+    aFontGroup->UpdateFontList();
+
     if (aFontGroup->GetStyle()->size == 0) {
         // Short-circuit for size-0 fonts, as Windows and ATSUI can't handle
         // them, and always create at least size 1 fonts, i.e. they still
@@ -555,6 +709,7 @@ TextRunWordCache::MakeTextRun(const PRUint8 *aText, PRUint32 aLength,
         return nsnull;
 #ifdef DEBUG
     textRun->mCachedWords = 0;
+    textRun->mCacheGeneration = mGeneration;
 #endif
 
     gfxFont *font = aFontGroup->GetFontAt(0);
@@ -563,35 +718,69 @@ TextRunWordCache::MakeTextRun(const PRUint8 *aText, PRUint32 aLength,
 
     nsAutoTArray<PRUint8,200> tempString;
     nsAutoTArray<DeferredWord,50> deferredWords;
+    nsAutoTArray<nsAutoPtr<gfxTextRun>,10> transientRuns;
     PRUint32 i;
     PRUint32 wordStart = 0;
     PRUint32 hash = 0;
+    PRBool seenDigitToModify = PR_FALSE;
+    PRBool needsNumeralProcessing =
+        mBidiNumeral != IBMBIDI_NUMERAL_NOMINAL;
     for (i = 0; i <= aLength; ++i) {
         PRUint8 ch = i < aLength ? aText[i] : ' ';
+        if (!seenDigitToModify && needsNumeralProcessing) {
+            // check if there is a digit that needs to be transformed
+            if (HandleNumberInChar(ch, i == 0 && (aFlags & gfxTextRunWordCache::TEXT_INCOMING_ARABICCHAR),
+                                   mBidiNumeral) != ch)
+                seenDigitToModify = PR_TRUE;
+        }
         if (IsWordBoundary(ch)) {
-            PRBool hit = LookupWord(textRun, font, wordStart, i, hash,
-                                    deferredWords.Length() == 0 ? nsnull : &deferredWords);
-            if (!hit) {
-                if (tempString.Length() > 0) {
-                    tempString.AppendElement(' ');
-                }
-                PRUint32 offset = tempString.Length();
+            if (seenDigitToModify) {
+                // see parallel code in the 16-bit method above
                 PRUint32 length = i - wordStart;
-                PRUint8 *chars = tempString.AppendElements(length);
-                if (!chars) {
-                    FinishTextRun(textRun, nsnull, nsnull, deferredWords, PR_FALSE);
-                    return nsnull;
+                nsAutoArrayPtr<PRUnichar> numString;
+                numString = new PRUnichar[length];
+                for (PRUint32 j = 0; j < length; ++j) {
+                    numString[j] = HandleNumberInChar(aText[wordStart+j],
+                                                      !!(j > 0 ?
+                                                          IS_ARABIC_CHAR(numString[j-1]) :
+                                                          (aFlags & gfxTextRunWordCache::TEXT_INCOMING_ARABICCHAR)),
+                                                      mBidiNumeral);
                 }
-                memcpy(chars, aText + wordStart, length*sizeof(PRUint8));
-                DeferredWord word = { nsnull, offset, wordStart, length, hash };
+                // now we make a transient textRun for the transformed word; this will not be cached
+                gfxTextRun *numRun;
+                numRun =
+                    aFontGroup->MakeTextRun(numString.get(), length, aParams,
+                                            aFlags & ~(gfxTextRunFactory::TEXT_IS_PERSISTENT |
+                                                       gfxTextRunFactory::TEXT_IS_8BIT));
+                DeferredWord word = { numRun, 0, wordStart, length, hash };
                 deferredWords.AppendElement(word);
-            }
-            
-            if (deferredWords.Length() == 0) {
-                if (IsBoundarySpace(ch) && i < aLength) {
-                    textRun->SetSpaceGlyph(font, aParams->mContext, i);
-                } // else we should set this character to be invisible missing,
-                  // but it already is because the textrun is blank!
+                transientRuns.AppendElement(numRun);
+                seenDigitToModify = PR_FALSE;
+            } else {
+                PRBool hit = LookupWord(textRun, font, wordStart, i, hash,
+                                        deferredWords.Length() == 0 ? nsnull : &deferredWords);
+                if (!hit) {
+                    if (tempString.Length() > 0) {
+                        tempString.AppendElement(' ');
+                    }
+                    PRUint32 offset = tempString.Length();
+                    PRUint32 length = i - wordStart;
+                    PRUint8 *chars = tempString.AppendElements(length);
+                    if (!chars) {
+                        FinishTextRun(textRun, nsnull, nsnull, deferredWords, PR_FALSE);
+                        return nsnull;
+                    }
+                    memcpy(chars, aText + wordStart, length*sizeof(PRUint8));
+                    DeferredWord word = { nsnull, offset, wordStart, length, hash };
+                    deferredWords.AppendElement(word);
+                }
+
+                if (deferredWords.Length() == 0) {
+                    if (IsBoundarySpace(ch) && i < aLength) {
+                        textRun->SetSpaceGlyph(font, aParams->mContext, i);
+                    } // else we should set this character to be invisible missing,
+                      // but it already is because the textrun is blank!
+                }
             }
             hash = 0;
             wordStart = i + 1;
@@ -611,9 +800,12 @@ TextRunWordCache::MakeTextRun(const PRUint8 *aText, PRUint32 aLength,
     gfxTextRunFactory::Parameters params =
         { aParams->mContext, nsnull, nsnull, nsnull, 0, aParams->mAppUnitsPerDevUnit };
     nsAutoPtr<gfxTextRun> newRun;
-    newRun = aFontGroup->MakeTextRun(tempString.Elements(), tempString.Length(),
-                                     &params, aFlags | gfxTextRunFactory::TEXT_IS_PERSISTENT);
-
+    if (tempString.Length() == 0) {
+        newRun = aFontGroup->MakeEmptyTextRun(&params, aFlags);
+    } else {
+        newRun = aFontGroup->MakeTextRun(tempString.Elements(), tempString.Length(),
+                                         &params, aFlags | gfxTextRunFactory::TEXT_IS_PERSISTENT);
+    }
     FinishTextRun(textRun, newRun, aParams, deferredWords, newRun != nsnull);
     return textRun.forget();
 }
@@ -646,6 +838,12 @@ TextRunWordCache::RemoveWord(gfxTextRun *aTextRun, PRUint32 aStart,
 void
 TextRunWordCache::RemoveTextRun(gfxTextRun *aTextRun)
 {
+#ifdef DEBUG
+    if (aTextRun->mCacheGeneration != mGeneration) {
+        PR_LOG(gWordCacheLog, PR_LOG_DEBUG, ("cache generation changed (aTextRun %p)", aTextRun));
+        return;
+    }
+#endif
     PRUint32 i;
     PRUint32 wordStart = 0;
     PRUint32 hash = 0;
@@ -710,7 +908,8 @@ TextRunWordCache::CacheHashEntry::KeyEquals(const KeyTypePointer aKey) const
         aKey->mAppUnitsPerDevUnit != mTextRun->GetAppUnitsPerDevUnit() ||
         aKey->mIsRTL != mTextRun->IsRightToLeft() ||
         aKey->mEnabledOptionalLigatures != ((mTextRun->GetFlags() & gfxTextRunFactory::TEXT_DISABLE_OPTIONAL_LIGATURES) == 0) ||
-        aKey->mOptimizeSpeed != ((mTextRun->GetFlags() & gfxTextRunFactory::TEXT_OPTIMIZE_SPEED) != 0))
+        aKey->mOptimizeSpeed != ((mTextRun->GetFlags() & gfxTextRunFactory::TEXT_OPTIMIZE_SPEED) != 0) ||
+        aKey->mUserFontSetGeneration != (mTextRun->GetUserFontSetGeneration()))
         return PR_FALSE;
 
     if (mTextRun->GetFlags() & gfxFontGroup::TEXT_IS_8BIT) {
@@ -731,13 +930,18 @@ TextRunWordCache::CacheHashEntry::KeyEquals(const KeyTypePointer aKey) const
 PLDHashNumber
 TextRunWordCache::CacheHashEntry::HashKey(const KeyTypePointer aKey)
 {
-    return aKey->mStringHash + (long)aKey->mFontOrGroup + aKey->mAppUnitsPerDevUnit +
+    // only use lower 32 bits of generation counter in hash key, 
+    // since these vary the most
+    PRUint32 fontSetGen;
+    LL_L2UI(fontSetGen, aKey->mUserFontSetGeneration);
+
+    return aKey->mStringHash + fontSetGen + (long)aKey->mFontOrGroup + aKey->mAppUnitsPerDevUnit +
         aKey->mIsDoubleByteText + aKey->mIsRTL*2 + aKey->mEnabledOptionalLigatures*4 +
         aKey->mOptimizeSpeed*8;
 }
 
 #ifdef DEBUG
-PLDHashOperator PR_CALLBACK
+PLDHashOperator
 TextRunWordCache::CacheDumpEntry(CacheHashEntry* aEntry, void* userArg)
 {
     FILE* output = static_cast<FILE*>(userArg);
@@ -758,20 +962,23 @@ TextRunWordCache::Dump()
 }
 #endif
 
-static TextRunWordCache *gTextRunWordCache = nsnull;
-
 nsresult
 gfxTextRunWordCache::Init()
 {
     gTextRunWordCache = new TextRunWordCache();
+    if (gTextRunWordCache) {
+        // ensure there is a reference before the AddObserver calls;
+        // this will be Release()'d in gfxTextRunWordCache::Shutdown()
+        NS_ADDREF(gTextRunWordCache);
+        gTextRunWordCache->Init();
+    }
     return gTextRunWordCache ? NS_OK : NS_ERROR_OUT_OF_MEMORY;
 }
 
 void
 gfxTextRunWordCache::Shutdown()
 {
-    delete gTextRunWordCache;
-    gTextRunWordCache = nsnull;
+    NS_IF_RELEASE(gTextRunWordCache);
 }
 
 gfxTextRun *

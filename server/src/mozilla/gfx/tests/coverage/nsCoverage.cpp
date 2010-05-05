@@ -252,7 +252,7 @@ nsPoint *pointlist;
  * Main Handler
  *--------------------------------------------------------------------------------
  */
-nsEventStatus PR_CALLBACK HandleEvent(nsGUIEvent *aEvent)
+nsEventStatus HandleEvent(nsGUIEvent *aEvent)
 { 
    nsEventStatus result = nsEventStatus_eIgnore;
 
@@ -373,7 +373,7 @@ nsresult CoverageTest(int *argc, char **argv)
 
     if (NS_OK == res)
     {
-      deviceContext->Init(gWindow->GetNativeData(NS_NATIVE_WIDGET));
+      deviceContext->Init(gWindow);
       NS_ADDREF(deviceContext);
     }
 

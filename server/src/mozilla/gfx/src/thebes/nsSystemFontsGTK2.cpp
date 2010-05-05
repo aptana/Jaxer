@@ -45,18 +45,18 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
-#include <gdk/gdkx.h>
 
+#ifdef MOZ_PANGO
 #include <pango/pango.h>
-#include <pango/pangox.h>
 #include <pango/pango-fontmap.h>
+#endif
 
 #include <fontconfig/fontconfig.h>
 #include "nsSystemFontsGTK2.h"
 #include "gfxPlatformGtk.h"
 
 // Glue to avoid build/runtime dependencies on Pango > 1.6
-#ifndef THEBES_USE_PANGO_CAIRO
+#if defined(MOZ_PANGO) && !defined(THEBES_USE_PANGO_CAIRO)
 static gboolean
 (* PTR_pango_font_description_get_size_is_absolute)(PangoFontDescription*)
     = nsnull;
@@ -101,11 +101,13 @@ static inline void ShutdownPangoLib()
 {
 }
 
+#ifdef MOZ_PANGO
 static inline gboolean
 MOZ_pango_font_description_get_size_is_absolute(PangoFontDescription *desc)
 {
     pango_font_description_get_size_is_absolute(desc);
 }
+#endif
 #endif
 
 nsSystemFontsGTK2::nsSystemFontsGTK2()
@@ -152,17 +154,16 @@ nsSystemFontsGTK2::nsSystemFontsGTK2()
     GtkWidget *accel_label = gtk_accel_label_new("M");
     GtkWidget *menuitem = gtk_menu_item_new();
     GtkWidget *menu = gtk_menu_new();
-    gtk_object_ref(GTK_OBJECT(menu));
-    gtk_object_sink(GTK_OBJECT(menu));
+    g_object_ref_sink(GTK_OBJECT(menu));
 
     gtk_container_add(GTK_CONTAINER(menuitem), accel_label);
-    gtk_menu_append(GTK_MENU(menu), menuitem);
+    gtk_menu_shell_append((GtkMenuShell *)GTK_MENU(menu), menuitem);
 
     gtk_widget_ensure_style(accel_label);
 
     GetSystemFontInfo(accel_label, &mMenuFontName, &mMenuFontStyle);
 
-    gtk_widget_unref(menu);
+    g_object_unref(menu);
 
     // mButtonFont
     parent = gtk_fixed_new();
@@ -190,6 +191,7 @@ nsresult
 nsSystemFontsGTK2::GetSystemFontInfo(GtkWidget *aWidget, nsString *aFontName,
                                      gfxFontStyle *aFontStyle) const
 {
+#ifdef MOZ_PANGO
     GtkSettings *settings = gtk_widget_get_settings(aWidget);
 
     aFontStyle->style       = FONT_STYLE_NORMAL;
@@ -210,13 +212,16 @@ nsSystemFontsGTK2::GetSystemFontInfo(GtkWidget *aWidget, nsString *aFontName,
 
     aFontStyle->weight = pango_font_description_get_weight(desc);
 
-    float size = float(pango_font_description_get_size(desc) / PANGO_SCALE);
+    // FIXME: Set aFontStyle->stretch correctly!
+    aFontStyle->stretch = NS_FONT_STRETCH_NORMAL;
+
+    float size = float(pango_font_description_get_size(desc)) / PANGO_SCALE;
 
     // |size| is now either pixels or pango-points (not Mozilla-points!)
 
     if (!MOZ_pango_font_description_get_size_is_absolute(desc)) {
         // |size| is in pango-points, so convert to pixels.
-        size *= float(gfxPlatformGtk::DPI()) / POINTS_PER_INCH_FLOAT;
+        size *= float(gfxPlatform::GetDPI()) / POINTS_PER_INCH_FLOAT;
     }
 
     // |size| is now pixels
@@ -224,6 +229,18 @@ nsSystemFontsGTK2::GetSystemFontInfo(GtkWidget *aWidget, nsString *aFontName,
     aFontStyle->size = size;
   
     pango_font_description_free(desc);
+
+#else
+    /* FIXME: DFB FT2 Hardcoding the system font info for now.. */
+    aFontStyle->style       = FONT_STYLE_NORMAL;
+    aFontStyle->systemFont = PR_TRUE;
+
+    NS_NAMED_LITERAL_STRING(fontname, "\"Sans\"");
+    *aFontName = fontname;
+    aFontStyle->weight = 400;
+    aFontStyle->size = 40/3;
+
+#endif
 
     return NS_OK;
 }
