@@ -116,7 +116,7 @@ nsDeque::~nsDeque() {
 
   Erase();
   if (mData && (mData!=mBuffer)) {
-    delete [] mData;
+    free(mData);
   }
   mData=0;
   SetDeallocator(0);
@@ -169,41 +169,34 @@ nsDeque& nsDeque::Erase() {
  * If the deque actually overflows, there's very little we can do.
  * Perhaps this function should return PRBool/nsresult indicating success/failure.
  *
- * @return  capacity of the deque
- *          If the deque did not grow,
- *          and you knew its capacity beforehand,
- *          then this would be a way to indicate the failure.
+ * @return  whether growing succeeded
  */
-PRInt32 nsDeque::GrowCapacity() {
+PRBool nsDeque::GrowCapacity() {
   PRInt32 theNewSize=mCapacity<<2;
   NS_ASSERTION(theNewSize>mCapacity, "Overflow");
   if (theNewSize<=mCapacity)
-    return mCapacity;
-  void** temp=new void*[theNewSize];
+    return PR_FALSE;
+  void** temp=(void**)malloc(theNewSize * sizeof(void*));
+  if (!temp)
+    return PR_FALSE;
 
   //Here's the interesting part: You can't just move the elements
   //directly (in situ) from the old buffer to the new one.
   //Since capacity has changed, the old origin doesn't make
   //sense anymore. It's better to resequence the elements now.
 
-  if (temp) {
-    PRInt32 tempi=0;
-    PRInt32 i=0;
-    PRInt32 j=0;
-    for (i=mOrigin; i<mCapacity; i++) {
-      temp[tempi++]=mData[i]; //copy the leading elements...
-    }
-    for (j=0;j<mOrigin;j++) {
-      temp[tempi++]=mData[j]; //copy the trailing elements...
-    }
-    if (mData != mBuffer) {
-      delete [] mData;
-    }
-    mCapacity=theNewSize;
-    mOrigin=0; //now realign the origin...
-    mData=temp;
+  memcpy(temp, mData + mOrigin, sizeof(void*) * (mCapacity - mOrigin));
+  memcpy(temp + (mCapacity - mOrigin), mData, sizeof(void*) * mOrigin);
+
+  if (mData != mBuffer) {
+    free(mData);
   }
-  return mCapacity;
+
+  mCapacity=theNewSize;
+  mOrigin=0; //now realign the origin...
+  mData=temp;
+
+  return PR_TRUE;
 }
 
 /**
@@ -215,8 +208,9 @@ PRInt32 nsDeque::GrowCapacity() {
  * @return  *this
  */
 nsDeque& nsDeque::Push(void* aItem) {
-  if (mSize==mCapacity) {
-    GrowCapacity();
+  if (mSize==mCapacity && !GrowCapacity()) {
+    NS_WARNING("out of memory");
+    return *this;
   }
   mData[modulus(mOrigin + mSize, mCapacity)]=aItem;
   mSize++;
@@ -260,7 +254,10 @@ nsDeque& nsDeque::PushFront(void* aItem) {
   mOrigin--;
   modasgn(mOrigin,mCapacity);
   if (mSize==mCapacity) {
-    GrowCapacity();
+    if (!GrowCapacity()) {
+      NS_WARNING("out of memory");
+      return *this;
+    }
     /* Comments explaining this are above*/
     mData[mSize]=mData[mOrigin];
   }

@@ -48,6 +48,7 @@
 #include "prerror.h"
 #include "prerr.h"
 #include "prenv.h"
+#include "pratom.h"
 
 #if defined(XP_BEOS)
 /* For DEBUGGER macros */
@@ -64,6 +65,11 @@
 
 #if defined(XP_UNIX)
 #include <signal.h>
+#endif
+
+#if defined(XP_WIN)
+#include <tchar.h>
+#include "nsString.h"
 #endif
 
 static void
@@ -86,39 +92,9 @@ Break(const char *aMsg);
 #include <stdlib.h>
 #endif
 
-/*
- * Determine if debugger is present in windows.
- */
-#if defined (_WIN32)
+static PRInt32 gAssertionCount = 0;
 
-typedef WINBASEAPI BOOL (WINAPI* LPFNISDEBUGGERPRESENT)();
-PRBool InDebugger()
-{
-#ifndef WINCE
-   PRBool fReturn = PR_FALSE;
-   LPFNISDEBUGGERPRESENT lpfnIsDebuggerPresent = NULL;
-   HINSTANCE hKernel = LoadLibrary("Kernel32.dll");
-
-   if(hKernel)
-      {
-      lpfnIsDebuggerPresent = 
-         (LPFNISDEBUGGERPRESENT)GetProcAddress(hKernel, "IsDebuggerPresent");
-      if(lpfnIsDebuggerPresent)
-         {
-         fReturn = (*lpfnIsDebuggerPresent)();
-         }
-      FreeLibrary(hKernel);
-      }
-
-   return fReturn;
-#else
-   return PR_FALSE;
-#endif
-}
-
-#endif /* WIN32*/
-
-NS_IMPL_QUERY_INTERFACE1(nsDebugImpl, nsIDebug)
+NS_IMPL_QUERY_INTERFACE2(nsDebugImpl, nsIDebug, nsIDebug2)
 
 NS_IMETHODIMP_(nsrefcnt)
 nsDebugImpl::AddRef()
@@ -158,6 +134,24 @@ NS_IMETHODIMP
 nsDebugImpl::Abort(const char *aFile, PRInt32 aLine)
 {
   NS_DebugBreak(NS_DEBUG_ABORT, nsnull, nsnull, aFile, aLine);
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+nsDebugImpl::GetIsDebugBuild(PRBool* aResult)
+{
+#ifdef DEBUG
+  *aResult = PR_TRUE;
+#else
+  *aResult = PR_FALSE;
+#endif
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+nsDebugImpl::GetAssertionCount(PRInt32* aResult)
+{
+  *aResult = gAssertionCount;
   return NS_OK;
 }
 
@@ -323,11 +317,13 @@ NS_DebugBreak(PRUint32 aSeverity, const char *aStr, const char *aExpr,
      return;
 
    case NS_DEBUG_ABORT:
+     nsTraceRefcntImpl::WalkTheStack(stderr);
      Abort(buf.buffer);
      return;
    }
 
    // Now we deal with assertions
+   PR_AtomicIncrement(&gAssertionCount);
 
    switch (GetAssertBehavior()) {
    case NS_ASSERT_WARN:
@@ -363,8 +359,11 @@ static void
 Abort(const char *aMsg)
 {
 #if defined(_WIN32)
+
+#ifndef WINCE
   //This should exit us
   raise(SIGABRT);
+#endif
   //If we are ignored exit this way..
   _exit(3);
 #elif defined(XP_UNIX)
@@ -379,6 +378,14 @@ Abort(const char *aMsg)
   // Don't know how to abort on this platform! call Break() instead
   Break(aMsg);
 #endif
+
+  // Still haven't aborted?  Try dereferencing null.
+  // (Written this way to lessen the likelihood of it being optimized away.)
+  gAssertionCount += *((PRInt32 *) 0); // TODO annotation saying we know 
+                                       // this is crazy
+
+  // Still haven't aborted?  Try _exit().
+  PR_ProcessExit(127);
 }
 
 // Abort() calls this function, don't call it!
@@ -392,7 +399,7 @@ Break(const char *aMsg)
     const char *shouldIgnoreDebugger = getenv("XPCOM_DEBUG_DLG");
     ignoreDebugger = 1 + (shouldIgnoreDebugger && !strcmp(shouldIgnoreDebugger, "1"));
   }
-  if((ignoreDebugger == 2) || !InDebugger()) {
+  if ((ignoreDebugger == 2) || !::IsDebuggerPresent()) {
     DWORD code = IDRETRY;
 
     /* Create the debug dialog out of process to avoid the crashes caused by 
@@ -401,9 +408,9 @@ Break(const char *aMsg)
      * See http://bugzilla.mozilla.org/show_bug.cgi?id=54792
      */
     PROCESS_INFORMATION pi;
-    STARTUPINFO si;
-    char executable[MAX_PATH];
-    char* pName;
+    STARTUPINFOW si;
+    PRUnichar executable[MAX_PATH];
+    PRUnichar* pName;
 
     memset(&pi, 0, sizeof(pi));
 
@@ -412,13 +419,15 @@ Break(const char *aMsg)
     si.wShowWindow = SW_SHOW;
 
     // 2nd arg of CreateProcess is in/out
-    char *msgCopy = (char*) _alloca(strlen(aMsg) + 1); 
-    strcpy(msgCopy, aMsg);
+    PRUnichar *msgCopy = (PRUnichar*) _alloca((strlen(aMsg) + 1)*sizeof(PRUnichar));
+    wcscpy(msgCopy  , (PRUnichar*)NS_ConvertUTF8toUTF16(aMsg).get());
 
-    if(GetModuleFileName(GetModuleHandle("xpcom.dll"), executable, MAX_PATH) &&
-       NULL != (pName = strrchr(executable, '\\')) &&
-       NULL != strcpy(pName+1, "windbgdlg.exe") &&
-       CreateProcess(executable, msgCopy, NULL, NULL, PR_FALSE,
+    if(GetModuleFileNameW(GetModuleHandleW(L"xpcom.dll"), (LPWCH)executable, MAX_PATH) &&
+       NULL != (pName = wcsrchr(executable, '\\')) &&
+       NULL != 
+       wcscpy((WCHAR*)
+       pName+1, L"windbgdlg.exe") &&
+       CreateProcessW((LPCWSTR)executable, (LPWSTR)msgCopy, NULL, NULL, PR_FALSE,
                      DETACHED_PROCESS | NORMAL_PRIORITY_CLASS,
                      NULL, NULL, &si, &pi)) {
       WaitForSingleObject(pi.hProcess, INFINITE);

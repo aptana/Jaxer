@@ -44,20 +44,21 @@ include $(DEPTH)/config/autoconf.mk
 
 MODULE		= xpcom
 
-REQUIRES	= string
-
-CPPSRCS		= TestCOM.cpp 
-
-SIMPLE_PROGRAMS	= $(CPPSRCS:.cpp=$(BIN_SUFFIX))
+REQUIRES	= \
+		string \
+		xpcom \
+		$(NULL)
 
 include $(topsrcdir)/config/config.mk
 
+CPP_UNIT_TESTS	= \
+                  TestCOM.cpp \
+                  $(NULL)
+
+# TestNTFSPermissions is causing oranges because it's creating directories
+# multiple times, and then leaving them in a state where they can't be cleaned
+#CPP_UNIT_TESTS += TestNTFSPermissions.cpp
+
 include $(topsrcdir)/config/rules.mk
 
-OS_LIBS	= $(call EXPAND_LIBNAME,rpcrt4 uuid)
-
-LIBS = \
-	$(DIST)/lib/$(LIB_PREFIX)xpcomglue_s.$(LIB_SUFFIX) \
-	$(XPCOM_LIBS) \
-	$(NSPR_LIBS) \
-	$(NULL)
+OS_LIBS	= $(call EXPAND_LIBNAME,rpcrt4 uuid advapi32)

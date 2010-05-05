@@ -36,85 +36,77 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-#ifndef nsLocalFileMac_h__
-#define nsLocalFileMac_h__
+#ifndef nsLocalFileMac_h_
+#define nsLocalFileMac_h_
 
 #include "nsILocalFileMac.h"
 #include "nsString.h"
 #include "nsIHashable.h"
-#include "nsIClassInfoImpl.h"
 
 class nsDirEnumerator;
 
-//*****************************************************************************
-//  nsLocalFile
-//
+// Mac OS X 10.4 does not have stat64/lstat64
+#if defined(HAVE_STAT64) && defined(HAVE_LSTAT64) && (MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_4)
+#define STAT stat64
+#define LSTAT lstat64
+#else
+#define STAT stat
+#define LSTAT lstat
+#endif
+
+// Mac OS X 10.4 does not have statvfs64
+#if defined(HAVE_STATVFS64) && (MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_4)
+#define STATVFS statvfs64
+#else
+#define STATVFS statvfs
+#endif
+
 // The native charset of this implementation is UTF-8. The Unicode used by the
 // Mac OS file system is decomposed, so "Native" versions of these routines will
 // always use decomposed Unicode (NFD). Their "non-Native" counterparts are 
 // intended to be simple wrappers which call the "Native" version and convert 
 // between UTF-8 and UTF-16. All the work is done on the "Native" side except
 // for the conversion to NFC (composed Unicode) done in "non-Native" getters.
-//*****************************************************************************
 
 class NS_COM nsLocalFile : public nsILocalFileMac,
                            public nsIHashable
 {
-    friend class nsDirEnumerator;
+  friend class nsDirEnumerator;
     
 public:
-    NS_DEFINE_STATIC_CID_ACCESSOR(NS_LOCAL_FILE_CID)
-    
-                        nsLocalFile();
+  NS_DEFINE_STATIC_CID_ACCESSOR(NS_LOCAL_FILE_CID)
 
-    static NS_METHOD    nsLocalFileConstructor(nsISupports* outer, const nsIID& aIID, void* *aInstancePtr);
+  nsLocalFile();
 
-    NS_DECL_ISUPPORTS
-    NS_DECL_NSIFILE
-    NS_DECL_NSILOCALFILE
-    NS_DECL_NSILOCALFILEMAC
-    NS_DECL_NSIHASHABLE
+  static NS_METHOD nsLocalFileConstructor(nsISupports* outer, const nsIID& aIID, void* *aInstancePtr);
+
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIFILE
+  NS_DECL_NSILOCALFILE
+  NS_DECL_NSILOCALFILEMAC
+  NS_DECL_NSIHASHABLE
 
 public:
+  static void GlobalInit();
+  static void GlobalShutdown();
 
-    static void         GlobalInit();
-    static void         GlobalShutdown();
-    
 private:
-                        ~nsLocalFile();
+  ~nsLocalFile();
 
 protected:
-                        nsLocalFile(const nsLocalFile& src);
-    
-    nsresult            SetBaseRef(CFURLRef aCFURLRef); // Does CFRetain on aCFURLRef
-    nsresult            UpdateTargetRef();
-    
-    nsresult            GetFSRefInternal(FSRef& aFSSpec, PRBool bForceUpdateCache = PR_TRUE);
-    nsresult            GetPathInternal(nsACString& path);  // Returns path WRT mFollowLinks
-    nsresult            EqualsInternal(nsISupports* inFile,
-                                       PRBool aUpdateCache, PRBool *_retval);
-
-    nsresult            CopyInternal(nsIFile* newParentDir,
-                                     const nsAString& newName,
-                                     PRBool followLinks);
-
-    static PRInt64      HFSPlustoNSPRTime(const UTCDateTime& utcTime);
-    static void         NSPRtoHFSPlusTime(PRInt64 nsprTime, UTCDateTime& utcTime);
-    static nsresult     CFStringReftoUTF8(CFStringRef aInStrRef, nsACString& aOutStr);
+  nsLocalFile(const nsLocalFile& src);
+  nsresult SetBaseURL(CFURLRef aCFURLRef); // retains aCFURLRef
+  nsresult GetFSRefInternal(FSRef& aFSRef);
+  nsresult GetPathInternal(nsACString& path); // Returns path respecting mFollowLinks
+  nsresult CopyInternal(nsIFile* newParentDir,
+                        const nsAString& newName,
+                        PRBool followLinks);
+  nsresult FillStatBufferInternal(struct STAT *statBuffer);
 
 protected:
-    CFURLRef            mBaseRef;           // The FS object we represent
-    CFURLRef            mTargetRef;         // If mBaseRef is an alias, its target
-
-    FSRef               mCachedFSRef;
-    PRPackedBool        mCachedFSRefValid;
-    
-    PRPackedBool        mFollowLinks;
-    PRPackedBool        mFollowLinksDirty;
-
-    static const char         kPathSepChar;
-    static const PRUnichar    kPathSepUnichar;
-    static const PRInt64      kJanuaryFirst1970Seconds;    
+  CFURLRef     mBaseURL; // The FS object we represent
+  char         mPath[PATH_MAX]; // POSIX path, UTF-8, NULL terminated
+  PRPackedBool mFollowLinks;
 };
 
-#endif // nsLocalFileMac_h__
+#endif // nsLocalFileMac_h_

@@ -67,6 +67,7 @@
 
 struct nsFactoryEntry;
 class nsIServiceManager;
+struct PRThread;
 
 #define NS_COMPONENTMANAGER_CID                      \
 { /* 91775d60-d5dc-11d2-92fb-00e09805570f */         \
@@ -212,6 +213,9 @@ public:
     nsFactoryEntry *GetFactoryEntry(const nsCID &aClass);
 
     nsresult SyncComponentsInDir(PRInt32 when, nsIFile *dirSpec);
+
+    // NOTE: HashContractID operates on the hash table with ContractIDs,
+    // for thread-safety it should only be invoked from inside mMon.
     nsresult HashContractID(const char *acontractID, PRUint32 aContractIDLen,
                             nsFactoryEntry *fe_ptr);
 
@@ -222,6 +226,10 @@ public:
     nsresult AutoRegisterDirectory(nsIFile*                  aComponentFile,
                                    nsCOMArray<nsILocalFile> &aLeftovers,
                                    nsTArray<DeferredModule> &aDeferred);
+    nsresult AutoRegisterComponentsList(nsIFile* inDir,
+                                        PRFileDesc* fd,
+                                        nsCOMArray<nsILocalFile>& aLeftovers,
+                                        nsTArray<DeferredModule>& aDeferred);
     nsresult AutoRegisterComponent(nsILocalFile*             aComponentFile,
                                    nsTArray<DeferredModule> &aDeferred,
                                    LoaderType                minLoader = NS_LOADER_TYPE_NATIVE);
@@ -260,12 +268,17 @@ public:
 
     PLArenaPool   mArena;
 
-#ifdef XPCOM_CHECK_PENDING_CIDS
-    nsresult AddPendingCID(const nsCID &aClass);
-    void RemovePendingCID(const nsCID &aClass);
+    struct PendingServiceInfo {
+      const nsCID* cid;
+      PRThread* thread;
+    };
 
-    nsVoidArray         mPendingCIDs;
-#endif
+    inline PendingServiceInfo* AddPendingService(const nsCID& aServiceCID,
+                                                 PRThread* aThread);
+    inline void RemovePendingService(const nsCID& aServiceCID);
+    inline PRThread* GetPendingServiceThread(const nsCID& aServiceCID) const;
+
+    nsTArray<PendingServiceInfo> mPendingServices;
 
 private:
     ~nsComponentManagerImpl();

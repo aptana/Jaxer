@@ -47,7 +47,7 @@
 PR_BEGIN_EXTERN_C
 
 typedef void
-(* PR_CALLBACK NS_WalkStackCallback)(void *aPC, void *aClosure);
+(* NS_WalkStackCallback)(void *aPC, void *aClosure);
 
 /**
  * Call aCallback for the C/C++ stack frames on the current thread, from
@@ -61,6 +61,9 @@ typedef void
  *
  * Returns NS_ERROR_NOT_IMPLEMENTED on platforms where it is
  * unimplemented.
+ * Returns NS_ERROR_UNEXPECTED when the stack indicates that the thread
+ * is in a very dangerous situation (e.g., holding sem_pool_lock in 
+ * Mac OS X pthreads code). Callers should then bail out immediately.
  *
  * May skip some stack frames due to compiler optimizations or code
  * generation.
@@ -76,7 +79,7 @@ typedef struct {
      * string and zero if unknown.
      */
     char library[256];
-    unsigned long loffset;
+    PRUptrdiff loffset;
     /*
      * The name of the file name and line number of the code
      * corresponding to the address, or empty string and zero if
@@ -89,7 +92,7 @@ typedef struct {
      * offset within that function, or empty string and zero if unknown.
      */
     char function[256];
-    unsigned long foffset;
+    PRUptrdiff foffset;
 } nsCodeAddressDetails;
 
 /**

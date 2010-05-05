@@ -36,44 +36,83 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+#ifndef MOZILLA_INTERNAL_API
+#error Cannot use internal string classes without MOZILLA_INTERNAL_API defined. Use the frozen header nsStringAPI.h instead.
+#endif
 
   /**
-   * nsTSubstring
-   *
-   * The base string type.  This type is not instantiated directly.  A sub-
-   * class is instantiated instead.  For example, see nsTString.
-   *
-   * This type works like nsTAString except that it does not have the ABI
-   * requirements of that interface.  Like nsTAString, nsTSubstring
-   * represents a single contiguous array of characters that may or may not
-   * be null-terminated.
-   *
-   * Many of the accessors on nsTSubstring are inlined as an optimization.
-   *
-   * This class is also known as "nsASingleFragmentC?String".
+   * The base for string comparators
    */
-class nsTSubstring_CharT : public nsTAString_CharT
+class NS_COM nsTStringComparator_CharT
   {
     public:
+      typedef CharT char_type;
 
-      typedef nsTSubstring_CharT    self_type;
-      typedef nsTString_CharT       string_type;
+      nsTStringComparator_CharT() {}
 
-      typedef char_type*            char_iterator;
-      typedef const char_type*      const_char_iterator;
+      virtual int operator()( const char_type*, const char_type*, PRUint32 length ) const = 0;
+      virtual int operator()( char_type, char_type ) const = 0;
+  };
 
-#ifdef MOZ_V1_STRING_ABI
-      typedef nsTAString_CharT      base_string_type;
-#else
-      typedef nsTSubstring_CharT    base_string_type;
-#endif
+
+  /**
+   * The default string comparator (case-sensitive comparision)
+   */
+class NS_COM nsTDefaultStringComparator_CharT
+    : public nsTStringComparator_CharT
+  {
+    public:
+      typedef CharT char_type;
+
+      nsTDefaultStringComparator_CharT() {}
+
+      virtual int operator()( const char_type*, const char_type*, PRUint32 length ) const;
+      virtual int operator()( char_type, char_type ) const;
+  };
+
+  /**
+   * nsTSubstring is the most abstract class in the string hierarchy. It
+   * represents a single contiguous array of characters, which may or may not
+   * be null-terminated. This type is not instantiated directly.  A sub-class
+   * is instantiated instead.  For example, see nsTString.
+   *
+   * NAMES:
+   *   nsAString for wide characters
+   *   nsACString for narrow characters
+   *
+   * Many of the accessors on nsTSubstring are inlined as an optimization.
+   */
+class nsTSubstring_CharT
+  {
+    public:
+      typedef CharT                               char_type;
+
+      typedef nsCharTraits<char_type>             char_traits;
+      typedef char_traits::incompatible_char_type incompatible_char_type;
+
+      typedef nsTSubstring_CharT                  self_type;
+      typedef self_type                           abstract_string_type;
+      typedef self_type                           base_string_type;
+
+      typedef self_type                           substring_type;
+      typedef nsTSubstringTuple_CharT             substring_tuple_type;
+      typedef nsTString_CharT                     string_type;
+
+      typedef nsReadingIterator<char_type>        const_iterator;
+      typedef nsWritingIterator<char_type>        iterator;
+
+      typedef nsTStringComparator_CharT           comparator_type;
+
+      typedef char_type*                          char_iterator;
+      typedef const char_type*                    const_char_iterator;
+
+      typedef PRUint32                            size_type;
+      typedef PRUint32                            index_type;
 
     public:
 
-#ifndef MOZ_V1_STRING_ABI
         // this acts like a virtual destructor
       NS_COM NS_CONSTRUCTOR_FASTCALL ~nsTSubstring_CharT();
-#endif
 
         /**
          * reading iterators
@@ -226,11 +265,6 @@ class nsTSubstring_CharT : public nsTAString_CharT
       NS_COM PRBool NS_FASTCALL Equals( const self_type& ) const;
       NS_COM PRBool NS_FASTCALL Equals( const self_type&, const comparator_type& ) const;
 
-#ifdef MOZ_V1_STRING_ABI
-      NS_COM PRBool NS_FASTCALL Equals( const abstract_string_type& readable ) const;
-      NS_COM PRBool NS_FASTCALL Equals( const abstract_string_type& readable, const comparator_type& comp ) const;
-#endif
-
       NS_COM PRBool NS_FASTCALL Equals( const char_type* data ) const;
       NS_COM PRBool NS_FASTCALL Equals( const char_type* data, const comparator_type& comp ) const;
 
@@ -310,9 +344,6 @@ class nsTSubstring_CharT : public nsTAString_CharT
       NS_COM void NS_FASTCALL Assign( const char_type* data, size_type length = size_type(-1) );
       NS_COM void NS_FASTCALL Assign( const self_type& );
       NS_COM void NS_FASTCALL Assign( const substring_tuple_type& );
-#ifdef MOZ_V1_STRING_ABI
-      NS_COM void NS_FASTCALL Assign( const abstract_string_type& );
-#endif
 
       NS_COM void NS_FASTCALL AssignASCII( const char* data, size_type length );
       NS_COM void NS_FASTCALL AssignASCII( const char* data );
@@ -336,9 +367,6 @@ class nsTSubstring_CharT : public nsTAString_CharT
       self_type& operator=( const char_type* data )                                             { Assign(data);     return *this; }
       self_type& operator=( const self_type& str )                                              { Assign(str);      return *this; }
       self_type& operator=( const substring_tuple_type& tuple )                                 { Assign(tuple);    return *this; }
-#ifdef MOZ_V1_STRING_ABI
-      self_type& operator=( const abstract_string_type& readable )                              { Assign(readable); return *this; }
-#endif
 
       NS_COM void NS_FASTCALL Adopt( char_type* data, size_type length = size_type(-1) );
 
@@ -351,9 +379,6 @@ class nsTSubstring_CharT : public nsTAString_CharT
       NS_COM void NS_FASTCALL Replace( index_type cutStart, size_type cutLength, const char_type* data, size_type length = size_type(-1) );
              void Replace( index_type cutStart, size_type cutLength, const self_type& str )      { Replace(cutStart, cutLength, str.Data(), str.Length()); }
       NS_COM void NS_FASTCALL Replace( index_type cutStart, size_type cutLength, const substring_tuple_type& tuple );
-#ifdef MOZ_V1_STRING_ABI
-      NS_COM void NS_FASTCALL Replace( index_type cutStart, size_type cutLength, const abstract_string_type& readable );
-#endif
 
       NS_COM void NS_FASTCALL ReplaceASCII( index_type cutStart, size_type cutLength, const char* data, size_type length = size_type(-1) );
 
@@ -361,9 +386,6 @@ class nsTSubstring_CharT : public nsTAString_CharT
       void Append( const char_type* data, size_type length = size_type(-1) )                     { Replace(mLength, 0, data, length); }
       void Append( const self_type& str )                                                        { Replace(mLength, 0, str); }
       void Append( const substring_tuple_type& tuple )                                           { Replace(mLength, 0, tuple); }
-#ifdef MOZ_V1_STRING_ABI
-      void Append( const abstract_string_type& readable )                                        { Replace(mLength, 0, readable); }
-#endif
 
       void AppendASCII( const char* data, size_type length = size_type(-1) )                     { ReplaceASCII(mLength, 0, data, length); }
 
@@ -386,17 +408,11 @@ class nsTSubstring_CharT : public nsTAString_CharT
       self_type& operator+=( const char_type* data )                                             { Append(data);     return *this; }
       self_type& operator+=( const self_type& str )                                              { Append(str);      return *this; }
       self_type& operator+=( const substring_tuple_type& tuple )                                 { Append(tuple);    return *this; }
-#ifdef MOZ_V1_STRING_ABI
-      self_type& operator+=( const abstract_string_type& readable )                              { Append(readable); return *this; }
-#endif
 
       void Insert( char_type c, index_type pos )                                                 { Replace(pos, 0, c); }
       void Insert( const char_type* data, index_type pos, size_type length = size_type(-1) )     { Replace(pos, 0, data, length); }
       void Insert( const self_type& str, index_type pos )                                        { Replace(pos, 0, str); }
       void Insert( const substring_tuple_type& tuple, index_type pos )                           { Replace(pos, 0, tuple); }
-#ifdef MOZ_V1_STRING_ABI
-      void Insert( const abstract_string_type& readable, index_type pos )                        { Replace(pos, 0, readable); }
-#endif
 
       void Cut( index_type cutStart, size_type cutLength )                                       { Replace(cutStart, cutLength, char_traits::sEmptyBuffer, 0); }
 
@@ -405,7 +421,15 @@ class nsTSubstring_CharT : public nsTAString_CharT
          * buffer sizing
          */
 
-      NS_COM void NS_FASTCALL SetCapacity( size_type newCapacity );
+        /**
+         * Attempts to set the capacity to the given size, without affecting
+         * the length of the string. Also ensures that the buffer is mutable.
+         *
+         * @returns PR_TRUE on success
+         *          PR_FALSE on out-of-memory, or if requesting a size bigger
+         *                   than a string can hold (2^31 chars).
+         */
+      NS_COM PRBool NS_FASTCALL SetCapacity( size_type newCapacity );
 
       NS_COM void NS_FASTCALL SetLength( size_type newLength );
 
@@ -480,17 +504,7 @@ class nsTSubstring_CharT : public nsTAString_CharT
          * this is public to support automatic conversion of tuple to string
          * base type, which helps avoid converting to nsTAString.
          */
-      nsTSubstring_CharT(const substring_tuple_type& tuple)
-#ifdef MOZ_V1_STRING_ABI
-        : abstract_string_type(nsnull, 0, F_NONE)
-#else
-        : mData(nsnull),
-          mLength(0),
-          mFlags(F_NONE)
-#endif
-        {
-          Assign(tuple);
-        }
+      NS_COM nsTSubstring_CharT(const substring_tuple_type& tuple);
 
         /**
          * allows for direct initialization of a nsTSubstring object. 
@@ -506,52 +520,29 @@ class nsTSubstring_CharT : public nsTAString_CharT
     protected:
 
       friend class nsTObsoleteAStringThunk_CharT;
-      friend class nsTAString_CharT;
       friend class nsTSubstringTuple_CharT;
 
       // XXX GCC 3.4 needs this :-(
       friend class nsTPromiseFlatString_CharT;
 
-#ifndef MOZ_V1_STRING_ABI
       char_type*  mData;
       size_type   mLength;
       PRUint32    mFlags;
-#endif
 
         // default initialization 
-      nsTSubstring_CharT()
-#ifdef MOZ_V1_STRING_ABI
-        : abstract_string_type(
-              const_cast<char_type*>(char_traits::sEmptyBuffer), 0, F_TERMINATED) {}
-#else
-        : mData(const_cast<char_type*>(char_traits::sEmptyBuffer)),
-          mLength(0),
-          mFlags(F_TERMINATED) {}
-#endif
+      NS_COM nsTSubstring_CharT();
 
         // version of constructor that leaves mData and mLength uninitialized
       explicit
-      nsTSubstring_CharT( PRUint32 flags )
-#ifdef MOZ_V1_STRING_ABI
-        : abstract_string_type(flags) {}
-#else
-        : mFlags(flags) {}
-#endif
+      NS_COM nsTSubstring_CharT( PRUint32 flags );
 
         // copy-constructor, constructs as dependent on given object
         // (NOTE: this is for internal use only)
-      nsTSubstring_CharT( const self_type& str )
-#ifdef MOZ_V1_STRING_ABI
-        : abstract_string_type(str.mData, str.mLength, str.mFlags & (F_TERMINATED | F_VOIDED)) {}
-#else
-        : mData(str.mData),
-          mLength(str.mLength),
-          mFlags(str.mFlags & (F_TERMINATED | F_VOIDED)) {}
-#endif
+      NS_COM nsTSubstring_CharT( const self_type& str );
 
         /**
          * this function releases mData and does not change the value of
-         * any of it's member variables.  in other words, this function acts
+         * any of its member variables.  in other words, this function acts
          * like a destructor.
          */
       void NS_FASTCALL Finalize();
@@ -602,7 +593,8 @@ class nsTSubstring_CharT : public nsTAString_CharT
          * returns the number of writable storage units starting at mData.
          * the value does not include space for the null-terminator character.
          *
-         * NOTE: this function returns size_type(-1) if mData is immutable.
+         * NOTE: this function returns 0 if mData is immutable (or the buffer
+         *       is 0-sized).
          */
       size_type NS_FASTCALL Capacity() const;
 

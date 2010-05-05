@@ -52,7 +52,7 @@
 #include "nsMemory.h" // for NS_ARRAY_LENGTH
 
 #include "nspr.h"
-#ifdef _M_IX86
+#if defined(_M_IX86) || defined(_M_AMD64)
 #include <imagehlp.h>
 // We need a way to know if we are building for WXP (or later), as if we are, we
 // need to use the newer 64-bit APIs. API_VERSION_NUMBER seems to fit the bill.
@@ -196,7 +196,9 @@ struct WalkStackData {
 void PrintError(char *prefix, WalkStackData* data);
 unsigned int WINAPI WalkStackThread(void* data);
 void WalkStackMain64(struct WalkStackData* data);
+#if !defined(_WIN64)
 void WalkStackMain(struct WalkStackData* data);
+#endif
 
 
 // Define these as static pointers so that we can load the DLL on the
@@ -328,9 +330,9 @@ EnsureImageHlpInitialized()
 
     ::InitializeCriticalSection(&gDbgHelpCS);
 
-    HMODULE module = ::LoadLibrary("DBGHELP.DLL");
+    HMODULE module = ::LoadLibraryW(L"DBGHELP.DLL");
     if (!module) {
-        module = ::LoadLibrary("IMAGEHLP.DLL");
+        module = ::LoadLibraryW(L"IMAGEHLP.DLL");
         if (!module) return PR_FALSE;
     }
 
@@ -495,6 +497,7 @@ WalkStackMain64(struct WalkStackData* data)
 }
 
 
+#if !defined(_WIN64)
 void
 WalkStackMain(struct WalkStackData* data)
 {
@@ -575,6 +578,7 @@ WalkStackMain(struct WalkStackData* data)
     return;
 
 }
+#endif
 
 unsigned int WINAPI
 WalkStackThread(void* aData)
@@ -611,10 +615,14 @@ WalkStackThread(void* aData)
                 PrintError("ThreadSuspend");
             }
             else {
+#if defined(_WIN64)
+                WalkStackMain64(data);
+#else
                 if (_StackWalk64)
                     WalkStackMain64(data);
                 else
                     WalkStackMain(data);
+#endif
 
                 ret = ::ResumeThread(data->thread);
                 if (ret == -1) {
@@ -1406,11 +1414,58 @@ NS_FormatCodeAddressDetails(void *aPC, const nsCodeAddressDetails *aDetails,
 extern void *__libc_stack_end; // from ld-linux.so
 #endif
 
+#ifdef XP_MACOSX
+struct AddressRange {
+  void* mStart;
+  void* mEnd;
+};
+// Addresses in this range must stop the stack walk
+static AddressRange gCriticalRange;
+
+static void FindFunctionAddresses(const char* aName, AddressRange* aRange)
+{
+  aRange->mStart = dlsym(RTLD_DEFAULT, aName);
+  if (!aRange->mStart)
+    return;
+  aRange->mEnd = aRange->mStart;
+  while (PR_TRUE) {
+    Dl_info info;
+    if (!dladdr(aRange->mEnd, &info))
+      break;
+    if (strcmp(info.dli_sname, aName))
+      break;
+    aRange->mEnd = (char*)aRange->mEnd + 1;
+  }
+}
+
+static void InitCriticalRanges()
+{
+  if (gCriticalRange.mStart)
+    return;
+  // We must not do work when 'new_sem_from_pool' calls realloc, since
+  // it holds a non-reentrant spin-lock and we will quickly deadlock.
+  // new_sem_from_pool is not directly accessible using dladdr but its
+  // code is bundled with pthread_cond_wait$UNIX2003 (on
+  // Leopard anyway).
+  FindFunctionAddresses("pthread_cond_wait$UNIX2003", &gCriticalRange);
+}
+
+static PRBool InCriticalRange(void* aPC)
+{
+  return gCriticalRange.mStart &&
+    gCriticalRange.mStart <= aPC && aPC < gCriticalRange.mEnd;
+}
+#else
+static void InitCriticalRanges() {}
+static PRBool InCriticalRange(void* aPC) { return PR_FALSE; }
+#endif
+
 EXPORT_XPCOM_API(nsresult)
 NS_StackWalk(NS_WalkStackCallback aCallback, PRUint32 aSkipFrames,
              void *aClosure)
 {
   // Stack walking code courtesy Kipp's "leaky".
+  InitCriticalRanges();
 
   // Get the frame pointer
   void **bp;
@@ -1443,6 +1498,10 @@ NS_StackWalk(NS_WalkStackCallback aCallback, PRUint32 aSkipFrames,
 #else // i386 or powerpc32 linux
     void *pc = *(bp+1);
 #endif
+    if (InCriticalRange(pc)) {
+      printf("Aborting stack trace, PC in critical range\n");
+      return NS_ERROR_UNEXPECTED;
+    }
     if (--skip < 0) {
       (*aCallback)(pc, aClosure);
     }

@@ -131,6 +131,12 @@ public:
   PRBool IsInitialized() const { return !!mTable.entrySize; }
 
   /**
+   * Return the generation number for the table. This increments whenever
+   * the table data items are moved.
+   */
+  PRUint32 GetGeneration() const { return mTable.generation; }
+
+  /**
    * KeyType is typedef'ed for ease of use.
    */
   typedef typename EntryType::KeyType KeyType;
@@ -218,7 +224,7 @@ public:
    *            @link PLDHashOperator::PL_DHASH_STOP PL_DHASH_STOP @endlink ,
    *            @link PLDHashOperator::PL_DHASH_REMOVE PL_DHASH_REMOVE @endlink
    */
-  typedef PLDHashOperator (*PR_CALLBACK Enumerator)(EntryType* aEntry, void* userArg);
+  typedef PLDHashOperator (* Enumerator)(EntryType* aEntry, void* userArg);
 
   /**
    * Enumerate all the entries of the function.
@@ -248,26 +254,26 @@ public:
 protected:
   PLDHashTable mTable;
 
-  static const void* PR_CALLBACK s_GetKey(PLDHashTable    *table,
-                                          PLDHashEntryHdr *entry);
+  static const void* s_GetKey(PLDHashTable    *table,
+                              PLDHashEntryHdr *entry);
 
-  static PLDHashNumber PR_CALLBACK s_HashKey(PLDHashTable *table,
-                                             const void   *key);
+  static PLDHashNumber s_HashKey(PLDHashTable *table,
+                                 const void   *key);
 
-  static PRBool PR_CALLBACK s_MatchEntry(PLDHashTable           *table,
-                                         const PLDHashEntryHdr  *entry,
-                                         const void             *key);
+  static PRBool s_MatchEntry(PLDHashTable           *table,
+                             const PLDHashEntryHdr  *entry,
+                             const void             *key);
   
-  static void PR_CALLBACK s_CopyEntry(PLDHashTable          *table,
-                                      const PLDHashEntryHdr *from,
-                                      PLDHashEntryHdr       *to);
+  static void s_CopyEntry(PLDHashTable          *table,
+                          const PLDHashEntryHdr *from,
+                          PLDHashEntryHdr       *to);
   
-  static void PR_CALLBACK s_ClearEntry(PLDHashTable *table,
-                                       PLDHashEntryHdr *entry);
+  static void s_ClearEntry(PLDHashTable *table,
+                           PLDHashEntryHdr *entry);
 
-  static PRBool PR_CALLBACK s_InitEntry(PLDHashTable     *table,
-                                        PLDHashEntryHdr  *entry,
-                                        const void       *key);
+  static PRBool s_InitEntry(PLDHashTable     *table,
+                            PLDHashEntryHdr  *entry,
+                            const void       *key);
 
   /**
    * passed internally during enumeration.  Allocated on the stack.
@@ -282,10 +288,10 @@ protected:
     void* userArg;
   };
   
-  static PLDHashOperator PR_CALLBACK s_EnumStub(PLDHashTable    *table,
-                                                PLDHashEntryHdr *entry,
-                                                PRUint32         number,
-                                                void            *arg);
+  static PLDHashOperator s_EnumStub(PLDHashTable    *table,
+                                    PLDHashEntryHdr *entry,
+                                    PRUint32         number,
+                                    void            *arg);
 private:
   // copy constructor, not implemented
   nsTHashtable(nsTHashtable<EntryType>& toCopy);

@@ -40,6 +40,8 @@
 #include "plstr.h"
 #include <stdlib.h>
 
+namespace TestCRT {
+
 // The return from strcmp etc is only defined to be postive, zero or
 // negative. The magnitude of a non-zero return is irrelevant.
 PRIntn sign(PRIntn val) {
@@ -61,8 +63,6 @@ static void Check(const char* s1, const char* s2, PRIntn n)
 {
   PRIntn clib = PL_strcmp(s1, s2);
   PRIntn clib_n = PL_strncmp(s1, s2, n);
-  PRIntn clib_case = PL_strcasecmp(s1, s2);
-  PRIntn clib_case_n = PL_strncasecmp(s1, s2, n);
 
   nsAutoString t1,t2; 
   t1.AssignWithConversion(s1);
@@ -100,6 +100,10 @@ static Test tests[] = {
   { "bar", "fo", 3 },
 };
 #define NUM_TESTS int((sizeof(tests) / sizeof(tests[0])))
+
+}
+
+using namespace TestCRT;
 
 int main()
 {

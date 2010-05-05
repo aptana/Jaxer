@@ -61,6 +61,7 @@
 #include "nsIProxyObjectManager.h"
 #include "nsThreadUtils.h"
 
+using namespace mozilla;
 class nsIComponentLoaderManager;
 
 /*
@@ -86,7 +87,7 @@ char* ArenaStrdup(const char* s, PLArenaPool* aArena);
 //
 class BaseStringEnumerator
   : public nsISimpleEnumerator,
-           nsIUTF8StringEnumerator
+    private nsIUTF8StringEnumerator
 {
 public:
   NS_DECL_ISUPPORTS
@@ -190,12 +191,12 @@ public:
   static EntryEnumerator* Create(nsTHashtable<CategoryLeaf>& aTable);
 
 private:
-  static PLDHashOperator PR_CALLBACK
+  static PLDHashOperator
     enumfunc_createenumerator(CategoryLeaf* aLeaf, void* userArg);
 };
 
 
-PLDHashOperator PR_CALLBACK
+PLDHashOperator
 EntryEnumerator::enumfunc_createenumerator(CategoryLeaf* aLeaf, void* userArg)
 {
   EntryEnumerator* mythis = static_cast<EntryEnumerator*>(userArg);
@@ -242,19 +243,11 @@ CategoryNode::Create(PLArenaPool* aArena)
     return nsnull;
   }
 
-  node->mLock = PR_NewLock();
-  if (!node->mLock) {
-    delete node;
-    return nsnull;
-  }
-
   return node;
 }
 
 CategoryNode::~CategoryNode()
 {
-  if (mLock)
-    PR_DestroyLock(mLock);
 }
 
 void*
@@ -269,18 +262,17 @@ NS_METHOD
 CategoryNode::GetLeaf(const char* aEntryName,
                       char** _retval)
 {
-  PR_Lock(mLock);
+  MutexAutoLock lock(mLock);
   nsresult rv = NS_ERROR_NOT_AVAILABLE;
   CategoryLeaf* ent =
     mTable.GetEntry(aEntryName);
 
   // we only want the non-persistent value
   if (ent && ent->nonpValue) {
-    *_retval = nsCRT::strdup(ent->nonpValue);
+    *_retval = NS_strdup(ent->nonpValue);
     if (*_retval)
       rv = NS_OK;
   }
-  PR_Unlock(mLock);
 
   return rv;
 }
@@ -293,7 +285,7 @@ CategoryNode::AddLeaf(const char* aEntryName,
                       char** _retval,
                       PLArenaPool* aArena)
 {
-  PR_Lock(mLock);
+  MutexAutoLock lock(mLock);
   CategoryLeaf* leaf = 
     mTable.GetEntry(aEntryName);
 
@@ -336,7 +328,6 @@ CategoryNode::AddLeaf(const char* aEntryName,
     }
   }
     
-  PR_Unlock(mLock);
   return rv;
 }
 
@@ -346,7 +337,7 @@ CategoryNode::DeleteLeaf(const char* aEntryName,
 {
   // we don't throw any errors, because it normally doesn't matter
   // and it makes JS a lot cleaner
-  PR_Lock(mLock);
+  MutexAutoLock lock(mLock);
 
   if (aDontPersist) {
     // we can just remove the entire hash entry without introspection
@@ -364,7 +355,6 @@ CategoryNode::DeleteLeaf(const char* aEntryName,
       }
     }
   }
-  PR_Unlock(mLock);
 
   return NS_OK;
 }
@@ -374,9 +364,8 @@ CategoryNode::Enumerate(nsISimpleEnumerator **_retval)
 {
   NS_ENSURE_ARG_POINTER(_retval);
 
-  PR_Lock(mLock);
+  MutexAutoLock lock(mLock);
   EntryEnumerator* enumObj = EntryEnumerator::Create(mTable);
-  PR_Unlock(mLock);
 
   if (!enumObj)
     return NS_ERROR_OUT_OF_MEMORY;
@@ -392,7 +381,7 @@ struct persistent_userstruct {
   PRBool      success;
 };
 
-PLDHashOperator PR_CALLBACK
+PLDHashOperator
 enumfunc_pentries(CategoryLeaf* aLeaf, void* userArg)
 {
   persistent_userstruct* args =
@@ -423,9 +412,8 @@ CategoryNode::WritePersistentEntries(PRFileDesc* fd, const char* aCategoryName)
     PR_TRUE
   };
 
-  PR_Lock(mLock);
+  MutexAutoLock lock(mLock);
   mTable.EnumerateEntries(enumfunc_pentries, &args);
-  PR_Unlock(mLock);
 
   return args.success;
 }
@@ -442,7 +430,7 @@ public:
   static CategoryEnumerator* Create(nsClassHashtable<nsDepCharHashKey, CategoryNode>& aTable);
 
 private:
-  static PLDHashOperator PR_CALLBACK
+  static PLDHashOperator
   enumfunc_createenumerator(const char* aStr,
                             CategoryNode* aNode,
                             void* userArg);
@@ -466,7 +454,7 @@ CategoryEnumerator::Create(nsClassHashtable<nsDepCharHashKey, CategoryNode>& aTa
   return enumObj;
 }
 
-PLDHashOperator PR_CALLBACK
+PLDHashOperator
 CategoryEnumerator::enumfunc_createenumerator(const char* aStr, CategoryNode* aNode, void* userArg)
 {
   CategoryEnumerator* mythis = static_cast<CategoryEnumerator*>(userArg);
@@ -501,21 +489,11 @@ nsCategoryManager::Create()
     return nsnull;
   }
 
-  manager->mLock = PR_NewLock();
-
-  if (!manager->mLock) {
-    delete manager;
-    return nsnull;
-  }
-
   return manager;
 }
 
 nsCategoryManager::~nsCategoryManager()
 {
-  if (mLock)
-    PR_DestroyLock(mLock);
-
   // the hashtable contains entries that must be deleted before the arena is
   // destroyed, or else you will have PRLocks undestroyed and other Really
   // Bad Stuff (TM)
@@ -584,9 +562,11 @@ nsCategoryManager::GetCategoryEntry( const char *aCategoryName,
 
   nsresult status = NS_ERROR_NOT_AVAILABLE;
 
-  PR_Lock(mLock);
-  CategoryNode* category = get_category(aCategoryName);
-  PR_Unlock(mLock);
+  CategoryNode* category;
+  {
+    MutexAutoLock lock(mLock);
+    category = get_category(aCategoryName);
+  }
 
   if (category) {
     status = category->GetLeaf(aEntryName, _retval);
@@ -609,17 +589,19 @@ nsCategoryManager::AddCategoryEntry( const char *aCategoryName,
 
   // Before we can insert a new entry, we'll need to
   //  find the |CategoryNode| to put it in...
-  PR_Lock(mLock);
-  CategoryNode* category = get_category(aCategoryName);
+  CategoryNode* category;
+  {
+    MutexAutoLock lock(mLock);
+    category = get_category(aCategoryName);
 
-  if (!category) {
-    // That category doesn't exist yet; let's make it.
-    category = CategoryNode::Create(&mArena);
+    if (!category) {
+      // That category doesn't exist yet; let's make it.
+      category = CategoryNode::Create(&mArena);
         
-    char* categoryName = ArenaStrdup(aCategoryName, &mArena);
-    mTable.Put(categoryName, category);
+      char* categoryName = ArenaStrdup(aCategoryName, &mArena);
+      mTable.Put(categoryName, category);
+    }
   }
-  PR_Unlock(mLock);
 
   if (!category)
     return NS_ERROR_OUT_OF_MEMORY;
@@ -665,9 +647,11 @@ nsCategoryManager::DeleteCategoryEntry( const char *aCategoryName,
     inconveniences JS clients
   */
 
-  PR_Lock(mLock);
-  CategoryNode* category = get_category(aCategoryName);
-  PR_Unlock(mLock);
+  CategoryNode* category;
+  {
+    MutexAutoLock lock(mLock);
+    category = get_category(aCategoryName);
+  }
 
   if (!category)
     return NS_OK;
@@ -692,9 +676,11 @@ nsCategoryManager::DeleteCategory( const char *aCategoryName )
   // actually delete them. We just remove all of the
   // leaf nodes.
 
-  PR_Lock(mLock);
-  CategoryNode* category = get_category(aCategoryName);
-  PR_Unlock(mLock);
+  CategoryNode* category;
+  {
+    MutexAutoLock lock(mLock);
+    category = get_category(aCategoryName);
+  }
 
   if (category) {
     category->Clear();
@@ -712,9 +698,11 @@ nsCategoryManager::EnumerateCategory( const char *aCategoryName,
   NS_ENSURE_ARG_POINTER(aCategoryName);
   NS_ENSURE_ARG_POINTER(_retval);
 
-  PR_Lock(mLock);
-  CategoryNode* category = get_category(aCategoryName);
-  PR_Unlock(mLock);
+  CategoryNode* category;
+  {
+    MutexAutoLock lock(mLock);
+    category = get_category(aCategoryName);
+  }
   
   if (!category) {
     return NS_NewEmptyEnumerator(_retval);
@@ -728,9 +716,8 @@ nsCategoryManager::EnumerateCategories(nsISimpleEnumerator **_retval)
 {
   NS_ENSURE_ARG_POINTER(_retval);
 
-  PR_Lock(mLock);
+  MutexAutoLock lock(mLock);
   CategoryEnumerator* enumObj = CategoryEnumerator::Create(mTable);
-  PR_Unlock(mLock);
 
   if (!enumObj)
     return NS_ERROR_OUT_OF_MEMORY;
@@ -745,7 +732,7 @@ struct writecat_struct {
   PRBool      success;
 };
 
-PLDHashOperator PR_CALLBACK
+PLDHashOperator
 enumfunc_categories(const char* aKey, CategoryNode* aCategory, void* userArg)
 {
   writecat_struct* args = static_cast<writecat_struct*>(userArg);
@@ -768,9 +755,8 @@ nsCategoryManager::WriteCategoryManagerToRegistry(PRFileDesc* fd)
     PR_TRUE
   };
 
-  PR_Lock(mLock);
+  MutexAutoLock lock(mLock);
   mTable.EnumerateRead(enumfunc_categories, &args);
-  PR_Unlock(mLock);
 
   if (!args.success) {
     return NS_ERROR_UNEXPECTED;

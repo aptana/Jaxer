@@ -61,14 +61,6 @@ LOCAL_INCLUDES	= -I$(srcdir)/../build
 
 CPPSRCS		= nsXPComStub.cpp
 
-ifndef MOZ_ENABLE_LIBXUL
-ifeq ($(OS_TARGET),OS2)
-ifndef MOZ_OS2_HIGH_MEMORY
-CPPSRCS         += nsOS2VACLegacy.cpp
-endif
-endif
-endif
-
 # If we have an import library, then copy that to the SDK.  Otherwise,
 # copy the shared library.
 ifneq (,$(filter OS2 WINCE WINNT,$(OS_ARCH)))
@@ -107,7 +99,7 @@ else
 DEPENDENT_LIBS_LIST += $(LIB_PREFIX)mozjs$(DLL_SUFFIX)
 endif
 
-ifeq (Darwin,$(OS_ARCH))
+ifeq (bundle,$(MOZ_FS_LAYOUT))
 EXTRA_DSO_LDOPTS += $(DIST)/bin/XUL
 DEPENDENT_LIBS_LIST += XUL
 else

@@ -46,7 +46,7 @@
 #include "nsDebug.h"
 #include "nsVoidArray.h"
 
-#ifdef NS_TRACE_MALLOC_XXX
+#ifdef NS_TRACE_MALLOC
 # include <stdio.h>
 # include "nsTraceMalloc.h"
 #endif
@@ -60,7 +60,7 @@ static const char* const LockTypeNames[] = {"Lock", "Monitor", "CMonitor"};
 struct nsNamedVector : public nsVoidArray {
     const char* mName;
 
-#ifdef NS_TRACE_MALLOC_XXX
+#ifdef NS_TRACE_MALLOC
     // Callsites for the inner locks/monitors stored in our base nsVoidArray.
     // This array parallels our base nsVoidArray.
     nsVoidArray mInnerSites;
@@ -73,19 +73,19 @@ struct nsNamedVector : public nsVoidArray {
     }
 };
 
-static void * PR_CALLBACK
+static void *
 _hash_alloc_table(void *pool, PRSize size)
 {
     return operator new(size);
 }
 
-static void  PR_CALLBACK
+static void 
 _hash_free_table(void *pool, void *item)
 {
     operator delete(item);
 }
 
-static PLHashEntry * PR_CALLBACK
+static PLHashEntry *
 _hash_alloc_entry(void *pool, const void *key)
 {
     return new PLHashEntry;
@@ -109,7 +109,7 @@ _hash_alloc_entry(void *pool, const void *key)
  * XXX so we should have nsLock, nsMonitor, etc. and strongly type their
  * XXX nsAutoXXX counterparts to take only the non-auto types as inputs
  */
-static void  PR_CALLBACK
+static void 
 _hash_free_entry(void *pool, PLHashEntry *entry, PRUintn flag)
 {
     nsNamedVector* vec = (nsNamedVector*) entry->value;
@@ -126,7 +126,7 @@ static const PLHashAllocOps _hash_alloc_ops = {
     _hash_alloc_entry, _hash_free_entry
 };
 
-PR_STATIC_CALLBACK(PRIntn)
+static PRIntn
 _purge_one(PLHashEntry* he, PRIntn cnt, void* arg)
 {
     nsNamedVector* vec = (nsNamedVector*) he->value;
@@ -137,7 +137,7 @@ _purge_one(PLHashEntry* he, PRIntn cnt, void* arg)
     return HT_ENUMERATE_NEXT;
 }
 
-PR_STATIC_CALLBACK(void)
+static void
 OnSemaphoreRecycle(void* addr)
 {
     if (OrderTable) { 
@@ -147,7 +147,7 @@ OnSemaphoreRecycle(void* addr)
     }
 }
 
-PR_STATIC_CALLBACK(PLHashNumber)
+static PLHashNumber
 _hash_pointer(const void* key)
 {
     return PLHashNumber(NS_PTR_TO_INT32(key)) >> 2;
@@ -257,7 +257,7 @@ static PRBool WellOrdered(const void* addr1, const void* addr2,
                     // Assert (addr1 < addr2) into the order table.
                     // XXX fix plvector/nsVector to use const void*
                     vec1->AppendElement((void*) addr2);
-#ifdef NS_TRACE_MALLOC_XXX
+#ifdef NS_TRACE_MALLOC
                     vec1->mInnerSites.AppendElement((void*) callsite2);
 #endif
                 }
@@ -285,8 +285,8 @@ nsAutoLockBase::nsAutoLockBase(void* addr, nsAutoLockType type)
             // lock at all, and NSPR will assert if you enter it.
         } else {
             const void* node =
-#ifdef NS_TRACE_MALLOC_XXX
-                NS_GetStackTrace(1)
+#ifdef NS_TRACE_MALLOC
+                (const void*)NS_TraceMallocGetStackTrace();
 #else
                 nsnull
 #endif
@@ -305,12 +305,14 @@ nsAutoLockBase::nsAutoLockBase(void* addr, nsAutoLockType type)
                             vec2->mName ? vec2->mName : "",
                             LockTypeNames[type],
                             addr);
-#ifdef NS_TRACE_MALLOC_XXX
+#ifdef NS_TRACE_MALLOC
                 fprintf(stderr, "\n*** %s\n\nCurrent stack:\n", buf);
-                NS_DumpStackTrace(node, stderr);
+                NS_TraceMallocPrintStackTrace(stderr,
+                                              NS_TraceMallocGetStackTrace());
 
                 fputs("\nPrevious stack:\n", stderr);
-                NS_DumpStackTrace(vec2->mInnerSites.ElementAt(i2), stderr);
+                NS_TraceMallocPrintStackTrace(stderr,
+                    (nsTMStackTraceIDStruct *)vec2->mInnerSites.ElementAt(i2));
                 putc('\n', stderr);
 #endif
                 NS_ERROR(buf);
@@ -448,7 +450,9 @@ void nsAutoMonitor::Exit()
     }
     (void) PR_SetThreadPrivate(LockStackTPI, mDown);
 #endif
-    PRStatus status = PR_ExitMonitor(mMonitor);
+    // Split 'status' init to avoid an "unused variable" compiler warning.
+    PRStatus status;
+    status = PR_ExitMonitor(mMonitor);
     NS_ASSERTION(status == PR_SUCCESS, "PR_ExitMonitor failed");
     mLockCount -= 1;
 }
@@ -475,7 +479,9 @@ void nsAutoCMonitor::Exit()
 #ifdef DEBUG
     (void) PR_SetThreadPrivate(LockStackTPI, mDown);
 #endif
-    PRStatus status = PR_CExitMonitor(mLockObject);
+    // Split 'status' init to avoid an "unused variable" compiler warning.
+    PRStatus status;
+    status = PR_CExitMonitor(mLockObject);
     NS_ASSERTION(status == PR_SUCCESS, "PR_CExitMonitor failed");
     mLockCount -= 1;
 }

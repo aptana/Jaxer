@@ -55,6 +55,10 @@ REQUIRES = \
 		string \
 		$(NULL)
 
+ifdef NS_TRACE_MALLOC
+REQUIRES += tracemalloc
+endif
+
 LOCAL_INCLUDES	= \
 		-I$(srcdir)/../build \
 		$(NULL)
@@ -69,52 +73,55 @@ CPPSRCS		= \
 		nsStringAPI.cpp \
 		$(NULL)
 
+# TODO nsAutoLock.h should die soon
 SDK_HEADERS = \
-		pldhash.h \
 		nsArrayEnumerator.h \
 		nsArrayUtils.h \
 		nsAutoLock.h \
 		nsBaseHashtable.h \
-		nsCategoryCache.h \
 		nsCOMArray.h \
+		nsCOMPtr.h \
 		nsCRTGlue.h \
+		nsCategoryCache.h \
 		nsClassHashtable.h \
+		nsComponentManagerUtils.h \
+		nsCycleCollectionParticipant.h \
 		nsDataHashtable.h \
+		nsDebug.h \
+		nsDeque.h \
 		nsEnumeratorUtils.h \
+		nsGenericFactory.h \
 		nsHashKeys.h \
-		nsINIParser.h \
-		nsInterfaceHashtable.h \
-		nsQuickSort.h \
-		nsStringGlue.h \
-		nsRefPtrHashtable.h \
-		nsStringAPI.h \
-		nsTextFormatter.h \
-		nsTHashtable.h \
-		nsVoidArray.h \
-		nsTArray.h \
-		nsTPtrArray.h \
-		nsTWeakRef.h \
+		nsIClassInfoImpl.h \
 		nsID.h \
 		nsIGenericFactory.h \
+		nsIGenericFactory.h \
 		nsIInterfaceRequestorUtils.h \
+		nsINIParser.h \
 		nsISupportsImpl.h \
 		nsISupportsUtils.h \
 		nsIWeakReferenceUtils.h \
-		nsCOMPtr.h \
-		nsDebug.h \
-		nsGenericFactory.h \
-		nsIGenericFactory.h \
+		nsInterfaceHashtable.h \
 		nsMemory.h \
-		nsTraceRefcnt.h \
-		nsWeakReference.h \
-		nsComponentManagerUtils.h \
+		nsQuickSort.h \
+		nsRefPtrHashtable.h \
 		nsServiceManagerUtils.h \
-		nsVersionComparator.h \
-		nsIClassInfoImpl.h \
+		nsStringAPI.h \
+		nsStringGlue.h \
+		nsTArray.h \
+		nsTHashtable.h \
 		nsTObserverArray.h \
-		nsCycleCollectionParticipant.h \
-		nsDeque.h \
+		nsTPtrArray.h \
+		nsTWeakRef.h \
+		nsTextFormatter.h \
+		nsTraceRefcnt.h \
+		nsVersionComparator.h \
+		nsVoidArray.h \
+		nsWeakReference.h \
+		pldhash.h \
 		$(NULL)
+
+EXPORTS_NAMESPACES = mozilla
 
 EXPORTS = \
 		nsThreadUtils.h \
@@ -122,9 +129,18 @@ EXPORTS = \
 		nsXPTCUtils.h \
 		$(NULL)
 
+EXPORTS_mozilla = \
+  BlockingResourceBase.h \
+  CondVar.h \
+  DeadlockDetector.h \
+  Monitor.h \
+  Mutex.h \
+  $(NULL)
+
 SDK_LIBRARY     =                        \
 		$(LIB_PREFIX)xpcomglue_s.$(LIB_SUFFIX) \
 		$(NULL)
+
 
 # we don't want the shared lib, but we want to force the creation of a static lib.
 FORCE_STATIC_LIB = 1

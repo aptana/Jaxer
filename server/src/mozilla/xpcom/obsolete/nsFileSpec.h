@@ -183,7 +183,7 @@
 // This clashes with some of the Win32 system headers (specifically,
 // winbase.h). Hopefully they'll have been included first; else we may
 // have problems. We could include winbase.h before doing this;
-// unfortunately, it's bring in too much crap and'd slow stuff down
+// unfortunately, it'd bring in too much crap and'd slow stuff down
 // more than it's worth doing.
 #ifdef CreateDirectory
 #undef CreateDirectory
@@ -316,7 +316,7 @@ class NS_COM_OBSOLETE nsFileSpec
     public:
                                 nsFileSpec();
                                 
-                                // These two meathods take *native* file paths.
+                                // These two methods take *native* file paths.
         NS_EXPLICIT             nsFileSpec(const char* inNativePath, PRBool inCreateDirs = PR_FALSE);
         NS_EXPLICIT             nsFileSpec(const nsString& inNativePath, PRBool inCreateDirs = PR_FALSE);
                                 

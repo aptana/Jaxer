@@ -66,6 +66,8 @@
 # define NS_LogCOMPtrRelease         NS_LogCOMPtrRelease_P
 # define NS_CycleCollectorSuspect    NS_CycleCollectorSuspect_P
 # define NS_CycleCollectorForget     NS_CycleCollectorForget_P
+# define NS_CycleCollectorSuspect2   NS_CycleCollectorSuspect2_P
+# define NS_CycleCollectorForget2    NS_CycleCollectorForget2_P
 #endif
 
 #include "nscore.h"
@@ -73,8 +75,10 @@
 
 #ifdef __cplusplus
 #define DECL_CLASS(c) class c
+#define DECL_STRUCT(c) struct c
 #else
 #define DECL_CLASS(c) typedef struct c c
+#define DECL_STRUCT(c) typedef struct c c
 #endif
 
 DECL_CLASS(nsAString);
@@ -91,6 +95,7 @@ DECL_CLASS(nsIDirectoryServiceProvider);
 DECL_CLASS(nsIMemory);
 DECL_CLASS(nsIDebug);
 DECL_CLASS(nsITraceRefcnt);
+DECL_STRUCT(nsPurpleBufferEntry);
 
 /**
  * Every XPCOM component implements this function signature, which is the
@@ -98,9 +103,9 @@ DECL_CLASS(nsITraceRefcnt);
  *
  * @status FROZEN
  */
-typedef nsresult (PR_CALLBACK *nsGetModuleProc)(nsIComponentManager *aCompMgr,
-                                                nsIFile* location,
-                                                nsIModule** return_cobj);
+typedef nsresult (*nsGetModuleProc)(nsIComponentManager *aCompMgr,
+                                    nsIFile* location,
+                                    nsIModule** return_cobj);
 
 /**
  * Initialises XPCOM. You must call one of the NS_InitXPCOM methods
@@ -459,12 +464,21 @@ NS_LogCOMPtrRelease(void *aCOMPtr, nsISupports *aObject);
  * The XPCOM cycle collector analyzes and breaks reference cycles between
  * participating XPCOM objects. All objects in the cycle must implement
  * nsCycleCollectionParticipant to break cycles correctly.
+ *
+ * The first two functions below exist only to support binary components
+ * that were compiled for older XPCOM versions.
  */
 XPCOM_API(PRBool)
 NS_CycleCollectorSuspect(nsISupports *n);
 
 XPCOM_API(PRBool)
 NS_CycleCollectorForget(nsISupports *n);
+
+XPCOM_API(nsPurpleBufferEntry*)
+NS_CycleCollectorSuspect2(nsISupports *n);
+
+XPCOM_API(PRBool)
+NS_CycleCollectorForget2(nsPurpleBufferEntry *e);
 
 /**
  * Categories (in the category manager service) used by XPCOM:
@@ -505,6 +519,13 @@ NS_CycleCollectorForget(nsISupports *n);
  * @status FROZEN
  */
 #define NS_XPCOM_STARTUP_OBSERVER_ID "xpcom-startup"
+
+/**
+ * At XPCOM shutdown, this topic is notified just before "xpcom-shutdown".
+ * Components should only use this to mark themselves as 'being destroyed'.
+ * Nothing should be dispatched to any event loop.
+ */
+#define NS_XPCOM_WILL_SHUTDOWN_OBSERVER_ID "xpcom-will-shutdown"
 
 /**
  * At XPCOM shutdown, this topic is notified. All components must

@@ -74,7 +74,7 @@
 #define NS_ABORT_IF_FALSE(_expr, _msg)                        \
   PR_BEGIN_MACRO                                              \
     if (!(_expr)) {                                           \
-      NS_DebugBreak(NS_DEBUG_ASSERTION, _msg, #_expr, __FILE__, __LINE__); \
+      NS_DebugBreak(NS_DEBUG_ABORT, _msg, #_expr, __FILE__, __LINE__); \
     }                                                         \
   PR_END_MACRO
 
@@ -183,6 +183,20 @@
 #define NS_BREAK()                     PR_BEGIN_MACRO /* nothing */ PR_END_MACRO
 
 #endif /* ! NS_DEBUG */
+
+/******************************************************************************
+** Macros for terminating execution when an unrecoverable condition is
+** reached.  These need to be compiled regardless of the NS_DEBUG flag. 
+******************************************************************************/
+
+/**
+ * Terminate execution <i>immediately</i>, and if possible on the current
+ * platform, in such a way that execution can't be continued by other
+ * code (e.g., by intercepting a signal).
+ */
+#define NS_RUNTIMEABORT(msg)                                    \
+  NS_DebugBreak(NS_DEBUG_ABORT, msg, nsnull, __FILE__, __LINE__)
+
 
 /* Macros for checking the trueness of an expression passed in within an 
  * interface implementation.  These need to be compiled regardless of the */

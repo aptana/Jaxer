@@ -261,8 +261,10 @@ static void FreeArray(nsDiscriminatedUnion* data)
 
 static nsresult CloneArray(PRUint16 inType, const nsIID* inIID,
                            PRUint32 inCount, void* inValue,
-                           PRUint16* outType, nsIID* outIID,
-                           PRUint32* outCount, void** outValue)
+                           PRUint16* outType NS_OUTPARAM,
+                           nsIID* outIID NS_OUTPARAM,
+                           PRUint32* outCount NS_OUTPARAM,
+                           void** outValue)
 {
     NS_ASSERTION(inCount, "bad param");
     NS_ASSERTION(inValue, "bad param");
@@ -807,7 +809,7 @@ static nsresult ToString(const nsDiscriminatedUnion& data,
     default:
         return NS_ERROR_CANNOT_CONVERT_DATA;
 
-    // nsID has its own text formater.
+    // nsID has its own text formatter.
 
     case nsIDataType::VTYPE_ID:
         ptr = data.u.mIDValue.ToString();

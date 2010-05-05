@@ -42,7 +42,6 @@
 #include "TimerThread.h"
 #include "nsAutoLock.h"
 #include "nsAutoPtr.h"
-#include "nsVoidArray.h"
 #include "nsThreadManager.h"
 #include "nsThreadUtils.h"
 #include "prmem.h"
@@ -147,7 +146,7 @@ nsTimerImpl::nsTimerImpl() :
   mTimeout(0)
 {
   // XXXbsmedberg: shouldn't this be in Init()?
-  mCallingThread = do_GetCurrentThread();
+  mEventTarget = static_cast<nsIEventTarget*>(NS_GetCurrentThread());
 
   mCallback.c = nsnull;
 
@@ -292,6 +291,14 @@ NS_IMETHODIMP nsTimerImpl::Cancel()
 
 NS_IMETHODIMP nsTimerImpl::SetDelay(PRUint32 aDelay)
 {
+  if (mCallbackType == CALLBACK_TYPE_UNKNOWN && mType == TYPE_ONE_SHOT) {
+    // This may happen if someone tries to re-use a one-shot timer
+    // by re-setting delay instead of reinitializing the timer.
+    NS_ERROR("nsITimer->SetDelay() called when the "
+             "one-shot timer is not set up.");
+    return NS_ERROR_NOT_INITIALIZED;
+  }
+
   // If we're already repeating precisely, update mTimeout now so that the
   // new delay takes effect in the future.
   if (mTimeout != 0 && mType == TYPE_REPEATING_PRECISE)
@@ -343,6 +350,26 @@ NS_IMETHODIMP nsTimerImpl::GetCallback(nsITimerCallback **aCallback)
   else
     *aCallback = nsnull;
 
+  return NS_OK;
+}
+
+
+NS_IMETHODIMP nsTimerImpl::GetTarget(nsIEventTarget** aTarget)
+{
+  NS_IF_ADDREF(*aTarget = mEventTarget);
+  return NS_OK;
+}
+
+
+NS_IMETHODIMP nsTimerImpl::SetTarget(nsIEventTarget* aTarget)
+{
+  NS_ENSURE_TRUE(mCallbackType == CALLBACK_TYPE_UNKNOWN,
+                 NS_ERROR_ALREADY_INITIALIZED);
+
+  if (aTarget)
+    mEventTarget = aTarget;
+  else
+    mEventTarget = static_cast<nsIEventTarget*>(NS_GetCurrentThread());
   return NS_OK;
 }
 
@@ -435,7 +462,9 @@ void nsTimerImpl::Fire()
   }
 #endif
 
-  if (mType == TYPE_REPEATING_SLACK) {
+  // Reschedule REPEATING_SLACK timers, but make sure that we aren't armed
+  // already (which can happen if the callback reinitialized the timer).
+  if (mType == TYPE_REPEATING_SLACK && !mArmed) {
     SetDelayInternal(mDelay); // force mTimeout to be recomputed.
     if (gThread)
       gThread->AddTimer(this);
@@ -522,7 +551,7 @@ nsresult nsTimerImpl::PostTimerEvent()
     }
   }
 
-  nsresult rv = mCallingThread->Dispatch(event, NS_DISPATCH_NORMAL);
+  nsresult rv = mEventTarget->Dispatch(event, NS_DISPATCH_NORMAL);
   if (NS_FAILED(rv) && gThread)
     gThread->RemoveTimer(this);
   return rv;

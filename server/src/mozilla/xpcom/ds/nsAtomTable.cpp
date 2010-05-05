@@ -262,7 +262,7 @@ struct AtomTableEntry : public PLDHashEntryHdr {
   }
 };
 
-PR_STATIC_CALLBACK(PLDHashNumber)
+static PLDHashNumber
 AtomTableGetHash(PLDHashTable *table, const void *key)
 {
   const AtomTableEntry *e = static_cast<const AtomTableEntry*>(key);
@@ -277,7 +277,7 @@ AtomTableGetHash(PLDHashTable *table, const void *key)
   return nsCRT::HashCode(e->getUTF8String(), e->getLength());
 }
 
-PR_STATIC_CALLBACK(PRBool)
+static PRBool
 AtomTableMatchKey(PLDHashTable *table, const PLDHashEntryHdr *entry,
                   const void *key)
 {
@@ -309,7 +309,7 @@ AtomTableMatchKey(PLDHashTable *table, const PLDHashEntryHdr *entry,
   return memcmp(atomString, str, length * sizeof(char)) == 0;
 }
 
-PR_STATIC_CALLBACK(void)
+static void
 AtomTableClearEntry(PLDHashTable *table, PLDHashEntryHdr *entry)
 {
   AtomTableEntry *he = static_cast<AtomTableEntry*>(entry);
@@ -335,7 +335,7 @@ AtomTableClearEntry(PLDHashTable *table, PLDHashEntryHdr *entry)
   he->ClearAtom();
 }
 
-PR_STATIC_CALLBACK(PRBool)
+static PRBool
 AtomTableInitEntry(PLDHashTable *table, PLDHashEntryHdr *entry,
                    const void *key)
 {
@@ -362,7 +362,7 @@ static const PLDHashTableOps AtomTableOps = {
 
 #ifdef DEBUG
 
-PR_STATIC_CALLBACK(PLDHashOperator)
+static PLDHashOperator
 DumpAtomLeaks(PLDHashTable *table, PLDHashEntryHdr *he,
               PRUint32 index, void *arg)
 {
@@ -403,7 +403,8 @@ NS_PurgeAtomTable()
 {
   if (gAtomTable.ops) {
 #ifdef DEBUG
-    if (PR_GetEnv("MOZ_DUMP_ATOM_LEAKS")) {
+    const char *dumpAtomLeaks = PR_GetEnv("MOZ_DUMP_ATOM_LEAKS");
+    if (dumpAtomLeaks && *dumpAtomLeaks) {
       PRUint32 leaked = 0;
       printf("*** %d atoms still exist (including permanent):\n",
              gAtomTable.entryCount);
@@ -630,13 +631,15 @@ WrapStaticAtom(const nsStaticAtom* aAtom, PRUint32 aLength)
   return wrapper;
 }
 
+#define ATOM_HASHTABLE_INITIAL_SIZE  4096
+
 static inline AtomTableEntry*
 GetAtomHashEntry(const char* aString, PRUint32 aLength)
 {
   NS_ASSERTION(NS_IsMainThread(), "wrong thread");
   if (!gAtomTable.ops &&
       !PL_DHashTableInit(&gAtomTable, &AtomTableOps, 0,
-                         sizeof(AtomTableEntry), 2048)) {
+                         sizeof(AtomTableEntry), ATOM_HASHTABLE_INITIAL_SIZE)) {
     gAtomTable.ops = nsnull;
     return nsnull;
   }
@@ -652,7 +655,7 @@ GetAtomHashEntry(const PRUnichar* aString, PRUint32 aLength)
   NS_ASSERTION(NS_IsMainThread(), "wrong thread");
   if (!gAtomTable.ops &&
       !PL_DHashTableInit(&gAtomTable, &AtomTableOps, 0,
-                         sizeof(AtomTableEntry), 2048)) {
+                         sizeof(AtomTableEntry), ATOM_HASHTABLE_INITIAL_SIZE)) {
     gAtomTable.ops = nsnull;
     return nsnull;
   }

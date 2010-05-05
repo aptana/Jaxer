@@ -388,7 +388,7 @@ class nsTArray : public nsTArray_base {
     template<class Item, class Comparator>
     index_type IndexOf(const Item& item, index_type start,
                        const Comparator& comp) const {
-      const elem_type* iter = Elements() + start, *end = iter + Length();
+      const elem_type* iter = Elements() + start, *end = Elements() + Length();
       for (; iter != end; ++iter) {
         if (comp.Equals(*iter, item))
           return iter - Elements();
@@ -541,6 +541,70 @@ class nsTArray : public nsTArray_base {
       return elem;
     }
 
+    // This method searches for the least index of the greatest
+    // element less than or equal to |item|.  If |item| is inserted at
+    // this index, the array will remain sorted.  True is returned iff
+    // this index is also equal to |item|.  In this case, the returned
+    // index may point to the start of multiple copies of |item|.
+    // @param item   The item to search for.
+    // @param comp   The Comparator used.
+    // @outparam idx The index of greatest element <= to |item|
+    // @return       True iff |item == array[*idx]|.
+    // @precondition The array is sorted
+    template<class Item, class Comparator>
+    PRBool
+    GreatestIndexLtEq(const Item& item,
+                      const Comparator& comp,
+                      index_type* idx NS_OUTPARAM) const {
+      // Nb: we could replace all the uses of "BinaryIndexOf" with this
+      // function, but BinaryIndexOf will be oh-so-slightly faster so
+      // it's not strictly desired to do.
+
+      // invariant: low <= [idx] < high
+      index_type low = 0, high = Length();
+      while (high > low) {
+        index_type mid = (high + low) >> 1;
+        if (comp.Equals(ElementAt(mid), item)) {
+          // we might have the array [..., 2, 4, 4, 4, 4, 4, 5, ...]
+          // and be searching for "4". it's arbitrary where mid ends
+          // up here, so we back it up to the first instance to maintain
+          // the "least index ..." we promised above.
+          do {
+            --mid;
+          } while (NoIndex != mid && comp.Equals(ElementAt(mid), item));
+          *idx = ++mid;
+          return PR_TRUE;
+        }
+        if (comp.LessThan(ElementAt(mid), item))
+          // invariant: low <= idx < high
+          low = mid + 1;
+        else
+          // invariant: low <= idx < high
+          high = mid;
+      }
+      // low <= idx < high, so insert at high ("shifting" high up by
+      // 1) to maintain invariant.
+      // (or insert at low, since low==high; just a matter of taste here.)
+      *idx = high;
+      return PR_FALSE;
+    }
+
+    // Inserts |item| at such an index to guarantee that if the array
+    // was previously sorted, it will remain sorted after this
+    // insertion.
+    template<class Item, class Comparator>
+    elem_type *InsertElementSorted(const Item& item, const Comparator& comp) {
+      index_type index;
+      GreatestIndexLtEq(item, comp, &index);
+      return InsertElementAt(index, item);
+    }
+
+    // A variation on the InsertElementSorted metod defined above.
+    template<class Item>
+    elem_type *InsertElementSorted(const Item& item) {
+      return InsertElementSorted(item, nsDefaultComparator<elem_type, Item>());
+    }
+
     // This method appends elements to the end of this array.
     // @param array     The elements to append to this array.
     // @param arrayLen  The number of elements to append to this array.
@@ -632,6 +696,27 @@ class nsTArray : public nsTArray_base {
       return RemoveElement(item, nsDefaultComparator<elem_type, Item>());
     }
 
+    // This helper function combines GreatestIndexLtEq with
+    // RemoveElementAt to "search and destroy" the first element that
+    // is equal to the given element.
+    // @param item  The item to search for.
+    // @param comp  The Comparator used to determine element equality.
+    // @return PR_TRUE if the element was found
+    template<class Item, class Comparator>
+    PRBool RemoveElementSorted(const Item& item, const Comparator& comp) {
+      index_type index;
+      PRBool found = GreatestIndexLtEq(item, comp, &index);
+      if (found)
+        RemoveElementAt(index);
+      return found;
+    }
+
+    // A variation on the RemoveElementSorted method defined above.
+    template<class Item>
+    PRBool RemoveElementSorted(const Item& item) {
+      return RemoveElementSorted(item, nsDefaultComparator<elem_type, Item>());
+    }
+
     // This method causes the elements contained in this array and the given
     // array to be swapped.
     // NOTE: This method isn't heavily optimized if either array is an
@@ -660,13 +745,42 @@ class nsTArray : public nsTArray_base {
     // removes elements from the array (see also RemoveElementsAt).
     // @param newLen  The desired length of this array.
     // @return        True if the operation succeeded; false otherwise.
+    // See also TruncateLength if the new length is guaranteed to be
+    // smaller than the old.
     PRBool SetLength(size_type newLen) {
       size_type oldLen = Length();
       if (newLen > oldLen) {
         return InsertElementsAt(oldLen, newLen - oldLen) != nsnull;
       }
       
+      TruncateLength(newLen);
+      return PR_TRUE;
+    }
+
+    // This method modifies the length of the array, but may only be
+    // called when the new length is shorter than the old.  It can
+    // therefore be called when elem_type has no default constructor,
+    // unlike SetLength.  It removes elements from the array (see also
+    // RemoveElementsAt).
+    // @param newLen  The desired length of this array.
+    void TruncateLength(size_type newLen) {
+      size_type oldLen = Length();
+      NS_ABORT_IF_FALSE(newLen <= oldLen,
+                        "caller should use SetLength instead");
       RemoveElementsAt(newLen, oldLen - newLen);
+    }
+
+    // This method ensures that the array has length at least the given
+    // length.  If the current length is shorter than the given length,
+    // then new elements will be constructed using elem_type's default
+    // constructor.
+    // @param minLen  The desired minimum length of this array.
+    // @return        True if the operation succeeded; false otherwise.
+    PRBool EnsureLengthAtLeast(size_type minLen) {
+      size_type oldLen = Length();
+      if (minLen > oldLen) {
+        return InsertElementsAt(oldLen, minLen - oldLen) != nsnull;
+      }
       return PR_TRUE;
     }
 

@@ -98,14 +98,32 @@ NS_GetCurrentThread(nsIThread **result);
 extern NS_COM_GLUE NS_METHOD
 NS_GetMainThread(nsIThread **result);
 
+#if defined(MOZILLA_INTERNAL_API) && defined(XP_WIN)
+
+NS_COM bool NS_IsMainThread();
+
+#elif defined(MOZILLA_INTERNAL_API) && defined(NS_TLS)
+// This is defined in nsThreadManager.cpp and initialized to `true` for the
+// main thread by nsThreadManager::Init.
+extern NS_TLS bool gTLSIsMainThread;
+
+#ifdef MOZ_ENABLE_LIBXUL
+inline bool NS_IsMainThread()
+{
+  return gTLSIsMainThread;
+}
+#else
+NS_COM bool NS_IsMainThread();
+#endif
+#else
 /**
  * Test to see if the current thread is the main thread.
  *
  * @returns PR_TRUE if the current thread is the main thread, and PR_FALSE
  * otherwise.
  */
-extern NS_COM_GLUE NS_METHOD_(PRBool)
-NS_IsMainThread();
+extern NS_COM_GLUE bool NS_IsMainThread();
+#endif
 
 /**
  * Dispatch the given event to the current thread.
@@ -245,30 +263,57 @@ protected:
 #define IMETHOD_VISIBILITY NS_VISIBILITY_HIDDEN
 
 // An event that can be used to call a method on a class.  The class type must
-// support reference counting.
-template <class T>
+// support reference counting. This event supports Revoke for use
+// with nsRevocableEventPtr.
+template <class ClassType, typename ReturnType = void>
 class nsRunnableMethod : public nsRunnable
 {
 public:
-  typedef void (T::*Method)();
+  typedef ReturnType (ClassType::*Method)();
 
-  nsRunnableMethod(T *obj, Method method)
+  nsRunnableMethod(ClassType *obj, Method method)
     : mObj(obj), mMethod(method) {
     NS_ADDREF(mObj);
   }
 
   NS_IMETHOD Run() {
+    if (!mObj)
+      return NS_OK;
     (mObj->*mMethod)();
     return NS_OK;
   }
 
-private:
-  virtual ~nsRunnableMethod() {
-    NS_RELEASE(mObj);
+  void Revoke() {
+    NS_IF_RELEASE(mObj);
   }
 
-  T      *mObj;
-  Method  mMethod;
+  // These ReturnTypeEnforcer classes set up a blacklist for return types that
+  // we know are not safe. The default ReturnTypeEnforcer compiles just fine but
+  // already_AddRefed will not.
+  template <typename OtherReturnType>
+  class ReturnTypeEnforcer
+  {
+  public:
+    typedef int ReturnTypeIsSafe;
+  };
+
+  template <class T>
+  class ReturnTypeEnforcer<already_AddRefed<T> >
+  {
+    // No ReturnTypeIsSafe makes this illegal!
+  };
+
+  // Make sure this return type is safe.
+  typedef typename ReturnTypeEnforcer<ReturnType>::ReturnTypeIsSafe check;
+
+protected:
+  virtual ~nsRunnableMethod() {
+    NS_IF_RELEASE(mObj);
+  }
+
+private:
+  ClassType* mObj;
+  Method mMethod;
 };
 
 // Use this helper macro like so:
@@ -283,8 +328,70 @@ private:
 //
 // NOTE: Attempts to make this a template function caused VC6 to barf :-(
 //
+
 #define NS_NEW_RUNNABLE_METHOD(class_, obj_, method_) \
-    new nsRunnableMethod<class_>(obj_, &class_::method_)
+    ns_new_runnable_method(obj_, &class_::method_)
+
+template<class ClassType, typename ReturnType>
+nsRunnableMethod<ClassType, ReturnType>*
+ns_new_runnable_method(ClassType* obj, ReturnType (ClassType::*method)())
+{
+  return new nsRunnableMethod<ClassType, ReturnType>(obj, method);
+}
+
+// An event that can be used to call a method on a class, but holds only
+// a raw pointer to the object on which the method will be called.  This
+// event supports Revoke for use with nsRevocableEventPtr and should
+// almost always be used with it.
+template <class ClassType, typename ReturnType = void>
+class nsNonOwningRunnableMethod : public nsRunnable
+{
+public:
+  typedef ReturnType (ClassType::*Method)();
+
+  nsNonOwningRunnableMethod(ClassType *obj, Method method)
+    : mObj(obj), mMethod(method) {
+  }
+
+  NS_IMETHOD Run() {
+    if (!mObj)
+      return NS_OK;
+    (mObj->*mMethod)();
+    return NS_OK;
+  }
+
+  void Revoke() {
+    mObj = nsnull;
+  }
+
+  // These ReturnTypeEnforcer classes set up a blacklist for return types that
+  // we know are not safe. The default ReturnTypeEnforcer compiles just fine but
+  // already_AddRefed will not.
+  template <typename OtherReturnType>
+  class ReturnTypeEnforcer
+  {
+  public:
+    typedef int ReturnTypeIsSafe;
+  };
+
+  template <class T>
+  class ReturnTypeEnforcer<already_AddRefed<T> >
+  {
+    // No ReturnTypeIsSafe makes this illegal!
+  };
+
+  // Make sure this return type is safe.
+  typedef typename ReturnTypeEnforcer<ReturnType>::ReturnTypeIsSafe check;
+
+protected:
+  virtual ~nsNonOwningRunnableMethod() {
+  }
+
+private:
+  ClassType* mObj;
+  Method mMethod;
+};
+
 
 #endif  // XPCOM_GLUE_AVOID_NSPR
 
@@ -364,6 +471,8 @@ public:
   PRBool IsPending() {
     return mEvent != nsnull;
   }
+  
+  T *get() { return mEvent; }
 
 private:
   // Not implemented

@@ -166,86 +166,6 @@
   #define NSCAP_LOG_RELEASE(this, ptr)
 #endif
 
-
-
-
-  /*
-    WARNING:
-      VC++4.2 is very picky.  To compile under VC++4.2, the classes must be defined
-      in an order that satisfies:
-    
-        nsDerivedSafe < nsCOMPtr
-        already_AddRefed < nsCOMPtr
-        nsCOMPtr < nsGetterAddRefs
-
-      The other compilers probably won't complain, so please don't reorder these
-      classes, on pain of breaking 4.2 compatibility.
-  */
-
-
-template <class T>
-class nsDerivedSafe : public T
-    /*
-      No client should ever see or have to type the name of this class.  It is the
-      artifact that makes it a compile-time error to call |AddRef| and |Release|
-      on a |nsCOMPtr|.  DO NOT USE THIS TYPE DIRECTLY IN YOUR CODE.
-
-      See |nsCOMPtr::operator->|, |nsCOMPtr::operator*|, et al.
-
-      This type should be a nested class inside |nsCOMPtr<T>|.
-    */
-  {
-    private:
-#ifdef HAVE_CPP_ACCESS_CHANGING_USING
-      using T::AddRef;
-      using T::Release;
-#else
-      nsrefcnt AddRef(void);
-      nsrefcnt Release(void);
-#endif
-
-#if !defined(AIX) && !defined(IRIX)
-      void operator delete( void*, size_t );                  // NOT TO BE IMPLEMENTED
-        // declaring |operator delete| private makes calling delete on an interface pointer a compile error
-#endif
-
-      nsDerivedSafe<T>& operator=( const T& );                // NOT TO BE IMPLEMENTED
-        // you may not call |operator=()| through a dereferenced |nsCOMPtr|, because you'd get the wrong one
-
-        /*
-          Compiler warnings and errors: nsDerivedSafe operator=() hides inherited operator=().
-          If you see that, that means somebody checked in a [XP]COM interface class that declares an
-          |operator=()|, and that's _bad_.  So bad, in fact, that this declaration exists explicitly
-          to stop people from doing it.
-        */
-
-    protected:
-      nsDerivedSafe();                                        // NOT TO BE IMPLEMENTED
-        /*
-          This ctor exists to avoid compile errors and warnings about nsDeriviedSafe using the
-          default ctor but inheriting classes without an empty ctor. See bug 209667.
-        */
-  };
-
-#if !defined(HAVE_CPP_ACCESS_CHANGING_USING) && defined(NEED_CPP_UNUSED_IMPLEMENTATIONS)
-template <class T>
-nsrefcnt
-nsDerivedSafe<T>::AddRef()
-  {
-    return 0;
-  }
-
-template <class T>
-nsrefcnt
-nsDerivedSafe<T>::Release()
-  {
-    return 0;
-  }
-
-#endif
-
-
-
 template <class T>
 struct already_AddRefed
     /*
@@ -341,7 +261,11 @@ class nsCOMPtr_helper
   warrant the specialcasing.
 */
 
-class NS_COM_GLUE nsQueryInterface
+class
+  NS_COM_GLUE
+  NS_STACK_CLASS
+  NS_FINAL_CLASS
+nsQueryInterface
   {
     public:
       explicit
@@ -475,7 +399,8 @@ class NS_COM_GLUE nsGetServiceByContractIDWithError
     nsresult*                   mErrorPtr;
 };
 
-class nsCOMPtr_base
+class
+nsCOMPtr_base
     /*
       ...factors implementation for all template versions of |nsCOMPtr|.
 
@@ -535,7 +460,9 @@ class nsCOMPtr_base
 // template <class T> class nsGetterAddRefs;
 
 template <class T>
-class nsCOMPtr
+class
+  NS_FINAL_CLASS
+nsCOMPtr
 #ifdef NSCAP_FEATURE_USE_BASE
     : private nsCOMPtr_base
 #endif
@@ -830,7 +757,7 @@ class nsCOMPtr
         }
 
       void
-      forget( T** rhs )
+      forget( T** rhs NS_OUTPARAM )
           // Set the target of rhs to the value of mRawPtr and null out mRawPtr.
           // Useful to avoid unnecessary AddRef/Release pairs with "out"
           // parameters.
@@ -843,30 +770,31 @@ class nsCOMPtr
       T*
       get() const
           /*
-            Prefer the implicit conversion provided automatically by |operator nsDerivedSafe<T>*() const|.
-             Use |get()| to resolve ambiguity or to get a castable pointer.
+            Prefer the implicit conversion provided automatically by |operator T*() const|.
+            Use |get()| to resolve ambiguity or to get a castable pointer.
           */
         {
           return reinterpret_cast<T*>(mRawPtr);
         }
 
-      operator nsDerivedSafe<T>*() const
+      operator T*() const
           /*
-            ...makes an |nsCOMPtr| act like its underlying raw pointer type (except against |AddRef()|, |Release()|,
-              and |delete|) whenever it is used in a context where a raw pointer is expected.  It is this operator
-              that makes an |nsCOMPtr| substitutable for a raw pointer.
+            ...makes an |nsCOMPtr| act like its underlying raw pointer type whenever it
+            is used in a context where a raw pointer is expected.  It is this operator
+            that makes an |nsCOMPtr| substitutable for a raw pointer.
 
-            Prefer the implicit use of this operator to calling |get()|, except where necessary to resolve ambiguity.
+            Prefer the implicit use of this operator to calling |get()|, except where
+            necessary to resolve ambiguity.
           */
         {
-          return get_DerivedSafe();
+          return get();
         }
 
-      nsDerivedSafe<T>*
+      T*
       operator->() const
         {
           NS_PRECONDITION(mRawPtr != 0, "You can't dereference a NULL nsCOMPtr with operator->().");
-          return get_DerivedSafe();
+          return get();
         }
 
 #ifdef CANT_RESOLVE_CPP_CONST_AMBIGUITY
@@ -901,17 +829,12 @@ class nsCOMPtr
 #endif // CANT_RESOLVE_CPP_CONST_AMBIGUITY
 
     public:
-      nsDerivedSafe<T>&
+      T&
       operator*() const
         {
           NS_PRECONDITION(mRawPtr != 0, "You can't dereference a NULL nsCOMPtr with operator*().");
-          return *get_DerivedSafe();
+          return *get();
         }
-
-#if 0
-    private:
-      friend class nsGetterAddRefs<T>;
-#endif
 
       T**
       StartAssignment()
@@ -923,14 +846,6 @@ class nsCOMPtr
           return reinterpret_cast<T**>(&mRawPtr);
 #endif
         }
-
-    private:
-      nsDerivedSafe<T>*
-      get_DerivedSafe() const
-        {
-          return reinterpret_cast<nsDerivedSafe<T>*>(mRawPtr);
-        }
-
   };
 
 
@@ -1150,8 +1065,18 @@ class nsCOMPtr<nsISupports>
           mRawPtr = temp;
         }
 
+      already_AddRefed<nsISupports>
+      forget()
+          // return the value of mRawPtr and null out mRawPtr. Useful for
+          // already_AddRefed return values.
+        {
+          nsISupports* temp = 0;
+          swap(temp);
+          return temp;
+        }
+
       void
-      forget( nsISupports** rhs )
+      forget( nsISupports** rhs NS_OUTPARAM )
           // Set the target of rhs to the value of mRawPtr and null out mRawPtr.
           // Useful to avoid unnecessary AddRef/Release pairs with "out"
           // parameters.
@@ -1166,30 +1091,32 @@ class nsCOMPtr<nsISupports>
       nsISupports*
       get() const
           /*
-            Prefer the implicit conversion provided automatically by |operator nsDerivedSafe<nsISupports>*() const|.
-             Use |get()| to resolve ambiguity or to get a castable pointer.
+            Prefer the implicit conversion provided automatically by
+            |operator nsISupports*() const|.
+            Use |get()| to resolve ambiguity or to get a castable pointer.
           */
         {
           return reinterpret_cast<nsISupports*>(mRawPtr);
         }
 
-      operator nsDerivedSafe<nsISupports>*() const
+      operator nsISupports*() const
           /*
-            ...makes an |nsCOMPtr| act like its underlying raw pointer type (except against |AddRef()|, |Release()|,
-              and |delete|) whenever it is used in a context where a raw pointer is expected.  It is this operator
-              that makes an |nsCOMPtr| substitutable for a raw pointer.
+            ...makes an |nsCOMPtr| act like its underlying raw pointer type whenever it
+            is used in a context where a raw pointer is expected.  It is this operator
+            that makes an |nsCOMPtr| substitutable for a raw pointer.
 
-            Prefer the implicit use of this operator to calling |get()|, except where necessary to resolve ambiguity.
+            Prefer the implicit use of this operator to calling |get()|, except where
+            necessary to resolve ambiguity.
           */
         {
-          return get_DerivedSafe();
+          return get();
         }
 
-      nsDerivedSafe<nsISupports>*
+      nsISupports*
       operator->() const
         {
           NS_PRECONDITION(mRawPtr != 0, "You can't dereference a NULL nsCOMPtr with operator->().");
-          return get_DerivedSafe();
+          return get();
         }
 
 #ifdef CANT_RESOLVE_CPP_CONST_AMBIGUITY
@@ -1225,17 +1152,12 @@ class nsCOMPtr<nsISupports>
 
     public:
 
-      nsDerivedSafe<nsISupports>&
+      nsISupports&
       operator*() const
         {
           NS_PRECONDITION(mRawPtr != 0, "You can't dereference a NULL nsCOMPtr with operator*().");
-          return *get_DerivedSafe();
+          return *get();
         }
-
-#if 0
-    private:
-      friend class nsGetterAddRefs<nsISupports>;
-#endif
 
       nsISupports**
       StartAssignment()
@@ -1247,14 +1169,6 @@ class nsCOMPtr<nsISupports>
           return reinterpret_cast<nsISupports**>(&mRawPtr);
 #endif
         }
-
-    private:
-      nsDerivedSafe<nsISupports>*
-      get_DerivedSafe() const
-        {
-          return reinterpret_cast<nsDerivedSafe<nsISupports>*>(mRawPtr);
-        }
-
   };
 
 #ifndef NSCAP_FEATURE_USE_BASE

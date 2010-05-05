@@ -68,10 +68,14 @@
     #include <sys/statfs.h>
 #endif
 
-#ifdef HAVE_STATVFS
-    #define STATFS statvfs
+#ifdef HAVE_STATVFS64
+    #define STATFS statvfs64
 #else
-    #define STATFS statfs
+    #ifdef HAVE_STATVFS
+        #define STATFS statvfs
+    #else
+        #define STATFS statfs
+    #endif
 #endif
 
 // so we can statfs on freebsd
@@ -81,6 +85,16 @@
     #include <sys/param.h>
     #include <sys/mount.h>
 #endif
+
+#if defined(HAVE_STAT64) && defined(HAVE_LSTAT64)
+    #define STAT stat64
+    #define LSTAT lstat64
+    #define HAVE_STATS64 1
+#else
+    #define STAT stat
+    #define LSTAT lstat
+#endif
+
 
 class NS_COM nsLocalFile : public nsILocalFile,
                            public nsIHashable
@@ -113,9 +127,10 @@ private:
     ~nsLocalFile() {}
 
 protected:
-    struct stat  mCachedStat;
+// This stat cache holds the *last stat* - it does not invalidate.
+// Call "FillStatCache" whenever you want to stat our file.
+    struct STAT  mCachedStat;
     nsCString    mPath;
-    PRPackedBool mHaveCachedStat;
 
     void LocateNativeLeafName(nsACString::const_iterator &,
                               nsACString::const_iterator &);
@@ -126,10 +141,7 @@ protected:
                                      const nsACString &newName,
                                      nsACString &_retval);
 
-    void InvalidateCache() {
-        mHaveCachedStat = PR_FALSE;
-    }
-    nsresult FillStatCache();
+    PRBool FillStatCache();
 
     nsresult CreateAndKeepOpen(PRUint32 type, PRIntn flags,
                                PRUint32 permissions, PRFileDesc **_retval);

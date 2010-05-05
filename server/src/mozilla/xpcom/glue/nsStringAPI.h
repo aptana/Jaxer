@@ -53,6 +53,7 @@
 #include "nsXPCOMStrings.h"
 #include "nsISupportsImpl.h"
 #include "prlog.h"
+#include "nsTArray.h"
 
 class nsAString
 {
@@ -1049,12 +1050,17 @@ private:
  * Under GCC, this define should only be set if compiling with -fshort-wchar.
  */
 
-#ifdef HAVE_CPP_2BYTE_WCHAR_T
+#if defined(HAVE_CPP_CHAR16_T) || defined(HAVE_CPP_2BYTE_WCHAR_T)
+#if defined(HAVE_CPP_CHAR16_T)
+  PR_STATIC_ASSERT(sizeof(char16_t) == 2);
+  #define NS_LL(s)                                u##s
+#else
   PR_STATIC_ASSERT(sizeof(wchar_t) == 2);
   #define NS_LL(s)                                L##s
-  #define NS_MULTILINE_LITERAL_STRING(s)          nsDependentString(reinterpret_cast<const nsAString::char_type*>(s), PRUint32((sizeof(s)/sizeof(wchar_t))-1))
-  #define NS_MULTILINE_LITERAL_STRING_INIT(n,s)   n(reinterpret_cast<const nsAString::char_type*>(s), PRUint32((sizeof(s)/sizeof(wchar_t))-1))
-  #define NS_NAMED_MULTILINE_LITERAL_STRING(n,s)  const nsDependentString n(reinterpret_cast<const nsAString::char_type*>(s), PRUint32((sizeof(s)/sizeof(wchar_t))-1))
+#endif
+  #define NS_MULTILINE_LITERAL_STRING(s)          nsDependentString(reinterpret_cast<const nsAString::char_type*>(s), PRUint32((sizeof(s)/2)-1))
+  #define NS_MULTILINE_LITERAL_STRING_INIT(n,s)   n(reinterpret_cast<const nsAString::char_type*>(s), PRUint32((sizeof(s)/2)-1))
+  #define NS_NAMED_MULTILINE_LITERAL_STRING(n,s)  const nsDependentString n(reinterpret_cast<const nsAString::char_type*>(s), PRUint32((sizeof(s)/2)-1))
   typedef nsDependentString nsLiteralString;
 #else
   #define NS_LL(s)                                s
@@ -1417,5 +1423,8 @@ typedef nsCString PromiseFlatCString;
 
 typedef nsCString nsCAutoString;
 typedef nsString nsAutoString;
+
+NS_HIDDEN_(PRBool) ParseString(const nsACString& aAstring, char aDelimiter, 
+                               nsTArray<nsCString>& aArray);
 
 #endif // nsStringAPI_h__

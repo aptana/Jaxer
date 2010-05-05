@@ -98,10 +98,16 @@
 #include "nsCycleCollector.h"
 #include "nsThreadUtils.h"
 #include "nsTObserverArray.h"
+#include "nsWildCard.h"
+#include "mozilla/Mutex.h"
+#include "mozilla/Monitor.h"
+#include "mozilla/CondVar.h"
 
-#if !defined(WINCE) && !defined(XP_OS2)
+#if !defined(XP_OS2)
 #include "nsWindowsRegKey.h"
 #endif
+
+using namespace mozilla;
 
 class nsCStringContainer : private nsStringContainer_base { };
 class nsStringContainer : private nsStringContainer_base { };
@@ -204,10 +210,10 @@ void XXXNeverCalled()
     new nsVariant();
     nsUnescape(nsnull);
     nsEscape(nsnull, url_XAlphas);
-    nsStringArray array;
+    nsTArray<nsString> array;
     NS_NewStringEnumerator(nsnull, &array);
     NS_NewAdoptingStringEnumerator(nsnull, &array);
-    nsCStringArray carray;
+    nsTArray<nsCString> carray;
     NS_NewUTF8StringEnumerator(nsnull, &carray);
     NS_NewAdoptingUTF8StringEnumerator(nsnull, &carray);
     nsVoidableString str3;
@@ -281,7 +287,7 @@ void XXXNeverCalled()
     nsXPCOMCycleCollectionParticipant();
     nsCycleCollector_collect();
 
-#if !defined(WINCE) && !defined(XP_OS2)
+#if !defined(XP_OS2)
     NS_NewWindowsRegKey(nsnull);
 #endif
 
@@ -294,4 +300,12 @@ void XXXNeverCalled()
     NS_ProcessPendingEvents(nsnull, 0);
     NS_HasPendingEvents(nsnull);
     NS_ProcessNextEvent(nsnull, PR_FALSE);
+    Mutex theMutex("dummy");
+    Monitor theMonitor("dummy2");
+    CondVar theCondVar(theMutex, "dummy3");
+
+    NS_WildCardValid((const char *)nsnull);
+    NS_WildCardValid((const PRUnichar *)nsnull);
+    NS_WildCardMatch((const char *)nsnull, (const char *)nsnull, PR_FALSE);
+    NS_WildCardMatch((const PRUnichar *)nsnull, (const PRUnichar *)nsnull, PR_FALSE);
 }

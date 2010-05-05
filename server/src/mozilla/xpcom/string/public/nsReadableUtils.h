@@ -48,6 +48,7 @@
 #ifndef nsAString_h___
 #include "nsAString.h"
 #endif
+#include "nsTArray.h"
 
 inline size_t Distance( const nsReadingIterator<PRUnichar>& start, const nsReadingIterator<PRUnichar>& end )
   {
@@ -58,17 +59,17 @@ inline size_t Distance( const nsReadingIterator<char>& start, const nsReadingIte
     return end.get() - start.get();
   }
 
-NS_COM void LossyCopyUTF16toASCII( const nsAString& aSource, nsACString& aDest );
-NS_COM void CopyASCIItoUTF16( const nsACString& aSource, nsAString& aDest );
+NS_COM void LossyCopyUTF16toASCII( const nsAString& aSource, nsACString& aDest NS_OUTPARAM );
+NS_COM void CopyASCIItoUTF16( const nsACString& aSource, nsAString& aDest NS_OUTPARAM );
 
-NS_COM void LossyCopyUTF16toASCII( const PRUnichar* aSource, nsACString& aDest );
-NS_COM void CopyASCIItoUTF16( const char* aSource, nsAString& aDest );
+NS_COM void LossyCopyUTF16toASCII( const PRUnichar* aSource, nsACString& aDest NS_OUTPARAM );
+NS_COM void CopyASCIItoUTF16( const char* aSource, nsAString& aDest NS_OUTPARAM );
 
-NS_COM void CopyUTF16toUTF8( const nsAString& aSource, nsACString& aDest );
-NS_COM void CopyUTF8toUTF16( const nsACString& aSource, nsAString& aDest );
+NS_COM void CopyUTF16toUTF8( const nsAString& aSource, nsACString& aDest NS_OUTPARAM );
+NS_COM void CopyUTF8toUTF16( const nsACString& aSource, nsAString& aDest NS_OUTPARAM );
 
-NS_COM void CopyUTF16toUTF8( const PRUnichar* aSource, nsACString& aDest );
-NS_COM void CopyUTF8toUTF16( const char* aSource, nsAString& aDest );
+NS_COM void CopyUTF16toUTF8( const PRUnichar* aSource, nsACString& aDest NS_OUTPARAM );
+NS_COM void CopyUTF8toUTF16( const char* aSource, nsAString& aDest NS_OUTPARAM );
 
 NS_COM void LossyAppendUTF16toASCII( const nsAString& aSource, nsACString& aDest );
 NS_COM void AppendASCIItoUTF16( const nsACString& aSource, nsAString& aDest );
@@ -252,6 +253,8 @@ NS_COM PRBool IsASCII( const nsACString& aString );
    */
 NS_COM PRBool IsUTF8( const nsACString& aString );
 
+NS_COM PRBool ParseString(const nsACString& aAstring, char aDelimiter, 
+                          nsTArray<nsCString>& aArray);
 
   /**
    * Converts case in place in the argument string.

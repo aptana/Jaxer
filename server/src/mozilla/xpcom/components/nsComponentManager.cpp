@@ -82,6 +82,11 @@
 #include "nsXPIDLString.h"
 #include "prcmon.h"
 #include "xptinfo.h" // this after nsISupports, to pick up IID so that xpt stuff doesn't try to define it itself...
+#include "nsThreadUtils.h"
+#include "prthread.h"
+#include "private/pprthred.h"
+#include "nsTArray.h"
+#include "prio.h"
 
 #include "nsInt64.h"
 #include "nsManifestLineReader.h"
@@ -101,7 +106,6 @@ NS_COM PRLogModuleInfo* nsComponentManagerLog = nsnull;
 #if 0 || defined (DEBUG_timeless)
  #define SHOW_DENIED_ON_SHUTDOWN
  #define SHOW_CI_ON_EXISTING_SERVICE
- #define XPCOM_CHECK_PENDING_CIDS
 #endif
 
 // Bloated registry buffer size to improve startup performance -- needs to
@@ -231,10 +235,10 @@ ArenaStrdup(const char *s, PLArenaPool *arena)
 // Hashtable Callbacks
 ////////////////////////////////////////////////////////////////////////////////
 
-PRBool PR_CALLBACK
+PRBool
 nsFactoryEntry_Destroy(nsHashKey *aKey, void *aData, void* closure);
 
-PR_STATIC_CALLBACK(PLDHashNumber)
+static PLDHashNumber
 factory_HashKey(PLDHashTable *aTable, const void *aKey)
 {
     const nsCID *cidp = reinterpret_cast<const nsCID*>(aKey);
@@ -242,7 +246,7 @@ factory_HashKey(PLDHashTable *aTable, const void *aKey)
     return cidp->m0;
 }
 
-PR_STATIC_CALLBACK(PRBool)
+static PRBool
 factory_MatchEntry(PLDHashTable *aTable, const PLDHashEntryHdr *aHdr,
                    const void *aKey)
 {
@@ -253,7 +257,7 @@ factory_MatchEntry(PLDHashTable *aTable, const PLDHashEntryHdr *aHdr,
     return (entry->mFactoryEntry->mCid).Equals(*cidp);
 }
 
-PR_STATIC_CALLBACK(void)
+static void
 factory_ClearEntry(PLDHashTable *aTable, PLDHashEntryHdr *aHdr)
 {
     nsFactoryTableEntry* entry = static_cast<nsFactoryTableEntry*>(aHdr);
@@ -273,7 +277,7 @@ static const PLDHashTableOps factory_DHashTableOps = {
     PL_DHashFinalizeStub,
 };
 
-PR_STATIC_CALLBACK(void)
+static void
 contractID_ClearEntry(PLDHashTable *aTable, PLDHashEntryHdr *aHdr)
 {
     nsContractIDTableEntry* entry = static_cast<nsContractIDTableEntry*>(aHdr);
@@ -327,9 +331,9 @@ private:
     ~PLDHashTableEnumeratorImpl();
     void ReleaseElements();
 
-    nsVoidArray   mElements;
-    PRInt32       mCount, mCurrent;
-    PRMonitor*    mMonitor;
+    nsTArray<nsISupports*> mElements;
+    PRInt32                mCount, mCurrent;
+    PRMonitor*             mMonitor;
 
     struct Closure {
         PRBool                        succeeded;
@@ -338,14 +342,14 @@ private:
         PLDHashTableEnumeratorImpl    *impl;
     };
 
-    static PLDHashOperator PR_CALLBACK Enumerator(PLDHashTable *table,
-                                                  PLDHashEntryHdr *hdr,
-                                                  PRUint32 number,
-                                                  void *data);
+    static PLDHashOperator Enumerator(PLDHashTable *table,
+                                      PLDHashEntryHdr *hdr,
+                                      PRUint32 number,
+                                      void *data);
 };
 
 // static
-PLDHashOperator PR_CALLBACK
+PLDHashOperator
 PLDHashTableEnumeratorImpl::Enumerator(PLDHashTable *table,
                                        PLDHashEntryHdr *hdr,
                                        PRUint32 number,
@@ -399,9 +403,7 @@ void
 PLDHashTableEnumeratorImpl::ReleaseElements()
 {
     for (PRInt32 i = 0; i < mCount; i++) {
-        nsISupports *supports = reinterpret_cast<nsISupports *>
-                                                (mElements[i]);
-        NS_IF_RELEASE(supports);
+        NS_IF_RELEASE(mElements[i]);
     }
 }
 
@@ -474,7 +476,7 @@ PLDHashTableEnumeratorImpl::CurrentItem(nsISupports **retval)
     if (!mCount || mCurrent == mCount)
         return NS_ERROR_FAILURE;
 
-    *retval = reinterpret_cast<nsISupports *>(mElements[mCurrent]);
+    *retval = mElements[mCurrent];
     if (*retval)
         NS_ADDREF(*retval);
 
@@ -599,6 +601,9 @@ nsComponentManagerImpl::nsComponentManagerImpl()
     mContractIDs.ops = nsnull;
 }
 
+#define CONTRACTID_HASHTABLE_INITIAL_SIZE	2048
+#define AUTOREGENTRY_HASHTABLE_INITIAL_SIZE	256
+
 nsresult nsComponentManagerImpl::Init(nsStaticModuleInfo const *aStaticModules,
                                       PRUint32 aStaticModuleCount)
 {
@@ -634,7 +639,7 @@ nsresult nsComponentManagerImpl::Init(nsStaticModuleInfo const *aStaticModules,
     if (!mContractIDs.ops) {
         if (!PL_DHashTableInit(&mContractIDs, &contractID_DHashTableOps,
                                0, sizeof(nsContractIDTableEntry),
-                               1024)) {
+                               CONTRACTID_HASHTABLE_INITIAL_SIZE)) {
             mContractIDs.ops = nsnull;
             return NS_ERROR_OUT_OF_MEMORY;
         }
@@ -648,7 +653,7 @@ nsresult nsComponentManagerImpl::Init(nsStaticModuleInfo const *aStaticModules,
 #endif
     }
 
-    if (!mAutoRegEntries.Init(32))
+    if (!mAutoRegEntries.Init(AUTOREGENTRY_HASHTABLE_INITIAL_SIZE))
         return NS_ERROR_OUT_OF_MEMORY;
 
     if (mMon == nsnull) {
@@ -715,9 +720,9 @@ nsresult nsComponentManagerImpl::Shutdown(void)
     if (mRegistryDirty) {
         nsresult rv = WritePersistentRegistry();
         if (NS_FAILED(rv)) {
-            PR_LOG(nsComponentManagerLog, PR_LOG_ERROR, ("nsComponentManager: Could not write out perisistant registry."));
+            PR_LOG(nsComponentManagerLog, PR_LOG_ERROR, ("nsComponentManager: Could not write out persistent registry."));
 #ifdef DEBUG
-            printf("Could not write out perisistant registry!\n");
+            printf("Could not write out persistent registry!\n");
 #endif
         }
     }
@@ -1038,46 +1043,6 @@ nsComponentManagerImpl::ReadPersistentRegistry()
         contractIDTableEntry->mFactoryEntry = cidEntry;
     }
 
-#ifdef XPCOM_CHECK_PENDING_CIDS
-    {
-/*
- * If you get Asserts when you define SHOW_CI_ON_EXISTING_SERVICE and want to
- * track down their cause, then you should add the contracts listed by the
- * assertion to abusedContracts. The next time you run your xpcom app, xpcom
- * will assert the first time the object associated with the contract is
- * instantiated (which in many cases is the source of the problem).
- *
- * If you're doing this then you might want to NOP and soft breakpoint the
- * lines labeled: NOP_AND_BREAK.
- *
- * Otherwise XPCOM will refuse to create the object for the caller, which
- * while reasonable at some level, will almost certainly cause the app to
- * stop functioning normally.
- */
-        static char abusedContracts[][128] = {
-        /*// Example contracts:
-            "@mozilla.org/rdf/container;1",
-            "@mozilla.org/intl/charsetalias;1",
-            "@mozilla.org/locale/win32-locale;1",
-            "@mozilla.org/widget/lookandfeel/win;1",
-        // */
-            0
-        };
-        for (int i=0; abusedContracts[i] && *abusedContracts[i]; i++) {
-            nsFactoryEntry *entry = nsnull;
-            nsContractIDTableEntry* contractIDTableEntry =
-                static_cast<nsContractIDTableEntry*>
-                           (PL_DHashTableOperate(&mContractIDs, abusedContracts[i],
-                                                    PL_DHASH_LOOKUP));
-
-            if (PL_DHASH_ENTRY_IS_BUSY(contractIDTableEntry)) {
-                entry = contractIDTableEntry->mFactoryEntry;
-                AddPendingCID(entry->mCid);
-            }
-        }
-    }
-#endif
-
     if (ReadSectionHeader(reader, "CATEGORIES"))
         goto out;
 
@@ -1119,7 +1084,7 @@ struct PersistentWriterArgs
     nsTArray<nsLoaderdata> *mLoaderData;
 };
 
-PR_STATIC_CALLBACK(PLDHashOperator)
+static PLDHashOperator
 ContractIDWriter(PLDHashTable *table,
                  PLDHashEntryHdr *hdr,
                  PRUint32 number,
@@ -1143,7 +1108,7 @@ ContractIDWriter(PLDHashTable *table,
     return PL_DHASH_NEXT;
 }
 
-PR_STATIC_CALLBACK(PLDHashOperator)
+static PLDHashOperator
 ClassIDWriter(PLDHashTable *table,
               PLDHashEntryHdr *hdr,
               PRUint32 number,
@@ -1199,9 +1164,9 @@ ClassIDWriter(PLDHashTable *table,
                (location   ? location   : ""));
 
     if (contractID)
-        PR_Free(contractID);
+        NS_Free(contractID);
     if (className)
-        PR_Free(className);
+        NS_Free(className);
 
     return PL_DHASH_NEXT;
 }
@@ -1334,7 +1299,7 @@ nsComponentManagerImpl::HashContractID(const char *aContractID,
     if(!aContractID || !aContractIDLen)
         return NS_ERROR_NULL_POINTER;
 
-    nsAutoMonitor mon(mMon);
+    NS_ABORT_IF_FALSE(PR_InMonitor(mMon), "called from outside mMon");
 
     nsContractIDTableEntry* contractIDTableEntry =
         static_cast<nsContractIDTableEntry*>
@@ -1462,7 +1427,7 @@ nsComponentManagerImpl::GetClassObject(const nsCID &aClass, const nsIID &aIID,
         char *buf = aClass.ToString();
         PR_LogPrint("nsComponentManager: GetClassObject(%s)", buf);
         if (buf)
-            PR_Free(buf);
+            NS_Free(buf);
     }
 #endif
 
@@ -1485,6 +1450,9 @@ nsComponentManagerImpl::GetClassObjectByContractID(const char *contractID,
                                                    const nsIID &aIID,
                                                    void **aResult)
 {
+    NS_ENSURE_ARG_POINTER(aResult);
+    NS_ENSURE_ARG_POINTER(contractID);
+
     nsresult rv;
 
     nsCOMPtr<nsIFactory> factory;
@@ -1495,8 +1463,6 @@ nsComponentManagerImpl::GetClassObjectByContractID(const char *contractID,
         PR_LogPrint("nsComponentManager: GetClassObject(%s)", contractID);
     }
 #endif
-
-    PR_ASSERT(aResult != nsnull);
 
     rv = FindFactory(contractID, strlen(contractID), getter_AddRefs(factory));
     if (NS_FAILED(rv)) return rv;
@@ -1518,13 +1484,8 @@ nsComponentManagerImpl::GetClassObjectByContractID(const char *contractID,
 NS_IMETHODIMP
 nsComponentManagerImpl::ContractIDToClassID(const char *aContractID, nsCID *aClass)
 {
-    NS_PRECONDITION(aContractID != nsnull, "null ptr");
-    if (!aContractID)
-        return NS_ERROR_NULL_POINTER;
-
-    NS_PRECONDITION(aClass != nsnull, "null ptr");
-    if (!aClass)
-        return NS_ERROR_NULL_POINTER;
+    NS_ENSURE_ARG_POINTER(aContractID);
+    NS_ENSURE_ARG_POINTER(aClass);
 
     nsresult rv = NS_ERROR_FACTORY_NOT_REGISTERED;
 
@@ -1542,7 +1503,7 @@ nsComponentManagerImpl::ContractIDToClassID(const char *aContractID, nsCID *aCla
                ("nsComponentManager: ContractIDToClassID(%s)->%s", aContractID,
                 NS_SUCCEEDED(rv) ? buf : "[FAILED]"));
         if (buf)
-            PR_Free(buf);
+            NS_Free(buf);
     }
 #endif
     return rv;
@@ -1572,46 +1533,12 @@ nsComponentManagerImpl::CLSIDToContractID(const nsCID &aClass,
                ("nsComponentManager: CLSIDToContractID(%s)->%s", buf,
                 NS_SUCCEEDED(rv) ? *aContractID : "[FAILED]"));
         if (buf)
-            PR_Free(buf);
+            NS_Free(buf);
     }
 #endif
     return rv;
 }
 
-#ifdef XPCOM_CHECK_PENDING_CIDS
-
-// This method must be called from within the mMon monitor
-nsresult
-nsComponentManagerImpl::AddPendingCID(const nsCID &aClass)
-{
-    int max = mPendingCIDs.Count();
-    for (int index = 0; index < max; index++)
-    {
-        nsCID *cidp = (nsCID*) mPendingCIDs.ElementAt(index);
-        NS_ASSERTION(cidp, "Bad CID in pending list");
-        if (cidp->Equals(aClass)) {
-            nsXPIDLCString cid;
-            cid.Adopt(aClass.ToString());
-            nsCAutoString message;
-            message = NS_LITERAL_CSTRING("Creation of \"") +
-                      cid + NS_LITERAL_CSTRING("\" in progress (Reentrant GS - see bug 194568)");
-            // Note that you may see this assertion by near-simultaneous
-            // calls to GetService on multiple threads.
-            NS_WARNING(message.get());
-            return NS_ERROR_NOT_AVAILABLE;
-        }
-    }
-    mPendingCIDs.AppendElement((void*)&aClass);
-    return NS_OK;
-}
-
-// This method must be called from within the mMon monitor
-void
-nsComponentManagerImpl::RemovePendingCID(const nsCID &aClass)
-{
-    mPendingCIDs.RemoveElement((void*)&aClass);
-}
-#endif
 /**
  * CreateInstance()
  *
@@ -1688,7 +1615,7 @@ nsComponentManagerImpl::CreateInstance(const nsCID &aClass,
                ("nsComponentManager: CreateInstance(%s) %s", buf,
                 NS_SUCCEEDED(rv) ? "succeeded" : "FAILED"));
         if (buf)
-            PR_Free(buf);
+            NS_Free(buf);
     }
 #endif
 
@@ -1710,6 +1637,8 @@ nsComponentManagerImpl::CreateInstanceByContractID(const char *aContractID,
                                                    const nsIID &aIID,
                                                    void **aResult)
 {
+    NS_ENSURE_ARG_POINTER(aContractID);
+
     // test this first, since there's no point in creating a component during
     // shutdown -- whether it's available or not would depend on the order it
     // occurs in the list
@@ -1775,7 +1704,7 @@ nsComponentManagerImpl::CreateInstanceByContractID(const char *aContractID,
 
 // Service Manager Impl
 static
-PLDHashOperator PR_CALLBACK
+PLDHashOperator
 FreeServiceFactoryEntryEnumerate(PLDHashTable *aTable,
                                  PLDHashEntryHdr *aHdr,
                                  PRUint32 aNumber,
@@ -1792,7 +1721,7 @@ FreeServiceFactoryEntryEnumerate(PLDHashTable *aTable,
 }
 
 static
-PLDHashOperator PR_CALLBACK
+PLDHashOperator
 FreeServiceContractIDEntryEnumerate(PLDHashTable *aTable,
                                     PLDHashEntryHdr *aHdr,
                                     PRUint32 aNumber,
@@ -1828,6 +1757,47 @@ nsComponentManagerImpl::FreeServices()
     return NS_OK;
 }
 
+// This should only ever be called within the monitor!
+nsComponentManagerImpl::PendingServiceInfo*
+nsComponentManagerImpl::AddPendingService(const nsCID& aServiceCID,
+                                          PRThread* aThread)
+{
+  PendingServiceInfo* newInfo = mPendingServices.AppendElement();
+  if (newInfo) {
+    newInfo->cid = &aServiceCID;
+    newInfo->thread = aThread;
+  }
+  return newInfo;
+}
+
+// This should only ever be called within the monitor!
+void
+nsComponentManagerImpl::RemovePendingService(const nsCID& aServiceCID)
+{
+  PRUint32 pendingCount = mPendingServices.Length();
+  for (PRUint32 index = 0; index < pendingCount; ++index) {
+    const PendingServiceInfo& info = mPendingServices.ElementAt(index);
+    if (info.cid->Equals(aServiceCID)) {
+      mPendingServices.RemoveElementAt(index);
+      return;
+    }
+  }
+}
+
+// This should only ever be called within the monitor!
+PRThread*
+nsComponentManagerImpl::GetPendingServiceThread(const nsCID& aServiceCID) const
+{
+  PRUint32 pendingCount = mPendingServices.Length();
+  for (PRUint32 index = 0; index < pendingCount; ++index) {
+    const PendingServiceInfo& info = mPendingServices.ElementAt(index);
+    if (info.cid->Equals(aServiceCID)) {
+      return info.thread;
+    }
+  }
+  return nsnull;
+}
+
 NS_IMETHODIMP
 nsComponentManagerImpl::GetService(const nsCID& aClass,
                                    const nsIID& aIID,
@@ -1850,8 +1820,6 @@ nsComponentManagerImpl::GetService(const nsCID& aClass,
 
     nsAutoMonitor mon(mMon);
 
-    nsresult rv = NS_OK;
-    nsIDKey key(aClass);
     nsFactoryEntry* entry = nsnull;
     nsFactoryTableEntry* factoryTableEntry =
         static_cast<nsFactoryTableEntry*>
@@ -1868,24 +1836,78 @@ nsComponentManagerImpl::GetService(const nsCID& aClass,
         return supports->QueryInterface(aIID, result);
     }
 
-#ifdef XPCOM_CHECK_PENDING_CIDS
-    rv = AddPendingCID(aClass);
-    if (NS_FAILED(rv))
-        return rv; // NOP_AND_BREAK
+    PRThread* currentPRThread = PR_GetCurrentThread();
+    NS_ASSERTION(currentPRThread, "This should never be null!");
+
+    // Needed to optimize the event loop below.
+    nsIThread* currentThread = nsnull;
+
+    PRThread* pendingPRThread;
+    while ((pendingPRThread = GetPendingServiceThread(aClass))) {
+        if (pendingPRThread == currentPRThread) {
+            NS_ERROR("Recursive GetService!");
+            return NS_ERROR_NOT_AVAILABLE;
+        }
+
+        mon.Exit();
+
+        if (!currentThread) {
+            currentThread = NS_GetCurrentThread();
+            NS_ASSERTION(currentThread, "This should never be null!");
+        }
+
+        // This will process a single event or yield the thread if no event is
+        // pending.
+        if (!NS_ProcessNextEvent(currentThread, PR_FALSE)) {
+            PR_Sleep(PR_INTERVAL_NO_WAIT);
+        }
+
+        mon.Enter();
+    }
+
+    if (currentThread) {
+        // If we have a currentThread then we must have waited on another thread
+        // to create the service. Grab it now if that succeeded.
+        if (!entry) {
+            factoryTableEntry = static_cast<nsFactoryTableEntry*>
+                (PL_DHashTableOperate(&mFactories, &aClass, PL_DHASH_LOOKUP));
+
+            if (PL_DHASH_ENTRY_IS_BUSY(factoryTableEntry)) {
+                entry = factoryTableEntry->mFactoryEntry;
+            }
+        }
+
+        // It's still possible that the other thread failed to create the
+        // service so we're not guaranteed to have an entry or service yet.
+        if (entry && entry->mServiceObject) {
+            nsCOMPtr<nsISupports> supports = entry->mServiceObject;
+            mon.Exit();
+            return supports->QueryInterface(aIID, result);
+        }
+    }
+
+#ifdef DEBUG
+    PendingServiceInfo* newInfo =
 #endif
+    AddPendingService(aClass, currentPRThread);
+    NS_ASSERTION(newInfo, "Failed to add info to the array!");
+
     nsCOMPtr<nsISupports> service;
     // We need to not be holding the service manager's monitor while calling
     // CreateInstance, because it invokes user code which could try to re-enter
     // the service manager:
     mon.Exit();
 
-    rv = CreateInstance(aClass, nsnull, aIID, getter_AddRefs(service));
+    nsresult rv = CreateInstance(aClass, nsnull, aIID, getter_AddRefs(service));
 
     mon.Enter();
 
-#ifdef XPCOM_CHECK_PENDING_CIDS
-    RemovePendingCID(aClass);
+#ifdef DEBUG
+    pendingPRThread = GetPendingServiceThread(aClass);
+    NS_ASSERTION(pendingPRThread == currentPRThread,
+                 "Pending service array has been changed!");
 #endif
+    RemovePendingService(aClass);
 
     if (NS_FAILED(rv))
         return rv;
@@ -1901,6 +1923,8 @@ nsComponentManagerImpl::GetService(const nsCID& aClass,
         NS_ASSERTION(entry, "we should have a factory entry since CI succeeded - we should not get here");
         if (!entry) return NS_ERROR_FAILURE;
     }
+
+    NS_ASSERTION(!entry->mServiceObject, "Created two instances of a service!");
 
     entry->mServiceObject = service;
     *result = service.get();
@@ -1974,6 +1998,7 @@ NS_IMETHODIMP
 nsComponentManagerImpl::RegisterService(const char* aContractID,
                                         nsISupports* aService)
 {
+    NS_ENSURE_ARG_POINTER(aContractID);
 
     nsAutoMonitor mon(mMon);
 
@@ -2151,34 +2176,71 @@ nsComponentManagerImpl::GetServiceByContractID(const char* aContractID,
 
     nsAutoMonitor mon(mMon);
 
-    nsresult rv = NS_OK;
     nsFactoryEntry *entry = nsnull;
     nsContractIDTableEntry* contractIDTableEntry =
         static_cast<nsContractIDTableEntry*>
                    (PL_DHashTableOperate(&mContractIDs, aContractID,
                                             PL_DHASH_LOOKUP));
 
-    if (PL_DHASH_ENTRY_IS_BUSY(contractIDTableEntry)) {
-        entry = contractIDTableEntry->mFactoryEntry;
+    if (!PL_DHASH_ENTRY_IS_BUSY(contractIDTableEntry))
+        return NS_ERROR_FACTORY_NOT_REGISTERED;
+
+    entry = contractIDTableEntry->mFactoryEntry;
+    NS_ASSERTION(entry, "This should never be null!");
+
+    if (entry->mServiceObject) {
+        nsCOMPtr<nsISupports> serviceObject = entry->mServiceObject;
+
+        // We need to not be holding the service manager's monitor while calling
+        // QueryInterface, because it invokes user code which could try to re-enter
+        // the service manager, or try to grab some other lock/monitor/condvar
+        // and deadlock, e.g. bug 282743.
+        mon.Exit();
+        return serviceObject->QueryInterface(aIID, result);
     }
 
-    if (entry) {
-        if (entry->mServiceObject) {
-            nsCOMPtr<nsISupports> serviceObject = entry->mServiceObject;
+    PRThread* currentPRThread = PR_GetCurrentThread();
+    NS_ASSERTION(currentPRThread, "This should never be null!");
 
-            // We need to not be holding the service manager's monitor while calling
-            // QueryInterface, because it invokes user code which could try to re-enter
-            // the service manager, or try to grab some other lock/monitor/condvar
-            // and deadlock, e.g. bug 282743.
-            mon.Exit();
-            return serviceObject->QueryInterface(aIID, result);
+    // Needed to optimize the event loop below.
+    nsIThread* currentThread = nsnull;
+
+    PRThread* pendingPRThread;
+    while ((pendingPRThread = GetPendingServiceThread(entry->mCid))) {
+        if (pendingPRThread == currentPRThread) {
+            NS_ERROR("Recursive GetService!");
+            return NS_ERROR_NOT_AVAILABLE;
         }
-#ifdef XPCOM_CHECK_PENDING_CIDS
-        rv = AddPendingCID(entry->mCid);
-        if (NS_FAILED(rv))
-            return rv; // NOP_AND_BREAK
-#endif
+
+        mon.Exit();
+
+        if (!currentThread) {
+            currentThread = NS_GetCurrentThread();
+            NS_ASSERTION(currentThread, "This should never be null!");
+        }
+
+        // This will process a single event or yield the thread if no event is
+        // pending.
+        if (!NS_ProcessNextEvent(currentThread, PR_FALSE)) {
+            PR_Sleep(PR_INTERVAL_NO_WAIT);
+        }
+
+        mon.Enter();
     }
+
+    if (currentThread && entry->mServiceObject) {
+        // If we have a currentThread then we must have waited on another thread
+        // to create the service. Grab it now if that succeeded.
+        nsCOMPtr<nsISupports> serviceObject = entry->mServiceObject;
+        mon.Exit();
+        return serviceObject->QueryInterface(aIID, result);
+    }
+
+#ifdef DEBUG
+    PendingServiceInfo* newInfo =
+#endif
+    AddPendingService(entry->mCid, currentPRThread);
+    NS_ASSERTION(newInfo, "Failed to add info to the array!");
 
     nsCOMPtr<nsISupports> service;
     // We need to not be holding the service manager's monitor while calling
@@ -2186,30 +2248,22 @@ nsComponentManagerImpl::GetServiceByContractID(const char* aContractID,
     // the service manager:
     mon.Exit();
 
-    rv = CreateInstanceByContractID(aContractID, nsnull, aIID, getter_AddRefs(service));
+    nsresult rv = CreateInstanceByContractID(aContractID, nsnull, aIID,
+                                             getter_AddRefs(service));
 
     mon.Enter();
 
-#ifdef XPCOM_CHECK_PENDING_CIDS 
-    if (entry)
-        RemovePendingCID(entry->mCid);
+#ifdef DEBUG
+    pendingPRThread = GetPendingServiceThread(entry->mCid);
+    NS_ASSERTION(pendingPRThread == currentPRThread,
+                 "Pending service array has been changed!");
 #endif
+    RemovePendingService(entry->mCid);
 
     if (NS_FAILED(rv))
         return rv;
 
-    if (!entry) { // second hash lookup for GetService
-        nsContractIDTableEntry* contractIDTableEntry =
-            static_cast<nsContractIDTableEntry*>
-                       (PL_DHashTableOperate(&mContractIDs, aContractID,
-                                                PL_DHASH_LOOKUP));
-
-        if (PL_DHASH_ENTRY_IS_BUSY(contractIDTableEntry)) {
-            entry = contractIDTableEntry->mFactoryEntry;
-        }
-        NS_ASSERTION(entry, "we should have a factory entry since CI succeeded - we should not get here");
-        if (!entry) return NS_ERROR_FAILURE;
-    }
+    NS_ASSERTION(!entry->mServiceObject, "Created two instances of a service!");
 
     entry->mServiceObject = service;
     *result = service.get();
@@ -2411,7 +2465,7 @@ nsComponentManagerImpl::RegisterFactory(const nsCID &aClass,
                ("nsComponentManager: RegisterFactory(%s, %s)", buf,
                 (aContractID ? aContractID : "(null)")));
         if (buf)
-            PR_Free(buf);
+            NS_Free(buf);
     }
 #endif
     nsFactoryEntry *entry = nsnull;
@@ -2560,7 +2614,6 @@ nsComponentManagerImpl::RegisterComponentCommon(const nsCID &aClass,
 {
     nsresult rv;
 
-    nsIDKey key(aClass);
     nsAutoMonitor mon(mMon);
 
     nsFactoryEntry *entry = GetFactoryEntry(aClass);
@@ -2577,7 +2630,7 @@ nsComponentManagerImpl::RegisterComponentCommon(const nsCID &aClass,
                 contractID ? contractID : "(null)",
                 aRegistryName, aType));
         if (buf)
-            PR_Free(buf);
+            NS_Free(buf);
     }
 #endif
     if (entry && !aReplace) {
@@ -2734,7 +2787,7 @@ typedef struct
     nsIFactory* factory;
 } UnregisterConditions;
 
-static PLDHashOperator PR_CALLBACK
+static PLDHashOperator
 DeleteFoundCIDs(PLDHashTable *aTable,
                 PLDHashEntryHdr *aHdr,
                 PRUint32 aNumber,
@@ -2775,7 +2828,7 @@ nsComponentManagerImpl::UnregisterFactory(const nsCID &aClass,
         PR_LOG(nsComponentManagerLog, PR_LOG_WARNING,
                ("nsComponentManager: UnregisterFactory(%s)", buf));
         if (buf)
-            PR_Free(buf);
+            NS_Free(buf);
     }
 #endif
     nsFactoryEntry *old;
@@ -2871,13 +2924,97 @@ nsComponentManagerImpl::AutoRegisterImpl(nsIFile   *inDirSpec,
     return rv;
 }
 
+static const char kNL[] = "\r\n";
+
+class ArrayCaseInsensitiveCStringComparator {
+public:
+    PRBool Equals(const char *a, const char *b) const {
+        return PL_strcasecmp(a, b) == 0;
+    }
+};
+
+struct ComponentsList {
+    ComponentsList()
+        : mCompString(nsnull), mCompList(128)
+    {
+    }
+
+    nsresult InitFromFile(PRFileDesc *fd)
+    {
+        PRFileInfo info;
+        if (PR_SUCCESS != PR_GetOpenFileInfo(fd, &info))
+            return NS_ErrorAccordingToNSPR();
+
+        nsAutoArrayPtr<char> buf(new char[info.size + 1]);
+        if (!buf)
+            return NS_ERROR_OUT_OF_MEMORY;
+
+        PRInt32 read = 0;
+        while (read < info.size) {
+            PRInt32 n = PR_Read(fd, buf + read, info.size - read);
+            if (n < 0)
+                return NS_ErrorAccordingToNSPR();
+
+            read += n;
+            if (n == 0)
+                break;
+        }
+
+        buf[read] = '\0';
+
+        mCompString = buf.forget();
+
+        char *c = mCompString;
+        while (char *token = NS_strtok(kNL, &c)) {
+            if (token[0] == '#')
+                continue;
+
+            mCompList.AppendElement(token);
+        }
+
+        return NS_OK;
+    }
+
+    ~ComponentsList() {
+        delete [] mCompString;
+    }
+
+    PRBool HasComponent(const char *name) {
+        return mCompList.Contains(name, ArrayCaseInsensitiveCStringComparator());
+    }
+
+    char *mCompString;
+    nsTArray<char*> mCompList;
+};
+
 nsresult
 nsComponentManagerImpl::AutoRegisterDirectory(nsIFile *inDirSpec,
                           nsCOMArray<nsILocalFile>    &aLeftovers,
                           nsTArray<DeferredModule>    &aDeferred)
 {
+    nsresult rv;
+
+    nsAutoPtr<ComponentsList> compList;
+    nsCOMPtr<nsIFile> compListFile;
+    inDirSpec->Clone(getter_AddRefs(compListFile));
+    if (compListFile) {
+        nsCOMPtr<nsILocalFile> lfComponentsList = do_QueryInterface(compListFile);
+        lfComponentsList->AppendNative(NS_LITERAL_CSTRING("components.list"));
+        PRFileDesc* fd;
+        if (NS_SUCCEEDED(lfComponentsList->OpenNSPRFileDesc(PR_RDONLY,
+                                                            0400, &fd)))
+        {
+            compList = new ComponentsList;
+            rv = compList->InitFromFile(fd);
+            PR_Close(fd);
+
+            if (NS_FAILED(rv))
+                compList = nsnull;
+        }
+    }
+
     nsCOMPtr<nsISimpleEnumerator> entries;
-    nsresult rv = inDirSpec->GetDirectoryEntries(getter_AddRefs(entries));
+    rv = inDirSpec->GetDirectoryEntries(getter_AddRefs(entries));
     if (NS_FAILED(rv))
         return rv;
 
@@ -2900,6 +3037,12 @@ nsComponentManagerImpl::AutoRegisterDirectory(nsIFile *inDirSpec,
         if (isDir)
             AutoRegisterDirectory(lf, aLeftovers, aDeferred);
         else {
+            if (compList) {
+                nsCAutoString leafName;
+                lf->GetNativeLeafName(leafName);
+                if (!compList->HasComponent(leafName.get()))
+                    continue;
+            }
             rv = AutoRegisterComponent(lf, aDeferred);
             if (NS_FAILED(rv))
                 aLeftovers.AppendObject(lf);
@@ -3404,6 +3547,7 @@ NS_IMETHODIMP
 nsComponentManagerImpl::IsContractIDRegistered(const char *aClass,
                                                PRBool *_retval)
 {
+    NS_ENSURE_ARG_POINTER(aClass);
     nsFactoryEntry *entry = GetFactoryEntry(aClass, strlen(aClass));
 
     if (entry)

@@ -652,17 +652,6 @@ class ConvertToUpperCase
         }
   };
 
-#ifdef MOZ_V1_STRING_ABI
-NS_COM
-void
-ToUpperCase( nsACString& aCString )
-  {
-    nsACString::iterator fromBegin, fromEnd;
-    ConvertToUpperCase converter;
-    copy_string(aCString.BeginWriting(fromBegin), aCString.EndWriting(fromEnd), converter);
-  }
-#endif
-
 NS_COM
 void
 ToUpperCase( nsCSubstring& aCString )
@@ -744,17 +733,6 @@ class ConvertToLowerCase
         }
   };
 
-#ifdef MOZ_V1_STRING_ABI
-NS_COM
-void
-ToLowerCase( nsACString& aCString )
-  {
-    nsACString::iterator fromBegin, fromEnd;
-    ConvertToLowerCase converter;
-    copy_string(aCString.BeginWriting(fromBegin), aCString.EndWriting(fromEnd), converter);
-  }
-#endif
-
 NS_COM
 void
 ToLowerCase( nsCSubstring& aCString )
@@ -811,6 +789,41 @@ ToLowerCase( const nsACString& aSource, nsACString& aDest )
 
     CopyToLowerCase converter(aDest.BeginWriting(toBegin));
     copy_string(aSource.BeginReading(fromBegin), aSource.EndReading(fromEnd), converter);
+  }
+
+NS_COM
+PRBool
+ParseString(const nsACString& aSource, char aDelimiter, 
+            nsTArray<nsCString>& aArray)
+  {
+    nsACString::const_iterator start, end;
+    aSource.BeginReading(start);
+    aSource.EndReading(end);
+
+    PRUint32 oldLength = aArray.Length();
+
+    for (;;)
+      {
+        nsACString::const_iterator delimiter = start;
+        FindCharInReadable(aDelimiter, delimiter, end);
+
+        if (delimiter != start)
+          {
+            if (!aArray.AppendElement(Substring(start, delimiter)))
+              {
+                aArray.RemoveElementsAt(oldLength, aArray.Length() - oldLength);
+                return PR_FALSE;
+              }
+          }
+
+        if (delimiter == end)
+          break;
+        start = ++delimiter;
+        if (start == end)
+          break;
+      }
+
+    return PR_TRUE;
   }
 
 template <class StringT, class IteratorT, class Comparator>

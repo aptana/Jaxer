@@ -196,8 +196,8 @@ struct PLDHashTable {
     const PLDHashTableOps *ops;         /* virtual operations, see below */
     void                *data;          /* ops- and instance-specific data */
     PRInt16             hashShift;      /* multiplicative hash shift */
-    uint8               maxAlphaFrac;   /* 8-bit fixed point max alpha */
-    uint8               minAlphaFrac;   /* 8-bit fixed point min alpha */
+    PRUint8             maxAlphaFrac;   /* 8-bit fixed point max alpha */
+    PRUint8             minAlphaFrac;   /* 8-bit fixed point min alpha */
     PRUint32            entrySize;      /* number of bytes in an entry */
     PRUint32            entryCount;     /* number of entries in table */
     PRUint32            removedCount;   /* removed entry sentinels in table */
@@ -239,26 +239,25 @@ struct PLDHashTable {
  * equal to 0; but note that pldhash.c code will never call with 0 nbytes).
  */
 typedef void *
-(* PR_CALLBACK PLDHashAllocTable)(PLDHashTable *table, PRUint32 nbytes);
+(* PLDHashAllocTable)(PLDHashTable *table, PRUint32 nbytes);
 
 typedef void
-(* PR_CALLBACK PLDHashFreeTable) (PLDHashTable *table, void *ptr);
+(* PLDHashFreeTable) (PLDHashTable *table, void *ptr);
 
 /*
  * Compute the hash code for a given key to be looked up, added, or removed
  * from table.  A hash code may have any PLDHashNumber value.
  */
 typedef PLDHashNumber
-(* PR_CALLBACK PLDHashHashKey)   (PLDHashTable *table, const void *key);
+(* PLDHashHashKey)   (PLDHashTable *table, const void *key);
 
 /*
  * Compare the key identifying entry in table with the provided key parameter.
  * Return PR_TRUE if keys match, PR_FALSE otherwise.
  */
 typedef PRBool
-(* PR_CALLBACK PLDHashMatchEntry)(PLDHashTable *table,
-                                      const PLDHashEntryHdr *entry,
-                                      const void *key);
+(* PLDHashMatchEntry)(PLDHashTable *table, const PLDHashEntryHdr *entry,
+                      const void *key);
 
 /*
  * Copy the data starting at from to the new entry storage at to.  Do not add
@@ -267,9 +266,8 @@ typedef PRBool
  * any reference-decrementing callback shortly.
  */
 typedef void
-(* PR_CALLBACK PLDHashMoveEntry)(PLDHashTable *table,
-                                     const PLDHashEntryHdr *from,
-                                     PLDHashEntryHdr *to);
+(* PLDHashMoveEntry)(PLDHashTable *table, const PLDHashEntryHdr *from,
+                     PLDHashEntryHdr *to);
 
 /*
  * Clear the entry and drop any strong references it holds.  This callback is
@@ -277,8 +275,7 @@ typedef void
  * but only if the given key is found in the table.
  */
 typedef void
-(* PR_CALLBACK PLDHashClearEntry)(PLDHashTable *table,
-                                      PLDHashEntryHdr *entry);
+(* PLDHashClearEntry)(PLDHashTable *table, PLDHashEntryHdr *entry);
 
 /*
  * Called when a table (whether allocated dynamically by itself, or nested in
@@ -286,7 +283,7 @@ typedef void
  * allows table->ops-specific code to finalize table->data.
  */
 typedef void
-(* PR_CALLBACK PLDHashFinalize)  (PLDHashTable *table);
+(* PLDHashFinalize)  (PLDHashTable *table);
 
 /*
  * Initialize a new entry, apart from keyHash.  This function is called when
@@ -296,9 +293,8 @@ typedef void
  * table.
  */
 typedef PRBool
-(* PR_CALLBACK PLDHashInitEntry)(PLDHashTable *table,
-                                     PLDHashEntryHdr *entry,
-                                     const void *key);
+(* PLDHashInitEntry)(PLDHashTable *table, PLDHashEntryHdr *entry,
+                     const void *key);
 
 /*
  * Finally, the "vtable" structure for PLDHashTable.  The first eight hooks
@@ -461,7 +457,7 @@ PL_DHashTableSetAlphaBounds(PLDHashTable *table,
 
 #define PL_DHASH_CAPACITY(entryCount, maxAlpha)                               \
     (PL_DHASH_CAP(entryCount, maxAlpha) +                                     \
-     (((PL_DHASH_CAP(entryCount, maxAlpha) * (uint8)(0x100 * (maxAlpha)))     \
+     (((PL_DHASH_CAP(entryCount, maxAlpha) * (PRUint8)(0x100 * (maxAlpha)))     \
        >> 8) < (entryCount)))
 
 #define PL_DHASH_DEFAULT_CAPACITY(entryCount)                                 \
@@ -575,11 +571,30 @@ PL_DHashTableRawRemove(PLDHashTable *table, PLDHashEntryHdr *entry);
  * the entry being enumerated, rather than returning PL_DHASH_REMOVE.
  */
 typedef PLDHashOperator
-(* PR_CALLBACK PLDHashEnumerator)(PLDHashTable *table, PLDHashEntryHdr *hdr,
-                                      PRUint32 number, void *arg);
+(* PLDHashEnumerator)(PLDHashTable *table, PLDHashEntryHdr *hdr, PRUint32 number,
+                      void *arg);
 
 NS_COM_GLUE PRUint32
 PL_DHashTableEnumerate(PLDHashTable *table, PLDHashEnumerator etor, void *arg);
+
+#ifdef DEBUG
+/**
+ * Mark a table as immutable for the remainder of its lifetime.  This
+ * changes the implementation from ASSERTing one set of invariants to
+ * ASSERTing a different set.
+ *
+ * When a table is NOT marked as immutable, the table implementation
+ * asserts that the table is not mutated from its own callbacks.  It
+ * assumes the caller protects the table from being accessed on multiple
+ * threads simultaneously.
+ *
+ * When the table is marked as immutable, the re-entry assertions will
+ * no longer trigger erroneously due to multi-threaded access.  Instead,
+ * mutations will cause assertions.
+ */
+NS_COM_GLUE void
+PL_DHashMarkTableImmutable(PLDHashTable *table);
+#endif
 
 #ifdef PL_DHASHMETER
 #include <stdio.h>

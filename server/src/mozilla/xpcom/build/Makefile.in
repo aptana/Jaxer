@@ -55,13 +55,6 @@ endif
 
 LIBXUL_LIBRARY = 1
 
-PACKAGE_FILE = xpcom.pkg
-PACKAGE_VARS += USE_SHORT_LIBNAME
-
-ifdef ENABLE_TESTS
-PACKAGE_FILE += xpcom-tests.pkg
-endif
-
 # This is only a static library in libxul builds
 ifdef MOZ_ENABLE_LIBXUL
 EXPORT_LIBRARY = 1
@@ -73,9 +66,8 @@ MOZILLA_INTERNAL_API = 1
 REQUIRES	= string \
 		  $(NULL)
 
-# pull in MoreFiles for MacOSX
-ifneq (,$(filter mac cocoa,$(MOZ_WIDGET_TOOLKIT)))
-REQUIRES += macmorefiles
+ifdef NS_TRACE_MALLOC
+REQUIRES += tracemalloc
 endif
 
 CSRCS		= \
@@ -89,16 +81,12 @@ CPPSRCS		= \
 		nsXPCOMStrings.cpp \
 		$(NULL)
 
-ifndef MINIMO
 ifeq ($(OS_ARCH)$(MOZ_ENABLE_LIBXUL),WINNT)
 CPPSRCS		+= dlldeps.cpp
 endif
-endif
 
-ifndef MINIMO
 ifeq ($(OS_ARCH)$(MOZ_ENABLE_LIBXUL),OS2)
 CPPSRCS		+= dlldeps.cpp
-endif
 endif
 
 ifdef XPCOM_USE_LEA
@@ -123,6 +111,12 @@ SHARED_LIBRARY_LIBS = \
 		../string/src/$(LIB_PREFIX)string_s.$(LIB_SUFFIX) \
 		$(NULL)
 
+ifdef NS_TRACE_MALLOC
+SHARED_LIBRARY_LIBS += \
+		$(DEPTH)/tools/trace-malloc/lib/$(LIB_PREFIX)tracemalloc.$(LIB_SUFFIX) \
+		$(NULL)
+endif
+
 LOCAL_INCLUDES	= \
 		-I$(srcdir) \
 		-I.. \
@@ -137,22 +131,28 @@ LOCAL_INCLUDES	= \
 		-I$(srcdir)/../reflect/xptinfo/src \
 		$(NULL)
 
+EXPORTS_NAMESPACES = mozilla
+
 SDK_HEADERS =  \
-		nsXPCOM.h       \
-		nsXPCOMCID.h    \
-		$(NULL)
+  nsXPCOM.h       \
+  nsXPCOMCID.h    \
+  $(NULL)
 
 EXPORTS	= \
-		nsXPCOMCIDInternal.h \
-		$(NULL)
+  nsXPCOMCIDInternal.h \
+  xrecore.h \
+  nsXULAppAPI.h \
+  $(NULL)
+
+EXPORTS_mozilla = \
+  XPCOM.h \
+  $(NULL)
 
 # Force use of PIC
 FORCE_USE_PIC	= 1 
 
 ifndef MOZ_ENABLE_LIBXUL
-ifndef MINIMO
 FORCE_SHARED_LIB = 1
-endif
 endif
 
 # UNIX98 iconv support
@@ -178,10 +178,9 @@ ifdef TARGET_XPCOM_ABI
 DEFINES += -DTARGET_XPCOM_ABI=\"$(TARGET_XPCOM_ABI)\"
 endif
 
-ifneq (,$(filter mac cocoa,$(MOZ_WIDGET_TOOLKIT)))
+ifeq (cocoa,$(MOZ_WIDGET_TOOLKIT))
 CXXFLAGS	+= $(TK_CFLAGS)
 EXTRA_DSO_LDOPTS += \
-  ../MoreFiles/$(LIB_PREFIX)macmorefiles_s.$(LIB_SUFFIX) \
   $(TK_LIBS) \
   $(NULL)
 endif
@@ -192,6 +191,9 @@ endif
 
 ifneq (,$(filter gtk2,$(MOZ_WIDGET_TOOLKIT)))
 EXTRA_DSO_LDOPTS += $(MOZ_GTK2_LIBS)
+ifdef MOZ_PLATFORM_MAEMO
+EXTRA_DSO_LDOPTS += $(MOZ_PLATFORM_MAEMO_LIBS)
+endif
 endif
 
 ifeq ($(OS_ARCH),WINNT)
@@ -200,6 +202,10 @@ ifneq (,$(MOZ_DEBUG)$(NS_TRACE_MALLOC))
 EXTRA_DSO_LDOPTS += $(call EXPAND_LIBNAME,imagehlp)
 endif
 endif # WINNT
+
+ifeq ($(OS_ARCH),WINCE)
+EXTRA_DSO_LDOPTS += $(call EXPAND_LIBNAME,ole32)
+endif # WINCE
 
 export:: $(XPCOM_GLUE_SRC_CSRCS) $(XPCOM_GLUE_SRC_CPPSRCS) $(XPCOM_GLUENS_SRC_CPPSRCS)
 	$(INSTALL) $^ .
