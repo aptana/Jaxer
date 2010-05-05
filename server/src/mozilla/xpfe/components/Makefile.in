@@ -46,6 +46,8 @@ MODULE = appcomps
 
 EXPORTS = nsXPFEComponentsCID.h
 
+include $(topsrcdir)/config/config.mk
+
 MOZ_HAVE_BROWSER=1
 ifdef MOZ_THUNDERBIRD
 MOZ_HAVE_BROWSER=
@@ -57,16 +59,8 @@ ifdef MOZ_SUNBIRD
 MOZ_HAVE_BROWSER=
 endif
 
-ifneq (,$(MOZ_PHOENIX)$(MOZ_XULRUNNER))
-# Firefox and XULRunner use this flag to suppress the distribution of chrome from
-# the jar.mn file that lives parallel to this Makefile. The jar.mn is responsible
-# for the packaging of a large number of chrome files these apps don't need. 
-DEFINES += -DSUPPRESS_CHROME
-endif
-
 DIRS = \
         find \
-        filepicker \
         $(NULL)
 
 ifdef MOZ_RDF
@@ -76,53 +70,21 @@ DIRS += \
         $(NULL)
 endif
 
+ifneq (,$(MOZ_THUNDERBIRD)$(MOZ_SUITE)$(MOZ_SUNBIRD))
+DIRS += autocomplete
+endif
+
 ifdef MOZ_HAVE_BROWSER
 DIRS += \
         directory \
-        resetPref \
         $(NULL)
-
-ifndef MOZ_PHOENIX
-ifndef MOZ_XULRUNNER
-DIRS += \
-        related \
-        autocomplete \
-        $(NULL)
-ifneq ($(MOZ_BUILD_APP),camino)
-DIRS += download-manager
-endif
-ifndef MOZ_XUL_APP
-DIRS += startup
-endif
-ifndef MOZ_PLACES
-DIRS += history
-endif
-endif
-endif
-
-ifdef MOZ_SUITE
-ifeq ($(OS_ARCH),WINNT)
-DIRS += winhooks
-endif
-endif
 
 # build should be last
 DIRS += build
-
-else
-# !MOZ_HAVE_BROWSER
-
-DIRS += \
-        autocomplete \
-        history/public \
-        $(NULL)
-
 endif
 
-ifndef MOZ_XUL_APP
-ifdef MOZ_ENABLE_XREMOTE
-TOOL_DIRS += xremote
-endif
+ifdef MOZ_THUNDERBIRD
+DIRS += build
 endif
 
 include $(topsrcdir)/config/rules.mk

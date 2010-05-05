@@ -38,7 +38,7 @@
 #ifndef nsWebShellWindow_h__
 #define nsWebShellWindow_h__
 
-#include "nsGUIEvent.h"
+#include "nsEvent.h"
 #include "nsIWebProgressListener.h"
 #include "nsITimer.h"
 
@@ -76,7 +76,6 @@ public:
   // nsIBaseWindow
   NS_IMETHOD Destroy();
 
-  static void SuppressFocusEvents(PRBool aSuppress);
 protected:
   
   virtual ~nsWebShellWindow();
@@ -86,7 +85,7 @@ protected:
   void                     LoadContentAreas();
   PRBool                   ExecuteCloseHandler();
 
-  static nsEventStatus PR_CALLBACK HandleEvent(nsGUIEvent *aEvent);
+  static nsEventStatus HandleEvent(nsGUIEvent *aEvent);
 
   nsCOMPtr<nsITimer>      mSPTimer;
   PRLock *                mSPTimerLock;

@@ -81,7 +81,7 @@
 
 #include "nsIDOMXULDocument.h"
 
-#include "nsIFocusController.h"
+#include "nsFocusManager.h"
 
 #include "nsIWebProgress.h"
 #include "nsIWebProgressListener.h"
@@ -107,51 +107,30 @@
 #include "nsIDocShellTreeNode.h"
 
 #include "nsIMarkupDocumentViewer.h"
-#include "nsIFocusEventSuppressor.h"
 
-#if defined(XP_MACOSX)
-#include "nsIMenuBar.h"
+#ifdef XP_MACOSX
+#include "nsINativeMenuService.h"
 #define USE_NATIVE_MENUS
 #endif
 
-static nsWebShellWindow* gCurrentlyFocusedWindow = nsnull;
-static nsWebShellWindow* gFocusedWindowBeforeSuppression = nsnull;
-static PRBool gFocusSuppressed = PR_FALSE;
-static PRUint32 gWebShellWindowCount = 0;
-
 /* Define Class IDs */
 static NS_DEFINE_CID(kWindowCID,           NS_WINDOW_CID);
-
-#include "nsWidgetsCID.h"
-static NS_DEFINE_CID(kMenuBarCID,          NS_MENUBAR_CID);
 
 #define SIZE_PERSISTENCE_TIMEOUT 500 // msec
 
 nsWebShellWindow::nsWebShellWindow() : nsXULWindow()
 {
   mSPTimerLock = PR_NewLock();
-  if (++gWebShellWindowCount == 1) {
-    nsCOMPtr<nsIFocusEventSuppressorService> suppressor =
-      do_GetService(NS_NSIFOCUSEVENTSUPPRESSORSERVICE_CONTRACTID);
-    if (suppressor) {
-      suppressor->AddObserverCallback(&nsWebShellWindow::SuppressFocusEvents);
-    }
-  }
 }
 
 
 nsWebShellWindow::~nsWebShellWindow()
 {
-  --gWebShellWindowCount;
-  if (gCurrentlyFocusedWindow == this) {
-    gCurrentlyFocusedWindow = nsnull;
-  }
-  if (gFocusedWindowBeforeSuppression == this) {
-    gFocusedWindowBeforeSuppression = nsnull;
-  }
-  if (mWindow)
+  if (mWindow) {
     mWindow->SetClientData(0);
-  mWindow = nsnull; // Force release here.
+    mWindow->Destroy();
+    mWindow = nsnull; // Force release here.
+  }
 
   if (mSPTimerLock) {
     PR_Lock(mSPTimerLock);
@@ -183,7 +162,7 @@ nsresult nsWebShellWindow::Initialize(nsIXULWindow* aParent,
   
   // XXX: need to get the default window size from prefs...
   // Doesn't come from prefs... will come from CSS/XUL/RDF
-  nsRect r(0, 0, aInitialWidth, aInitialHeight);
+  nsIntRect r(0, 0, aInitialWidth, aInitialHeight);
   
   // Create top level window
   mWindow = do_CreateInstance(kWindowCID, &rv);
@@ -210,6 +189,7 @@ nsresult nsWebShellWindow::Initialize(nsIXULWindow* aParent,
 
   mWindow->SetClientData(this);
   mWindow->Create((nsIWidget *)parentWidget,          // Parent nsIWidget
+                  nsnull,                             // Native parent widget
                   r,                                  // Widget dimensions
                   nsWebShellWindow::HandleEvent,      // Event handler function
                   nsnull,                             // Device context
@@ -220,7 +200,7 @@ nsresult nsWebShellWindow::Initialize(nsIXULWindow* aParent,
   mWindow->SetBackgroundColor(NS_RGB(192,192,192));
 
   // Create web shell
-  mDocShell = do_CreateInstance("@mozilla.org/webshell;1");
+  mDocShell = do_CreateInstance("@mozilla.org/docshell;1");
   NS_ENSURE_TRUE(mDocShell, NS_ERROR_FAILURE);
 
   // Make sure to set the item type on the docshell _before_ calling
@@ -301,7 +281,7 @@ nsWebShellWindow::Toolbar()
  * This function is called to process events for the nsIWidget of the 
  * nsWebShellWindow...
  */
-nsEventStatus PR_CALLBACK
+nsEventStatus
 nsWebShellWindow::HandleEvent(nsGUIEvent *aEvent)
 {
   nsEventStatus result = nsEventStatus_eIgnore;
@@ -357,7 +337,7 @@ nsWebShellWindow::HandleEvent(nsGUIEvent *aEvent)
         // persist size, but not immediately, in case this OS is firing
         // repeated size events as the user drags the sizing handle
         if (!eventWindow->IsLocked())
-          eventWindow->SetPersistenceTimer(PAD_SIZE | PAD_MISC);
+          eventWindow->SetPersistenceTimer(PAD_POSITION | PAD_SIZE | PAD_MISC);
         result = nsEventStatus_eConsumeNoDefault;
         break;
       }
@@ -368,7 +348,8 @@ nsWebShellWindow::HandleEvent(nsGUIEvent *aEvent)
         // normal browser windows. here we just drop a raised window
         // to the normal zlevel if it's maximized. we make no provision
         // for automatically re-raising it when restored.
-        if (modeEvent->mSizeMode == nsSizeMode_Maximized) {
+        if (modeEvent->mSizeMode == nsSizeMode_Maximized ||
+            modeEvent->mSizeMode == nsSizeMode_Fullscreen) {
           PRUint32 zLevel;
           eventWindow->GetZLevel(&zLevel);
           if (zLevel > nsIXULWindow::normalZ)
@@ -388,21 +369,6 @@ nsWebShellWindow::HandleEvent(nsGUIEvent *aEvent)
         // the state and pass the event on to the OS. The day is coming
         // when we'll handle the event here, and the return result will
         // then need to be different.
-#ifdef XP_WIN
-        // This is a nasty hack to get around the fact that win32 sends the kill focus
-        // event in a different sequence than the deactivate depending on if you're
-        // minimizing the window vs. just clicking in a different window to cause
-        // the deactivation. Bug #82534
-        if(modeEvent->mSizeMode == nsSizeMode_Minimized) {
-          nsCOMPtr<nsPIDOMWindow> privateDOMWindow = do_GetInterface(docShell);
-          if(privateDOMWindow) {
-            nsIFocusController *focusController =
-              privateDOMWindow->GetRootFocusController();
-            if (focusController)
-              focusController->RewindFocusState();
-          }
-        }
-#endif
         break;
       }
       case NS_OS_TOOLBAR: {
@@ -437,17 +403,23 @@ nsWebShellWindow::HandleEvent(nsGUIEvent *aEvent)
         break;
       }
 
-      case NS_MOUSE_ACTIVATE:{
-        break;
-      }
-      
       case NS_ACTIVATE: {
 #if defined(DEBUG_saari) || defined(DEBUG_smaug)
         printf("nsWebShellWindow::NS_ACTIVATE\n");
 #endif
-        nsCOMPtr<nsPIDOMWindow> privateDOMWindow = do_GetInterface(docShell);
-        if (privateDOMWindow)
-          privateDOMWindow->Activate();
+        // focusing the window could cause it to close, so keep a reference to it
+        nsCOMPtr<nsIXULWindow> kungFuDeathGrip(eventWindow);
+
+        nsCOMPtr<nsIDOMWindow> window = do_GetInterface(docShell);
+        nsCOMPtr<nsIFocusManager> fm = do_GetService(FOCUSMANAGER_CONTRACTID);
+        if (fm && window)
+          fm->WindowRaised(window);
+
+        if (eventWindow->mChromeLoaded) {
+          eventWindow->PersistentAttributesDirty(
+                             PAD_POSITION | PAD_SIZE | PAD_MISC);
+          eventWindow->SavePersistentAttributes();
+        }
 
         break;
       }
@@ -457,81 +429,18 @@ nsWebShellWindow::HandleEvent(nsGUIEvent *aEvent)
         printf("nsWebShellWindow::NS_DEACTIVATE\n");
 #endif
 
-        nsCOMPtr<nsPIDOMWindow> privateDOMWindow = do_GetInterface(docShell);
-        if (privateDOMWindow) {
-          nsIFocusController *focusController =
-            privateDOMWindow->GetRootFocusController();
-          if (focusController)
-            focusController->SetActive(PR_FALSE);
-
-          privateDOMWindow->Deactivate();
-        }
+        nsCOMPtr<nsIDOMWindow> window = do_GetInterface(docShell);
+        nsCOMPtr<nsIFocusManager> fm = do_GetService(FOCUSMANAGER_CONTRACTID);
+        if (fm && window)
+          fm->WindowLowered(window);
         break;
       }
       
-      case NS_GOTFOCUS: {
-#if defined(DEBUG_saari) || defined(DEBUG_smaug)
-        printf("nsWebShellWindow::GOTFOCUS\n");
-#endif
-        gCurrentlyFocusedWindow = eventWindow;
-        if (gFocusSuppressed) {
-          break;
-        }
-        nsCOMPtr<nsIDOMDocument> domDocument;
-        nsCOMPtr<nsPIDOMWindow> piWin = do_GetInterface(docShell);
-        if (!piWin) {
-          break;
-        }
-        nsIFocusController *focusController = piWin->GetRootFocusController();
-        if (focusController) {
-          // This is essentially the first stage of activation (NS_GOTFOCUS is
-          // followed by the DOM window getting activated (which is direct on Win32
-          // and done through web shell window via an NS_ACTIVATE message on the
-          // other platforms).
-          //
-          // Go ahead and mark the focus controller as being active.  We have
-          // to do this even before the activate message comes in, since focus
-          // memory kicks in prior to the activate being processed.
-          focusController->SetActive(PR_TRUE);
-
-          nsCOMPtr<nsIDOMWindowInternal> focusedWindow;
-          focusController->GetFocusedWindow(getter_AddRefs(focusedWindow));
-          if (focusedWindow) {
-            // It's possible for focusing the window to cause it to close.
-            // To avoid holding a pointer to deleted memory, keep a reference
-            // on eventWindow. -bryner
-            nsCOMPtr<nsIXULWindow> kungFuDeathGrip(eventWindow);
-
-            focusController->SetSuppressFocus(PR_TRUE, "Activation Suppression");
-
-            nsCOMPtr<nsIDOMWindowInternal> domWindow = 
-              do_QueryInterface(piWin);
-
-            NS_ASSERTION(domWindow,
-                         "windows must support nsIDOMWindowInternal");
-
-            domWindow->Focus(); // This sets focus, but we'll ignore it.  
-                                // A subsequent activate will cause us to stop suppressing.
-
-            // since the window has been activated, replace persistent size data
-            // with the newly activated window's
-            if (eventWindow->mChromeLoaded) {
-              eventWindow->PersistentAttributesDirty(
-                             PAD_POSITION | PAD_SIZE | PAD_MISC);
-              eventWindow->SavePersistentAttributes();
-            }
-
-            break;
-          }
-        }
-        break;
-      }
-      case NS_LOSTFOCUS: {
-#if defined(DEBUG_saari) || defined(DEBUG_smaug)
-        printf("nsWebShellWindow::LOSTFOCUS\n");
-#endif
-        if (gCurrentlyFocusedWindow == eventWindow) {
-          gCurrentlyFocusedWindow = nsnull;
+      case NS_GETACCESSIBLE: {
+        nsCOMPtr<nsIPresShell> presShell;
+        docShell->GetPresShell(getter_AddRefs(presShell));
+        if (presShell) {
+          presShell->HandleEventWithTarget(aEvent, nsnull, nsnull, &result);
         }
         break;
       }
@@ -552,23 +461,17 @@ static void LoadNativeMenus(nsIDOMDocument *aDOMDoc, nsIWidget *aParentWindow)
   aDOMDoc->GetElementsByTagNameNS(NS_LITERAL_STRING("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"),
                                   NS_LITERAL_STRING("menubar"),
                                   getter_AddRefs(menubarElements));
-  
+
   nsCOMPtr<nsIDOMNode> menubarNode;
   if (menubarElements)
     menubarElements->Item(0, getter_AddRefs(menubarNode));
-
   if (!menubarNode)
     return;
 
-  nsCOMPtr<nsIMenuBar> pnsMenuBar = do_CreateInstance(kMenuBarCID);
-  if (!pnsMenuBar)
-    return;
-
-  pnsMenuBar->Create(aParentWindow);
-
-  // fake event
-  nsMenuEvent fake(PR_TRUE, 0, nsnull);
-  pnsMenuBar->MenuConstruct(fake, aParentWindow, menubarNode);
+  nsCOMPtr<nsINativeMenuService> nms = do_GetService("@mozilla.org/widget/nativemenuservice;1");
+  nsCOMPtr<nsIContent> menubarContent(do_QueryInterface(menubarNode));
+  if (nms && menubarContent)
+    nms->CreateNativeMenuBar(aParentWindow, menubarContent);
 }
 #endif
 
@@ -579,19 +482,16 @@ nsWebShellWindow::SetPersistenceTimer(PRUint32 aDirtyFlags)
     return;
 
   PR_Lock(mSPTimerLock);
-  if (mSPTimer) {
-    mSPTimer->SetDelay(SIZE_PERSISTENCE_TIMEOUT);
-    PersistentAttributesDirty(aDirtyFlags);
-  } else {
+  if (!mSPTimer) {
     nsresult rv;
     mSPTimer = do_CreateInstance("@mozilla.org/timer;1", &rv);
     if (NS_SUCCEEDED(rv)) {
       NS_ADDREF_THIS(); // for the timer, which holds a reference to this window
-      mSPTimer->InitWithFuncCallback(FirePersistenceTimer, this,
-                                     SIZE_PERSISTENCE_TIMEOUT, nsITimer::TYPE_ONE_SHOT);
-      PersistentAttributesDirty(aDirtyFlags);
     }
   }
+  mSPTimer->InitWithFuncCallback(FirePersistenceTimer, this,
+                                 SIZE_PERSISTENCE_TIMEOUT, nsITimer::TYPE_ONE_SHOT);
+  PersistentAttributesDirty(aDirtyFlags);
   PR_Unlock(mSPTimerLock);
 }
 
@@ -872,44 +772,3 @@ NS_IMETHODIMP nsWebShellWindow::Destroy()
   }
   return nsXULWindow::Destroy();
 }
-
-void
-nsWebShellWindow::SuppressFocusEvents(PRBool aSuppress)
-{
-  if (aSuppress) {
-    gFocusSuppressed = PR_TRUE;
-    gFocusedWindowBeforeSuppression = gCurrentlyFocusedWindow;
-    return;
-  }
-
-  gFocusSuppressed = PR_FALSE;
-  if (gFocusedWindowBeforeSuppression == gCurrentlyFocusedWindow) {
-    return;
-  }
-
-  // Backup what is focused before we send the blur. If the
-  // blur causes a focus change, keep that new focus change,
-  // don't overwrite with the old "currently focused window".
-  nsWebShellWindow* currentFocusBeforeBlur = gCurrentlyFocusedWindow;
-
-  if (gFocusedWindowBeforeSuppression) {
-    nsCOMPtr<nsIWidget> widget = gFocusedWindowBeforeSuppression->mWindow;
-    if (widget) {
-      nsRefPtr<nsWebShellWindow> window = gFocusedWindowBeforeSuppression;
-      nsGUIEvent lostfocus(PR_TRUE, NS_LOSTFOCUS, widget);
-      window->HandleEvent(&lostfocus);
-    }
-  }
-
-  // Send NS_GOTFOCUS to the widget that we think should be focused.
-  if (gCurrentlyFocusedWindow &&
-      gCurrentlyFocusedWindow == currentFocusBeforeBlur) {
-    nsCOMPtr<nsIWidget> widget = gCurrentlyFocusedWindow->mWindow;
-    if (widget) {
-      nsRefPtr<nsWebShellWindow> window = gCurrentlyFocusedWindow;
-      nsGUIEvent gotfocus(PR_TRUE, NS_GOTFOCUS, widget);
-      window->HandleEvent(&gotfocus);
-    }
-  }
-}
-

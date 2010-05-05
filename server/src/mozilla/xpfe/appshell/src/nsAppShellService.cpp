@@ -51,7 +51,6 @@
 #include "nsIPrefBranch.h"
 #include "nsIPrefService.h"
 
-#include "nsIWidget.h"
 #include "nsIWindowMediator.h"
 #include "nsIWindowWatcher.h"
 #include "nsPIWindowWatcher.h"
@@ -83,6 +82,7 @@
 class nsIAppShell;
 
 nsAppShellService::nsAppShellService() : 
+  mXPCOMWillShutDown(PR_FALSE),
   mXPCOMShuttingDown(PR_FALSE),
   mModalWindowCount(0),
   mApplicationProvidedHiddenWindow(PR_FALSE)
@@ -90,8 +90,10 @@ nsAppShellService::nsAppShellService() :
   nsCOMPtr<nsIObserverService> obs
     (do_GetService("@mozilla.org/observer-service;1"));
 
-  if (obs)
+  if (obs) {
+    obs->AddObserver(this, "xpcom-will-shutdown", PR_FALSE);
     obs->AddObserver(this, "xpcom-shutdown", PR_FALSE);
+  }
 }
 
 nsAppShellService::~nsAppShellService()
@@ -295,6 +297,7 @@ nsAppShellService::JustCreateTopWindow(nsIXULWindow *aParent,
                                        nsWebShellWindow **aResult)
 {
   *aResult = nsnull;
+  NS_ENSURE_STATE(!mXPCOMWillShutDown);
 
   nsRefPtr<nsWebShellWindow> window = new nsWebShellWindow();
   NS_ENSURE_TRUE(window, NS_ERROR_OUT_OF_MEMORY);
@@ -548,23 +551,21 @@ nsAppShellService::UnregisterTopLevelWindow(nsIXULWindow* aWindow)
   return NS_OK;
 }
 
-/* Old function, needs to be removed... it was only used on Mac OS9 */
-NS_IMETHODIMP
-nsAppShellService::TopLevelWindowIsModal(nsIXULWindow *aWindow, PRBool aModal)
-{
-  return NS_OK;
-}
 
 NS_IMETHODIMP
 nsAppShellService::Observe(nsISupports* aSubject, const char *aTopic,
                            const PRUnichar *aData)
 {
-  NS_ASSERTION(!strcmp(aTopic, "xpcom-shutdown"), "Unexpected observer topic!");
-
-  mXPCOMShuttingDown = PR_TRUE;
-  if (mHiddenWindow) {
-    ClearXPConnectSafeContext();
-    mHiddenWindow->Destroy();
+  if (!strcmp(aTopic, "xpcom-will-shutdown")) {
+    mXPCOMWillShutDown = PR_TRUE;
+  } else if (!strcmp(aTopic, "xpcom-shutdown")) {
+    mXPCOMShuttingDown = PR_TRUE;
+    if (mHiddenWindow) {
+      ClearXPConnectSafeContext();
+      mHiddenWindow->Destroy();
+    }
+  } else {
+    NS_ERROR("Unexpected observer topic!");
   }
 
   return NS_OK;

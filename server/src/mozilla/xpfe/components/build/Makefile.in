@@ -49,9 +49,6 @@ IS_COMPONENT	= 1
 MODULE_NAME	= application
 LIBXUL_LIBRARY	= 1
 
-PACKAGE_FILE = appcomps.pkg
-PACKAGE_VARS += MOZ_PHOENIX
-
 REQUIRES	= xpcom \
 		  string \
 		  rdf \
@@ -64,60 +61,20 @@ REQUIRES	= xpcom \
 
 CPPSRCS		= nsModule.cpp
 
+include $(topsrcdir)/config/config.mk
+
 ifdef MOZ_PERF_METRICS
 SHARED_LIBRARY_LIBS += $(DEPTH)/modules/libutil/src/$(LIB_PREFIX)mozutil_s.$(LIB_SUFFIX)
 endif
 
+ifndef MOZ_THUNDERBIRD
 # General includes
 SHARED_LIBRARY_LIBS += ../directory/$(LIB_PREFIX)directory_s.$(LIB_SUFFIX)
 LOCAL_INCLUDES += -I$(srcdir)/../directory
+endif
 
-# Non-Mac Browser requirements
-ifneq ($(MOZ_BUILD_APP),macbrowser)
 SHARED_LIBRARY_LIBS += ../../browser/src/$(LIB_PREFIX)mozbrwsr_s.$(LIB_SUFFIX)
 LOCAL_INCLUDES += -I$(srcdir)/../../browser/src
-endif
-
-# Suite specific includes
-ifdef MOZ_SUITE
-REQUIRES	+= \
-		downloadmanager \
-		intl \
-		mork \
-		widget \
-		mimetype \
-		autocomplete \
-		$(NULL)
-
-SHARED_LIBRARY_LIBS += \
-	../download-manager/src/$(LIB_PREFIX)downloadmanager_s.$(LIB_SUFFIX) \
-	../related/src/$(LIB_PREFIX)related_s.$(LIB_SUFFIX) \
-	$(NULL)
-LOCAL_INCLUDES += \
-	-I$(srcdir)/../download-manager/src \
-	-I$(srcdir)/../related/src       \
-	$(NULL)
-
-ifndef MOZ_PLACES
-REQUIRES += history
-SHARED_LIBRARY_LIBS += \
-	../history/src/$(LIB_PREFIX)history_s.$(LIB_SUFFIX) \
-	$(NULL)
-LOCAL_INCLUDES += \
-	-I$(srcdir)/../history/src       \
-	$(NULL)
-endif
-
-ifeq ($(OS_ARCH),WINNT)
-SHARED_LIBRARY_LIBS += \
-	../winhooks/$(LIB_PREFIX)winhooks_s.$(LIB_SUFFIX) \
-	$(NULL)
-LOCAL_INCLUDES += \
-	-I$(srcdir)/../winhooks \
-	$(NULL)
-endif # WINNT
-
-endif # MOZ_SUITE
 
 ifeq ($(OS_ARCH),WINNT)
 OS_LIBS	+= $(call EXPAND_LIBNAME,ole32 shell32)
