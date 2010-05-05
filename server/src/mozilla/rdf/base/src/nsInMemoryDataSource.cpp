@@ -85,7 +85,7 @@
 #include "nsISupportsArray.h"
 #include "nsCOMArray.h"
 #include "nsEnumeratorUtils.h"
-#include "nsVoidArray.h"  // XXX introduces dependency on raptorbase
+#include "nsTArray.h"
 #include "nsCRT.h"
 #include "nsRDFCID.h"
 #include "nsRDFBaseDataSources.h"
@@ -145,7 +145,7 @@ public:
         aAssertion->~Assertion();
         aAllocator.Free(aAssertion, sizeof(*aAssertion)); }
 
-    static PLDHashOperator PR_CALLBACK
+    static PLDHashOperator
     DeletePropertyHashEntry(PLDHashTable* aTable, PLDHashEntryHdr* aHdr,
                            PRUint32 aNumber, void* aArg);
 
@@ -157,11 +157,22 @@ public:
 
     ~Assertion();
 
-    void AddRef() { ++mRefCnt; }
+    void AddRef() {
+        if (mRefCnt == PR_UINT16_MAX) {
+            NS_WARNING("refcount overflow, leaking Assertion");
+            return;
+        }
+        ++mRefCnt;
+    }
 
     void Release(nsFixedSizeAllocator& aAllocator) {
+        if (mRefCnt == PR_UINT16_MAX) {
+            NS_WARNING("refcount overflow, leaking Assertion");
+            return;
+        }
         if (--mRefCnt == 0)
-            Destroy(aAllocator, this); }
+            Destroy(aAllocator, this);
+    }
 
     // For nsIRDFPurgeableDataSource
     inline  void    Mark()      { u.as.mMarked = PR_TRUE; }
@@ -194,7 +205,7 @@ public:
     // also shared between hash/as (see the union above)
     // but placed after union definition to ensure that
     // all 32-bit entries are long aligned
-    PRInt16                     mRefCnt;
+    PRUint16                    mRefCnt;
     PRPackedBool                mHashEntry;
 
 private:
@@ -265,7 +276,7 @@ Assertion::~Assertion()
     }
 }
 
-PLDHashOperator PR_CALLBACK
+PLDHashOperator
 Assertion::DeletePropertyHashEntry(PLDHashTable* aTable, PLDHashEntryHdr* aHdr,
                                            PRUint32 aNumber, void* aArg)
 {
@@ -316,11 +327,11 @@ protected:
     // during mReadCount == 0
     PRUint32 mReadCount;
 
-    static PLDHashOperator PR_CALLBACK
+    static PLDHashOperator
     DeleteForwardArcsEntry(PLDHashTable* aTable, PLDHashEntryHdr* aHdr,
                            PRUint32 aNumber, void* aArg);
 
-    static PLDHashOperator PR_CALLBACK
+    static PLDHashOperator
     ResourceEnumerator(PLDHashTable* aTable, PLDHashEntryHdr* aHdr,
                        PRUint32 aNumber, void* aArg);
 
@@ -367,7 +378,7 @@ public:
     NS_DECL_RDFIDATASOURCE
 
 protected:
-    static PLDHashOperator PR_CALLBACK
+    static PLDHashOperator
     SweepForwardArcsEntries(PLDHashTable* aTable, PLDHashEntryHdr* aHdr,
                             PRUint32 aNumber, void* aArg);
 
@@ -625,7 +636,7 @@ InMemoryAssertionEnumeratorImpl::GetNext(nsISupports** aResult)
  * <tt>nsIRDFArcsOutCursor</tt> and <tt>nsIRDFArcsInCursor</tt> interfaces.
  * Because the structure of the in-memory graph is pretty flexible, it's
  * fairly easy to parameterize this class. The only funky thing to watch
- * out for is the mutliple inheiritance clashes.
+ * out for is the mutliple inheritance clashes.
  */
 
 class InMemoryArcsEnumeratorImpl : public nsISimpleEnumerator
@@ -639,7 +650,7 @@ private:
     InMemoryDataSource* mDataSource;
     nsIRDFResource*     mSource;
     nsIRDFNode*         mTarget;
-    nsAutoVoidArray     mAlreadyReturned;
+    nsAutoTArray<nsCOMPtr<nsIRDFResource>, 8> mAlreadyReturned;
     nsIRDFResource*     mCurrent;
     Assertion*          mAssertion;
     nsCOMPtr<nsISupportsArray> mHashArcs;
@@ -650,7 +661,7 @@ private:
 
     virtual ~InMemoryArcsEnumeratorImpl();
 
-    static PLDHashOperator PR_CALLBACK
+    static PLDHashOperator
     ArcEnumerator(PLDHashTable* aTable, PLDHashEntryHdr* aHdr,
                        PRUint32 aNumber, void* aArg);
 
@@ -684,7 +695,7 @@ public:
 };
 
 
-PLDHashOperator PR_CALLBACK
+PLDHashOperator
 InMemoryArcsEnumeratorImpl::ArcEnumerator(PLDHashTable* aTable,
                                        PLDHashEntryHdr* aHdr,
                                        PRUint32 aNumber, void* aArg)
@@ -739,11 +750,6 @@ InMemoryArcsEnumeratorImpl::~InMemoryArcsEnumeratorImpl()
     NS_IF_RELEASE(mSource);
     NS_IF_RELEASE(mTarget);
     NS_IF_RELEASE(mCurrent);
-
-    for (PRInt32 i = mAlreadyReturned.Count() - 1; i >= 0; --i) {
-        nsIRDFResource* resource = (nsIRDFResource*) mAlreadyReturned[i];
-        NS_RELEASE(resource);
-    }
 }
 
 NS_IMPL_ADDREF(InMemoryArcsEnumeratorImpl)
@@ -799,7 +805,7 @@ InMemoryArcsEnumeratorImpl::HasMoreElements(PRBool* aResult)
             while (mAssertion && (next == mAssertion->u.as.mProperty));
 
             PRBool alreadyReturned = PR_FALSE;
-            for (PRInt32 i = mAlreadyReturned.Count() - 1; i >= 0; --i) {
+            for (PRInt32 i = mAlreadyReturned.Length() - 1; i >= 0; --i) {
                 if (mAlreadyReturned[i] == next) {
                     alreadyReturned = PR_TRUE;
                     break;
@@ -833,7 +839,6 @@ InMemoryArcsEnumeratorImpl::GetNext(nsISupports** aResult)
 
     // Add this to the set of things we've already returned so that we
     // can ensure uniqueness
-    NS_ADDREF(mCurrent);
     mAlreadyReturned.AppendElement(mCurrent);
 
     // Don't AddRef: we "transfer" ownership to the caller
@@ -953,7 +958,7 @@ InMemoryDataSource::~InMemoryDataSource()
 
 }
 
-PLDHashOperator PR_CALLBACK
+PLDHashOperator
 InMemoryDataSource::DeleteForwardArcsEntry(PLDHashTable* aTable, PLDHashEntryHdr* aHdr,
                                            PRUint32 aNumber, void* aArg)
 {
@@ -1774,7 +1779,7 @@ InMemoryDataSource::ArcLabelsOut(nsIRDFResource* aSource, nsISimpleEnumerator** 
     return NS_OK;
 }
 
-PLDHashOperator PR_CALLBACK
+PLDHashOperator
 InMemoryDataSource::ResourceEnumerator(PLDHashTable* aTable,
                                        PLDHashEntryHdr* aHdr,
                                        PRUint32 aNumber, void* aArg)
@@ -2037,7 +2042,7 @@ InMemoryDataSource::Sweep()
 }
 
 
-PLDHashOperator PR_CALLBACK
+PLDHashOperator
 InMemoryDataSource::SweepForwardArcsEntries(PLDHashTable* aTable,
                                             PLDHashEntryHdr* aHdr,
                                             PRUint32 aNumber, void* aArg)
@@ -2140,7 +2145,7 @@ public:
     nsresult mRv;
 };
 
-PLDHashOperator PR_CALLBACK
+PLDHashOperator
 SubjectEnumerator(PLDHashTable* aTable, PLDHashEntryHdr* aHdr,
                   PRUint32 aNumber, void* aArg) {
     Entry* entry = reinterpret_cast<Entry*>(aHdr);
@@ -2182,7 +2187,7 @@ public:
     VisitorClosure* mOuter;
 };
 
-PLDHashOperator PR_CALLBACK
+PLDHashOperator
 TriplesInnerEnumerator(PLDHashTable* aTable, PLDHashEntryHdr* aHdr,
                   PRUint32 aNumber, void* aArg) {
     Entry* entry = reinterpret_cast<Entry*>(aHdr);
@@ -2203,7 +2208,7 @@ TriplesInnerEnumerator(PLDHashTable* aTable, PLDHashEntryHdr* aHdr,
     }
     return PL_DHASH_NEXT;
 }
-PLDHashOperator PR_CALLBACK
+PLDHashOperator
 TriplesEnumerator(PLDHashTable* aTable, PLDHashEntryHdr* aHdr,
                   PRUint32 aNumber, void* aArg) {
     Entry* entry = reinterpret_cast<Entry*>(aHdr);

@@ -84,7 +84,7 @@
 #include "nsIURL.h"
 #include "nsIXMLContentSink.h"
 #include "nsRDFCID.h"
-#include "nsVoidArray.h"
+#include "nsTArray.h"
 #include "nsXPIDLString.h"
 #include "prlog.h"
 #include "prmem.h"
@@ -96,6 +96,7 @@
 #include "nsIAtom.h"
 #include "nsStaticAtom.h"
 #include "nsIScriptError.h"
+#include "nsIDTD.h"
 
 ////////////////////////////////////////////////////////////////////////
 // XPCOM IIDs
@@ -159,9 +160,9 @@ public:
     NS_DECL_NSIEXPATSINK
 
     // nsIContentSink
-    NS_IMETHOD WillTokenize(void);
-    NS_IMETHOD WillBuildModel(void);
-    NS_IMETHOD DidBuildModel(void);
+    NS_IMETHOD WillParse(void);
+    NS_IMETHOD WillBuildModel(nsDTDMode aDTDMode);
+    NS_IMETHOD DidBuildModel(PRBool aTerminated);
     NS_IMETHOD WillInterrupt(void);
     NS_IMETHOD WillResume(void);
     NS_IMETHOD SetParser(nsIParser* aParser);  
@@ -274,7 +275,14 @@ protected:
 
     nsIRDFResource* GetContextElement(PRInt32 ancestor = 0);
 
-    nsAutoVoidArray* mContextStack;
+
+    struct RDFContextStackElement {
+        nsCOMPtr<nsIRDFResource> mResource;
+        RDFContentSinkState      mState;
+        RDFContentSinkParseMode  mParseMode;
+    };
+
+    nsAutoTArray<RDFContextStackElement, 8>* mContextStack;
 
     nsIURI*      mDocumentURL;
 };
@@ -379,7 +387,7 @@ RDFContentSinkImpl::~RDFContentSinkImpl()
         // XXX we should never need to do this, but, we'll write the
         // code all the same. If someone left the content stack dirty,
         // pop all the elements off the stack and release them.
-        PRInt32 i = mContextStack->Count();
+        PRInt32 i = mContextStack->Length();
         while (0 < i--) {
             nsIRDFResource* resource;
             RDFContentSinkState state;
@@ -537,8 +545,7 @@ RDFContentSinkImpl::HandleEndElement(const PRUnichar *aName)
       break;
   }
   
-  PRInt32 nestLevel = mContextStack->Count();
-  if (nestLevel == 0)
+  if (mContextStack->IsEmpty())
       mState = eRDFContentSinkState_InEpilog;
 
   NS_IF_RELEASE(resource);
@@ -607,14 +614,14 @@ RDFContentSinkImpl::ReportError(const PRUnichar* aErrorText,
 // nsIContentSink interface
 
 NS_IMETHODIMP 
-RDFContentSinkImpl::WillTokenize(void)
+RDFContentSinkImpl::WillParse(void)
 {
     return NS_OK;
 }
 
 
 NS_IMETHODIMP 
-RDFContentSinkImpl::WillBuildModel(void)
+RDFContentSinkImpl::WillBuildModel(nsDTDMode)
 {
     if (mDataSource) {
         nsCOMPtr<nsIRDFXMLSink> sink = do_QueryInterface(mDataSource);
@@ -625,7 +632,7 @@ RDFContentSinkImpl::WillBuildModel(void)
 }
 
 NS_IMETHODIMP 
-RDFContentSinkImpl::DidBuildModel(void)
+RDFContentSinkImpl::DidBuildModel(PRBool aTerminated)
 {
     if (mDataSource) {
         nsCOMPtr<nsIRDFXMLSink> sink = do_QueryInterface(mDataSource);
@@ -994,8 +1001,12 @@ RDFContentSinkImpl::GetResourceAttribute(const PRUnichar** aAttributes,
       mNodeIDMap.Get(nodeID,aResource);
 
       if (!*aResource) {
+          nsresult rv;
+          rv = gRDFService->GetAnonymousResource(aResource);
+          if (NS_FAILED(rv)) {
+              return rv;
+          }
           mNodeIDMap.Put(nodeID,*aResource);
-          return gRDFService->GetAnonymousResource(aResource);
       }
       return NS_OK;
   }
@@ -1475,24 +1486,16 @@ RDFContentSinkImpl::ReinitContainer(nsIRDFResource* aContainerType, nsIRDFResour
 ////////////////////////////////////////////////////////////////////////
 // Content stack management
 
-struct RDFContextStackElement {
-    nsIRDFResource*         mResource;
-    RDFContentSinkState     mState;
-    RDFContentSinkParseMode mParseMode;
-};
-
 nsIRDFResource* 
 RDFContentSinkImpl::GetContextElement(PRInt32 ancestor /* = 0 */)
 {
     if ((nsnull == mContextStack) ||
-        (ancestor >= mContextStack->Count())) {
+        (PRUint32(ancestor) >= mContextStack->Length())) {
         return nsnull;
     }
 
-    RDFContextStackElement* e =
-        static_cast<RDFContextStackElement*>(mContextStack->ElementAt(mContextStack->Count()-ancestor-1));
-
-    return e->mResource;
+    return mContextStack->ElementAt(
+           mContextStack->Length()-ancestor-1).mResource;
 }
 
 PRInt32 
@@ -1501,22 +1504,20 @@ RDFContentSinkImpl::PushContext(nsIRDFResource         *aResource,
                                 RDFContentSinkParseMode aParseMode)
 {
     if (! mContextStack) {
-        mContextStack = new nsAutoVoidArray();
+        mContextStack = new nsAutoTArray<RDFContextStackElement, 8>();
         if (! mContextStack)
             return 0;
     }
 
-    RDFContextStackElement* e = new RDFContextStackElement;
+    RDFContextStackElement* e = mContextStack->AppendElement();
     if (! e)
-        return mContextStack->Count();
+        return mContextStack->Length();
 
-    NS_IF_ADDREF(aResource);
     e->mResource  = aResource;
     e->mState     = aState;
     e->mParseMode = aParseMode;
   
-    mContextStack->AppendElement(static_cast<void*>(e));
-    return mContextStack->Count();
+    return mContextStack->Length();
 }
  
 nsresult
@@ -1524,22 +1525,20 @@ RDFContentSinkImpl::PopContext(nsIRDFResource         *&aResource,
                                RDFContentSinkState     &aState,
                                RDFContentSinkParseMode &aParseMode)
 {
-    RDFContextStackElement* e;
     if ((nsnull == mContextStack) ||
-        (0 == mContextStack->Count())) {
+        (mContextStack->IsEmpty())) {
         return NS_ERROR_NULL_POINTER;
     }
 
-    PRInt32 i = mContextStack->Count() - 1;
-    e = static_cast<RDFContextStackElement*>(mContextStack->ElementAt(i));
+    PRUint32 i = mContextStack->Length() - 1;
+    RDFContextStackElement &e = mContextStack->ElementAt(i);
+
+    aResource  = e.mResource;
+    NS_IF_ADDREF(aResource);
+    aState     = e.mState;
+    aParseMode = e.mParseMode;
+
     mContextStack->RemoveElementAt(i);
-
-    // don't bother Release()-ing: call it our implicit AddRef().
-    aResource  = e->mResource;
-    aState     = e->mState;
-    aParseMode = e->mParseMode;
-
-    delete e;
     return NS_OK;
 }
  
