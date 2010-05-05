@@ -1,0 +1,15 @@
+== boxshadow-basic.html boxshadow-basic-ref.html
+!= boxshadow-blur.html boxshadow-blur-notref.html
+== boxshadow-multiple.html boxshadow-multiple-ref.html
+== boxshadow-spread.html boxshadow-spread-ref.html
+== tableboxshadow-basic.html tableboxshadow-basic-ref.html
+== tableboxshadow-trshadow.html tableboxshadow-trshadow-ref.html
+== tableboxshadow-tdshadow.html tableboxshadow-tdshadow-ref.html
+== boxshadow-rounding.html boxshadow-rounding-ref.html
+== boxshadow-button.html boxshadow-button-ref.html
+== boxshadow-fileupload.html boxshadow-fileupload-ref.html
+== boxshadow-inner-basic.html boxshadow-inner-basic-ref.html
+== boxshadow-mixed.html boxshadow-mixed-ref.html
+== boxshadow-rounded-spread.html boxshadow-rounded-spread-ref.html
+HTTP(..) == boxshadow-dynamic.xul boxshadow-dynamic-ref.xul
+== boxshadow-onecorner.html boxshadow-onecorner-ref.html
