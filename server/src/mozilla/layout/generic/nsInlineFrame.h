@@ -46,9 +46,6 @@
 
 class nsAnonymousBlockFrame;
 
-#define NS_INLINE_FRAME_CID \
- { 0x88b298af, 0x8b0e, 0x4592,{0x9e, 0xc6, 0xea, 0x4c, 0x4b, 0x3f, 0xf7, 0xa4}}
-
 #define nsInlineFrameSuper nsHTMLContainerFrame
 
 // NS_INLINE_FRAME_HARD_TEXT_OFFSETS is used for access keys, where what
@@ -79,10 +76,11 @@ class nsAnonymousBlockFrame;
 class nsInlineFrame : public nsInlineFrameSuper
 {
 public:
-  friend nsIFrame* NS_NewInlineFrame(nsIPresShell* aPresShell, nsStyleContext* aContext);
+  NS_DECL_QUERYFRAME_TARGET(nsInlineFrame)
+  NS_DECL_QUERYFRAME
+  NS_DECL_FRAMEARENA_HELPERS
 
-  // nsISupports overrides
-  NS_IMETHOD QueryInterface(const nsIID& aIID, void** aInstancePtr);
+  friend nsIFrame* NS_NewInlineFrame(nsIPresShell* aPresShell, nsStyleContext* aContext);
 
   // nsIFrame overrides
   NS_IMETHOD BuildDisplayList(nsDisplayListBuilder*   aBuilder,
@@ -125,6 +123,8 @@ public:
                     nsReflowStatus& aStatus);
 
   virtual PRBool CanContinueTextRun() const;
+
+  virtual void PullOverflowsFromPrevInFlow();
 
   // Take all of the frames away from this frame. The caller is
   // presumed to keep them alive.
@@ -214,6 +214,8 @@ protected:
  */
 class nsFirstLineFrame : public nsInlineFrame {
 public:
+  NS_DECL_FRAMEARENA_HELPERS
+
   friend nsIFrame* NS_NewFirstLineFrame(nsIPresShell* aPresShell, nsStyleContext* aContext);
 
 #ifdef DEBUG
@@ -224,6 +226,8 @@ public:
                     nsHTMLReflowMetrics& aDesiredSize,
                     const nsHTMLReflowState& aReflowState,
                     nsReflowStatus& aStatus);
+
+  virtual void PullOverflowsFromPrevInFlow();
 
   // Take frames starting at aFrame until the end of the frame-list
   // away from this frame. The caller is presumed to keep them alive.
@@ -246,6 +250,8 @@ protected:
 class nsPositionedInlineFrame : public nsInlineFrame
 {
 public:
+  NS_DECL_FRAMEARENA_HELPERS
+
   nsPositionedInlineFrame(nsStyleContext* aContext)
     : nsInlineFrame(aContext)
     , mAbsoluteContainer(nsGkAtoms::absoluteList)
@@ -256,12 +262,12 @@ public:
   virtual void Destroy();
 
   NS_IMETHOD SetInitialChildList(nsIAtom*        aListName,
-                                 nsIFrame*       aChildList);
+                                 nsFrameList&    aChildList);
   NS_IMETHOD AppendFrames(nsIAtom*        aListName,
-                          nsIFrame*       aFrameList);
+                          nsFrameList&    aFrameList);
   NS_IMETHOD InsertFrames(nsIAtom*        aListName,
                           nsIFrame*       aPrevFrame,
-                          nsIFrame*       aFrameList);
+                          nsFrameList&    aFrameList);
   NS_IMETHOD RemoveFrame(nsIAtom*        aListName,
                          nsIFrame*       aOldFrame);
 
@@ -271,7 +277,7 @@ public:
 
   virtual nsIAtom* GetAdditionalChildListName(PRInt32 aIndex) const;
 
-  virtual nsIFrame* GetFirstChild(nsIAtom* aListName) const;
+  virtual nsFrameList GetChildList(nsIAtom* aListName) const;
 
   NS_IMETHOD Reflow(nsPresContext*          aPresContext,
                     nsHTMLReflowMetrics&     aDesiredSize,

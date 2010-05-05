@@ -45,7 +45,6 @@
 
 #include "nsSplitterFrame.h"
 #include "nsGkAtoms.h"
-#include "nsISupportsArray.h"
 #include "nsIDOMElement.h"
 #include "nsIDOMXULElement.h"
 #include "nsIDOMDocument.h"
@@ -61,11 +60,10 @@
 #include "nsIScrollableView.h"
 #include "nsIDOMMouseEvent.h"
 #include "nsIPresShell.h"
-#include "nsFrameNavigator.h"
+#include "nsFrameList.h"
 #include "nsHTMLParts.h"
 #include "nsILookAndFeel.h"
 #include "nsStyleContext.h"
-#include "nsWidgetsCID.h"
 #include "nsBoxLayoutState.h"
 #include "nsIXBLService.h"
 #include "nsIServiceManager.h"
@@ -77,10 +75,6 @@
 #include "nsLayoutUtils.h"
 #include "nsDisplayList.h"
 #include "nsContentUtils.h"
-
-// was used in nsSplitterFrame::Init but now commented out
-//static NS_DEFINE_IID(kLookAndFeelCID,  NS_LOOKANDFEEL_CID);
-PRInt32 realTimeDrag;
 
 class nsSplitterInfo {
 public:
@@ -158,7 +152,6 @@ public:
   void Reverse(nsSplitterInfo*& aIndexes, PRInt32 aCount);
   PRBool SupportsCollapseDirection(CollapseDirection aDirection);
 
-  void MoveSplitterBy(nsPresContext* aPresContext, nscoord aDiff);
   void EnsureOrient();
   void SetPreferredSize(nsBoxLayoutState& aState, nsIBox* aChildBox, nscoord aOnePixel, PRBool aIsHorizontal, nscoord* aSize);
 
@@ -259,7 +252,9 @@ nsIFrame*
 NS_NewSplitterFrame (nsIPresShell* aPresShell, nsStyleContext* aContext)
 {
   return new (aPresShell) nsSplitterFrame(aPresShell, aContext);
-} // NS_NewSplitterFrame
+}
+
+NS_IMPL_FRAMEARENA_HELPERS(nsSplitterFrame)
 
 nsSplitterFrame::nsSplitterFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
 : nsBoxFrame(aPresShell, aContext),
@@ -278,13 +273,6 @@ nsSplitterFrame::Destroy()
   }
   nsBoxFrame::Destroy();
 }
-
-
-//
-// QueryInterface
-//
-NS_INTERFACE_MAP_BEGIN(nsSplitterFrame)
-NS_INTERFACE_MAP_END_INHERITING(nsBoxFrame)
 
 
 NS_IMETHODIMP
@@ -344,18 +332,6 @@ nsSplitterFrame::Init(nsIContent*      aContent,
   mInner->mState = nsSplitterFrameInner::Open;
   mInner->mDragging = PR_FALSE;
 
-  {
-#if 0
-    // make it real time drag for now due to problems
-    nsCOMPtr<nsILookAndFeel> lookAndFeel = do_GetService(kLookAndFeelCID);
-    if (lookAndFeel) {
-      lookAndFeel->GetMetric(nsILookAndFeel::eMetric_DragFullWindow, realTimeDrag);
-    }
-    else
-#endif
-      realTimeDrag = 1;
-  }
-
   // determine orientation of parent, and if vertical, set orient to vertical
   // on splitter content, then re-resolve style
   // XXXbz this is pretty messed up, since this can change whether we should
@@ -377,20 +353,8 @@ nsSplitterFrame::Init(nsIContent*      aContent,
   nsresult  rv = nsBoxFrame::Init(aContent, aParent, aPrevInFlow);
   NS_ENSURE_SUCCESS(rv, rv);
 
-  rv = nsHTMLContainerFrame::CreateViewForFrame(this, nsnull, PR_TRUE);
+  rv = nsHTMLContainerFrame::CreateViewForFrame(this, PR_TRUE);
   NS_ENSURE_SUCCESS(rv, rv);
-
-  if (!realTimeDrag) {
-    nsIView* view = GetView();
-    // currently this only works on win32 and mac
-    static NS_DEFINE_CID(kCChildCID, NS_CHILD_CID);
-
-    // Need to have a widget to appear on top of other widgets.
-    NS_ASSERTION(!view->HasWidget(), "have an unwanted widget");
-    if (!view->HasWidget()) {
-      view->CreateWidget(kCChildCID);
-    }
-  }
 
   mInner->mState = nsSplitterFrameInner::Open;
   mInner->AddListener(PresContext());
@@ -432,8 +396,9 @@ nsSplitterFrame::HandlePress(nsPresContext* aPresContext,
 
 NS_IMETHODIMP
 nsSplitterFrame::HandleMultiplePress(nsPresContext* aPresContext,
-                         nsGUIEvent *    aEvent,
-                         nsEventStatus*  aEventStatus)
+                                     nsGUIEvent *    aEvent,
+                                     nsEventStatus*  aEventStatus,
+                                     PRBool aControlHeld)
 {
   return NS_OK;
 }
@@ -478,6 +443,11 @@ nsSplitterFrame::HandleEvent(nsPresContext* aPresContext,
                                       nsGUIEvent* aEvent,
                                       nsEventStatus* aEventStatus)
 {
+  NS_ENSURE_ARG_POINTER(aEventStatus);
+  if (nsEventStatus_eConsumeNoDefault == *aEventStatus) {
+    return NS_OK;
+  }
+
   nsWeakFrame weakFrame(this);
   nsRefPtr<nsSplitterFrameInner> kungFuDeathGrip(mInner);
   switch (aEvent->message) {
@@ -526,6 +496,8 @@ nsSplitterFrameInner::MouseUp(nsPresContext* aPresContext, nsGUIEvent* aEvent)
   delete[] mChildInfosAfter;
   mChildInfosBefore = nsnull;
   mChildInfosAfter = nsnull;
+  mChildInfosBeforeCount = 0;
+  mChildInfosAfterCount = 0;
 }
 
 void
@@ -574,8 +546,8 @@ nsSplitterFrameInner::MouseDrag(nsPresContext* aPresContext, nsGUIEvent* aEvent)
     PRBool supportsAfter = SupportsCollapseDirection(After);
 
     // if we are in a collapsed position
-    if (realTimeDrag && ((oldPos > 0 && oldPos > pos && supportsAfter) ||
-                         (oldPos < 0 && oldPos < pos && supportsBefore)))
+    if ((oldPos > 0 && oldPos > pos && supportsAfter) ||
+        (oldPos < 0 && oldPos < pos && supportsBefore))
     {
       // and we are not collapsed then collapse
       if (currentState == Dragging) {
@@ -613,10 +585,7 @@ nsSplitterFrameInner::MouseDrag(nsPresContext* aPresContext, nsGUIEvent* aEvent)
       // we are dragging.
       if (currentState != Dragging)
         mOuter->mContent->SetAttr(kNameSpaceID_None, nsGkAtoms::state, NS_LITERAL_STRING("dragging"), PR_TRUE);
-      if (realTimeDrag)
-        AdjustChildren(aPresContext);
-      else
-        MoveSplitterBy(aPresContext, pos);
+      AdjustChildren(aPresContext);
     }
 
     // printf("----- resize ----- ");
@@ -741,15 +710,17 @@ nsSplitterFrameInner::MouseDown(nsIDOMEvent* aMouseEvent)
   mParentBox = mOuter->GetParentBox();
   if (!mParentBox)
     return NS_OK;
-  
+
   // get our index
   nsPresContext* outerPresContext = mOuter->PresContext();
-  nscoord childIndex = nsFrameNavigator::IndexOf(outerPresContext, mParentBox, mOuter);
-  // if it's 0 then stop right here.
-  if (childIndex == 0)
+  nsFrameList siblingList(mParentBox->GetFirstChild(nsnull));
+  PRInt32 childIndex = siblingList.IndexOf(mOuter);
+  // if it's 0 (or not found) then stop right here.
+  // It might be not found if we're not in the parent's primary frame list.
+  if (childIndex <= 0)
     return NS_OK;
 
-  PRInt32 childCount = nsFrameNavigator::CountFrames(outerPresContext, mParentBox);
+  PRInt32 childCount = siblingList.GetLength();
   // if it's the last index then we need to allow for resizeafter="grow"
   if (childIndex == childCount - 1 && GetResizeAfter() != Grow)
     return NS_OK;
@@ -974,13 +945,17 @@ nsSplitterFrameInner::UpdateState()
     return;
   }
 
-  if (SupportsCollapseDirection(Before) || SupportsCollapseDirection(After)) {
-    nsIBox* splitter = mOuter;
+  if ((SupportsCollapseDirection(Before) || SupportsCollapseDirection(After)) &&
+      mOuter->GetParent()->IsBoxFrame()) {
     // Find the splitter's immediate sibling.
-    nsIBox* splitterSibling =
-      nsFrameNavigator::GetChildBeforeAfter(mOuter->PresContext(), splitter,
-                                            (newState == CollapsedBefore ||
-                                             mState == CollapsedBefore));
+    nsIFrame* splitterSibling;
+    if (newState == CollapsedBefore || mState == CollapsedBefore) {
+      splitterSibling =
+        nsFrameList(mOuter->GetParent()->GetFirstChild(nsnull)).GetPrevSiblingFor(mOuter);
+    } else {
+      splitterSibling = mOuter->GetNextSibling();
+    }
+
     if (splitterSibling) {
       nsCOMPtr<nsIContent> sibling = splitterSibling->GetContent();
       if (sibling) {
@@ -1025,17 +1000,9 @@ nsSplitterFrameInner::AdjustChildren(nsPresContext* aPresContext)
   AdjustChildren(aPresContext, mChildInfosBefore, mChildInfosBeforeCount, isHorizontal);
   AdjustChildren(aPresContext, mChildInfosAfter, mChildInfosAfterCount, isHorizontal);
    
-  
    // printf("----- Posting Dirty -----\n");
 
-   
-  if (realTimeDrag) {
-    aPresContext->PresShell()->FlushPendingNotifications(Flush_Display);
-  }
-  else {
-    aPresContext->PresShell()->
-      FrameNeedsReflow(mOuter, nsIPresShell::eTreeChange, NS_FRAME_IS_DIRTY);
-  }
+  aPresContext->PresShell()->FlushPendingNotifications(Flush_Display);
 }
 
 static nsIBox* GetChildBoxForContent(nsIBox* aParentBox, nsIContent* aContent)
@@ -1199,31 +1166,4 @@ nsSplitterFrameInner::ResizeChildTo(nsPresContext* aPresContext,
       spaceLeft = 0;
     }
   }
-}
-
-
-void
-nsSplitterFrameInner::MoveSplitterBy(nsPresContext* aPresContext, nscoord aDiff)
-{
-  const nsRect& r = mOuter->mRect;
-  nsIView *v = mOuter->GetView();
-  nsIViewManager* vm = v->GetViewManager();
-  nsRect vr = v->GetBounds();
-  nsRect invalid;
-  EnsureOrient();
-  PRBool isHorizontal = !mOuter->IsHorizontal();
-  if (isHorizontal) {
-    mOuter->SetPosition(nsPoint(mSplitterPos + aDiff, r.y));
-    vm->MoveViewTo(v, mSplitterViewPos + aDiff, vr.y);
-    invalid.UnionRect(r,mOuter->mRect);
-  } else {
-    mOuter->SetPosition(nsPoint(r.x, mSplitterPos + aDiff));
-    vm->MoveViewTo(v, vr.x, mSplitterViewPos + aDiff);
-    invalid.UnionRect(r,mOuter->mRect);
-  }
-
-  // redraw immediately only what changed. This is animation so 
-  // it must be immediate.
-  nsBoxLayoutState state(aPresContext);
-  mParentBox->Redraw(state, &invalid, PR_TRUE);
 }

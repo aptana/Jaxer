@@ -41,7 +41,7 @@
 #ifndef nsComputedDOMStyle_h__
 #define nsComputedDOMStyle_h__
 
-#include "nsIComputedDOMStyle.h"
+#include "nsICSSDeclaration.h"
 
 #include "nsROCSSPrimitiveValue.h"
 #include "nsDOMCSSDeclaration.h"
@@ -55,11 +55,14 @@
 #include "nsCOMPtr.h"
 #include "nsWeakReference.h"
 #include "nsAutoPtr.h"
+#include "nsStyleStruct.h"
 
-class nsComputedDOMStyle : public nsIComputedDOMStyle
+class nsComputedDOMStyle : public nsICSSDeclaration,
+                           public nsWrapperCache
 {
 public:
-  NS_DECL_ISUPPORTS
+  NS_DECL_CYCLE_COLLECTING_ISUPPORTS
+  NS_DECL_CYCLE_COLLECTION_CLASS(nsComputedDOMStyle)
 
   NS_IMETHOD Init(nsIDOMElement *aElement,
                   const nsAString& aPseudoElt,
@@ -74,8 +77,20 @@ public:
 
   static void Shutdown();
 
+  virtual nsISupports *GetParentObject()
+  {
+    return mContent;
+  }
+
+  static already_AddRefed<nsStyleContext>
+  GetStyleContextForContent(nsIContent* aContent, nsIAtom* aPseudo,
+                            nsIPresShell* aPresShell);
+
 private:
-  void FlushPendingReflows();
+  void AssertFlushedPendingReflows() {
+    NS_ASSERTION(mFlushedPendingReflows,
+                 "property getter should have been marked layout-dependent");
+  }
   
 #define STYLE_STRUCT(name_, checkdata_cb_, ctor_args_)                  \
   const nsStyle##name_ * GetStyle##name_() {                            \
@@ -83,6 +98,10 @@ private:
   }
 #include "nsStyleStructList.h"
 #undef STYLE_STRUCT
+
+  nsresult GetEllipseRadii(const nsStyleCorners& aRadius,
+                           PRUint8 aFullCorner,
+                           nsIDOMCSSValue** aValue);
 
   nsresult GetOffsetWidthFor(PRUint8 aSide, nsIDOMCSSValue** aValue);
 
@@ -98,17 +117,26 @@ private:
 
   nsresult GetBorderStyleFor(PRUint8 aSide, nsIDOMCSSValue** aValue);
 
-  nsresult GetBorderRadiusFor(PRUint8 aSide, nsIDOMCSSValue** aValue);
-
   nsresult GetBorderWidthFor(PRUint8 aSide, nsIDOMCSSValue** aValue);
 
   nsresult GetBorderColorFor(PRUint8 aSide, nsIDOMCSSValue** aValue);
 
-  nsresult GetOutlineRadiusFor(PRUint8 aSide, nsIDOMCSSValue** aValue);
-
   nsresult GetMarginWidthFor(PRUint8 aSide, nsIDOMCSSValue** aValue);
 
   PRBool GetLineHeightCoord(nscoord& aCoord);
+
+  nsresult GetCSSShadowArray(nsCSSShadowArray* aArray,
+                             const nscolor& aDefaultColor,
+                             PRBool aIsBoxShadow,
+                             nsIDOMCSSValue** aValue);
+
+  nsresult GetBackgroundList(PRUint8 nsStyleBackground::Layer::* aMember,
+                             PRUint32 nsStyleBackground::* aCount,
+                             const PRInt32 aTable[],
+                             nsIDOMCSSValue** aResult);
+
+  nsresult GetCSSGradientString(const nsStyleGradient* aGradient,
+                                nsAString& aString);
 
   /* Properties Queryable as CSSValues */
 
@@ -133,13 +161,15 @@ private:
   nsresult GetTop(nsIDOMCSSValue** aValue);
   nsresult GetRight(nsIDOMCSSValue** aValue);
   nsresult GetBottom(nsIDOMCSSValue** aValue);
+  nsresult GetStackSizing(nsIDOMCSSValue** aValue);
 
   /* Font properties */
   nsresult GetColor(nsIDOMCSSValue** aValue);
   nsresult GetFontFamily(nsIDOMCSSValue** aValue);
-  nsresult GetFontStyle(nsIDOMCSSValue** aValue);
   nsresult GetFontSize(nsIDOMCSSValue** aValue);
   nsresult GetFontSizeAdjust(nsIDOMCSSValue** aValue);
+  nsresult GetFontStretch(nsIDOMCSSValue** aValue);
+  nsresult GetFontStyle(nsIDOMCSSValue** aValue);
   nsresult GetFontWeight(nsIDOMCSSValue** aValue);
   nsresult GetFontVariant(nsIDOMCSSValue** aValue);
 
@@ -152,6 +182,7 @@ private:
   nsresult GetBackgroundClip(nsIDOMCSSValue** aValue);
   nsresult GetBackgroundInlinePolicy(nsIDOMCSSValue** aValue);
   nsresult GetBackgroundOrigin(nsIDOMCSSValue** aValue);
+  nsresult GetMozBackgroundSize(nsIDOMCSSValue** aValue);
 
   /* Padding properties */
   nsresult GetPadding(nsIDOMCSSValue** aValue);
@@ -192,6 +223,13 @@ private:
   nsresult GetBorderRadiusTopLeft(nsIDOMCSSValue** aValue);
   nsresult GetBorderRadiusTopRight(nsIDOMCSSValue** aValue);
   nsresult GetFloatEdge(nsIDOMCSSValue** aValue);
+  nsresult GetBorderImage(nsIDOMCSSValue** aValue);
+
+  /* Box Shadow */
+  nsresult GetBoxShadow(nsIDOMCSSValue** aValue);
+
+  /* Window Shadow */
+  nsresult GetWindowShadow(nsIDOMCSSValue** aValue);
 
   /* Margin Properties */
   nsresult GetMarginWidth(nsIDOMCSSValue** aValue);
@@ -235,12 +273,15 @@ private:
   nsresult GetTextDecoration(nsIDOMCSSValue** aValue);
   nsresult GetTextIndent(nsIDOMCSSValue** aValue);
   nsresult GetTextTransform(nsIDOMCSSValue** aValue);
+  nsresult GetTextShadow(nsIDOMCSSValue** aValue);
   nsresult GetLetterSpacing(nsIDOMCSSValue** aValue);
   nsresult GetWordSpacing(nsIDOMCSSValue** aValue);
   nsresult GetWhiteSpace(nsIDOMCSSValue** aValue);
+  nsresult GetWordWrap(nsIDOMCSSValue** aValue);
 
   /* Visibility properties */
   nsresult GetOpacity(nsIDOMCSSValue** aValue);
+  nsresult GetPointerEvents(nsIDOMCSSValue** aValue);
   nsresult GetVisibility(nsIDOMCSSValue** aValue);
 
   /* Direction properties */
@@ -259,6 +300,8 @@ private:
   nsresult GetOverflowY(nsIDOMCSSValue** aValue);
   nsresult GetPageBreakAfter(nsIDOMCSSValue** aValue);
   nsresult GetPageBreakBefore(nsIDOMCSSValue** aValue);
+  nsresult GetMozTransform(nsIDOMCSSValue** aValue);
+  nsresult GetMozTransformOrigin(nsIDOMCSSValue **aValue);
 
   /* User interface properties */
   nsresult GetCursor(nsIDOMCSSValue** aValue);
@@ -273,6 +316,9 @@ private:
   nsresult GetColumnCount(nsIDOMCSSValue** aValue);
   nsresult GetColumnWidth(nsIDOMCSSValue** aValue);
   nsresult GetColumnGap(nsIDOMCSSValue** aValue);
+  nsresult GetColumnRuleWidth(nsIDOMCSSValue** aValue);
+  nsresult GetColumnRuleStyle(nsIDOMCSSValue** aValue);
+  nsresult GetColumnRuleColor(nsIDOMCSSValue** aValue);
 
 #ifdef MOZ_SVG
   /* SVG properties */
@@ -303,7 +349,7 @@ private:
   nsresult GetColorInterpolation(nsIDOMCSSValue** aValue);
   nsresult GetColorInterpolationFilters(nsIDOMCSSValue** aValue);
   nsresult GetDominantBaseline(nsIDOMCSSValue** aValue);
-  nsresult GetPointerEvents(nsIDOMCSSValue** aValue);
+  nsresult GetImageRendering(nsIDOMCSSValue** aValue);
   nsresult GetShapeRendering(nsIDOMCSSValue** aValue);
   nsresult GetTextRendering(nsIDOMCSSValue** aValue);
 
@@ -359,6 +405,8 @@ private:
 
   PRBool GetCBContentWidth(nscoord& aWidth);
   PRBool GetCBContentHeight(nscoord& aWidth);
+  PRBool GetFrameBoundsWidthForTransform(nscoord &aWidth);
+  PRBool GetFrameBoundsHeightForTransform(nscoord &aHeight);
   PRBool GetFrameBorderRectWidth(nscoord& aWidth);
 
   struct ComputedStyleMapEntry
@@ -368,6 +416,7 @@ private:
 
     nsCSSProperty mProperty;
     ComputeMethod mGetter;
+    PRBool mNeedsLayoutFlush;
   };
 
   static const ComputedStyleMapEntry* GetQueryablePropertyMap(PRUint32* aLength);
@@ -407,7 +456,16 @@ private:
   nsIPresShell* mPresShell;
 
   PRInt32 mAppUnitsPerInch; /* For unit conversions */
+
+#ifdef DEBUG
+  PRBool mFlushedPendingReflows;
+#endif
 };
+
+nsresult 
+NS_NewComputedDOMStyle(nsIDOMElement *aElement, const nsAString &aPseudoElt,
+                       nsIPresShell *aPresShell,
+                       nsComputedDOMStyle **aComputedStyle);
 
 #endif /* nsComputedDOMStyle_h__ */
 

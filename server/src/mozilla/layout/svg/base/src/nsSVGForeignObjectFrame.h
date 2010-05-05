@@ -44,6 +44,10 @@
 #include "nsIDOMSVGMatrix.h"
 #include "nsRegion.h"
 #include "nsIPresShell.h"
+#include "gfxRect.h"
+#include "gfxMatrix.h"
+
+class nsSVGOuterSVGFrame;
 
 typedef nsContainerFrame nsSVGForeignObjectFrameBase;
 
@@ -51,18 +55,15 @@ class nsSVGForeignObjectFrame : public nsSVGForeignObjectFrameBase,
                                 public nsISVGChildFrame
 {
   friend nsIFrame*
-  NS_NewSVGForeignObjectFrame(nsIPresShell* aPresShell, nsIContent* aContent, nsStyleContext* aContext);
+  NS_NewSVGForeignObjectFrame(nsIPresShell* aPresShell, nsStyleContext* aContext);
 protected:
   nsSVGForeignObjectFrame(nsStyleContext* aContext);
-  
-  // nsISupports interface:
-  NS_IMETHOD QueryInterface(const nsIID& aIID, void** aInstancePtr);
-private:
-  NS_IMETHOD_(nsrefcnt) AddRef() { return 1; }
-  NS_IMETHOD_(nsrefcnt) Release() { return 1; }
 
 public:
-  // nsIFrame:  
+  NS_DECL_QUERYFRAME
+  NS_DECL_FRAMEARENA_HELPERS
+
+  // nsIFrame:
   NS_IMETHOD  Init(nsIContent* aContent,
                    nsIFrame*   aParent,
                    nsIFrame*   aPrevInFlow);
@@ -75,12 +76,23 @@ public:
     return GetFirstChild(nsnull)->GetContentInsertionFrame();
   }
 
-  NS_IMETHOD DidSetStyleContext();
-
   NS_IMETHOD Reflow(nsPresContext*           aPresContext,
                     nsHTMLReflowMetrics&     aDesiredSize,
                     const nsHTMLReflowState& aReflowState,
                     nsReflowStatus&          aStatus);
+
+  /**
+   * Foreign objects are always transformed.
+   */
+  virtual PRBool IsTransformed() const
+  {
+    return PR_TRUE;
+  }
+
+  /**
+   * Foreign objects can return a transform matrix.
+   */
+  virtual gfxMatrix GetTransformMatrix(nsIFrame **aOutAncestor);
 
   /**
    * Get the "type" of the frame
@@ -97,7 +109,7 @@ public:
 
   virtual void InvalidateInternal(const nsRect& aDamageRect,
                                   nscoord aX, nscoord aY, nsIFrame* aForChild,
-                                  PRBool aImmediate);
+                                  PRUint32 aFlags);
 
 #ifdef DEBUG
   NS_IMETHOD GetFrameName(nsAString& aResult) const
@@ -107,8 +119,9 @@ public:
 #endif
 
   // nsISVGChildFrame interface:
-  NS_IMETHOD PaintSVG(nsSVGRenderState *aContext, nsRect *aDirtyRect);
-  NS_IMETHOD GetFrameForPointSVG(float x, float y, nsIFrame** hit);  
+  NS_IMETHOD PaintSVG(nsSVGRenderState *aContext,
+                      const nsIntRect *aDirtyRect);
+  NS_IMETHOD_(nsIFrame*) GetFrameForPoint(const nsPoint &aPoint);
   NS_IMETHOD_(nsRect) GetCoveredRegion();
   NS_IMETHOD UpdateCoveredRegion();
   NS_IMETHOD InitialUpdate();
@@ -116,20 +129,12 @@ public:
   NS_IMETHOD NotifyRedrawSuspended();
   NS_IMETHOD NotifyRedrawUnsuspended();
   NS_IMETHOD SetMatrixPropagation(PRBool aPropagate);
-  NS_IMETHOD SetOverrideCTM(nsIDOMSVGMatrix *aCTM);
-  virtual already_AddRefed<nsIDOMSVGMatrix> GetOverrideCTM();
-  NS_IMETHOD GetBBox(nsIDOMSVGRect **_retval);
+  virtual PRBool GetMatrixPropagation();
+  virtual gfxRect GetBBoxContribution(const gfxMatrix &aToBBoxUserspace);
   NS_IMETHOD_(PRBool) IsDisplayContainer() { return PR_TRUE; }
-  NS_IMETHOD_(PRBool) HasValidCoveredRect() { return PR_FALSE; }
+  NS_IMETHOD_(PRBool) HasValidCoveredRect() { return PR_TRUE; }
 
-  // foreignobject public methods
-  /**
-   * @param aPt a point in the twips coordinate system of the SVG outer frame
-   * Transforms the point to a point in this frame's twips coordinate system
-   */
-  nsPoint TransformPointFromOuter(nsPoint aPt);
-
-  already_AddRefed<nsIDOMSVGMatrix> GetCanvasTM();
+  gfxMatrix GetCanvasTM();
 
   // This method allows our nsSVGOuterSVGFrame to reflow us as necessary.
   void MaybeReflowFromOuterSVGFrame();
@@ -139,18 +144,25 @@ protected:
   void DoReflow();
   void RequestReflow(nsIPresShell::IntrinsicDirty aType);
   void UpdateGraphic();
-  already_AddRefed<nsIDOMSVGMatrix> GetTMIncludingOffset();
-  nsresult TransformPointFromOuterPx(float aX, float aY, nsPoint* aOut);
+
+  // Returns GetCanvasTM followed by a scale from CSS px to Dev px. Used for
+  // painting, because children expect to paint to device space, not userspace.
+  gfxMatrix GetCanvasTMForChildren();
+  void InvalidateDirtyRect(nsSVGOuterSVGFrame* aOuter,
+                           const nsRect& aRect, PRUint32 aFlags);
   void FlushDirtyRegion();
 
   // If width or height is less than or equal to zero we must disable rendering
   PRBool IsDisabled() const { return mRect.width <= 0 || mRect.height <= 0; }
 
   nsCOMPtr<nsIDOMSVGMatrix> mCanvasTM;
-  nsCOMPtr<nsIDOMSVGMatrix> mOverrideCTM;
-  nsRegion                  mDirtyRegion;
 
-  PRPackedBool mPropagateTransform;
+  // Areas dirtied by changes to decendents that are in our document
+  nsRegion mSameDocDirtyRegion;
+
+  // Areas dirtied by changes to sub-documents embedded by our decendents
+  nsRegion mSubDocDirtyRegion;
+
   PRPackedBool mInReflow;
 };
 

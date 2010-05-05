@@ -75,10 +75,8 @@ REQUIRES        += \
 endif
 
 ifdef MOZ_XUL
-DIRS		= tree grid
+PARALLEL_DIRS = tree/public tree/src grid
 endif
-
-EXPORTS		= nsIMenuParent.h
 
 CPPSRCS		= \
 		nsScrollBoxFrame.cpp \
@@ -111,7 +109,6 @@ CPPSRCS		+= \
 		nsLeafBoxFrame.cpp \
 		nsTextBoxFrame.cpp \
 		nsGroupBoxFrame.cpp \
-		nsFrameNavigator.cpp \
 		nsSplitterFrame.cpp \
 		nsDeckFrame.cpp \
 		nsProgressMeterFrame.cpp \
@@ -125,6 +122,7 @@ CPPSRCS		+= \
 		nsListBoxBodyFrame.cpp \
 		nsListItemFrame.cpp \
 		nsListBoxLayout.cpp \
+		nsXULLabelFrame.cpp \
 		nsXULPopupManager.cpp \
 		$(NULL)
 
@@ -140,6 +138,7 @@ include $(topsrcdir)/config/rules.mk
 LOCAL_INCLUDES	= \
 		-I$(srcdir) \
 		-I$(srcdir)/../../../base \
+		-I$(srcdir)/../../../../content/base/src \
 		-I$(srcdir)/../../../../content/events/src \
 		-I$(srcdir)/../../../generic \
 		-I$(srcdir)/../../../style \

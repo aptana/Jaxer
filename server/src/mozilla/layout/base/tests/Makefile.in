@@ -43,61 +43,158 @@ relativesrcdir	= layout/base/tests
 
 include $(DEPTH)/config/autoconf.mk
 
-ifeq (0,1) # false, since TestSpaceManager is broken
+DIRS += \
+  chrome \
+  $(NULL)
 
-MOZILLA_INTERNAL_API = 1
+# We can't use CPP_UNIT_TESTS for TestPoisonArea because libxpcom
+# (which it does not need) isn't available at this point in the build.
 
-REQUIRES	= xpcom \
-		  gfx \
-		  $(NULL)
-
-CPPSRCS		= \
-		TestSpaceManager.cpp \
+BARE_UNIT_TESTS = \
+		TestPoisonArea.cpp \
 		$(NULL)
 
-SIMPLE_PROGRAMS	= $(CPPSRCS:.cpp=$(BIN_SUFFIX))
-
-LOCAL_INCLUDES	= \
-		-I$(srcdir)/../src \
-		$(NULL)
-
-EXTRA_DSO_LIBS	= gkbase_s gkgfx
-
-LIBS		+= \
-		$(LIBS_DIR) \
-		$(EXTRA_DSO_LIBS) \
-		$(MOZ_UNICHARUTIL_LIBS) \
-		$(MOZ_COMPONENT_LIBS) \
-		$(MOZ_JS_LIBS) \
-		$(TK_LIBS) \
-		$(NULL)
-
-endif # false
+CPPSRCS += $(BARE_UNIT_TESTS)
+SIMPLE_PROGRAMS += $(BARE_UNIT_TESTS:.cpp=$(BIN_SUFFIX))
 
 include $(topsrcdir)/config/rules.mk
 
+
 DEFINES += -D_IMPL_NS_LAYOUT
 
-ifdef MOZ_MOCHITEST
-
 _TEST_FILES =	\
+		bug369950-subframe.xml \
+		bug495648.rdf \
+		decoration_line_rendering.js \
+		region_lib.js \
+		scrolling_helper.html \
 		test_bug66619.html \
+		test_bug114649.html \
+		$(warning test_bug369950.html disabled due to random orange; see bug 492575) \
+		test_bug370436.html \
 		test_bug386575.xhtml \
 		test_bug388019.html \
 		test_bug394057.html \
-		test_bug396024.html \
 		test_bug399284.html \
 		test_bug399951.html \
 		test_bug404209.xhtml \
 		test_bug416896.html \
 		test_bug420499.xul \
 		test_bug423523.html \
+		test_bug445810.html \
+		test_bug449781.html \
+		test_bug450930.xhtml \
+		test_bug458898.html \
+		test_bug465448.xul \
+		test_bug469170.html \
+		test_bug471126.html \
+		test_bug435293-scale.html \
+		test_bug435293-interaction.html \
+		test_bug435293-skew.html \
+		test_bug495648.xul \
+		test_bug514127.html \
+		test_bug518777.html \
+		test_scrolling.html \
 		$(NULL)
 # test_bug396024.html is currently disabled because it interacts badly with
 # the "You can't print-preview while the page is loading" dialog.
 # (See bug 407080)
 
+# Tests for bugs 441782 and 467672 don't pass reliably on Windows, because of bug 469208
+ifeq (,$(filter windows,$(MOZ_WIDGET_TOOLKIT)))
+_TEST_FILES += \
+		bidi_numeral_test.js \
+		test_bug332655-1.html \
+		test_bug332655-2.html \
+		test_bug441782-1a.html \
+		test_bug441782-1b.html \
+		test_bug441782-1c.html \
+		test_bug441782-1d.html \
+		test_bug441782-1e.html \
+		bug441782-1.html \
+		bug441782-1-ref.html \
+		test_bug441782-2a.html \
+		test_bug441782-2b.html \
+		test_bug441782-2c.html \
+		test_bug441782-2d.html \
+		test_bug441782-2e.html \
+		bug441782-2.html \
+		bug441782-2-ref.html \
+		test_bug441782-3a.html \
+		test_bug441782-3b.html \
+		test_bug441782-3c.html \
+		test_bug441782-3d.html \
+		test_bug441782-3e.html \
+		bug441782-3.html \
+		bug441782-3-ref.html \
+		test_bug441782-4a.html \
+		test_bug441782-4b.html \
+		test_bug441782-4c.html \
+		test_bug441782-4d.html \
+		test_bug441782-4e.html \
+		bug441782-4.html \
+		bug441782-4-ref.html \
+		test_bug441782-5a.html \
+		test_bug441782-5b.html \
+		test_bug441782-5c.html \
+		test_bug441782-5d.html \
+		test_bug441782-5e.html \
+		bug441782-5.html \
+		bug441782-5-ref.html \
+		test_bug467672-1a.html \
+		test_bug467672-1b.html \
+		test_bug467672-1c.html \
+		test_bug467672-1d.html \
+		test_bug467672-1e.html \
+		test_bug467672-1f.html \
+		test_bug467672-1g.html \
+		bug467672-1.html \
+		bug467672-1-ref.html \
+		test_bug467672-2a.html \
+		test_bug467672-2b.html \
+		test_bug467672-2c.html \
+		test_bug467672-2d.html \
+		test_bug467672-2e.html \
+		test_bug467672-2f.html \
+		test_bug467672-2g.html \
+		bug467672-2.html \
+		bug467672-2-ref.html \
+		test_bug467672-3a.html \
+		test_bug467672-3b.html \
+		test_bug467672-3c.html \
+		test_bug467672-3d.html \
+		test_bug467672-3e.html \
+		test_bug467672-3f.html \
+		test_bug467672-3g.html \
+		bug467672-3.html \
+		bug467672-3-ref.html \
+		test_bug467672-4a.html \
+		test_bug467672-4b.html \
+		test_bug467672-4c.html \
+		test_bug467672-4d.html \
+		test_bug467672-4e.html \
+		test_bug467672-4f.html \
+		test_bug467672-4g.html \
+		bug467672-4.html \
+		bug467672-4-ref.html \
+		test_bug467672-5a.html \
+		test_bug467672-5b.html \
+		test_bug467672-5c.html \
+		test_bug467672-5d.html \
+		test_bug467672-5e.html \
+		test_bug467672-5f.html \
+		test_bug467672-5g.html \
+		bug467672-5.html \
+		bug467672-5-ref.html \
+		test_bug499538-1.html \
+		$(NULL)
+endif
+
 libs:: $(_TEST_FILES)
 	$(INSTALL) $(foreach f,$^,"$f") $(DEPTH)/_tests/testing/mochitest/tests/$(relativesrcdir)
 
-endif # MOZ_MOCHITEST
+check::
+	@$(EXIT_ON_ERROR) \
+	  for f in $(subst .cpp,,$(BARE_UNIT_TESTS)); do \
+	    $(RUN_TEST_PROGRAM) $(DIST)/bin/$$f; \
+	  done

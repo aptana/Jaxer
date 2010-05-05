@@ -91,8 +91,7 @@ NS_IMETHODIMP nsScrollBoxObject::ScrollTo(PRInt32 x, PRInt32 y)
     return NS_ERROR_FAILURE;
 
   return scrollableView->ScrollTo(nsPresContext::CSSPixelsToAppUnits(x),
-                                  nsPresContext::CSSPixelsToAppUnits(y),
-                                  NS_SCROLL_PROPERTY_ALWAYS_BLIT);
+                                  nsPresContext::CSSPixelsToAppUnits(y), 0);
 }
 
 /* void scrollBy (in long dx, in long dy); */
@@ -126,8 +125,8 @@ static nsIFrame* GetScrolledBox(nsBoxObject* aScrollBox) {
   nsIFrame* frame = aScrollBox->GetFrame(PR_FALSE);
   if (!frame) 
     return nsnull;
-  nsIScrollableFrame* scrollFrame;
-  if (NS_FAILED(CallQueryInterface(frame, &scrollFrame))) {
+  nsIScrollableFrame* scrollFrame = do_QueryFrame(frame);
+  if (!scrollFrame) {
     NS_WARNING("nsIScrollBoxObject attached to something that's not a scroll frame!");
     return nsnull;
   }
@@ -228,10 +227,9 @@ NS_IMETHODIMP nsScrollBoxObject::ScrollByIndex(PRInt32 dindexes)
        // In the right-to-left case we scroll so that the right edge of the
        // selected child is scrolled to the right edge of the scrollbox.
        return scrollableView->ScrollTo((isLTR) ? rect.x :
-                                       rect.x + rect.width - frameWidth, 
-                                       cp.y, NS_SCROLL_PROPERTY_ALWAYS_BLIT);
+                                       rect.x + rect.width - frameWidth, cp.y, 0);
    else
-       return scrollableView->ScrollTo(cp.x, rect.y, NS_SCROLL_PROPERTY_ALWAYS_BLIT);
+       return scrollableView->ScrollTo(cp.x, rect.y, 0);
 }
 
 /* void scrollToLine (in long line); */
@@ -243,7 +241,7 @@ NS_IMETHODIMP nsScrollBoxObject::ScrollToLine(PRInt32 line)
   
   nscoord height = 0;
   scrollableView->GetLineHeight(&height);
-  scrollableView->ScrollTo(0,height*line, NS_SCROLL_PROPERTY_ALWAYS_BLIT);
+  scrollableView->ScrollTo(0, height * line, 0);
 
   return NS_OK;
 }
@@ -268,7 +266,7 @@ NS_IMETHODIMP nsScrollBoxObject::ScrollToElement(nsIDOMElement *child)
     nsRect rect, crect;
     nsCOMPtr<nsIDOMDocument> doc;
     child->GetOwnerDocument(getter_AddRefs(doc));
-    nsCOMPtr<nsIDOMNSDocument> nsDoc(do_QueryInterface(doc));
+    nsCOMPtr<nsIDocument> nsDoc(do_QueryInterface(doc));
     if(!nsDoc)
       return NS_ERROR_UNEXPECTED;
 
@@ -290,9 +288,9 @@ NS_IMETHODIMP nsScrollBoxObject::ScrollToElement(nsIDOMElement *child)
     nsPoint cp;
     scrollableView->GetScrollPosition(cp.x,cp.y);
 
-    GetOffsetRect(crect);    
-    crect.x = nsPresContext::CSSPixelsToAppUnits(crect.x);
-    crect.y = nsPresContext::CSSPixelsToAppUnits(crect.y);
+    nsIntRect prect;
+    GetOffsetRect(prect);
+    crect = prect.ToAppUnits(nsPresContext::AppUnitsPerCSSPixel());
     nscoord newx=cp.x, newy=cp.y;
 
     // we only scroll in the direction of the scrollbox orientation
@@ -303,7 +301,7 @@ NS_IMETHODIMP nsScrollBoxObject::ScrollToElement(nsIDOMElement *child)
         newy = rect.y - crect.y;
     }
     // scroll away
-    return scrollableView->ScrollTo(newx, newy, NS_SCROLL_PROPERTY_ALWAYS_BLIT);
+    return scrollableView->ScrollTo(newx, newy, 0);
 }
 
 /* void scrollToIndex (in long index); */
@@ -355,7 +353,7 @@ NS_IMETHODIMP nsScrollBoxObject::EnsureElementIsVisible(nsIDOMElement *child)
     nsCOMPtr<nsIDOMDocument> doc;
     // XXXbz sXBL/XBL2 issue -- which document?
     child->GetOwnerDocument(getter_AddRefs(doc));
-    nsCOMPtr<nsIDOMNSDocument> nsDoc(do_QueryInterface(doc));
+    nsCOMPtr<nsIDocument> nsDoc(do_QueryInterface(doc));
     if(!nsDoc)
         return NS_ERROR_UNEXPECTED;
 
@@ -390,11 +388,9 @@ NS_IMETHODIMP nsScrollBoxObject::EnsureElementIsVisible(nsIDOMElement *child)
     // get our current info
     nsPoint cp;
     scrollableView->GetScrollPosition(cp.x,cp.y);
-    GetOffsetRect(crect);    
-    crect.x = nsPresContext::CSSPixelsToAppUnits(crect.x);
-    crect.y = nsPresContext::CSSPixelsToAppUnits(crect.y);
-    crect.width = nsPresContext::CSSPixelsToAppUnits(crect.width);
-    crect.height = nsPresContext::CSSPixelsToAppUnits(crect.height);
+    nsIntRect prect;
+    GetOffsetRect(prect);
+    crect = prect.ToAppUnits(nsPresContext::AppUnitsPerCSSPixel());
 
     nscoord newx=cp.x, newy=cp.y;
 
@@ -414,7 +410,7 @@ NS_IMETHODIMP nsScrollBoxObject::EnsureElementIsVisible(nsIDOMElement *child)
     }
     
     // scroll away
-    return scrollableView->ScrollTo(newx, newy, NS_SCROLL_PROPERTY_ALWAYS_BLIT);
+    return scrollableView->ScrollTo(newx, newy, 0);
 }
 
 /* void ensureIndexIsVisible (in long index); */
@@ -437,8 +433,8 @@ nsScrollBoxObject::GetScrollableView()
   if (!frame) 
     return nsnull;
   
-  nsIScrollableFrame* scrollFrame;
-  if (NS_FAILED(CallQueryInterface(frame, &scrollFrame)))
+  nsIScrollableFrame* scrollFrame = do_QueryFrame(frame);
+  if (!scrollFrame)
     return nsnull;
 
   nsIScrollableView* scrollingView = scrollFrame->GetScrollableView();

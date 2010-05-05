@@ -45,22 +45,29 @@
 #include "nsIServiceManager.h"
 #include "nsIDOMHTMLInputElement.h"
 #include "nsDisplayList.h"
+#include "nsCSSAnonBoxes.h"
+#include "nsIDOMNSHTMLInputElement.h"
 
 static void
-PaintCheckMark(nsIRenderingContext& aRenderingContext,
-               const nsRect& aRect)
+PaintCheckMark(nsIFrame* aFrame,
+               nsIRenderingContext* aCtx,
+               const nsRect& aDirtyRect,
+               nsPoint aPt)
 {
+  nsRect rect(aPt, aFrame->GetSize());
+  rect.Deflate(aFrame->GetUsedBorderAndPadding());
+
   // Points come from the coordinates on a 7X7 unit box centered at 0,0
   const PRInt32 checkPolygonX[] = { -3, -1,  3,  3, -1, -3 };
   const PRInt32 checkPolygonY[] = { -1,  1, -3, -1,  3,  1 };
   const PRInt32 checkNumPoints = sizeof(checkPolygonX) / sizeof(PRInt32);
-  const PRInt32 checkSize      = 9; // This is value is determined by adding 2
-                                    // units to pad the 7x7 unit checkmark
+  const PRInt32 checkSize      = 9; // 2 units of padding on either side
+                                    // of the 7x7 unit checkmark
 
   // Scale the checkmark based on the smallest dimension
-  nscoord paintScale = PR_MIN(aRect.width, aRect.height) / checkSize;
-  nsPoint paintCenter(aRect.x + aRect.width  / 2,
-                      aRect.y + aRect.height / 2);
+  nscoord paintScale = PR_MIN(rect.width, rect.height) / checkSize;
+  nsPoint paintCenter(rect.x + rect.width  / 2,
+                      rect.y + rect.height / 2);
 
   nsPoint paintPolygon[checkNumPoints];
   // Convert checkmark for screen rendering
@@ -70,15 +77,35 @@ PaintCheckMark(nsIRenderingContext& aRenderingContext,
                                       checkPolygonY[polyIndex] * paintScale);
   }
 
-  aRenderingContext.FillPolygon(paintPolygon, checkNumPoints);
+  aCtx->SetColor(aFrame->GetStyleColor()->mColor);
+  aCtx->FillPolygon(paintPolygon, checkNumPoints);
+}
+
+static void
+PaintIndeterminateMark(nsIFrame* aFrame,
+                       nsIRenderingContext* aCtx,
+                       const nsRect& aDirtyRect,
+                       nsPoint aPt)
+{
+  nsRect rect(aPt, aFrame->GetSize());
+  rect.Deflate(aFrame->GetUsedBorderAndPadding());
+
+  rect.y += (rect.height - rect.height/4) / 2;
+  rect.height /= 4;
+
+  aCtx->SetColor(aFrame->GetStyleColor()->mColor);
+  aCtx->FillRect(rect);
 }
 
 //------------------------------------------------------------
 nsIFrame*
-NS_NewGfxCheckboxControlFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
+NS_NewGfxCheckboxControlFrame(nsIPresShell* aPresShell,
+                              nsStyleContext* aContext)
 {
   return new (aPresShell) nsGfxCheckboxControlFrame(aContext);
 }
+
+NS_IMPL_FRAMEARENA_HELPERS(nsGfxCheckboxControlFrame)
 
 
 //------------------------------------------------------------
@@ -93,128 +120,33 @@ nsGfxCheckboxControlFrame::~nsGfxCheckboxControlFrame()
 }
 
 
-//----------------------------------------------------------------------
-// nsISupports
-//----------------------------------------------------------------------
-// Frames are not refcounted, no need to AddRef
-NS_IMETHODIMP
-nsGfxCheckboxControlFrame::QueryInterface(const nsIID& aIID, void** aInstancePtr)
-{
-  NS_PRECONDITION(aInstancePtr, "null out param");
-
-  if (aIID.Equals(NS_GET_IID(nsICheckboxControlFrame))) {
-    *aInstancePtr = static_cast<nsICheckboxControlFrame*>(this);
-    return NS_OK;
-  }
-
-  return nsFormControlFrame::QueryInterface(aIID, aInstancePtr);
-}
+NS_QUERYFRAME_HEAD(nsGfxCheckboxControlFrame)
+  NS_QUERYFRAME_ENTRY(nsICheckboxControlFrame)
+NS_QUERYFRAME_TAIL_INHERITING(nsFormControlFrame)
 
 #ifdef ACCESSIBILITY
-NS_IMETHODIMP nsGfxCheckboxControlFrame::GetAccessible(nsIAccessible** aAccessible)
+NS_IMETHODIMP
+nsGfxCheckboxControlFrame::GetAccessible(nsIAccessible** aAccessible)
 {
-  nsCOMPtr<nsIAccessibilityService> accService = do_GetService("@mozilla.org/accessibilityService;1");
+  nsCOMPtr<nsIAccessibilityService> accService
+    = do_GetService("@mozilla.org/accessibilityService;1");
 
   if (accService) {
-    return accService->CreateHTMLCheckboxAccessible(static_cast<nsIFrame*>(this), aAccessible);
+    return accService->CreateHTMLCheckboxAccessible(
+      static_cast<nsIFrame*>(this), aAccessible);
   }
 
   return NS_ERROR_FAILURE;
 }
 #endif
 
-//--------------------------------------------------------------
-NS_IMETHODIMP
-nsGfxCheckboxControlFrame::SetCheckboxFaceStyleContext(nsStyleContext *aCheckboxFaceStyleContext)
-{
-  mCheckButtonFaceStyle = aCheckboxFaceStyleContext;
-  return NS_OK;
-}
-
-
-//--------------------------------------------------------------
-nsStyleContext*
-nsGfxCheckboxControlFrame::GetAdditionalStyleContext(PRInt32 aIndex) const
-{
-  switch (aIndex) {
-  case NS_GFX_CHECKBOX_CONTROL_FRAME_FACE_CONTEXT_INDEX:
-    return mCheckButtonFaceStyle;
-    break;
-  default:
-    return nsnull;
-  }
-}
-
-
-
-//--------------------------------------------------------------
-void
-nsGfxCheckboxControlFrame::SetAdditionalStyleContext(PRInt32 aIndex, 
-                                                     nsStyleContext* aStyleContext)
-{
-  switch (aIndex) {
-  case NS_GFX_CHECKBOX_CONTROL_FRAME_FACE_CONTEXT_INDEX:
-    mCheckButtonFaceStyle = aStyleContext;
-    break;
-  }
-}
-
-
 //------------------------------------------------------------
 NS_IMETHODIMP
 nsGfxCheckboxControlFrame::OnChecked(nsPresContext* aPresContext,
                                      PRBool aChecked)
 {
-  Invalidate(GetOverflowRect(), PR_FALSE);
+  InvalidateOverflowRect();
   return NS_OK;
-}
-
-static void PaintCheckMarkFromStyle(nsIFrame* aFrame,
-     nsIRenderingContext* aCtx, const nsRect& aDirtyRect, nsPoint aPt) {
-  static_cast<nsGfxCheckboxControlFrame*>(aFrame)
-    ->PaintCheckBoxFromStyle(*aCtx, aPt, aDirtyRect);
-}
-
-class nsDisplayCheckMark : public nsDisplayItem {
-public:
-  nsDisplayCheckMark(nsGfxCheckboxControlFrame* aFrame)
-    : nsDisplayItem(aFrame) {
-    MOZ_COUNT_CTOR(nsDisplayCheckMark);
-  }
-#ifdef NS_BUILD_REFCNT_LOGGING
-  virtual ~nsDisplayCheckMark() {
-    MOZ_COUNT_DTOR(nsDisplayCheckMark);
-  }
-#endif
-
-  virtual void Paint(nsDisplayListBuilder* aBuilder, nsIRenderingContext* aCtx,
-     const nsRect& aDirtyRect);
-  NS_DISPLAY_DECL_NAME("CheckMark")
-};
-
-void
-nsDisplayCheckMark::Paint(nsDisplayListBuilder* aBuilder,
-     nsIRenderingContext* aCtx, const nsRect& aDirtyRect) {
-  static_cast<nsGfxCheckboxControlFrame*>(mFrame)->
-    PaintCheckBox(*aCtx, aBuilder->ToReferenceFrame(mFrame), aDirtyRect);
-}
-
-
-//------------------------------------------------------------
-void
-nsGfxCheckboxControlFrame::PaintCheckBox(nsIRenderingContext& aRenderingContext,
-                                         nsPoint aPt,
-                                         const nsRect& aDirtyRect)
-{
-  // REVIEW: moved the mAppearance test out so we avoid constructing
-  // a display item if it's not needed
-  nsRect checkRect(aPt, mRect.Size());
-  checkRect.Deflate(GetUsedBorderAndPadding());
-
-  const nsStyleColor* color = GetStyleColor();
-  aRenderingContext.SetColor(color->mColor);
-
-  PaintCheckMark(aRenderingContext, checkRect);
 }
 
 //------------------------------------------------------------
@@ -223,61 +155,39 @@ nsGfxCheckboxControlFrame::BuildDisplayList(nsDisplayListBuilder*   aBuilder,
                                             const nsRect&           aDirtyRect,
                                             const nsDisplayListSet& aLists)
 {
-  nsresult rv = nsFormControlFrame::BuildDisplayList(aBuilder, aDirtyRect, aLists);
+  nsresult rv = nsFormControlFrame::BuildDisplayList(aBuilder, aDirtyRect,
+                                                     aLists);
   NS_ENSURE_SUCCESS(rv, rv);
   
   // Get current checked state through content model.
-  if (!GetCheckboxState() || !IsVisibleForPainting(aBuilder))
+  if ((!IsChecked() && !IsIndeterminate()) || !IsVisibleForPainting(aBuilder))
     return NS_OK;   // we're not checked or not visible, nothing to paint.
     
   if (IsThemed())
     return NS_OK; // No need to paint the checkmark. The theme will do it.
 
-  // Paint the checkmark
-  if (mCheckButtonFaceStyle) {
-    // This code actually works now; not sure how useful it'll be
-    // (The putpose is to allow the UA stylesheet can substitute its own
-    //  checkmark for the default one)
-    const nsStyleBackground* myBackground = mCheckButtonFaceStyle->GetStyleBackground();
-    if (!myBackground->IsTransparent())
-      return aLists.Content()->AppendNewToTop(new (aBuilder)
-          nsDisplayGeneric(this, PaintCheckMarkFromStyle, "CheckMarkFromStyle"));
-  }
-
-  return aLists.Content()->AppendNewToTop(new (aBuilder) nsDisplayCheckMark(this));
-}
-
-void
-nsGfxCheckboxControlFrame::PaintCheckBoxFromStyle(
-    nsIRenderingContext& aRenderingContext, nsPoint aPt, const nsRect& aDirtyRect) {
-  const nsStylePadding* myPadding = mCheckButtonFaceStyle->GetStylePadding();
-  const nsStylePosition* myPosition = mCheckButtonFaceStyle->GetStylePosition();
-  const nsStyleBorder* myBorder = mCheckButtonFaceStyle->GetStyleBorder();
-  const nsStyleBackground* myBackground = mCheckButtonFaceStyle->GetStyleBackground();
-
-  NS_ASSERTION(myPosition->mWidth.GetUnit() == eStyleUnit_Coord &&
-               myPosition->mHeight.GetUnit() == eStyleUnit_Coord,
-               "styles for :-moz-checkbox are incorrect or author-accessible");
-  nscoord width = myPosition->mWidth.GetCoordValue();
-  nscoord height = myPosition->mHeight.GetCoordValue();
-  // Position the button centered within the control's rectangle.
-  nscoord x = (mRect.width - width) / 2;
-  nscoord y = (mRect.height - height) / 2;
-  nsRect rect(aPt.x + x, aPt.y + y, width, height);
-
-  nsCSSRendering::PaintBackgroundWithSC(PresContext(), aRenderingContext,
-                                        this, aDirtyRect, rect, *myBackground,
-                                        *myBorder, *myPadding, PR_FALSE);
-  nsCSSRendering::PaintBorder(PresContext(), aRenderingContext, this,
-                              aDirtyRect, rect, *myBorder, mCheckButtonFaceStyle, 0);
+  return aLists.Content()->AppendNewToTop(new (aBuilder)
+    nsDisplayGeneric(this,
+                     IsIndeterminate()
+                     ? PaintIndeterminateMark : PaintCheckMark,
+                     "CheckedCheckbox"));
 }
 
 //------------------------------------------------------------
 PRBool
-nsGfxCheckboxControlFrame::GetCheckboxState ( )
+nsGfxCheckboxControlFrame::IsChecked()
 {
   nsCOMPtr<nsIDOMHTMLInputElement> elem(do_QueryInterface(mContent));
   PRBool retval = PR_FALSE;
   elem->GetChecked(&retval);
+  return retval;
+}
+
+PRBool
+nsGfxCheckboxControlFrame::IsIndeterminate()
+{
+  nsCOMPtr<nsIDOMNSHTMLInputElement> elem(do_QueryInterface(mContent));
+  PRBool retval = PR_FALSE;
+  elem->GetIndeterminate(&retval);
   return retval;
 }

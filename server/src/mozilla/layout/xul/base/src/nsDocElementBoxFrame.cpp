@@ -39,7 +39,6 @@
 #include "nsCSSRendering.h"
 #include "nsIDocument.h"
 #include "nsPresContext.h"
-#include "nsIWidget.h"
 #include "nsPageFrame.h"
 #include "nsIRenderingContext.h"
 #include "nsGUIEvent.h"
@@ -72,7 +71,8 @@ public:
   nsDocElementBoxFrame(nsIPresShell* aShell, nsStyleContext* aContext)
     :nsBoxFrame(aShell, aContext, PR_TRUE) {}
 
-  NS_DECL_ISUPPORTS_INHERITED
+  NS_DECL_QUERYFRAME
+  NS_DECL_FRAMEARENA_HELPERS
 
   // nsIAnonymousContentCreator
   virtual nsresult CreateAnonymousContent(nsTArray<nsIContent*>& aElements);
@@ -101,6 +101,8 @@ NS_NewDocElementBoxFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
   return new (aPresShell) nsDocElementBoxFrame (aPresShell, aContext);
 }
 
+NS_IMPL_FRAMEARENA_HELPERS(nsDocElementBoxFrame)
+
 void
 nsDocElementBoxFrame::Destroy()
 {
@@ -121,21 +123,20 @@ nsDocElementBoxFrame::CreateAnonymousContent(nsTArray<nsIContent*>& aElements)
 
   // create the top-secret popupgroup node. shhhhh!
   nsCOMPtr<nsINodeInfo> nodeInfo;
-  nsresult rv = nodeInfoManager->GetNodeInfo(nsGkAtoms::popupgroup,
-                                             nsnull, kNameSpaceID_XUL,
-                                             getter_AddRefs(nodeInfo));
-  NS_ENSURE_SUCCESS(rv, rv);
+  nodeInfo = nodeInfoManager->GetNodeInfo(nsGkAtoms::popupgroup,
+                                          nsnull, kNameSpaceID_XUL);
+  NS_ENSURE_TRUE(nodeInfo, NS_ERROR_OUT_OF_MEMORY);
 
-  rv = NS_NewXULElement(getter_AddRefs(mPopupgroupContent), nodeInfo);
+  nsresult rv = NS_NewXULElement(getter_AddRefs(mPopupgroupContent), nodeInfo);
   NS_ENSURE_SUCCESS(rv, rv);
 
   if (!aElements.AppendElement(mPopupgroupContent))
     return NS_ERROR_OUT_OF_MEMORY;
 
   // create the top-secret default tooltip node. shhhhh!
-  rv = nodeInfoManager->GetNodeInfo(nsGkAtoms::tooltip, nsnull,
-                                    kNameSpaceID_XUL, getter_AddRefs(nodeInfo));
-  NS_ENSURE_SUCCESS(rv, rv);
+  nodeInfo = nodeInfoManager->GetNodeInfo(nsGkAtoms::tooltip, nsnull,
+                                          kNameSpaceID_XUL);
+  NS_ENSURE_TRUE(nodeInfo, NS_ERROR_OUT_OF_MEMORY);
 
   rv = NS_NewXULElement(getter_AddRefs(mTooltipContent), nodeInfo);
   NS_ENSURE_SUCCESS(rv, rv);
@@ -149,21 +150,9 @@ nsDocElementBoxFrame::CreateAnonymousContent(nsTArray<nsIContent*>& aElements)
   return NS_OK;
 }
 
-NS_IMETHODIMP_(nsrefcnt) 
-nsDocElementBoxFrame::AddRef(void)
-{
-  return NS_OK;
-}
-
-NS_IMETHODIMP_(nsrefcnt)
-nsDocElementBoxFrame::Release(void)
-{
-  return NS_OK;
-}
-
-NS_INTERFACE_MAP_BEGIN(nsDocElementBoxFrame)
-  NS_INTERFACE_MAP_ENTRY(nsIAnonymousContentCreator)
-NS_INTERFACE_MAP_END_INHERITING(nsBoxFrame)
+NS_QUERYFRAME_HEAD(nsDocElementBoxFrame)
+  NS_QUERYFRAME_ENTRY(nsIAnonymousContentCreator)
+NS_QUERYFRAME_TAIL_INHERITING(nsBoxFrame)
 
 #ifdef DEBUG
 NS_IMETHODIMP

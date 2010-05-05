@@ -37,28 +37,40 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/* class to notify frames of background image loads */
+/* class to notify frames of background and border image loads */
 
 #include "nsStubImageDecoderObserver.h"
 
-class nsPresContext;
 class nsIFrame;
 class nsIURI;
 
 #include "imgIRequest.h"
 #include "nsCOMPtr.h"
+#include "nsAutoPtr.h"
 
+/**
+ * Image loaders pass notifications for background and border image
+ * loading and animation on to the frames.
+ *
+ * Each frame's image loaders form a linked list.
+ */
 class nsImageLoader : public nsStubImageDecoderObserver
 {
-public:
-  nsImageLoader();
+private:
+  nsImageLoader(nsIFrame *aFrame, PRBool aReflowOnLoad,
+                nsImageLoader *aNextLoader);
   virtual ~nsImageLoader();
+
+public:
+  static already_AddRefed<nsImageLoader>
+    Create(nsIFrame *aFrame, imgIRequest *aRequest,
+           PRBool aReflowOnLoad, nsImageLoader *aNextLoader);
 
   NS_DECL_ISUPPORTS
 
   // imgIDecoderObserver (override nsStubImageDecoderObserver)
   NS_IMETHOD OnStartContainer(imgIRequest *aRequest, imgIContainer *aImage);
-  NS_IMETHOD OnStopFrame(imgIRequest *aRequest, gfxIImageFrame *aFrame);
+  NS_IMETHOD OnStopFrame(imgIRequest *aRequest, PRUint32 aFrame);
   // Do not override OnDataAvailable since background images are not
   // displayed incrementally; they are displayed after the entire image
   // has been loaded.
@@ -66,22 +78,19 @@ public:
   // incrementally in nsImageFrame.cpp.
 
   // imgIContainerObserver (override nsStubImageDecoderObserver)
-  NS_IMETHOD FrameChanged(imgIContainer *aContainer, gfxIImageFrame *newframe,
-                          nsRect * dirtyRect);
-
-  void Init(nsIFrame *aFrame, nsPresContext *aPresContext);
-  nsresult Load(imgIRequest *aImage);
+  NS_IMETHOD FrameChanged(imgIContainer *aContainer, nsIntRect *dirtyRect);
 
   void Destroy();
 
-  nsIFrame *GetFrame() { return mFrame; }
   imgIRequest *GetRequest() { return mRequest; }
+  nsImageLoader *GetNextLoader() { return mNextLoader; }
 
 private:
+  nsresult Load(imgIRequest *aImage);
   void RedrawDirtyFrame(const nsRect* aDamageRect);
 
-private:
   nsIFrame *mFrame;
-  nsPresContext *mPresContext;
   nsCOMPtr<imgIRequest> mRequest;
+  PRBool mReflowOnLoad;
+  nsRefPtr<nsImageLoader> mNextLoader;
 };

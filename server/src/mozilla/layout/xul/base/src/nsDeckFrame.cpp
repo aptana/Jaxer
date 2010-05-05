@@ -56,26 +56,22 @@
 #include "nsBoxLayoutState.h"
 #include "nsStackLayout.h"
 #include "nsDisplayList.h"
+#include "nsHTMLContainerFrame.h"
 
 nsIFrame*
-NS_NewDeckFrame(nsIPresShell* aPresShell, nsStyleContext* aContext, nsIBoxLayout* aLayoutManager)
+NS_NewDeckFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
 {
-  return new (aPresShell) nsDeckFrame(aPresShell, aContext, aLayoutManager);
-} // NS_NewDeckFrame
+  return new (aPresShell) nsDeckFrame(aPresShell, aContext);
+}
+
+NS_IMPL_FRAMEARENA_HELPERS(nsDeckFrame)
 
 
-nsDeckFrame::nsDeckFrame(nsIPresShell* aPresShell,
-                         nsStyleContext* aContext,
-                         nsIBoxLayout* aLayoutManager)
+nsDeckFrame::nsDeckFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
   : nsBoxFrame(aPresShell, aContext), mIndex(0)
 {
-     // if no layout manager specified us the static sprocket layout
-  nsCOMPtr<nsIBoxLayout> layout = aLayoutManager;
-
-  if (!layout) {
-    NS_NewStackLayout(aPresShell, layout);
-  }
-
+  nsCOMPtr<nsIBoxLayout> layout;
+  NS_NewStackLayout(aPresShell, layout);
   SetLayoutManager(layout);
 }
 
@@ -112,6 +108,39 @@ nsDeckFrame::Init(nsIContent*     aContent,
   mIndex = GetSelectedIndex();
 
   return rv;
+}
+
+static void
+CreateViewsForFrames(const nsFrameList& aFrames)
+{
+  for (nsFrameList::Enumerator f(aFrames); !f.AtEnd(); f.Next()) {
+    nsHTMLContainerFrame::CreateViewForFrame(f.get(), PR_TRUE);
+  }
+}
+
+NS_IMETHODIMP
+nsDeckFrame::SetInitialChildList(nsIAtom*        aListName,
+                                 nsFrameList&    aChildList)
+{
+  CreateViewsForFrames(aChildList);
+  return nsBoxFrame::SetInitialChildList(aListName, aChildList);
+}
+
+NS_IMETHODIMP
+nsDeckFrame::AppendFrames(nsIAtom*        aListName,
+                          nsFrameList&    aFrameList)
+{
+  CreateViewsForFrames(aFrameList);
+  return nsBoxFrame::AppendFrames(aListName, aFrameList);
+}
+
+NS_IMETHODIMP
+nsDeckFrame::InsertFrames(nsIAtom*        aListName,
+                          nsIFrame*       aPrevFrame,
+                          nsFrameList&    aFrameList)
+{
+  CreateViewsForFrames(aFrameList);
+  return nsBoxFrame::InsertFrames(aListName, aPrevFrame, aFrameList);
 }
 
 void

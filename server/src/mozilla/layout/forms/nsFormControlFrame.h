@@ -49,7 +49,6 @@
 class nsFormControlFrame : public nsLeafFrame,
                            public nsIFormControlFrame
 {
-
 public:
   /**
     * Main constructor
@@ -64,7 +63,8 @@ public:
       ~(nsIFrame::eReplaced | nsIFrame::eReplacedContainsBlock));
   }
 
-  NS_IMETHOD QueryInterface(const nsIID& aIID, void** aInstancePtr);
+  NS_DECL_QUERYFRAME
+  NS_DECL_FRAMEARENA_HELPERS
 
   /** 
     * Respond to a gui event
@@ -124,11 +124,6 @@ protected:
     */
 
   void GetCurrentCheckState(PRBool* aState);
-
-private:
-  NS_IMETHOD_(nsrefcnt) AddRef() { return NS_OK; }
-  NS_IMETHOD_(nsrefcnt) Release() { return NS_OK; }
-
 };
 
 #endif

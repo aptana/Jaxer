@@ -46,8 +46,45 @@
 #include "nsHTMLCanvasFrame.h"
 #include "nsICanvasElement.h"
 #include "nsDisplayList.h"
+#include "nsLayoutUtils.h"
 
 #include "nsTransform2D.h"
+
+#include "gfxContext.h"
+
+class nsDisplayItemCanvas : public nsDisplayItem {
+public:
+  nsDisplayItemCanvas(nsIFrame* aFrame)
+    : nsDisplayItem(aFrame)
+  {
+    MOZ_COUNT_CTOR(nsDisplayItemCanvas);
+  }
+#ifdef NS_BUILD_REFCNT_LOGGING
+  virtual ~nsDisplayItemCanvas() {
+    MOZ_COUNT_DTOR(nsDisplayItemCanvas);
+  }
+#endif
+
+  NS_DISPLAY_DECL_NAME("nsDisplayItemCanvas")
+  
+  virtual void Paint(nsDisplayListBuilder* aBuilder,
+                     nsIRenderingContext* aCtx) {
+    nsHTMLCanvasFrame* f = static_cast<nsHTMLCanvasFrame*>(GetUnderlyingFrame());
+    f->PaintCanvas(*aCtx, mVisibleRect, aBuilder->ToReferenceFrame(f));
+  }
+
+  virtual PRBool IsOpaque(nsDisplayListBuilder* aBuilder) {
+    nsIFrame* f = GetUnderlyingFrame();
+    nsCOMPtr<nsICanvasElement> canvas(do_QueryInterface(f->GetContent()));
+    return canvas->GetIsOpaque();
+  }
+
+  virtual nsRect GetBounds(nsDisplayListBuilder* aBuilder) {
+    nsHTMLCanvasFrame* f = static_cast<nsHTMLCanvasFrame*>(GetUnderlyingFrame());
+    return f->GetInnerArea() + aBuilder->ToReferenceFrame(f);
+  }
+};
+
 
 nsIFrame*
 NS_NewHTMLCanvasFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
@@ -55,11 +92,13 @@ NS_NewHTMLCanvasFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
   return new (aPresShell) nsHTMLCanvasFrame(aContext);
 }
 
+NS_IMPL_FRAMEARENA_HELPERS(nsHTMLCanvasFrame)
+
 nsHTMLCanvasFrame::~nsHTMLCanvasFrame()
 {
 }
 
-nsSize
+nsIntSize
 nsHTMLCanvasFrame::GetCanvasSize()
 {
   PRUint32 w, h;
@@ -76,7 +115,7 @@ nsHTMLCanvasFrame::GetCanvasSize()
     h = w = 1;
   }
 
-  return nsSize(w, h);
+  return nsIntSize(w, h);
 }
 
 /* virtual */ nscoord
@@ -102,7 +141,9 @@ nsHTMLCanvasFrame::GetPrefWidth(nsIRenderingContext *aRenderingContext)
 /* virtual */ nsSize
 nsHTMLCanvasFrame::GetIntrinsicRatio()
 {
-  return GetCanvasSize();
+  nsIntSize size(GetCanvasSize());
+  return nsSize(nsPresContext::CSSPixelsToAppUnits(size.width),
+                nsPresContext::CSSPixelsToAppUnits(size.height));
 }
 
 /* virtual */ nsSize
@@ -111,13 +152,13 @@ nsHTMLCanvasFrame::ComputeSize(nsIRenderingContext *aRenderingContext,
                                nsSize aMargin, nsSize aBorder, nsSize aPadding,
                                PRBool aShrinkWrap)
 {
-  nsSize size = GetCanvasSize();
+  nsIntSize size = GetCanvasSize();
 
   IntrinsicSize intrinsicSize;
   intrinsicSize.width.SetCoordValue(nsPresContext::CSSPixelsToAppUnits(size.width));
   intrinsicSize.height.SetCoordValue(nsPresContext::CSSPixelsToAppUnits(size.height));
 
-  nsSize& intrinsicRatio = size; // won't actually be used
+  nsSize intrinsicRatio = GetIntrinsicRatio(); // won't actually be used
 
   return nsLayoutUtils::ComputeSizeWithIntrinsicDimensions(
                             aRenderingContext, this,
@@ -160,7 +201,7 @@ nsHTMLCanvasFrame::Reflow(nsPresContext*           aPresContext,
   FinishAndStoreOverflow(&aMetrics);
 
   if (mRect.width != aMetrics.width || mRect.height != aMetrics.height) {
-    Invalidate(nsRect(0, 0, mRect.width, mRect.height), PR_FALSE);
+    Invalidate(nsRect(0, 0, mRect.width, mRect.height));
   }
 
   NS_FRAME_TRACE(NS_FRAME_TRACE_CALLS,
@@ -187,6 +228,7 @@ void
 nsHTMLCanvasFrame::PaintCanvas(nsIRenderingContext& aRenderingContext,
                                const nsRect& aDirtyRect, nsPoint aPt) 
 {
+  nsPresContext *presContext = PresContext();
   nsRect inner = GetInnerArea() + aPt;
 
   nsCOMPtr<nsICanvasElement> canvas(do_QueryInterface(GetContent()));
@@ -197,40 +239,22 @@ nsHTMLCanvasFrame::PaintCanvas(nsIRenderingContext& aRenderingContext,
   if (inner.width == 0 || inner.height == 0)
     return;
 
-  nsSize canvasSize = GetCanvasSize();
-  nsSize sizeAppUnits(PresContext()->DevPixelsToAppUnits(canvasSize.width),
-                      PresContext()->DevPixelsToAppUnits(canvasSize.height));
+  gfxRect devInner(presContext->AppUnitsToGfxUnits(inner));
 
-  // XXXvlad clip to aDirtyRect!
+  nsIntSize sizeCSSPixels = GetCanvasSize();
+  gfxFloat sx = devInner.size.width / (gfxFloat) sizeCSSPixels.width;
+  gfxFloat sy = devInner.size.height / (gfxFloat) sizeCSSPixels.height;
 
-  if (inner.Size() != sizeAppUnits)
-  {
-    float sx = inner.width / (float) sizeAppUnits.width;
-    float sy = inner.height / (float) sizeAppUnits.height;
+  gfxContext *ctx = aRenderingContext.ThebesContext();
 
-    aRenderingContext.PushState();
-    aRenderingContext.Translate(inner.x, inner.y);
-    aRenderingContext.Scale(sx, sy);
+  ctx->Save();
 
-    canvas->RenderContexts(aRenderingContext.ThebesContext());
+  ctx->Translate(devInner.pos);
+  ctx->Scale(sx, sy);
 
-    aRenderingContext.PopState();
-  } else {
-    //nsIRenderingContext::AutoPushTranslation(&aRenderingContext, px, py);
+  canvas->RenderContexts(ctx, nsLayoutUtils::GetGraphicsFilterForFrame(this));
 
-    aRenderingContext.PushState();
-    aRenderingContext.Translate(inner.x, inner.y);
-
-    canvas->RenderContexts(aRenderingContext.ThebesContext());
-
-    aRenderingContext.PopState();
-  }
-}
-
-static void PaintCanvas(nsIFrame* aFrame, nsIRenderingContext* aCtx,
-                        const nsRect& aDirtyRect, nsPoint aPt)
-{
-  static_cast<nsHTMLCanvasFrame*>(aFrame)->PaintCanvas(*aCtx, aDirtyRect, aPt);
+  ctx->Restore();
 }
 
 NS_IMETHODIMP
@@ -245,22 +269,11 @@ nsHTMLCanvasFrame::BuildDisplayList(nsDisplayListBuilder*   aBuilder,
   NS_ENSURE_SUCCESS(rv, rv);
 
   rv = aLists.Content()->AppendNewToTop(new (aBuilder)
-         nsDisplayGeneric(this, ::PaintCanvas, "Canvas"));
+         nsDisplayItemCanvas(this));
   NS_ENSURE_SUCCESS(rv, rv);
 
   return DisplaySelectionOverlay(aBuilder, aLists,
                                  nsISelectionDisplay::DISPLAY_IMAGES);
-}
-
-NS_IMETHODIMP  
-nsHTMLCanvasFrame::GetContentForEvent(nsPresContext* aPresContext,
-                                      nsEvent* aEvent,
-                                      nsIContent** aContent)
-{
-  NS_ENSURE_ARG_POINTER(aContent);
-  *aContent = GetContent();
-  NS_IF_ADDREF(*aContent);
-  return NS_OK;
 }
 
 nsIAtom*

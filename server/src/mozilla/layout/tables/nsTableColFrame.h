@@ -40,8 +40,8 @@
 #include "nscore.h"
 #include "nsContainerFrame.h"
 #include "nsTablePainter.h"
+#include "nsTArray.h"
 
-class nsVoidArray;
 class nsTableCellFrame;
 
 enum nsTableColType {
@@ -53,6 +53,7 @@ enum nsTableColType {
 
 class nsTableColFrame : public nsSplittableFrame {
 public:
+  NS_DECL_FRAMEARENA_HELPERS
 
   enum {eWIDTH_SOURCE_NONE          =0,   // no cell has contributed to the width style
         eWIDTH_SOURCE_CELL          =1,   // a cell specified a width
@@ -69,16 +70,14 @@ public:
     */
   friend nsTableColFrame* NS_NewTableColFrame(nsIPresShell* aPresShell,
                                               nsStyleContext*  aContext);
-
+  /** @see nsIFrame::DidSetStyleContext */
+  virtual void DidSetStyleContext(nsStyleContext* aOldStyleContext);
+  
   PRInt32 GetColIndex() const;
   
   void SetColIndex (PRInt32 aColIndex);
 
   nsTableColFrame* GetNextCol() const;
-
-  NS_IMETHOD Init(nsIContent*      aContent,
-                  nsIFrame*        aParent,
-                  nsIFrame*        aPrevInFlow);
 
   NS_IMETHOD Reflow(nsPresContext*          aPresContext,
                     nsHTMLReflowMetrics&     aDesiredSize,
@@ -107,9 +106,6 @@ public:
 
   /** return the number of the columns the col represents.  always >= 1 */
   PRInt32 GetSpan();
-
-  /** convenience method, calls into cellmap */
-  nsVoidArray * GetCells();
 
   /** convenience method, calls into cellmap */
   PRInt32 Count() const;
@@ -304,6 +300,18 @@ protected:
   nsTableColFrame(nsStyleContext* aContext);
   ~nsTableColFrame();
 
+  nscoord mMinCoord;
+  nscoord mPrefCoord;
+  nscoord mSpanMinCoord; // XXX...
+  nscoord mSpanPrefCoord; // XXX...
+  float mPrefPercent;
+  float mSpanPrefPercent; // XXX...
+  // ...XXX the four members marked above could be allocated as part of
+  // a separate array allocated only during
+  // BasicTableLayoutStrategy::ComputeColumnIntrinsicWidths (and only
+  // when colspans were present).
+  nscoord mFinalWidth;
+
   // the index of the column with respect to the whole tabble (starting at 0) 
   // it should never be smaller then the start column index of the parent 
   // colgroup
@@ -317,17 +325,6 @@ protected:
   BCPixelSize mBottomContBorderWidth;
 
   PRPackedBool mHasSpecifiedCoord;
-  nscoord mMinCoord;
-  nscoord mPrefCoord;
-  nscoord mSpanMinCoord; // XXX...
-  nscoord mSpanPrefCoord; // XXX...
-  float mPrefPercent;
-  float mSpanPrefPercent; // XXX...
-  // ...XXX the four members marked above could be allocated as part of
-  // a separate array allocated only during
-  // BasicTableLayoutStrategy::ComputeColumnIntrinsicWidths (and only
-  // when colspans were present).
-  nscoord mFinalWidth;
 };
 
 inline PRInt32 nsTableColFrame::GetColIndex() const

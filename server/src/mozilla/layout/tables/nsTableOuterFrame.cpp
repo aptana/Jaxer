@@ -65,7 +65,7 @@ nsTableCaptionFrame::nsTableCaptionFrame(nsStyleContext* aContext):
   nsBlockFrame(aContext)
 {
   // shrink wrap 
-  SetFlags(NS_BLOCK_SPACE_MGR);
+  SetFlags(NS_BLOCK_FLOAT_MGR);
 }
 
 nsTableCaptionFrame::~nsTableCaptionFrame()
@@ -174,10 +174,9 @@ NS_NewTableCaptionFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
   return new (aPresShell) nsTableCaptionFrame(aContext);
 }
 
-/* ----------- nsTableOuterFrame ---------- */
+NS_IMPL_FRAMEARENA_HELPERS(nsTableCaptionFrame)
 
-NS_IMPL_ADDREF_INHERITED(nsTableOuterFrame, nsHTMLContainerFrame)
-NS_IMPL_RELEASE_INHERITED(nsTableOuterFrame, nsHTMLContainerFrame)
+/* ----------- nsTableOuterFrame ---------- */
 
 nsTableOuterFrame::nsTableOuterFrame(nsStyleContext* aContext):
   nsHTMLContainerFrame(aContext)
@@ -188,18 +187,9 @@ nsTableOuterFrame::~nsTableOuterFrame()
 {
 }
 
-NS_IMETHODIMP
-nsTableOuterFrame::QueryInterface(const nsIID& aIID, void** aInstancePtr)
-{
-  NS_PRECONDITION(aInstancePtr, "null out param");
-
-  if (aIID.Equals(NS_GET_IID(nsITableLayout))) {
-    *aInstancePtr = static_cast<nsITableLayout*>(this);
-    return NS_OK;
-  }
-
-  return nsHTMLContainerFrame::QueryInterface(aIID, aInstancePtr);
-}
+NS_QUERYFRAME_HEAD(nsTableOuterFrame)
+  NS_QUERYFRAME_ENTRY(nsITableLayout)
+NS_QUERYFRAME_TAIL_INHERITING(nsHTMLContainerFrame)
 
 #ifdef ACCESSIBILITY
 NS_IMETHODIMP nsTableOuterFrame::GetAccessible(nsIAccessible** aAccessible)
@@ -220,20 +210,6 @@ nsTableOuterFrame::IsContainingBlock() const
   return PR_FALSE;
 }
 
-NS_IMETHODIMP
-nsTableOuterFrame::Init(
-                   nsIContent*           aContent,
-                   nsIFrame*             aParent,
-                   nsIFrame*             aPrevInFlow)
-{
-  nsresult rv = nsHTMLContainerFrame::Init(aContent, aParent, aPrevInFlow);
-  
-  // record that children that are ignorable whitespace should be excluded 
-  mState |= NS_FRAME_EXCLUDE_IGNORABLE_WHITESPACE;
-
-  return rv;
-}
-
 void
 nsTableOuterFrame::Destroy()
 {
@@ -241,16 +217,16 @@ nsTableOuterFrame::Destroy()
   nsHTMLContainerFrame::Destroy();
 }
 
-nsIFrame*
-nsTableOuterFrame::GetFirstChild(nsIAtom* aListName) const
+nsFrameList
+nsTableOuterFrame::GetChildList(nsIAtom* aListName) const
 {
   if (nsGkAtoms::captionList == aListName) {
-    return mCaptionFrames.FirstChild();
+    return mCaptionFrames;
   }
   if (!aListName) {
-    return mFrames.FirstChild();
+    return mFrames;
   }
-  return nsnull;
+  return nsFrameList::EmptyList();
 }
 
 nsIAtom*
@@ -264,21 +240,21 @@ nsTableOuterFrame::GetAdditionalChildListName(PRInt32 aIndex) const
 
 NS_IMETHODIMP 
 nsTableOuterFrame::SetInitialChildList(nsIAtom*        aListName,
-                                       nsIFrame*       aChildList)
+                                       nsFrameList&    aChildList)
 {
   if (nsGkAtoms::captionList == aListName) {
     // the frame constructor already checked for table-caption display type
     mCaptionFrames.SetFrames(aChildList);
-    mCaptionFrame  = mCaptionFrames.FirstChild();
+    mCaptionFrame = mCaptionFrames.FirstChild();
   }
   else {
     NS_ASSERTION(!aListName, "wrong childlist");
     NS_ASSERTION(mFrames.IsEmpty(), "Frame leak!");
-    mFrames.SetFrames(aChildList);
     mInnerTableFrame = nsnull;
-    if (aChildList) {
-      if (nsGkAtoms::tableFrame == aChildList->GetType()) {
-        mInnerTableFrame = (nsTableFrame*)aChildList;
+    if (aChildList.NotEmpty()) {
+      if (nsGkAtoms::tableFrame == aChildList.FirstChild()->GetType()) {
+        mInnerTableFrame = (nsTableFrame*)aChildList.FirstChild();
+        mFrames.SetFrames(aChildList);
       }
       else {
         NS_ERROR("expected a table frame");
@@ -292,15 +268,15 @@ nsTableOuterFrame::SetInitialChildList(nsIAtom*        aListName,
 
 NS_IMETHODIMP
 nsTableOuterFrame::AppendFrames(nsIAtom*        aListName,
-                                nsIFrame*       aFrameList)
+                                nsFrameList&    aFrameList)
 {
   nsresult rv;
 
   // We only have two child frames: the inner table and a caption frame.
   // The inner frame is provided when we're initialized, and it cannot change
   if (nsGkAtoms::captionList == aListName) {
-    NS_ASSERTION(!aFrameList ||
-                 aFrameList->GetType() == nsGkAtoms::tableCaptionFrame,
+    NS_ASSERTION(aFrameList.IsEmpty() ||
+                 aFrameList.FirstChild()->GetType() == nsGkAtoms::tableCaptionFrame,
                  "appending non-caption frame to captionList");
     mCaptionFrames.AppendFrames(this, aFrameList);
     mCaptionFrame = mCaptionFrames.FirstChild();
@@ -323,13 +299,13 @@ nsTableOuterFrame::AppendFrames(nsIAtom*        aListName,
 NS_IMETHODIMP
 nsTableOuterFrame::InsertFrames(nsIAtom*        aListName,
                                 nsIFrame*       aPrevFrame,
-                                nsIFrame*       aFrameList)
+                                nsFrameList&    aFrameList)
 {
   if (nsGkAtoms::captionList == aListName) {
     NS_ASSERTION(!aPrevFrame || aPrevFrame->GetParent() == this,
                  "inserting after sibling frame with different parent");
-    NS_ASSERTION(!aFrameList ||
-                 aFrameList->GetType() == nsGkAtoms::tableCaptionFrame,
+    NS_ASSERTION(aFrameList.IsEmpty() ||
+                 aFrameList.FirstChild()->GetType() == nsGkAtoms::tableCaptionFrame,
                  "inserting non-caption frame into captionList");
     mCaptionFrames.InsertFrames(nsnull, aPrevFrame, aFrameList);
     mCaptionFrame = mCaptionFrames.FirstChild();
@@ -419,15 +395,14 @@ nsTableOuterFrame::BuildDisplayListForInnerTable(nsDisplayListBuilder*   aBuilde
   return NS_OK;
 }
 
-NS_IMETHODIMP nsTableOuterFrame::SetSelected(nsPresContext* aPresContext,
-                                             nsIDOMRange *aRange,
-                                             PRBool aSelected,
-                                             nsSpread aSpread)
+void
+nsTableOuterFrame::SetSelected(PRBool        aSelected,
+                               SelectionType aType)
 {
-  nsresult result = nsFrame::SetSelected(aPresContext, aRange,aSelected, aSpread);
-  if (NS_SUCCEEDED(result) && mInnerTableFrame)
-    return mInnerTableFrame->SetSelected(aPresContext, aRange,aSelected, aSpread);
-  return result;
+  nsFrame::SetSelected(aSelected, aType);
+  if (mInnerTableFrame) {
+    mInnerTableFrame->SetSelected(aSelected, aType);
+  }
 }
 
 NS_IMETHODIMP 
@@ -494,21 +469,6 @@ nsTableOuterFrame::GetMargin(nsPresContext*           aPresContext,
   InitChildReflowState(*aPresContext, childRS);
 
   aMargin = childRS.mComputedMargin;
-}
-
-static
-nscoord CalcAutoMargin(nscoord aAutoMargin,
-                       nscoord aOppositeMargin,
-                       nscoord aContainBlockSize,
-                       nscoord aFrameSize)
-{
-  nscoord margin;
-  if (NS_AUTOMARGIN == aOppositeMargin) 
-    margin = (aContainBlockSize - aFrameSize) / 2;
-  else {
-    margin = aContainBlockSize - aFrameSize - aOppositeMargin;
-  }
-  return PR_MAX(0, margin);
 }
 
 static nsSize
@@ -731,7 +691,13 @@ nsTableOuterFrame::SetDesiredSize(PRUint8         aCaptionSide,
       aWidth = PR_MAX(aWidth, captionRect.XMost() + aCaptionMargin.right);
   }
   aHeight = innerRect.YMost() + aInnerMargin.bottom;
-  aHeight = PR_MAX(aHeight, captionRect.YMost() + aCaptionMargin.bottom);
+  if (NS_STYLE_CAPTION_SIDE_BOTTOM != aCaptionSide) {
+    aHeight = PR_MAX(aHeight, captionRect.YMost() + aCaptionMargin.bottom);
+  }
+  else {
+    aHeight = PR_MAX(aHeight, captionRect.YMost() + aCaptionMargin.bottom +
+                              aInnerMargin.bottom);
+  }
 
 }
 
@@ -809,124 +775,86 @@ nsTableOuterFrame::GetCaptionOrigin(PRUint32         aCaptionSide,
                                     nsMargin&        aCaptionMargin,
                                     nsPoint&         aOrigin)
 {
-  // FIXME: This function expects computed margin values to be
-  // NS_AUTOMARGIN, but this is no longer the case.
   aOrigin.x = aOrigin.y = 0;
   if ((NS_UNCONSTRAINEDSIZE == aInnerSize.width) || (NS_UNCONSTRAINEDSIZE == aInnerSize.height) ||  
       (NS_UNCONSTRAINEDSIZE == aCaptionSize.width) || (NS_UNCONSTRAINEDSIZE == aCaptionSize.height)) {
     return NS_OK;
   }
   if (!mCaptionFrame) return NS_OK;
+  
+  NS_ASSERTION(NS_AUTOMARGIN != aCaptionMargin.left,   "The computed caption margin is auto?");
+  NS_ASSERTION(NS_AUTOMARGIN != aCaptionMargin.top,    "The computed caption margin is auto?");
+  NS_ASSERTION(NS_AUTOMARGIN != aCaptionMargin.bottom, "The computed caption margin is auto?");
 
-  // FIXME: Have two separate switch statements so we can coalesce the
-  // horizontal computation for top and bottom.
+  // horizontal computation
   switch(aCaptionSide) {
   case NS_STYLE_CAPTION_SIDE_BOTTOM:
   case NS_STYLE_CAPTION_SIDE_BOTTOM_OUTSIDE: {
-    if (NS_AUTOMARGIN == aCaptionMargin.left) {
-      aCaptionMargin.left = CalcAutoMargin(aCaptionMargin.left, aCaptionMargin.right,
-                                           aContainBlockSize.width, aCaptionSize.width);
-    }
+    // FIXME: Position relative to right edge for RTL.  (Based on table
+    // direction or table parent direction?)
     aOrigin.x = aCaptionMargin.left;
     if (aCaptionSide == NS_STYLE_CAPTION_SIDE_BOTTOM) {
       // We placed the caption using only the table's width as available
       // width, and we should position it this way as well.
       aOrigin.x += aInnerMargin.left;
     }
-    if (NS_AUTOMARGIN == aCaptionMargin.top) {
-      aCaptionMargin.top = 0;
-    }
-    // FIXME: Position relative to right edge for RTL.  (Based on table
-    // direction or table parent direction?)
-    nsCollapsingMargin marg;
-    marg.Include(aCaptionMargin.top);
-    marg.Include(aInnerMargin.bottom);
-    nscoord collapseMargin = marg.get();
-    if (NS_AUTOMARGIN == aCaptionMargin.bottom) {
-      nscoord height = aInnerSize.height + collapseMargin + aCaptionSize.height;
-      aCaptionMargin.bottom = CalcAutoMargin(aCaptionMargin.bottom, aInnerMargin.top,
-                                             aContainBlockSize.height, height);
-    }
-    aOrigin.y = aInnerMargin.top + aInnerSize.height + collapseMargin;
   } break;
   case NS_STYLE_CAPTION_SIDE_LEFT: {
-    if (NS_AUTOMARGIN == aCaptionMargin.left) {
-      if (NS_AUTOMARGIN != aInnerMargin.left) {
-        aCaptionMargin.left = CalcAutoMargin(aCaptionMargin.left, aCaptionMargin.right,
-                                             aInnerMargin.left, aCaptionSize.width);
-      } 
-      else {
-        // zero for now
-        aCaptionMargin.left = 0;
-      } 
-    }
     aOrigin.x = aCaptionMargin.left;
-    aOrigin.y = aInnerMargin.top;
-    switch(GetCaptionVerticalAlign()) {
-      case NS_STYLE_VERTICAL_ALIGN_MIDDLE:
-        aOrigin.y = PR_MAX(0, aInnerMargin.top + ((aInnerSize.height - aCaptionSize.height) / 2));
-        break;
-      case NS_STYLE_VERTICAL_ALIGN_BOTTOM:
-        aOrigin.y = PR_MAX(0, aInnerMargin.top + aInnerSize.height - aCaptionSize.height);
-        break;
-      default:
-        break;
-    }
   } break;
   case NS_STYLE_CAPTION_SIDE_RIGHT: {
-    if (NS_AUTOMARGIN == aCaptionMargin.left) {
-      if (NS_AUTOMARGIN != aInnerMargin.right) {
-        aCaptionMargin.left = CalcAutoMargin(aCaptionMargin.left, aCaptionMargin.right,
-                                             aInnerMargin.right, aCaptionSize.width);
-      }
-      else {
-       // zero for now
-       aCaptionMargin.left = 0;
-      } 
-    }
     aOrigin.x = aInnerMargin.left + aInnerSize.width + aCaptionMargin.left;
-    aOrigin.y = aInnerMargin.top;
-    switch(GetCaptionVerticalAlign()) {
-      case NS_STYLE_VERTICAL_ALIGN_MIDDLE:
-        aOrigin.y += PR_MAX(0, (aInnerSize.height - aCaptionSize.height) / 2);
-        break;
-      case NS_STYLE_VERTICAL_ALIGN_BOTTOM:
-        aOrigin.y += PR_MAX(0, aInnerSize.height - aCaptionSize.height);
-        break;
-      default:
-        break;
-    }
   } break;
   default: { // top
     NS_ASSERTION(aCaptionSide == NS_STYLE_CAPTION_SIDE_TOP ||
                  aCaptionSide == NS_STYLE_CAPTION_SIDE_TOP_OUTSIDE,
                  "unexpected caption side");
-    if (NS_AUTOMARGIN == aCaptionMargin.left) {
-      aCaptionMargin.left = CalcAutoMargin(aCaptionMargin.left, aCaptionMargin.right,
-                                           aContainBlockSize.width, aCaptionSize.width);
-    }
+    // FIXME: Position relative to right edge for RTL.  (Based on table
+    // direction or table parent direction?)
     aOrigin.x = aCaptionMargin.left;
     if (aCaptionSide == NS_STYLE_CAPTION_SIDE_TOP) {
       // We placed the caption using only the table's width as available
       // width, and we should position it this way as well.
       aOrigin.x += aInnerMargin.left;
     }
-    // FIXME: Position relative to right edge for RTL.  (Based on table
-    // direction or table parent direction?)
-    if (NS_AUTOMARGIN == aCaptionMargin.bottom) {
-      aCaptionMargin.bottom = 0;
-    }
-    if (NS_AUTOMARGIN == aCaptionMargin.top) {
-      nsCollapsingMargin marg;
-      marg.Include(aCaptionMargin.bottom);
-      marg.Include(aInnerMargin.top);
-      nscoord collapseMargin = marg.get();
-      nscoord height = aCaptionSize.height + collapseMargin + aInnerSize.height;
-      aCaptionMargin.top = CalcAutoMargin(aCaptionMargin.top, aInnerMargin.bottom,
-                                          aContainBlockSize.height, height);
-    }
-    aOrigin.y = aCaptionMargin.top;
+    
   } break;
+  }
+  // vertical computation
+  switch (aCaptionSide) {
+    case NS_STYLE_CAPTION_SIDE_RIGHT:
+    case NS_STYLE_CAPTION_SIDE_LEFT:
+      aOrigin.y = aInnerMargin.top;
+      switch (GetCaptionVerticalAlign()) {
+        case NS_STYLE_VERTICAL_ALIGN_MIDDLE:
+          aOrigin.y = PR_MAX(0, aInnerMargin.top + ((aInnerSize.height - aCaptionSize.height) / 2));
+          break;
+        case NS_STYLE_VERTICAL_ALIGN_BOTTOM:
+          aOrigin.y = PR_MAX(0, aInnerMargin.top + aInnerSize.height - aCaptionSize.height);
+          break;
+        default:
+          break;
+      }
+      break;
+    case NS_STYLE_CAPTION_SIDE_BOTTOM: {
+      aOrigin.y = aInnerMargin.top + aInnerSize.height + aCaptionMargin.top;
+    } break;
+    case NS_STYLE_CAPTION_SIDE_BOTTOM_OUTSIDE: {
+      nsCollapsingMargin marg;
+      marg.Include(aCaptionMargin.top);
+      marg.Include(aInnerMargin.bottom);
+      nscoord collapseMargin = marg.get();
+      aOrigin.y = aInnerMargin.top + aInnerSize.height + collapseMargin;
+    } break;
+    case NS_STYLE_CAPTION_SIDE_TOP: {
+      aOrigin.y = aInnerMargin.top + aCaptionMargin.top;
+    } break;
+    case NS_STYLE_CAPTION_SIDE_TOP_OUTSIDE: {
+      aOrigin.y = aCaptionMargin.top;
+    } break;
+    default:
+      NS_NOTREACHED("Unknown caption alignment type");
+      break;
   }
   return NS_OK;
 }
@@ -940,8 +868,14 @@ nsTableOuterFrame::GetInnerOrigin(PRUint32         aCaptionSide,
                                   nsMargin&        aInnerMargin,
                                   nsPoint&         aOrigin)
 {
-  // FIXME: This function expects computed margin values to be
-  // NS_AUTOMARGIN, but this is no longer the case.
+  
+  NS_ASSERTION(NS_AUTOMARGIN != aCaptionMargin.left,  "The computed caption margin is auto?");
+  NS_ASSERTION(NS_AUTOMARGIN != aCaptionMargin.right, "The computed caption margin is auto?");
+  NS_ASSERTION(NS_AUTOMARGIN != aInnerMargin.left,    "The computed inner margin is auto?");
+  NS_ASSERTION(NS_AUTOMARGIN != aInnerMargin.right,   "The computed inner margin is auto?");
+  NS_ASSERTION(NS_AUTOMARGIN != aInnerMargin.top,     "The computed inner margin is auto?");
+  NS_ASSERTION(NS_AUTOMARGIN != aInnerMargin.bottom,  "The computed inner margin is auto?");
+  
   aOrigin.x = aOrigin.y = 0;
   if ((NS_UNCONSTRAINEDSIZE == aInnerSize.width) || (NS_UNCONSTRAINEDSIZE == aInnerSize.height) ||  
       (NS_UNCONSTRAINEDSIZE == aCaptionSize.width) || (NS_UNCONSTRAINEDSIZE == aCaptionSize.height)) {
@@ -949,40 +883,13 @@ nsTableOuterFrame::GetInnerOrigin(PRUint32         aCaptionSide,
   }
 
   nscoord minCapWidth = aCaptionSize.width;
-  if (NS_AUTOMARGIN != aCaptionMargin.left)
-    minCapWidth += aCaptionMargin.left;
-  if (NS_AUTOMARGIN != aCaptionMargin.right)
-    minCapWidth += aCaptionMargin.right;
+  
+  minCapWidth += aCaptionMargin.left;
+  minCapWidth += aCaptionMargin.right;
 
-  switch(aCaptionSide) {
-  case NS_STYLE_CAPTION_SIDE_BOTTOM:
-  case NS_STYLE_CAPTION_SIDE_BOTTOM_OUTSIDE: {
-    if (NS_AUTOMARGIN == aInnerMargin.left) {
-      aInnerMargin.left = CalcAutoMargin(aInnerMargin.left, aInnerMargin.right,
-                                         aContainBlockSize.width, aInnerSize.width);
-    }
-    aOrigin.x = aInnerMargin.left;
-    if (NS_AUTOMARGIN == aInnerMargin.bottom) {
-      aInnerMargin.bottom = 0;
-    }
-    if (NS_AUTOMARGIN == aInnerMargin.top) {
-      nsCollapsingMargin marg;
-      marg.Include(aInnerMargin.bottom);
-      marg.Include(aCaptionMargin.top);
-      nscoord collapseMargin = marg.get();
-      nscoord height = aInnerSize.height + collapseMargin + aCaptionSize.height;
-      aInnerMargin.top = CalcAutoMargin(aInnerMargin.top, aCaptionMargin.bottom,
-                                        aContainBlockSize.height, height);
-    }
-    aOrigin.y = aInnerMargin.top;
-  } break;
+  // horizontal computation
+  switch (aCaptionSide) {
   case NS_STYLE_CAPTION_SIDE_LEFT: {
-    
-    if (NS_AUTOMARGIN == aInnerMargin.left) {
-      aInnerMargin.left = CalcAutoMargin(aInnerMargin.left, aInnerMargin.right,
-                                         aContainBlockSize.width, aInnerSize.width);
-      
-    }
     if (aInnerMargin.left < minCapWidth) {
       // shift the inner table to get some place for the caption
       aInnerMargin.right += aInnerMargin.left - minCapWidth;
@@ -990,89 +897,56 @@ nsTableOuterFrame::GetInnerOrigin(PRUint32         aCaptionSide,
       aInnerMargin.left   = minCapWidth;
     }
     aOrigin.x = aInnerMargin.left;
-    if (NS_AUTOMARGIN == aInnerMargin.top) {
-      aInnerMargin.top = 0;
-    }
-    aOrigin.y = aInnerMargin.top;
-    switch(GetCaptionVerticalAlign()) {
-      case NS_STYLE_VERTICAL_ALIGN_MIDDLE:
-        aOrigin.y = PR_MAX(aInnerMargin.top, (aCaptionSize.height - aInnerSize.height) / 2);
-        break;
-      case NS_STYLE_VERTICAL_ALIGN_BOTTOM:
-        aOrigin.y = PR_MAX(aInnerMargin.top, aCaptionSize.height - aInnerSize.height);
-        break;
-      default:
-        break;
-    }
   } break;
-  case NS_STYLE_CAPTION_SIDE_RIGHT: {
-    if (NS_AUTOMARGIN == aInnerMargin.right) {
-      aInnerMargin.right = CalcAutoMargin(aInnerMargin.left, aInnerMargin.right,
-                                          aContainBlockSize.width, aInnerSize.width);
-      if (aInnerMargin.right < minCapWidth) {
-        // shift the inner table to get some place for the caption
-        aInnerMargin.left -= aInnerMargin.right - minCapWidth;
-        aInnerMargin.left  = PR_MAX(0, aInnerMargin.left);
-        aInnerMargin.right = minCapWidth;
-      }
-    }
-    aOrigin.x = aInnerMargin.left;
-    if (NS_AUTOMARGIN == aInnerMargin.top) {
-      aInnerMargin.top = 0;
-    }
-    aOrigin.y = aInnerMargin.top;
-    switch(GetCaptionVerticalAlign()) {
-      case NS_STYLE_VERTICAL_ALIGN_MIDDLE:
-        aOrigin.y = PR_MAX(aInnerMargin.top, (aCaptionSize.height - aInnerSize.height) / 2);
-        break;
-      case NS_STYLE_VERTICAL_ALIGN_BOTTOM:
-        aOrigin.y = PR_MAX(aInnerMargin.top, aCaptionSize.height - aInnerSize.height);
-        break;
-      default:
-        break;
-    }
-  } break;
-  default: { // top
+  default: {
     NS_ASSERTION(aCaptionSide == NS_STYLE_CAPTION_SIDE_TOP ||
                  aCaptionSide == NS_STYLE_CAPTION_SIDE_TOP_OUTSIDE ||
+                 aCaptionSide == NS_STYLE_CAPTION_SIDE_BOTTOM ||
+                 aCaptionSide == NS_STYLE_CAPTION_SIDE_BOTTOM_OUTSIDE ||
+                 aCaptionSide == NS_STYLE_CAPTION_SIDE_RIGHT ||
                  aCaptionSide == NO_SIDE,
                  "unexpected caption side");
-    if (NS_AUTOMARGIN == aInnerMargin.left) {
-      aInnerMargin.left = CalcAutoMargin(aInnerMargin.left, aInnerMargin.right,
-                                         aContainBlockSize.width, aInnerSize.width);
-    }
     aOrigin.x = aInnerMargin.left;
-    if (NS_AUTOMARGIN == aInnerMargin.top) {
-      aInnerMargin.top = 0;
-    }
-    nsCollapsingMargin marg;
-    marg.Include(aCaptionMargin.bottom);
-    marg.Include(aInnerMargin.top);
-    nscoord collapseMargin = marg.get();
-    if (NS_AUTOMARGIN == aInnerMargin.bottom) {
-      nscoord height = aCaptionSize.height + collapseMargin + aInnerSize.height;
-      aInnerMargin.bottom = CalcAutoMargin(aCaptionMargin.bottom, aInnerMargin.top,
-                                           aContainBlockSize.height, height);
-    }
-    aOrigin.y = aCaptionMargin.top + aCaptionSize.height + collapseMargin;
   } break;
   }
-  return NS_OK;
-}
-
-// helper method for determining if this is a nested table or not
-PRBool 
-nsTableOuterFrame::IsNested(const nsHTMLReflowState& aReflowState) const
-{
-  // Walk up the reflow state chain until we find a cell or the root
-  const nsHTMLReflowState* rs = aReflowState.parentReflowState;
-  while (rs) {
-    if (nsGkAtoms::tableFrame == rs->frame->GetType()) {
-      return PR_TRUE;
-    }
-    rs = rs->parentReflowState;
+  
+  // vertical computation
+  switch (aCaptionSide) {
+    case NS_STYLE_CAPTION_SIDE_BOTTOM:
+    case NS_STYLE_CAPTION_SIDE_BOTTOM_OUTSIDE: {
+      aOrigin.y = aInnerMargin.top;
+    } break;
+    case NS_STYLE_CAPTION_SIDE_LEFT:
+    case NS_STYLE_CAPTION_SIDE_RIGHT: {
+      aOrigin.y = aInnerMargin.top;
+      switch (GetCaptionVerticalAlign()) {
+        case NS_STYLE_VERTICAL_ALIGN_MIDDLE:
+          aOrigin.y = PR_MAX(aInnerMargin.top, (aCaptionSize.height - aInnerSize.height) / 2);
+          break;
+        case NS_STYLE_VERTICAL_ALIGN_BOTTOM:
+          aOrigin.y = PR_MAX(aInnerMargin.top, aCaptionSize.height - aInnerSize.height);
+          break;
+        default:
+          break;
+      }
+    } break;
+    case NO_SIDE:
+    case NS_STYLE_CAPTION_SIDE_TOP: {
+      aOrigin.y = aInnerMargin.top + aCaptionMargin.top + aCaptionSize.height +
+                  aCaptionMargin.bottom;
+    } break;
+    case NS_STYLE_CAPTION_SIDE_TOP_OUTSIDE: {
+      nsCollapsingMargin marg;
+      marg.Include(aCaptionMargin.bottom);
+      marg.Include(aInnerMargin.top);
+      nscoord collapseMargin = marg.get();
+      aOrigin.y = aCaptionMargin.top + aCaptionSize.height + collapseMargin;
+    } break;
+    default:
+      NS_NOTREACHED("Unknown caption alignment type");
+      break;
   }
-  return PR_FALSE;
+  return NS_OK;
 }
 
 void
@@ -1323,13 +1197,6 @@ NS_METHOD nsTableOuterFrame::Reflow(nsPresContext*           aPresContext,
   return rv;
 }
 
-#ifdef NS_DEBUG
-NS_METHOD nsTableOuterFrame::VerifyTree() const
-{
-  return NS_OK;
-}
-#endif
-
 nsIAtom*
 nsTableOuterFrame::GetType() const
 {
@@ -1392,6 +1259,8 @@ NS_NewTableOuterFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
 {
   return new (aPresShell) nsTableOuterFrame(aContext);
 }
+
+NS_IMPL_FRAMEARENA_HELPERS(nsTableOuterFrame)
 
 #ifdef DEBUG
 NS_IMETHODIMP

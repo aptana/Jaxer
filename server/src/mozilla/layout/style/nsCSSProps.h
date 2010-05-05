@@ -50,6 +50,20 @@
 #include "nsStyleStruct.h"
 #include "nsCSSKeywords.h"
 
+// Flags for the kFlagsTable bitfield (flags_ in nsCSSPropList.h)
+
+// A property that is a *-ltr-source or *-rtl-source property for one of
+// the directional pseudo-shorthand properties.
+#define CSS_PROPERTY_DIRECTIONAL_SOURCE           (1<<0)
+#define CSS_PROPERTY_VALUE_LIST_USES_COMMAS       (1<<1) /* otherwise spaces */
+#define CSS_PROPERTY_APPLIES_TO_FIRST_LETTER      (1<<2)
+#define CSS_PROPERTY_APPLIES_TO_FIRST_LINE        (1<<3)
+#define CSS_PROPERTY_APPLIES_TO_FIRST_LETTER_AND_FIRST_LINE \
+  (CSS_PROPERTY_APPLIES_TO_FIRST_LETTER | CSS_PROPERTY_APPLIES_TO_FIRST_LINE)
+// Note that 'background-color' is ignored differently from the other
+// properties that have this set, but that's just special-cased.
+#define CSS_PROPERTY_IGNORED_WHEN_COLORS_DISABLED (1<<4)
+
 class nsCSSProps {
 public:
   static void AddRefTable(void);
@@ -65,8 +79,13 @@ public:
     return (aProperty >= eCSSProperty_COUNT_no_shorthands);
   }
 
+  // Same but for @font-face descriptors
+  static nsCSSFontDesc LookupFontDesc(const nsAString& aProperty);
+  static nsCSSFontDesc LookupFontDesc(const nsACString& aProperty);
+
   // Given a property enum, get the string value
   static const nsAFlatCString& GetStringValue(nsCSSProperty aProperty);
+  static const nsAFlatCString& GetStringValue(nsCSSFontDesc aFontDesc);
 
   // Given a CSS Property and a Property Enum Value
   // Return back a const nsString& representation of the 
@@ -90,21 +109,53 @@ public:
   static const nsStyleStructID kSIDTable[eCSSProperty_COUNT_no_shorthands];
   static const PRInt32* const  kKeywordTableTable[eCSSProperty_COUNT_no_shorthands];
 
+private:
+  static const PRUint32        kFlagsTable[eCSSProperty_COUNT];
+
+public:
+  static inline PRBool PropHasFlags(nsCSSProperty aProperty, PRUint32 aFlags)
+  {
+    NS_ASSERTION(0 <= aProperty && aProperty < eCSSProperty_COUNT,
+                 "out of range");
+    return (nsCSSProps::kFlagsTable[aProperty] & aFlags) == aFlags;
+  }
+
+private:
   // A table for shorthand properties.  The appropriate index is the
   // property ID minus eCSSProperty_COUNT_no_shorthands.
-private:
   static const nsCSSProperty *const
     kSubpropertyTable[eCSSProperty_COUNT - eCSSProperty_COUNT_no_shorthands];
 
 public:
   static inline
-  const nsCSSProperty *const SubpropertyEntryFor(nsCSSProperty aProperty) {
+  const nsCSSProperty * SubpropertyEntryFor(nsCSSProperty aProperty) {
     NS_ASSERTION(eCSSProperty_COUNT_no_shorthands <= aProperty &&
                  aProperty < eCSSProperty_COUNT,
                  "out of range");
     return nsCSSProps::kSubpropertyTable[aProperty -
                                          eCSSProperty_COUNT_no_shorthands];
   }
+
+  // Returns an eCSSProperty_UNKNOWN-terminated array of the shorthand
+  // properties containing |aProperty|, sorted from those that contain
+  // the most properties to those that contain the least.
+  static const nsCSSProperty * ShorthandsContaining(nsCSSProperty aProperty) {
+    NS_ASSERTION(gShorthandsContainingPool, "uninitialized");
+    NS_ASSERTION(0 <= aProperty && aProperty < eCSSProperty_COUNT_no_shorthands,
+                 "out of range");
+    return gShorthandsContainingTable[aProperty];
+  }
+private:
+  // gShorthandsContainingTable is an array of the return values for
+  // ShorthandsContaining (arrays of nsCSSProperty terminated by
+  // eCSSProperty_UNKNOWN) pointing into memory in
+  // gShorthandsContainingPool (which contains all of those arrays in a
+  // single allocation, and is the one pointer that should be |free|d).
+  static nsCSSProperty *gShorthandsContainingTable[eCSSProperty_COUNT_no_shorthands];
+  static nsCSSProperty* gShorthandsContainingPool;
+  static PRBool BuildShorthandsContainingTable();
+
+public:
 
 #define CSSPROPS_FOR_SHORTHAND_SUBPROPERTIES(iter_, prop_)                    \
   for (const nsCSSProperty* iter_ = nsCSSProps::SubpropertyEntryFor(prop_);   \
@@ -115,13 +166,14 @@ public:
   static const PRInt32 kAzimuthKTable[];
   static const PRInt32 kBackgroundAttachmentKTable[];
   static const PRInt32 kBackgroundClipKTable[];
-  static const PRInt32 kBackgroundColorKTable[];
   static const PRInt32 kBackgroundInlinePolicyKTable[];
   static const PRInt32 kBackgroundOriginKTable[];
   static const PRInt32 kBackgroundPositionKTable[];
   static const PRInt32 kBackgroundRepeatKTable[];
+  static const PRInt32 kBackgroundSizeKTable[];
   static const PRInt32 kBorderCollapseKTable[];
   static const PRInt32 kBorderColorKTable[];
+  static const PRInt32 kBorderImageKTable[];
   static const PRInt32 kBorderStyleKTable[];
   static const PRInt32 kBorderWidthKTable[];
   static const PRInt32 kBoxAlignKTable[];
@@ -131,7 +183,7 @@ public:
 #ifdef MOZ_SVG
   static const PRInt32 kDominantBaselineKTable[];
   static const PRInt32 kFillRuleKTable[];
-  static const PRInt32 kPointerEventsKTable[];
+  static const PRInt32 kImageRenderingKTable[];
   static const PRInt32 kShapeRenderingKTable[];
   static const PRInt32 kStrokeLinecapKTable[];
   static const PRInt32 kStrokeLinejoinKTable[];
@@ -140,6 +192,7 @@ public:
   static const PRInt32 kColorInterpolationKTable[];
 #endif
   static const PRInt32 kBoxPropSourceKTable[];
+  static const PRInt32 kBoxShadowTypeKTable[];
   static const PRInt32 kBoxSizingKTable[];
   static const PRInt32 kCaptionSideKTable[];
   static const PRInt32 kClearKTable[];
@@ -158,8 +211,8 @@ public:
   static const PRInt32 kFontStyleKTable[];
   static const PRInt32 kFontVariantKTable[];
   static const PRInt32 kFontWeightKTable[];
-  static const PRInt32 kKeyEquivalentKTable[];
   static const PRInt32 kIMEModeKTable[];
+  static const PRInt32 kLineHeightKTable[];
   static const PRInt32 kListStylePositionKTable[];
   static const PRInt32 kListStyleKTable[];
   static const PRInt32 kOutlineStyleKTable[];
@@ -171,12 +224,16 @@ public:
   static const PRInt32 kPageMarksKTable[];
   static const PRInt32 kPageSizeKTable[];
   static const PRInt32 kPitchKTable[];
+  static const PRInt32 kPointerEventsKTable[];
   static const PRInt32 kPositionKTable[];
+  static const PRInt32 kRadialGradientShapeKTable[];
+  static const PRInt32 kRadialGradientSizeKTable[];
   static const PRInt32 kSpeakKTable[];
   static const PRInt32 kSpeakHeaderKTable[];
   static const PRInt32 kSpeakNumeralKTable[];
   static const PRInt32 kSpeakPunctuationKTable[];
   static const PRInt32 kSpeechRateKTable[];
+  static const PRInt32 kStackSizingKTable[];
   static const PRInt32 kTableLayoutKTable[];
   static const PRInt32 kTextAlignKTable[];
   static const PRInt32 kTextDecorationKTable[];
@@ -191,6 +248,8 @@ public:
   static const PRInt32 kVolumeKTable[];
   static const PRInt32 kWhitespaceKTable[];
   static const PRInt32 kWidthKTable[]; // also min-width, max-width
+  static const PRInt32 kWindowShadowKTable[];
+  static const PRInt32 kWordwrapKTable[];
 };
 
 #endif /* nsCSSProps_h___ */

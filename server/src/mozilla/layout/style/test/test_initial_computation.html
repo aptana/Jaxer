@@ -4,7 +4,7 @@
 -->
 <head>
   <title>Test for computation of CSS '-moz-initial'</title>
-  <script type="text/javascript" src="/MochiKit/MochiKit.js"></script>
+  <script type="text/javascript" src="/MochiKit/packed.js"></script>
   <script type="text/javascript" src="/tests/SimpleTest/SimpleTest.js"></script>
   <script type="text/javascript" src="property_database.js"></script>
   <style type="text/css" id="stylesheet"></style>
@@ -36,8 +36,6 @@
 /** Test for computation of CSS '-moz-initial' **/
 
 var gBrokenInitial = {
-  // Not implemented in nsRuleNode.
-  "quotes": true,
 };
 
 function xfail_initial(property) {

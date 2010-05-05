@@ -51,17 +51,14 @@
 #include "nsBoxFrame.h"
 #include "nsGridLayout2.h"
 
-nsresult
-NS_NewGridRowLeafLayout( nsIPresShell* aPresShell, nsIBoxLayout** aNewLayout)
+already_AddRefed<nsIBoxLayout> NS_NewGridRowLeafLayout()
 {
-  *aNewLayout = new nsGridRowLeafLayout(aPresShell);
-  NS_IF_ADDREF(*aNewLayout);
-
-  return NS_OK;
-  
+  nsIBoxLayout* layout = new nsGridRowLeafLayout();
+  NS_IF_ADDREF(layout);
+  return layout;
 } 
 
-nsGridRowLeafLayout::nsGridRowLeafLayout(nsIPresShell* aPresShell):nsGridRowLayout(aPresShell)
+nsGridRowLeafLayout::nsGridRowLeafLayout():nsGridRowLayout()
 {
 }
 
@@ -134,7 +131,7 @@ nsGridRowLeafLayout::ChildAddedOrRemoved(nsIBox* aBox, nsBoxLayoutState& aState)
 }
 
 void
-nsGridRowLeafLayout::PopulateBoxSizes(nsIBox* aBox, nsBoxLayoutState& aState, nsBoxSize*& aBoxSizes, nsComputedBoxSize*& aComputedBoxSizes, nscoord& aMinSize, nscoord& aMaxSize, PRInt32& aFlexes)
+nsGridRowLeafLayout::PopulateBoxSizes(nsIBox* aBox, nsBoxLayoutState& aState, nsBoxSize*& aBoxSizes, nscoord& aMinSize, nscoord& aMaxSize, PRInt32& aFlexes)
 {
   PRInt32 index = 0;
   nsGrid* grid = GetGrid(aBox, &index);
@@ -247,7 +244,7 @@ nsGridRowLeafLayout::PopulateBoxSizes(nsIBox* aBox, nsBoxLayoutState& aState, ns
     aBoxSizes = start;
   }
 
-  nsSprocketLayout::PopulateBoxSizes(aBox, aState, aBoxSizes, aComputedBoxSizes, aMinSize, aMaxSize, aFlexes);
+  nsSprocketLayout::PopulateBoxSizes(aBox, aState, aBoxSizes, aMinSize, aMaxSize, aFlexes);
 }
 
 void
@@ -269,7 +266,7 @@ nsGridRowLeafLayout::ComputeChildSizes(nsIBox* aBox,
     GetParentGridPart(aBox, &parentBox, getter_AddRefs(parent));
     while (parentBox) {
       nsIBox* scrollbox = nsGrid::GetScrollBox(parentBox);
-      nsCOMPtr<nsIScrollableFrame> scrollable = do_QueryInterface(scrollbox);
+      nsIScrollableFrame *scrollable = do_QueryFrame(scrollbox);
       if (scrollable) {
         nsMargin scrollbarSizes = scrollable->GetActualScrollbarSizes();
 

@@ -38,7 +38,7 @@
 #define nsTableFrame_h__
 
 #include "nscore.h"
-#include "nsVoidArray.h"
+#include "nsTPtrArray.h"
 #include "nsHTMLContainerFrame.h"
 #include "nsStyleCoord.h"
 #include "nsStyleConsts.h"
@@ -139,9 +139,8 @@ private:
 class nsTableFrame : public nsHTMLContainerFrame, public nsITableLayout
 {
 public:
-
-  // nsISupports
-  NS_DECL_ISUPPORTS_INHERITED
+  NS_DECL_QUERYFRAME
+  NS_DECL_FRAMEARENA_HELPERS
 
   /** nsTableOuterFrame has intimate knowledge of the inner table frame */
   friend class nsTableOuterFrame;
@@ -196,12 +195,15 @@ public:
 
   /** @see nsIFrame::Destroy */
   virtual void Destroy();
+  
+  /** @see nsIFrame::DidSetStyleContext */
+  virtual void DidSetStyleContext(nsStyleContext* aOldStyleContext);
 
   NS_IMETHOD AppendFrames(nsIAtom*        aListName,
-                          nsIFrame*       aFrameList);
+                          nsFrameList&    aFrameList);
   NS_IMETHOD InsertFrames(nsIAtom*        aListName,
                           nsIFrame*       aPrevFrame,
-                          nsIFrame*       aFrameList);
+                          nsFrameList&    aFrameList);
   NS_IMETHOD RemoveFrame(nsIAtom*        aListName,
                          nsIFrame*       aOldFrame);
 
@@ -210,9 +212,6 @@ public:
 
   // Get the offset from the border box to the area where the row groups fit
   nsMargin GetChildAreaOffset(const nsHTMLReflowState* aReflowState) const;
-
-  // Get the offset from the border box to the area where the content fits
-  nsMargin GetContentAreaOffset(const nsHTMLReflowState* aReflowState) const;
 
   /** helper method to find the table parent of any table frame object */
   static nsTableFrame* GetTableFrame(nsIFrame* aSourceFrame);
@@ -259,12 +258,9 @@ public:
     * @see nsIFrame::SetInitialChildList 
     */
   NS_IMETHOD SetInitialChildList(nsIAtom*        aListName,
-                                 nsIFrame*       aChildList);
+                                 nsFrameList&    aChildList);
 
-  /** return the first child belonging to the list aListName. 
-    * @see nsIFrame::GetFirstChild
-    */
-  virtual nsIFrame* GetFirstChild(nsIAtom* aListName) const;
+  virtual nsFrameList GetChildList(nsIAtom* aListName) const;
 
   /** @see nsIFrame::GetAdditionalChildListName */
   virtual nsIAtom* GetAdditionalChildListName(PRInt32 aIndex) const;
@@ -282,40 +278,43 @@ public:
                                   const nsRect& aDirtyRect,
                                   nsPoint aPt);
 
-  // Get the outer half (i.e., the part outside the height and width of
-  // the table) of the largest segment (?) of border-collapsed border on
-  // the table on each side, or 0 for non border-collapsed tables.
+  /** Get the outer half (i.e., the part outside the height and width of
+   *  the table) of the largest segment (?) of border-collapsed border on
+   *  the table on each side, or 0 for non border-collapsed tables.
+   */
   nsMargin GetOuterBCBorder() const;
 
-  // Same as above, but only if it's included from the border-box width
-  // of the table (nonzero only in quirks mode).
+  /** Same as above, but only if it's included from the border-box width
+   *  of the table.
+   */
   nsMargin GetIncludedOuterBCBorder() const;
 
-  // Same as above, but only if it's excluded from the border-box width
-  // of the table (nonzero only in standards mode).  This is the area
-  // that leaks out into the margin (or potentially past it, if there is
-  // no margin).
+  /** Same as above, but only if it's excluded from the border-box width
+   *  of the table.  This is the area that leaks out into the margin
+   *  (or potentially past it, if there is no margin).
+   */
   nsMargin GetExcludedOuterBCBorder() const;
+
+  /**
+   * In quirks mode, the size of the table background is reduced
+   * by the outer BC border. Compute the reduction needed.
+   */
+  nsMargin GetDeflationForBackground(nsPresContext* aPresContext) const;
 
   /** Get width of table + colgroup + col collapse: elements that
    *  continue along the length of the whole left side.
    *  see nsTablePainter about continuous borders
-   *  @param aPixelsToTwips - conversion factor
-   *  @param aGetInner - get only inner half of border width
    */
   nscoord GetContinuousLeftBCBorderWidth() const;
+  void SetContinuousLeftBCBorderWidth(nscoord aValue);
 
+  friend class nsDelayedCalcBCBorders;
+  
   void SetBCDamageArea(const nsRect& aValue);
-
+  PRBool BCRecalcNeeded(nsStyleContext* aOldStyleContext,
+                        nsStyleContext* aNewStyleContext);
   void PaintBCBorders(nsIRenderingContext& aRenderingContext,
                       const nsRect&        aDirtyRect);
-
-  /** nsIFrame method overridden to handle table specifics
-  */
-  NS_IMETHOD SetSelected(nsPresContext* aPresContext,
-                         nsIDOMRange *aRange,
-                         PRBool aSelected,
-                         nsSpread aSpread);
 
   virtual void MarkIntrinsicWidthsDirty();
   // For border-collapse tables, the caller must not add padding and
@@ -452,17 +451,18 @@ public:
 
   PRInt32 DestroyAnonymousColFrames(PRInt32 aNumFrames);
 
-  void CreateAnonymousColFrames(PRInt32         aNumColsToAdd,
-                                nsTableColType  aColType,
-                                PRBool          aDoAppend,
-                                nsIFrame*       aPrevCol = nsnull);
+  // Append aNumColsToAdd anonymous col frames of type eColAnonymousCell to our
+  // last eColGroupAnonymousCell colgroup.  If we have no such colgroup, then
+  // create one.
+  void AppendAnonymousColFrames(PRInt32 aNumColsToAdd);
 
-  void CreateAnonymousColFrames(nsTableColGroupFrame* aColGroupFrame,
+  // Append aNumColsToAdd anonymous col frames of type aColType to
+  // aColGroupFrame.  If aAddToTable is true, also call AddColsToTable on the
+  // new cols.
+  void AppendAnonymousColFrames(nsTableColGroupFrame* aColGroupFrame,
                                 PRInt32               aNumColsToAdd,
                                 nsTableColType        aColType,
-                                PRBool                aAddToColGroupAndTable,
-                                nsIFrame*             aPrevCol,
-                                nsIFrame**            aFirstNewFrame);
+                                PRBool                aAddToTable);
 
   void MatchCellMapToColCache(nsTableCellMap* aCellMap);
   /** empty the column frame cache */
@@ -473,48 +473,38 @@ public:
   virtual void AppendCell(nsTableCellFrame& aCellFrame,
                           PRInt32           aRowIndex);
 
-  virtual void InsertCells(nsVoidArray&    aCellFrames, 
-                           PRInt32         aRowIndex, 
-                           PRInt32         aColIndexBefore);
+  virtual void InsertCells(nsTArray<nsTableCellFrame*>& aCellFrames,
+                           PRInt32                      aRowIndex,
+                           PRInt32                      aColIndexBefore);
 
   virtual void RemoveCell(nsTableCellFrame* aCellFrame,
                           PRInt32           aRowIndex);
 
-  void AppendRows(nsTableRowGroupFrame& aRowGroupFrame,
-                  PRInt32               aRowIndex,
-                  nsVoidArray&          aRowFrames);
+  void AppendRows(nsTableRowGroupFrame&       aRowGroupFrame,
+                  PRInt32                     aRowIndex,
+                  nsTArray<nsTableRowFrame*>& aRowFrames);
 
   PRInt32 InsertRow(nsTableRowGroupFrame& aRowGroupFrame,
                     nsIFrame&             aFrame,
                     PRInt32               aRowIndex,
                     PRBool                aConsiderSpans);
 
-  PRInt32 InsertRows(nsTableRowGroupFrame& aRowGroupFrame,
-                     nsVoidArray&          aFrames,
-                     PRInt32               aRowIndex,
-                     PRBool                aConsiderSpans);
+  PRInt32 InsertRows(nsTableRowGroupFrame&       aRowGroupFrame,
+                     nsTArray<nsTableRowFrame*>& aFrames,
+                     PRInt32                     aRowIndex,
+                     PRBool                      aConsiderSpans);
 
   virtual void RemoveRows(nsTableRowFrame& aFirstRowFrame,
                           PRInt32          aNumRowsToRemove,
                           PRBool           aConsiderSpans);
 
   /** Insert multiple rowgroups into the table cellmap handling
-    * @param aFirstRowGroupFrame - first row group to be inserted all siblings
-    *                              will be appended too.
+    * @param aRowGroups - iterator that iterates over the rowgroups to insert
     */
-  void AppendRowGroups(nsIFrame* aFirstRowGroupFrame);
+  void InsertRowGroups(const nsFrameList::Slice& aRowGroups);
 
-  /** Insert multiple rowgroups into the table cellmap handling
-    * @param aFirstRowGroupFrame - first row group to be inserted
-    * @param aLastRowGroupFrame  - when inserting the siblings of 
-    *                              aFirstRowGroupFrame stop at this row group
-    */
-  void InsertRowGroups(nsIFrame*       aFirstRowGroupFrame,
-                       nsIFrame*       aLastRowGroupFrame);
-
-  void InsertColGroups(PRInt32         aColIndex,
-                       nsIFrame*       aFirstFrame,
-                       nsIFrame*       aLastFrame = nsnull);
+  void InsertColGroups(PRInt32                   aStartColIndex,
+                       const nsFrameList::Slice& aColgroups);
 
   virtual void RemoveCol(nsTableColGroupFrame* aColGroupFrame,
                          PRInt32               aColIndex,
@@ -523,8 +513,8 @@ public:
 
   NS_IMETHOD GetIndexByRowAndColumn(PRInt32 aRow, PRInt32 aColumn, PRInt32 *aIndex);
   NS_IMETHOD GetRowAndColumnByIndex(PRInt32 aIndex, PRInt32 *aRow, PRInt32 *aColumn);
-  PRInt32 GetNumCellsOriginatingInCol(PRInt32 aColIndex) const;
-  PRInt32 GetNumCellsOriginatingInRow(PRInt32 aRowIndex) const;
+
+  PRBool ColumnHasCellSpacingBefore(PRInt32 aColIndex) const;
 
   PRBool HasPctCol() const;
   void SetHasPctCol(PRBool aValue);
@@ -535,7 +525,7 @@ public:
   /**
    * To be called on a frame by its parent after setting its size/position and
    * calling DidReflow (possibly via FinishReflowChild()).  This can also be
-   * used for child frames which are not being reflown but did have their size
+   * used for child frames which are not being reflowed but did have their size
    * or position changed.
    *
    * @param aFrame The frame to invalidate
@@ -563,8 +553,6 @@ protected:
 
   /** implement abstract method on nsHTMLContainerFrame */
   virtual PRIntn GetSkipSides() const;
-
-  virtual PRBool ParentDisablesSelection() const; //override default behavior
 
 public:
   PRBool IsRowInserted() const;
@@ -604,7 +592,7 @@ protected:
   void AdjustForCollapsingRowsCols(nsHTMLReflowMetrics& aDesiredSize,
                                    nsMargin             aBorderPadding);
 
-  nsITableLayoutStrategy* LayoutStrategy() {
+  nsITableLayoutStrategy* LayoutStrategy() const {
     return static_cast<nsTableFrame*>(GetFirstInFlow())->
       mTableLayoutStrategy;
   }
@@ -641,7 +629,6 @@ protected:
                   const nsRect&        aOriginalKidOverflowRect);
 
   nsIFrame* GetFirstBodyRowGroupFrame();
-  PRBool MoveOverflowToChildList(nsPresContext* aPresContext);
   /**
    * Push all our child frames from the aFrames array, in order, starting from the
    * frame at aPushFrom to the end of the array. The frames are put on our overflow
@@ -748,15 +735,12 @@ public:
   /** Reset the rowindices of all rows as they might have changed due to 
     * rowgroup reordering, exclude new row group frames that show in the
     * reordering but are not yet inserted into the cellmap
-    * @param aFirstRowGroupFrame - first row group to be excluded
-    * @param aLastRowGroupFrame  - last sibling of aFirstRowGroupFrame that
-    *                              should be excluded when reseting the row
-    *                              indices.
+    * @param aRowGroupsToExclude - an iterator that will produce the row groups
+    *                              to exclude.
     */
-  void ResetRowIndices(nsIFrame* aFirstRowGroupFrame = nsnull,
-                       nsIFrame* aLastRowGroupFrame = nsnull);
+  void ResetRowIndices(const nsFrameList::Slice& aRowGroupsToExclude);
 
-  nsVoidArray& GetColCache();
+  nsTArray<nsTableColFrame*>& GetColCache();
 
   /** Return aFrame's child if aFrame is an nsScrollFrame, otherwise return aFrame
     */
@@ -774,8 +758,8 @@ protected:
   void SetColumnDimensions(nscoord         aHeight,
                            const nsMargin& aReflowState);
 
-  PRInt32 CollectRows(nsIFrame*       aFrame,
-                      nsVoidArray&    aCollection);
+  PRInt32 CollectRows(nsIFrame*                   aFrame,
+                      nsTArray<nsTableRowFrame*>& aCollection);
 
 public: /* ----- Cell Map public methods ----- */
 
@@ -828,7 +812,6 @@ public:
   void Dump(PRBool          aDumpRows,
             PRBool          aDumpCols, 
             PRBool          aDumpCellMap);
-  static void DumpTableFrames(nsIFrame* aFrame);
 #endif
 
 protected:
@@ -836,7 +819,7 @@ protected:
   void DumpRowGroup(nsIFrame* aChildFrame);
 #endif
   // DATA MEMBERS
-  nsAutoVoidArray mColFrames;  
+  nsAutoTPtrArray<nsTableColFrame, 8> mColFrames;
 
   struct TableBits {
     PRUint32 mHaveReflowedColGroups:1; // have the col groups gotten their initial reflow
@@ -908,12 +891,12 @@ inline void nsTableFrame::SetRowInserted(PRBool aValue)
 
 inline void nsTableFrame::SetNeedToCollapse(PRBool aValue)
 {
-  mBits.mNeedToCollapse = (unsigned)aValue;
+  static_cast<nsTableFrame*>(GetFirstInFlow())->mBits.mNeedToCollapse = (unsigned)aValue;
 }
 
 inline PRBool nsTableFrame::NeedToCollapse() const
 {
-  return (PRBool)mBits.mNeedToCollapse;
+  return (PRBool) static_cast<nsTableFrame*>(GetFirstInFlow())->mBits.mNeedToCollapse;
 }
 
 inline void nsTableFrame::SetHasZeroColSpans(PRBool aValue)
@@ -942,7 +925,7 @@ inline nsFrameList& nsTableFrame::GetColGroups()
   return static_cast<nsTableFrame*>(GetFirstInFlow())->mColGroups;
 }
 
-inline nsVoidArray& nsTableFrame::GetColCache()
+inline nsTArray<nsTableColFrame*>& nsTableFrame::GetColCache()
 {
   return mColFrames;
 }
@@ -972,6 +955,11 @@ nsTableFrame::GetContinuousLeftBCBorderWidth() const
 {
   PRInt32 aPixelsToTwips = nsPresContext::AppUnitsPerCSSPixel();
   return BC_BORDER_RIGHT_HALF_COORD(aPixelsToTwips, mBits.mLeftContBCBorder);
+}
+
+inline void nsTableFrame::SetContinuousLeftBCBorderWidth(nscoord aValue)
+{
+  mBits.mLeftContBCBorder = (unsigned) aValue;
 }
 
 class nsTableIterator

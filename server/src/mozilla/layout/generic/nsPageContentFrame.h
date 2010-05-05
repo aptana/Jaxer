@@ -45,6 +45,8 @@ class nsSharedPageData;
 class nsPageContentFrame : public ViewportFrame {
 
 public:
+  NS_DECL_FRAMEARENA_HELPERS
+
   friend nsIFrame* NS_NewPageContentFrame(nsIPresShell* aPresShell, nsStyleContext* aContext);
   friend class nsPageFrame;
 
@@ -83,10 +85,6 @@ protected:
   nsPageContentFrame(nsStyleContext* aContext) : ViewportFrame(aContext) {}
 
   nsSharedPageData*         mPD;
-
-private:
-  PRBool IsFixedPlaceholder(nsIFrame* aFrame);
-  nsFrameList StealFixedPlaceholders(nsIFrame* aDocRoot);
 };
 
 #endif /* nsPageContentFrame_h___ */

@@ -44,8 +44,8 @@
 struct nsStyleBackground;
 
 enum nsFontSizeType {
-  eFontSize_HTML  	= 1,
-  eFontSize_CSS			= 2
+  eFontSize_HTML = 1,
+  eFontSize_CSS = 2
 };
 
 
@@ -69,14 +69,18 @@ public:
 
   static PRInt32 ConstrainFontWeight(PRInt32 aWeight);
 
-  static PRBool IsHTMLLink(nsIContent *aContent, nsIAtom *aTag, nsPresContext *aPresContext, nsLinkState *aState);
-  static PRBool IsLink(nsIContent *aContent, nsPresContext *aPresContext, nsLinkState *aState);
+  static PRBool IsHTMLLink(nsIContent *aContent, nsILinkHandler *aLinkHandler,
+                           nsLinkState *aState);
+  static PRBool IsLink(nsIContent *aContent, nsILinkHandler *aLinkHandler,
+                       nsLinkState *aState);
 
  static PRBool DashMatchCompare(const nsAString& aAttributeValue,
                                 const nsAString& aSelectorValue,
                                 const nsStringComparator& aComparator);
                                 
-  static void EscapeCSSString(const nsString& aString, nsAString& aReturn);
+  // Append a quoted (with "") and escaped version of aString to aResult.
+  static void AppendEscapedCSSString(const nsString& aString,
+                                     nsAString& aResult);
 
   /*
    * Convert an author-provided floating point number to an integer (0

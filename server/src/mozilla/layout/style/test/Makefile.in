@@ -45,6 +45,9 @@ include $(DEPTH)/config/autoconf.mk
 
 MODULE		= layout
 
+DIRS +=		chrome \
+		$(NULL)
+
 # XXX Yuck.  We can't transfer everything from autoconf to HOST_CFLAGS,
 # but it would be nice to pick up anything affecting nsCSSPropList.h
 # automatically.
@@ -68,9 +71,12 @@ css_properties.js: host_ListCSSProperties$(HOST_BIN_SUFFIX) css_properties_like_
 
 GARBAGE += css_properties.js
 
-_TEST_FILES =	test_bug73586.html \
+_TEST_FILES =	test_acid3_test46.html \
+		test_at_rule_parse_serialize.html \
+		test_bug73586.html \
 		test_bug74880.html \
 		test_bug98997.html \
+		test_bug160403.html \
 		test_bug221428.html \
 		test_bug229915.html \
 		test_bug302186.html \
@@ -90,24 +96,58 @@ _TEST_FILES =	test_bug73586.html \
 		test_bug391034.html \
 		test_bug391221.html \
 		test_bug397427.html \
+		test_bug399349.html \
 		test_bug401046.html \
 		test_bug405818.html \
 		test_bug412901.html \
+		test_bug437915.html \
+		test_bug450191.html \
+		test_bug453896_deck.html \
+		test_bug470769.html \
+		test_bug499655.html \
+		test_bug499655.xhtml \
+		test_bug517224.html \
+		test_cascade.html \
 		test_compute_data_with_start_struct.html \
+		test_computed_style_no_pseudo.html \
+		test_css_eof_handling.html \
+		test_descriptor_storage.html \
+		test_descriptor_syntax_errors.html \
 		test_dont_use_document_colors.html \
-		test_inherit_storage.html \
+		test_font_face_parser.html \
+		test_garbage_at_end_of_declarations.html \
+		test_hover.html \
 		test_inherit_computation.html \
-		test_initial_storage.html \
+		test_inherit_storage.html \
 		test_initial_computation.html \
+		test_initial_storage.html \
+		test_media_queries.html \
+		test_media_queries_dynamic.html \
+		test_media_queries_dynamic_xbl.html \
+		test_namespace_rule.html \
+		test_of_type_selectors.xhtml \
 		test_parse_rule.html \
+		test_parse_url.html \
+		test_pointer-events.html \
 		test_property_database.html \
+		test_priority_preservation.html \
 		test_property_syntax_errors.html \
+		test_rem_unit.html \
 		test_selectors.html \
+		test_selectors_on_anonymous_content.html \
+		test_shorthand_property_getters.html \
 		test_style_struct_copy_constructors.html \
-		test_value_storage.html \
+		test_system_font_serialization.html \
+		test_units_angle.html \
+		test_units_frequency.html \
+		test_units_length.html \
+		test_units_time.html \
 		test_value_computation.html \
+		test_value_storage.html \
+		test_visited_pref.html \
 		css_properties.js \
 		property_database.js \
+		descriptor_database.js \
 		unstyled.xml \
 		unstyled.css \
 		unstyled-frame.xml \
@@ -121,8 +161,24 @@ _TEST_FILES =	test_bug73586.html \
 		redirect-3.css \
 		redirect-3.css^headers^ \
 		post-redirect-3.css \
+		xbl_bindings.xml \
+		empty.html \
+		media_queries_iframe.html \
+		media_queries_dynamic_xbl_binding.xml \
+		media_queries_dynamic_xbl_iframe.html \
+		media_queries_dynamic_xbl_style.css \
+		bug453896_iframe.html \
+		bug517224.sjs \
 		$(NULL)
 
+_BROWSER_FILES = \
+		browser_bug453896.js \
+		bug453896_iframe.html \
+		media_queries_iframe.html \
+		$(NULL)
 
 libs:: $(_TEST_FILES)
 	$(INSTALL) $(foreach f,$^,"$f") $(DEPTH)/_tests/testing/mochitest/tests/$(relativesrcdir)
+
+libs:: $(_BROWSER_FILES)
+	$(INSTALL) $(foreach f,$^,"$f") $(DEPTH)/_tests/testing/mochitest/browser/$(relativesrcdir)

@@ -113,6 +113,22 @@
 #define NS_FRAME_TRACE_REFLOW_OUT(_method, _status)
 #endif
 
+// Frame allocation boilerplate macros.  Every subclass of nsFrame
+// must define its own operator new and GetAllocatedSize.  If they do
+// not, the per-frame recycler lists in nsPresArena will not work
+// correctly, with potentially catastrophic consequences (not enough
+// memory is allocated for a frame object).
+
+#define NS_DECL_FRAMEARENA_HELPERS                                \
+  NS_MUST_OVERRIDE void* operator new(size_t, nsIPresShell*);     \
+  virtual NS_MUST_OVERRIDE nsQueryFrame::FrameIID GetFrameId();
+
+#define NS_IMPL_FRAMEARENA_HELPERS(class)                         \
+  void* class::operator new(size_t sz, nsIPresShell* aShell)      \
+  { return aShell->AllocateFrame(nsQueryFrame::class##_id, sz); } \
+  nsQueryFrame::FrameIID class::GetFrameId()                      \
+  { return nsQueryFrame::class##_id; }
+
 //----------------------------------------------------------------------
 
 struct nsBoxLayoutMetrics;
@@ -134,42 +150,43 @@ public:
    * Create a new "empty" frame that maps a given piece of content into a
    * 0,0 area.
    */
-  friend nsIFrame* NS_NewEmptyFrame(nsIPresShell* aShell, nsStyleContext* aContext);
-
-  // Overloaded new operator. Initializes the memory to 0 and relies on an arena
-  // (which comes from the presShell) to perform the allocation.
-  void* operator new(size_t sz, nsIPresShell* aPresShell) CPP_THROW_NEW;
-
-  // Overridden to prevent the global delete from being called, since the memory
-  // came out of an arena instead of the global delete operator's heap.  
-  // XXX Would like to make this private some day, but our UNIX compilers can't 
-  // deal with it.
-  void operator delete(void* aPtr, size_t sz);
-
-  // We compute and store the HTML content's overflow area. So don't
-  // try to compute it in the box code.
-  virtual PRBool ComputesOwnOverflowArea() { return PR_TRUE; }
+  friend nsIFrame* NS_NewEmptyFrame(nsIPresShell* aShell,
+                                    nsStyleContext* aContext);
 
 private:
-  // The normal operator new is disallowed on nsFrames.
-  void* operator new(size_t sz) CPP_THROW_NEW { return nsnull; }
+  // Left undefined; nsFrame objects are never allocated from the heap.
+  void* operator new(size_t sz) CPP_THROW_NEW;
+
+protected:
+  // Overridden to prevent the global delete from being called, since
+  // the memory came out of an arena instead of the heap.
+  //
+  // Ideally this would be private and undefined, like the normal
+  // operator new.  Unfortunately, the C++ standard requires an
+  // overridden operator delete to be accessible to any subclass that
+  // defines a virtual destructor, so we can only make it protected;
+  // worse, some C++ compilers will synthesize calls to this function
+  // from the "deleting destructors" that they emit in case of
+  // delete-expressions, so it can't even be undefined.
+  void operator delete(void* aPtr, size_t sz);
 
 public:
 
-  // nsISupports
-  NS_IMETHOD  QueryInterface(const nsIID& aIID, void** aInstancePtr);
+  // nsQueryFrame
+  NS_DECL_QUERYFRAME
+  NS_DECL_FRAMEARENA_HELPERS
 
   // nsIFrame
   NS_IMETHOD  Init(nsIContent*      aContent,
                    nsIFrame*        aParent,
                    nsIFrame*        asPrevInFlow);
-  NS_IMETHOD  SetInitialChildList(nsIAtom*        aListName,
-                                  nsIFrame*       aChildList);
+  NS_IMETHOD  SetInitialChildList(nsIAtom*           aListName,
+                                  nsFrameList&       aChildList);
   NS_IMETHOD  AppendFrames(nsIAtom*        aListName,
-                           nsIFrame*       aFrameList);
+                           nsFrameList&    aFrameList);
   NS_IMETHOD  InsertFrames(nsIAtom*        aListName,
                            nsIFrame*       aPrevFrame,
-                           nsIFrame*       aFrameList);
+                           nsFrameList&    aFrameList);
   NS_IMETHOD  RemoveFrame(nsIAtom*        aListName,
                           nsIFrame*       aOldFrame);
   virtual void Destroy();
@@ -179,7 +196,7 @@ public:
   NS_IMETHOD  SetParent(const nsIFrame* aParent);
   virtual nscoord GetBaseline() const;
   virtual nsIAtom* GetAdditionalChildListName(PRInt32 aIndex) const;
-  virtual nsIFrame* GetFirstChild(nsIAtom* aListName) const;
+  virtual nsFrameList GetChildList(nsIAtom* aListName) const;
   NS_IMETHOD  HandleEvent(nsPresContext* aPresContext, 
                           nsGUIEvent*     aEvent,
                           nsEventStatus*  aEventStatus);
@@ -212,9 +229,7 @@ public:
    */
   static nsIFrame* GetNearestCapturingFrame(nsIFrame* aFrame);
 
-  NS_IMETHOD  CharacterDataChanged(nsPresContext* aPresContext,
-                                   nsIContent*     aChild,
-                                   PRBool          aAppend);
+  NS_IMETHOD  CharacterDataChanged(CharacterDataChangeInfo* aInfo);
   NS_IMETHOD  AttributeChanged(PRInt32         aNameSpaceID,
                                nsIAtom*        aAttribute,
                                PRInt32         aModType);
@@ -228,18 +243,15 @@ public:
   virtual nsIFrame* GetNextInFlowVirtual() const;
   NS_IMETHOD  SetNextInFlow(nsIFrame*);
   NS_IMETHOD  GetOffsetFromView(nsPoint& aOffset, nsIView** aView) const;
-  NS_IMETHOD  GetOriginToViewOffset(nsPoint& aOffset, nsIView **aView) const;
   virtual nsIAtom* GetType() const;
   virtual PRBool IsContainingBlock() const;
 #ifdef NS_DEBUG
   NS_IMETHOD  List(FILE* out, PRInt32 aIndent) const;
   NS_IMETHOD  GetFrameName(nsAString& aResult) const;
   NS_IMETHOD_(nsFrameState) GetDebugStateBits() const;
-  NS_IMETHOD  DumpRegressionData(nsPresContext* aPresContext, FILE* out, PRInt32 aIndent, PRBool aIncludeStyleData);
-  NS_IMETHOD  VerifyTree() const;
+  NS_IMETHOD  DumpRegressionData(nsPresContext* aPresContext, FILE* out, PRInt32 aIndent);
 #endif
 
-  NS_IMETHOD  SetSelected(nsPresContext* aPresContext, nsIDOMRange *aRange,PRBool aSelected, nsSpread aSpread);
   NS_IMETHOD  GetSelected(PRBool *aSelected) const;
   NS_IMETHOD  IsSelectable(PRBool* aIsSelectable, PRUint8* aSelectStyle) const;
 
@@ -346,7 +358,8 @@ public:
 
   NS_IMETHOD HandleMultiplePress(nsPresContext* aPresContext,
                          nsGUIEvent *    aEvent,
-                         nsEventStatus*  aEventStatus);
+                         nsEventStatus*  aEventStatus,
+                         PRBool          aControlHeld);
 
   NS_IMETHOD HandleDrag(nsPresContext* aPresContext,
                         nsGUIEvent *    aEvent,
@@ -360,7 +373,8 @@ public:
                                     nsSelectionAmount aAmountForward,
                                     PRInt32 aStartPos,
                                     nsPresContext* aPresContext,
-                                    PRBool aJumpLines);
+                                    PRBool aJumpLines,
+                                    PRBool aMultipleSelection);
 
 
   // Helper for GetContentAndOffsetsFromPoint; calculation of content offsets
@@ -374,22 +388,22 @@ public:
   virtual nscoord GetFlex(nsBoxLayoutState& aBoxLayoutState);
   virtual nscoord GetBoxAscent(nsBoxLayoutState& aBoxLayoutState);
 
+  // We compute and store the HTML content's overflow area. So don't
+  // try to compute it in the box code.
+  virtual PRBool ComputesOwnOverflowArea() { return PR_TRUE; }
+
   //--------------------------------------------------
   // Additional methods
 
   /**
    * Helper method to invalidate portions of a standard container frame if the
-   * reflow state indicates that the size has changed (specifically border,
+   * desired size indicates that the size has changed (specifically border,
    * background and outline).
    * We assume that the difference between the old frame area and the new
    * frame area is invalidated by some other means.
-   * @param aPresContext the presentation context
    * @param aDesiredSize the new size of the frame
-   * @param aReflowState the reflow that was just done on this frame
    */
-  void CheckInvalidateSizeChange(nsPresContext*          aPresContext,
-                                 nsHTMLReflowMetrics&     aDesiredSize,
-                                 const nsHTMLReflowState& aReflowState);
+  void CheckInvalidateSizeChange(nsHTMLReflowMetrics&     aNewDesiredSize);
 
   // Helper function that tests if the frame tree is too deep; if it
   // is it marks the frame as "unflowable" and zeros out the metrics
@@ -433,31 +447,30 @@ public:
 
   // Helper function that verifies that each frame in the list has the
   // NS_FRAME_IS_DIRTY bit set
-  static void VerifyDirtyBitSet(nsIFrame* aFrameList);
+  static void VerifyDirtyBitSet(const nsFrameList& aFrameList);
 
   // Helper function to return the index in parent of the frame's content
   // object. Returns -1 on error or if the frame doesn't have a content object
   static PRInt32 ContentIndexInContainer(const nsIFrame* aFrame);
 
+  static void IndentBy(FILE* out, PRInt32 aIndent) {
+    while (--aIndent >= 0) fputs("  ", out);
+  }
+  
   void ListTag(FILE* out) const {
     ListTag(out, (nsIFrame*)this);
   }
 
   static void ListTag(FILE* out, nsIFrame* aFrame) {
     nsAutoString tmp;
-    nsIFrameDebug*  frameDebug;
-
-    if (NS_SUCCEEDED(aFrame->QueryInterface(NS_GET_IID(nsIFrameDebug), (void**)&frameDebug))) {
+    nsIFrameDebug*  frameDebug = do_QueryFrame(aFrame);
+    if (frameDebug) {
       frameDebug->GetFrameName(tmp);
     }
     fputs(NS_LossyConvertUTF16toASCII(tmp).get(), out);
     fprintf(out, "@%p", static_cast<void*>(aFrame));
   }
 
-  static void IndentBy(FILE* out, PRInt32 aIndent) {
-    while (--aIndent >= 0) fputs("  ", out);
-  }
-  
   static void XMLQuote(nsString& aString);
 
   /**
@@ -469,7 +482,7 @@ public:
    * some custom behavior that requires changing how the outer "frame"
    * XML container is dumped.
    */
-  virtual void DumpBaseRegressionData(nsPresContext* aPresContext, FILE* out, PRInt32 aIndent, PRBool aIncludeStyleData);
+  virtual void DumpBaseRegressionData(nsPresContext* aPresContext, FILE* out, PRInt32 aIndent);
   
   nsresult MakeFrameName(const nsAString& aKind, nsAString& aResult) const;
 
@@ -502,6 +515,17 @@ public:
   static void DisplayReflowShutdown();
 #endif
 
+  /**
+   * Adds display item for standard CSS background if necessary.
+   * Does not check IsVisibleForPainting.
+   * @param aForceBackground draw the background even if the frame
+   * background style appears to have no background --- this is useful
+   * for frames that might receive a propagated background via
+   * nsCSSRendering::FindBackground
+   */
+  nsresult DisplayBackgroundUnconditional(nsDisplayListBuilder*   aBuilder,
+                                          const nsDisplayListSet& aLists,
+                                          PRBool aForceBackground = PR_FALSE);
   /**
    * Adds display items for standard CSS borders, background and outline for
    * for this frame, as necessary. Checks IsVisibleForPainting and won't
@@ -544,11 +568,6 @@ protected:
   virtual ~nsFrame();
 
   /**
-   * @return PR_FALSE if this frame definitely has no borders at all
-   */                 
-  PRBool HasBorder() const;
-
-  /**
    * To be called by |BuildDisplayLists| of this class or derived classes to add
    * a translucent overlay if this frame's content is selected.
    * @param aContentType an nsISelectionDisplay DISPLAY_ constant identifying
@@ -560,7 +579,7 @@ protected:
   PRInt16 DisplaySelection(nsPresContext* aPresContext, PRBool isOkToTurnOn = PR_FALSE);
   
   // Style post processing hook
-  NS_IMETHOD DidSetStyleContext();
+  virtual void DidSetStyleContext(nsStyleContext* aOldStyleContext);
 
 public:
   //given a frame five me the first/last leaf available
@@ -568,8 +587,13 @@ public:
   static void GetLastLeaf(nsPresContext* aPresContext, nsIFrame **aFrame);
   static void GetFirstLeaf(nsPresContext* aPresContext, nsIFrame **aFrame);
 
-  // return the line number of the aFrame, and (optionally) the containing block frame.
-  static PRInt32 GetLineNumber(nsIFrame *aFrame, nsIFrame** aContainingBlock = nsnull);
+  // Return the line number of the aFrame, and (optionally) the containing block
+  // frame.
+  // If aScrollLock is true, don't break outside scrollframes when looking for a
+  // containing block frame.
+  static PRInt32 GetLineNumber(nsIFrame *aFrame,
+                               PRBool aLockScroll,
+                               nsIFrame** aContainingBlock = nsnull);
 
 protected:
 
@@ -586,8 +610,6 @@ protected:
                                       nsIContent **aParentContent, PRInt32 *aContentOffset, 
                                       PRInt32 *aTarget);
 
-  virtual PRBool ParentDisablesSelection() const;
-
   // Fills aCursor with the appropriate information from ui
   static void FillCursorInformationFromStyle(const nsStyleUserInterface* ui,
                                              nsIFrame::Cursor& aCursor);
@@ -596,9 +618,6 @@ protected:
 #ifdef DEBUG_LAYOUT
   virtual void GetBoxName(nsAutoString& aName);
 #endif
-
-  virtual PRBool GetWasCollapsed(nsBoxLayoutState& aState);
-  virtual void SetWasCollapsed(nsBoxLayoutState& aState, PRBool aWas);
 
   void InitBoxMetrics(PRBool aClear);
   nsBoxLayoutMetrics* BoxMetrics() const;
@@ -619,9 +638,7 @@ private:
 
   NS_IMETHODIMP RefreshSizeCache(nsBoxLayoutState& aState);
 
-protected:
-  NS_IMETHOD_(nsrefcnt) AddRef(void);
-  NS_IMETHOD_(nsrefcnt) Release(void);
+  virtual nsILineIterator* GetLineIterator();
 };
 
 // Start Display Reflow Debugging

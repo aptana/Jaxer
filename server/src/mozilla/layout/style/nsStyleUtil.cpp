@@ -42,7 +42,6 @@
 
 #include "nsGkAtoms.h"
 #include "nsILinkHandler.h"
-#include "nsILink.h"
 #include "nsIContent.h"
 #include "nsIDocument.h"
 #include "nsINameSpaceManager.h"
@@ -225,11 +224,11 @@ nsStyleUtil::CalcFontPointSize(PRInt32 aHTMLSize, PRInt32 aBasePointSize,
   {
     PRInt32 row = fontSize - sFontSizeTableMin;
 
-	  if (aPresContext->CompatibilityMode() == eCompatibility_NavQuirks) {
-	    dFontSize = nsPresContext::CSSPixelsToAppUnits(sQuirksFontSizeTable[row][column[aHTMLSize]]);
-	  } else {
-	    dFontSize = nsPresContext::CSSPixelsToAppUnits(sStrictFontSizeTable[row][column[aHTMLSize]]);
-	  }
+    if (aPresContext->CompatibilityMode() == eCompatibility_NavQuirks) {
+      dFontSize = nsPresContext::CSSPixelsToAppUnits(sQuirksFontSizeTable[row][column[aHTMLSize]]);
+    } else {
+      dFontSize = nsPresContext::CSSPixelsToAppUnits(sStrictFontSizeTable[row][column[aHTMLSize]]);
+    }
   }
   else
   {
@@ -267,13 +266,13 @@ nscoord nsStyleUtil::FindNextSmallerFontSize(nscoord aFontSize, PRInt32 aBasePoi
 
   nscoord onePx = nsPresContext::CSSPixelsToAppUnits(1);
 
-	if (aFontSizeType == eFontSize_HTML) {
-		indexMin = 1;
-		indexMax = 7;
-	} else {
-		indexMin = 0;
-		indexMax = 6;
-	}
+  if (aFontSizeType == eFontSize_HTML) {
+    indexMin = 1;
+    indexMax = 7;
+  } else {
+    indexMin = 0;
+    indexMax = 6;
+  }
   
   smallestIndexFontSize = CalcFontPointSize(indexMin, aBasePointSize, aScalingFactor, aPresContext, aFontSizeType);
   largestIndexFontSize = CalcFontPointSize(indexMax, aBasePointSize, aScalingFactor, aPresContext, aFontSizeType); 
@@ -332,13 +331,13 @@ nscoord nsStyleUtil::FindNextLargerFontSize(nscoord aFontSize, PRInt32 aBasePoin
 
   nscoord onePx = nsPresContext::CSSPixelsToAppUnits(1);
 
-	if (aFontSizeType == eFontSize_HTML) {
-		indexMin = 1;
-		indexMax = 7;
-	} else {
-		indexMin = 0;
-		indexMax = 6;
-	}
+  if (aFontSizeType == eFontSize_HTML) {
+    indexMin = 1;
+    indexMax = 7;
+  } else {
+    indexMin = 0;
+    indexMax = 6;
+  }
   
   smallestIndexFontSize = CalcFontPointSize(indexMin, aBasePointSize, aScalingFactor, aPresContext, aFontSizeType);
   largestIndexFontSize = CalcFontPointSize(indexMax, aBasePointSize, aScalingFactor, aPresContext, aFontSizeType); 
@@ -402,68 +401,73 @@ nsStyleUtil::ConstrainFontWeight(PRInt32 aWeight)
   return (base + ((negativeStep) ? -step : step));
 }
 
-
-/*static*/
-PRBool nsStyleUtil::IsHTMLLink(nsIContent *aContent, nsIAtom *aTag, nsPresContext *aPresContext, nsLinkState *aState)
+static nsLinkState
+GetLinkStateFromURI(nsIURI* aURI, nsIContent* aContent,
+                    nsILinkHandler* aLinkHandler)
 {
-  NS_ASSERTION(aContent && aState, "null arg in IsHTMLLink");
-
-  // check for:
-  //  - HTML ANCHOR with valid HREF
-  //  - HTML LINK with valid HREF
-  //  - HTML AREA with valid HREF
-
-  PRBool result = PR_FALSE;
-
-  if ((aTag == nsGkAtoms::a) ||
-      (aTag == nsGkAtoms::link) ||
-      (aTag == nsGkAtoms::area)) {
-
-    nsCOMPtr<nsILink> link( do_QueryInterface(aContent) );
-    // In XML documents, this can be null.
-    if (link) {
-      nsLinkState linkState;
-      link->GetLinkState(linkState);
-      if (linkState == eLinkState_Unknown) {
-        // if it is an anchor, area or link then check the href attribute
-        // make sure this anchor has a link even if we are not testing state
-        // if there is no link, then this anchor is not really a linkpseudo.
-        // bug=23209
-
-        nsCOMPtr<nsIURI> hrefURI;
-        link->GetHrefURI(getter_AddRefs(hrefURI));
-
-        if (hrefURI) {
-          nsILinkHandler *linkHandler = aPresContext->GetLinkHandler();
-          if (linkHandler) {
-            linkHandler->GetLinkState(hrefURI, linkState);
-          }
-          else {
-            // no link handler?  then all links are unvisited
-            linkState = eLinkState_Unvisited;
-          }
-        } else {
-          linkState = eLinkState_NotLink;
-        }
-        if (linkState != eLinkState_NotLink) {
-          aPresContext->Document()->AddStyleRelevantLink(aContent, hrefURI);
-        }
-        link->SetLinkState(linkState);
-      }
-      if (linkState != eLinkState_NotLink) {
-        *aState = linkState;
-        result = PR_TRUE;
-      }
+  NS_PRECONDITION(aURI, "Must have URI");
+  nsLinkState state;
+  if (NS_LIKELY(aLinkHandler)) {
+    aLinkHandler->GetLinkState(aURI, state);
+  }
+  else {
+    // no link handler?  Try to get one off the content
+    NS_ASSERTION(aContent->GetOwnerDoc(), "Shouldn't happen");
+    nsCOMPtr<nsISupports> supp =
+      aContent->GetOwnerDoc()->GetContainer();
+    nsCOMPtr<nsILinkHandler> handler = do_QueryInterface(supp);
+    if (handler) {
+      handler->GetLinkState(aURI, state);
+    } else {
+      // no link handler?  then all links are unvisited
+      state = eLinkState_Unvisited;
     }
   }
 
-  return result;
+  return state;  
 }
 
 /*static*/
-PRBool nsStyleUtil::IsLink(nsIContent    *aContent,
-                           nsPresContext *aPresContext,
-                           nsLinkState   *aState)
+PRBool nsStyleUtil::IsHTMLLink(nsIContent *aContent,
+                               nsILinkHandler *aLinkHandler,
+                               nsLinkState *aState)
+{
+  NS_ASSERTION(aContent->IsNodeOfType(nsINode::eHTML),
+               "Only use this function with HTML elements");
+  NS_ASSERTION(aState, "null arg in IsHTMLLink");
+
+  nsLinkState linkState = aContent->GetLinkState();
+  if (linkState == eLinkState_Unknown) {
+    // if it is an anchor, area or link then check the href attribute
+    // make sure this anchor has a link even if we are not testing state
+    // if there is no link, then this anchor is not really a linkpseudo.
+    // bug=23209
+
+    nsCOMPtr<nsIURI> hrefURI = aContent->GetHrefURI();
+
+    if (hrefURI) {
+      linkState = GetLinkStateFromURI(hrefURI, aContent, aLinkHandler);
+    } else {
+      linkState = eLinkState_NotLink;
+    }
+    if (linkState != eLinkState_NotLink && aContent->IsInDoc()) {
+      aContent->GetCurrentDoc()->AddStyleRelevantLink(aContent, hrefURI);
+    }
+    aContent->SetLinkState(linkState);
+  }
+  if (linkState == eLinkState_NotLink) {
+    return PR_FALSE;
+  }
+
+  *aState = linkState;
+
+  return PR_TRUE;
+}
+
+/*static*/
+PRBool nsStyleUtil::IsLink(nsIContent     *aContent,
+                           nsILinkHandler *aLinkHandler,
+                           nsLinkState    *aState)
 {
   // XXX PERF This function will cause serious performance problems on
   // pages with lots of XLinks.  We should be caching the visited
@@ -476,15 +480,10 @@ PRBool nsStyleUtil::IsLink(nsIContent    *aContent,
   if (aContent && aState) {
     nsCOMPtr<nsIURI> absURI;
     if (aContent->IsLink(getter_AddRefs(absURI))) {
-      nsILinkHandler *linkHandler = aPresContext->GetLinkHandler();
-      if (linkHandler) {
-        linkHandler->GetLinkState(absURI, *aState);
+      *aState = GetLinkStateFromURI(absURI, aContent, aLinkHandler);
+      if (aContent->IsInDoc()) {
+        aContent->GetCurrentDoc()->AddStyleRelevantLink(aContent, absURI);
       }
-      else {
-        // no link handler?  then all links are unvisited
-        *aState = eLinkState_Unvisited;
-      }
-      aPresContext->Document()->AddStyleRelevantLink(aContent, absURI);
 
       rv = PR_TRUE;
     }
@@ -520,9 +519,10 @@ PRBool nsStyleUtil::DashMatchCompare(const nsAString& aAttributeValue,
   return result;
 }
 
-void nsStyleUtil::EscapeCSSString(const nsString& aString, nsAString& aReturn)
+void nsStyleUtil::AppendEscapedCSSString(const nsString& aString,
+                                         nsAString& aReturn)
 {
-  aReturn.Truncate();
+  aReturn.Append(PRUnichar('"'));
 
   const nsString::char_type* in = aString.get();
   const nsString::char_type* const end = in + aString.Length();
@@ -552,6 +552,8 @@ void nsStyleUtil::EscapeCSSString(const nsString& aString, nsAString& aReturn)
        aReturn.Append(PRUnichar(*in));
     }
   }
+
+  aReturn.Append(PRUnichar('"'));
 }
 
 /* static */ float

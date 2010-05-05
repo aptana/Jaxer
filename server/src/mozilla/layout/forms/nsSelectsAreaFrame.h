@@ -37,18 +37,14 @@
 #ifndef nsSelectsAreaFrame_h___
 #define nsSelectsAreaFrame_h___
 
-#include "nsAreaFrame.h"
+#include "nsBlockFrame.h"
 class nsIContent;
 
-/**
- * The area frame has an additional named child list:
- * - "Absolute-list" which contains the absolutely positioned frames
- *
- * @see nsGkAtoms::absoluteList
- */
-class nsSelectsAreaFrame : public nsAreaFrame
+class nsSelectsAreaFrame : public nsBlockFrame
 {
 public:
+  NS_DECL_FRAMEARENA_HELPERS
+
   friend nsIFrame* NS_NewSelectsAreaFrame(nsIPresShell* aShell, nsStyleContext* aContext, PRUint32 aFlags);
 
   NS_IMETHOD BuildDisplayList(nsDisplayListBuilder*   aBuilder,
@@ -71,7 +67,7 @@ public:
   
 protected:
   nsSelectsAreaFrame(nsStyleContext* aContext) :
-    nsAreaFrame(aContext),
+    nsBlockFrame(aContext),
     mHeightOfARow(0)
   {}
 

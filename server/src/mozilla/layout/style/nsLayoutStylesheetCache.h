@@ -55,6 +55,8 @@ class nsLayoutStylesheetCache
   static nsICSSStyleSheet* FormsSheet();
   static nsICSSStyleSheet* UserContentSheet();
   static nsICSSStyleSheet* UserChromeSheet();
+  static nsICSSStyleSheet* UASheet();
+  static nsICSSStyleSheet* QuirkSheet();
 
   static void Shutdown();
 
@@ -66,14 +68,18 @@ private:
   void InitFromProfile();
   static void LoadSheetFile(nsIFile* aFile, nsCOMPtr<nsICSSStyleSheet> &aSheet);
   static void LoadSheet(nsIURI* aURI, nsCOMPtr<nsICSSStyleSheet> &aSheet,
-                        PRBool aEnableUnsafeRules);
+                        PRBool aEnableUnsafeRules,
+                        PRBool aUseCaseSensitiveLoader);
 
   static nsLayoutStylesheetCache* gStyleCache;
   static nsICSSLoader* gCSSLoader;
+  static nsICSSLoader* gCaseSensitiveCSSLoader;
   nsCOMPtr<nsICSSStyleSheet> mScrollbarsSheet;
   nsCOMPtr<nsICSSStyleSheet> mFormsSheet;
   nsCOMPtr<nsICSSStyleSheet> mUserContentSheet;
   nsCOMPtr<nsICSSStyleSheet> mUserChromeSheet;
+  nsCOMPtr<nsICSSStyleSheet> mUASheet;
+  nsCOMPtr<nsICSSStyleSheet> mQuirkSheet;
 };
 
 #endif

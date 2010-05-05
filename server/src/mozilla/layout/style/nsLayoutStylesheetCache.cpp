@@ -44,6 +44,7 @@
 #include "nsNetUtil.h"
 #include "nsIObserverService.h"
 #include "nsServiceManagerUtils.h"
+#include "nsIXULRuntime.h"
 
 NS_IMPL_ISUPPORTS1(nsLayoutStylesheetCache, nsIObserver)
 
@@ -84,7 +85,7 @@ nsLayoutStylesheetCache::ScrollbarsSheet()
 
     // Scrollbars don't need access to unsafe rules
     if (sheetURI)
-      LoadSheet(sheetURI, gStyleCache->mScrollbarsSheet, PR_FALSE);
+      LoadSheet(sheetURI, gStyleCache->mScrollbarsSheet, PR_FALSE, PR_TRUE);
     NS_ASSERTION(gStyleCache->mScrollbarsSheet, "Could not load scrollbars.css.");
   }
 
@@ -105,7 +106,7 @@ nsLayoutStylesheetCache::FormsSheet()
 
     // forms.css needs access to unsafe rules
     if (sheetURI)
-      LoadSheet(sheetURI, gStyleCache->mFormsSheet, PR_TRUE);
+      LoadSheet(sheetURI, gStyleCache->mFormsSheet, PR_TRUE, PR_FALSE);
 
     NS_ASSERTION(gStyleCache->mFormsSheet, "Could not load forms.css.");
   }
@@ -133,10 +134,31 @@ nsLayoutStylesheetCache::UserChromeSheet()
   return gStyleCache->mUserChromeSheet;
 }
 
+nsICSSStyleSheet*
+nsLayoutStylesheetCache::UASheet()
+{
+  EnsureGlobal();
+  if (!gStyleCache)
+    return nsnull;
+
+  return gStyleCache->mUASheet;
+}
+
+nsICSSStyleSheet*
+nsLayoutStylesheetCache::QuirkSheet()
+{
+  EnsureGlobal();
+  if (!gStyleCache)
+    return nsnull;
+
+  return gStyleCache->mQuirkSheet;
+}
+
 void
 nsLayoutStylesheetCache::Shutdown()
 {
   NS_IF_RELEASE(gCSSLoader);
+  NS_IF_RELEASE(gCaseSensitiveCSSLoader);
   NS_IF_RELEASE(gStyleCache);
 }
 
@@ -154,11 +176,27 @@ nsLayoutStylesheetCache::nsLayoutStylesheetCache()
   }
 
   InitFromProfile();
+
+  // And make sure that we load our UA sheets.  No need to do this
+  // per-profile, since they're profile-invariant.
+  nsCOMPtr<nsIURI> uri;
+  NS_NewURI(getter_AddRefs(uri), "resource://gre/res/ua.css");
+  if (uri) {
+    LoadSheet(uri, mUASheet, PR_TRUE, PR_FALSE);
+  }
+  NS_ASSERTION(mUASheet, "Could not load ua.css");
+
+  NS_NewURI(getter_AddRefs(uri), "resource://gre/res/quirk.css");
+  if (uri) {
+    LoadSheet(uri, mQuirkSheet, PR_TRUE, PR_FALSE);
+  }
+  NS_ASSERTION(mQuirkSheet, "Could not load quirk.css");
 }
 
 nsLayoutStylesheetCache::~nsLayoutStylesheetCache()
 {
   gCSSLoader = nsnull;
+  gCaseSensitiveCSSLoader = nsnull;
   gStyleCache = nsnull;
 }
 
@@ -176,6 +214,13 @@ nsLayoutStylesheetCache::EnsureGlobal()
 void
 nsLayoutStylesheetCache::InitFromProfile()
 {
+  nsCOMPtr<nsIXULRuntime> appInfo = do_GetService("@mozilla.org/xre/app-info;1");
+  if (appInfo) {
+    PRBool inSafeMode = PR_FALSE;
+    appInfo->GetInSafeMode(&inSafeMode);
+    if (inSafeMode)
+      return;
+  }
   nsCOMPtr<nsIFile> contentFile;
   nsCOMPtr<nsIFile> chromeFile;
 
@@ -207,23 +252,32 @@ nsLayoutStylesheetCache::LoadSheetFile(nsIFile* aFile, nsCOMPtr<nsICSSStyleSheet
   nsCOMPtr<nsIURI> uri;
   NS_NewFileURI(getter_AddRefs(uri), aFile);
 
-  LoadSheet(uri, aSheet, PR_FALSE);
+  LoadSheet(uri, aSheet, PR_FALSE, PR_FALSE);
 }
 
 void
 nsLayoutStylesheetCache::LoadSheet(nsIURI* aURI, nsCOMPtr<nsICSSStyleSheet> &aSheet,
-                                   PRBool aEnableUnsafeRules)
+                                   PRBool aEnableUnsafeRules,
+                                   PRBool aUseCaseSensitiveLoader)
 {
   if (!aURI) {
     NS_ERROR("Null URI. Out of memory?");
     return;
   }
 
-  if (!gCSSLoader)
-    NS_NewCSSLoader(&gCSSLoader);
+  nsICSSLoader** cssLoader =
+    aUseCaseSensitiveLoader ? &gCaseSensitiveCSSLoader : &gCSSLoader;
 
-  if (gCSSLoader) {
-    gCSSLoader->LoadSheetSync(aURI, aEnableUnsafeRules, getter_AddRefs(aSheet));
+  if (!*cssLoader) {
+    NS_NewCSSLoader(cssLoader);
+    if (aUseCaseSensitiveLoader) {
+      (*cssLoader)->SetCaseSensitive(PR_TRUE);
+    }
+  }
+
+  if (*cssLoader) {
+    (*cssLoader)->LoadSheetSync(aURI, aEnableUnsafeRules, PR_TRUE,
+                                getter_AddRefs(aSheet));
   }
 }  
 
@@ -232,3 +286,6 @@ nsLayoutStylesheetCache::gStyleCache = nsnull;
 
 nsICSSLoader*
 nsLayoutStylesheetCache::gCSSLoader = nsnull;
+
+nsICSSLoader*
+nsLayoutStylesheetCache::gCaseSensitiveCSSLoader = nsnull;

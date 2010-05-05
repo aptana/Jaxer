@@ -62,14 +62,15 @@ nsDOMCSSDeclaration::~nsDOMCSSDeclaration()
 {
 }
 
-
-// QueryInterface implementation for nsDOMCSSDeclaration
-NS_INTERFACE_MAP_BEGIN(nsDOMCSSDeclaration)
-  NS_INTERFACE_MAP_ENTRY(nsICSSDeclaration)
-  NS_INTERFACE_MAP_ENTRY(nsIDOMCSSStyleDeclaration)
+NS_INTERFACE_TABLE_HEAD(nsDOMCSSDeclaration)
+  NS_OFFSET_AND_INTERFACE_TABLE_BEGIN(nsDOMCSSDeclaration)
+    NS_INTERFACE_TABLE_ENTRY(nsDOMCSSDeclaration, nsICSSDeclaration)
+    NS_INTERFACE_TABLE_ENTRY(nsDOMCSSDeclaration, nsIDOMCSSStyleDeclaration)
+    NS_INTERFACE_TABLE_ENTRY(nsDOMCSSDeclaration, nsISupports)
+  NS_OFFSET_AND_INTERFACE_TABLE_END
+  NS_OFFSET_AND_INTERFACE_TABLE_TO_MAP_SEGUE
   NS_INTERFACE_MAP_ENTRY_AGGREGATED(nsIDOMCSS2Properties, &mInner)
   NS_INTERFACE_MAP_ENTRY_AGGREGATED(nsIDOMNSCSS2Properties, &mInner)
-  NS_INTERFACE_MAP_ENTRY_AMBIGUOUS(nsISupports, nsIDOMCSSStyleDeclaration)
   NS_INTERFACE_MAP_ENTRY_CONTENT_CLASSINFO(CSSStyleDeclaration)
 NS_INTERFACE_MAP_END
 
@@ -379,7 +380,7 @@ CSS2PropertiesTearoff::QueryInterface(REFNSIID aIID, void** aInstancePtr)
 // nsIDOMCSS2Properties
 // nsIDOMNSCSS2Properties
 
-#define CSS_PROP(name_, id_, method_, datastruct_, member_, type_, kwtable_) \
+#define CSS_PROP(name_, id_, method_, flags_, datastruct_, member_, type_, kwtable_) \
   NS_IMETHODIMP                                                              \
   CSS2PropertiesTearoff::Get##method_(nsAString& aValue)                     \
   {                                                                          \
@@ -392,34 +393,19 @@ CSS2PropertiesTearoff::QueryInterface(REFNSIID aIID, void** aInstancePtr)
     return mOuter->SetPropertyValue(eCSSProperty_##id_, aValue);             \
   }
 
-#define CSS_PROP_NOTIMPLEMENTED(name_, id_, method_)                         \
-  NS_IMETHODIMP                                                              \
-  CSS2PropertiesTearoff::Get##method_(nsAString& aValue)                     \
-  {                                                                          \
-    aValue.Truncate();                                                       \
-    return NS_OK;                                                            \
-  }                                                                          \
-                                                                             \
-  NS_IMETHODIMP                                                              \
-  CSS2PropertiesTearoff::Set##method_(const nsAString& aValue)               \
-  {                                                                          \
-    return NS_OK;                                                            \
-  }
-
 #define CSS_PROP_LIST_EXCLUDE_INTERNAL
-#define CSS_PROP_SHORTHAND(name_, id_, method_) \
-  CSS_PROP(name_, id_, method_, X, X, X, X)
+#define CSS_PROP_SHORTHAND(name_, id_, method_, flags_) \
+  CSS_PROP(name_, id_, method_, flags_, X, X, X, X)
 #include "nsCSSPropList.h"
 
 // Aliases
-CSS_PROP(X, opacity, MozOpacity, X, X, X, X)
-CSS_PROP(X, outline, MozOutline, X, X, X, X)
-CSS_PROP(X, outline_color, MozOutlineColor, X, X, X, X)
-CSS_PROP(X, outline_style, MozOutlineStyle, X, X, X, X)
-CSS_PROP(X, outline_width, MozOutlineWidth, X, X, X, X)
-CSS_PROP(X, outline_offset, MozOutlineOffset, X, X, X, X)
+CSS_PROP(X, opacity, MozOpacity, 0, X, X, X, X)
+CSS_PROP(X, outline, MozOutline, 0, X, X, X, X)
+CSS_PROP(X, outline_color, MozOutlineColor, 0, X, X, X, X)
+CSS_PROP(X, outline_style, MozOutlineStyle, 0, X, X, X, X)
+CSS_PROP(X, outline_width, MozOutlineWidth, 0, X, X, X, X)
+CSS_PROP(X, outline_offset, MozOutlineOffset, 0, X, X, X, X)
 
 #undef CSS_PROP_SHORTHAND
-#undef CSS_PROP_NOTIMPLEMENTED
 #undef CSS_PROP_LIST_EXCLUDE_INTERNAL
 #undef CSS_PROP

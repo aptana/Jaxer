@@ -50,16 +50,16 @@
 #include "nsBoxFrame.h"
 #include "nsFrameList.h"
 #include "nsGkAtoms.h"
-#include "nsIMenuParent.h"
+#include "nsMenuParent.h"
 #include "nsIMenuFrame.h"
 #include "nsXULPopupManager.h"
 #include "nsITimer.h"
-#include "nsISupportsArray.h"
 #include "nsIDOMText.h"
 #include "nsIContent.h"
 #include "nsIScrollableViewProvider.h"
 
-nsIFrame* NS_NewMenuFrame(nsIPresShell* aPresShell, nsStyleContext* aContext, PRUint32 aFlags);
+nsIFrame* NS_NewMenuFrame(nsIPresShell* aPresShell, nsStyleContext* aContext);
+nsIFrame* NS_NewMenuItemFrame(nsIPresShell* aPresShell, nsStyleContext* aContext);
 
 class nsMenuBarFrame;
 class nsIScrollableView;
@@ -110,7 +110,8 @@ class nsMenuFrame : public nsBoxFrame,
 public:
   nsMenuFrame(nsIPresShell* aShell, nsStyleContext* aContext);
 
-  NS_DECL_ISUPPORTS
+  NS_DECL_QUERYFRAME
+  NS_DECL_FRAMEARENA_HELPERS
 
   // nsIBox
   NS_IMETHOD DoLayout(nsBoxLayoutState& aBoxLayoutState);
@@ -130,9 +131,9 @@ public:
   // The following methods are all overridden so that the menupopup
   // can be stored in a separate list, so that it doesn't impact reflow of the
   // actual menu item at all.
-  virtual nsIFrame* GetFirstChild(nsIAtom* aListName) const;
+  virtual nsFrameList GetChildList(nsIAtom* aListName) const;
   NS_IMETHOD SetInitialChildList(nsIAtom*        aListName,
-                                 nsIFrame*       aChildList);
+                                 nsFrameList&    aChildList);
   virtual nsIAtom* GetAdditionalChildListName(PRInt32 aIndex) const;
   virtual void Destroy();
 
@@ -147,11 +148,11 @@ public:
                          nsEventStatus*  aEventStatus);
 
   NS_IMETHOD  AppendFrames(nsIAtom*        aListName,
-                           nsIFrame*       aFrameList);
+                           nsFrameList&    aFrameList);
 
   NS_IMETHOD  InsertFrames(nsIAtom*        aListName,
                            nsIFrame*       aPrevFrame,
-                           nsIFrame*       aFrameList);
+                           nsFrameList&    aFrameList);
 
   NS_IMETHOD  RemoveFrame(nsIAtom*        aListName,
                           nsIFrame*       aOldFrame);
@@ -180,7 +181,7 @@ public:
 
   NS_IMETHOD SetParent(const nsIFrame* aParent);
 
-  virtual nsIMenuParent *GetMenuParent() { return mMenuParent; }
+  virtual nsMenuParent *GetMenuParent() { return mMenuParent; }
   const nsAString& GetRadioGroupName() { return mGroupName; }
   nsMenuType GetMenuType() { return mType; }
   nsMenuPopupFrame* GetPopup() { return mPopupFrame; }
@@ -229,9 +230,9 @@ protected:
   friend class nsMenuTimerMediator;
   friend class nsASyncMenuInitialization;
 
-  // initialize mPopupFrame to the first popup frame within aChildList. Returns
-  // aChildList with the popup frame removed.
-  nsIFrame* SetPopupFrame(nsIFrame* aChildList);
+  // initialize mPopupFrame to the first popup frame within
+  // aChildList. Removes the popup, if any, from aChildList.
+  void SetPopupFrame(nsFrameList& aChildList);
 
   // set mMenuParent to the nearest enclosing menu bar or menupopup frame of
   // aParent (or aParent itself). This is called when initializing the frame,
@@ -269,7 +270,7 @@ protected:
   PRPackedBool mChecked;              // are we checked?
   nsMenuType mType;
 
-  nsIMenuParent* mMenuParent; // Our parent menu.
+  nsMenuParent* mMenuParent; // Our parent menu.
 
   // the popup for this menu, owned
   nsMenuPopupFrame* mPopupFrame;

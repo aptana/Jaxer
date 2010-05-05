@@ -62,19 +62,11 @@ nsFormControlFrame::Destroy()
   nsLeafFrame::Destroy();
 }
 
-// Frames are not refcounted, no need to AddRef
-NS_IMETHODIMP
-nsFormControlFrame::QueryInterface(const nsIID& aIID, void** aInstancePtr)
-{
-  NS_PRECONDITION(aInstancePtr, "null out param");
+NS_QUERYFRAME_HEAD(nsFormControlFrame)
+  NS_QUERYFRAME_ENTRY(nsIFormControlFrame)
+NS_QUERYFRAME_TAIL_INHERITING(nsLeafFrame)
 
-  if (aIID.Equals(NS_GET_IID(nsIFormControlFrame))) {
-    *aInstancePtr = static_cast<nsIFormControlFrame*>(this);
-    return NS_OK;
-  }
-
-  return nsLeafFrame::QueryInterface(aIID, aInstancePtr);
-}
+NS_IMPL_FRAMEARENA_HELPERS(nsFormControlFrame)
 
 nscoord
 nsFormControlFrame::GetIntrinsicWidth()

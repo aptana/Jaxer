@@ -43,8 +43,6 @@
 #include "nsDataDocumentContentPolicy.h"
 #include "nsNoDataProtocolContentPolicy.h"
 #include "nsDOMCID.h"
-#include "nsCSSOMFactory.h"
-#include "nsInspectorCSSUtils.h"
 #include "nsHTMLContentSerializer.h"
 #include "nsHTMLParts.h"
 #include "nsGenericHTMLElement.h"
@@ -53,7 +51,6 @@
 #include "nsICSSStyleSheet.h"
 #include "nsICategoryManager.h"
 #include "nsIComponentManager.h"
-#include "nsIComputedDOMStyle.h"
 #include "nsIContentIterator.h"
 #include "nsIContentSerializer.h"
 #include "nsIController.h"
@@ -85,10 +82,11 @@
 #include "nsIScriptNameSpaceManager.h"
 #include "nsISelection.h"
 #include "nsIXBLService.h"
-#include "nsICaret.h"
+#include "nsCaret.h"
 #include "nsPlainTextSerializer.h"
 #include "mozSanitizingSerializer.h"
 #include "nsXMLContentSerializer.h"
+#include "nsXHTMLContentSerializer.h"
 #include "nsRuleNode.h"
 #include "nsWyciwygProtocolHandler.h"
 #include "nsContentAreaDragDrop.h"
@@ -100,7 +98,9 @@
 #include "nsILanguageAtomService.h"
 #include "nsStyleSheetService.h"
 #include "nsXULPopupManager.h"
+#include "nsFocusManager.h"
 
+#include "nsIEventListenerService.h"
 // Transformiix stuff
 #include "nsXPathEvaluator.h"
 #include "txMozillaXSLTProcessor.h"
@@ -118,6 +118,7 @@
 
 // DOM includes
 #include "nsDOMException.h"
+#include "nsDOMFileReader.h"
 #include "nsGlobalWindowCommands.h"
 #include "nsIControllerCommandTable.h"
 #include "nsJSProtocolHandler.h"
@@ -126,8 +127,6 @@
 #include "nsDOMScriptObjectFactory.h"
 #include "nsDOMStorage.h"
 #include "nsJSON.h"
-
-#include "nsIFocusEventSuppressor.h"
 
 // Editor stuff
 #include "nsEditorCID.h"
@@ -211,6 +210,9 @@ NS_GENERIC_FACTORY_CONSTRUCTOR(nsHTMLEditor)
 
 #ifdef MOZ_ENABLE_CANVAS
 #include "nsIDOMCanvasRenderingContext2D.h"
+#ifdef MOZ_ENABLE_CANVAS3D
+#include "nsICanvasRenderingContextGLWeb20.h"
+#endif
 #endif
 
 class nsIDocumentLoaderFactory;
@@ -222,6 +224,11 @@ class nsIDocumentLoaderFactory;
 
 #define NS_HTMLOPTIONELEMENT_CONTRACTID \
   "@mozilla.org/content/element/html;1?name=option"
+
+#ifdef MOZ_MEDIA
+#define NS_HTMLAUDIOELEMENT_CONTRACTID \
+  "@mozilla.org/content/element/html;1?name=audio"
+#endif
 
 /* 0ddf4df8-4dbb-4133-8b79-9afb966514f5 */
 #define NS_PLUGINDOCLOADERFACTORY_CID \
@@ -258,13 +265,15 @@ NS_IMETHODIMP
 NS_NewXULTreeBuilder(nsISupports* aOuter, REFNSIID aIID, void** aResult);
 #endif
 
-PR_STATIC_CALLBACK(nsresult) Initialize(nsIModule* aSelf);
+static nsresult Initialize(nsIModule* aSelf);
 static void Shutdown();
 
 #ifdef MOZ_XTF
 #include "nsIXTFService.h"
 #include "nsIXMLContentBuilder.h"
 #endif
+
+#include "nsGeolocation.h"
 
 // Transformiix
 /* {0C351177-0159-4500-86B0-A219DFDE4258} */
@@ -286,6 +295,7 @@ NS_GENERIC_AGGREGATED_CONSTRUCTOR_INIT(nsXPathEvaluator, Init)
 NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(txNodeSetAdaptor, Init)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsDOMSerializer)
 NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsXMLHttpRequest, Init)
+NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsDOMFileReader, Init)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsDOMParser)
 NS_GENERIC_FACTORY_SINGLETON_CONSTRUCTOR(nsDOMStorageManager,
                                          nsDOMStorageManager::GetInstance)
@@ -324,7 +334,7 @@ static PRBool gInitialized = PR_FALSE;
 // Perform our one-time intialization for this module
 
 // static
-nsresult PR_CALLBACK
+nsresult
 Initialize(nsIModule* aSelf)
 {
   NS_PRECONDITION(!gInitialized, "module already initialized");
@@ -398,6 +408,9 @@ nsresult NS_NewTreeBoxObject(nsIBoxObject** aResult);
 
 #ifdef MOZ_ENABLE_CANVAS
 nsresult NS_NewCanvasRenderingContext2D(nsIDOMCanvasRenderingContext2D** aResult);
+#ifdef MOZ_ENABLE_CANVAS3D
+nsresult NS_NewCanvasRenderingContextGLWeb20(nsICanvasRenderingContextGLWeb20** aResult);
+#endif
 #endif
 
 nsresult NS_CreateFrameTraversal(nsIFrameTraversal** aResult);
@@ -418,7 +431,8 @@ nsresult NS_NewTextEncoder(nsIDocumentEncoder** aResult);
 nsresult NS_NewXBLService(nsIXBLService** aResult);
 nsresult NS_NewContentPolicy(nsIContentPolicy** aResult);
 nsresult NS_NewDOMEventGroup(nsIDOMEventGroup** aResult);
-nsresult NS_NewFocusEventSuppressorService(nsIFocusEventSuppressorService** aResult);
+
+nsresult NS_NewEventListenerService(nsIEventListenerService** aResult);
 
 NS_IMETHODIMP NS_NewXULControllers(nsISupports* aOuter, REFNSIID aIID, void** aResult);
 
@@ -466,7 +480,6 @@ NS_GENERIC_FACTORY_CONSTRUCTOR(inCSSValueSearch)
 NS_GENERIC_FACTORY_CONSTRUCTOR(inDOMUtils)
 #endif
 
-MAKE_CTOR(CreateCaret,                    nsICaret,                    NS_NewCaret)
 MAKE_CTOR(CreateNameSpaceManager,         nsINameSpaceManager,         NS_GetNameSpaceManager)
 MAKE_CTOR(CreateEventListenerManager,     nsIEventListenerManager,     NS_NewEventListenerManager)
 MAKE_CTOR(CreateDOMEventGroup,            nsIDOMEventGroup,            NS_NewDOMEventGroup)
@@ -491,10 +504,12 @@ MAKE_CTOR(CreatePreContentIterator,       nsIContentIterator,          NS_NewPre
 MAKE_CTOR(CreateSubtreeIterator,          nsIContentIterator,          NS_NewContentSubtreeIterator)
 // CreateHTMLImgElement, see below
 // CreateHTMLOptionElement, see below
+// CreateHTMLAudioElement, see below
 MAKE_CTOR(CreateTextEncoder,              nsIDocumentEncoder,          NS_NewTextEncoder)
 MAKE_CTOR(CreateHTMLCopyTextEncoder,      nsIDocumentEncoder,          NS_NewHTMLCopyTextEncoder)
 MAKE_CTOR(CreateXMLContentSerializer,     nsIContentSerializer,        NS_NewXMLContentSerializer)
 MAKE_CTOR(CreateHTMLContentSerializer,    nsIContentSerializer,        NS_NewHTMLContentSerializer)
+MAKE_CTOR(CreateXHTMLContentSerializer,   nsIContentSerializer,        NS_NewXHTMLContentSerializer)
 MAKE_CTOR(CreatePlainTextSerializer,      nsIContentSerializer,        NS_NewPlainTextSerializer)
 MAKE_CTOR(CreateHTMLFragmentSink,         nsIFragmentContentSink,      NS_NewHTMLFragmentContentSink)
 MAKE_CTOR(CreateHTMLFragmentSink2,        nsIFragmentContentSink,      NS_NewHTMLFragmentContentSink2)
@@ -505,8 +520,6 @@ MAKE_CTOR(CreateXHTMLParanoidFragmentSink,nsIFragmentContentSink,      NS_NewXHT
 MAKE_CTOR(CreateSanitizingHTMLSerializer, nsIContentSerializer,        NS_NewSanitizingHTMLSerializer)
 MAKE_CTOR(CreateXBLService,               nsIXBLService,               NS_NewXBLService)
 MAKE_CTOR(CreateContentPolicy,            nsIContentPolicy,            NS_NewContentPolicy)
-MAKE_CTOR(CreateComputedDOMStyle,         nsIComputedDOMStyle,         NS_NewComputedDOMStyle)
-MAKE_CTOR(CreateFocusEventSuppressorService,nsIFocusEventSuppressorService,NS_NewFocusEventSuppressorService)
 #ifdef MOZ_XUL
 MAKE_CTOR(CreateXULSortService,           nsIXULSortService,           NS_NewXULSortService)
 // NS_NewXULContentBuilder
@@ -521,20 +534,28 @@ MAKE_CTOR(CreateXTFService,               nsIXTFService,               NS_NewXTF
 MAKE_CTOR(CreateXMLContentBuilder,        nsIXMLContentBuilder,        NS_NewXMLContentBuilder)
 #endif
 MAKE_CTOR(CreateContentDLF,               nsIDocumentLoaderFactory,    NS_NewContentDocumentLoaderFactory)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsCSSOMFactory)
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsInspectorCSSUtils)
+MAKE_CTOR(CreateEventListenerService,     nsIEventListenerService,     NS_NewEventListenerService)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsWyciwygProtocolHandler)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsContentAreaDragDrop)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsDataDocumentContentPolicy)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsNoDataProtocolContentPolicy)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsSyncLoadService)
 MAKE_CTOR(CreatePluginDocument,           nsIDocument,                 NS_NewPluginDocument)
+#ifdef MOZ_MEDIA
+MAKE_CTOR(CreateVideoDocument,            nsIDocument,                 NS_NewVideoDocument)
+#endif
+MAKE_CTOR(CreateFocusManager,             nsIFocusManager,      NS_NewFocusManager)
 
 #ifdef MOZ_ENABLE_CANVAS
 MAKE_CTOR(CreateCanvasRenderingContext2D, nsIDOMCanvasRenderingContext2D, NS_NewCanvasRenderingContext2D)
+#ifdef MOZ_ENABLE_CANVAS3D
+MAKE_CTOR(CreateCanvasRenderingContextGLWeb20, nsICanvasRenderingContextGLWeb20, NS_NewCanvasRenderingContextGLWeb20)
+#endif
 #endif
 
 NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsStyleSheetService, Init)
+
+NS_GENERIC_FACTORY_CONSTRUCTOR(nsJSURI)
 
 // views are not refcounted, so this is the same as
 // NS_GENERIC_FACTORY_CONSTRUCTOR without the NS_ADDREF/NS_RELEASE
@@ -667,6 +688,53 @@ UnregisterHTMLOptionElement(nsIComponentManager* aCompMgr,
   return NS_OK;
 }
 
+#ifdef MOZ_MEDIA
+static NS_IMETHODIMP
+CreateHTMLAudioElement(nsISupports* aOuter, REFNSIID aIID, void** aResult)
+{
+  *aResult = nsnull;
+  if (aOuter)
+    return NS_ERROR_NO_AGGREGATION;
+  // Note! NS_NewHTMLAudioElement is special cased to handle a null nodeinfo
+  nsCOMPtr<nsIContent> inst(NS_NewHTMLAudioElement(nsnull));
+  return inst ? inst->QueryInterface(aIID, aResult) : NS_ERROR_OUT_OF_MEMORY;
+}
+
+static NS_IMETHODIMP
+RegisterHTMLAudioElement(nsIComponentManager *aCompMgr,
+                         nsIFile* aPath,
+                         const char* aRegistryLocation,
+                         const char* aComponentType,
+                         const nsModuleComponentInfo* aInfo)
+{
+  nsCOMPtr<nsICategoryManager> catman =
+    do_GetService(NS_CATEGORYMANAGER_CONTRACTID);
+
+  if (!catman)
+    return NS_ERROR_FAILURE;
+
+  nsXPIDLCString previous;
+  nsresult rv = catman->AddCategoryEntry(JAVASCRIPT_GLOBAL_CONSTRUCTOR_CATEGORY,
+                                         "Audio", NS_HTMLAUDIOELEMENT_CONTRACTID,
+                                         PR_TRUE, PR_TRUE, getter_Copies(previous));
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  return catman->AddCategoryEntry(JAVASCRIPT_GLOBAL_CONSTRUCTOR_PROTO_ALIAS_CATEGORY,
+                                  "Audio", "HTMLAudioElement",
+                                  PR_TRUE, PR_TRUE, getter_Copies(previous));
+}
+
+static NS_IMETHODIMP
+UnregisterHTMLAudioElement(nsIComponentManager* aCompMgr,
+                           nsIFile* aPath,
+                           const char* aRegistryLocation,
+                           const nsModuleComponentInfo* aInfo)
+{
+  // XXX remove category entry
+  return NS_OK;
+}
+#endif
+
 static NS_METHOD
 RegisterDataDocumentContentPolicy(nsIComponentManager *aCompMgr,
                                   nsIFile* aPath,
@@ -786,6 +854,16 @@ CreateWindowControllerWithSingletonCommandTable(nsISupports *aOuter,
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsDOMScriptObjectFactory)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsBaseDOMException)
 
+#define NS_GEOLOCATION_CID \
+  { 0x1E1C3FF, 0x94A, 0xD048, { 0x44, 0xB4, 0x62, 0xD2, 0x9C, 0x7B, 0x4F, 0x39 } }
+
+NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsGeolocation, Init)
+
+#define NS_GEOLOCATION_SERVICE_CID \
+  { 0x404d02a, 0x1CA, 0xAAAB, { 0x47, 0x62, 0x94, 0x4b, 0x1b, 0xf2, 0xf7, 0xb5 } }
+
+NS_GENERIC_FACTORY_SINGLETON_CONSTRUCTOR(nsGeolocationService, nsGeolocationService::GetGeolocationService)
+
 // The list of components we register
 static const nsModuleComponentInfo gComponents[] = {
 #ifdef DEBUG
@@ -803,11 +881,6 @@ static const nsModuleComponentInfo gComponents[] = {
     NS_FRAMETRAVERSAL_CID,
     nsnull,
     CreateNewFrameTraversal },
-
-  { "caret",
-    NS_CARET_CID,
-    "@mozilla.org/layout/caret;1",
-    CreateCaret },
 
   // XXX ick
   { "Presentation shell",
@@ -989,17 +1062,7 @@ static const nsModuleComponentInfo gComponents[] = {
     "@mozilla.org/content/subtree-content-iterator;1",
     CreateSubtreeIterator },
 
-  { "CSS Object Model Factory",
-    NS_CSSOMFACTORY_CID,
-    nsnull,
-    nsCSSOMFactoryConstructor },
-
-  { "Inspector CSS Utils",
-    NS_INSPECTORCSSUTILS_CID,
-    nsnull,
-    nsInspectorCSSUtilsConstructor },
-
-  // Needed to support "new Option;" and "new Image;" in JavaScript
+  // Needed to support "new Option;", "new Image;" and "new Audio;" in JavaScript
   { "HTML img element",
     NS_HTMLIMAGEELEMENT_CID,
     NS_HTMLIMGELEMENT_CONTRACTID,
@@ -1014,11 +1077,26 @@ static const nsModuleComponentInfo gComponents[] = {
     RegisterHTMLOptionElement,
     UnregisterHTMLOptionElement },
 
+#ifdef MOZ_MEDIA
+  { "HTML audio element",
+    NS_HTMLAUDIOELEMENT_CID,
+    NS_HTMLAUDIOELEMENT_CONTRACTID,
+    CreateHTMLAudioElement,
+    RegisterHTMLAudioElement,
+    UnregisterHTMLAudioElement },
+#endif
+
 #ifdef MOZ_ENABLE_CANVAS
   { "Canvas 2D Rendering Context",
     NS_CANVASRENDERINGCONTEXT2D_CID,
     "@mozilla.org/content/canvas-rendering-context;1?id=2d",
     CreateCanvasRenderingContext2D },
+#ifdef MOZ_ENABLE_CANVAS3D
+  { "Canvas OpenGL Web 2.0 Rendering Context",
+    NS_CANVASRENDERINGCONTEXTGLWEB20_CID,
+    "@mozilla.org/content/canvas-rendering-context;1?id=moz-glweb20",
+    CreateCanvasRenderingContextGLWeb20 },
+#endif
 #endif
 
   { "XML document encoder",
@@ -1031,7 +1109,7 @@ static const nsModuleComponentInfo gComponents[] = {
     NS_DOC_ENCODER_CONTRACTID_BASE "application/xml",
     CreateTextEncoder },
 
-  { "XML document encoder",
+  { "XHTML document encoder",
     NS_TEXT_ENCODER_CID,
     NS_DOC_ENCODER_CONTRACTID_BASE "application/xhtml+xml",
     CreateTextEncoder },
@@ -1068,10 +1146,10 @@ static const nsModuleComponentInfo gComponents[] = {
     NS_CONTENTSERIALIZER_CONTRACTID_PREFIX "application/xml",
     CreateXMLContentSerializer },
 
-  { "XML content serializer",
-    NS_XMLCONTENTSERIALIZER_CID,
+  { "XHTML content serializer",
+    NS_XHTMLCONTENTSERIALIZER_CID,
     NS_CONTENTSERIALIZER_CONTRACTID_PREFIX "application/xhtml+xml",
-    CreateXMLContentSerializer },
+    CreateXHTMLContentSerializer },
 
 #ifdef MOZ_SVG
   { "SVG content serializer",
@@ -1158,11 +1236,6 @@ static const nsModuleComponentInfo gComponents[] = {
     nsNoDataProtocolContentPolicyConstructor,
     RegisterNoDataProtocolContentPolicy,
     UnregisterNoDataProtocolContentPolicy },
-
-  { "DOM CSS Computed Style Declaration",
-    NS_COMPUTEDDOMSTYLE_CID,
-    "@mozilla.org/DOM/Level2/CSS/computedStyleDeclaration;1",
-    CreateComputedDOMStyle },
 
   { "XUL Controllers",
     NS_XULCONTROLLERS_CID,
@@ -1251,6 +1324,10 @@ static const nsModuleComponentInfo gComponents[] = {
     NS_JSPROTOCOLHANDLER_CID,
     NS_JSPROTOCOLHANDLER_CONTRACTID,
     nsJSProtocolHandler::Create },
+  { "JavaScript URI",
+    NS_JSURI_CID,
+    nsnull,
+    nsJSURIConstructor },
   { "Window Command Table",
     NS_WINDOWCOMMANDTABLE_CID,
     "",
@@ -1266,11 +1343,6 @@ static const nsModuleComponentInfo gComponents[] = {
   { "View Manager", NS_VIEW_MANAGER_CID, "@mozilla.org/view-manager;1",
     nsViewManagerConstructor },
 
-  { "Focus Event Suppressor",
-    NS_NSIFOCUSEVENTSUPPRESSORSERVICE_CID,
-    NS_NSIFOCUSEVENTSUPPRESSORSERVICE_CONTRACTID,
-    CreateFocusEventSuppressorService },
-
   { "Plugin Document Loader Factory",
     NS_PLUGINDOCLOADERFACTORY_CID,
     "@mozilla.org/content/plugin/document-loader-factory;1",
@@ -1280,6 +1352,13 @@ static const nsModuleComponentInfo gComponents[] = {
     NS_PLUGINDOCUMENT_CID,
     nsnull,
     CreatePluginDocument },
+
+#ifdef MOZ_MEDIA
+  { "Video Document",
+    NS_VIDEODOCUMENT_CID,
+    nsnull,
+    CreateVideoDocument },
+#endif
 
   { "Style sheet service",
     NS_STYLESHEETSERVICE_CID,
@@ -1313,6 +1392,11 @@ static const nsModuleComponentInfo gComponents[] = {
     NS_XMLSERIALIZER_CONTRACTID,
     nsDOMSerializerConstructor },
 
+  { "FileReader",
+    NS_FILEREADER_CID,
+    NS_FILEREADER_CONTRACTID,
+    nsDOMFileReaderConstructor },
+
   { "XMLHttpRequest",
     NS_XMLHTTPREQUEST_CID,
     NS_XMLHTTPREQUEST_CONTRACTID,
@@ -1327,6 +1411,11 @@ static const nsModuleComponentInfo gComponents[] = {
     NS_DOMSTORAGE_CID,
     "@mozilla.org/dom/storage;1",
     NS_NewDOMStorage },
+
+  { "DOM Storage 2",
+    NS_DOMSTORAGE2_CID,
+    "@mozilla.org/dom/storage;2",
+    NS_NewDOMStorage2 },
 
   { "DOM Storage Manager",
     NS_DOMSTORAGEMANAGER_CID,
@@ -1373,6 +1462,27 @@ static const nsModuleComponentInfo gComponents[] = {
       "@mozilla.org/textservices/textservicesdocument;1",
       nsTextServicesDocumentConstructor },
 #endif
+
+    { "Geolocation Service",
+      NS_GEOLOCATION_SERVICE_CID,
+      "@mozilla.org/geolocation/service;1",
+      nsGeolocationServiceConstructor },
+
+    { "Geolocation",
+      NS_GEOLOCATION_CID,
+      "@mozilla.org/geolocation;1",
+      nsGeolocationConstructor },
+
+    { "Focus Manager",
+      NS_FOCUSMANAGER_CID,
+      "@mozilla.org/focus-manager;1",
+      CreateFocusManager },
+
+
+    { "Event Listener Service",
+      NS_EVENTLISTENERSERVICE_CID,
+      NS_EVENTLISTENERSERVICE_CONTRACTID,
+      CreateEventListenerService }
 };
 
 NS_IMPL_NSGETMODULE_WITH_CTOR(nsLayoutModule, gComponents, Initialize)

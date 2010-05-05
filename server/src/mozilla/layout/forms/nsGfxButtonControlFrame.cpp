@@ -70,6 +70,8 @@ NS_NewGfxButtonControlFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
   return new (aPresShell) nsGfxButtonControlFrame(aContext);
 }
 
+NS_IMPL_FRAMEARENA_HELPERS(nsGfxButtonControlFrame)
+
 void nsGfxButtonControlFrame::Destroy()
 {
   nsContentUtils::DestroyAnonymousContent(&mTextContent);
@@ -149,7 +151,6 @@ nsGfxButtonControlFrame::CreateFrameFor(nsIContent*      aContent)
       if (newFrame) {
         // initialize the text frame
         newFrame->Init(mTextContent, parentFrame, nsnull);
-        newFrame->SetInitialChildList(nsnull, nsnull);
       }
     }
   }
@@ -186,19 +187,9 @@ NS_IMETHODIMP nsGfxButtonControlFrame::GetAccessible(nsIAccessible** aAccessible
 }
 #endif
 
-// Frames are not refcounted, no need to AddRef
-NS_IMETHODIMP
-nsGfxButtonControlFrame::QueryInterface(const nsIID& aIID, void** aInstancePtr)
-{
-  NS_PRECONDITION(aInstancePtr, "null out param");
-
-  if (aIID.Equals(NS_GET_IID(nsIAnonymousContentCreator))) {
-    *aInstancePtr = static_cast<nsIAnonymousContentCreator*>(this);
-    return NS_OK;
-  }
-
-  return nsHTMLButtonControlFrame::QueryInterface(aIID, aInstancePtr);
-}
+NS_QUERYFRAME_HEAD(nsGfxButtonControlFrame)
+  NS_QUERYFRAME_ENTRY(nsIAnonymousContentCreator)
+NS_QUERYFRAME_TAIL_INHERITING(nsHTMLButtonControlFrame)
 
 // Initially we hardcoded the default strings here.
 // Next, we used html.css to store the default label for various types

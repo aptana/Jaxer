@@ -57,6 +57,8 @@
   */
 class ViewportFrame : public nsContainerFrame {
 public:
+  NS_DECL_FRAMEARENA_HELPERS
+
   typedef nsContainerFrame Super;
 
   ViewportFrame(nsStyleContext* aContext)
@@ -72,21 +74,21 @@ public:
                   nsIFrame*        asPrevInFlow);
 
   NS_IMETHOD SetInitialChildList(nsIAtom*        aListName,
-                                 nsIFrame*       aChildList);
+                                 nsFrameList&    aChildList);
 
   NS_IMETHOD AppendFrames(nsIAtom*        aListName,
-                          nsIFrame*       aFrameList);
+                          nsFrameList&    aFrameList);
 
   NS_IMETHOD InsertFrames(nsIAtom*        aListName,
                           nsIFrame*       aPrevFrame,
-                          nsIFrame*       aFrameList);
+                          nsFrameList&    aFrameList);
 
   NS_IMETHOD RemoveFrame(nsIAtom*        aListName,
                          nsIFrame*       aOldFrame);
 
   virtual nsIAtom* GetAdditionalChildListName(PRInt32 aIndex) const;
 
-  virtual nsIFrame* GetFirstChild(nsIAtom* aListName) const;
+  virtual nsFrameList GetChildList(nsIAtom* aListName) const;
 
   NS_IMETHOD BuildDisplayList(nsDisplayListBuilder*   aBuilder,
                               const nsRect&           aDirtyRect,
@@ -110,7 +112,7 @@ public:
 
   virtual void InvalidateInternal(const nsRect& aDamageRect,
                                   nscoord aX, nscoord aY, nsIFrame* aForChild,
-                                  PRBool aImmediate);
+                                  PRUint32 aFlags);
 
 #ifdef DEBUG
   NS_IMETHOD GetFrameName(nsAString& aResult) const;

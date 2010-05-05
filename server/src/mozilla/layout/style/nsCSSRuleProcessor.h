@@ -47,8 +47,12 @@
 
 #include "nsIStyleRuleProcessor.h"
 #include "nsCSSStyleSheet.h"
+#include "nsTArray.h"
+#include "nsAutoPtr.h"
+#include "nsCSSRules.h"
 
 struct RuleCascadeData;
+struct nsCSSSelectorList;
 
 /**
  * The CSS style rule processor provides a mechanism for sibling style
@@ -63,7 +67,8 @@ struct RuleCascadeData;
 
 class nsCSSRuleProcessor: public nsIStyleRuleProcessor {
 public:
-  nsCSSRuleProcessor(const nsCOMArray<nsICSSStyleSheet>& aSheets);
+  nsCSSRuleProcessor(const nsCOMArray<nsICSSStyleSheet>& aSheets, 
+                     PRUint8 aSheetType);
   virtual ~nsCSSRuleProcessor();
 
   NS_DECL_ISUPPORTS
@@ -71,7 +76,17 @@ public:
 public:
   nsresult ClearRuleCascades();
 
-  static void Shutdown();
+  static void Startup();
+  static void FreeSystemMetrics();
+  static PRBool HasSystemMetric(nsIAtom* aMetric);
+
+  /*
+   * Returns true if the given RuleProcessorData matches one of the
+   * selectors in aSelectorList.  Note that this method will assume
+   * the matching is not for styling purposes.
+   */
+  static PRBool SelectorListMatches(RuleProcessorData& aData,
+                                    nsCSSSelectorList* aSelectorList);
 
   // nsIStyleRuleProcessor
   NS_IMETHOD RulesMatching(ElementRuleProcessorData* aData);
@@ -84,13 +99,38 @@ public:
   NS_IMETHOD HasAttributeDependentStyle(AttributeRuleProcessorData* aData,
                                         nsReStyleHint* aResult);
 
-protected:
+  NS_IMETHOD MediumFeaturesChanged(nsPresContext* aPresContext,
+                                   PRBool* aRulesChanged);
+
+  // Append all the currently-active font face rules to aArray.  Return
+  // true for success and false for failure.
+  PRBool AppendFontFaceRules(nsPresContext* aPresContext,
+                             nsTArray<nsFontFaceRuleContainer>& aArray);
+
+#ifdef DEBUG
+  void AssertQuirksChangeOK() {
+    NS_ASSERTION(!mRuleCascades, "can't toggle quirks style sheet without "
+                                 "clearing rule cascades");
+  }
+#endif
+
+private:
+  static PRBool CascadeSheetEnumFunc(nsICSSStyleSheet* aSheet, void* aData);
+
   RuleCascadeData* GetRuleCascade(nsPresContext* aPresContext);
+  void RefreshRuleCascade(nsPresContext* aPresContext);
 
   // The sheet order here is the same as in nsStyleSet::mSheets
   nsCOMArray<nsICSSStyleSheet> mSheets;
 
+  // active first, then cached (most recent first)
   RuleCascadeData* mRuleCascades;
+
+  // The last pres context for which GetRuleCascades was called.
+  nsPresContext *mLastPresContext;
+  
+  // type of stylesheet using this processor
+  PRUint8 mSheetType;  // == nsStyleSet::sheetType
 };
 
 #endif /* nsCSSRuleProcessor_h_ */

@@ -9,7 +9,7 @@
 == border-breaking-001-cols.xhtml border-breaking-001-cols.ref.xhtml
 == border-breaking-002-cols.xhtml border-breaking-002-cols.ref.xhtml
 == border-breaking-003-cols.xhtml border-breaking-003-cols.ref.xhtml
-== border-breaking-004-cols.xhtml border-breaking-002-cols.ref.xhtml
+fails == border-breaking-004-cols.xhtml border-breaking-002-cols.ref.xhtml
 == content-inserted-000.xhtml content-inserted-000.ref.xhtml
 == content-inserted-001.xhtml content-inserted-001.ref.xhtml
 == content-inserted-002.xhtml content-inserted-002.ref.xhtml
@@ -20,3 +20,9 @@
 == content-inserted-007.xhtml content-inserted-002.ref.xhtml
 == content-inserted-008.xhtml content-inserted-001.ref.xhtml
 == content-inserted-009.xhtml content-inserted-002.ref.xhtml
+== abspos-breaking-000.xhtml abspos-breaking-000.ref.xhtml
+== abspos-breaking-001.xhtml abspos-breaking-000.ref.xhtml
+== abspos-breaking-002.xhtml abspos-breaking-000.ref.xhtml
+fails == float-continuations-000.html float-continuations-000.ref.html
+== resize-reflow-000.html resize-reflow-000.ref.html
+== resize-reflow-001.html resize-reflow-001.ref.html

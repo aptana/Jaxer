@@ -71,13 +71,12 @@ public:
   NS_DECL_ISUPPORTS
   // imgIDecoderObserver (override nsStubImageDecoderObserver)
   NS_IMETHOD OnStartContainer(imgIRequest *aRequest, imgIContainer *aImage);
-  NS_IMETHOD OnDataAvailable(imgIRequest *aRequest, gfxIImageFrame *aFrame,
-                             const nsRect *aRect);
+  NS_IMETHOD OnDataAvailable(imgIRequest *aRequest, PRBool aCurrentFrame,
+                             const nsIntRect *aRect);
   NS_IMETHOD OnStopDecode(imgIRequest *aRequest, nsresult status,
                           const PRUnichar *statusArg);
   // imgIContainerObserver (override nsStubImageDecoderObserver)
-  NS_IMETHOD FrameChanged(imgIContainer *aContainer, gfxIImageFrame *newframe,
-                          nsRect * dirtyRect);
+  NS_IMETHOD FrameChanged(imgIContainer *aContainer, nsIntRect *dirtyRect);
 
   void SetFrame(nsBulletFrame *frame) { mFrame = frame; }
 
@@ -85,6 +84,7 @@ private:
   nsBulletFrame *mFrame;
 };
 
+NS_IMPL_FRAMEARENA_HELPERS(nsBulletFrame)
 
 nsBulletFrame::~nsBulletFrame()
 {
@@ -95,7 +95,7 @@ nsBulletFrame::Destroy()
 {
   // Stop image loading first
   if (mImageRequest) {
-    mImageRequest->Cancel(NS_ERROR_FAILURE);
+    mImageRequest->CancelAndForgetObserver(NS_ERROR_FAILURE);
     mImageRequest = nsnull;
   }
 
@@ -132,9 +132,11 @@ nsBulletFrame::IsSelfEmpty()
   return GetStyleList()->mListStyleType == NS_STYLE_LIST_STYLE_NONE;
 }
 
-NS_IMETHODIMP
-nsBulletFrame::DidSetStyleContext()
+/* virtual */ void
+nsBulletFrame::DidSetStyleContext(nsStyleContext* aOldStyleContext)
 {
+  nsFrame::DidSetStyleContext(aOldStyleContext);
+
   imgIRequest *newRequest = GetStyleList()->mListStyleImage;
 
   if (newRequest) {
@@ -179,8 +181,6 @@ nsBulletFrame::DidSetStyleContext()
       mImageRequest = nsnull;
     }
   }
-
-  return NS_OK;
 }
 
 class nsDisplayBullet : public nsDisplayItem {
@@ -196,16 +196,16 @@ public:
 
   virtual nsIFrame* HitTest(nsDisplayListBuilder* aBuilder, nsPoint aPt,
                             HitTestState* aState) { return mFrame; }
-  virtual void Paint(nsDisplayListBuilder* aBuilder, nsIRenderingContext* aCtx,
-     const nsRect& aDirtyRect);
+  virtual void Paint(nsDisplayListBuilder* aBuilder,
+                     nsIRenderingContext* aCtx);
   NS_DISPLAY_DECL_NAME("Bullet")
 };
 
 void nsDisplayBullet::Paint(nsDisplayListBuilder* aBuilder,
-     nsIRenderingContext* aCtx, const nsRect& aDirtyRect)
+                            nsIRenderingContext* aCtx)
 {
   static_cast<nsBulletFrame*>(mFrame)->
-    PaintBullet(*aCtx, aBuilder->ToReferenceFrame(mFrame), aDirtyRect);
+    PaintBullet(*aCtx, aBuilder->ToReferenceFrame(mFrame), mVisibleRect);
 }
 
 NS_IMETHODIMP
@@ -239,8 +239,9 @@ nsBulletFrame::PaintBullet(nsIRenderingContext& aRenderingContext, nsPoint aPt,
         nsRect dest(mPadding.left, mPadding.top,
                     mRect.width - (mPadding.left + mPadding.right),
                     mRect.height - (mPadding.top + mPadding.bottom));
-        nsLayoutUtils::DrawImage(&aRenderingContext, imageCon,
-                                 dest + aPt, aDirtyRect);
+        nsLayoutUtils::DrawSingleImage(&aRenderingContext,
+             imageCon, nsLayoutUtils::GetGraphicsFilterForFrame(this),
+             dest + aPt, aDirtyRect);
         return;
       }
     }
@@ -454,7 +455,7 @@ static PRBool RomanToText(PRInt32 ordinal, nsString& result, const char* achars,
       case '5': case '6':
       case '7': case  '8':
         addOn.Append(PRUnichar(bchars[romanPos]));
-        for(n=0;n<(*dp-'5');n++) {
+        for(n=0;'5'+n<*dp;n++) {
           addOn.Append(PRUnichar(achars[romanPos]));
         }
         break;
@@ -840,10 +841,6 @@ static PRBool HebrewToText(PRInt32 ordinal, nsString& result)
 
 static PRBool ArmenianToText(PRInt32 ordinal, nsString& result)
 {
-  // XXXbz this system goes out to a lot further than 9999... we should fix
-  // that.  This algorithm seems broken in general.  There's this business of
-  // "7000" being special and then there's the combining accent we're supposed
-  // to be using...
   if (ordinal < 1 || ordinal > 9999) { // zero or reach the limit of Armenian numbering system
     DecimalToText(ordinal, result);
     return PR_FALSE;
@@ -1461,13 +1458,13 @@ NS_IMETHODIMP nsBulletFrame::OnStartContainer(imgIRequest *aRequest,
 }
 
 NS_IMETHODIMP nsBulletFrame::OnDataAvailable(imgIRequest *aRequest,
-                                             gfxIImageFrame *aFrame,
-                                             const nsRect *aRect)
+                                             PRBool aCurrentFrame,
+                                             const nsIntRect *aRect)
 {
   // The image has changed.
   // Invalidate the entire content area. Maybe it's not optimal but it's simple and
   // always correct, and I'll be a stunned mullet if it ever matters for performance
-  Invalidate(nsRect(0, 0, mRect.width, mRect.height), PR_FALSE);
+  Invalidate(nsRect(0, 0, mRect.width, mRect.height));
 
   return NS_OK;
 }
@@ -1492,12 +1489,11 @@ NS_IMETHODIMP nsBulletFrame::OnStopDecode(imgIRequest *aRequest,
 }
 
 NS_IMETHODIMP nsBulletFrame::FrameChanged(imgIContainer *aContainer,
-                                          gfxIImageFrame *aNewFrame,
-                                          nsRect *aDirtyRect)
+                                          nsIntRect *aDirtyRect)
 {
   // Invalidate the entire content area. Maybe it's not optimal but it's simple and
   // always correct.
-  Invalidate(nsRect(0, 0, mRect.width, mRect.height), PR_FALSE);
+  Invalidate(nsRect(0, 0, mRect.width, mRect.height));
 
   return NS_OK;
 }
@@ -1550,13 +1546,13 @@ NS_IMETHODIMP nsBulletListener::OnStartContainer(imgIRequest *aRequest,
 }
 
 NS_IMETHODIMP nsBulletListener::OnDataAvailable(imgIRequest *aRequest,
-                                                gfxIImageFrame *aFrame,
-                                                const nsRect *aRect)
+                                                PRBool aCurrentFrame,
+                                                const nsIntRect *aRect)
 {
   if (!mFrame)
     return NS_ERROR_FAILURE;
 
-  return mFrame->OnDataAvailable(aRequest, aFrame, aRect);
+  return mFrame->OnDataAvailable(aRequest, aCurrentFrame, aRect);
 }
 
 NS_IMETHODIMP nsBulletListener::OnStopDecode(imgIRequest *aRequest,
@@ -1570,11 +1566,10 @@ NS_IMETHODIMP nsBulletListener::OnStopDecode(imgIRequest *aRequest,
 }
 
 NS_IMETHODIMP nsBulletListener::FrameChanged(imgIContainer *aContainer,
-                                             gfxIImageFrame *newframe,
-                                             nsRect * dirtyRect)
+                                             nsIntRect *dirtyRect)
 {
   if (!mFrame)
     return NS_ERROR_FAILURE;
 
-  return mFrame->FrameChanged(aContainer, newframe, dirtyRect);
+  return mFrame->FrameChanged(aContainer, dirtyRect);
 }

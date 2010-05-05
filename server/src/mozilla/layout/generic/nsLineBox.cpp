@@ -41,7 +41,6 @@
 /* representation of one line within a block frame, a CSS line box */
 
 #include "nsLineBox.h"
-#include "nsSpaceManager.h"
 #include "nsLineLayout.h"
 #include "prprf.h"
 #include "nsBlockFrame.h"
@@ -59,6 +58,7 @@ PRInt32 nsLineBox::GetCtorCount() { return ctorCount; }
 nsLineBox::nsLineBox(nsIFrame* aFrame, PRInt32 aCount, PRBool aIsBlock)
   : mFirstChild(aFrame),
     mBounds(0, 0, 0, 0),
+    mAscent(0),
     mData(nsnull)
 {
   MOZ_COUNT_CTOR(nsLineBox);
@@ -96,15 +96,15 @@ NS_NewLineBox(nsIPresShell* aPresShell, nsIFrame* aFrame,
 
 // Overloaded new operator. Uses an arena (which comes from the presShell)
 // to perform the allocation.
-void* 
+void*
 nsLineBox::operator new(size_t sz, nsIPresShell* aPresShell) CPP_THROW_NEW
 {
-  return aPresShell->AllocateFrame(sz);
+  return aPresShell->AllocateMisc(sz);
 }
 
 // Overloaded delete operator. Doesn't actually free the memory, because we
 // use an arena
-void 
+void
 nsLineBox::operator delete(void* aPtr, size_t sz)
 {
 }
@@ -116,7 +116,7 @@ nsLineBox::Destroy(nsIPresShell* aPresShell)
   delete this;
 
   // Have the pres shell recycle the memory
-  aPresShell->FreeFrame(sizeof(*this), (void*)this);
+  aPresShell->FreeMisc(sizeof(*this), (void*)this);
 }
 
 void
@@ -146,16 +146,12 @@ ListFloats(FILE* out, PRInt32 aIndent, const nsFloatCacheList& aFloats)
       fprintf(out, "placeholder@%p ", static_cast<void*>(ph));
       nsIFrame* frame = ph->GetOutOfFlowFrame();
       if (frame) {
-        nsIFrameDebug*  frameDebug;
-
-        if (NS_SUCCEEDED(frame->QueryInterface(NS_GET_IID(nsIFrameDebug), (void**)&frameDebug))) {
+        nsIFrameDebug* frameDebug = do_QueryFrame(frame);
+        if (frameDebug) {
           frameDebug->GetFrameName(frameName);
           fputs(NS_LossyConvertUTF16toASCII(frameName).get(), out);
         }
       }
-      fprintf(out, " region={%d,%d,%d,%d}",
-              fc->mRegion.x, fc->mRegion.y,
-              fc->mRegion.width, fc->mRegion.height);
 
       if (!frame) {
         fputs("\n###!!! NULL out-of-flow frame", out);
@@ -226,9 +222,8 @@ nsLineBox::List(FILE* out, PRInt32 aIndent) const
   nsIFrame* frame = mFirstChild;
   PRInt32 n = GetChildCount();
   while (--n >= 0) {
-    nsIFrameDebug*  frameDebug;
-
-    if (NS_SUCCEEDED(frame->QueryInterface(NS_GET_IID(nsIFrameDebug), (void**)&frameDebug))) {
+    nsIFrameDebug* frameDebug = do_QueryFrame(frame);
+    if (frameDebug) {
       frameDebug->List(out, aIndent + 1);
     }
     frame = frame->GetNextSibling();
@@ -291,6 +286,9 @@ nsLineBox::IsEmpty() const
     if (!kid->IsEmpty())
       return PR_FALSE;
   }
+  if (HasBullet()) {
+    return PR_FALSE;
+  }
   return PR_TRUE;
 }
 
@@ -321,6 +319,9 @@ nsLineBox::CachedIsEmpty()
           break;
         }
       }
+    if (HasBullet()) {
+      result = PR_FALSE;
+    }
   }
 
   mFlags.mEmptyCacheValid = PR_TRUE;
@@ -543,7 +544,11 @@ nsLineIterator::~nsLineIterator()
   }
 }
 
-NS_IMPL_ISUPPORTS2(nsLineIterator, nsILineIterator, nsILineIteratorNavigator)
+/* virtual */ void
+nsLineIterator::DisposeLineIterator()
+{
+  delete this;
+}
 
 nsresult
 nsLineIterator::Init(nsLineList& aLines, PRBool aRightToLeft)
@@ -578,26 +583,16 @@ nsLineIterator::Init(nsLineList& aLines, PRBool aRightToLeft)
   return NS_OK;
 }
 
-NS_IMETHODIMP
-nsLineIterator::GetNumLines(PRInt32* aResult)
+PRInt32
+nsLineIterator::GetNumLines()
 {
-  NS_PRECONDITION(aResult, "null OUT ptr");
-  if (!aResult) {
-    return NS_ERROR_NULL_POINTER;
-  }
-  *aResult = mNumLines;
-  return NS_OK;
+  return mNumLines;
 }
 
-NS_IMETHODIMP
-nsLineIterator::GetDirection(PRBool* aIsRightToLeft)
+PRBool
+nsLineIterator::GetDirection()
 {
-  NS_PRECONDITION(aIsRightToLeft, "null OUT ptr");
-  if (!aIsRightToLeft) {
-    return NS_ERROR_NULL_POINTER;
-  }
-  *aIsRightToLeft = mRightToLeft;
-  return NS_OK;
+  return mRightToLeft;
 }
 
 NS_IMETHODIMP
@@ -635,42 +630,35 @@ nsLineIterator::GetLine(PRInt32 aLineNumber,
   return NS_OK;
 }
 
-NS_IMETHODIMP
-nsLineIterator::FindLineContaining(nsIFrame* aFrame,
-                                   PRInt32* aLineNumberResult)
+PRInt32
+nsLineIterator::FindLineContaining(nsIFrame* aFrame)
 {
   nsLineBox* line = mLines[0];
   PRInt32 lineNumber = 0;
   while (lineNumber != mNumLines) {
     if (line->Contains(aFrame)) {
-      *aLineNumberResult = lineNumber;
-      return NS_OK;
+      return lineNumber;
     }
     line = mLines[++lineNumber];
   }
-  *aLineNumberResult = -1;
-  return NS_OK;
+  return -1;
 }
 
-NS_IMETHODIMP
-nsLineIterator::FindLineAt(nscoord aY,
-                           PRInt32* aLineNumberResult)
+/* virtual */ PRInt32
+nsLineIterator::FindLineAt(nscoord aY)
 {
   nsLineBox* line = mLines[0];
   if (!line || (aY < line->mBounds.y)) {
-    *aLineNumberResult = -1;
-    return NS_OK;
+    return -1;
   }
   PRInt32 lineNumber = 0;
   while (lineNumber != mNumLines) {
     if ((aY >= line->mBounds.y) && (aY < line->mBounds.YMost())) {
-      *aLineNumberResult = lineNumber;
-      return NS_OK;
+      return lineNumber;
     }
     line = mLines[++lineNumber];
   }
-  *aLineNumberResult = mNumLines;
-  return NS_OK;
+  return mNumLines;
 }
 
 #ifdef IBMBIDI

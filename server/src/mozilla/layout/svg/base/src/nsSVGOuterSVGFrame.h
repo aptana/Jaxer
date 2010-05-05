@@ -43,6 +43,7 @@
 #include "nsISVGSVGFrame.h"
 #include "nsIDOMSVGPoint.h"
 #include "nsIDOMSVGNumber.h"
+#include "gfxMatrix.h"
 
 #ifdef MOZ_SVG_FOREIGNOBJECT
 class nsSVGForeignObjectFrame;
@@ -57,17 +58,13 @@ class nsSVGOuterSVGFrame : public nsSVGOuterSVGFrameBase,
                            public nsISVGSVGFrame
 {
   friend nsIFrame*
-  NS_NewSVGOuterSVGFrame(nsIPresShell* aPresShell, nsIContent* aContent, nsStyleContext* aContext);
+  NS_NewSVGOuterSVGFrame(nsIPresShell* aPresShell, nsStyleContext* aContext);
 protected:
   nsSVGOuterSVGFrame(nsStyleContext* aContext);
 
-   // nsISupports interface:
-  NS_IMETHOD QueryInterface(const nsIID& aIID, void** aInstancePtr);
-private:
-  NS_IMETHOD_(nsrefcnt) AddRef() { return 1; }
-  NS_IMETHOD_(nsrefcnt) Release() { return 1; }
-
 public:
+  NS_DECL_QUERYFRAME
+  NS_DECL_FRAMEARENA_HELPERS
 
 #ifdef DEBUG
   ~nsSVGOuterSVGFrame() {
@@ -97,7 +94,7 @@ public:
                         const nsHTMLReflowState*  aReflowState,
                         nsDidReflowStatus aStatus);
 
-  nsIFrame* GetFrameForPoint(const nsPoint& aPoint);
+  NS_IMETHOD_(nsIFrame*) GetFrameForPoint(const nsPoint& aPoint);
 
   NS_IMETHOD BuildDisplayList(nsDisplayListBuilder*   aBuilder,
                               const nsRect&           aDirtyRect,
@@ -133,8 +130,12 @@ public:
   // nsSVGOuterSVGFrame methods:
 
   void InvalidateCoveredRegion(nsIFrame *aFrame);
-  /* Invalidate takes a nsRect in screen pixel coordinates */
-  void InvalidateRect(nsRect aRect);
+  // Calls aSVG->UpdateCoveredRegion and returns true if the covered
+  // region actually changed. If it changed, invalidates the old and new
+  // covered regions, taking filters into account, like
+  // InvalidateCoveredRegion.
+  PRBool UpdateAndInvalidateCoveredRegion(nsIFrame *aFrame);
+
   PRBool IsRedrawSuspended();
 
   // nsISVGSVGFrame interface:
@@ -143,7 +144,7 @@ public:
   NS_IMETHOD NotifyViewportChange();
 
   // nsSVGContainerFrame methods:
-  virtual already_AddRefed<nsIDOMSVGMatrix> GetCanvasTM();
+  virtual gfxMatrix GetCanvasTM();
 
 #ifdef MOZ_SVG_FOREIGNOBJECT
   /* Methods to allow descendant nsSVGForeignObjectFrame frames to register and
@@ -171,16 +172,13 @@ protected:
   PRUint32 mRedrawSuspendCount;
   nsCOMPtr<nsIDOMSVGMatrix> mCanvasTM;
 
-  // zoom and pan
-  nsCOMPtr<nsIDOMSVGPoint>  mCurrentTranslate;
-  nsCOMPtr<nsIDOMSVGNumber> mCurrentScale;
-
   float mFullZoom;
 
   PRPackedBool mViewportInitialized;
 #ifdef XP_MACOSX
   PRPackedBool mEnableBitmapFallback;
 #endif
+  PRPackedBool mIsRootContent;
 };
 
 #endif

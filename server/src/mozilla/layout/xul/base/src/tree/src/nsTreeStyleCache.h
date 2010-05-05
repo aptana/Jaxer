@@ -45,6 +45,8 @@
 #include "nsICSSPseudoComparator.h"
 #include "nsStyleContext.h"
 
+class nsISupportsArray;
+
 class nsDFAState : public nsHashKey
 {
 public:
@@ -108,9 +110,9 @@ public:
                                   nsIAtom* aPseudoElement,
                                   nsISupportsArray* aInputWord);
 
-  static PRBool PR_CALLBACK DeleteDFAState(nsHashKey *aKey, void *aData, void *closure);
+  static PRBool DeleteDFAState(nsHashKey *aKey, void *aData, void *closure);
 
-  static PRBool PR_CALLBACK ReleaseStyleContext(nsHashKey *aKey, void *aData, void *closure);
+  static PRBool ReleaseStyleContext(nsHashKey *aKey, void *aData, void *closure);
 
 protected:
   // A transition table for a deterministic finite automaton.  The DFA

@@ -80,12 +80,20 @@ public:
   NS_HIDDEN_(void) Destroy();
 
   nsrefcnt AddRef() {
+    if (mRefCnt == PR_UINT32_MAX) {
+      NS_WARNING("refcount overflow, leaking object");
+      return mRefCnt;
+    }
     ++mRefCnt;
     NS_LOG_ADDREF(this, mRefCnt, "nsStyleContext", sizeof(nsStyleContext));
     return mRefCnt;
   }
 
   nsrefcnt Release() {
+    if (mRefCnt == PR_UINT32_MAX) {
+      NS_WARNING("refcount overflow, leaking object");
+      return mRefCnt;
+    }
     --mRefCnt;
     NS_LOG_RELEASE(this, mRefCnt, "nsStyleContext");
     if (mRefCnt == 0) {
@@ -99,15 +107,22 @@ public:
 
   nsStyleContext* GetParent() const { return mParent; }
 
-  nsStyleContext* GetFirstChild() const { return mChild; }
-
   nsIAtom* GetPseudoType() const { return mPseudoTag; }
 
   NS_HIDDEN_(already_AddRefed<nsStyleContext>)
   FindChildWithRules(const nsIAtom* aPseudoTag, nsRuleNode* aRules);
 
-  NS_HIDDEN_(PRBool)    Equals(const nsStyleContext* aOther) const;
-  PRBool    HasTextDecorations() { return !!(mBits & NS_STYLE_HAS_TEXT_DECORATIONS); }
+  // Does this style context or any of its ancestors have text
+  // decorations?
+  PRBool HasTextDecorations() const
+    { return !!(mBits & NS_STYLE_HAS_TEXT_DECORATIONS); }
+
+  // Does this style context represent the style for a pseudo-element or
+  // inherit data from such a style context?  Whether this returns true
+  // is equivalent to whether it or any of its ancestors returns
+  // non-null for GetPseudoType.
+  PRBool HasPseudoElementData() const
+    { return !!(mBits & NS_STYLE_HAS_PSEUDO_ELEMENT_DATA); }
 
   NS_HIDDEN_(void) SetStyle(nsStyleStructID aSID, void* aStruct);
 
@@ -158,9 +173,6 @@ public:
   NS_HIDDEN_(nsChangeHint) CalcStyleDifference(nsStyleContext* aOther);
 
 #ifdef DEBUG
-  NS_HIDDEN_(void) DumpRegressionData(nsPresContext* aPresContext, FILE* out,
-                                      PRInt32 aIndent);
-
   NS_HIDDEN_(void) List(FILE* out, PRInt32 aIndent);
 #endif
 
@@ -170,7 +182,7 @@ protected:
 
   NS_HIDDEN_(void) ApplyStyleFixups(nsPresContext* aPresContext);
 
-  nsStyleContext* mParent;
+  nsStyleContext* const mParent;
 
   // Children are kept in two circularly-linked lists.  The list anchor
   // is not part of the list (null for empty), and we point to the first

@@ -41,7 +41,7 @@ VPATH		= @srcdir@
 
 include $(DEPTH)/config/autoconf.mk
 
-ifdef MOZ_MOCHITEST
+ifdef ENABLE_TESTS
 DIRS		+= test
 endif
 
@@ -67,7 +67,6 @@ REQUIRES	= xpcom \
 		  plugin \
 		  docshell \
 		  webbrwsr \
-		  oji \
 		  unicharutil \
 		  lwbrk \
 		  imglib2 \
@@ -78,16 +77,16 @@ REQUIRES	= xpcom \
 		  cairo \
 		  $(NULL)
 
+ifdef MOZ_OJI
+REQUIRES	+= oji
+endif
+
 ifdef ACCESSIBILITY
 REQUIRES	+= accessibility
 endif
 
-# Sun's Complex Text Layout support
-ifdef SUNCTL
-REQUIRES	+= ctl
-endif
-
 EXPORTS		= \
+		nsQueryFrame.h \
 		nsFrameList.h \
 		nsHTMLParts.h \
 		nsHTMLReflowMetrics.h \
@@ -117,9 +116,7 @@ endif
 
 CPPSRCS		= \
 		nsAbsoluteContainingBlock.cpp \
-		nsAreaFrame.cpp \
 		nsBRFrame.cpp \
-		nsBlockBandData.cpp \
 		nsBlockFrame.cpp \
 		nsBlockReflowContext.cpp \
 		nsBlockReflowState.cpp \
@@ -127,6 +124,7 @@ CPPSRCS		= \
 		nsColumnSetFrame.cpp \
 		nsContainerFrame.cpp \
 		nsFirstLetterFrame.cpp \
+		nsFloatManager.cpp \
 		nsFrame.cpp \
 		nsFrameFrame.cpp \
 		nsFrameList.cpp \
@@ -150,7 +148,6 @@ CPPSRCS		= \
 		nsPlaceholderFrame.cpp \
 		nsSelection.cpp \
 		nsSimplePageSequence.cpp \
-		nsSpaceManager.cpp \
 		nsSpacerFrame.cpp \
 		nsSplittableFrame.cpp \
 		nsTextFrameThebes.cpp \
@@ -158,6 +155,12 @@ CPPSRCS		= \
 		nsTextRunTransformations.cpp \
 		nsViewportFrame.cpp \
 		$(NULL)
+
+ifdef MOZ_MEDIA
+CPPSRCS		+= \
+		nsVideoFrame.cpp \
+		$(NULL)
+endif
 
 ifdef IBMBIDI
 CPPSRCS		+= \
@@ -170,8 +173,8 @@ RESOURCES_HTML = \
 		$(NULL)
 
 RESOURCES = \
-		$(srcdir)/broken-image.gif \
-		$(srcdir)/loading-image.gif \
+		$(srcdir)/broken-image.png \
+		$(srcdir)/loading-image.png \
 		$(NULL)
 
 FORCE_STATIC_LIB = 1
@@ -187,12 +190,16 @@ LOCAL_INCLUDES += \
 		-I$(srcdir)/../../content/xul/content/src \
 		-I$(srcdir)/../../content/base/src \
 		-I$(srcdir)/../../content/html/content/src \
-		-I$(srcdir)/../../dom/src/base \
+		-I$(srcdir)/../../dom/base \
 		$(MOZ_CAIRO_CFLAGS) \
 		$(NULL)
 
 ifdef MOZ_ENABLE_GTK2
 CXXFLAGS += $(MOZ_GTK2_CFLAGS)
+endif
+
+ifdef MOZ_ENABLE_QT
+CXXFLAGS += $(MOZ_QT_CFLAGS)
 endif
 
 libs::

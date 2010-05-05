@@ -79,7 +79,6 @@
 #include "nsXPIDLString.h"
 #include "nsIScrollable.h"
 #include "nsINameSpaceManager.h"
-#include "nsIWidget.h"
 #include "nsWeakReference.h"
 #include "nsIDOMWindow.h"
 #include "nsIDOMDocument.h"
@@ -114,16 +113,15 @@ class nsSubDocumentFrame : public nsLeafFrame,
                            public nsIReflowCallback
 {
 public:
+  NS_DECL_FRAMEARENA_HELPERS
+
   nsSubDocumentFrame(nsStyleContext* aContext);
 
 #ifdef DEBUG
   NS_IMETHOD GetFrameName(nsAString& aResult) const;
 #endif
 
-  // nsISupports
-  NS_IMETHOD QueryInterface(REFNSIID aIID, void** aInstancePtr);
-  NS_IMETHOD_(nsrefcnt) AddRef(void) { return 2; }
-  NS_IMETHOD_(nsrefcnt) Release(void) { return 1; }
+  NS_DECL_QUERYFRAME
 
   virtual nsIAtom* GetType() const;
 
@@ -181,15 +179,17 @@ public:
 
   // nsIFrameFrame
   NS_IMETHOD GetDocShell(nsIDocShell **aDocShell);
-
-  NS_IMETHOD  VerifyTree() const;
+  NS_IMETHOD BeginSwapDocShells(nsIFrame* aOther);
+  virtual void EndSwapDocShells(nsIFrame* aOther);
 
   // nsIReflowCallback
   virtual PRBool ReflowFinished();
   virtual void ReflowCallbackCanceled();
 
 protected:
-  nsSize GetMargin();
+  // Helper method to look up the HTML marginwidth & marginheight attributes
+  nsIntSize GetMarginAttributes();
+
   PRBool IsInline() { return mIsInline; }
   nsresult ShowDocShell();
   nsresult CreateViewAndWidget(nsContentType aContentType);
@@ -198,6 +198,10 @@ protected:
   virtual nscoord GetIntrinsicHeight();
 
   virtual PRIntn GetSkipSides() const;
+
+  // Hide or show our document viewer
+  void HideViewer();
+  void ShowViewer();
 
   /* Obtains the frame we should use for intrinsic size information if we are
    * an HTML <object>, <embed> or <applet> (a replaced element - not <iframe>)
@@ -236,20 +240,9 @@ NS_IMETHODIMP nsSubDocumentFrame::GetAccessible(nsIAccessible** aAccessible)
 }
 #endif
 
-//--------------------------------------------------------------
-// Frames are not refcounted, no need to AddRef
-NS_IMETHODIMP
-nsSubDocumentFrame::QueryInterface(const nsIID& aIID, void** aInstancePtr)
-{
-  NS_PRECONDITION(aInstancePtr, "null out param");
-
-  if (aIID.Equals(NS_GET_IID(nsIFrameFrame))) {
-    *aInstancePtr = static_cast<nsIFrameFrame*>(this);
-    return NS_OK;
-  }
-
-  return nsLeafFrame::QueryInterface(aIID, aInstancePtr);
-}
+NS_QUERYFRAME_HEAD(nsSubDocumentFrame)
+  NS_QUERYFRAME_ENTRY(nsIFrameFrame)
+NS_QUERYFRAME_TAIL_INHERITING(nsLeafFrame)
 
 NS_IMETHODIMP
 nsSubDocumentFrame::Init(nsIContent*     aContent,
@@ -265,8 +258,6 @@ nsSubDocumentFrame::Init(nsIContent*     aContent,
   nsresult rv =  nsLeafFrame::Init(aContent, aParent, aPrevInFlow);
   if (NS_FAILED(rv))
     return rv;
-    
-  nsPresContext *aPresContext = PresContext();
 
   // We are going to create an inner view.  If we need a view for the
   // OuterFrame but we wait for the normal view creation path in
@@ -277,23 +268,7 @@ nsSubDocumentFrame::Init(nsIContent*     aContent,
   // really need it or not, and the inner view will get it as the
   // parent.
   if (!HasView()) {
-    // To properly initialize the view we need to know the frame for the content
-    // that is the parent of content for this frame. This might not be our actual
-    // frame parent if we are out of flow (e.g., positioned) so our parent frame
-    // may have been set to some other ancestor.
-    // We look for a content parent frame in the frame property list, where it
-    // will have been set by nsCSSFrameConstructor if necessary.
-    nsCOMPtr<nsIAtom> contentParentAtom = do_GetAtom("contentParent");
-    nsIFrame* contentParent = nsnull;
-
-    void *value =
-      aPresContext->PropertyTable()->UnsetProperty(this,
-                                                   contentParentAtom, &rv);
-    if (NS_SUCCEEDED(rv)) {
-          contentParent = (nsIFrame*)value;
-    }
-
-    rv = nsHTMLContainerFrame::CreateViewForFrame(this, contentParent, PR_TRUE);
+    rv = nsHTMLContainerFrame::CreateViewForFrame(this, PR_TRUE);
     NS_ENSURE_SUCCESS(rv, rv);
   }
   nsIView* view = GetView();
@@ -303,18 +278,32 @@ nsSubDocumentFrame::Init(nsIContent*     aContent,
     view->CreateWidget(kCChildCID);
   }
 
-  if (!aPresContext->IsDynamic()) {
+  // Set the primary frame now so that
+  // DocumentViewerImpl::FindContainerView called by ShowViewer below
+  // can find it if necessary.
+  PresContext()->FrameManager()->SetPrimaryFrameFor(aContent, this);
+
+  ShowViewer();
+  return NS_OK;
+}
+
+void
+nsSubDocumentFrame::ShowViewer()
+{
+  if (!PresContext()->IsDynamic()) {
     // We let the printing code take care of loading the document; just
     // create a widget for it to use
-    rv = CreateViewAndWidget(eContentTypeContent);
-    NS_ENSURE_SUCCESS(rv,rv);
+    nsresult rv = CreateViewAndWidget(eContentTypeContent);
+    if (NS_FAILED(rv)) {
+      return;
+    }
   } else {
-    rv = ShowDocShell();
-    NS_ENSURE_SUCCESS(rv,rv);
+    nsresult rv = ShowDocShell();
+    if (NS_FAILED(rv)) {
+      return;
+    }
     mDidCreateDoc = PR_TRUE;
   }
-
-  return NS_OK;
 }
 
 PRIntn
@@ -331,6 +320,10 @@ nsSubDocumentFrame::BuildDisplayList(nsDisplayListBuilder*   aBuilder,
   if (!IsVisibleForPainting(aBuilder))
     return NS_OK;
 
+  if (aBuilder->IsForEventDelivery() &&
+      GetStyleVisibility()->mPointerEvents == NS_STYLE_POINTER_EVENTS_NONE)
+    return NS_OK;
+
   nsresult rv = DisplayBorderBackgroundOutline(aBuilder, aLists);
   NS_ENSURE_SUCCESS(rv, rv);
   
@@ -339,26 +332,69 @@ nsSubDocumentFrame::BuildDisplayList(nsDisplayListBuilder*   aBuilder,
   nsIView* subdocView = mInnerView->GetFirstChild();
   if (!subdocView)
     return NS_OK;
+
+  nsCOMPtr<nsIPresShell> presShell;
+
   nsIFrame* f = static_cast<nsIFrame*>(subdocView->GetClientData());
-  if (!f)
-    return NS_OK;
-  
-  nsRect dirty = aDirtyRect - f->GetOffsetTo(this);
 
-  aBuilder->EnterPresShell(f, dirty);
-
-  // Clip children to the child root frame's rectangle
-  nsDisplayList childItems;
-  rv = f->BuildDisplayListForStackingContext(aBuilder, dirty, &childItems);
-  if (NS_SUCCEEDED(rv)) {
-    rv = aLists.Content()->AppendNewToTop(
-        new (aBuilder) nsDisplayClip(nsnull, this, &childItems,
-              nsRect(aBuilder->ToReferenceFrame(f), f->GetSize())));
-    // delete childItems in case of OOM
-    childItems.DeleteAll();
+  if (f) {
+    presShell = f->PresContext()->PresShell();
+  } else {
+    // If we don't have a frame we use this roundabout way to get the pres shell.
+    if (!mFrameLoader)
+      return NS_OK;
+    nsCOMPtr<nsIDocShell> docShell;
+    mFrameLoader->GetDocShell(getter_AddRefs(docShell));
+    if (!docShell)
+      return NS_OK;
+    docShell->GetPresShell(getter_AddRefs(presShell));
+    if (!presShell)
+      return NS_OK;
   }
 
-  aBuilder->LeavePresShell(f, dirty);
+  PRBool suppressed = PR_TRUE;
+  presShell->IsPaintingSuppressed(&suppressed);
+
+  nsDisplayList childItems;
+
+  nsRect dirty;
+  if (f) {
+    dirty = aDirtyRect - f->GetOffsetTo(this);
+    aBuilder->EnterPresShell(f, dirty);
+  }
+
+  // Get the bounds of subdocView relative to the reference frame.
+  nsRect shellBounds = subdocView->GetBounds() +
+                       mInnerView->GetPosition() +
+                       GetOffsetTo(aBuilder->ReferenceFrame());
+
+  if (!aBuilder->IsForEventDelivery()) {
+    // Add the canvas background color.
+    nsCOMPtr<nsIPresShell_MOZILLA_1_9_2> presShell192 =
+      do_QueryInterface(presShell);
+    if (presShell192) {
+      rv = presShell192->AddCanvasBackgroundColorItem2(
+             *aBuilder, childItems, f ? f : this, &shellBounds,
+             NS_RGBA(0,0,0,0), PR_TRUE);
+    }
+  }
+
+  if (f && NS_SUCCEEDED(rv)) {
+    rv = f->BuildDisplayListForStackingContext(aBuilder, dirty, &childItems);
+  }
+
+  if (NS_SUCCEEDED(rv)) {
+    // Clip children to the child root frame's rectangle
+    rv = aLists.Content()->AppendNewToTop(
+        new (aBuilder) nsDisplayClip(this, this, &childItems, shellBounds));
+  }
+  // delete childItems in case of OOM
+  childItems.DeleteAll();
+
+  if (f) {
+    aBuilder->LeavePresShell(f, dirty);
+  }
+
   return rv;
 }
 
@@ -500,7 +536,7 @@ nsSubDocumentFrame::ComputeSize(nsIRenderingContext *aRenderingContext,
 }
 
 NS_IMETHODIMP
-nsSubDocumentFrame::Reflow(nsPresContext*          aPresContext,
+nsSubDocumentFrame::Reflow(nsPresContext*           aPresContext,
                            nsHTMLReflowMetrics&     aDesiredSize,
                            const nsHTMLReflowState& aReflowState,
                            nsReflowStatus&          aStatus)
@@ -540,19 +576,21 @@ nsSubDocumentFrame::Reflow(nsPresContext*          aPresContext,
     innerSize.height -= aReflowState.mComputedBorderPadding.TopBottom();
   }
 
-  nsIViewManager* vm = mInnerView->GetViewManager();
-  vm->MoveViewTo(mInnerView, offset.x, offset.y);
-  vm->ResizeView(mInnerView, nsRect(nsPoint(0, 0), innerSize), PR_TRUE);
+  if (mInnerView) {
+    nsIViewManager* vm = mInnerView->GetViewManager();
+    vm->MoveViewTo(mInnerView, offset.x, offset.y);
+    vm->ResizeView(mInnerView, nsRect(nsPoint(0, 0), innerSize), PR_TRUE);
+  }
 
   // Determine if we need to repaint our border, background or outline
-  CheckInvalidateSizeChange(aPresContext, aDesiredSize, aReflowState);
+  CheckInvalidateSizeChange(aDesiredSize);
 
   FinishAndStoreOverflow(&aDesiredSize);
 
   // Invalidate the frame contents
   // XXX is this really needed?
   nsRect rect(nsPoint(0, 0), GetSize());
-  Invalidate(rect, PR_FALSE);
+  Invalidate(rect);
 
   if (!aPresContext->IsPaginated() && !mPostedReflowCallback) {
     PresContext()->PresShell()->PostReflowCallback(this);
@@ -629,14 +667,6 @@ nsSubDocumentFrame::ReflowCallbackCanceled()
 }
 
 NS_IMETHODIMP
-nsSubDocumentFrame::VerifyTree() const
-{
-  // XXX Completely disabled for now; once pseud-frames are reworked
-  // then we can turn it back on.
-  return NS_OK;
-}
-
-NS_IMETHODIMP
 nsSubDocumentFrame::AttributeChanged(PRInt32 aNameSpaceID,
                                      nsIAtom* aAttribute,
                                      PRInt32 aModType)
@@ -655,10 +685,7 @@ nsSubDocumentFrame::AttributeChanged(PRInt32 aNameSpaceID,
       if (parentFrame) {
         // There is no interface for nsHTMLFramesetFrame so QI'ing to
         // concrete class, yay!
-        nsHTMLFramesetFrame* framesetFrame = nsnull;
-        parentFrame->QueryInterface(NS_GET_IID(nsHTMLFramesetFrame),
-                                    (void **)&framesetFrame);
-
+        nsHTMLFramesetFrame* framesetFrame = do_QueryFrame(parentFrame);
         if (framesetFrame) {
           framesetFrame->RecalculateBorderResize();
         }
@@ -737,6 +764,8 @@ NS_NewSubDocumentFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
   return new (aPresShell) nsSubDocumentFrame(aContext);
 }
 
+NS_IMPL_FRAMEARENA_HELPERS(nsSubDocumentFrame)
+
 void
 nsSubDocumentFrame::Destroy()
 {
@@ -745,6 +774,14 @@ nsSubDocumentFrame::Destroy()
     mPostedReflowCallback = PR_FALSE;
   }
   
+  HideViewer();
+
+  nsLeafFrame::Destroy();
+}
+
+void
+nsSubDocumentFrame::HideViewer()
+{
   if (mFrameLoader && mDidCreateDoc) {
     // Get the content viewer through the docshell, but don't call
     // GetDocShell() since we don't want to create one if we don't
@@ -774,17 +811,16 @@ nsSubDocumentFrame::Destroy()
       // Hide the content viewer now that the frame is going away...
       baseWin->SetVisibility(PR_FALSE);
 
-      // Clear out the parentWidget, since it's about to die with us
+      // Clear out the parentWidget, since it might be about to die with us
       baseWin->SetParentWidget(nsnull);
     }
   }
-
-  nsLeafFrame::Destroy();
 }
 
-nsSize nsSubDocumentFrame::GetMargin()
+nsIntSize
+nsSubDocumentFrame::GetMarginAttributes()
 {
-  nsSize result(-1, -1);
+  nsIntSize result(-1, -1);
   nsGenericHTMLElement *content = nsGenericHTMLElement::FromContent(mContent);
   if (content) {
     const nsAttrValue* attr = content->GetParsedAttr(nsGkAtoms::marginwidth);
@@ -824,6 +860,46 @@ nsSubDocumentFrame::GetDocShell(nsIDocShell **aDocShell)
   return mFrameLoader->GetDocShell(aDocShell);
 }
 
+NS_IMETHODIMP
+nsSubDocumentFrame::BeginSwapDocShells(nsIFrame* aOther)
+{
+  if (!aOther || aOther->GetType() != nsGkAtoms::subDocumentFrame) {
+    return NS_ERROR_NOT_IMPLEMENTED;
+  }
+
+  nsSubDocumentFrame* other = static_cast<nsSubDocumentFrame*>(aOther);
+  if (!mFrameLoader || !mDidCreateDoc || !other->mFrameLoader ||
+      !other->mDidCreateDoc) {
+    return NS_ERROR_NOT_IMPLEMENTED;
+  }
+
+  HideViewer();
+  other->HideViewer();
+
+  mFrameLoader.swap(other->mFrameLoader);
+  return NS_OK;
+}
+
+void
+nsSubDocumentFrame::EndSwapDocShells(nsIFrame* aOther)
+{
+  nsSubDocumentFrame* other = static_cast<nsSubDocumentFrame*>(aOther);
+  ShowViewer();
+  other->ShowViewer();
+
+  // Now make sure we reflow both frames, in case their contents
+  // determine their size.
+  PresContext()->PresShell()->
+    FrameNeedsReflow(this, nsIPresShell::eTreeChange, NS_FRAME_IS_DIRTY);
+  other->PresContext()->PresShell()->
+    FrameNeedsReflow(other, nsIPresShell::eTreeChange, NS_FRAME_IS_DIRTY);
+
+  // And repaint them, for good measure, in case there's nothing
+  // interesting that happens during reflow.
+  InvalidateOverflowRect();
+  other->InvalidateOverflowRect();
+}
+
 inline PRInt32 ConvertOverflow(PRUint8 aOverflow)
 {
   switch (aOverflow) {
@@ -858,7 +934,7 @@ nsSubDocumentFrame::ShowDocShell()
 
   // pass along marginwidth, marginheight, scrolling so sub document
   // can use it
-  nsSize margin = GetMargin();
+  nsIntSize margin = GetMarginAttributes();
   docShell->SetMarginWidth(margin.width);
   docShell->SetMarginHeight(margin.height);
 
@@ -935,22 +1011,29 @@ nsSubDocumentFrame::ShowDocShell()
 nsresult
 nsSubDocumentFrame::CreateViewAndWidget(nsContentType aContentType)
 {
+  if (mInnerView) {
+    // Nothing to do here
+    return NS_OK;
+  }
+  
   // create, init, set the parent of the view
   nsIView* outerView = GetView();
   NS_ASSERTION(outerView, "Must have an outer view already");
   nsRect viewBounds(0, 0, 0, 0); // size will be fixed during reflow
 
   nsIViewManager* viewMan = outerView->GetViewManager();
-  // Create the inner view hidden if the outer view is already hidden
-  // (it won't get hidden properly otherwise)
-  nsIView* innerView = viewMan->CreateView(viewBounds, outerView,
-                                           outerView->GetVisibility());
+  nsIView* innerView = viewMan->CreateView(viewBounds, outerView);
   if (!innerView) {
     NS_ERROR("Could not create inner view");
     return NS_ERROR_OUT_OF_MEMORY;
   }
   mInnerView = innerView;
   viewMan->InsertChild(outerView, innerView, nsnull, PR_TRUE);
+
+  if (aContentType == eContentTypeContentFrame) {
+    // No widget needed.
+    return NS_OK;
+  }
 
   return innerView->CreateWidget(kCChildCID, nsnull, nsnull, PR_TRUE, PR_TRUE,
                                  aContentType);

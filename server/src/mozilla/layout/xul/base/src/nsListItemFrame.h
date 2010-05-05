@@ -41,19 +41,15 @@
 #include "nsGridRowLeafFrame.h"
 
 nsIFrame* NS_NewListItemFrame(nsIPresShell* aPresShell,
-                              nsStyleContext *aContext,
-                              PRBool aIsRoot = PR_FALSE,
-                              nsIBoxLayout* aLayoutManager = nsnull);
+                              nsStyleContext *aContext);
 
 class nsListItemFrame : public nsGridRowLeafFrame
 {
 public:
-  NS_DECL_ISUPPORTS
+  NS_DECL_FRAMEARENA_HELPERS
 
   friend nsIFrame* NS_NewListItemFrame(nsIPresShell* aPresShell,
-                                       nsStyleContext *aContext,
-                                       PRBool aIsRoot,
-                                       nsIBoxLayout* aLayoutManager);
+                                       nsStyleContext *aContext);
 
   // overridden so that children of listitems don't handle mouse events,
   // unless allowevents="true" is specified on the listitem

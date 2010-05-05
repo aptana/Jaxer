@@ -52,21 +52,10 @@
 #include "nsBlockFrame.h"
 #endif
 
-
-nsresult
-nsAbsoluteContainingBlock::FirstChild(const nsIFrame* aDelegatingFrame,
-                                      nsIAtom*        aListName,
-                                      nsIFrame**      aFirstChild) const
-{
-  NS_PRECONDITION(GetChildListName() == aListName, "unexpected child list name");
-  *aFirstChild = mAbsoluteFrames.FirstChild();
-  return NS_OK;
-}
-
 nsresult
 nsAbsoluteContainingBlock::SetInitialChildList(nsIFrame*       aDelegatingFrame,
                                                nsIAtom*        aListName,
-                                               nsIFrame*       aChildList)
+                                               nsFrameList&    aChildList)
 {
   NS_PRECONDITION(GetChildListName() == aListName, "unexpected child list name");
 #ifdef NS_DEBUG
@@ -79,7 +68,7 @@ nsAbsoluteContainingBlock::SetInitialChildList(nsIFrame*       aDelegatingFrame,
 nsresult
 nsAbsoluteContainingBlock::AppendFrames(nsIFrame*      aDelegatingFrame,
                                         nsIAtom*       aListName,
-                                        nsIFrame*      aFrameList)
+                                        nsFrameList&   aFrameList)
 {
   NS_ASSERTION(GetChildListName() == aListName, "unexpected child list");
 
@@ -100,7 +89,7 @@ nsresult
 nsAbsoluteContainingBlock::InsertFrames(nsIFrame*      aDelegatingFrame,
                                         nsIAtom*       aListName,
                                         nsIFrame*      aPrevFrame,
-                                        nsIFrame*      aFrameList)
+                                        nsFrameList&   aFrameList)
 {
   NS_ASSERTION(GetChildListName() == aListName, "unexpected child list");
   NS_ASSERTION(!aPrevFrame || aPrevFrame->GetParent() == aDelegatingFrame,
@@ -127,7 +116,7 @@ nsAbsoluteContainingBlock::RemoveFrame(nsIFrame*       aDelegatingFrame,
   nsIFrame* nif = aOldFrame->GetNextInFlow();
   if (nif) {
     static_cast<nsContainerFrame*>(nif->GetParent())
-      ->DeleteNextInFlowChild(aOldFrame->PresContext(), nif);
+      ->DeleteNextInFlowChild(aOldFrame->PresContext(), nif, PR_FALSE);
   }
 
   PRBool result = mAbsoluteFrames.DestroyFrame(aOldFrame);
@@ -158,9 +147,9 @@ nsAbsoluteContainingBlock::Reflow(nsContainerFrame*        aDelegatingFrame,
   nsIFrame* kidFrame;
   nsOverflowContinuationTracker tracker(aPresContext, aDelegatingFrame, PR_TRUE);
   for (kidFrame = mAbsoluteFrames.FirstChild(); kidFrame; kidFrame = kidFrame->GetNextSibling()) {
-    if (reflowAll ||
-        NS_SUBTREE_DIRTY(kidFrame) ||
-        FrameDependsOnContainer(kidFrame, aCBWidthChanged, aCBHeightChanged)) {
+    PRBool kidNeedsReflow = reflowAll || NS_SUBTREE_DIRTY(kidFrame) ||
+      FrameDependsOnContainer(kidFrame, aCBWidthChanged, aCBHeightChanged);
+    if (kidNeedsReflow && !aPresContext->HasPendingInterrupt()) {
       // Reflow the frame
       nsReflowStatus  kidStatus = NS_FRAME_COMPLETE;
       ReflowAbsoluteFrame(aDelegatingFrame, aPresContext, aReflowState,
@@ -188,7 +177,7 @@ nsAbsoluteContainingBlock::Reflow(nsContainerFrame*        aDelegatingFrame,
         if (nextFrame) {
           tracker.Finish(kidFrame);
           static_cast<nsContainerFrame*>(nextFrame->GetParent())
-            ->DeleteNextInFlowChild(aPresContext, nextFrame);
+            ->DeleteNextInFlowChild(aPresContext, nextFrame, PR_TRUE);
         }
       }
     }
@@ -199,7 +188,28 @@ nsAbsoluteContainingBlock::Reflow(nsContainerFrame*        aDelegatingFrame,
                                                kidFrame->GetPosition());
       }
     }
+
+    // Make a CheckForInterrupt call, here, not just HasPendingInterrupt.  That
+    // will make sure that we end up reflowing aDelegatingFrame in cases when
+    // one of our kids interrupted.  Otherwise we'd set the dirty or
+    // dirty-children bit on the kid in the condition below, and then when
+    // reflow completes and we go to mark dirty bits on all ancestors of that
+    // kid we'll immediately bail out, because the kid already has a dirty bit.
+    // In particular, we won't set any dirty bits on aDelegatingFrame, so when
+    // the following reflow happens we won't reflow the kid in question.  This
+    // might be slightly suboptimal in cases where |kidFrame| itself did not
+    // interrupt, since we'll trigger a reflow of it too when it's not strictly
+    // needed.  But the logic to not do that is enough more complicated, and
+    // the case enough of an edge case, that this is probably better.
+    if (kidNeedsReflow && aPresContext->CheckForInterrupt(aDelegatingFrame)) {
+      if (aDelegatingFrame->GetStateBits() & NS_FRAME_IS_DIRTY) {
+        kidFrame->AddStateBits(NS_FRAME_IS_DIRTY);
+      } else {
+        kidFrame->AddStateBits(NS_FRAME_HAS_DIRTY_CHILDREN);
+      }
+    }
   }
+
   // Abspos frames can't cause their parent to be incomplete,
   // only overflow incomplete.
   if (NS_FRAME_IS_NOT_COMPLETE(reflowStatus))
@@ -210,26 +220,24 @@ nsAbsoluteContainingBlock::Reflow(nsContainerFrame*        aDelegatingFrame,
 }
 
 static inline PRBool IsFixedPaddingSize(nsStyleUnit aUnit) {
-  return aUnit == eStyleUnit_Coord || aUnit == eStyleUnit_Chars;
+  return aUnit == eStyleUnit_Coord;
 }
 static inline PRBool IsFixedMarginSize(nsStyleUnit aUnit) {
-  return aUnit == eStyleUnit_Coord || aUnit == eStyleUnit_Chars;
+  return aUnit == eStyleUnit_Coord;
 }
 static inline PRBool IsFixedMaxSize(nsStyleUnit aUnit) {
-  return aUnit == eStyleUnit_None || aUnit == eStyleUnit_Coord ||
-         aUnit == eStyleUnit_Chars;
+  return aUnit == eStyleUnit_None || aUnit == eStyleUnit_Coord;
 }
 static inline PRBool IsFixedOffset(nsStyleUnit aUnit) {
-  return aUnit == eStyleUnit_Coord || aUnit == eStyleUnit_Chars;
+  return aUnit == eStyleUnit_Coord;
 }
 static inline PRBool IsFixedHeight(nsStyleUnit aUnit) {
-  return aUnit == eStyleUnit_Coord || aUnit == eStyleUnit_Chars;
+  return aUnit == eStyleUnit_Coord;
 }
 
 static inline PRBool IsFixedWidth(const nsStyleCoord& aCoord)
 {
   return aCoord.GetUnit() == eStyleUnit_Coord ||
-         aCoord.GetUnit() == eStyleUnit_Chars ||
          (aCoord.GetUnit() == eStyleUnit_Enumerated &&
           (aCoord.GetIntValue() == NS_STYLE_WIDTH_MAX_CONTENT ||
            aCoord.GetIntValue() == NS_STYLE_WIDTH_MIN_CONTENT));
@@ -345,6 +353,33 @@ nsAbsoluteContainingBlock::DestroyFrames(nsIFrame* aDelegatingFrame)
   mAbsoluteFrames.DestroyFrames();
 }
 
+void
+nsAbsoluteContainingBlock::MarkSizeDependentFramesDirty()
+{
+  DoMarkFramesDirty(PR_FALSE);
+}
+
+void
+nsAbsoluteContainingBlock::MarkAllFramesDirty()
+{
+  DoMarkFramesDirty(PR_TRUE);
+}
+
+void
+nsAbsoluteContainingBlock::DoMarkFramesDirty(PRBool aMarkAllDirty)
+{
+  for (nsIFrame* kidFrame = mAbsoluteFrames.FirstChild();
+       kidFrame;
+       kidFrame = kidFrame->GetNextSibling()) {
+    if (aMarkAllDirty) {
+      kidFrame->AddStateBits(NS_FRAME_IS_DIRTY);
+    } else if (FrameDependsOnContainer(kidFrame, PR_TRUE, PR_TRUE)) {
+      // Add the weakest flags that will make sure we reflow this frame later
+      kidFrame->AddStateBits(NS_FRAME_HAS_DIRTY_CHILDREN);
+    }
+  }
+}
+
 // XXX Optimize the case where it's a resize reflow and the absolutely
 // positioned child has the exact same size and position and skip the
 // reflow...
@@ -369,8 +404,8 @@ nsAbsoluteContainingBlock::ReflowAbsoluteFrame(nsIFrame*                aDelegat
     nsFrame::IndentBy(stdout,nsBlockFrame::gNoiseIndent);
     printf("abs pos ");
     if (nsnull != aKidFrame) {
-      nsIFrameDebug*  frameDebug;
-      if (NS_SUCCEEDED(CallQueryInterface(aKidFrame, &frameDebug))) {
+      nsIFrameDebug *frameDebug = do_QueryFrame(aKidFrame);
+      if (frameDebug) {
         nsAutoString name;
         frameDebug->GetFrameName(name);
         printf("%s ", NS_LossyConvertUTF16toASCII(name).get());
@@ -397,7 +432,7 @@ nsAbsoluteContainingBlock::ReflowAbsoluteFrame(nsIFrame*                aDelegat
 
   nsresult  rv;
   // Get the border values
-  const nsMargin& border = aReflowState.mStyleBorder->GetBorder();
+  const nsMargin& border = aReflowState.mStyleBorder->GetActualBorder();
 
   nscoord availWidth = aContainingBlockWidth;
   if (availWidth == -1) {
@@ -426,7 +461,10 @@ nsAbsoluteContainingBlock::ReflowAbsoluteFrame(nsIFrame*                aDelegat
        // anything totally below the fold, but we can't position frames
        // across next-in-flow breaks yet.
   if (constrainHeight) {
-    kidReflowState.availableHeight = aReflowState.availableHeight - aKidFrame->GetRect().y;
+    kidReflowState.availableHeight = aReflowState.availableHeight - border.top
+                                     - kidReflowState.mComputedMargin.top;
+    if (NS_AUTOOFFSET != kidReflowState.mComputedOffsets.top)
+      kidReflowState.availableHeight -= kidReflowState.mComputedOffsets.top;
   }
 
   // Do the reflow
@@ -510,8 +548,8 @@ nsAbsoluteContainingBlock::ReflowAbsoluteFrame(nsIFrame*                aDelegat
     nsFrame::IndentBy(stdout,nsBlockFrame::gNoiseIndent - 1);
     printf("abs pos ");
     if (nsnull != aKidFrame) {
-      nsIFrameDebug*  frameDebug;
-      if (NS_SUCCEEDED(CallQueryInterface(aKidFrame, &frameDebug))) {
+      nsIFrameDebug *frameDebug = do_QueryFrame(aKidFrame);
+      if (frameDebug) {
         nsAutoString name;
         frameDebug->GetFrameName(name);
         printf("%s ", NS_LossyConvertUTF16toASCII(name).get());

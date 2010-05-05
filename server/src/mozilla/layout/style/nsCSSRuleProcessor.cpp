@@ -24,6 +24,7 @@
  *   L. David Baron <dbaron@dbaron.org>
  *   Daniel Glazman <glazman@netscape.com>
  *   Ehsan Akhgari <ehsan.akhgari@gmail.com>
+ *   Rob Arnold <robarnold@mozilla.com>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either of the GNU General Public License Version 2 or later (the "GPL"),
@@ -45,6 +46,7 @@
  */
 
 #include "nsCSSRuleProcessor.h"
+#include "nsRuleProcessorData.h"
 
 #define PL_ARENA_CONST_ALIGN_MASK 7
 #define NS_RULEHASH_ARENA_BLOCK_SIZE (256)
@@ -64,7 +66,6 @@
 #include "nsGkAtoms.h"
 #include "nsString.h"
 #include "nsUnicharUtils.h"
-#include "nsVoidArray.h"
 #include "nsDOMError.h"
 #include "nsRuleWalker.h"
 #include "nsCSSPseudoClasses.h"
@@ -79,6 +80,15 @@
 #include "nsWidgetsCID.h"
 #include "nsServiceManagerUtils.h"
 #include "nsTArray.h"
+#include "nsContentUtils.h"
+#include "nsIMediaList.h"
+#include "nsCSSRules.h"
+#include "nsIPrincipal.h"
+#include "nsStyleSet.h"
+
+#define VISITED_PSEUDO_PREF "layout.css.visited_links_enabled"
+
+static PRBool gSupportVisitedPseudo = PR_TRUE;
 
 static NS_DEFINE_CID(kLookAndFeelCID, NS_LOOKANDFEEL_CID);
 static nsTArray< nsCOMPtr<nsIAtom> >* sSystemMetrics = 0;
@@ -135,7 +145,11 @@ struct RuleHashTableEntry : public PLDHashEntryHdr {
   RuleValue *mRules; // linked list of |RuleValue|, null-terminated
 };
 
-PR_STATIC_CALLBACK(PLDHashNumber)
+struct RuleHashTagTableEntry : public RuleHashTableEntry {
+  nsCOMPtr<nsIAtom> mTag;
+};
+
+static PLDHashNumber
 RuleHash_CIHashKey(PLDHashTable *table, const void *key)
 {
   nsIAtom *atom = const_cast<nsIAtom*>(static_cast<const nsIAtom*>(key));
@@ -147,8 +161,7 @@ RuleHash_CIHashKey(PLDHashTable *table, const void *key)
 }
 
 typedef nsIAtom*
-(* PR_CALLBACK RuleHashGetKey)    (PLDHashTable *table,
-                                   const PLDHashEntryHdr *entry);
+(* RuleHashGetKey) (PLDHashTable *table, const PLDHashEntryHdr *entry);
 
 struct RuleHashTableOps {
   PLDHashTableOps ops;
@@ -165,7 +178,7 @@ ToLocalOps(const PLDHashTableOps *aOps)
            (((const char*) aOps) - offsetof(RuleHashTableOps, ops));
 }
 
-PR_STATIC_CALLBACK(PRBool)
+static PRBool
 RuleHash_CIMatchEntry(PLDHashTable *table, const PLDHashEntryHdr *hdr,
                       const void *key)
 {
@@ -185,7 +198,7 @@ RuleHash_CIMatchEntry(PLDHashTable *table, const PLDHashEntryHdr *hdr,
   return (nsCRT::strcasecmp(entry_str, match_str) == 0);
 }
 
-PR_STATIC_CALLBACK(PRBool)
+static PRBool
 RuleHash_CSMatchEntry(PLDHashTable *table, const PLDHashEntryHdr *hdr,
                       const void *key)
 {
@@ -197,15 +210,23 @@ RuleHash_CSMatchEntry(PLDHashTable *table, const PLDHashEntryHdr *hdr,
   return match_atom == entry_atom;
 }
 
-PR_STATIC_CALLBACK(nsIAtom*)
-RuleHash_TagTable_GetKey(PLDHashTable *table, const PLDHashEntryHdr *hdr)
+static PRBool
+RuleHash_TagTable_MatchEntry(PLDHashTable *table, const PLDHashEntryHdr *hdr,
+                      const void *key)
 {
-  const RuleHashTableEntry *entry =
-    static_cast<const RuleHashTableEntry*>(hdr);
-  return entry->mRules->mSelector->mTag;
+  nsIAtom *match_atom = const_cast<nsIAtom*>(static_cast<const nsIAtom*>
+                                              (key));
+  nsIAtom *entry_atom = static_cast<const RuleHashTagTableEntry*>(hdr)->mTag;
+
+  return match_atom == entry_atom;
 }
 
-PR_STATIC_CALLBACK(nsIAtom*)
+static void RuleHash_TagTable_ClearEntry(PLDHashTable *table, PLDHashEntryHdr *entry)
+{
+  (static_cast<RuleHashTagTableEntry*>(entry))->~RuleHashTagTableEntry();
+}
+
+static nsIAtom*
 RuleHash_ClassTable_GetKey(PLDHashTable *table, const PLDHashEntryHdr *hdr)
 {
   const RuleHashTableEntry *entry =
@@ -213,7 +234,7 @@ RuleHash_ClassTable_GetKey(PLDHashTable *table, const PLDHashEntryHdr *hdr)
   return entry->mRules->mSelector->mClassList->mAtom;
 }
 
-PR_STATIC_CALLBACK(nsIAtom*)
+static nsIAtom*
 RuleHash_IdTable_GetKey(PLDHashTable *table, const PLDHashEntryHdr *hdr)
 {
   const RuleHashTableEntry *entry =
@@ -221,13 +242,13 @@ RuleHash_IdTable_GetKey(PLDHashTable *table, const PLDHashEntryHdr *hdr)
   return entry->mRules->mSelector->mIDList->mAtom;
 }
 
-PR_STATIC_CALLBACK(PLDHashNumber)
+static PLDHashNumber
 RuleHash_NameSpaceTable_HashKey(PLDHashTable *table, const void *key)
 {
   return NS_PTR_TO_INT32(key);
 }
 
-PR_STATIC_CALLBACK(PRBool)
+static PRBool
 RuleHash_NameSpaceTable_MatchEntry(PLDHashTable *table,
                                    const PLDHashEntryHdr *hdr,
                                    const void *key)
@@ -239,18 +260,15 @@ RuleHash_NameSpaceTable_MatchEntry(PLDHashTable *table,
          entry->mRules->mSelector->mNameSpace;
 }
 
-static const RuleHashTableOps RuleHash_TagTable_Ops = {
-  {
+static const PLDHashTableOps RuleHash_TagTable_Ops = {
   PL_DHashAllocTable,
   PL_DHashFreeTable,
   PL_DHashVoidPtrKeyStub,
-  RuleHash_CSMatchEntry,
+  RuleHash_TagTable_MatchEntry,
   PL_DHashMoveEntryStub,
-  PL_DHashClearEntryStub,
+  RuleHash_TagTable_ClearEntry,
   PL_DHashFinalizeStub,
   NULL
-  },
-  RuleHash_TagTable_GetKey
 };
 
 // Case-sensitive ops.
@@ -327,11 +345,6 @@ static const PLDHashTableOps RuleHash_NameSpaceTable_Ops = {
 #undef RULE_HASH_STATS
 #undef PRINT_UNIVERSAL_RULES
 
-#ifdef DEBUG_dbaron
-#define RULE_HASH_STATS
-#define PRINT_UNIVERSAL_RULES
-#endif
-
 #ifdef RULE_HASH_STATS
 #define RULE_HASH_STAT_INCREMENT(var_) PR_BEGIN_MACRO ++(var_); PR_END_MACRO
 #else
@@ -358,6 +371,7 @@ public:
 protected:
   void PrependRuleToTable(PLDHashTable* aTable, const void* aKey,
                           RuleValue* aRuleInfo);
+  void PrependRuleToTagTable(const void* aKey, RuleValue* aRuleInfo);
   void PrependUniversalRule(RuleValue* aRuleInfo);
 
   // All rule values in these hashtables are arena allocated
@@ -417,8 +431,8 @@ RuleHash::RuleHash(PRBool aQuirksMode)
   // Initialize our arena
   PL_INIT_ARENA_POOL(&mArena, "RuleHashArena", NS_RULEHASH_ARENA_BLOCK_SIZE);
 
-  PL_DHashTableInit(&mTagTable, &RuleHash_TagTable_Ops.ops, nsnull,
-                    sizeof(RuleHashTableEntry), 64);
+  PL_DHashTableInit(&mTagTable, &RuleHash_TagTable_Ops, nsnull,
+                    sizeof(RuleHashTagTableEntry), 64);
   PL_DHashTableInit(&mIdTable,
                     aQuirksMode ? &RuleHash_IdTable_CIOps.ops
                                 : &RuleHash_IdTable_CSOps.ops,
@@ -494,6 +508,21 @@ void RuleHash::PrependRuleToTable(PLDHashTable* aTable, const void* aKey,
   entry->mRules = aRuleInfo->Add(mRuleCount++, entry->mRules);
 }
 
+void RuleHash::PrependRuleToTagTable(const void* aKey, RuleValue* aRuleInfo)
+{
+  // Get a new or exisiting entry
+   RuleHashTagTableEntry *entry = static_cast<RuleHashTagTableEntry*>
+                              (PL_DHashTableOperate(&mTagTable, aKey, PL_DHASH_ADD));
+   if (!entry)
+     return;
+
+   entry->mTag = const_cast<nsIAtom*>(static_cast<const nsIAtom*>(aKey));
+
+   // This may give the same rule two different rule counts, but that is OK
+   // because we never combine two different entries in the tag table.
+   entry->mRules = aRuleInfo->Add(mRuleCount++, entry->mRules);
+}
+
 void RuleHash::PrependUniversalRule(RuleValue *aRuleInfo)
 {
   mUniversalRules = aRuleInfo->Add(mRuleCount++, mUniversalRules);
@@ -510,9 +539,16 @@ void RuleHash::PrependRule(RuleValue *aRuleInfo)
     PrependRuleToTable(&mClassTable, selector->mClassList->mAtom, aRuleInfo);
     RULE_HASH_STAT_INCREMENT(mClassSelectors);
   }
-  else if (nsnull != selector->mTag) {
-    PrependRuleToTable(&mTagTable, selector->mTag, aRuleInfo);
+  else if (selector->mLowercaseTag) {
+    PrependRuleToTagTable(selector->mLowercaseTag, aRuleInfo);
     RULE_HASH_STAT_INCREMENT(mTagSelectors);
+    if (selector->mCasedTag && 
+        selector->mCasedTag != selector->mLowercaseTag) {
+      PrependRuleToTagTable(selector->mCasedTag, 
+                            new (mArena) RuleValue(aRuleInfo->mRule, 
+                                                   aRuleInfo->mSelector));
+      RULE_HASH_STAT_INCREMENT(mTagSelectors);
+    }
   }
   else if (kNameSpaceID_Unknown != selector->mNameSpace) {
     PrependRuleToTable(&mNameSpaceTable,
@@ -653,10 +689,10 @@ void RuleHash::EnumerateTagRules(nsIAtom* aTag, RuleEnumFunc aFunc, void* aData)
 // Attribute selectors hash table.
 struct AttributeSelectorEntry : public PLDHashEntryHdr {
   nsIAtom *mAttribute;
-  nsVoidArray *mSelectors;
+  nsTArray<nsCSSSelector*> *mSelectors;
 };
 
-PR_STATIC_CALLBACK(void)
+static void
 AttributeSelectorClearEntry(PLDHashTable *table, PLDHashEntryHdr *hdr)
 {
   AttributeSelectorEntry *entry = static_cast<AttributeSelectorEntry*>(hdr);
@@ -682,7 +718,7 @@ struct RuleCascadeData {
   RuleCascadeData(nsIAtom *aMedium, PRBool aQuirksMode)
     : mRuleHash(aQuirksMode),
       mStateSelectors(),
-      mMedium(aMedium),
+      mCacheKey(aMedium),
       mNext(nsnull)
   {
     PL_DHashTableInit(&mAttributeSelectors, &AttributeSelectorOps, nsnull,
@@ -693,21 +729,23 @@ struct RuleCascadeData {
   {
     PL_DHashTableFinish(&mAttributeSelectors);
   }
-  RuleHash          mRuleHash;
-  nsVoidArray       mStateSelectors;
-  nsVoidArray       mClassSelectors;
-  nsVoidArray       mIDSelectors;
-  PLDHashTable      mAttributeSelectors; // nsIAtom* -> nsVoidArray*
+  RuleHash                 mRuleHash;
+  nsTArray<nsCSSSelector*> mStateSelectors;
+  nsTArray<nsCSSSelector*> mClassSelectors;
+  nsTArray<nsCSSSelector*> mIDSelectors;
+  PLDHashTable             mAttributeSelectors;
+
+  nsTArray<nsFontFaceRuleContainer> mFontFaceRules;
 
   // Looks up or creates the appropriate list in |mAttributeSelectors|.
   // Returns null only on allocation failure.
-  nsVoidArray* AttributeListFor(nsIAtom* aAttribute);
+  nsTArray<nsCSSSelector*>* AttributeListFor(nsIAtom* aAttribute);
 
-  nsCOMPtr<nsIAtom> mMedium;
+  nsMediaQueryResultCacheKey mCacheKey;
   RuleCascadeData*  mNext; // for a different medium
 };
 
-nsVoidArray*
+nsTArray<nsCSSSelector*>*
 RuleCascadeData::AttributeListFor(nsIAtom* aAttribute)
 {
   AttributeSelectorEntry *entry = static_cast<AttributeSelectorEntry*>
@@ -715,7 +753,7 @@ RuleCascadeData::AttributeListFor(nsIAtom* aAttribute)
   if (!entry)
     return nsnull;
   if (!entry->mSelectors) {
-    if (!(entry->mSelectors = new nsVoidArray)) {
+    if (!(entry->mSelectors = new nsTArray<nsCSSSelector*>)) {
       PL_DHashTableRawRemove(&mAttributeSelectors, entry);
       return nsnull;
     }
@@ -728,9 +766,12 @@ RuleCascadeData::AttributeListFor(nsIAtom* aAttribute)
 // CSS Style rule processor implementation
 //
 
-nsCSSRuleProcessor::nsCSSRuleProcessor(const nsCOMArray<nsICSSStyleSheet>& aSheets)
-  : mSheets(aSheets),
-    mRuleCascades(nsnull)
+nsCSSRuleProcessor::nsCSSRuleProcessor(const nsCOMArray<nsICSSStyleSheet>& aSheets,
+                                       PRUint8 aSheetType)
+  : mSheets(aSheets)
+  , mRuleCascades(nsnull)
+  , mLastPresContext(nsnull)
+  , mSheetType(aSheetType)
 {
   for (PRInt32 i = mSheets.Count() - 1; i >= 0; --i)
     mSheets[i]->AddRuleProcessor(this);
@@ -745,6 +786,16 @@ nsCSSRuleProcessor::~nsCSSRuleProcessor()
 }
 
 NS_IMPL_ISUPPORTS1(nsCSSRuleProcessor, nsIStyleRuleProcessor)
+
+/* static */ void
+nsCSSRuleProcessor::Startup()
+{
+  nsContentUtils::AddBoolPrefVarCache(VISITED_PSEUDO_PREF,
+                                      &gSupportVisitedPseudo);
+  // We want to default to true, not false as AddBoolPrefVarCache does.
+  gSupportVisitedPseudo =
+    nsContentUtils::GetBoolPref(VISITED_PSEUDO_PREF, PR_TRUE);
+}
 
 static PRBool
 InitSystemMetrics()
@@ -761,41 +812,75 @@ InitSystemMetrics()
   PRInt32 metricResult;
   lookAndFeel->GetMetric(nsILookAndFeel::eMetric_ScrollArrowStyle, metricResult);
   if (metricResult & nsILookAndFeel::eMetric_ScrollArrowStartBackward) {
-    sSystemMetrics->AppendElement(do_GetAtom("scrollbar-start-backward"));
+    sSystemMetrics->AppendElement(nsGkAtoms::scrollbar_start_backward);
   }
   if (metricResult & nsILookAndFeel::eMetric_ScrollArrowStartForward) {
-    sSystemMetrics->AppendElement(do_GetAtom("scrollbar-start-forward"));
+    sSystemMetrics->AppendElement(nsGkAtoms::scrollbar_start_forward);
   }
   if (metricResult & nsILookAndFeel::eMetric_ScrollArrowEndBackward) {
-    sSystemMetrics->AppendElement(do_GetAtom("scrollbar-end-backward"));
+    sSystemMetrics->AppendElement(nsGkAtoms::scrollbar_end_backward);
   }
   if (metricResult & nsILookAndFeel::eMetric_ScrollArrowEndForward) {
-    sSystemMetrics->AppendElement(do_GetAtom("scrollbar-end-forward"));
+    sSystemMetrics->AppendElement(nsGkAtoms::scrollbar_end_forward);
   }
 
   lookAndFeel->GetMetric(nsILookAndFeel::eMetric_ScrollSliderStyle, metricResult);
   if (metricResult != nsILookAndFeel::eMetric_ScrollThumbStyleNormal) {
-    sSystemMetrics->AppendElement(do_GetAtom("scrollbar-thumb-proportional"));
+    sSystemMetrics->AppendElement(nsGkAtoms::scrollbar_thumb_proportional);
   }
 
   lookAndFeel->GetMetric(nsILookAndFeel::eMetric_ImagesInMenus, metricResult);
   if (metricResult) {
-    sSystemMetrics->AppendElement(do_GetAtom("images-in-menus"));
+    sSystemMetrics->AppendElement(nsGkAtoms::images_in_menus);
   }
 
   rv = lookAndFeel->GetMetric(nsILookAndFeel::eMetric_WindowsDefaultTheme, metricResult);
   if (NS_SUCCEEDED(rv) && metricResult) {
-    sSystemMetrics->AppendElement(do_GetAtom("windows-default-theme"));
+    sSystemMetrics->AppendElement(nsGkAtoms::windows_default_theme);
+  }
+
+  rv = lookAndFeel->GetMetric(nsILookAndFeel::eMetric_MacGraphiteTheme, metricResult);
+  if (NS_SUCCEEDED(rv) && metricResult) {
+    sSystemMetrics->AppendElement(nsGkAtoms::mac_graphite_theme);
+  }
+
+  rv = lookAndFeel->GetMetric(nsILookAndFeel::eMetric_DWMCompositor, metricResult);
+  if (NS_SUCCEEDED(rv) && metricResult) {
+    sSystemMetrics->AppendElement(nsGkAtoms::windows_compositor);
+  }
+
+  rv = lookAndFeel->GetMetric(nsILookAndFeel::eMetric_WindowsClassic, metricResult);
+  if (NS_SUCCEEDED(rv) && metricResult) {
+    sSystemMetrics->AppendElement(nsGkAtoms::windows_classic);
+  }
+
+  rv = lookAndFeel->GetMetric(nsILookAndFeel::eMetric_TouchEnabled, metricResult);
+  if (NS_SUCCEEDED(rv) && metricResult) {
+    sSystemMetrics->AppendElement(nsGkAtoms::touch_enabled);
+  }
+ 
+  rv = lookAndFeel->GetMetric(nsILookAndFeel::eMetric_MaemoClassic, metricResult);
+  if (NS_SUCCEEDED(rv) && metricResult) {
+    sSystemMetrics->AppendElement(nsGkAtoms::maemo_classic);
   }
 
   return PR_TRUE;
 }
 
 /* static */ void
-nsCSSRuleProcessor::Shutdown()
+nsCSSRuleProcessor::FreeSystemMetrics()
 {
   delete sSystemMetrics;
   sSystemMetrics = nsnull;
+}
+
+/* static */ PRBool
+nsCSSRuleProcessor::HasSystemMetric(nsIAtom* aMetric)
+{
+  if (!sSystemMetrics && !InitSystemMetrics()) {
+    return PR_FALSE;
+  }
+  return sSystemMetrics->IndexOf(aMetric) != sSystemMetrics->NoIndex;
 }
 
 RuleProcessorData::RuleProcessorData(nsPresContext* aPresContext,
@@ -805,7 +890,6 @@ RuleProcessorData::RuleProcessorData(nsPresContext* aPresContext,
 {
   MOZ_COUNT_CTOR(RuleProcessorData);
 
-  NS_PRECONDITION(aPresContext, "null pointer");
   NS_ASSERTION(!aContent || aContent->IsNodeOfType(nsINode::eELEMENT),
                "non-element leaked into SelectorMatches");
 
@@ -827,22 +911,36 @@ RuleProcessorData::RuleProcessorData(nsPresContext* aPresContext,
   mParentData = nsnull;
   mLanguage = nsnull;
   mClasses = nsnull;
+  mNthIndices[0][0] = -2;
+  mNthIndices[0][1] = -2;
+  mNthIndices[1][0] = -2;
+  mNthIndices[1][1] = -2;
 
   // get the compat. mode (unless it is provided)
-  if (!aCompat) {
+  // XXXbz is passing in the compat mode really that much of an optimization?
+  if (aCompat) {
+    mCompatMode = *aCompat;
+  } else if (NS_LIKELY(mPresContext)) {
     mCompatMode = mPresContext->CompatibilityMode();
   } else {
-    mCompatMode = *aCompat;
+    NS_ASSERTION(aContent, "Must have content");
+    NS_ASSERTION(aContent->GetOwnerDoc(), "Must have document");
+    mCompatMode = aContent->GetOwnerDoc()->GetCompatibilityMode();
   }
 
-
   if (aContent) {
+    NS_ASSERTION(aContent->GetOwnerDoc(), "Document-less node here?");
+    
     // get the tag and parent
     mContentTag = aContent->Tag();
     mParentContent = aContent->GetParent();
 
     // get the event state
-    mPresContext->EventStateManager()->GetContentState(aContent, mEventState);
+    if (mPresContext) {
+      mPresContext->EventStateManager()->GetContentState(aContent, mEventState);
+    } else {
+      mEventState = aContent->IntrinsicState();
+    }
 
     // get the ID and classes for the content
     mContentID = aContent->GetID();
@@ -851,24 +949,19 @@ RuleProcessorData::RuleProcessorData(nsPresContext* aPresContext,
     // see if there are attributes for the content
     mHasAttributes = aContent->GetAttrCount() > 0;
 
+    // get the namespace
+    mNameSpaceID = aContent->GetNameSpaceID();
+
     // check for HTMLContent and Link status
-    if (aContent->IsNodeOfType(nsINode::eHTML)) {
-      mIsHTMLContent = PR_TRUE;
-      // Note that we want to treat non-XML HTML content as XHTML for namespace
-      // purposes, since html.css has that namespace declared.
-      mNameSpaceID = kNameSpaceID_XHTML;
-    } else {
-      // get the namespace
-      mNameSpaceID = aContent->GetNameSpaceID();
-    }
-
-
+    mIsHTMLContent = (mNameSpaceID == kNameSpaceID_XHTML);
 
     // if HTML content and it has some attributes, check for an HTML link
     // NOTE: optimization: cannot be a link if no attributes (since it needs an href)
+    nsILinkHandler* linkHandler =
+      mPresContext ? mPresContext->GetLinkHandler() : nsnull;
     if (mIsHTMLContent && mHasAttributes) {
       // check if it is an HTML Link
-      if(nsStyleUtil::IsHTMLLink(aContent, mContentTag, mPresContext, &mLinkState)) {
+      if(nsStyleUtil::IsHTMLLink(aContent, linkHandler, &mLinkState)) {
         mIsLink = PR_TRUE;
       }
     } 
@@ -878,9 +971,13 @@ RuleProcessorData::RuleProcessorData(nsPresContext* aPresContext,
     if(!mIsLink &&
        mHasAttributes && 
        !(mIsHTMLContent || aContent->IsNodeOfType(nsINode::eXUL)) && 
-       nsStyleUtil::IsLink(aContent, mPresContext, &mLinkState)) {
+       nsStyleUtil::IsLink(aContent, linkHandler, &mLinkState)) {
       mIsLink = PR_TRUE;
     } 
+  }
+
+  if (mLinkState == eLinkState_Visited && !gSupportVisitedPseudo) {
+    mLinkState = eLinkState_Unvisited;
   }
 }
 
@@ -909,7 +1006,7 @@ RuleProcessorData::~RuleProcessorData()
       }
 
       if (d != this)
-        d->Destroy(mPresContext);
+        d->Destroy();
     } while (destroyQueue.Count());
   }
 
@@ -919,7 +1016,7 @@ RuleProcessorData::~RuleProcessorData()
 const nsString* RuleProcessorData::GetLang()
 {
   if (!mLanguage) {
-    mLanguage = new nsAutoString();
+    mLanguage = new nsString();
     if (!mLanguage)
       return nsnull;
     for (nsIContent* content = mContent; content;
@@ -927,15 +1024,15 @@ const nsString* RuleProcessorData::GetLang()
       if (content->GetAttrCount() > 0) {
         // xml:lang has precedence over lang on HTML elements (see
         // XHTML1 section C.7).
-        nsAutoString value;
         PRBool hasAttr = content->GetAttr(kNameSpaceID_XML, nsGkAtoms::lang,
-                                          value);
+                                          *mLanguage);
         if (!hasAttr && content->IsNodeOfType(nsINode::eHTML)) {
           hasAttr = content->GetAttr(kNameSpaceID_None, nsGkAtoms::lang,
-                                     value);
+                                     *mLanguage);
         }
+        NS_ASSERTION(hasAttr || mLanguage->IsEmpty(),
+                     "GetAttr that returns false should not make string non-empty");
         if (hasAttr) {
-          *mLanguage = value;
           break;
         }
       }
@@ -944,7 +1041,82 @@ const nsString* RuleProcessorData::GetLang()
   return mLanguage;
 }
 
-static const PRUnichar kNullCh = PRUnichar('\0');
+PRInt32
+RuleProcessorData::GetNthIndex(PRBool aIsOfType, PRBool aIsFromEnd,
+                               PRBool aCheckEdgeOnly)
+{
+  NS_ASSERTION(mParentContent, "caller should check mParentContent");
+  NS_ASSERTION(!mPreviousSiblingData ||
+               mPreviousSiblingData->mContent->IsNodeOfType(nsINode::eELEMENT),
+               "Unexpected previous sibling data");
+
+  PRInt32 &slot = mNthIndices[aIsOfType][aIsFromEnd];
+  if (slot != -2 && (slot != -1 || aCheckEdgeOnly))
+    return slot;
+
+  if (mPreviousSiblingData &&
+      (!aIsOfType ||
+       (mPreviousSiblingData->mNameSpaceID == mNameSpaceID &&
+        mPreviousSiblingData->mContentTag == mContentTag))) {
+    slot = mPreviousSiblingData->mNthIndices[aIsOfType][aIsFromEnd];
+    if (slot > 0) {
+      slot += (aIsFromEnd ? -1 : 1);
+      NS_ASSERTION(slot > 0, "How did that happen?");
+      return slot;
+    }
+  }
+
+  PRInt32 result = 1;
+  nsIContent* parent = mParentContent;
+
+  PRUint32 childCount;
+  nsIContent * const * curChildPtr = parent->GetChildArray(&childCount);
+
+#ifdef DEBUG
+  nsMutationGuard debugMutationGuard;
+#endif  
+  
+  PRInt32 increment;
+  nsIContent * const * stopPtr;
+  if (aIsFromEnd) {
+    stopPtr = curChildPtr - 1;
+    curChildPtr = stopPtr + childCount;
+    increment = -1;
+  } else {
+    increment = 1;
+    stopPtr = curChildPtr + childCount;
+  }
+
+  for ( ; ; curChildPtr += increment) {
+    if (curChildPtr == stopPtr) {
+      // mContent is the root of an anonymous content subtree.
+      result = 0; // special value to indicate that it is not at any index
+      break;
+    }
+    nsIContent* child = *curChildPtr;
+    if (child == mContent)
+      break;
+    if (child->IsNodeOfType(nsINode::eELEMENT) &&
+        (!aIsOfType ||
+         (child->Tag() == mContentTag &&
+          child->GetNameSpaceID() == mNameSpaceID))) {
+      if (aCheckEdgeOnly) {
+        // The caller only cares whether or not the result is 1, and we
+        // now know it's not.
+        result = -1;
+        break;
+      }
+      ++result;
+    }
+  }
+
+#ifdef DEBUG
+  NS_ASSERTION(!debugMutationGuard.Mutated(0), "Unexpected mutations happened");
+#endif  
+
+  slot = result;
+  return result;
+}
 
 static PRBool ValueIncludes(const nsSubstring& aValueList,
                             const nsSubstring& aValue,
@@ -955,13 +1127,13 @@ static PRBool ValueIncludes(const nsSubstring& aValueList,
 
   while (p < p_end) {
     // skip leading space
-    while (p != p_end && nsCRT::IsAsciiSpace(*p))
+    while (p != p_end && nsContentUtils::IsHTMLWhitespace(*p))
       ++p;
 
     const PRUnichar *val_start = p;
 
     // look for space or end
-    while (p != p_end && !nsCRT::IsAsciiSpace(*p))
+    while (p != p_end && !nsContentUtils::IsHTMLWhitespace(*p))
       ++p;
 
     const PRUnichar *val_end = p;
@@ -1012,6 +1184,17 @@ static PRBool AttrMatchesValue(const nsAttrSelector* aAttrSelector,
                                const nsString& aValue)
 {
   NS_PRECONDITION(aAttrSelector, "Must have an attribute selector");
+
+  // http://lists.w3.org/Archives/Public/www-style/2008Apr/0038.html
+  // *= (CONTAINSMATCH) ~= (INCLUDES) ^= (BEGINSMATCH) $= (ENDSMATCH)
+  // all accept the empty string, but match nothing.
+  if (aAttrSelector->mValue.IsEmpty() &&
+      (aAttrSelector->mFunction == NS_ATTR_FUNC_INCLUDES ||
+       aAttrSelector->mFunction == NS_ATTR_FUNC_ENDSMATCH ||
+       aAttrSelector->mFunction == NS_ATTR_FUNC_BEGINSMATCH ||
+       aAttrSelector->mFunction == NS_ATTR_FUNC_CONTAINSMATCH))
+    return PR_FALSE;
+
   const nsDefaultStringComparator defaultComparator;
   const nsCaseInsensitiveStringComparator ciComparator;
   const nsStringComparator& comparator = aAttrSelector->mCaseSensitive
@@ -1036,13 +1219,15 @@ static PRBool AttrMatchesValue(const nsAttrSelector* aAttrSelector,
   }
 }
 
-// NOTE:  The |aStateMask| code isn't going to work correctly anymore if
-// we start batching style changes, because if multiple states change in
-// separate notifications then we might determine the style is not
+// NOTE: For |aStateMask| and |aAttribute| to work correctly, it's
+// important that any change that changes multiple state bits and
+// maybe an attribute include all those state bits and the attribute
+// in the notification.  Otherwise, if multiple states change but we
+// do separate notifications then we might determine the style is not
 // state-dependent when it really is (e.g., determining that a
 // :hover:active rule no longer matches when both states are unset).
-// XXXldb This is a real problem for things like [checked]:checked where
-// both states are determined exactly by an attribute.
+
+// If |aForStyling| is false, we shouldn't mark slow-selector bits on nodes.
 
 // |aDependence| has two functions:
 //  * when non-null, it indicates that we're processing a negation,
@@ -1053,15 +1238,28 @@ static PRBool SelectorMatches(RuleProcessorData &data,
                               nsCSSSelector* aSelector,
                               PRInt32 aStateMask, // states NOT to test
                               nsIAtom* aAttribute, // attribute NOT to test
+                              PRBool aForStyling,
                               PRBool* const aDependence = nsnull) 
 
 {
   // namespace/tag match
+  // optimization : bail out early if we can
   if ((kNameSpaceID_Unknown != aSelector->mNameSpace &&
-       data.mNameSpaceID != aSelector->mNameSpace) ||
-      (aSelector->mTag && aSelector->mTag != data.mContentTag)) {
-    // optimization : bail out early if we can
+       data.mNameSpaceID != aSelector->mNameSpace))
     return PR_FALSE;
+
+  if (aSelector->mLowercaseTag) {
+    //If we tested that this is an HTML node in a text/html document and
+    //had some tweaks in RuleHash, we could remove case-sensitivity from
+    //style sheets.
+    if (data.mIsHTMLContent) {
+      if (data.mContentTag != aSelector->mLowercaseTag)
+        return PR_FALSE;
+    }
+    else {
+      if (data.mContentTag != aSelector->mCasedTag)
+        return PR_FALSE;
+    }
   }
 
   PRBool result = PR_TRUE;
@@ -1071,76 +1269,131 @@ static PRBool SelectorMatches(RuleProcessorData &data,
   // generally quick to test, and thus earlier).  If they were later,
   // we'd probably avoid setting those bits in more cases where setting
   // them is unnecessary.
-  const PRBool setNodeFlags = aStateMask == 0 && !aAttribute;
+  const PRBool setNodeFlags = aForStyling && aStateMask == 0 && !aAttribute;
 
   // test for pseudo class match
   // first-child, root, lang, active, focus, hover, link, visited...
   // XXX disabled, enabled, selected, selection
-  for (nsAtomStringList* pseudoClass = aSelector->mPseudoClassList;
+  for (nsPseudoClassList* pseudoClass = aSelector->mPseudoClassList;
        pseudoClass && result; pseudoClass = pseudoClass->mNext) {
     PRInt32 stateToCheck = 0;
-    if ((nsCSSPseudoClasses::firstChild == pseudoClass->mAtom) ||
-        (nsCSSPseudoClasses::firstNode == pseudoClass->mAtom) ) {
-      nsIContent *firstChild = nsnull;
+    if (nsCSSPseudoClasses::firstNode == pseudoClass->mAtom) {
+      nsIContent *firstNode = nsnull;
       nsIContent *parent = data.mParentContent;
       if (parent) {
         if (setNodeFlags)
           parent->SetFlags(NODE_HAS_EDGE_CHILD_SELECTOR);
 
-        PRBool acceptNonWhitespace =
-          nsCSSPseudoClasses::firstNode == pseudoClass->mAtom;
         PRInt32 index = -1;
         do {
-          firstChild = parent->GetChildAt(++index);
-          // stop at first non-comment and non-whitespace node (and
-          // non-text node for firstChild)
-        } while (firstChild &&
-                 !IsSignificantChild(firstChild, acceptNonWhitespace, PR_FALSE));
+          firstNode = parent->GetChildAt(++index);
+          // stop at first non-comment and non-whitespace node
+        } while (firstNode &&
+                 !IsSignificantChild(firstNode, PR_TRUE, PR_FALSE));
       }
-      result = (data.mContent == firstChild);
+      result = (data.mContent == firstNode);
     }
-    else if ((nsCSSPseudoClasses::lastChild == pseudoClass->mAtom) ||
-             (nsCSSPseudoClasses::lastNode == pseudoClass->mAtom)) {
-      nsIContent *lastChild = nsnull;
+    else if (nsCSSPseudoClasses::lastNode == pseudoClass->mAtom) {
+      nsIContent *lastNode = nsnull;
       nsIContent *parent = data.mParentContent;
       if (parent) {
         if (setNodeFlags)
           parent->SetFlags(NODE_HAS_EDGE_CHILD_SELECTOR);
 
-        PRBool acceptNonWhitespace =
-          nsCSSPseudoClasses::lastNode == pseudoClass->mAtom;
         PRUint32 index = parent->GetChildCount();
         do {
-          lastChild = parent->GetChildAt(--index);
-          // stop at first non-comment and non-whitespace node (and
-          // non-text node for lastChild)
-        } while (lastChild &&
-                 !IsSignificantChild(lastChild, acceptNonWhitespace, PR_FALSE));
+          lastNode = parent->GetChildAt(--index);
+          // stop at first non-comment and non-whitespace node
+        } while (lastNode &&
+                 !IsSignificantChild(lastNode, PR_TRUE, PR_FALSE));
       }
-      result = (data.mContent == lastChild);
+      result = (data.mContent == lastNode);
     }
-    else if (nsCSSPseudoClasses::onlyChild == pseudoClass->mAtom) {
-      nsIContent *onlyChild = nsnull;
-      nsIContent *moreChild = nsnull;
+    else if (nsCSSPseudoClasses::firstChild == pseudoClass->mAtom ||
+             nsCSSPseudoClasses::lastChild == pseudoClass->mAtom ||
+             nsCSSPseudoClasses::onlyChild == pseudoClass->mAtom) {
       nsIContent *parent = data.mParentContent;
       if (parent) {
+        const PRBool checkFirst =
+          pseudoClass->mAtom != nsCSSPseudoClasses::lastChild;
+        const PRBool checkLast =
+          pseudoClass->mAtom != nsCSSPseudoClasses::firstChild;
         if (setNodeFlags)
           parent->SetFlags(NODE_HAS_EDGE_CHILD_SELECTOR);
 
-        PRInt32 index = -1;
-        do {
-          onlyChild = parent->GetChildAt(++index);
-          // stop at first non-comment, non-whitespace and non-text node
-        } while (onlyChild &&
-                 !IsSignificantChild(onlyChild, PR_FALSE, PR_FALSE));
-        if (data.mContent == onlyChild) {
-          // see if there's any more
-          do {
-            moreChild = parent->GetChildAt(++index);
-          } while (moreChild && !IsSignificantChild(moreChild, PR_FALSE, PR_FALSE));
-        }
+        result = (!checkFirst ||
+                  data.GetNthIndex(PR_FALSE, PR_FALSE, PR_TRUE) == 1) &&
+                 (!checkLast ||
+                  data.GetNthIndex(PR_FALSE, PR_TRUE, PR_TRUE) == 1);
+      } else {
+        result = PR_FALSE;
       }
-      result = (data.mContent == onlyChild && moreChild == nsnull);
+    }
+    else if (nsCSSPseudoClasses::nthChild == pseudoClass->mAtom ||
+             nsCSSPseudoClasses::nthLastChild == pseudoClass->mAtom ||
+             nsCSSPseudoClasses::nthOfType == pseudoClass->mAtom ||
+             nsCSSPseudoClasses::nthLastOfType == pseudoClass->mAtom) {
+      nsIContent *parent = data.mParentContent;
+      if (parent) {
+        PRBool isOfType =
+          nsCSSPseudoClasses::nthOfType == pseudoClass->mAtom ||
+          nsCSSPseudoClasses::nthLastOfType == pseudoClass->mAtom;
+        PRBool isFromEnd =
+          nsCSSPseudoClasses::nthLastChild == pseudoClass->mAtom ||
+          nsCSSPseudoClasses::nthLastOfType == pseudoClass->mAtom;
+        if (setNodeFlags) {
+          if (isFromEnd)
+            parent->SetFlags(NODE_HAS_SLOW_SELECTOR);
+          else
+            parent->SetFlags(NODE_HAS_SLOW_SELECTOR_NOAPPEND);
+        }
+
+        const PRInt32 index = data.GetNthIndex(isOfType, isFromEnd, PR_FALSE);
+        if (index <= 0) {
+          // Node is anonymous content (not really a child of its parent).
+          result = PR_FALSE;
+        } else {
+          const PRInt32 a = pseudoClass->u.mNumbers[0];
+          const PRInt32 b = pseudoClass->u.mNumbers[1];
+          // result should be true if there exists n >= 0 such that
+          // a * n + b == index.
+          if (a == 0) {
+            result = b == index;
+          } else {
+            // Integer division in C does truncation (towards 0).  So
+            // check that the result is nonnegative, and that there was no
+            // truncation.
+            const PRInt32 n = (index - b) / a;
+            result = n >= 0 && (a * n == index - b);
+          }
+        }
+      } else {
+        result = PR_FALSE;
+      }
+    }
+    else if (nsCSSPseudoClasses::firstOfType == pseudoClass->mAtom ||
+             nsCSSPseudoClasses::lastOfType == pseudoClass->mAtom ||
+             nsCSSPseudoClasses::onlyOfType == pseudoClass->mAtom) {
+      nsIContent *parent = data.mParentContent;
+      if (parent) {
+        const PRBool checkFirst =
+          pseudoClass->mAtom != nsCSSPseudoClasses::lastOfType;
+        const PRBool checkLast =
+          pseudoClass->mAtom != nsCSSPseudoClasses::firstOfType;
+        if (setNodeFlags) {
+          if (checkLast)
+            parent->SetFlags(NODE_HAS_SLOW_SELECTOR);
+          else
+            parent->SetFlags(NODE_HAS_SLOW_SELECTOR_NOAPPEND);
+        }
+
+        result = (!checkFirst ||
+                  data.GetNthIndex(PR_TRUE, PR_FALSE, PR_TRUE) == 1) &&
+                 (!checkLast ||
+                  data.GetNthIndex(PR_TRUE, PR_TRUE, PR_TRUE) == 1);
+      } else {
+        result = PR_FALSE;
+      }
     }
     else if (nsCSSPseudoClasses::empty == pseudoClass->mAtom ||
              nsCSSPseudoClasses::mozOnlyWhitespace == pseudoClass->mAtom) {
@@ -1161,7 +1414,7 @@ static PRBool SelectorMatches(RuleProcessorData &data,
       result = (child == nsnull);
     }
     else if (nsCSSPseudoClasses::mozEmptyExceptChildrenWithLocalname == pseudoClass->mAtom) {
-      NS_ASSERTION(pseudoClass->mString, "Must have string!");
+      NS_ASSERTION(pseudoClass->u.mString, "Must have string!");
       nsIContent *child = nsnull;
       nsIContent *element = data.mContent;
       PRInt32 index = -1;
@@ -1174,17 +1427,13 @@ static PRBool SelectorMatches(RuleProcessorData &data,
       } while (child &&
                (!IsSignificantChild(child, PR_TRUE, PR_FALSE) ||
                 (child->GetNameSpaceID() == element->GetNameSpaceID() &&
-                 child->Tag()->Equals(nsDependentString(pseudoClass->mString)))));
+                 child->Tag()->Equals(nsDependentString(pseudoClass->u.mString)))));
       result = (child == nsnull);
     }
     else if (nsCSSPseudoClasses::mozSystemMetric == pseudoClass->mAtom) {
-      if (!sSystemMetrics && !InitSystemMetrics()) {
-        return PR_FALSE;
-      }
-      NS_ASSERTION(pseudoClass->mString, "Must have string!");
-      nsCOMPtr<nsIAtom> metric = do_GetAtom(pseudoClass->mString);
-      result = sSystemMetrics->IndexOf(metric) !=
-               sSystemMetrics->NoIndex;
+      NS_ASSERTION(pseudoClass->u.mString, "Must have string!");
+      nsCOMPtr<nsIAtom> metric = do_GetAtom(pseudoClass->u.mString);
+      result = nsCSSRuleProcessor::HasSystemMetric(metric);
     }
     else if (nsCSSPseudoClasses::mozHasHandlerRef == pseudoClass->mAtom) {
       nsIContent *child = nsnull;
@@ -1206,7 +1455,10 @@ static PRBool SelectorMatches(RuleProcessorData &data,
       }
     }
     else if (nsCSSPseudoClasses::root == pseudoClass->mAtom) {
-      result = (data.mParentContent == nsnull);
+      result = (data.mParentContent == nsnull &&
+                data.mContent &&
+                data.mContent ==
+                  data.mContent->GetOwnerDoc()->GetRootContent());
     }
     else if (nsCSSPseudoClasses::mozBoundElement == pseudoClass->mAtom) {
       // XXXldb How do we know where the selector came from?  And what
@@ -1215,9 +1467,9 @@ static PRBool SelectorMatches(RuleProcessorData &data,
       result = (data.mScopedRoot && data.mScopedRoot == data.mContent);
     }
     else if (nsCSSPseudoClasses::lang == pseudoClass->mAtom) {
-      NS_ASSERTION(nsnull != pseudoClass->mString, "null lang parameter");
+      NS_ASSERTION(nsnull != pseudoClass->u.mString, "null lang parameter");
       result = PR_FALSE;
-      if (pseudoClass->mString && *pseudoClass->mString) {
+      if (pseudoClass->u.mString && *pseudoClass->u.mString) {
         // We have to determine the language of the current element.  Since
         // this is currently no property and since the language is inherited
         // from the parent we have to be prepared to look at all parent
@@ -1225,7 +1477,7 @@ static PRBool SelectorMatches(RuleProcessorData &data,
         const nsString* lang = data.GetLang();
         if (lang && !lang->IsEmpty()) { // null check for out-of-memory
           result = nsStyleUtil::DashMatchCompare(*lang,
-                                    nsDependentString(pseudoClass->mString), 
+                                    nsDependentString(pseudoClass->u.mString), 
                                     nsCaseInsensitiveStringComparator());
         }
         else if (data.mContent) {
@@ -1238,7 +1490,7 @@ static PRBool SelectorMatches(RuleProcessorData &data,
             nsAutoString language;
             doc->GetContentLanguage(language);
 
-            nsDependentString langString(pseudoClass->mString);
+            nsDependentString langString(pseudoClass->u.mString);
             language.StripWhitespace();
             PRInt32 begin = 0;
             PRInt32 len = language.Length();
@@ -1327,6 +1579,12 @@ static PRBool SelectorMatches(RuleProcessorData &data,
     else if (nsCSSPseudoClasses::mozTypeUnsupported == pseudoClass->mAtom) {
       stateToCheck = NS_EVENT_STATE_TYPE_UNSUPPORTED;
     }
+    else if (nsCSSPseudoClasses::mozHandlerDisabled == pseudoClass->mAtom) {
+      stateToCheck = NS_EVENT_STATE_HANDLER_DISABLED;
+    }
+    else if (nsCSSPseudoClasses::mozHandlerBlocked == pseudoClass->mAtom) {
+      stateToCheck = NS_EVENT_STATE_HANDLER_BLOCKED;
+    }
     else if (nsCSSPseudoClasses::defaultPseudo == pseudoClass->mAtom) {
       stateToCheck = NS_EVENT_STATE_DEFAULT;
     }
@@ -1354,9 +1612,62 @@ static PRBool SelectorMatches(RuleProcessorData &data,
     else if (nsCSSPseudoClasses::mozReadWrite == pseudoClass->mAtom) {
       stateToCheck = NS_EVENT_STATE_MOZ_READWRITE;
     }
+    else if (nsCSSPseudoClasses::indeterminate == pseudoClass->mAtom) {
+      stateToCheck = NS_EVENT_STATE_INDETERMINATE;
+    }
     else if (nsCSSPseudoClasses::mozIsHTML == pseudoClass->mAtom) {
-      result = data.mIsHTMLContent &&
-        data.mContent->GetNameSpaceID() == kNameSpaceID_None;
+      result = data.mIsHTMLContent && data.mContent->IsInHTMLDocument();
+    }
+    else if (nsCSSPseudoClasses::mozLocaleDir == pseudoClass->mAtom) {
+      nsIDocument* doc = data.mContent ? data.mContent->GetDocument() :
+                                         data.mPresContext->Document();
+
+      if (doc) {
+        PRBool docIsRTL = doc && doc->IsDocumentRightToLeft();
+
+        nsDependentString dirString(pseudoClass->u.mString);
+        NS_ASSERTION(dirString.EqualsLiteral("ltr") || dirString.EqualsLiteral("rtl"),
+                     "invalid value for -moz-locale-dir");
+
+        if (dirString.EqualsLiteral("rtl")) {
+          result = docIsRTL;
+        } else if (dirString.EqualsLiteral("ltr")) {
+          result = !docIsRTL;
+        }
+      }
+      else {
+        result = PR_FALSE;
+      }
+    }
+    else if (nsCSSPseudoClasses::mozLWTheme == pseudoClass->mAtom) {
+      nsIDocument* doc = data.mContent ? data.mContent->GetOwnerDoc() : nsnull;
+
+      if (doc) {
+        result = doc->GetDocumentLWTheme() > nsIDocument::Doc_Theme_None;
+      }
+      else {
+        result = PR_FALSE;
+      }
+    }
+    else if (nsCSSPseudoClasses::mozLWThemeBrightText == pseudoClass->mAtom) {
+      nsIDocument* doc = data.mContent ? data.mContent->GetOwnerDoc() : nsnull;
+
+      if (doc) {
+        result = doc->GetDocumentLWTheme() == nsIDocument::Doc_Theme_Bright;
+      }
+      else {
+        result = PR_FALSE;
+      }
+    }
+    else if (nsCSSPseudoClasses::mozLWThemeDarkText == pseudoClass->mAtom) {
+      nsIDocument* doc = data.mContent ? data.mContent->GetOwnerDoc() : nsnull;
+
+      if (doc) {
+        result = doc->GetDocumentLWTheme() == nsIDocument::Doc_Theme_Dark;
+      }
+      else {
+        result = PR_FALSE;
+      }
     }
 #ifdef MOZ_MATHML
     else if (nsCSSPseudoClasses::mozMathIncrementScriptLevel == pseudoClass->mAtom) {
@@ -1372,7 +1683,8 @@ static PRBool SelectorMatches(RuleProcessorData &data,
       if ((stateToCheck & (NS_EVENT_STATE_HOVER | NS_EVENT_STATE_ACTIVE)) &&
           data.mCompatMode == eCompatibility_NavQuirks &&
           // global selector (but don't check .class):
-          !aSelector->mTag && !aSelector->mIDList && !aSelector->mAttrList &&
+          !aSelector->HasTagSelector() && !aSelector->mIDList && 
+          !aSelector->mAttrList &&
           // This (or the other way around) both make :not() asymmetric
           // in quirks mode (and it's hard to work around since we're
           // testing the current mNegations, not the first
@@ -1549,7 +1861,7 @@ static PRBool SelectorMatches(RuleProcessorData &data,
          result && negation; negation = negation->mNegations) {
       PRBool dependence = PR_FALSE;
       result = !SelectorMatches(data, negation, aStateMask,
-                                aAttribute, &dependence);
+                                aAttribute, aForStyling, &dependence);
       // If the selector does match due to the dependence on aStateMask
       // or aAttribute, then we want to keep result true so that the
       // final result of SelectorMatches is true.  Doing so tells
@@ -1570,7 +1882,8 @@ static PRBool SelectorMatches(RuleProcessorData &data,
 #define NS_IS_GREEDY_OPERATOR(ch) (ch == PRUnichar(0) || ch == PRUnichar('~'))
 
 static PRBool SelectorMatchesTree(RuleProcessorData& aPrevData,
-                                  nsCSSSelector* aSelector) 
+                                  nsCSSSelector* aSelector,
+                                  PRBool aForStyling) 
 {
   nsCSSSelector* selector = aSelector;
   RuleProcessorData* prevdata = &aPrevData;
@@ -1595,10 +1908,9 @@ static PRBool SelectorMatchesTree(RuleProcessorData& aPrevData,
           while (0 <= --index) {
             content = parent->GetChildAt(index);
             if (content->IsNodeOfType(nsINode::eELEMENT)) {
-              data = new (prevdata->mPresContext)
-                          RuleProcessorData(prevdata->mPresContext, content,
-                                            prevdata->mRuleWalker,
-                                            &prevdata->mCompatMode);
+              data = RuleProcessorData::Create(prevdata->mPresContext, content,
+                                               prevdata->mRuleWalker,
+                                               prevdata->mCompatMode);
               prevdata->mPreviousSiblingData = data;    
               break;
             }
@@ -1612,11 +1924,12 @@ static PRBool SelectorMatchesTree(RuleProcessorData& aPrevData,
       data = prevdata->mParentData;
       if (!data) {
         nsIContent *content = prevdata->mContent->GetParent();
-        if (content) {
-          data = new (prevdata->mPresContext)
-                      RuleProcessorData(prevdata->mPresContext, content,
-                                        prevdata->mRuleWalker,
-                                        &prevdata->mCompatMode);
+        // GetParent could return a document fragment; we only want
+        // element parents.
+        if (content && content->IsNodeOfType(nsINode::eELEMENT)) {
+          data = RuleProcessorData::Create(prevdata->mPresContext, content,
+                                           prevdata->mRuleWalker,
+                                           prevdata->mCompatMode);
           prevdata->mParentData = data;    
         }
       }
@@ -1624,7 +1937,7 @@ static PRBool SelectorMatchesTree(RuleProcessorData& aPrevData,
     if (! data) {
       return PR_FALSE;
     }
-    if (SelectorMatches(*data, selector, 0, nsnull)) {
+    if (SelectorMatches(*data, selector, 0, nsnull, aForStyling)) {
       // to avoid greedy matching, we need to recur if this is a
       // descendant or general sibling combinator and the next
       // combinator is different, but we can make an exception for
@@ -1643,7 +1956,7 @@ static PRBool SelectorMatchesTree(RuleProcessorData& aPrevData,
         // it tests from the top of the content tree, down.  This
         // doesn't matter much for performance since most selectors
         // don't match.  (If most did, it might be faster...)
-        if (SelectorMatchesTree(*data, selector)) {
+        if (SelectorMatchesTree(*data, selector, aForStyling)) {
           return PR_TRUE;
         }
       }
@@ -1666,9 +1979,9 @@ static void ContentEnumFunc(nsICSSStyleRule* aRule, nsCSSSelector* aSelector,
 {
   ElementRuleProcessorData* data = (ElementRuleProcessorData*)aData;
 
-  if (SelectorMatches(*data, aSelector, 0, nsnull)) {
+  if (SelectorMatches(*data, aSelector, 0, nsnull, PR_TRUE)) {
     nsCSSSelector *next = aSelector->mNext;
-    if (!next || SelectorMatchesTree(*data, next)) {
+    if (!next || SelectorMatchesTree(*data, next, PR_TRUE)) {
       // for performance, require that every implementation of
       // nsICSSStyleRule return the same pointer for nsIStyleRule (why
       // would anything multiply inherit nsIStyleRule anyway?)
@@ -1707,7 +2020,10 @@ static void PseudoEnumFunc(nsICSSStyleRule* aRule, nsCSSSelector* aSelector,
 {
   PseudoRuleProcessorData* data = (PseudoRuleProcessorData*)aData;
 
-  NS_ASSERTION(aSelector->mTag == data->mPseudoTag, "RuleHash failure");
+  if (!aSelector->IsPseudoElement())
+    return;
+
+  NS_ASSERTION(aSelector->mLowercaseTag == data->mPseudoTag, "RuleHash failure");
   PRBool matches = PR_TRUE;
   if (data->mComparator)
     data->mComparator->PseudoMatches(data->mPseudoTag, aSelector, &matches);
@@ -1719,7 +2035,7 @@ static void PseudoEnumFunc(nsICSSStyleRule* aRule, nsCSSSelector* aSelector,
       if (PRUnichar('+') == selector->mOperator) {
         return; // not valid here, can't match
       }
-      if (SelectorMatches(*data, selector, 0, nsnull)) {
+      if (SelectorMatches(*data, selector, 0, nsnull, PR_TRUE)) {
         selector = selector->mNext;
       }
       else {
@@ -1730,7 +2046,7 @@ static void PseudoEnumFunc(nsICSSStyleRule* aRule, nsCSSSelector* aSelector,
     }
 
     if (selector && 
-        (! SelectorMatchesTree(*data, selector))) {
+        (! SelectorMatchesTree(*data, selector, PR_TRUE))) {
       return; // remaining selectors didn't match
     }
 
@@ -1769,35 +2085,6 @@ IsSiblingOperator(PRUnichar oper)
   return oper == PRUnichar('+') || oper == PRUnichar('~');
 }
 
-struct StateEnumData {
-  StateEnumData(StateRuleProcessorData *aData)
-    : data(aData), change(nsReStyleHint(0)) {}
-
-  StateRuleProcessorData *data;
-  nsReStyleHint change;
-};
-
-PR_STATIC_CALLBACK(PRBool) StateEnumFunc(void* aSelector, void* aData)
-{
-  StateEnumData *enumData = static_cast<StateEnumData*>(aData);
-  StateRuleProcessorData *data = enumData->data;
-  nsCSSSelector* selector = static_cast<nsCSSSelector*>(aSelector);
-
-  nsReStyleHint possibleChange = IsSiblingOperator(selector->mOperator) ?
-    eReStyle_LaterSiblings : eReStyle_Self;
-
-  // If enumData->change already includes all the bits of possibleChange, don't
-  // bother calling SelectorMatches, since even if it returns false
-  // enumData->change won't change.
-  if ((possibleChange & ~(enumData->change)) &&
-      SelectorMatches(*data, selector, data->mStateMask, nsnull) &&
-      SelectorMatchesTree(*data, selector->mNext)) {
-    enumData->change = nsReStyleHint(enumData->change | possibleChange);
-  }
-
-  return PR_TRUE;
-}
-
 NS_IMETHODIMP
 nsCSSRuleProcessor::HasStateDependentStyle(StateRuleProcessorData* aData,
                                            nsReStyleHint* aResult)
@@ -1815,10 +2102,26 @@ nsCSSRuleProcessor::HasStateDependentStyle(StateRuleProcessorData* aData,
   // "body > p:hover" will be in |cascade->mStateSelectors|).  Note that
   // |IsStateSelector| below determines which selectors are in
   // |cascade->mStateSelectors|.
-  StateEnumData data(aData);
-  if (cascade)
-    cascade->mStateSelectors.EnumerateForwards(StateEnumFunc, &data);
-  *aResult = data.change;
+  if (cascade) {
+    *aResult = nsReStyleHint(0);
+    nsCSSSelector **iter = cascade->mStateSelectors.Elements(),
+                  **end = iter + cascade->mStateSelectors.Length();
+    for(; iter != end; ++iter) {
+      nsCSSSelector* selector = *iter;
+
+      nsReStyleHint possibleChange = IsSiblingOperator(selector->mOperator) ?
+        eReStyle_LaterSiblings : eReStyle_Self;
+
+      // If *aResult already includes all the bits of possibleChange,
+      // don't bother calling SelectorMatches, since even if it returns false
+      // *aResult won't change.
+      if ((possibleChange & ~(*aResult)) &&
+          SelectorMatches(*aData, selector, aData->mStateMask, nsnull, PR_TRUE) &&
+          SelectorMatchesTree(*aData, selector->mNext, PR_TRUE)) {
+        *aResult = nsReStyleHint(*aResult | possibleChange);
+      }
+    }
+  }
   return NS_OK;
 }
 
@@ -1831,25 +2134,23 @@ struct AttributeEnumData {
 };
 
 
-PR_STATIC_CALLBACK(PRBool) AttributeEnumFunc(void* aSelector, void* aData)
+static void
+AttributeEnumFunc(nsCSSSelector* aSelector, AttributeEnumData* aData)
 {
-  AttributeEnumData *enumData = static_cast<AttributeEnumData*>(aData);
-  AttributeRuleProcessorData *data = enumData->data;
-  nsCSSSelector* selector = static_cast<nsCSSSelector*>(aSelector);
+  AttributeRuleProcessorData *data = aData->data;
 
-  nsReStyleHint possibleChange = IsSiblingOperator(selector->mOperator) ?
+  nsReStyleHint possibleChange = IsSiblingOperator(aSelector->mOperator) ?
     eReStyle_LaterSiblings : eReStyle_Self;
 
   // If enumData->change already includes all the bits of possibleChange, don't
   // bother calling SelectorMatches, since even if it returns false
   // enumData->change won't change.
-  if ((possibleChange & ~(enumData->change)) &&
-      SelectorMatches(*data, selector, data->mStateMask, data->mAttribute) &&
-      SelectorMatchesTree(*data, selector->mNext)) {
-    enumData->change = nsReStyleHint(enumData->change | possibleChange);
+  if ((possibleChange & ~(aData->change)) &&
+      SelectorMatches(*data, aSelector, data->mStateMask, data->mAttribute,
+                      PR_TRUE) &&
+      SelectorMatchesTree(*data, aSelector->mNext, PR_TRUE)) {
+    aData->change = nsReStyleHint(aData->change | possibleChange);
   }
-
-  return PR_TRUE;
 }
 
 NS_IMETHODIMP
@@ -1883,6 +2184,16 @@ nsCSSRuleProcessor::HasAttributeDependentStyle(AttributeRuleProcessorData* aData
   // XXXbz now that :link and :visited are also states, do we need a
   // similar optimization in HasStateDependentStyle?
 
+  // check for the localedir, lwtheme and lwthemetextcolor attribute on root XUL elements
+  if ((aData->mAttribute == nsGkAtoms::localedir ||
+       aData->mAttribute == nsGkAtoms::lwtheme ||
+       aData->mAttribute == nsGkAtoms::lwthemetextcolor) &&
+      aData->mNameSpaceID == kNameSpaceID_XUL &&
+      aData->mContent == aData->mContent->GetOwnerDoc()->GetRootContent())
+  {
+    data.change = nsReStyleHint(data.change | eReStyle_Self);
+  }
+
   RuleCascadeData* cascade = GetRuleCascade(aData->mPresContext);
 
   // We do the same thing for attributes that we do for state selectors
@@ -1891,18 +2202,30 @@ nsCSSRuleProcessor::HasAttributeDependentStyle(AttributeRuleProcessorData* aData
 
   if (cascade) {
     if (aData->mAttribute == aData->mContent->GetIDAttributeName()) {
-      cascade->mIDSelectors.EnumerateForwards(AttributeEnumFunc, &data);
+      nsCSSSelector **iter = cascade->mIDSelectors.Elements(),
+                    **end = iter + cascade->mIDSelectors.Length();
+      for(; iter != end; ++iter) {
+        AttributeEnumFunc(*iter, &data);
+      }
     }
     
     if (aData->mAttribute == aData->mContent->GetClassAttributeName()) {
-      cascade->mClassSelectors.EnumerateForwards(AttributeEnumFunc, &data);
+      nsCSSSelector **iter = cascade->mClassSelectors.Elements(),
+                    **end = iter + cascade->mClassSelectors.Length();
+      for(; iter != end; ++iter) {
+        AttributeEnumFunc(*iter, &data);
+      }
     }
 
     AttributeSelectorEntry *entry = static_cast<AttributeSelectorEntry*>
                                                (PL_DHashTableOperate(&cascade->mAttributeSelectors, aData->mAttribute,
                              PL_DHASH_LOOKUP));
     if (PL_DHASH_ENTRY_IS_BUSY(entry)) {
-      entry->mSelectors->EnumerateForwards(AttributeEnumFunc, &data);
+      nsCSSSelector **iter = entry->mSelectors->Elements(),
+                    **end = iter + entry->mSelectors->Length();
+      for(; iter != end; ++iter) {
+        AttributeEnumFunc(*iter, &data);
+      }
     }
   }
 
@@ -1910,9 +2233,48 @@ nsCSSRuleProcessor::HasAttributeDependentStyle(AttributeRuleProcessorData* aData
   return NS_OK;
 }
 
+NS_IMETHODIMP
+nsCSSRuleProcessor::MediumFeaturesChanged(nsPresContext* aPresContext,
+                                          PRBool* aRulesChanged)
+{
+  RuleCascadeData *old = mRuleCascades;
+  // We don't want to do anything if there aren't any sets of rules
+  // cached yet (or somebody cleared them and is thus responsible for
+  // rebuilding things), since we should not build the rule cascade too
+  // early (e.g., before we know whether the quirk style sheet should be
+  // enabled).  And if there's nothing cached, it doesn't matter if
+  // anything changed.  See bug 448281.
+  if (old) {
+    RefreshRuleCascade(aPresContext);
+  }
+  *aRulesChanged = (old != mRuleCascades);
+  return NS_OK;
+}
+
+// Append all the currently-active font face rules to aArray.  Return
+// true for success and false for failure.
+PRBool
+nsCSSRuleProcessor::AppendFontFaceRules(
+                              nsPresContext *aPresContext,
+                              nsTArray<nsFontFaceRuleContainer>& aArray)
+{
+  RuleCascadeData* cascade = GetRuleCascade(aPresContext);
+
+  if (cascade) {
+    if (!aArray.AppendElements(cascade->mFontFaceRules))
+      return PR_FALSE;
+  }
+  
+  return PR_TRUE;
+}
+
 nsresult
 nsCSSRuleProcessor::ClearRuleCascades()
 {
+  // We rely on our caller (perhaps indirectly) to do something that
+  // will rebuild style data and the user font set (either
+  // nsIPresShell::ReconstructStyleData or
+  // nsPresContext::RebuildAllStyleData).
   RuleCascadeData *data = mRuleCascades;
   mRuleCascades = nsnull;
   while (data) {
@@ -1929,7 +2291,7 @@ nsCSSRuleProcessor::ClearRuleCascades()
 inline
 PRBool IsStateSelector(nsCSSSelector& aSelector)
 {
-  for (nsAtomStringList* pseudoClass = aSelector.mPseudoClassList;
+  for (nsPseudoClassList* pseudoClass = aSelector.mPseudoClassList;
        pseudoClass; pseudoClass = pseudoClass->mNext) {
     if ((pseudoClass->mAtom == nsCSSPseudoClasses::active) ||
         (pseudoClass->mAtom == nsCSSPseudoClasses::checked) ||
@@ -1953,6 +2315,7 @@ PRBool IsStateSelector(nsCSSSelector& aSelector)
         (pseudoClass->mAtom == nsCSSPseudoClasses::outOfRange) ||
         (pseudoClass->mAtom == nsCSSPseudoClasses::mozReadOnly) ||
         (pseudoClass->mAtom == nsCSSPseudoClasses::mozReadWrite) ||
+        (pseudoClass->mAtom == nsCSSPseudoClasses::indeterminate) ||
 #ifdef MOZ_MATHML
         (pseudoClass->mAtom == nsCSSPseudoClasses::mozMathIncrementScriptLevel) ||
 #endif
@@ -1971,9 +2334,9 @@ AddRule(RuleValue* aRuleInfo, void* aCascade)
   // Build the rule hash.
   cascade->mRuleHash.PrependRule(aRuleInfo);
 
-  nsVoidArray* stateArray = &cascade->mStateSelectors;
-  nsVoidArray* classArray = &cascade->mClassSelectors;
-  nsVoidArray* idArray = &cascade->mIDSelectors;
+  nsTArray<nsCSSSelector*>* stateArray = &cascade->mStateSelectors;
+  nsTArray<nsCSSSelector*>* classArray = &cascade->mClassSelectors;
+  nsTArray<nsCSSSelector*>* idArray = &cascade->mIDSelectors;
   
   for (nsCSSSelector* selector = aRuleInfo->mSelector;
            selector; selector = selector->mNext) {
@@ -2004,7 +2367,7 @@ AddRule(RuleValue* aRuleInfo, void* aCascade)
       // Build mAttributeSelectors.
       for (nsAttrSelector *attr = negation->mAttrList; attr;
            attr = attr->mNext) {
-        nsVoidArray *array = cascade->AttributeListFor(attr->mAttr);
+        nsTArray<nsCSSSelector*> *array = cascade->AttributeListFor(attr->mAttr);
         if (!array)
           return PR_FALSE;
         array->AppendElement(selector);
@@ -2024,13 +2387,13 @@ struct RuleByWeightEntry : public PLDHashEntryHdr {
   PerWeightData data; // mWeight is key, mRules are value
 };
 
-PR_STATIC_CALLBACK(PLDHashNumber)
+static PLDHashNumber
 HashIntKey(PLDHashTable *table, const void *key)
 {
   return PLDHashNumber(NS_PTR_TO_INT32(key));
 }
 
-PR_STATIC_CALLBACK(PRBool)
+static PRBool
 MatchWeightEntry(PLDHashTable *table, const PLDHashEntryHdr *hdr,
                  const void *key)
 {
@@ -2050,9 +2413,16 @@ static PLDHashTableOps gRulesByWeightOps = {
 };
 
 struct CascadeEnumData {
-  CascadeEnumData(nsPresContext* aPresContext, PLArenaPool& aArena)
+  CascadeEnumData(nsPresContext* aPresContext,
+                  nsTArray<nsFontFaceRuleContainer>& aFontFaceRules,
+                  nsMediaQueryResultCacheKey& aKey,
+                  PLArenaPool& aArena,
+                  PRUint8 aSheetType)
     : mPresContext(aPresContext),
-      mArena(aArena)
+      mFontFaceRules(aFontFaceRules),
+      mCacheKey(aKey),
+      mArena(aArena),
+      mSheetType(aSheetType)
   {
     if (!PL_DHashTableInit(&mRulesByWeight, &gRulesByWeightOps, nsnull,
                           sizeof(RuleByWeightEntry), 64))
@@ -2066,14 +2436,25 @@ struct CascadeEnumData {
   }
 
   nsPresContext* mPresContext;
+  nsTArray<nsFontFaceRuleContainer>& mFontFaceRules;
+  nsMediaQueryResultCacheKey& mCacheKey;
+  PLArenaPool& mArena;
   // Hooray, a manual PLDHashTable since nsClassHashtable doesn't
   // provide a getter that gives me a *reference* to the value.
   PLDHashTable mRulesByWeight; // of RuleValue* linked lists (?)
-  PLArenaPool& mArena;
+  PRUint8 mSheetType;
 };
 
+/*
+ * This enumerates style rules in a sheet (and recursively into any
+ * grouping rules) in order to:
+ *  (1) add any style rules, in order, into data->mRulesByWeight (for
+ *      the primary CSS cascade), where they are separated by weight
+ *      but kept in order per-weight, and
+ *  (2) add any @font-face rules, in order, into data->mFontFaceRules.
+ */
 static PRBool
-InsertRuleByWeight(nsICSSRule* aRule, void* aData)
+CascadeRuleEnumFunc(nsICSSRule* aRule, void* aData)
 {
   CascadeEnumData* data = (CascadeEnumData*)aData;
   PRInt32 type = nsICSSRule::UNKNOWN_RULE;
@@ -2101,39 +2482,48 @@ InsertRuleByWeight(nsICSSRule* aRule, void* aData)
   else if (nsICSSRule::MEDIA_RULE == type ||
            nsICSSRule::DOCUMENT_RULE == type) {
     nsICSSGroupRule* groupRule = (nsICSSGroupRule*)aRule;
-    if (groupRule->UseForPresentation(data->mPresContext))
-      if (!groupRule->EnumerateRulesForwards(InsertRuleByWeight, aData))
+    if (groupRule->UseForPresentation(data->mPresContext, data->mCacheKey))
+      if (!groupRule->EnumerateRulesForwards(CascadeRuleEnumFunc, aData))
         return PR_FALSE;
   }
+  else if (nsICSSRule::FONT_FACE_RULE == type) {
+    nsCSSFontFaceRule *fontFaceRule = static_cast<nsCSSFontFaceRule*>(aRule);
+    nsFontFaceRuleContainer *ptr = data->mFontFaceRules.AppendElement();
+    if (!ptr)
+      return PR_FALSE;
+    ptr->mRule = fontFaceRule;
+    ptr->mSheetType = data->mSheetType;
+  }
+
   return PR_TRUE;
 }
 
-
-static PRBool
-CascadeSheetRulesInto(nsICSSStyleSheet* aSheet, void* aData)
+/* static */ PRBool
+nsCSSRuleProcessor::CascadeSheetEnumFunc(nsICSSStyleSheet* aSheet, void* aData)
 {
   nsCSSStyleSheet*  sheet = static_cast<nsCSSStyleSheet*>(aSheet);
   CascadeEnumData* data = static_cast<CascadeEnumData*>(aData);
   PRBool bSheetApplicable = PR_TRUE;
   sheet->GetApplicable(bSheetApplicable);
 
-  if (bSheetApplicable && sheet->UseForMedium(data->mPresContext)) {
-    nsCSSStyleSheet* child = sheet->mFirstChild;
+  if (bSheetApplicable &&
+      sheet->UseForPresentation(data->mPresContext, data->mCacheKey) &&
+      sheet->mInner) {
+    nsCSSStyleSheet* child = sheet->mInner->mFirstChild;
     while (child) {
-      CascadeSheetRulesInto(child, data);
+      CascadeSheetEnumFunc(child, data);
       child = child->mNext;
     }
 
-    if (sheet->mInner) {
-      if (!sheet->mInner->mOrderedRules.EnumerateForwards(InsertRuleByWeight, data))
-        return PR_FALSE;
-    }
+    if (!sheet->mInner->mOrderedRules.EnumerateForwards(CascadeRuleEnumFunc,
+                                                        data))
+      return PR_FALSE;
   }
   return PR_TRUE;
 }
 
-PR_STATIC_CALLBACK(int) CompareWeightData(const void* aArg1, const void* aArg2,
-                                         void* closure)
+static int CompareWeightData(const void* aArg1, const void* aArg2,
+                             void* closure)
 {
   const PerWeightData* arg1 = static_cast<const PerWeightData*>(aArg1);
   const PerWeightData* arg2 = static_cast<const PerWeightData*>(aArg2);
@@ -2152,7 +2542,7 @@ struct FillWeightArrayData {
 };
 
 
-PR_STATIC_CALLBACK(PLDHashOperator)
+static PLDHashOperator
 FillWeightArray(PLDHashTable *table, PLDHashEntryHdr *hdr,
                 PRUint32 number, void *arg)
 {
@@ -2167,31 +2557,55 @@ FillWeightArray(PLDHashTable *table, PLDHashEntryHdr *hdr,
 RuleCascadeData*
 nsCSSRuleProcessor::GetRuleCascade(nsPresContext* aPresContext)
 {
-  // Having RuleCascadeData objects be per-medium works for now since
-  // nsCSSRuleProcessor objects are per-document.  (For a given set
-  // of stylesheets they can vary based on medium (@media) or document
-  // (@-moz-document).)  Things will get a little more complicated if
-  // we implement media queries, though.
+  // If anything changes about the presentation context, we will be
+  // notified.  Otherwise, our cache is valid if mLastPresContext
+  // matches aPresContext.  (The only rule processors used for multiple
+  // pres contexts are for XBL.  These rule processors are probably less
+  // likely to have @media rules, and thus the cache is pretty likely to
+  // hit instantly even when we're switching between pres contexts.)
 
-  RuleCascadeData **cascadep = &mRuleCascades;
-  RuleCascadeData *cascade;
-  nsIAtom *medium = aPresContext->Medium();
-  while ((cascade = *cascadep)) {
-    if (cascade->mMedium == medium)
-      return cascade;
-    cascadep = &cascade->mNext;
+  if (!mRuleCascades || aPresContext != mLastPresContext) {
+    RefreshRuleCascade(aPresContext);
+  }
+  mLastPresContext = aPresContext;
+
+  return mRuleCascades;
+}
+
+void
+nsCSSRuleProcessor::RefreshRuleCascade(nsPresContext* aPresContext)
+{
+  // Having RuleCascadeData objects be per-medium (over all variation
+  // caused by media queries, handled through mCacheKey) works for now
+  // since nsCSSRuleProcessor objects are per-document.  (For a given
+  // set of stylesheets they can vary based on medium (@media) or
+  // document (@-moz-document).)
+
+  for (RuleCascadeData **cascadep = &mRuleCascades, *cascade;
+       (cascade = *cascadep); cascadep = &cascade->mNext) {
+    if (cascade->mCacheKey.Matches(aPresContext)) {
+      // Ensure that the current one is always mRuleCascades.
+      *cascadep = cascade->mNext;
+      cascade->mNext = mRuleCascades;
+      mRuleCascades = cascade;
+
+      return;
+    }
   }
 
   if (mSheets.Count() != 0) {
     nsAutoPtr<RuleCascadeData> newCascade(
-      new RuleCascadeData(medium,
+      new RuleCascadeData(aPresContext->Medium(),
                           eCompatibility_NavQuirks == aPresContext->CompatibilityMode()));
     if (newCascade) {
-      CascadeEnumData data(aPresContext, newCascade->mRuleHash.Arena());
+      CascadeEnumData data(aPresContext, newCascade->mFontFaceRules,
+                           newCascade->mCacheKey,
+                           newCascade->mRuleHash.Arena(),
+                           mSheetType);
       if (!data.mRulesByWeight.ops)
-        return nsnull;
-      if (!mSheets.EnumerateForwards(CascadeSheetRulesInto, &data))
-        return nsnull;
+        return; /* out of memory */
+      if (!mSheets.EnumerateForwards(CascadeSheetEnumFunc, &data))
+        return; /* out of memory */
 
       // Sort the hash table of per-weight linked lists by weight.
       PRUint32 weightCount = data.mRulesByWeight.entryCount;
@@ -2213,14 +2627,35 @@ nsCSSRuleProcessor::GetRuleCascade(nsPresContext* aPresContext)
           // Calling |AddRule| reuses mNext!
           RuleValue *next = ruleValue->mNext;
           if (!AddRule(ruleValue, newCascade))
-            return nsnull;
+            return; /* out of memory */
           ruleValue = next;
         } while (ruleValue);
       }
 
-      *cascadep = newCascade;
-      cascade = newCascade.forget();
+      // Ensure that the current one is always mRuleCascades.
+      newCascade->mNext = mRuleCascades;
+      mRuleCascades = newCascade.forget();
     }
   }
-  return cascade;
+  return;
+}
+
+/* static */ PRBool
+nsCSSRuleProcessor::SelectorListMatches(RuleProcessorData& aData,
+                                        nsCSSSelectorList* aSelectorList)
+{
+  while (aSelectorList) {
+    nsCSSSelector* sel = aSelectorList->mSelectors;
+    NS_ASSERTION(sel, "Should have *some* selectors");
+    if (SelectorMatches(aData, sel, 0, nsnull, PR_FALSE)) {
+      nsCSSSelector* next = sel->mNext;
+      if (!next || SelectorMatchesTree(aData, next, PR_FALSE)) {
+        return PR_TRUE;
+      }
+    }
+
+    aSelectorList = aSelectorList->mNext;
+  }
+
+  return PR_FALSE;
 }

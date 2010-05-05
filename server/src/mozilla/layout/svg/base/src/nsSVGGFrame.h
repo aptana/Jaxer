@@ -40,18 +40,27 @@
 #define NSSVGGFRAME_H
 
 #include "nsSVGContainerFrame.h"
+#include "gfxMatrix.h"
 
 typedef nsSVGDisplayContainerFrame nsSVGGFrameBase;
 
 class nsSVGGFrame : public nsSVGGFrameBase
 {
   friend nsIFrame*
-  NS_NewSVGGFrame(nsIPresShell* aPresShell, nsIContent* aContent, nsStyleContext* aContext);
+  NS_NewSVGGFrame(nsIPresShell* aPresShell, nsStyleContext* aContext);
 protected:
   nsSVGGFrame(nsStyleContext* aContext) :
-    nsSVGGFrameBase(aContext), mPropagateTransform(PR_TRUE) {}
+    nsSVGGFrameBase(aContext) {}
 
 public:
+  NS_DECL_FRAMEARENA_HELPERS
+
+#ifdef DEBUG
+  NS_IMETHOD Init(nsIContent*      aContent,
+                  nsIFrame*        aParent,
+                  nsIFrame*        aPrevInFlow);
+#endif
+
   /**
    * Get the "type" of the frame
    *
@@ -67,24 +76,17 @@ public:
 #endif
 
   // nsIFrame interface:
-  NS_IMETHOD DidSetStyleContext();
   NS_IMETHOD AttributeChanged(PRInt32         aNameSpaceID,
                               nsIAtom*        aAttribute,
                               PRInt32         aModType);
 
   // nsISVGChildFrame interface:
   virtual void NotifySVGChanged(PRUint32 aFlags);
-  NS_IMETHOD SetMatrixPropagation(PRBool aPropagate);
-  NS_IMETHOD SetOverrideCTM(nsIDOMSVGMatrix *aCTM);
-  virtual already_AddRefed<nsIDOMSVGMatrix> GetOverrideCTM();
 
   // nsSVGContainerFrame methods:
-  virtual already_AddRefed<nsIDOMSVGMatrix> GetCanvasTM();
+  virtual gfxMatrix GetCanvasTM();
 
   nsCOMPtr<nsIDOMSVGMatrix> mCanvasTM;
-  nsCOMPtr<nsIDOMSVGMatrix> mOverrideCTM;
-
-  PRPackedBool mPropagateTransform;
 };
 
 #endif

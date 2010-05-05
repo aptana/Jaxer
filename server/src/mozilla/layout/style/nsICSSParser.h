@@ -55,13 +55,14 @@ class nsICSSLoader;
 class nsICSSRule;
 class nsMediaList;
 class nsIPrincipal;
+struct nsCSSSelectorList;
 
 #define NS_ICSS_PARSER_IID    \
 { 0xad4a3778, 0xdae0, 0x4640, \
  { 0xb2, 0x5a, 0x24, 0xff, 0x09, 0xc3, 0x70, 0xef } }
 
 // Rule processing function
-typedef void (*PR_CALLBACK RuleAppendFunc) (nsICSSRule* aRule, void* aData);
+typedef void (* RuleAppendFunc) (nsICSSRule* aRule, void* aData);
 
 // Interface to the css parser.
 class nsICSSParser : public nsISupports {
@@ -168,6 +169,15 @@ public:
                               nsIURI* aURL, // for error reporting
                               PRUint32 aLineNumber, // for error reporting
                               nscolor* aColor) = 0;
+
+  /**
+   * Parse aBuffer into a selector list.  On success, caller must
+   * delete *aSelectorList when done with it.
+   */
+  NS_IMETHOD ParseSelectorString(const nsSubstring& aSelectorString,
+                                 nsIURI* aURL, // for error reporting
+                                 PRUint32 aLineNumber, // for error reporting
+                                 nsCSSSelectorList **aSelectorList) = 0;
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsICSSParser, NS_ICSS_PARSER_IID)

@@ -51,6 +51,7 @@
 #include "nsIEventStateManager.h"
 #include "nsIDOMElement.h"
 #include "nsDisplayList.h"
+#include "nsContentUtils.h"
 
 //
 // NS_NewXULButtonFrame
@@ -61,7 +62,9 @@ nsIFrame*
 NS_NewButtonBoxFrame (nsIPresShell* aPresShell, nsStyleContext* aContext)
 {
   return new (aPresShell) nsButtonBoxFrame(aPresShell, aContext);
-} // NS_NewXULButtonFrame
+}
+
+NS_IMPL_FRAMEARENA_HELPERS(nsButtonBoxFrame)
 
 NS_IMETHODIMP
 nsButtonBoxFrame::BuildDisplayListForChildren(nsDisplayListBuilder*   aBuilder,
@@ -79,6 +82,11 @@ nsButtonBoxFrame::HandleEvent(nsPresContext* aPresContext,
                               nsGUIEvent* aEvent,
                               nsEventStatus* aEventStatus)
 {
+  NS_ENSURE_ARG_POINTER(aEventStatus);
+  if (nsEventStatus_eConsumeNoDefault == *aEventStatus) {
+    return NS_OK;
+  }
+
   switch (aEvent->message) {
     case NS_KEY_DOWN:
       if (NS_KEY_EVENT == aEvent->eventStructType) {
@@ -144,19 +152,24 @@ nsButtonBoxFrame::DoMouseClick(nsGUIEvent* aEvent, PRBool aTrustEvent)
     return;
 
   // Execute the oncommand event handler.
-  nsEventStatus status = nsEventStatus_eIgnore;
-  nsXULCommandEvent event(aEvent ? NS_IS_TRUSTED_EVENT(aEvent) : aTrustEvent,
-                          NS_XUL_COMMAND, nsnull);
+  PRBool isShift = PR_FALSE;
+  PRBool isControl = PR_FALSE;
+  PRBool isAlt = PR_FALSE;
+  PRBool isMeta = PR_FALSE;
   if(aEvent) {
-    event.isShift = ((nsInputEvent*)(aEvent))->isShift;
-    event.isControl = ((nsInputEvent*)(aEvent))->isControl;
-    event.isAlt = ((nsInputEvent*)(aEvent))->isAlt;
-    event.isMeta = ((nsInputEvent*)(aEvent))->isMeta;
+    isShift = ((nsInputEvent*)(aEvent))->isShift;
+    isControl = ((nsInputEvent*)(aEvent))->isControl;
+    isAlt = ((nsInputEvent*)(aEvent))->isAlt;
+    isMeta = ((nsInputEvent*)(aEvent))->isMeta;
   }
 
   // Have the content handle the event, propagating it according to normal DOM rules.
   nsCOMPtr<nsIPresShell> shell = PresContext()->GetPresShell();
   if (shell) {
-    shell->HandleDOMEventWithTarget(mContent, &event, &status);
+    nsContentUtils::DispatchXULCommand(mContent,
+                                       aEvent ?
+                                         NS_IS_TRUSTED_EVENT(aEvent) : aTrustEvent,
+                                       nsnull, shell,
+                                       isControl, isAlt, isShift, isMeta);
   }
 }

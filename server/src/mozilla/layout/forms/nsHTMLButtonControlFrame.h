@@ -62,10 +62,10 @@ public:
   nsHTMLButtonControlFrame(nsStyleContext* aContext);
   ~nsHTMLButtonControlFrame();
 
-
   virtual void Destroy();
 
-  NS_IMETHOD  QueryInterface(const nsIID& aIID, void** aInstancePtr);
+  NS_DECL_QUERYFRAME
+  NS_DECL_FRAMEARENA_HELPERS
 
   NS_IMETHOD BuildDisplayList(nsDisplayListBuilder*   aBuilder,
                               const nsRect&           aDirtyRect,
@@ -95,11 +95,11 @@ public:
                                          nsStyleContext* aStyleContext);
  
   NS_IMETHOD AppendFrames(nsIAtom*        aListName,
-                          nsIFrame*       aFrameList);
+                          nsFrameList&    aFrameList);
 
   NS_IMETHOD InsertFrames(nsIAtom*        aListName,
                           nsIFrame*       aPrevFrame,
-                          nsIFrame*       aFrameList);
+                          nsFrameList&    aFrameList);
 
   NS_IMETHOD RemoveFrame(nsIAtom*        aListName,
                          nsIFrame*       aOldFrame);
@@ -115,6 +115,8 @@ public:
     return MakeFrameName(NS_LITERAL_STRING("HTMLButtonControl"), aResult);
   }
 #endif
+
+  virtual PRBool HonorPrintBackgroundSettings() { return PR_FALSE; }
 
   // nsIFormControlFrame
   void SetFocus(PRBool aOn, PRBool aRepaint);
@@ -133,17 +135,13 @@ public:
   }
 
 protected:
-  virtual PRBool IsReset(PRInt32 type);
-  virtual PRBool IsSubmit(PRInt32 type);
+  virtual PRBool IsInput() { return PR_FALSE; }
   void ReflowButtonContents(nsPresContext* aPresContext,
                             nsHTMLReflowMetrics& aDesiredSize,
                             const nsHTMLReflowState& aReflowState,
                             nsIFrame* aFirstKid,
                             nsMargin aFocusPadding,
                             nsReflowStatus& aStatus);
-
-  NS_IMETHOD_(nsrefcnt) AddRef(void);
-  NS_IMETHOD_(nsrefcnt) Release(void);
 
   PRIntn GetSkipSides() const;
   nsButtonFrameRenderer mRenderer;

@@ -69,6 +69,7 @@ class nsDisplayTextDecoration;
 // functionality.
 class nsHTMLContainerFrame : public nsContainerFrame {
 public:
+  NS_DECL_FRAMEARENA_HELPERS
 
   /**
    * Helper method to create next-in-flows if necessary. If aFrame
@@ -87,15 +88,8 @@ public:
   /**
    * Helper method to wrap views around frames. Used by containers
    * under special circumstances (can be used by leaf frames as well)
-   * @param aContentParentFrame
-   *         if non-null, this is the frame 
-   *         which would have held aFrame except that aFrame was reparented
-   *         to an alternative geometric parent. This is necessary
-   *         so that aFrame can remember to get its Z-order from 
-   *         aContentParentFrame.
    */
   static nsresult CreateViewForFrame(nsIFrame* aFrame,
-                                     nsIFrame* aContentParentFrame,
                                      PRBool aForce);
 
   static nsresult ReparentFrameView(nsPresContext* aPresContext,
@@ -103,10 +97,10 @@ public:
                                     nsIFrame*       aOldParentFrame,
                                     nsIFrame*       aNewParentFrame);
 
-  static nsresult ReparentFrameViewList(nsPresContext* aPresContext,
-                                        nsIFrame*       aChildFrameList,
-                                        nsIFrame*       aOldParentFrame,
-                                        nsIFrame*       aNewParentFrame);
+  static nsresult ReparentFrameViewList(nsPresContext*     aPresContext,
+                                        const nsFrameList& aChildFrameList,
+                                        nsIFrame*          aOldParentFrame,
+                                        nsIFrame*          aNewParentFrame);
 
   /**
    * Displays the standard border, background and outline for the frame
@@ -161,7 +155,7 @@ protected:
   /** 
    * Function that does the actual drawing of the textdecoration. 
    *   input:
-   *    @param aRenderingContext
+   *    @param aCtx               the Thebes graphics context to draw on
    *    @param aLine              the line, or nsnull if this is an inline frame
    *    @param aColor             the color of the text-decoration
    *    @param aAscent            ascent of the font from which the
@@ -176,7 +170,7 @@ protected:
    *                                      NS_STYLE_TEXT_DECORATION_OVERLINE or
    *                                      NS_STYLE_TEXT_DECORATION_LINE_THROUGH.
    */
-  virtual void PaintTextDecorationLine(nsIRenderingContext& aRenderingContext,
+  virtual void PaintTextDecorationLine(gfxContext* aCtx,
                                        const nsPoint& aPt,
                                        nsLineBox* aLine,
                                        nscolor aColor,
@@ -185,7 +179,12 @@ protected:
                                        gfxFloat aSize,
                                        const PRUint8 aDecoration);
 
+  virtual void AdjustForTextIndent(const nsLineBox* aLine,
+                                   nscoord& start,
+                                   nscoord& width);
+
   friend class nsDisplayTextDecoration;
+  friend class nsDisplayTextShadow;
 };
 
 #endif /* nsHTMLContainerFrame_h___ */

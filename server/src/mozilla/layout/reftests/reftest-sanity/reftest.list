@@ -6,12 +6,61 @@
 == test-async.xul test-async-ref.xul
 == test-async.html test-async-ref.html
 
-# This makes sure that the harness is choosing HTML vs. XHTML processing
-# based on the file extensions.
+# test that zoom works (and really zooms, not just scales)
+== test-zoom.html test-zoom-ref.html
+
+# make sure we don't fall over if the root is missing
+== no-root.html about:blank
+
+# Makes sure that the file: protocol handler and HTTP server both
+# choose HTML vs. XHTML processing based on the file extensions.
 != html-vs-xhtml-by-extension.html html-vs-xhtml-by-extension.xhtml
+HTTP != html-vs-xhtml-by-extension.html html-vs-xhtml-by-extension.xhtml
 
 # make sure red and green colors are not the default and are different from
 # each other
 != green.html default.html
 != green.html red.html
 != red.html default.html
+
+# Make sure about:blank works, even via HTTP.
+== blank.html about:blank
+== about:blank blank.html
+HTTP == blank.html about:blank
+HTTP == about:blank blank.html
+# same for data:
+== default.html data:text/html,<div>Text</div>
+== data:text/html,<div>Text</div> default.html
+HTTP == default.html data:text/html,<div>Text</div>
+HTTP == data:text/html,<div>Text</div> default.html
+!= blank.html default.html
+HTTP != blank.html default.html
+
+HTTP(..) == filter-1.xhtml filter-1-ref.xhtml
+HTTP(..) == filter-2.xhtml filter-2-ref.xhtml
+
+# test that the MozReftestInvalidate event fires
+== invalidation.html about:blank
+== zoom-invalidation.html zoom-invalidation-ref.html
+
+# test that xulRuntime.OS works
+fails-if(xulRuntime.OS!="Linux") == data:text/html,<body>Linux data:text/html,<script>document.write(navigator.platform.substr(0,5))</script>
+fails-if(xulRuntime.OS!="WINNT") == data:text/html,<body>Win32 data:text/html,<script>document.write(navigator.platform)</script>
+fails-if(xulRuntime.OS!="Darwin") == data:text/html,<body>Mac data:text/html,<script>document.write(navigator.platform.substr(0,3))</script>
+
+# test parsing of asserts() expressions
+asserts(0) load about:blank
+asserts(0-5) load about:blank
+asserts-if(true,0) load about:blank
+asserts-if(false,7) load about:blank
+asserts-if(true,0-4) load about:blank
+asserts-if(false,6-8) load about:blank
+
+# test that <div> is display:block
+== div.html div-ref.html
+
+# test script keyword
+include scripttests.list
+
+# test url-prefix
+include urlprefixtests.list

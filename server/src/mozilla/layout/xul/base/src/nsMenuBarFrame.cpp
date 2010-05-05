@@ -53,8 +53,6 @@
 #include "nsMenuPopupFrame.h"
 #include "nsGUIEvent.h"
 #include "nsUnicharUtils.h"
-#include "nsICaret.h"
-#include "nsIFocusController.h"
 #include "nsIDOMWindowInternal.h"
 #include "nsIDOMDocument.h"
 #include "nsPIDOMWindow.h"
@@ -78,6 +76,8 @@ NS_NewMenuBarFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
 {
   return new (aPresShell) nsMenuBarFrame (aPresShell, aContext);
 }
+
+NS_IMPL_FRAMEARENA_HELPERS(nsMenuBarFrame)
 
 //
 // nsMenuBarFrame cntr
@@ -244,13 +244,12 @@ nsMenuBarFrame::FindMenuWithShortcut(nsIDOMKeyEvent* aKeyEvent)
       current->GetAttr(kNameSpaceID_None, nsGkAtoms::accesskey, shortcutKey);
       if (!shortcutKey.IsEmpty()) {
         ToLowerCase(shortcutKey);
-        nsAutoString::const_iterator start, end;
-        shortcutKey.BeginReading(start);
-        shortcutKey.EndReading(end);
-        PRUint32 ch = UTF16CharEnumerator::NextChar(start, end);
+        const PRUnichar* start = shortcutKey.BeginReading();
+        const PRUnichar* end = shortcutKey.EndReading();
+        PRUint32 ch = UTF16CharEnumerator::NextChar(&start, end);
         PRUint32 index = accessKeys.IndexOf(ch);
         if (index != accessKeys.NoIndex &&
-            (foundIndex == kNotFound || index < foundIndex)) {
+            (foundIndex == accessKeys.NoIndex || index < foundIndex)) {
           foundMenu = currFrame;
           foundIndex = index;
         }
@@ -341,7 +340,8 @@ public:
     if (mOldMenu && mNewMenu) {
       menubar = static_cast<nsMenuBarFrame *>
         (pm->GetFrameOfTypeForContent(mMenuBar, nsGkAtoms::menuBarFrame, PR_FALSE));
-      menubar->SetStayActive(PR_TRUE);
+      if (menubar)
+        menubar->SetStayActive(PR_TRUE);
     }
 
     if (mOldMenu) {

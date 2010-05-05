@@ -45,6 +45,7 @@
 #include "nsIPercentHeightObserver.h"
 #include "nsGkAtoms.h"
 #include "nsLayoutUtils.h"
+#include "nsTArray.h"
 
 class nsTableFrame;
 
@@ -71,9 +72,9 @@ class nsTableCellFrame : public nsHTMLContainerFrame,
                          public nsIPercentHeightObserver
 {
 public:
-
-  // nsISupports
-  NS_DECL_ISUPPORTS_INHERITED
+  NS_DECL_QUERYFRAME_TARGET(nsTableCellFrame)
+  NS_DECL_QUERYFRAME
+  NS_DECL_FRAMEARENA_HELPERS
 
   // default constructor supplied by the compiler
 
@@ -92,14 +93,17 @@ public:
                                nsIAtom*        aAttribute,
                                PRInt32         aModType);
 
-  // table cells contain an area frame which does most of the work, and
+  /** @see nsIFrame::DidSetStyleContext */
+  virtual void DidSetStyleContext(nsStyleContext* aOldStyleContext);
+  
+  // table cells contain a block frame which does most of the work, and
   // so these functions should never be called. They assert and return
   // NS_ERROR_NOT_IMPLEMENTED
   NS_IMETHOD AppendFrames(nsIAtom*        aListName,
-                          nsIFrame*       aFrameList);
+                          nsFrameList&    aFrameList);
   NS_IMETHOD InsertFrames(nsIAtom*        aListName,
                           nsIFrame*       aPrevFrame,
-                          nsIFrame*       aFrameList);
+                          nsFrameList&    aFrameList);
   NS_IMETHOD RemoveFrame(nsIAtom*        aListName,
                          nsIFrame*       aOldFrame);
 
@@ -127,11 +131,6 @@ public:
   void PaintCellBackground(nsIRenderingContext& aRenderingContext,
                            const nsRect& aDirtyRect, nsPoint aPt);
 
-  NS_IMETHOD SetSelected(nsPresContext* aPresContext,
-                         nsIDOMRange *aRange,
-                         PRBool aSelected,
-                         nsSpread aSpread);
-
   virtual nscoord GetMinWidth(nsIRenderingContext *aRenderingContext);
   virtual nscoord GetPrefWidth(nsIRenderingContext *aRenderingContext);
   virtual IntrinsicWidthOffsetData
@@ -158,6 +157,10 @@ public:
   void VerticallyAlignChild(nscoord aMaxAscent);
 
   PRBool HasVerticalAlignBaseline();
+  
+  PRBool CellHasVisibleContent(nscoord       height, 
+                               nsTableFrame* tableFrame,
+                               nsIFrame*     kidFrame);
 
   /**
    * Get the first-line baseline of the cell relative to its top border
@@ -232,8 +235,6 @@ protected:
   /** implement abstract method on nsHTMLContainerFrame */
   virtual PRIntn GetSkipSides() const;
 
-  virtual PRBool ParentDisablesSelection() const; //override default behavior
-
   /**
    * GetSelfOverflow says what effect the cell should have on its own
    * overflow area.  In the separated borders model this should just be
@@ -243,13 +244,6 @@ protected:
    * handle invalidation correctly for dynamic border changes.
    */
   virtual void GetSelfOverflow(nsRect& aOverflowArea);
-
-private:  
-
-  // All these methods are support methods for RecalcLayoutData
-  nsIFrame* GetFrameAt(nsVoidArray* aList,  PRInt32 aIndex);
-
-protected:
 
   friend class nsTableRowFrame;
 
@@ -308,6 +302,7 @@ inline void nsTableCellFrame::SetHasPctOverHeight(PRBool aValue)
 class nsBCTableCellFrame : public nsTableCellFrame
 {
 public:
+  NS_DECL_FRAMEARENA_HELPERS
 
   nsBCTableCellFrame(nsStyleContext* aContext);
 

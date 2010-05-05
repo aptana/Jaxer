@@ -67,6 +67,8 @@ NS_NewPopupSetFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
   return new (aPresShell) nsPopupSetFrame (aPresShell, aContext);
 }
 
+NS_IMPL_FRAMEARENA_HELPERS(nsPopupSetFrame)
+
 NS_IMETHODIMP
 nsPopupSetFrame::Init(nsIContent*      aContent,
                       nsIFrame*        aParent,
@@ -74,10 +76,10 @@ nsPopupSetFrame::Init(nsIContent*      aContent,
 {
   nsresult  rv = nsBoxFrame::Init(aContent, aParent, aPrevInFlow);
 
-  nsIRootBox *rootBox;
-  nsresult res = CallQueryInterface(aParent->GetParent(), &rootBox);
-  NS_ASSERTION(NS_SUCCEEDED(res), "grandparent should be root box");
-  if (NS_SUCCEEDED(res)) {
+  // Normally the root box is our grandparent, but in case of wrapping
+  // it can be our great-grandparent.
+  nsIRootBox *rootBox = nsIRootBox::GetRootBox(PresContext()->GetPresShell());
+  if (rootBox) {
     rootBox->SetPopupSetFrame(this);
   }
 
@@ -92,7 +94,7 @@ nsPopupSetFrame::GetType() const
 
 NS_IMETHODIMP
 nsPopupSetFrame::AppendFrames(nsIAtom*        aListName,
-                              nsIFrame*       aFrameList)
+                              nsFrameList&    aFrameList)
 {
   if (aListName == nsGkAtoms::popupList) {
     return AddPopupFrameList(aFrameList);
@@ -113,7 +115,7 @@ nsPopupSetFrame::RemoveFrame(nsIAtom*        aListName,
 NS_IMETHODIMP
 nsPopupSetFrame::InsertFrames(nsIAtom*        aListName,
                               nsIFrame*       aPrevFrame,
-                              nsIFrame*       aFrameList)
+                              nsFrameList&    aFrameList)
 {
   if (aListName == nsGkAtoms::popupList) {
     return AddPopupFrameList(aFrameList);
@@ -123,7 +125,7 @@ nsPopupSetFrame::InsertFrames(nsIAtom*        aListName,
 
 NS_IMETHODIMP
 nsPopupSetFrame::SetInitialChildList(nsIAtom*        aListName,
-                                     nsIFrame*       aChildList)
+                                     nsFrameList&    aChildList)
 {
   if (aListName == nsGkAtoms::popupList) {
     return AddPopupFrameList(aChildList);
@@ -144,10 +146,10 @@ nsPopupSetFrame::Destroy()
     delete temp;
   }
 
-  nsIRootBox *rootBox;
-  nsresult res = CallQueryInterface(mParent->GetParent(), &rootBox);
-  NS_ASSERTION(NS_SUCCEEDED(res), "grandparent should be root box");
-  if (NS_SUCCEEDED(res)) {
+  // Normally the root box is our grandparent, but in case of wrapping
+  // it can be our great-grandparent.
+  nsIRootBox *rootBox = nsIRootBox::GetRootBox(PresContext()->GetPresShell());
+  if (rootBox) {
     rootBox->SetPopupSetFrame(nsnull);
   }
 
@@ -180,7 +182,7 @@ nsPopupSetFrame::DoLayout(nsBoxLayoutState& aState)
 
       nsRect bounds(popupChild->GetRect());
 
-      nsCOMPtr<nsIScrollableFrame> scrollframe = do_QueryInterface(child);
+      nsIScrollableFrame *scrollframe = do_QueryFrame(child);
       if (scrollframe &&
           scrollframe->GetScrollbarStyles().mVertical == NS_STYLE_OVERFLOW_AUTO) {
         // if our pref height
@@ -263,10 +265,15 @@ nsPopupSetFrame::RemovePopupFrame(nsIFrame* aPopup)
 }
 
 nsresult
-nsPopupSetFrame::AddPopupFrameList(nsIFrame* aPopupFrameList)
+nsPopupSetFrame::AddPopupFrameList(nsFrameList& aPopupFrameList)
 {
-  for (nsIFrame* kid = aPopupFrameList; kid; kid = kid->GetNextSibling()) {
-    nsresult rv = AddPopupFrame(kid);
+  while (!aPopupFrameList.IsEmpty()) {
+    nsIFrame* f = aPopupFrameList.FirstChild();
+    // Clears out prev/next sibling points appropriately. Every frame
+    // in our popup list has null next and prev pointers, they're logically
+    // each in their own list.
+    aPopupFrameList.RemoveFrame(f);
+    nsresult rv = AddPopupFrame(f);
     NS_ENSURE_SUCCESS(rv, rv);
   }
   return NS_OK;
@@ -329,7 +336,7 @@ nsPopupSetFrame::List(FILE* out, PRInt32 aIndent) const
   }
   fprintf(out, " [content=%p]", static_cast<void*>(mContent));
   nsPopupSetFrame* f = const_cast<nsPopupSetFrame*>(this);
-  if (f->GetStateBits() & NS_FRAME_OUTSIDE_CHILDREN) {
+  if (f->HasOverflowRect()) {
     nsRect overflowArea = f->GetOverflowRect();
     fprintf(out, " [overflow=%d,%d,%d,%d]", overflowArea.x, overflowArea.y,
             overflowArea.width, overflowArea.height);
@@ -365,8 +372,8 @@ nsPopupSetFrame::List(FILE* out, PRInt32 aIndent) const
         NS_ASSERTION(kid->GetParent() == (nsIFrame*)this, "bad parent frame pointer");
 
         // Have the child frame list
-        nsIFrameDebug*  frameDebug;
-        if (NS_SUCCEEDED(kid->QueryInterface(NS_GET_IID(nsIFrameDebug), (void**)&frameDebug))) {
+        nsIFrameDebug*  frameDebug = do_QueryFrame(kid);
+        if (frameDebug) {
           frameDebug->List(out, aIndent + 1);
         }
         kid = kid->GetNextSibling();
@@ -392,9 +399,8 @@ nsPopupSetFrame::List(FILE* out, PRInt32 aIndent) const
     fputs(" <\n", out);
     ++aIndent;
     for (nsPopupFrameList* l = mPopupList; l; l = l->mNextPopup) {
-      nsIFrameDebug* frameDebug;
-      if (l->mPopupFrame &&
-          NS_SUCCEEDED(CallQueryInterface(l->mPopupFrame, &frameDebug))) {
+      nsIFrameDebug* frameDebug = do_QueryFrame(l->mPopupFrame);
+      if (frameDebug) {
         frameDebug->List(out, aIndent);
       }
     }

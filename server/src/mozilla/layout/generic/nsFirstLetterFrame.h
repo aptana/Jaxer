@@ -46,13 +46,15 @@
 
 class nsFirstLetterFrame : public nsFirstLetterFrameSuper {
 public:
+  NS_DECL_FRAMEARENA_HELPERS
+
   nsFirstLetterFrame(nsStyleContext* aContext) : nsHTMLContainerFrame(aContext) {}
 
   NS_IMETHOD Init(nsIContent*      aContent,
                   nsIFrame*        aParent,
                   nsIFrame*        aPrevInFlow);
   NS_IMETHOD SetInitialChildList(nsIAtom*        aListName,
-                                 nsIFrame*       aChildList);
+                                 nsFrameList&    aChildList);
 #ifdef NS_DEBUG
   NS_IMETHOD GetFrameName(nsAString& aResult) const;
 #endif
@@ -82,8 +84,6 @@ public:
                     nsReflowStatus&          aStatus);
 
   virtual PRBool CanContinueTextRun() const;
-
-  NS_IMETHOD SetSelected(nsPresContext* aPresContext, nsIDOMRange *aRange,PRBool aSelected, nsSpread aSpread);
 
 //override of nsFrame method
   NS_IMETHOD GetChildFrameContainingOffset(PRInt32 inContentOffset,

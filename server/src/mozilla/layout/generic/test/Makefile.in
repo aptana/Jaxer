@@ -44,10 +44,24 @@ relativesrcdir  = layout/generic/test
 include $(DEPTH)/config/autoconf.mk
 include $(topsrcdir)/config/rules.mk
 
-_TEST_FILES = 	test_bug288789.html \
+# in the list below, we make sure that the tests that require focus
+# run before test_plugin_clipping, which can steal focus for its window.
+_TEST_FILES = \
+		bug344830_testembed.svg \
+		frame_selection_underline.xhtml \
+		frame_selection_underline-ref.xhtml \
+		frame_selection_underline.css \
+		plugin_clipping_helper.xhtml \
+		plugin_clipping_helper2.xhtml \
+		plugin_clipping_helper_transformed.xhtml \
+		plugin_clipping_helper_table.xhtml \
+		plugin_clipping_lib.js \
+		test_backspace_delete.xul \
+		test_bug263683.html \
+		test_bug288789.html \
 		test_bug323656.html \
 		test_bug344830.html \
-		bug344830_testembed.svg \
+		test_bug348681.html \
 		test_bug382429.html \
 		test_bug384527.html \
 		test_bug385751.html \
@@ -61,10 +75,39 @@ _TEST_FILES = 	test_bug288789.html \
 		test_bug404872.html \
 		test_bug405178.html \
 		test_bug416168.html \
-		test_character_movement.html \
-		test_word_movement.html \
-		test_backspace_delete.html \
+		test_bug421436.html \
+		$(warning test_bug421839-1.html disabled because it calls finish twice which can cause timeouts) \
+		test_bug421839-2.html \
+		bug421839-2-page.html \
+		test_bug438840.html \
+		test_bug448860.html \
+		test_bug460532.html \
+		test_bug468167.html \
+		test_bug469613.xul \
+		test_bug469774.xul \
+		test_bug470212.html \
+		test_bug503813.html \
+		$(warning test_bug507902.html temporarily disabled - see bug 510001) \
+		test_bug514732.html \
+		test_bug527306.html \
+		test_movement_by_characters.html \
+		test_movement_by_words.html \
+		test_plugin_clipping.xhtml \
+		test_plugin_clipping2.xhtml \
+		test_plugin_clipping_transformed.xhtml \
+		test_plugin_clipping_table.xhtml \
+		test_plugin_mouse_coords.html \
+		test_plugin_position.xhtml \
+		test_selection_underline.html \
+		file_BrokenImageReference.png \
+		file_Dolske.png \
+		file_IconTestServer.sjs \
+		file_LoadingImageReference.png \
+		file_bug514732_1.html \
+		file_bug514732_helper.html \
 		$(NULL)
+# disabled temporarily
+#		test_bug488417.html \
 
 libs:: $(_TEST_FILES)
 	$(INSTALL) $(foreach f,$^,"$f") $(DEPTH)/_tests/testing/mochitest/tests/$(relativesrcdir)

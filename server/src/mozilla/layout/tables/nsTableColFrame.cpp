@@ -83,6 +83,22 @@ nsTableColFrame::SetColType(nsTableColType aType)
   mState |= (type << COL_TYPE_OFFSET);
 }
 
+/* virtual */ void
+nsTableColFrame::DidSetStyleContext(nsStyleContext* aOldStyleContext)
+{
+  if (!aOldStyleContext) //avoid this on init
+    return;
+     
+  nsTableFrame* tableFrame = nsTableFrame::GetTableFrame(this);
+    
+  if (tableFrame->IsBorderCollapse() &&
+      tableFrame->BCRecalcNeeded(aOldStyleContext, GetStyleContext())) {
+    nsRect damageArea = nsRect(GetColIndex(), 0, 1, tableFrame->GetRowCount());
+    tableFrame->SetBCDamageArea(damageArea);
+  }
+  return;
+}
+
 void nsTableColFrame::SetContinuousBCBorderWidth(PRUint8     aForSide,
                                                  BCPixelSize aPixelValue)
 {
@@ -172,19 +188,7 @@ NS_NewTableColFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
   return new (aPresShell) nsTableColFrame(aContext);
 }
 
-NS_IMETHODIMP
-nsTableColFrame::Init(nsIContent*      aContent,
-                      nsIFrame*        aParent,
-                      nsIFrame*        aPrevInFlow)
-{
-  // Let the base class do its initialization
-  nsresult rv = nsSplittableFrame::Init(aContent, aParent, aPrevInFlow);
-
-  // record that children that are ignorable whitespace should be excluded 
-  mState |= NS_FRAME_EXCLUDE_IGNORABLE_WHITESPACE;
-
-  return rv;
-}
+NS_IMPL_FRAMEARENA_HELPERS(nsTableColFrame)
 
 nsTableColFrame*  
 nsTableColFrame::GetNextCol() const

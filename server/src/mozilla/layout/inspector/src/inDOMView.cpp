@@ -349,7 +349,7 @@ inDOMView::GetCellProperties(PRInt32 row, nsITreeColumn* col, nsISupportsArray *
   if (!node) return NS_ERROR_FAILURE;
 
   nsCOMPtr<nsIContent> content = do_QueryInterface(node->node);
-  if (content && content->GetBindingParent()) {
+  if (content && content->IsInAnonymousSubtree()) {
     properties->AppendElement(kAnonymousAtom);
   }
 
@@ -660,14 +660,15 @@ inDOMView::IsSorted(PRBool *_retval)
 }
 
 NS_IMETHODIMP
-inDOMView::CanDrop(PRInt32 index, PRInt32 orientation, PRBool *_retval)
+inDOMView::CanDrop(PRInt32 index, PRInt32 orientation,
+                   nsIDOMDataTransfer* aDataTransfer, PRBool *_retval)
 {
   *_retval = PR_FALSE;
   return NS_OK;
 }
 
 NS_IMETHODIMP
-inDOMView::Drop(PRInt32 row, PRInt32 orientation)
+inDOMView::Drop(PRInt32 row, PRInt32 orientation, nsIDOMDataTransfer* aDataTransfer)
 {
   return NS_OK;
 }
@@ -980,13 +981,13 @@ inDOMView::ContentRemoved(nsIDocument *aDocument, nsIContent* aContainer, nsICon
 inDOMViewNode*
 inDOMView::GetNodeAt(PRInt32 aRow)
 {
-  return (inDOMViewNode*)mNodes.ElementAt(aRow);
+  return mNodes.ElementAt(aRow);
 }
 
 PRInt32
 inDOMView::GetRowCount()
 {
-  return mNodes.Count();
+  return mNodes.Length();
 }
 
 PRInt32
@@ -1026,7 +1027,7 @@ inDOMView::InsertNode(inDOMViewNode* aNode, PRInt32 aRow)
   if (RowOutOfBounds(aRow, 1))
     AppendNode(aNode);
   else
-    mNodes.InsertElementAt(aNode, aRow);
+    mNodes.InsertElementAt(aRow, aNode);
 }
 
 void
@@ -1046,16 +1047,16 @@ inDOMView::ReplaceNode(inDOMViewNode* aNode, PRInt32 aRow)
     return;
 
   delete GetNodeAt(aRow);
-  mNodes.ReplaceElementAt(aNode, aRow);
+  mNodes.ElementAt(aRow) = aNode;
 }
 
 void
-inDOMView::InsertNodes(nsVoidArray& aNodes, PRInt32 aRow)
+inDOMView::InsertNodes(nsTArray<inDOMViewNode*>& aNodes, PRInt32 aRow)
 {
   if (aRow < 0 || aRow > GetRowCount())
     return;
 
-  mNodes.InsertElementsAt(aNodes, aRow);
+  mNodes.InsertElementsAt(aRow, aNodes);
 }
 
 void
@@ -1094,14 +1095,14 @@ inDOMView::ExpandNode(PRInt32 aRow)
                    kids);
   PRInt32 kidCount = kids.Count();
 
-  nsVoidArray list(kidCount);
+  nsTArray<inDOMViewNode*> list(kidCount);
 
   inDOMViewNode* newNode = nsnull;
   inDOMViewNode* prevNode = nsnull;
 
   for (PRInt32 i = 0; i < kidCount; ++i) {
     newNode = CreateNode(kids[i], node);
-    list.ReplaceElementAt(newNode, i);
+    list.AppendElement(newNode);
 
     if (prevNode)
       prevNode->next = newNode;

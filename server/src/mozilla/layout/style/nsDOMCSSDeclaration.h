@@ -41,7 +41,7 @@
 #define nsDOMCSSDeclaration_h___
 
 #include "nsICSSDeclaration.h"
-#include "nsIDOMCSS2Properties.h"
+#include "nsIDOMNSCSS2Properties.h"
 
 class nsCSSDeclaration;
 class nsICSSParser;
@@ -93,7 +93,6 @@ public:
   NS_IMETHOD Item(PRUint32 index, nsAString & _retval);
   NS_IMETHOD GetParentRule(nsIDOMCSSRule * *aParentRule) = 0; 
 
-  virtual void DropReference() = 0;
 protected:
   // Always fills in the out parameter, even on failure, and if the out
   // parameter is null the nsresult will be the correct thing to

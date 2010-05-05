@@ -45,7 +45,6 @@
 
 #include "nsBoxFrame.h"
 
-class nsISupportsArray;
 class nsSplitterFrameInner;
 
 nsIFrame* NS_NewSplitterFrame(nsIPresShell* aPresShell, nsStyleContext* aContext);
@@ -53,6 +52,8 @@ nsIFrame* NS_NewSplitterFrame(nsIPresShell* aPresShell, nsStyleContext* aContext
 class nsSplitterFrame : public nsBoxFrame
 {
 public:
+  NS_DECL_FRAMEARENA_HELPERS
+
   nsSplitterFrame(nsIPresShell* aPresShell, nsStyleContext* aContext);
   virtual void Destroy();
 
@@ -76,17 +77,14 @@ public:
 
   NS_IMETHOD DoLayout(nsBoxLayoutState& aBoxLayoutState);
 
-  NS_IMETHOD QueryInterface(REFNSIID aIID, void** aInstancePtr); 
-  NS_IMETHOD_(nsrefcnt) AddRef(void) { return NS_OK; }
-  NS_IMETHOD_(nsrefcnt) Release(void) { return NS_OK; }
-
   NS_IMETHOD HandlePress(nsPresContext* aPresContext,
                          nsGUIEvent *    aEvent,
                          nsEventStatus*  aEventStatus);
 
   NS_IMETHOD HandleMultiplePress(nsPresContext* aPresContext,
-                         nsGUIEvent *    aEvent,
-                         nsEventStatus*  aEventStatus);
+                                 nsGUIEvent *    aEvent,
+                                 nsEventStatus*  aEventStatus,
+                                 PRBool aControlHeld);
 
   NS_IMETHOD HandleDrag(nsPresContext* aPresContext,
                         nsGUIEvent *    aEvent,

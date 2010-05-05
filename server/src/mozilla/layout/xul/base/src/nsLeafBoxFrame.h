@@ -45,12 +45,9 @@ class nsAccessKeyInfo;
 class nsLeafBoxFrame : public nsLeafFrame
 {
 public:
+  NS_DECL_FRAMEARENA_HELPERS
 
   friend nsIFrame* NS_NewLeafBoxFrame(nsIPresShell* aPresShell, nsStyleContext* aContext);
-
-  // Override addref/release to not assert
-  NS_IMETHOD_(nsrefcnt) AddRef(void);
-  NS_IMETHOD_(nsrefcnt) Release(void);
 
   virtual nsSize GetPrefSize(nsBoxLayoutState& aState);
   virtual nsSize GetMinSize(nsBoxLayoutState& aState);
@@ -88,9 +85,7 @@ public:
                     const nsHTMLReflowState& aReflowState,
                     nsReflowStatus&          aStatus);
 
-  NS_IMETHOD CharacterDataChanged(nsPresContext* aPresContext,
-                                  nsIContent*     aChild,
-                                  PRBool          aAppend);
+  NS_IMETHOD CharacterDataChanged(CharacterDataChangeInfo* aInfo);
 
   NS_IMETHOD  Init(
                nsIContent*      aContent,
@@ -109,9 +104,6 @@ public:
   virtual PRBool ComputesOwnOverflowArea() { return PR_FALSE; }
 
 protected:
-
-  virtual PRBool GetWasCollapsed(nsBoxLayoutState& aState);
-  virtual void SetWasCollapsed(nsBoxLayoutState& aState, PRBool aWas);
 
   NS_IMETHOD DoLayout(nsBoxLayoutState& aState);
 

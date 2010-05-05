@@ -20,6 +20,7 @@
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
+ *   L. David Baron <dbaron@dbaron.org>, Mozilla Corporation
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either of the GNU General Public License Version 2 or later (the "GPL"),
@@ -44,130 +45,16 @@
 #ifndef nsIStyleRuleProcessor_h___
 #define nsIStyleRuleProcessor_h___
 
-#include <stdio.h>
-
 #include "nsISupports.h"
-#include "nsPresContext.h" // for nsCompatability
-#include "nsILinkHandler.h"
-#include "nsString.h"
 #include "nsChangeHint.h"
+#include "nsIContent.h"
 
-class nsIStyleSheet;
+struct RuleProcessorData;
+struct ElementRuleProcessorData;
+struct PseudoRuleProcessorData;
+struct StateRuleProcessorData;
+struct AttributeRuleProcessorData;
 class nsPresContext;
-class nsIContent;
-class nsIAtom;
-class nsICSSPseudoComparator;
-class nsRuleWalker;
-class nsAttrValue;
-
-// The implementation of the constructor and destructor are currently in
-// nsCSSRuleProcessor.cpp.
-
-struct RuleProcessorData {
-  RuleProcessorData(nsPresContext* aPresContext,
-                    nsIContent* aContent, 
-                    nsRuleWalker* aRuleWalker,
-                    nsCompatibility* aCompat = nsnull);
-  
-  // NOTE: not |virtual|
-  ~RuleProcessorData();
-
-  void* operator new(size_t sz, nsPresContext* aContext) CPP_THROW_NEW {
-    return aContext->AllocateFromShell(sz);
-  }
-  void Destroy(nsPresContext* aContext) {
-    this->~RuleProcessorData();
-    aContext->FreeToShell(sizeof(RuleProcessorData), this);
-  }
-
-  const nsString* GetLang();
-
-  nsPresContext*   mPresContext;
-  nsIContent*       mContent;       // weak ref
-  nsIContent*       mParentContent; // if content, content->GetParent(); weak ref
-  nsRuleWalker*     mRuleWalker; // Used to add rules to our results.
-  nsIContent*       mScopedRoot;    // Root of scoped stylesheet (set and unset by the supplier of the scoped stylesheet
-  
-  nsIAtom*          mContentTag;    // if content, then content->GetTag()
-  nsIAtom*          mContentID;     // if styled content, then weak reference to styledcontent->GetID()
-  PRPackedBool      mIsHTMLContent; // if content, then does QI on HTMLContent, true or false
-  PRPackedBool      mIsLink;        // if content, calls nsStyleUtil::IsHTMLLink or nsStyleUtil::IsLink
-  PRPackedBool      mHasAttributes; // if content, content->GetAttrCount() > 0
-  nsCompatibility   mCompatMode;    // Possibly remove use of this in SelectorMatches?
-  nsLinkState       mLinkState;     // if a link, this is the state, otherwise unknown
-  PRInt32           mEventState;    // if content, eventStateMgr->GetContentState()
-  PRInt32           mNameSpaceID;   // if content, content->GetNameSapce()
-  const nsAttrValue* mClasses;      // if styled content, styledcontent->GetClasses()
-  // mPreviousSiblingData and mParentData are always RuleProcessorData
-  // and never a derived class.  They are allocated lazily, when
-  // selectors require matching of prior siblings or ancestors.
-  RuleProcessorData* mPreviousSiblingData;
-  RuleProcessorData* mParentData;
-
-protected:
-  nsAutoString *mLanguage; // NULL means we haven't found out the language yet
-};
-
-struct ElementRuleProcessorData : public RuleProcessorData {
-  ElementRuleProcessorData(nsPresContext* aPresContext,
-                           nsIContent* aContent, 
-                           nsRuleWalker* aRuleWalker)
-  : RuleProcessorData(aPresContext,aContent,aRuleWalker)
-  {
-    NS_PRECONDITION(aContent, "null pointer");
-    NS_PRECONDITION(aRuleWalker, "null pointer");
-  }
-};
-
-struct PseudoRuleProcessorData : public RuleProcessorData {
-  PseudoRuleProcessorData(nsPresContext* aPresContext,
-                          nsIContent* aParentContent,
-                          nsIAtom* aPseudoTag,
-                          nsICSSPseudoComparator* aComparator,
-                          nsRuleWalker* aRuleWalker)
-  : RuleProcessorData(aPresContext, aParentContent, aRuleWalker)
-  {
-    NS_PRECONDITION(aPseudoTag, "null pointer");
-    NS_PRECONDITION(aRuleWalker, "null pointer");
-    mPseudoTag = aPseudoTag;
-    mComparator = aComparator;
-  }
-
-  nsIAtom*                 mPseudoTag;
-  nsICSSPseudoComparator*  mComparator;
-};
-
-struct StateRuleProcessorData : public RuleProcessorData {
-  StateRuleProcessorData(nsPresContext* aPresContext,
-                         nsIContent* aContent,
-                         PRInt32 aStateMask)
-    : RuleProcessorData(aPresContext, aContent, nsnull),
-      mStateMask(aStateMask)
-  {
-    NS_PRECONDITION(aContent, "null pointer");
-  }
-  const PRInt32 mStateMask; // |HasStateDependentStyle| for which state(s)?
-                            //  Constants defined in nsIEventStateManager.h .
-};
-
-struct AttributeRuleProcessorData : public RuleProcessorData {
-  AttributeRuleProcessorData(nsPresContext* aPresContext,
-                             nsIContent* aContent,
-                             nsIAtom* aAttribute,
-                             PRInt32 aModType,
-                             PRUint32 aStateMask)
-    : RuleProcessorData(aPresContext, aContent, nsnull),
-      mAttribute(aAttribute),
-      mModType(aModType),
-      mStateMask(aStateMask)
-  {
-    NS_PRECONDITION(aContent, "null pointer");
-  }
-  nsIAtom* mAttribute; // |HasAttributeDependentStyle| for which attribute?
-  PRInt32 mModType;    // The type of modification (see nsIDOMMutationEvent).
-  PRUint32 mStateMask; // The states that changed with the attr change.
-};
-
 
 // IID for the nsIStyleRuleProcessor interface {015575fe-7b6c-11d3-ba05-001083023c2b}
 #define NS_ISTYLE_RULE_PROCESSOR_IID     \
@@ -187,7 +74,7 @@ public:
 
   // Shorthand for:
   //  nsCOMArray<nsIStyleRuleProcessor>::nsCOMArrayEnumFunc
-  typedef PRBool (* PR_CALLBACK EnumFunc)(nsIStyleRuleProcessor*, void*);
+  typedef PRBool (* EnumFunc)(nsIStyleRuleProcessor*, void*);
 
   /**
    * Find the |nsIStyleRule|s matching the given content node and
@@ -222,6 +109,14 @@ public:
    */
   NS_IMETHOD HasAttributeDependentStyle(AttributeRuleProcessorData* aData,
                                         nsReStyleHint* aResult) = 0;
+
+  /**
+   * Do any processing that needs to happen as a result of a change in
+   * the characteristics of the medium, and return whether this rule
+   * processor's rules have changed (e.g., because of media queries).
+   */
+  NS_IMETHOD MediumFeaturesChanged(nsPresContext* aPresContext,
+                                   PRBool* aRulesChanged) = 0;
 };
 
 NS_DEFINE_STATIC_IID_ACCESSOR(nsIStyleRuleProcessor,

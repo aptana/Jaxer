@@ -52,9 +52,7 @@
 #include "nsISupports.h"
 #include "nsGkAtoms.h"
 #include "nsCSSAnonBoxes.h"
-#include "nsIImage.h"
 #include "nsStyleConsts.h"
-#include "nsIWidget.h"
 #include "nsIComponentManager.h"
 #include "nsIDocument.h"
 #include "nsButtonFrameRenderer.h"
@@ -75,6 +73,8 @@ NS_NewHTMLButtonControlFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
 {
   return new (aPresShell) nsHTMLButtonControlFrame(aContext);
 }
+
+NS_IMPL_FRAMEARENA_HELPERS(nsHTMLButtonControlFrame)
 
 nsHTMLButtonControlFrame::nsHTMLButtonControlFrame(nsStyleContext* aContext)
   : nsHTMLContainerFrame(aContext)
@@ -105,31 +105,9 @@ nsHTMLButtonControlFrame::Init(
   return rv;
 }
 
-nsrefcnt nsHTMLButtonControlFrame::AddRef(void)
-{
-  NS_WARNING("not supported");
-  return 1;
-}
-
-nsrefcnt nsHTMLButtonControlFrame::Release(void)
-{
-  NS_WARNING("not supported");
-  return 1;
-}
-
-// Frames are not refcounted, no need to AddRef
-NS_IMETHODIMP
-nsHTMLButtonControlFrame::QueryInterface(const nsIID& aIID, void** aInstancePtr)
-{
-  NS_PRECONDITION(aInstancePtr, "null out param");
-
-  if (aIID.Equals(NS_GET_IID(nsIFormControlFrame))) {
-    *aInstancePtr = static_cast<nsIFormControlFrame*>(this);
-    return NS_OK;
-  }
-
-  return nsHTMLContainerFrame::QueryInterface(aIID, aInstancePtr);
-}
+NS_QUERYFRAME_HEAD(nsHTMLButtonControlFrame)
+  NS_QUERYFRAME_ENTRY(nsIFormControlFrame)
+NS_QUERYFRAME_TAIL_INHERITING(nsHTMLContainerFrame)
 
 #ifdef ACCESSIBILITY
 NS_IMETHODIMP nsHTMLButtonControlFrame::GetAccessible(nsIAccessible** aAccessible)
@@ -154,26 +132,6 @@ nsIAtom*
 nsHTMLButtonControlFrame::GetType() const
 {
   return nsGkAtoms::HTMLButtonControlFrame;
-}
-
-PRBool
-nsHTMLButtonControlFrame::IsReset(PRInt32 type)
-{
-  if (NS_FORM_BUTTON_RESET == type) {
-    return PR_TRUE;
-  } else {
-    return PR_FALSE;
-  }
-}
-
-PRBool
-nsHTMLButtonControlFrame::IsSubmit(PRInt32 type)
-{
-  if (NS_FORM_BUTTON_SUBMIT == type) {
-    return PR_TRUE;
-  } else {
-    return PR_FALSE;
-  }
 }
 
 void 
@@ -221,19 +179,19 @@ nsHTMLButtonControlFrame::BuildDisplayList(nsDisplayListBuilder*   aBuilder,
   // Put the foreground outline and focus rects on top of the children
   set.Content()->AppendToTop(&onTop);
 
-    // XXX This is temporary
-  // clips to its size minus the border 
-  // but the real problem is the FirstChild (the AreaFrame)
-  // isn't being constrained properly
-  // Bug #17474
-  nsMargin border = GetStyleBorder()->GetBorder();
-  nsRect rect(aBuilder->ToReferenceFrame(this), GetSize());
-  rect.Deflate(border);
+  // clips to our padding box for <input>s but not <button>s.
+  if (IsInput()) {
+    nsMargin border = GetStyleBorder()->GetActualBorder();
+    nsRect rect(aBuilder->ToReferenceFrame(this), GetSize());
+    rect.Deflate(border);
   
-  nsresult rv = OverflowClip(aBuilder, set, aLists, rect);
-  NS_ENSURE_SUCCESS(rv, rv);
+    nsresult rv = OverflowClip(aBuilder, set, aLists, rect);
+    NS_ENSURE_SUCCESS(rv, rv);
+  } else {
+    set.MoveTo(aLists);
+  }
   
-  rv = DisplayOutline(aBuilder, aLists);
+  nsresult rv = DisplayOutline(aBuilder, aLists);
   NS_ENSURE_SUCCESS(rv, rv);
 
   // to draw border when selected in editor
@@ -450,7 +408,7 @@ nsHTMLButtonControlFrame::SetAdditionalStyleContext(PRInt32 aIndex,
 
 NS_IMETHODIMP 
 nsHTMLButtonControlFrame::AppendFrames(nsIAtom*        aListName,
-                                       nsIFrame*       aFrameList)
+                                       nsFrameList&    aFrameList)
 {
   NS_NOTREACHED("unsupported operation");
   return NS_ERROR_UNEXPECTED;
@@ -459,7 +417,7 @@ nsHTMLButtonControlFrame::AppendFrames(nsIAtom*        aListName,
 NS_IMETHODIMP
 nsHTMLButtonControlFrame::InsertFrames(nsIAtom*        aListName,
                                        nsIFrame*       aPrevFrame,
-                                       nsIFrame*       aFrameList)
+                                       nsFrameList&    aFrameList)
 {
   NS_NOTREACHED("unsupported operation");
   return NS_ERROR_UNEXPECTED;

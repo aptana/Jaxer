@@ -71,6 +71,8 @@ NS_NewPageFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
   return new (aPresShell) nsPageFrame(aContext);
 }
 
+NS_IMPL_FRAMEARENA_HELPERS(nsPageFrame)
+
 nsPageFrame::nsPageFrame(nsStyleContext* aContext)
 : nsContainerFrame(aContext)
 {
@@ -80,7 +82,7 @@ nsPageFrame::~nsPageFrame()
 {
 }
 
-NS_IMETHODIMP nsPageFrame::Reflow(nsPresContext*          aPresContext,
+NS_IMETHODIMP nsPageFrame::Reflow(nsPresContext*           aPresContext,
                                   nsHTMLReflowMetrics&     aDesiredSize,
                                   const nsHTMLReflowState& aReflowState,
                                   nsReflowStatus&          aStatus)
@@ -314,7 +316,7 @@ nsPageFrame::DrawHeaderFooter(nsIRenderingContext& aRenderingContext,
 }
 
 // Draw a header or footer string
-// @param aRenderingContext - rendering content ot draw into
+// @param aRenderingContext - rendering context to draw into
 // @param aHeaderFooter - indicates whether it is a header or footer
 // @param aJust - indicates where the string is located within the header/footer
 // @param aStr - the string to be drawn
@@ -371,7 +373,9 @@ nsPageFrame::DrawHeaderFooter(nsIRenderingContext& aRenderingContext,
       return; // bail if couldn't find the correct length
     }
     
-    PresContext()->SetBidiEnabled(HasRTLChars(str));
+    if (HasRTLChars(str)) {
+      PresContext()->SetBidiEnabled();
+    }
 
     // cacl the x and y positions of the text
     nscoord x = GetXPosition(aRenderingContext, aRect, aJust, str);
@@ -385,7 +389,7 @@ nsPageFrame::DrawHeaderFooter(nsIRenderingContext& aRenderingContext,
     // set up new clip and draw the text
     aRenderingContext.PushState();
     aRenderingContext.SetColor(NS_RGB(0,0,0));
-    aRenderingContext.SetClipRect(aRect, nsClipCombine_kReplace);
+    aRenderingContext.SetClipRect(aRect, nsClipCombine_kIntersect);
     nsLayoutUtils::DrawString(this, &aRenderingContext, str.get(), str.Length(), nsPoint(x, y + aAscent));
     aRenderingContext.PopState();
   }
@@ -498,13 +502,16 @@ nsPageFrame::PaintHeaderFooter(nsIRenderingContext& aRenderingContext,
   nsRect rect(aPt.x, aPt.y, mRect.width - mPD->mShadowSize.width,
               mRect.height - mPD->mShadowSize.height);
 
-  aRenderingContext.SetFont(*mPD->mHeadFootFont, nsnull);
   aRenderingContext.SetColor(NS_RGB(0,0,0));
 
   // Get the FontMetrics to determine width.height of strings
   nsCOMPtr<nsIFontMetrics> fontMet;
   pc->DeviceContext()->GetMetricsFor(*mPD->mHeadFootFont, nsnull,
+                                     pc->GetUserFontSet(),
                                      *getter_AddRefs(fontMet));
+
+  aRenderingContext.SetFont(fontMet);
+
   nscoord ascent = 0;
   nscoord visibleHeight = 0;
   if (fontMet) {
@@ -557,19 +564,21 @@ nsPageFrame::PaintPageContent(nsIRenderingContext& aRenderingContext,
     // We're doing print-selection, with one long page-content frame.
     // Clip to the appropriate page-content slice for the current page.
     NS_ASSERTION(mPageNum > 0, "page num should be positive");
-    clipRect.y =  expectedPageContentHeight * (mPageNum - 1);
+    // Note: The pageContentFrame's y-position has been set such that a zero
+    // y-value matches the top edge of the current page.  So, to clip to the
+    // current page's content (in coordinates *relative* to the page content
+    // frame), we just negate its y-position and add the top margin.
+    clipRect.y = NSToCoordCeil((-pageContentFrame->GetRect().y + 
+                                mPD->mReflowMargin.top) / scale);
     clipRect.height = expectedPageContentHeight;
     NS_ASSERTION(clipRect.y < pageContentFrame->GetSize().height,
                  "Should be clipping to region inside the page content bounds");
   }
   aRenderingContext.SetClipRect(clipRect, nsClipCombine_kIntersect);
 
-  const nsStyleBorder* border = GetStyleBorder();
-  const nsStylePadding* padding = GetStylePadding();
   nsRect backgroundRect = nsRect(nsPoint(0, 0), pageContentFrame->GetSize());
   nsCSSRendering::PaintBackground(PresContext(), aRenderingContext, this,
-                                  rect, backgroundRect, *border, *padding,
-                                  PR_TRUE);
+                                  rect, backgroundRect, 0);
 
   nsLayoutUtils::PaintFrame(&aRenderingContext, pageContentFrame,
                             nsRegion(rect), NS_RGBA(0,0,0,0));
@@ -599,6 +608,8 @@ NS_NewPageBreakFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
   return new (aPresShell) nsPageBreakFrame(aContext);
 }
 
+NS_IMPL_FRAMEARENA_HELPERS(nsPageBreakFrame)
+
 nsPageBreakFrame::nsPageBreakFrame(nsStyleContext* aContext) :
   nsLeafFrame(aContext), mHaveReflowed(PR_FALSE)
 {
@@ -621,7 +632,7 @@ nsPageBreakFrame::GetIntrinsicHeight()
 }
 
 nsresult 
-nsPageBreakFrame::Reflow(nsPresContext*          aPresContext,
+nsPageBreakFrame::Reflow(nsPresContext*           aPresContext,
                          nsHTMLReflowMetrics&     aDesiredSize,
                          const nsHTMLReflowState& aReflowState,
                          nsReflowStatus&          aStatus)
@@ -651,4 +662,10 @@ nsPageBreakFrame::GetType() const
   return nsGkAtoms::pageBreakFrame; 
 }
 
-
+#ifdef DEBUG
+NS_IMETHODIMP
+nsPageBreakFrame::GetFrameName(nsAString& aResult) const
+{
+  return MakeFrameName(NS_LITERAL_STRING("PageBreak"), aResult);
+}
+#endif

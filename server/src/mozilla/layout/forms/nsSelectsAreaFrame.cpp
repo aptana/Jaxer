@@ -48,13 +48,15 @@ NS_NewSelectsAreaFrame(nsIPresShell* aShell, nsStyleContext* aContext, PRUint32 
   nsSelectsAreaFrame* it = new (aShell) nsSelectsAreaFrame(aContext);
 
   if (it) {
-    // We need NS_BLOCK_SPACE_MGR to ensure that the options inside the select
+    // We need NS_BLOCK_FLOAT_MGR to ensure that the options inside the select
     // aren't expanded by right floats outside the select.
-    it->SetFlags(aFlags | NS_BLOCK_SPACE_MGR);
+    it->SetFlags(aFlags | NS_BLOCK_FLOAT_MGR);
   }
 
   return it;
 }
+
+NS_IMPL_FRAMEARENA_HELPERS(nsSelectsAreaFrame)
 
 //---------------------------------------------------------
 PRBool 
@@ -171,8 +173,8 @@ public:
     nsListControlFrame* listFrame = GetEnclosingListFrame(GetUnderlyingFrame());
     return listFrame->GetOverflowRect() + aBuilder->ToReferenceFrame(listFrame);
   }
-  virtual void Paint(nsDisplayListBuilder* aBuilder, nsIRenderingContext* aCtx,
-     const nsRect& aDirtyRect) {
+  virtual void Paint(nsDisplayListBuilder* aBuilder,
+                     nsIRenderingContext* aCtx) {
     nsListControlFrame* listFrame = GetEnclosingListFrame(GetUnderlyingFrame());
     // listFrame must be non-null or we wouldn't get called.
     listFrame->PaintFocus(*aCtx, aBuilder->ToReferenceFrame(listFrame));
@@ -201,7 +203,7 @@ nsSelectsAreaFrame::BuildDisplayListInternal(nsDisplayListBuilder*   aBuilder,
                                              const nsRect&           aDirtyRect,
                                              const nsDisplayListSet& aLists)
 {
-  nsresult rv = nsAreaFrame::BuildDisplayList(aBuilder, aDirtyRect, aLists);
+  nsresult rv = nsBlockFrame::BuildDisplayList(aBuilder, aDirtyRect, aLists);
   NS_ENSURE_SUCCESS(rv, rv);
 
   nsListControlFrame* listFrame = GetEnclosingListFrame(this);
@@ -234,7 +236,7 @@ nsSelectsAreaFrame::Reflow(nsPresContext*           aPresContext,
   nscoord oldHeight;
   if (isInDropdownMode) {
     // Store the height now in case it changes during
-    // nsAreaFrame::Reflow for some odd reason.
+    // nsBlockFrame::Reflow for some odd reason.
     if (!(GetStateBits() & NS_FRAME_FIRST_REFLOW)) {
       oldHeight = GetSize().height;
     } else {
@@ -242,7 +244,7 @@ nsSelectsAreaFrame::Reflow(nsPresContext*           aPresContext,
     }
   }
   
-  nsresult rv = nsAreaFrame::Reflow(aPresContext, aDesiredSize,
+  nsresult rv = nsBlockFrame::Reflow(aPresContext, aDesiredSize,
                                     aReflowState, aStatus);
   NS_ENSURE_SUCCESS(rv, rv);
 

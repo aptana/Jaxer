@@ -43,6 +43,7 @@
 #include "nsILineIterator.h"
 #include "nsTablePainter.h"
 #include "nsTArray.h"
+#include "nsCSSAnonBoxes.h"
 
 class nsTableFrame;
 class nsTableRowFrame;
@@ -71,10 +72,6 @@ struct nsRowGroupReflowState {
   ~nsRowGroupReflowState() {}
 };
 
-#define NS_ITABLEROWGROUPFRAME_IID    \
-{ 0xe940e7bc, 0xb534, 0x11d2,  \
-  { 0x95, 0xa2, 0x0, 0x60, 0xb0, 0xc3, 0x44, 0x14 } }
-
 // use the following bits from nsFrame's frame state 
 
 // thead or tfoot should be repeated on every printed page
@@ -95,11 +92,14 @@ struct nsRowGroupReflowState {
  * @see nsTableFrame
  * @see nsTableRowFrame
  */
-class nsTableRowGroupFrame : public nsHTMLContainerFrame, public nsILineIteratorNavigator
+class nsTableRowGroupFrame
+  : public nsHTMLContainerFrame
+  , public nsILineIterator
 {
 public:
-  // nsISupports
-  NS_DECL_ISUPPORTS_INHERITED
+  NS_DECL_QUERYFRAME_TARGET(nsTableRowGroupFrame)
+  NS_DECL_QUERYFRAME
+  NS_DECL_FRAMEARENA_HELPERS
 
   /** instantiate a new instance of nsTableRowFrame.
     * @param aPresShell the pres shell for this frame
@@ -108,17 +108,15 @@ public:
     */
   friend nsIFrame* NS_NewTableRowGroupFrame(nsIPresShell* aPresShell, nsStyleContext* aContext);
   virtual ~nsTableRowGroupFrame();
-
-  NS_IMETHOD Init(nsIContent*      aContent,
-                  nsIFrame*        aParent,
-                  nsIFrame*        aPrevInFlow);
-
+  /** @see nsIFrame::DidSetStyleContext */
+  virtual void DidSetStyleContext(nsStyleContext* aOldStyleContext);
+  
   NS_IMETHOD AppendFrames(nsIAtom*        aListName,
-                          nsIFrame*       aFrameList);
+                          nsFrameList&    aFrameList);
   
   NS_IMETHOD InsertFrames(nsIAtom*        aListName,
                           nsIFrame*       aPrevFrame,
-                          nsIFrame*       aFrameList);
+                          nsFrameList&    aFrameList);
 
   NS_IMETHOD RemoveFrame(nsIAtom*        aListName,
                          nsIFrame*       aOldFrame);
@@ -222,6 +220,8 @@ public:
 
 // nsILineIterator methods
 public:
+  virtual void DisposeLineIterator() { }
+
   // The table row is the equivalent to a line in block layout. 
   // The nsILineIterator assumes that a line resides in a block, this role is
   // fullfilled by the row group. Rows in table are counted relative to the
@@ -230,14 +230,14 @@ public:
   // row index of the first row in the row group.
    
   /** Get the number of rows in a row group
-    * @param aResult - pointer that holds the number of lines in a row group
+    * @return the number of lines in a row group
     */
-  NS_IMETHOD GetNumLines(PRInt32* aResult);
+  virtual PRInt32 GetNumLines();
 
   /** @see nsILineIterator.h GetDirection
-    * @param aIsRightToLeft - true if the table is rtl
+    * @return true if the table is rtl
     */
-  NS_IMETHOD GetDirection(PRBool* aIsRightToLeft);
+  virtual PRBool GetDirection();
   
   /** Return structural information about a line. 
     * @param aLineNumber       - the index of the row relative to the row group
@@ -259,16 +259,15 @@ public:
   
   /** Given a frame that's a child of the rowgroup, find which line its on.
     * @param aFrame       - frame, should be a row
-    * @param aIndexResult - row index relative to the row group if this a row
-    *                       frame. aIndexResult will be set to -1 if the frame
-    *                       cannot be found.
+    * @return               row index relative to the row group if this a row
+    *                       frame. -1 if the frame cannot be found.
     */
-  NS_IMETHOD FindLineContaining(nsIFrame* aFrame, PRInt32* aLineNumberResult);
+  virtual PRInt32 FindLineContaining(nsIFrame* aFrame);
   
   /** not implemented
     * the function is also not called in our tree
     */
-  NS_IMETHOD FindLineAt(nscoord aY, PRInt32* aLineNumberResult);
+  virtual PRInt32 FindLineAt(nscoord aY);
 
   /** Find the orginating cell frame on a row that is the nearest to the
     * coordinate X.
@@ -360,6 +359,15 @@ public:
    * decided not to use a cursor or we already have one set up.
    */
   FrameCursorData* SetupRowCursor();
+  
+  PRBool IsScrolled() {
+    // Note that if mOverflowY is CLIP, so is mOverflowX, and we need to clip the background
+    // as if the rowgroup is scrollable.
+    return GetStyleContext()->GetPseudoType() == nsCSSAnonBoxes::scrolledContent ||
+           GetStyleDisplay()->mOverflowY == NS_STYLE_OVERFLOW_CLIP;
+  }
+
+  virtual nsILineIterator* GetLineIterator() { return this; }
 
 protected:
   nsTableRowGroupFrame(nsStyleContext* aContext);

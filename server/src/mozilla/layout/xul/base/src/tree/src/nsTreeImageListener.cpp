@@ -64,16 +64,15 @@ NS_IMETHODIMP nsTreeImageListener::OnStartContainer(imgIRequest *aRequest,
 }
 
 NS_IMETHODIMP nsTreeImageListener::OnDataAvailable(imgIRequest *aRequest,
-                                                   gfxIImageFrame *aFrame,
-                                                   const nsRect *aRect)
+                                                   PRBool aCurrentFrame,
+                                                   const nsIntRect *aRect)
 {
   Invalidate();
   return NS_OK;
 }
 
 NS_IMETHODIMP nsTreeImageListener::FrameChanged(imgIContainer *aContainer,
-                                                gfxIImageFrame *newframe,
-                                                nsRect * dirtyRect)
+                                                nsIntRect *dirtyRect)
 {
   Invalidate();
   return NS_OK;

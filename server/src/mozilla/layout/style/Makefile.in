@@ -43,7 +43,7 @@ include $(DEPTH)/config/autoconf.mk
 
 DIRS = xbl-marquee
 
-ifdef MOZ_MOCHITEST
+ifdef ENABLE_TESTS
 DIRS		+= test
 endif
 
@@ -72,6 +72,7 @@ REQUIRES	= xpcom \
 		  intl \
 		  pref \
 		  imglib2 \
+		  docshell \
 		  $(NULL)
 
 EXPORTS		= \
@@ -86,8 +87,11 @@ EXPORTS		= \
 		nsCSSPseudoClasses.h \
 		nsCSSPseudoElementList.h \
 		nsCSSPseudoElements.h \
+		nsCSSRuleProcessor.h \
+		nsCSSStyleSheet.h \
 		nsCSSStruct.h \
 		nsCSSValue.h \
+		nsDOMCSSAttrDeclaration.h \
 		nsDOMCSSDeclaration.h \
 		nsICSSDeclaration.h \
 		nsICSSGroupRule.h \
@@ -95,29 +99,30 @@ EXPORTS		= \
 		nsICSSLoader.h \
 		nsICSSLoaderObserver.h \
 		nsICSSNameSpaceRule.h \
-		nsICSSOMFactory.h \
 		nsICSSParser.h \
 		nsICSSPseudoComparator.h \
 		nsICSSRule.h \
+		nsICSSRuleList.h \
 		nsICSSStyleRule.h \
 		nsICSSStyleRuleDOMWrapper.h \
 		nsICSSStyleSheet.h \
-		nsIComputedDOMStyle.h \
 		nsIHTMLCSSStyleSheet.h \
-		nsIInspectorCSSUtils.h \
 		nsIStyleRule.h \
 		nsIStyleRuleProcessor.h \
 		nsIStyleSheet.h \
 		nsLayoutStylesheetCache.h \
 		nsRuleData.h \
 		nsRuleNode.h \
+		nsRuleProcessorData.h \
 		nsRuleWalker.h \
 		nsStyleContext.h \
 		nsStyleCoord.h \
 		nsStyleSet.h \
 		nsStyleStruct.h \
 		nsStyleStructFwd.h \
+		nsStyleStructInlines.h \
 		nsStyleStructList.h \
+		nsStyleTransformMatrix.h \
 		nsStyleUtil.h \
 		$(NULL)
 
@@ -127,7 +132,6 @@ CPPSRCS		= \
 		nsCSSDeclaration.cpp \
 		nsCSSKeywords.cpp \
 		nsCSSLoader.cpp \
-		nsCSSOMFactory.cpp \
 		nsCSSParser.cpp \
 		nsCSSProps.cpp \
 		nsCSSPseudoClasses.cpp \
@@ -146,16 +150,18 @@ CPPSRCS		= \
 		nsDOMCSSRGBColor.cpp \
 		nsDOMCSSRect.cpp \
 		nsDOMCSSValueList.cpp \
+		nsFontFaceLoader.cpp \
 		nsHTMLCSSStyleSheet.cpp \
 		nsHTMLStyleSheet.cpp \
-		nsInspectorCSSUtils.cpp \
 		nsLayoutStylesheetCache.cpp \
+		nsMediaFeatures.cpp \
 		nsROCSSPrimitiveValue.cpp \
 		nsRuleNode.cpp \
 		nsStyleContext.cpp \
 		nsStyleCoord.cpp \
 		nsStyleSet.cpp \
 		nsStyleStruct.cpp \
+		nsStyleTransformMatrix.cpp \
 		nsStyleUtil.cpp \
 		$(NULL)
 

@@ -42,8 +42,9 @@
 
 class nsTitleBarFrame : public nsBoxFrame  
 {
-
 public:
+  NS_DECL_FRAMEARENA_HELPERS
+
   friend nsIFrame* NS_NewTitleBarFrame(nsIPresShell* aPresShell, nsStyleContext* aContext);  
 
   nsTitleBarFrame(nsIPresShell* aPresShell, nsStyleContext* aContext);
@@ -70,7 +71,7 @@ protected:
 
 protected:
 	PRBool mTrackingMouseMove;	
-	nsPoint mLastPoint;
+	nsIntPoint mLastPoint;
 
 
 }; // class nsTitleBarFrame

@@ -36,11 +36,11 @@
 
 #include "nsSVGGFrame.h"
 #include "nsIAnonymousContentCreator.h"
-#include "nsSVGMatrix.h"
 #include "nsIDOMSVGUseElement.h"
 #include "nsIDOMSVGTransformable.h"
 #include "nsSVGElement.h"
 #include "nsSVGUseElement.h"
+#include "gfxMatrix.h"
 
 typedef nsSVGGFrame nsSVGUseFrameBase;
 
@@ -48,27 +48,28 @@ class nsSVGUseFrame : public nsSVGUseFrameBase,
                       public nsIAnonymousContentCreator
 {
   friend nsIFrame*
-  NS_NewSVGUseFrame(nsIPresShell* aPresShell, nsIContent* aContent, nsStyleContext* aContext);
+  NS_NewSVGUseFrame(nsIPresShell* aPresShell, nsStyleContext* aContext);
 
 protected:
   nsSVGUseFrame(nsStyleContext* aContext) : nsSVGUseFrameBase(aContext) {}
 
-   // nsISupports interface:
-  NS_IMETHOD QueryInterface(const nsIID& aIID, void** aInstancePtr);
-private:
-  NS_IMETHOD_(nsrefcnt) AddRef() { return 1; }
-  NS_IMETHOD_(nsrefcnt) Release() { return 1; }
-
 public:
+  NS_DECL_QUERYFRAME
+  NS_DECL_FRAMEARENA_HELPERS
+
+  
   // nsIFrame interface:
+#ifdef DEBUG
+  NS_IMETHOD Init(nsIContent*      aContent,
+                  nsIFrame*        aParent,
+                  nsIFrame*        aPrevInFlow);
+#endif
+
   NS_IMETHOD  AttributeChanged(PRInt32         aNameSpaceID,
                                nsIAtom*        aAttribute,
                                PRInt32         aModType);
 
   virtual void Destroy();
-
-  // nsSVGContainerFrame methods:
-  virtual already_AddRefed<nsIDOMSVGMatrix> GetCanvasTM();
 
   /**
    * Get the "type" of the frame
@@ -76,6 +77,8 @@ public:
    * @see nsGkAtoms::svgUseFrame
    */
   virtual nsIAtom* GetType() const;
+
+  virtual PRBool IsLeaf() const;
 
 #ifdef DEBUG
   NS_IMETHOD GetFrameName(nsAString& aResult) const
@@ -92,16 +95,12 @@ public:
 // Implementation
 
 nsIFrame*
-NS_NewSVGUseFrame(nsIPresShell* aPresShell, nsIContent* aContent, nsStyleContext* aContext)
+NS_NewSVGUseFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
 {
-  nsCOMPtr<nsIDOMSVGUseElement> use = do_QueryInterface(aContent);
-  if (!use) {
-    NS_ERROR("Can't create frame! Content is not an SVG use!");
-    return nsnull;
-  }
-
   return new (aPresShell) nsSVGUseFrame(aContext);
 }
+
+NS_IMPL_FRAMEARENA_HELPERS(nsSVGUseFrame)
 
 nsIAtom *
 nsSVGUseFrame::GetType() const
@@ -110,14 +109,27 @@ nsSVGUseFrame::GetType() const
 }
 
 //----------------------------------------------------------------------
-// nsISupports methods
+// nsQueryFrame methods
 
-NS_INTERFACE_MAP_BEGIN(nsSVGUseFrame)
-  NS_INTERFACE_MAP_ENTRY(nsIAnonymousContentCreator)
-NS_INTERFACE_MAP_END_INHERITING(nsSVGUseFrameBase)
+NS_QUERYFRAME_HEAD(nsSVGUseFrame)
+  NS_QUERYFRAME_ENTRY(nsIAnonymousContentCreator)
+NS_QUERYFRAME_TAIL_INHERITING(nsSVGUseFrameBase)
 
 //----------------------------------------------------------------------
 // nsIFrame methods:
+
+#ifdef DEBUG
+NS_IMETHODIMP
+nsSVGUseFrame::Init(nsIContent* aContent,
+                    nsIFrame* aParent,
+                    nsIFrame* aPrevInFlow)
+{
+  nsCOMPtr<nsIDOMSVGUseElement> use = do_QueryInterface(aContent);
+  NS_ASSERTION(use, "Content is not an SVG use!");
+
+  return nsSVGUseFrameBase::Init(aContent, aParent, aPrevInFlow);
+}
+#endif /* DEBUG */
 
 NS_IMETHODIMP
 nsSVGUseFrame::AttributeChanged(PRInt32         aNameSpaceID,
@@ -146,37 +158,10 @@ nsSVGUseFrame::Destroy()
   use->DestroyAnonymousContent();
 }
 
-
-//----------------------------------------------------------------------
-// nsSVGContainerFrame methods:
-
-already_AddRefed<nsIDOMSVGMatrix>
-nsSVGUseFrame::GetCanvasTM()
+PRBool
+nsSVGUseFrame::IsLeaf() const
 {
-  if (!mPropagateTransform) {
-    nsIDOMSVGMatrix *retval;
-    if (mOverrideCTM) {
-      retval = mOverrideCTM;
-      NS_ADDREF(retval);
-    } else {
-      NS_NewSVGMatrix(&retval);
-    }
-    return retval;
-  }
-
-  nsCOMPtr<nsIDOMSVGMatrix> currentTM = nsSVGUseFrameBase::GetCanvasTM();
-
-  // x and y:
-  float x, y;
-  nsSVGElement *element = static_cast<nsSVGElement*>(mContent);
-  element->GetAnimatedLengthValues(&x, &y, nsnull);
-
-  nsCOMPtr<nsIDOMSVGMatrix> fini;
-  currentTM->Translate(x, y, getter_AddRefs(fini));
-
-  nsIDOMSVGMatrix *retval = fini.get();
-  NS_IF_ADDREF(retval);
-  return retval;
+  return PR_TRUE;
 }
 
 

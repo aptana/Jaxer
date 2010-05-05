@@ -84,21 +84,18 @@ public:
   nsIAtom* GetChildListName() const { return mChildListName; }
 #endif
 
-  nsresult FirstChild(const nsIFrame* aDelegatingFrame,
-                      nsIAtom*        aListName,
-                      nsIFrame**      aFirstChild) const;
-  nsIFrame* GetFirstChild() { return mAbsoluteFrames.FirstChild(); }
+  const nsFrameList& GetChildList() const { return mAbsoluteFrames; }
 
   nsresult SetInitialChildList(nsIFrame*       aDelegatingFrame,
                                nsIAtom*        aListName,
-                               nsIFrame*       aChildList);
+                               nsFrameList&    aChildList);
   nsresult AppendFrames(nsIFrame*      aDelegatingFrame,
                         nsIAtom*       aListName,
-                        nsIFrame*      aFrameList);
+                        nsFrameList&   aFrameList);
   nsresult InsertFrames(nsIFrame*      aDelegatingFrame,
                         nsIAtom*       aListName,
                         nsIFrame*      aPrevFrame,
-                        nsIFrame*      aFrameList);
+                        nsFrameList&   aFrameList);
   nsresult RemoveFrame(nsIFrame*      aDelegatingFrame,
                        nsIAtom*       aListName,
                        nsIFrame*      aOldFrame);
@@ -130,6 +127,13 @@ public:
 
   PRBool  HasAbsoluteFrames() {return mAbsoluteFrames.NotEmpty();}
 
+  // Mark our size-dependent absolute frames with NS_FRAME_HAS_DIRTY_CHILDREN
+  // so that we'll make sure to reflow them.
+  void MarkSizeDependentFramesDirty();
+
+  // Mark all our absolute frames with NS_FRAME_IS_DIRTY
+  void MarkAllFramesDirty();
+
 protected:
   // Returns PR_TRUE if the position of f depends on the position of
   // its placeholder or if the position or size of f depends on a
@@ -146,6 +150,11 @@ protected:
                                nsIFrame*                aKidFrame,
                                nsReflowStatus&          aStatus,
                                nsRect*                  aChildBounds);
+
+  // Mark our absolute frames dirty.  If aMarkAllDirty is true, all will be
+  // marked with NS_FRAME_IS_DIRTY.  Otherwise, the size-dependant ones will be
+  // marked with NS_FRAME_HAS_DIRTY_CHILDREN.
+  void DoMarkFramesDirty(PRBool aMarkAllDirty);
 
 protected:
   nsFrameList mAbsoluteFrames;  // additional named child list

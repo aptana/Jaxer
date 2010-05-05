@@ -36,6 +36,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 @namespace url(http://www.w3.org/1999/xhtml); /* set default namespace to HTML */
+@namespace xul url(http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul);
 
 /* bidi */
 
@@ -50,6 +51,22 @@
 bdo[dir] {
   unicode-bidi: bidi-override;
 }
+
+/* To ensure http://www.w3.org/TR/REC-html40/struct/dirlang.html#style-bidi:
+ *
+ * "When a block element that does not have a dir attribute is transformed to
+ * the style of an inline element by a style sheet, the resulting presentation
+ * should be equivalent, in terms of bidirectional formatting, to the
+ * formatting obtained by explicitly adding a dir attribute (assigned the
+ * inherited value) to the transformed element." */
+
+address, blockquote, body, caption, center, col, colgroup, dd, dir, div, dl, dt,
+fieldset, form, h1, h2, h3, h4, h5, h6, hr, html, isindex, li, listing, map, 
+marquee, menu, noframes, ol, p, plaintext, pre, table, tbody, td, tfoot, th, 
+thead, tr, ul, xmp {
+  unicode-bidi: embed;
+}
+
 
 /* blocks */
 
@@ -466,14 +483,14 @@ canvas {
 }
 
 /* focusable content: anything w/ tabindex >=0 is focusable */
-abbr:focus, acronym:focus, address:focus, applet:focus, b:focus, 
+abbr:focus, acronym:focus, address:focus, b:focus,
 base:focus, big:focus, blockquote:focus, br:focus, canvas:focus, caption:focus,
 center:focus, cite:focus, code:focus, col:focus, colgroup:focus, dd:focus,
 del:focus, dfn:focus, dir:focus, div:focus, dl:focus, dt:focus, em:focus,
 fieldset:focus, font:focus, form:focus, h1:focus, h2:focus, h3:focus, h4:focus,
 h5:focus, h6:focus, hr:focus, i:focus, img:focus, ins:focus, 
 kbd:focus, label:focus, legend:focus, li:focus, link:focus, menu:focus, 
-object:focus, ol:focus, p:focus, pre:focus, q:focus, s:focus, samp:focus, 
+ol:focus, p:focus, pre:focus, q:focus, s:focus, samp:focus, 
 small:focus, span:focus, strike:focus, strong:focus, sub:focus, sup:focus, 
 table:focus, tbody:focus, td:focus, tfoot:focus, th:focus, thead:focus, 
 tr:focus, tt:focus, u:focus, ul:focus, var:focus {
@@ -485,6 +502,22 @@ tr:focus, tt:focus, u:focus, ul:focus, var:focus {
 area, base, basefont, head, meta, script, style, title,
 noembed, param {
    display: none;
+}
+
+/* media elements */
+video > xul|videocontrols, audio > xul|videocontrols {
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-binding: url("chrome://global/content/bindings/videocontrols.xml#videoControls");
+}
+
+video:not([controls]) > xul|videocontrols,
+audio:not([controls]) > xul|videocontrols {
+  visibility: hidden;
+}
+
+audio:not([controls]) {
+  display: none;
 }
 
 /* emulation of non-standard HTML <marquee> tag */
@@ -506,10 +539,4 @@ marquee[direction="up"], marquee[direction="down"] {
 
   marquee { -moz-binding: none; }
 
-  /* XXX this should not be necessary, we should be stopping blinking
-     of any kind in print preview, not just the <blink> element */
-  blink {
-    text-decoration: none;
-  }
- 
 }

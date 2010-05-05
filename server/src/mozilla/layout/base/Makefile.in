@@ -42,7 +42,7 @@ VPATH		= @srcdir@
 
 include $(DEPTH)/config/autoconf.mk
 
-ifdef MOZ_MOCHITEST
+ifdef ENABLE_TESTS
 DIRS		+= tests
 endif
 
@@ -78,6 +78,7 @@ REQUIRES	= xpcom \
 		  shistory \
 		  caps \
 		  thebes \
+		  qcms \
 		  $(NULL)
 ifdef JAXER
 REQUIRES	+= aptana
@@ -94,6 +95,7 @@ XPIDLSRCS	= \
 EXPORTS		= \
 		nsBidi.h \
 		nsBidiPresUtils.h \
+		nsCaret.h \
 		nsCSSFrameConstructor.h \
 		nsChangeHint.h \
 		nsCompatibility.h \
@@ -101,7 +103,6 @@ EXPORTS		= \
 		nsFrameManager.h \
 		nsFrameManagerBase.h \
 		nsFrameTraversal.h \
-		nsICaret.h \
 		nsIDocumentViewer.h \
 		nsIFrameTraversal.h \
 		nsIImageMap.h \
@@ -112,7 +113,6 @@ EXPORTS		= \
 		nsIReflowCallback.h \
 		nsLayoutErrors.h \
 		nsLayoutUtils.h \
-		nsIFocusEventSuppressor.h \
 		nsPresContext.h \
 		nsPresState.h \
 		nsStyleChangeList.h \
@@ -123,6 +123,7 @@ CPPSRCS		= \
 		nsCSSColorUtils.cpp \
 		nsCSSFrameConstructor.cpp \
 		nsCSSRendering.cpp \
+		nsCSSRenderingBorders.cpp \
 		nsCaret.cpp \
 		nsChildIterator.cpp \
 		nsCounterManager.cpp \
@@ -135,13 +136,13 @@ CPPSRCS		= \
 		nsLayoutDebugger.cpp \
 		nsLayoutHistoryState.cpp \
 		nsLayoutUtils.cpp \
+		nsPresArena.cpp \
 		nsPresContext.cpp \
 		nsPresShell.cpp \
 		nsPresState.cpp \
 		nsQuoteList.cpp \
 		nsStyleChangeList.cpp \
 		nsStyleSheetService.cpp \
-		nsFocusEventSuppressor.cpp \
 		$(NULL)
 
 ifndef MOZ_XUL
@@ -169,28 +170,34 @@ include $(topsrcdir)/config/rules.mk
 
 LOCAL_INCLUDES += \
 		-I$(srcdir) \
+		-I$(srcdir)/../style \
 		-I$(srcdir)/../generic \
 		-I$(srcdir)/../forms \
 		-I$(srcdir)/../tables \
 		-I$(srcdir)/../printing \
 		-I$(srcdir)/../xul/base/src \
+		-I$(srcdir)/../xul/base/src/tree/src \
 		-I$(srcdir)/../../content/base/src \
 		-I$(srcdir)/../../content/events/src \
 		-I$(srcdir)/../../content/xbl/src \
 		-I$(srcdir)/../../view/src \
-		-I$(srcdir)/../../dom/src/base \
+		-I$(srcdir)/../../dom/base \
 		-I$(srcdir)/../../content/svg/content/src \
 		$(NULL)
 
 ifdef MOZ_MATHML
 LOCAL_INCLUDES += \
-        -I$(srcdir)/../mathml/content/src \
-        -I$(srcdir)/../mathml/base/src
+        -I$(srcdir)/../mathml
 endif
 
 ifdef MOZ_SVG
 LOCAL_INCLUDES += \
         -I$(srcdir)/../svg/base/src
+endif
+
+ifdef MOZ_MEDIA
+LOCAL_INCLUDES += \
+        -I$(srcdir)/../../content/html/content/src
 endif
 
 CXXFLAGS += $(MOZ_CAIRO_CFLAGS)

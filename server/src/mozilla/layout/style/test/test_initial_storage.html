@@ -5,7 +5,7 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=375363
 -->
 <head>
   <title>Test for parsing, storage, and serialization of CSS '-moz-initial'</title>
-  <script type="text/javascript" src="/MochiKit/MochiKit.js"></script>
+  <script type="text/javascript" src="/MochiKit/packed.js"></script>
   <script type="text/javascript" src="/tests/SimpleTest/SimpleTest.js"></script>
   <script type="text/javascript" src="property_database.js"></script>
   <link rel="stylesheet" type="text/css" href="/tests/SimpleTest/test.css" />
@@ -24,48 +24,6 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=375363
 /** Test for parsing, storage, and serialization of CSS '-moz-initial' **/
 
 var gDeclaration = document.getElementById("testnode").style;
-
-var gKnownFails = {
-  /* bug 377519: */
-  "-moz-border-end": true,
-  "-moz-border-radius": true,
-  "-moz-border-start": true,
-  "-moz-outline-radius": true,
-  "background": true,
-  "border": true,
-  "border-bottom": true,
-  "border-color": true,
-  "border-left": true,
-  "border-right": true,
-  "border-style": true,
-  "border-top": true,
-  "border-width": true,
-  "cue": true,
-  "font": true,
-  "list-style": true,
-  "margin": true,
-  "outline": true,
-  "padding": true,
-  "pause": true
-};
-
-var gKnownFails2 = {
-  "-moz-border-end": true,
-  "-moz-border-radius": true,
-  "-moz-border-start": true,
-  "-moz-outline-radius": true,
-  "background": true,
-  "border": true,
-  "border-bottom": true,
-  "border-left": true,
-  "border-right": true,
-  "border-top": true,
-  "cue": true,
-  "font": true,
-  "list-style": true,
-  "outline": true,
-  "pause": true
-};
 
 function test_property(property)
 {
@@ -90,11 +48,8 @@ function test_property(property)
   function check_set(sproperty) {
     var sinfo = gCSSProperties[sproperty];
     val = gDeclaration.getPropertyValue(sproperty);
-    var func = is;
-    if (sproperty == property && property in gKnownFails)
-      func = todo_is;
-    func(val, "-moz-initial",
-         "-moz-initial reported back for property '" + sproperty + "'");
+    is(val, "-moz-initial",
+       "-moz-initial reported back for property '" + sproperty + "'");
     if (sinfo.domProp) {
       is(val, gDeclaration[sinfo.domProp],
          "consistency between decl.getPropertyValue('" + sproperty +
@@ -108,10 +63,7 @@ function test_property(property)
 
   // We don't care particularly about the whitespace or the placement of
   // semicolons, but for simplicity we'll test the current behavior.
-  var cssTextFunc = is;
-  if (property in gKnownFails2)
-    cssTextFunc = todo_is;
-  cssTextFunc(gDeclaration.cssText, property + ": -moz-initial;",
+  is(gDeclaration.cssText, property + ": -moz-initial;",
     "declaration should serialize to exactly what went in (for -moz-initial)");
 
   gDeclaration.removeProperty(property);

@@ -48,10 +48,10 @@
 
 /*
  * nsCSSCompressedDataBlock holds property-value pairs corresponding to
- * CSS declaration blocks.  The value is stored in one of the six CSS
- * data types.  These six types are nsCSSValue, nsCSSRect,
- * nsCSSValueList, nsCSSCounterData, nsCSSQuotes, and nsCSSValuePair, and
- * each correspond to a value of the nsCSSType enumeration.
+ * CSS declaration blocks.  The value is stored in one of the five CSS
+ * data types: nsCSSValue, nsCSSRect, nsCSSValueList, nsCSSValuePair,
+ * and nsCSSValuePairList, which each correspond to a value of the
+ * nsCSSType enumeration.
  *
  * The storage strategy uses the CDB*Storage structs below to help
  * ensure that all the types remain properly aligned.  nsCSSValue's
@@ -152,23 +152,13 @@ inline nsCSSValueList* ValueListAtCursor(const char *aCursor) {
                       (reinterpret_cast<const CDBPointerStorage*>(aCursor)->value);
 }
 
-inline nsCSSCounterData*& CounterDataAtCursor(char *aCursor) {
-    return * reinterpret_cast<nsCSSCounterData**>
+inline nsCSSValuePairList*& ValuePairListAtCursor(char *aCursor) {
+    return * reinterpret_cast<nsCSSValuePairList**>
                              (& reinterpret_cast<CDBPointerStorage*>(aCursor)->value);
 }
 
-inline nsCSSCounterData* CounterDataAtCursor(const char *aCursor) {
-    return static_cast<nsCSSCounterData*>
-                      (reinterpret_cast<const CDBPointerStorage*>(aCursor)->value);
-}
-
-inline nsCSSQuotes*& QuotesAtCursor(char *aCursor) {
-    return * reinterpret_cast<nsCSSQuotes**>
-                             (& reinterpret_cast<CDBPointerStorage*>(aCursor)->value);
-}
-
-inline nsCSSQuotes* QuotesAtCursor(const char *aCursor) {
-    return static_cast<nsCSSQuotes*>
+inline nsCSSValuePairList* ValuePairListAtCursor(const char *aCursor) {
+    return static_cast<nsCSSValuePairList*>
                       (reinterpret_cast<const CDBPointerStorage*>(aCursor)->value);
 }
 
@@ -206,45 +196,40 @@ nsCSSCompressedDataBlock::MapRuleInfoInto(nsRuleData *aRuleData) const
                     if (target->GetUnit() == eCSSUnit_Null) {
                         const nsCSSValue *val = ValueAtCursor(cursor);
                         NS_ASSERTION(val->GetUnit() != eCSSUnit_Null, "oops");
-                        if ((iProp == eCSSProperty_background_image ||
-                             iProp == eCSSProperty_list_style_image) &&
-                            val->GetUnit() == eCSSUnit_URL) {
-                            val->StartImageLoad(aRuleData->mPresContext->Document());
+                        if (iProp == eCSSProperty_list_style_image) {
+                            if (val->GetUnit() == eCSSUnit_URL) {
+                                val->StartImageLoad(
+                                    aRuleData->mPresContext->Document());
+                            }
+                        } else if (iProp == eCSSProperty_border_image) {
+                            if (val->GetUnit() == eCSSUnit_Array) {
+                                nsCSSValue::Array *array = val->GetArrayValue();
+                                if (array->Item(0).GetUnit() == eCSSUnit_URL) {
+                                    array->Item(0).StartImageLoad(
+                                        aRuleData->mPresContext->Document());
+                                }
+                            }
                         }
                         *target = *val;
                         if (iProp == eCSSProperty_font_family) {
                             // XXX Are there other things like this?
                             aRuleData->mFontData->mFamilyFromHTML = PR_FALSE;
                         }
-                        else if (iProp == eCSSProperty_color ||
-                                 iProp == eCSSProperty_background_color ||
-                                 iProp == eCSSProperty_background_image ||
-                                 iProp == eCSSProperty_border_top_color ||
-                                 iProp == eCSSProperty_border_right_color_value ||
-                                 iProp == eCSSProperty_border_right_color_ltr_source ||
-                                 iProp == eCSSProperty_border_right_color_rtl_source ||
-                                 iProp == eCSSProperty_border_bottom_color ||
-                                 iProp == eCSSProperty_border_left_color_value ||
-                                 iProp == eCSSProperty_border_left_color_ltr_source ||
-                                 iProp == eCSSProperty_border_left_color_rtl_source ||
-                                 iProp == eCSSProperty_outline_color) {
-                            if (ShouldIgnoreColors(aRuleData)) {
-                                if (iProp == eCSSProperty_background_color) {
-                                    // Force non-'transparent' background
-                                    // colors to the user's default.
-                                    nsCSSUnit u = target->GetUnit();
-                                    if (u != eCSSUnit_Enumerated &&
-                                        u != eCSSUnit_Inherit &&
-                                        u != eCSSUnit_Initial) {
-                                        target->SetColorValue(aRuleData->
-                                            mPresContext->
-                                            DefaultBackgroundColor());
-                                    }
-                                } else {
-                                    // Ignore 'color', 'border-*-color', and
-                                    // 'background-image'
-                                    *target = nsCSSValue();
+                        if (nsCSSProps::PropHasFlags(iProp,
+                                CSS_PROPERTY_IGNORED_WHEN_COLORS_DISABLED) &&
+                            ShouldIgnoreColors(aRuleData))
+                        {
+                            if (iProp == eCSSProperty_background_color) {
+                                // Force non-'transparent' background
+                                // colors to the user's default.
+                                if (target->IsNonTransparentColor()) {
+                                    target->SetColorValue(aRuleData->
+                                        mPresContext->
+                                        DefaultBackgroundColor());
                                 }
+                            } else {
+                                // Ignore 'color', 'border-*-color', etc.
+                                *target = nsCSSValue();
                             }
                         }
                     }
@@ -252,6 +237,9 @@ nsCSSCompressedDataBlock::MapRuleInfoInto(nsRuleData *aRuleData) const
                 } break;
 
                 case eCSSType_Rect: {
+                    NS_ABORT_IF_FALSE(!nsCSSProps::PropHasFlags(iProp,
+                        CSS_PROPERTY_IGNORED_WHEN_COLORS_DISABLED),
+                        "this case needs to handle color properties");
                     const nsCSSRect* val = RectAtCursor(cursor);
                     NS_ASSERTION(val->HasValue(), "oops");
                     nsCSSRect* target = static_cast<nsCSSRect*>(prop);
@@ -267,53 +255,57 @@ nsCSSCompressedDataBlock::MapRuleInfoInto(nsRuleData *aRuleData) const
                 } break;
 
                 case eCSSType_ValuePair: {
+                    NS_ABORT_IF_FALSE(!nsCSSProps::PropHasFlags(iProp,
+                        CSS_PROPERTY_IGNORED_WHEN_COLORS_DISABLED),
+                        "this case needs to handle color properties");
                     const nsCSSValuePair* val = ValuePairAtCursor(cursor);
                     NS_ASSERTION(val->mXValue.GetUnit() != eCSSUnit_Null ||
                                  val->mYValue.GetUnit() != eCSSUnit_Null, "oops");
                     nsCSSValuePair* target = static_cast<nsCSSValuePair*>(prop);
-                    if (target->mXValue.GetUnit() == eCSSUnit_Null)
+                    NS_ASSERTION((target->mXValue.GetUnit() == eCSSUnit_Null)
+                              == (target->mYValue.GetUnit() == eCSSUnit_Null),
+                                 "half a property?");
+                    if (target->mXValue.GetUnit() == eCSSUnit_Null) {
                         target->mXValue = val->mXValue;
-                    if (target->mYValue.GetUnit() == eCSSUnit_Null)
                         target->mYValue = val->mYValue;
+                    }
                     cursor += CDBValuePairStorage_advance;
                 } break;
 
                 case eCSSType_ValueList:
-                    if (iProp == eCSSProperty_content) {
-                        for (nsCSSValueList* l = ValueListAtCursor(cursor);
-                             l; l = l->mNext)
-                            if (l->mValue.GetUnit() == eCSSUnit_URL)
-                                l->mValue.StartImageLoad(
-                                    aRuleData->mPresContext->Document());
-                    } else if (iProp == eCSSProperty_cursor) {
-                        for (nsCSSValueList* l = ValueListAtCursor(cursor);
-                             l; l = l->mNext)
-                            if (l->mValue.GetUnit() == eCSSUnit_Array) {
-                                // Don't try to restart loads we've already
-                                // started
-                                nsCSSValue& val =
-                                    l->mValue.GetArrayValue()->Item(0);
-                                if (val.GetUnit() == eCSSUnit_URL)
-                                    val.StartImageLoad(
-                                      aRuleData->mPresContext->Document());
-                            }
-                    }
-                // fall through
-                case eCSSType_CounterData:
-                case eCSSType_Quotes: {
+                case eCSSType_ValuePairList: {
                     void** target = static_cast<void**>(prop);
                     if (!*target) {
+                        if (iProp == eCSSProperty_background_image ||
+                            iProp == eCSSProperty_content) {
+                            for (nsCSSValueList* l = ValueListAtCursor(cursor);
+                                 l; l = l->mNext)
+                                if (l->mValue.GetUnit() == eCSSUnit_URL)
+                                    l->mValue.StartImageLoad(
+                                        aRuleData->mPresContext->Document());
+                        } else if (iProp == eCSSProperty_cursor) {
+                            for (nsCSSValueList* l = ValueListAtCursor(cursor);
+                                 l; l = l->mNext)
+                                if (l->mValue.GetUnit() == eCSSUnit_Array) {
+                                    // Don't try to restart loads we've already
+                                    // started
+                                    nsCSSValue& val =
+                                        l->mValue.GetArrayValue()->Item(0);
+                                    if (val.GetUnit() == eCSSUnit_URL)
+                                        val.StartImageLoad(
+                                          aRuleData->mPresContext->Document());
+                                }
+                        }
+
                         void* val = PointerAtCursor(cursor);
                         NS_ASSERTION(val, "oops");
                         *target = val;
 
-                        if (iProp == eCSSProperty_border_top_colors ||
-                            iProp == eCSSProperty_border_right_colors ||
-                            iProp == eCSSProperty_border_bottom_colors ||
-                            iProp == eCSSProperty_border_left_colors) {
-                            if (ShouldIgnoreColors(aRuleData)) {
-                                *target = nsnull;
-                            }
+                        if (nsCSSProps::PropHasFlags(iProp,
+                                CSS_PROPERTY_IGNORED_WHEN_COLORS_DISABLED) &&
+                            ShouldIgnoreColors(aRuleData))
+                        {
+                            *target = nsnull;
                         }
                     }
                     cursor += CDBPointerStorage_advance;
@@ -334,8 +326,7 @@ nsCSSCompressedDataBlock::MapRuleInfoInto(nsRuleData *aRuleData) const
                 } break;
 
                 case eCSSType_ValueList:
-                case eCSSType_CounterData:
-                case eCSSType_Quotes: {
+                case eCSSType_ValuePairList: {
                     cursor += CDBPointerStorage_advance;
                 } break;
             }
@@ -349,6 +340,9 @@ nsCSSCompressedDataBlock::MapRuleInfoInto(nsRuleData *aRuleData) const
 const void*
 nsCSSCompressedDataBlock::StorageFor(nsCSSProperty aProperty) const
 {
+    NS_PRECONDITION(!nsCSSProps::IsShorthand(aProperty),
+                    "Don't call for shorthands");
+
     // If we have no data for this struct, then return immediately.
     // This optimization should make us return most of the time, so we
     // have to worry much less (although still some) about the speed of
@@ -375,8 +369,7 @@ nsCSSCompressedDataBlock::StorageFor(nsCSSProperty aProperty) const
                     return ValuePairAtCursor(cursor);
                 }
                 case eCSSType_ValueList:
-                case eCSSType_CounterData:
-                case eCSSType_Quotes: {
+                case eCSSType_ValuePairList: {
                     return &PointerAtCursor(const_cast<char*>(cursor));
                 }
             }
@@ -395,8 +388,7 @@ nsCSSCompressedDataBlock::StorageFor(nsCSSProperty aProperty) const
             } break;
 
             case eCSSType_ValueList:
-            case eCSSType_CounterData:
-            case eCSSType_Quotes: {
+            case eCSSType_ValuePairList: {
                 cursor += CDBPointerStorage_advance;
             } break;
         }
@@ -454,8 +446,7 @@ nsCSSCompressedDataBlock::Clone() const
             } break;
 
             case eCSSType_ValueList:
-            case eCSSType_CounterData:
-            case eCSSType_Quotes: {
+            case eCSSType_ValuePairList: {
                 void *copy;
                 NS_ASSERTION(PointerAtCursor(cursor), "oops");
                 switch (nsCSSProps::kTypeTable[iProp]) {
@@ -464,14 +455,10 @@ nsCSSCompressedDataBlock::Clone() const
                         // fall through to keep gcc's uninitialized
                         // variable warning quiet
                     case eCSSType_ValueList:
-                        copy = new nsCSSValueList(*ValueListAtCursor(cursor));
+                        copy = ValueListAtCursor(cursor)->Clone();
                         break;
-                    case eCSSType_CounterData:
-                        copy =
-                            new nsCSSCounterData(*CounterDataAtCursor(cursor));
-                        break;
-                    case eCSSType_Quotes:
-                        copy = new nsCSSQuotes(*QuotesAtCursor(cursor));
+                    case eCSSType_ValuePairList:
+                        copy = ValuePairListAtCursor(cursor)->Clone();
                         break;
                 }
                 if (!copy) {
@@ -533,15 +520,8 @@ nsCSSCompressedDataBlock::Destroy()
                 cursor += CDBPointerStorage_advance;
             } break;
 
-            case eCSSType_CounterData: {
-                nsCSSCounterData* val = CounterDataAtCursor(cursor);
-                NS_ASSERTION(val, "oops");
-                delete val;
-                cursor += CDBPointerStorage_advance;
-            } break;
-
-            case eCSSType_Quotes: {
-                nsCSSQuotes* val = QuotesAtCursor(cursor);
+            case eCSSType_ValuePairList: {
+                nsCSSValuePairList* val = ValuePairListAtCursor(cursor);
                 NS_ASSERTION(val, "oops");
                 delete val;
                 cursor += CDBPointerStorage_advance;
@@ -577,11 +557,11 @@ nsCSSExpandedDataBlock::~nsCSSExpandedDataBlock()
 
 const nsCSSExpandedDataBlock::PropertyOffsetInfo
 nsCSSExpandedDataBlock::kOffsetTable[eCSSProperty_COUNT_no_shorthands] = {
-    #define CSS_PROP_BACKENDONLY(name_, id_, method_, datastruct_, member_, type_, kwtable_) \
+    #define CSS_PROP_BACKENDONLY(name_, id_, method_, flags_, datastruct_, member_, type_, kwtable_) \
         { offsetof(nsCSSExpandedDataBlock, m##datastruct_.member_),           \
           size_t(-1),                                                         \
           size_t(-1) },
-    #define CSS_PROP(name_, id_, method_, datastruct_, member_, type_, kwtable_) \
+    #define CSS_PROP(name_, id_, method_, flags_, datastruct_, member_, type_, kwtable_) \
         { offsetof(nsCSSExpandedDataBlock, m##datastruct_.member_),           \
           offsetof(nsRuleData, m##datastruct_##Data),                         \
           offsetof(nsRuleData##datastruct_, member_) },
@@ -658,8 +638,7 @@ nsCSSExpandedDataBlock::DoExpand(nsCSSCompressedDataBlock *aBlock,
             } break;
 
             case eCSSType_ValueList:
-            case eCSSType_CounterData:
-            case eCSSType_Quotes: {
+            case eCSSType_ValuePairList: {
                 void* val = PointerAtCursor(cursor);
                 void** dest = static_cast<void**>(prop);
                 NS_ASSERTION(val, "oops");
@@ -703,7 +682,9 @@ nsCSSExpandedDataBlock::ComputeSize()
                 nsCSSProperty(iHigh * kPropertiesSetChunkSize + iLow);
             NS_ASSERTION(0 <= iProp && iProp < eCSSProperty_COUNT_no_shorthands,
                          "out of range");
+#ifdef DEBUG
             void *prop = PropertyAt(iProp);
+#endif
             PRUint32 increment = 0;
             switch (nsCSSProps::kTypeTable[iProp]) {
                 case eCSSType_Value: {
@@ -735,8 +716,7 @@ nsCSSExpandedDataBlock::ComputeSize()
                 } break;
 
                 case eCSSType_ValueList:
-                case eCSSType_CounterData:
-                case eCSSType_Quotes: {
+                case eCSSType_ValuePairList: {
 #ifdef DEBUG
                     void* val = *static_cast<void**>(prop);
                     NS_ASSERTION(val, "Null pointer while computing size");
@@ -843,8 +823,7 @@ nsCSSExpandedDataBlock::Compress(nsCSSCompressedDataBlock **aNormalBlock,
                 } break;
 
                 case eCSSType_ValueList:
-                case eCSSType_CounterData:
-                case eCSSType_Quotes: {
+                case eCSSType_ValuePairList: {
                     void*& val = *static_cast<void**>(prop);
                     NS_ASSERTION(val, "Null pointer while compressing");
                     CDBPointerStorage *storage =
@@ -928,17 +907,9 @@ nsCSSExpandedDataBlock::ClearProperty(nsCSSProperty aPropID)
             }
         } break;
 
-        case eCSSType_CounterData: {
-            nsCSSCounterData*& val =
-                *static_cast<nsCSSCounterData**>(prop);
-            if (val) {
-                delete val;
-                val = nsnull;
-            }
-        } break;
-
-        case eCSSType_Quotes: {
-            nsCSSQuotes*& val = *static_cast<nsCSSQuotes**>(prop);
+        case eCSSType_ValuePairList: {
+            nsCSSValuePairList*& val =
+              *static_cast<nsCSSValuePairList**>(prop);
             if (val) {
                 delete val;
                 val = nsnull;
@@ -993,14 +964,9 @@ nsCSSExpandedDataBlock::DoAssertInitialState()
                 NS_ASSERTION(val == nsnull, "not initial state");
             } break;
 
-            case eCSSType_CounterData: {
-                nsCSSCounterData* val =
-                    *static_cast<nsCSSCounterData**>(prop);
-                NS_ASSERTION(val == nsnull, "not initial state");
-            } break;
-
-            case eCSSType_Quotes: {
-                nsCSSQuotes* val = *static_cast<nsCSSQuotes**>(prop);
+            case eCSSType_ValuePairList: {
+                nsCSSValuePairList* val =
+                  *static_cast<nsCSSValuePairList**>(prop);
                 NS_ASSERTION(val == nsnull, "not initial state");
             } break;
         }

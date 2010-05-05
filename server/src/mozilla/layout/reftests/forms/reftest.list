@@ -1,3 +1,35 @@
+
+== checkbox-label-dynamic.html checkbox-label-dynamic-ref.html
+== checkbox-radio-stretched.html checkbox-radio-stretched-ref.html # bug 464589
+
 == input-file-width-clip-1.html input-file-width-clip-ref.html # bug 409587
+== input-hidden-border.html about:blank
 == input-text-size-1.html input-text-size-1-ref.html
 == input-text-size-2.html input-text-size-2-ref.html
+HTTP(..) == input-text-baseline-1.html input-text-baseline-1-ref.html
+HTTP(..) == input-text-centering-1.xul input-text-centering-1-ref.xul
+HTTP(..) == text-control-baseline-1.html text-control-baseline-1-ref.html
+== input-text-dynamic-height-1.xul input-text-dynamic-height-1-ref.xul
+== textbox-align-baseline-1.xul textbox-align-baseline-1-ref.xul # bug 494901
+
+== radio-label-dynamic.html radio-label-dynamic-ref.html
+== out-of-bounds-selectedindex.html out-of-bounds-selectedindex-ref.html # bug 471741
+!= indeterminate-checked.html indeterminate-checked-notref.html
+!= indeterminate-unchecked.html indeterminate-unchecked-notref.html
+!= indeterminate-native-checked.html indeterminate-native-checked-notref.html
+!= indeterminate-native-unchecked.html indeterminate-native-unchecked-notref.html
+== indeterminate-selector.html indeterminate-selector-ref.html
+
+!= checkbox-checked.html checkbox-checked-notref.html
+!= checkbox-checked-native.html checkbox-checked-native-notref.html
+!= radio-checked.html radio-checked-notref.html
+!= radio-checked-native.html radio-checked-native-notref.html
+
+!= checkbox-checked.html about:blank
+!= checkbox-checked-notref.html about:blank
+!= radio-checked.html about:blank
+!= radio-checked-notref.html about:blank
+!= checkbox-checked-native.html about:blank
+!= checkbox-checked-native-notref.html about:blank
+!= radio-checked-native.html about:blank
+!= radio-checked-native-notref.html about:blank

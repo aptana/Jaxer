@@ -51,6 +51,7 @@
 #include "nsITreeColumns.h"
 #include "nsIDOMXULTreeElement.h"
 #include "nsDisplayList.h"
+#include "nsTreeBodyFrame.h"
 
 //
 // NS_NewTreeColFrame
@@ -58,29 +59,12 @@
 // Creates a new col frame
 //
 nsIFrame*
-NS_NewTreeColFrame(nsIPresShell* aPresShell, nsStyleContext* aContext,
-                   PRBool aIsRoot, nsIBoxLayout* aLayoutManager)
+NS_NewTreeColFrame(nsIPresShell* aPresShell, nsStyleContext* aContext)
 {
-  return new (aPresShell) nsTreeColFrame(aPresShell, aContext, aIsRoot, aLayoutManager);
-} // NS_NewTreeColFrame
-
-NS_IMETHODIMP_(nsrefcnt) 
-nsTreeColFrame::AddRef(void)
-{
-  return NS_OK;
+  return new (aPresShell) nsTreeColFrame(aPresShell, aContext);
 }
 
-NS_IMETHODIMP_(nsrefcnt)
-nsTreeColFrame::Release(void)
-{
-  return NS_OK;
-}
-
-//
-// QueryInterface
-//
-NS_INTERFACE_MAP_BEGIN(nsTreeColFrame)
-NS_INTERFACE_MAP_END_INHERITING(nsBoxFrame)
+NS_IMPL_FRAMEARENA_HELPERS(nsTreeColFrame)
 
 // Destructor
 nsTreeColFrame::~nsTreeColFrame()
@@ -133,6 +117,13 @@ nsDisplayXULTreeColSplitterTarget::HitTest(nsDisplayListBuilder* aBuilder,
     right = PR_TRUE;
   else if (nsPresContext::CSSPixelsToAppUnits(4) > pt.x)
     left = PR_TRUE;
+
+  // Swap left and right for RTL trees in order to find the correct splitter
+  if (mFrame->GetStyleVisibility()->mDirection == NS_STYLE_DIRECTION_RTL) {
+    PRBool tmp = left;
+    left = right;
+    right = tmp;
+  }
 
   if (left || right) {
     // We are a header. Look for the correct splitter.
@@ -231,8 +222,7 @@ nsTreeColFrame::InvalidateColumns(PRBool aCanWalkFrameTree)
     if (aCanWalkFrameTree) {
       treeBoxObject->GetColumns(getter_AddRefs(columns));
     } else {
-      nsITreeBoxObject* body =
-        static_cast<nsTreeBoxObject*>(treeBoxObject)->GetCachedTreeBody();
+      nsTreeBodyFrame* body = static_cast<nsTreeBoxObject*>(treeBoxObject)->GetCachedTreeBody();
       if (body) {
         body->GetColumns(getter_AddRefs(columns));
       }

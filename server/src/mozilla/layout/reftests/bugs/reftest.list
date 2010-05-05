@@ -1,6 +1,8 @@
 # Please keep this list sorted by bug number (but feel free to use a
 # logical order for the tests for each bug).
 
+== 105-1.html 105-1-ref.html
+== 647-1.html 647-1-ref.html
 == 9458-basic-1.html 9458-basic-1-ref.html
 == 9458-valign-1.html 9458-valign-1-ref.html
 == 9458-valign-2.html 9458-valign-2-ref.html
@@ -15,6 +17,7 @@
 == 9458-zorder-3.html 9458-zorder-ref-inline.html
 == 9458-zorder-4.html 9458-zorder-ref-inline-block.html
 == 9458-zorder-5.html 9458-zorder-ref-inline-block.html
+== 10036-1.html 10036-1-ref.html
 == 18217-basic-1.html 18217-basic-1-ref.html
 == 18217-basic-2a.html 18217-basic-2-ref.html
 == 18217-basic-2b.html 18217-basic-2-ref.html
@@ -33,16 +36,14 @@
 == 23604-1.html 23604-1-ref.html
 == 23604-2.html 23604-2-ref.html
 != 24998-1.html 24998-1-ref.html
-fails == 25888-1l.html 25888-1l-ref.html # bug 25888
-fails != 25888-1l.html 25888-1l-notref.html # bug 25888
-fails == 25888-1r.html 25888-1r-ref.html # bug 25888
-fails != 25888-1r.html 25888-1r-notref.html # bug 25888
-fails == 25888-2l.html 25888-2l-ref.html # bug 25888
-fails == 25888-2r.html 25888-2r-ref.html # bug 25888
-fails == 25888-3l.html 25888-3l-ref.html # bug 25888
-fails == 25888-3r.html 25888-3r-ref.html # bug 25888
-== 271747-1a.html 271747-1-ref.html
-== 271747-1b.html 271747-1-ref.html
+== 25888-1l.html 25888-1l-ref.html
+!= 25888-1l.html 25888-1l-notref.html
+== 25888-1r.html 25888-1r-ref.html
+!= 25888-1r.html 25888-1r-notref.html
+== 25888-2l.html 25888-2l-ref.html
+== 25888-2r.html 25888-2r-ref.html
+== 25888-3l.html 25888-3l-ref.html
+== 25888-3r.html 25888-3r-ref.html
 == 28811-1a.html 28811-1-ref.html
 == 28811-1b.html 28811-1-ref.html
 == 28811-2a.html 28811-2-ref.html
@@ -57,6 +58,20 @@ fails == 25888-3r.html 25888-3r-ref.html # bug 25888
 != 40596-1h.html 40596-1-ref.html
 == 40596-1i.html 40596-1-ref.html
 != 40596-1j.html 40596-1-ref.html
+== 50630-1a.html 50630-1-ref.html
+== 50630-1b.html 50630-1-ref.html
+== 50630-1c.html 50630-1-ref.html
+== 50630-2.html 50630-2-ref.html
+== 50630-3.html 50630-3-ref.html
+== 50630-4.html 50630-4-ref.html
+== 50630-4.html 50630-4-ref2.html
+== 50630-5.html 50630-5-ref.html
+== 67752-1.html 67752-1-ref.html
+== 67752-2.html 67752-2-ref.html
+== 68061-1.xml 68061-1-ref.xml
+== 68061-2.xml 68061-2-ref.xml
+== 76331-1.html 76331-1-ref.html
+== 81947-1.html 81947-ref.html
 == 84400-1.html 84400-1-ref.html
 == 84400-2.html 84400-2-ref.html
 == 97777-1.html 97777-1-ref.html
@@ -64,10 +79,12 @@ fails == 25888-3r.html 25888-3r-ref.html # bug 25888
 == 98223-1.html 98223-1-ref.html
 == 98223-2.html 98223-2-ref.html
 == 99850-1a.html 99850-1-ref.html
-== 99850-1b.html 99850-1-ref.html
+random == 99850-1b.html 99850-1-ref.html # bug 471629
 == 99850-1c.html 99850-1-ref.html
 == 99850-1d.html 99850-1-ref.html
 == 105030-1.html 105030-1-ref.html
+== 109735-1.html 109735-1-ref.html
+== 116882-1.html 116882-1-ref.html
 == 120834-1a.html 120834-1-ref.html
 == 120834-2a.html 120834-2-ref.html
 == 120834-2b.html 120834-2-ref.html
@@ -112,21 +129,46 @@ fails == 25888-3r.html 25888-3r-ref.html # bug 25888
 == 163504-2b.html 163504-2-ref.html
 == 169749-1.html 169749-1-ref.html
 == 172073-1.html 172073-1-ref.html
+== 179596-1a.html 179596-1a-ref.html
+== 179596-1b.html 179596-1b-ref.html
+== 179596-2.html 179596-2-ref.html
+== 179596-2.html 179596-2-ref2.html
+== 179596-2.html 179596-2-ref3.html
 == 180085-1.html 180085-1-ref.html
 == 180085-2.html 180085-2-ref.html
 == 185388-1.html 185388-1-ref.html
+== 192902-1.html 192902-ref.html
+!= 200774-1.html about:blank # really a crashtest
 == 201215-1.html 201215-1-ref.html
 == 201293-1a.html 201293-1-ref.html
 == 201293-1b.html 201293-1-ref.html
 == 201293-1c.html 201293-1-ref.html
 == 201293-1d.html 201293-1-ref.html
+== 203727.html 203727-ref.html
 == 206516-1.html 206516-1-ref.html
+== 206631-1.html 206631-1-ref.html
+== 210094-1a.html 210094-1-ref.html
+== 210094-1b.html 210094-1-ref.html
+!= 210094-1c.html 210094-1-ref.html
 == 210876-1.html 210876-1-ref.html
+== 211931-1.html 211931-1-ref.html
 == 212563-1.html 212563-1-ref.html
+== 212563-2.html 212563-2-ref.html
+== 213834-1.html 213834-1-ref.html
 == 214077-1a.html 214077-1-ref.html
 == 214077-1b.html 214077-1-ref.html
 == 218473-1.html 218473-1-ref.html
+== 220165-1.svg 220165-1-ref.svg
+== 223809-1.html 223809-1-ref.html
+== 228856-1.html 228856-1-ref.html
+== 228856-2.html 228856-2-ref.html
 # == 231823-1.html 231823-1-ref.html
+== 232990-1a.xhtml 232990-1-ref.xhtml
+== 232990-1b.xhtml 232990-1-ref.xhtml
+== 233094-1.html 233094-1-ref.html
+== 233094-2a.html 233094-2-ref.html
+== 233094-2b.html 233094-2-ref.html
+== 233094-2c.html 233094-2-ref.html
 == 234686-1.html 234686-ref.html
 == 234686-2.html 234686-ref.html
 == 234686-3.html 234686-ref.html
@@ -150,24 +192,77 @@ fails == 25888-3r.html 25888-3r-ref.html # bug 25888
 == 234964-2.html 234964-2-ref.html
 == 235593-1.html 235593-1-ref.html
 == 236539-1.html 236539-1-ref.html
+== 240029-1.html 240029-1-ref.html
 == 240470-1.html 240470-1-ref.html
+skip-if(MOZ_WIDGET_TOOLKIT=="cocoa") != 240536-resizer-ltr.xul 240536-resizer-rtl.xul
 == 243266-1.html 243266-1-ref.html
 == 243302-1.html 243302-1-ref.html
+== 243519-1.html 243519-1-ref.html
+== 243519-2.html 243519-2-ref.html
+== 243519-3.html 243519-3-ref.html
+== 243519-4a.html 243519-4-ref.html
+== 243519-4b.html 243519-4-ref.html
+== 243519-4c.html 243519-4-ref.html
+== 243519-4d.html 243519-4-ref.html
+== 243519-4e.html 243519-4-ref.html
+== 243519-4f.html 243519-4-ref.html
+== 243519-5a.html 243519-5-ref.html
+== 243519-5b.html 243519-5-ref.html
+== 243519-5c.html 243519-5-ref.html
+== 243519-5d.html 243519-5-ref.html
+== 243519-6.html 243519-6-ref.html
+== 243519-7.html 243519-7-ref.html
+== 243519-8.svg 243519-8-ref.svg
+== 243519-9a.html 243519-9-ref.html
+== 243519-9b.html 243519-9-ref.html
+== 243519-9c.html 243519-9-ref.html
+== 243519-9d.html 243519-9-ref.html
+== 243519-9e.html 243519-9-ref.html
+== 243519-9f.html 243519-9-ref.html
 == 244135-1.html 244135-1-ref.html
 == 244135-2.html 244135-2-ref.html
 == 244932-1.html 244932-1-ref.html
+== 249141.xul 249141-ref.xul
 == 249982-1.html 249982-1-ref.html
+== 246669-1.html 246669-1-ref.html
+== 252920-1.html 252920-1-ref.html
 == 253701-1.html 253701-1-ref.html
 == 255820-1.html 255820-1-ref.html
+== 261826-1.xul 261826-1-ref.xul
 == 262151-1.html 262151-1-ref.html
+== 262998-1.html 262998-1-ref.html
 == 267353-1.html 267353-1-ref.html
+== 269908-1.html 269908-1-ref.html
+== 269908-2.html 269908-2-ref.html
+== 269908-3.html 269908-3-ref.html
+== 269908-4.html 269908-4-ref.html
+== 269908-5.html 269908-5-ref.html
+== 271747-1a.html 271747-1-ref.html
+== 271747-1b.html 271747-1-ref.html
+== 272646-1.xul 272646-1-ref.xul
+== 272646-2a.xul 272646-2-ref.xul
+== 272646-2b.xul 272646-2-ref.xul
+== 272646-2c.xul 272646-2-ref.xul
 == 273681-1.html 273681-1-ref.html
+== 278266-1a.html 278266-1-ref.html
+== 278266-1b.html 278266-1-ref.html
+== 280708-1a.html 280708-1-ref.html
+== 280708-1b.html 280708-1-ref.html
+== 283686-1.html about:blank
+== 283686-2.html 283686-2-ref.html
+== 283686-3.html about:blank
 fails-if(MOZ_WIDGET_TOOLKIT!="cocoa") HTTP == 289480.html#top 289480-ref.html # basically-verbatim acid2 test, HTTP for a 404 page -- bug 409329 for the non-Mac failures
 == 290129-1.html 290129-1-ref.html
 == 291078-1.html 291078-1-ref.html
 == 291078-2.html 291078-2-ref.html
 == 291262-1.html 291262-1-ref.html
+== 294306-1.html 294306-1a-ref.html
+!= 294306-1.html 294306-1b-ref.html
 == 296904-1.html 296904-1-ref.html
+== 299136-1.html 299136-1-ref.html
+== 299837-1.html 299837-1-ref.html
+== 299837-2.xul 299837-2-ref.xul
+== 299837-3.xul 299837-3-ref.xul
 == 300691-1a.html 300691-1-ref.html
 == 300691-1b.html 300691-1-ref.html
 == 300691-1c.html 300691-1-ref.html
@@ -176,16 +271,20 @@ fails-if(MOZ_WIDGET_TOOLKIT!="cocoa") HTTP == 289480.html#top 289480-ref.html # 
 == 300691-1f.html 300691-1-ref.html
 == 301726-1.html 301726-1-ref.html
 != 301726-2.html 301726-2-ref.html
+== 302379.html 302379-ref.html
 == 306630-1.html 306630-1-ref.html
 == 306660-1.html 306660-1-ref.html
 == 306660-2.html 306660-2-ref.html
 == 306660-3.html 306660-3-ref.html
+== 307076-1.html 307076-1-ref.html
 == 307102-1.html 307102-1-ref.html
 == 307102-2.html 307102-2-ref.html
 == 307102-3.html 307102-3-ref.html
 == 307102-4.html 307102-4-ref.html
 == 308406-1.html 308406-1-ref.html
 == 308406-2.html 308406-2-ref.html
+== 309550-1.html 309550-1-ref.html
+== 309914-1.xul 309914-1-ref.xul
 == 311366-unknown-inline-1.html 311366-unknown-inline-1-ref.html
 == 311366-unknown-block-1.html 311366-unknown-block-1-ref.html
 != 311366-unknown-block-3.html 311366-unknown-block-3-ref.html
@@ -260,6 +359,7 @@ fails == 315920-5.html 315920-5-ref.html # bug 229915 ???
 == 321402-4.xul 321402-4-ref.xul
 == 321402-5.xul 321402-5-ref.xul
 == 321402-6.xul 321402-6-ref.xul
+== 321738-1.html 321738-1-ref.html
 == 322436-1.html 322436-1-ref.html
 == 322461-1.xml 322461-1-ref.html
 == 323656-1.html 323656-1-ref.html
@@ -268,9 +368,12 @@ fails == 315920-5.html 315920-5-ref.html # bug 229915 ???
 == 323656-4.html 323656-4-ref.html
 == 323656-5.svg 323656-5-ref.svg
 == 323656-6.html 323656-6-ref.html
+== 325292-1.html 325292-1-ref.html
 == 325486-1.html 325486-1-ref.html
+== 328111-1.html 328111-1-ref.html
 random == 328829-1.xhtml 328829-1-ref.xhtml # bug 369046 (intermittent)
 == 328829-2.xhtml 328829-2-ref.xhtml
+== 329359-1.html 329359-1-ref.html
 == 331809-1.html 331809-1-ref.html
 == 332360.html 332360-ref.html
 == 332360-ltr.html 332360-ltr-ref.html
@@ -286,8 +389,6 @@ random-if(MOZ_WIDGET_TOOLKIT=="gtk2") == 333970-1.html 333970-1-ref.html # bug 3
 == 336096-1.xul 336096-1-ref.xul
 == 336147-1.html 336147-1-ref.html
 == 336153-1.html 336153-1-ref.html
-== 336736-1a.html 336736-1-ref.html
-== 336736-1b.html 336736-1-ref.html
 != 338251-p.html about:blank
 == 338251-p-oh.html 338251-p-oh-ref.html
 != 338251-pre.html about:blank
@@ -295,17 +396,19 @@ random-if(MOZ_WIDGET_TOOLKIT=="gtk2") == 333970-1.html 333970-1-ref.html # bug 3
 == 339289-1.html 339289-1-ref.html
 == 341043-1a.html 341043-1-ref.html
 != 341043-1b.html 341043-1-ref.html
+== 343538-1.html 343538-1-ref.html
 == 343540-1.html 343540-1-ref.html
 == 345267-1a.html 345267-1-ref.html
 == 345267-1b.html 345267-1-ref.html
 == 345267-1c.html 345267-1-ref.html
 == 345267-1d.html 345267-1-ref.html
-!= 345563-sub.xhtml 345563-sup.xhtml 
+!= 345563-sub.xhtml 345563-sup.xhtml
+== 346189-1.xul 346189-1-ref.xul
 == 346774-1a.html 346774-1-ref.html
 == 346774-1b.html 346774-1-ref.html
 == 346774-1c.html 346774-1-ref.html
 == 347348-1.xhtml 347348-1-ref.xhtml
-skip-if(MOZ_WIDGET_TOOLKIT=="windows") == 347496-1.xhtml 347496-1-ref.xhtml # Bug 409150
+== 347496-1.xhtml 347496-1-ref.xhtml
 == 347912-1.html 347912-1-ref.html
 == 348049-1.xhtml 348049-1-ref.xhtml
 == 348516-1.html 348516-1-ref.html
@@ -328,6 +431,8 @@ skip-if(MOZ_WIDGET_TOOLKIT=="windows") == 347496-1.xhtml 347496-1-ref.xhtml # Bu
 == 348809-2h.html 348809-2-ref.html
 == 349695-1a.html 349695-1-ref.html
 == 349695-1b.html 349695-1-ref.html
+# fails with CoreText rendering due to clipping of one subpixel-antialiasing pixel at end of text
+random-if(MOZ_WIDGET_TOOLKIT=="cocoa") == 350506-1.html 350506-1-ref.html
 == 351641-1a.html 351641-1-ref.html
 == 351641-1b.html 351641-1-ref.html
 == 351641-2a.html 351641-2-ref.html
@@ -361,6 +466,8 @@ skip-if(MOZ_WIDGET_TOOLKIT=="windows") == 347496-1.xhtml 347496-1-ref.xhtml # Bu
 == 355548-3.xml 355548-3-ref.xml
 == 355548-4.xml 355548-4-ref.xml
 == 355548-5.xml 355548-5-ref.xml
+fails-if(MOZ_WIDGET_TOOLKIT=="cocoa") == 356774-1.html 356774-1-ref.html # probably bug 379317
+== 356775-1.html 356775-1-ref.html
 == 359903-1.html 359903-1-ref.html
 == 359869-1.html 359869-1-ref.html
 == 359903-2.html 359903-2-ref.html
@@ -378,11 +485,16 @@ skip-if(MOZ_WIDGET_TOOLKIT=="windows") == 347496-1.xhtml 347496-1-ref.xhtml # Bu
 == 362594-2b.html 362594-2-standards-ref.html
 == 362594-2c.html 362594-2-standards-ref.html
 == 362901-1.html 362901-1-ref.html
+== 363247-1.html 363247-1-ref.html
 == 363329-1.html 363329-1-ref.html
 == 363329-2.html 363329-2-ref.html
 == 363370-1.html 363370-1-ref.html
 == 363402-1.html 363402-1-ref.html
 == 363637-1.html 363637-1-ref.html
+== 363706-1.html 363706-1-ref.html
+!= 363706-1.html about:blank
+== 363728-1.html 363728-1-ref.html
+== 363728-2.html 363728-2-ref.html
 == 363858-1.html 363858-1-ref.html
 == 363858-2.html 363858-2-ref.html
 == 363858-3.html 363858-3-ref.html
@@ -398,8 +510,10 @@ skip-if(MOZ_WIDGET_TOOLKIT=="windows") == 347496-1.xhtml 347496-1-ref.xhtml # Bu
 == 364079-1.html 364079-1-ref.html
 == 364861-1.html 364861-1-ref.html
 == 364862-1.html 364862-1-ref.html
+== 364968-1.xul 364968-1-ref.html
+== 364989-1.html 364989-1-ref.html
 == 365173-1.html 365173-1-ref.html
-== 366207-1.xul 366207-1-ref.xul 
+== 366207-1.xul 366207-1-ref.xul
 == 366616-1.xul 366616-1-ref.xul
 == 367220-1.html 367220-1-ref.html
 == 367247-s-visible.html 367247-s-hidden.html
@@ -446,8 +560,9 @@ random-if(MOZ_WIDGET_TOOLKIT=="gtk2") == 368020-5.html 368020-5-ref.html # bug 3
 == 368504-5.html 368504-5-ref.html
 == 368504-6.html 368504-6-ref.html
 == 368622-1.html 368622-1-ref.html
-== 368622-1.html 368622-1-ref.html
 == 368651-1.html 368651-1-ref.html
+== 369361-1.html 369361-1-ref.html
+== 369361-2.html 369361-2-ref.html
 == 369975-1.html 369975-1.html
 == 369882.xul 369882-ref.xul
 == 370353-1.html 370353-1-ref.html
@@ -455,7 +570,6 @@ random-if(MOZ_WIDGET_TOOLKIT=="gtk2") == 368020-5.html 368020-5-ref.html # bug 3
 == 370525-1.html 370525-1-ref.html
 != 370525-1.html 370525-1-notref.html
 == 370525-2.html 370525-2-ref.html
-!= 370525-2.html 370525-2-notref.html
 != 370525-2.html 370525-2-notref.html
 == 370525-rowspan-1a.html 370525-rowspan-1a-ref.html
 == 370525-rowspan-1b.html 370525-rowspan-1b-ref.html
@@ -471,25 +585,31 @@ random-if(MOZ_WIDGET_TOOLKIT=="gtk2") == 368020-5.html 368020-5-ref.html # bug 3
 == 370692-1.xhtml 370692-1-ref.xhtml
 == 371041-1.html 371041-1-ref.html
 == 371043-1.html 371043-1-ref.html
-== 371483-1.html about:blank # assertion test 
+== 371354-1.html 371354-1-ref.html
+== 371483-1.html about:blank # assertion test
+== 371561-1.html 371561-1-ref.html
 != 371681-1.xhtml about:blank
 == 371925-1a.html 371925-1-ref.html
 == 371925-1b.html 371925-1-ref.html
 == 372037-1.html 372037-1-ref.html
+== 372063-1.html 372063-1-ref.html
 == 372323-1.xhtml 372323-1-ref.xhtml
 == 372553-1.html 372553-1-ref.html
 == 372632-1.html 372632-1-ref.html
 == 373295-1.html 373295-1-ref.html
 == 373298-1.html 373298-1-ref.html
 == 373381-1.html 373381-1-ref.html
+== 373381-2.html 373381-2-ref.html
+== 373381-3.html 373381-3-ref.html
+== 373381-4.html 373381-4-ref.html
 == 375508-1.html 375508-1-ref.html
 == 373433-1.html 373433-1-ref.html
 == 372062-1.html 372062-1-ref.html
 == 372768-1.html 372768-1-ref.html
 == 373383-1.html 373383-1-ref.html
 == 374038-1.xul 374038-1-ref.xul
+== 374719-1.xul 374719-1-ref.xul
 == 374038-2.xul 374038-2-ref.xul
-== 374193-1.xhtml about:blank
 fails == 374927-1.html 374927-1-ref.html # Was broken by patch for bug 368600; fails until bug 400776 is fixed
 == 375716-1.html 375716-1-ref.html
 == 375827-1.html 375827-1-ref.html
@@ -528,7 +648,7 @@ random-if(MOZ_WIDGET_TOOLKIT=="cocoa") == 379316-2.html 379316-2-ref.html # bug 
 == 381130-1.html 381130-1-ref.html
 == 381507-1.html 381507-1-ref.html
 == 382600-1.html 382600-1-ref.html
-== 382916-1.html 382916-1-ref.html 
+== 382916-1.html 382916-1-ref.html
 == 383551-1.html 383551-1-ref.html
 == 383883-1.html 383883-1-ref.html
 == 383883-2.html 383883-2-ref.html
@@ -544,10 +664,10 @@ random-if(MOZ_WIDGET_TOOLKIT=="cocoa") == 379316-2.html 379316-2-ref.html # bug 
 == 385569-1a.html 385569-1-ref.html
 == 385569-1b.html 385569-1-ref.html
 == 385607-1.html 385607-1-ref.html
-== 385823-1.html 385823-1-ref.html 
-== 385823-2a.html 385823-2-ref.html 
-fails == 385823-2b.html 385823-2-ref.html 
-== 385823-2c.html 385823-2-ref.html 
+== 385823-1.html 385823-1-ref.html
+== 385823-2a.html 385823-2-ref.html
+fails == 385823-2b.html 385823-2-ref.html
+== 385823-2c.html 385823-2-ref.html
 == 385870-1.html 385870-1-ref.html
 == 385870-2.html 385870-2-ref.html
 == 386014-1a.html 386014-1-ref.html
@@ -555,11 +675,11 @@ fails == 385823-2b.html 385823-2-ref.html
 == 386014-1c.html 386014-1-ref.html
 == 386065-1.html 386065-1-ref.html
 == 386065-2.html about:blank
-== 386147-1.html 386147-1-ref.html
+fails == 386147-1.html 386147-1-ref.html # bug 447460
 == 386310-1a.html 386310-1-ref.html
-fails == 386310-1b.html 386310-1-ref.html
+== 386310-1b.html 386310-1-ref.html
 == 386310-1c.html 386310-1-ref.html
-fails == 386310-1d.html 386310-1-ref.html
+== 386310-1d.html 386310-1-ref.html
 == 386401-1.html 386401-1-ref.html
 == 386401-2.html 386401-2-ref.html
 == 386401-3.html 386401-3-ref.html
@@ -570,15 +690,19 @@ fails == 386310-1d.html 386310-1-ref.html
 == 387201-1.html 387201-1-ref.html
 == 387201-2.html about:blank  # Really an assertion test rather than a rendering test
 == 387201-3.html about:blank  # Really an assertion test rather than a rendering test
+== 387227-1.html 387227-1-ref.html
+== 387227-2.html 387227-2-ref.html
 == 387344-1.html 387344-1-ref.html
 == 387876-1.html 387876-1-ref.html
-== 387876-2.html 387876-2-ref.html
+random == 387876-2.html 387876-2-ref.html # bug 471630
 == 387876-3a.html 387876-3-ref.html
 == 387876-3b.html 387876-3-ref.html
 == 388026-1.html 388026-1-ref.html
 == 388367-1.html about:blank
 == 388980-1.html 388980-1-ref.html
+== 389074-1.html 389074-1-ref.html
 == 389468-1.html 389468-1-ref.html
+== 389623-1.html 389623-1-ref.html
 == 389636-1.html about:blank  # assertion test
 == 389924-1a.html 389924-1-ref.html
 == 389924-1b.html 389924-1-ref.html
@@ -592,6 +716,7 @@ skip-if(MOZ_WIDGET_TOOLKIT!="windows") == 391045.html 391045-ref.html # windows-
 == 391909-1.html 391909-1-ref.html
 == 391979.html 391979-ref.html
 == 391994-1.html 391994-1-ref.html
+== 392047.html 392047-ref.html
 == 392435-1.html 392435-1-ref.html
 == 393330-1.html 393330-1-ref.html
 == 393490-1.html 393490-1-ref.html
@@ -618,12 +743,14 @@ skip-if(MOZ_WIDGET_TOOLKIT!="windows") == 391045.html 391045-ref.html # windows-
 == 395130-1.html 395130-1-ref.html
 == 395130-2.html 395130-2-ref.html
 == 395331-1.xml 395331-1-ref.xml
+== 395390-1.html 395390-1-ref.html
 == 396286-1.html about:blank  # crash test
 == 397428-1.html 397428-1-ref.html
 == 397844-1.xhtml 397844-1-ref.xhtml
 == 398092-1.html 398092-1-ref.html
 == 398101-1.html 398101-1-ref.html
 == 398144-1.html 398144-1-ref.html
+== 398682-1.html 398682-1-ref.html
 == 398797-1a.html 398797-1-ref.html
 == 398797-1b.html 398797-1-ref.html
 == 398797-1c.html 398797-1-ref.html
@@ -632,6 +759,12 @@ skip-if(MOZ_WIDGET_TOOLKIT!="windows") == 391045.html 391045-ref.html # windows-
 == 399209-2.html 399209-2-ref.html
 == 399258-1.html 399258-1-ref.html
 == 399384-1.html 399384-1-ref.html
+random-if(MOZ_WIDGET_TOOLKIT=="gtk2") == 399636-standards-css.html 399636-standards-ref.html # bug 429022
+random-if(MOZ_WIDGET_TOOLKIT=="gtk2") == 399636-standards-html.html 399636-standards-ref.html # bug 429022
+random-if(MOZ_WIDGET_TOOLKIT=="gtk2") == 399636-quirks-css.html 399636-quirks-ref.html # bug 429022
+# We can't rely on this test working on platforms other than Windows and
+# Mac because they need not have a font called "Symbol".
+fails-if(MOZ_WIDGET_TOOLKIT=="windows") fails-if(MOZ_WIDGET_TOOLKIT=="cocoa") random-if(MOZ_WIDGET_TOOLKIT!="cocoa"&&MOZ_WIDGET_TOOLKIT!="windows") != 399636-quirks-html.html 399636-quirks-ref.html # windows failure bug 429017, mac failure bug 429019
 == 400081-1.html about:blank
 == 400171-1a.html 400171-1-ref.html
 == 400171-1b.html 400171-1-ref.html
@@ -686,7 +819,8 @@ random == 403134-1.html 403134-1-ref.html # bug 405377
 != 404030-1-notref2.html 404030-1.html
 == 404123-1.html 404123-1-ref.html
 == 404123-2.html 404123-2-ref.html
-== 404123-3.html 404123-3-ref.html
+!= 404123-3.html 404123-3-ref.html
+HTTP(..) == 404149-1.xul 404149-1-ref.xul # HTTP for fonts directory access
 == 404180-1.html 404180-1-ref.html
 == 404301-1.html 404301-1-ref.html
 == 404309-1a.html 404309-1-ref.html
@@ -702,12 +836,10 @@ random == 403134-1.html 403134-1-ref.html # bug 405377
 == 405577-1.html 405577-1-ref.html
 == 405584-1.html 405584-1-ref.html
 # == 405952-1.html 405952-1-ref.html
-== 406073-1.html 406073-1-ref.html
 == 406484-1.html 406484-1-ref.html
 == 406568-1.html 406568-1-ref.html
 == 407016-1-a.html 407016-1-ref.html
 == 407016-1-b.html 407016-1-ref.html
-== 407016-2.html 407016-2-ref.html
 == 407078-1.html 407078-1-ref.html
 == 407095-1.html 407095-1-ref.html
 == 407111-1.html 407111-1-ref.html
@@ -716,20 +848,28 @@ random == 403134-1.html 403134-1-ref.html # bug 405377
 == 407937-1.html 407937-1-ref.html
 == 408493-1.html about:blank
 == 408493-2.html 408493-2-ref.html
-== 408656-1a.html 408656-1-ref.html 
+== 408656-1a.html 408656-1-ref.html
 == 408656-1b.html 408656-1-ref.html
 == 408656-1c.html 408656-1-ref.html
 == 408782-1a.html 408782-1-ref.html
 == 408782-1b.html 408782-1-ref.html
 == 408782-2a.html 408782-2-ref.html
 == 408782-2b.html 408782-2-ref.html
+== 409089-1.html 409089-1-ref.html
+== 409089-2.html 409089-2-ref.html
+== 409089-3.html 409089-3-ref.html
 == 409084-1a.html 409084-1-ref.html
 == 409084-1b.html 409084-1-ref.html
 == 409659-1a.html 409659-1-ref.html
 != 409659-1b.html 409659-1-ref.html
 != 409659-1c.html 409659-1-ref.html
 == 409659-1d.html 409659-1-ref.html
+== 410621-1.html 410621-1-ref.html
+== 411059-1.html 411059-1-ref.html
 == 411334-1.xml 411334-1-ref.xml
+== 411367-1.html 411367-1-ref.html
+== 411367-2.html 411367-2-ref.html
+== 411367-3.html 411367-3-ref.html
 == 411585-1.html 411585-1-ref.html
 == 411585-2.html 411585-2-ref.html
 fails == 411585-3.html 411585-3-ref.html # bug 426909
@@ -741,21 +881,20 @@ fails == 411585-3.html 411585-3-ref.html # bug 426909
 == 412607-1b.html 412607-1-ref.html
 == 412679-1.html 412679-1-ref.html
 == 412679-2.html 412679-2-ref.html
-fails == 413027-1.html 413027-1-ref.html
+== 413027-1.html 413027-1-ref.html
 fails == 413027-2.html 413027-2-ref.html
 fails == 413027-3.html 413027-3-ref.html
-== 413027-4.html 413027-4-ref.html
 == 413286-1a.html 413286-1-ref.html
 == 413286-1b.html 413286-1-ref.html
 == 413286-1c.html 413286-1-ref.html
 == 413286-2a.html 413286-2-ref.html
 == 413286-2b.html 413286-2-ref.html
 == 413286-2c.html 413286-2-ref.html
-== 413286-3.html 413286-3-ref.html 
-== 413286-4a.html 413286-4-ref.html 
-== 413286-4b.html 413286-4-ref.html 
-== 413286-5.html 413286-5-ref.html 
-== 413286-6.html 413286-6-ref.html 
+== 413286-3.html 413286-3-ref.html
+== 413286-4a.html 413286-4-ref.html
+== 413286-4b.html 413286-4-ref.html
+== 413286-5.html 413286-5-ref.html
+== 413286-6.html 413286-6-ref.html
 skip-if(MOZ_WIDGET_TOOLKIT=="cocoa") == 413292-1.html 413292-1-ref.html # disabling due to failure loading on some mac tinderboxes. See bug 432954
 == 413361-1.html 413361-1-ref.html
 == 413840-background-unchanged.html 413840-background-unchanged-ref.html
@@ -771,18 +910,31 @@ skip-if(MOZ_WIDGET_TOOLKIT=="cocoa") == 413292-1.html 413292-1-ref.html # disabl
 == 417178-1.html 417178-1-ref.html
 == 417246-1.html 417246-1-ref.html
 == 417676.html 417676-ref.html
+== 418574-1.html 418574-1-ref.html
+== 418574-2.html 418574-2-ref.html
 == 418766-1a.html 418766-1-ref.html
 == 418766-1b.html 418766-1-ref.html
+== 419285-1.html 419285-1-ref.html
 == 419060.html 419060-ref.html
 == 419531-1.html 419531-1-ref.html
 == 420069-1.html 420069-1-ref.html
 == 420069-2.html 420069-2-ref.html
 == 420351-1.html 420351-1-ref.html
+== 420790-1.xhtml 420790-1-ref.xhtml
 == 421069.html 421069-ref.html
 == 421069.html 421069-ref2.html
 == 421069-ref.html 421069-ref2.html
+== 421203-1.xul 421203-1-ref.html
+== 421203-2.xul 421203-1-ref.html
+== 421203-3.xul 321402-3-ref.xul
+== 421203-4.xul 321402-4-ref.xul
+== 421203-5.xul 321402-5-ref.xul
+== 421203-6.xul 321402-6-ref.xul
 == 421234-1.html 421234-1-ref.html
 == 421419-1.html 421419-1-ref.html
+== 421436-1a.html 421436-1-ref.html
+== 421436-1b.html 421436-1-ref.html
+== 421632-1.html 421632-1-ref.html
 != 421710-1.html about:blank     # assertion test (and crash test)
 == 421885-1.xml 421885-1-ref.xml
 == 421955-1.html 421955-1-ref.html
@@ -793,16 +945,30 @@ skip-if(MOZ_WIDGET_TOOLKIT=="cocoa") == 413292-1.html 413292-1-ref.html # disabl
 == 423385-1.html 423385-1-ref.html
 == 423599-1.html 423599-1-ref.html
 == 423676-1.html 423676-1-ref.html
+== 423823-1.html 423823-1-ref.html
 == 424074-1.xul 424074-1-ref.xul
 != 424074-1.xul 424074-1-ref2.xul
 fails-if(MOZ_WIDGET_TOOLKIT=="gtk2") == 424074-1-ref2.xul 424074-1-ref3.xul
+== 424236-1.html 424236-1-ref.html
+== 424236-2.html 424236-2-ref.html
+== 424236-3.html 424236-3-ref.html
+== 424236-4.html 424236-4-ref.html
+== 424236-5.html 424236-5-ref.html
+== 424236-6.html 424236-6-ref.html
+== 424236-7.html 424236-7-ref.html
+== 424236-8.html 424236-8-ref.html
+== 424236-9.html 424236-9-ref.html
 == 424236-10.html 424236-10-ref.html
+== 424236-11.html 424236-3-ref.html
 == 424434-1.html 424434-1-ref.html
+== 424465-1.html 424465-1-ref.html
 == 424631-1.html 424631-1-ref.html
 == 424710-1.html 424710-1-ref.html
+== 424766-1.html 424766-1-ref.html
 == 425972-1.html 425972-1-ref.html
 == 425972-2.html 425972-2-ref.html
 != 425972-1.html 425972-2.html
+== 426629-1.html 426629-1-ref.html
 != 427017-1.xhtml about:blank    # crash test (needs reftest-print)
 == 427129-scrollframe.html 427129-ref.html
 == 427129-table.html 427129-ref.html
@@ -810,13 +976,364 @@ fails-if(MOZ_WIDGET_TOOLKIT=="gtk2") == 424074-1-ref2.xul 424074-1-ref3.xul
 == 427129-table-caption.html 427129-table-caption-ref.html
 == 427370-1.html 427370-1-ref.html
 == 427730-1.html 427730-1-ref.html
+== 428278.html 428278-ref.html
 == 428423-1a.html 428423-1-ref.html
 == 428423-1b.html 428423-1-ref.html
 == 428521-1a.html 428521-1-ref.html
 == 428521-1b.html 428521-1-ref.html
 == 428521-1c.html 428521-1-ref.html
-== 429849-1.html 429849-1-ref.html
+== 428810-1a-ltr.html 428810-1-ltr-ref.html
+== 428810-1b-ltr.html 428810-1-ltr-ref.html
+== 428810-1c-ltr.html 428810-empty-ltr-ref.html
+fails == 428810-1d-ltr.html 428810-empty-ltr-ref.html # bug 179596
+!= 428810-1-ltr-ref.html about:blank
+== 428810-2a-ltr.html 428810-2-ltr-ref.html
+== 428810-2b-ltr.html 428810-2-ltr-ref.html
+fails == 428810-2e-ltr.html 428810-empty-ltr-ref.html # bug 179596
+== 428810-2f-ltr.html 428810-empty-ltr-ref.html
+!= 428810-2-ltr-ref.html about:blank
+== 428810-3a-ltr.html 428810-3-ltr-ref.html
+== 428810-3b-ltr.html 428810-3-ltr-ref.html
+fails == 428810-3e-ltr.html 428810-empty-ltr-ref.html # bug 179596
+== 428810-3f-ltr.html 428810-empty-ltr-ref.html
+!= 428810-3-ltr-ref.html about:blank
+== 428810-1a-rtl.html 428810-1-rtl-ref.html
+== 428810-1b-rtl.html 428810-1-rtl-ref.html
+== 428810-1c-rtl.html 428810-empty-rtl-ref.html
+fails == 428810-1d-rtl.html 428810-empty-rtl-ref.html # bug 179596
+!= 428810-1-rtl-ref.html about:blank
+!= 428810-1-rtl-ref.html 428810-1-ltr-ref.html
+== 428810-2a-rtl.html 428810-2-rtl-ref.html
+== 428810-2b-rtl.html 428810-2-rtl-ref.html
+fails == 428810-2e-rtl.html 428810-empty-rtl-ref.html # bug 179596
+== 428810-2f-rtl.html 428810-empty-rtl-ref.html
+!= 428810-2-rtl-ref.html about:blank
+!= 428810-2-rtl-ref.html 428810-2-ltr-ref.html
+== 428810-3a-rtl.html 428810-3-rtl-ref.html
+== 428810-3b-rtl.html 428810-3-rtl-ref.html
+fails == 428810-3e-rtl.html 428810-empty-rtl-ref.html # bug 179596
+== 428810-3f-rtl.html 428810-empty-rtl-ref.html
+!= 428810-3-rtl-ref.html about:blank
+!= 428810-3-rtl-ref.html 428810-3-ltr-ref.html
+== 428810-1a-ltr-insets.html 428810-1-ltr-insets-ref.html
+== 428810-1b-ltr-insets.html 428810-1-ltr-insets-ref.html
+== 428810-1c-ltr-insets.html 428810-empty-ltr-insets-ref.html
+fails == 428810-1d-ltr-insets.html 428810-empty-ltr-insets-ref.html # bug 179596
+!= 428810-1-ltr-insets-ref.html about:blank
+== 428810-2a-ltr-insets.html 428810-2-ltr-insets-ref.html
+== 428810-2b-ltr-insets.html 428810-2-ltr-insets-ref.html
+fails == 428810-2e-ltr-insets.html 428810-empty-ltr-insets-ref.html # bug 179596
+== 428810-2f-ltr-insets.html 428810-empty-ltr-insets-ref.html
+!= 428810-2-ltr-insets-ref.html about:blank
+== 428810-3a-ltr-insets.html 428810-3-ltr-insets-ref.html
+== 428810-3b-ltr-insets.html 428810-3-ltr-insets-ref.html
+fails == 428810-3e-ltr-insets.html 428810-empty-ltr-insets-ref.html # bug 179596
+== 428810-3f-ltr-insets.html 428810-empty-ltr-insets-ref.html
+!= 428810-3-ltr-insets-ref.html about:blank
+== 428810-1a-rtl-insets.html 428810-1-rtl-insets-ref.html
+== 428810-1b-rtl-insets.html 428810-1-rtl-insets-ref.html
+== 428810-1c-rtl-insets.html 428810-empty-rtl-insets-ref.html
+fails == 428810-1d-rtl-insets.html 428810-empty-rtl-insets-ref.html # bug 179596
+!= 428810-1-rtl-insets-ref.html about:blank
+!= 428810-1-rtl-insets-ref.html 428810-1-ltr-insets-ref.html
+== 428810-2a-rtl-insets.html 428810-2-rtl-insets-ref.html
+== 428810-2b-rtl-insets.html 428810-2-rtl-insets-ref.html
+fails == 428810-2e-rtl-insets.html 428810-empty-rtl-insets-ref.html # bug 179596
+== 428810-2f-rtl-insets.html 428810-empty-rtl-insets-ref.html
+!= 428810-2-rtl-insets-ref.html about:blank
+!= 428810-2-rtl-insets-ref.html 428810-2-ltr-insets-ref.html
+== 428810-3a-rtl-insets.html 428810-3-rtl-insets-ref.html
+== 428810-3b-rtl-insets.html 428810-3-rtl-insets-ref.html
+fails == 428810-3e-rtl-insets.html 428810-empty-rtl-insets-ref.html # bug 179596
+== 428810-3f-rtl-insets.html 428810-empty-rtl-insets-ref.html
+!= 428810-3-rtl-insets-ref.html about:blank
+!= 428810-3-rtl-insets-ref.html 428810-3-ltr-insets-ref.html
 == 430412-1.html 430412-1-ref.html
 == 430813-1.html 430813-1-ref.html
 == 430813-2.html 430813-2-ref.html
 == 430813-3.html 430813-3-ref.html
+== 431341-1.html 431341-1-ref.html
+== 431341-2.html 431341-2-ref.html
+== 431520-1.html 431520-1-ref.html
+== 431948-1.html 431948-1-ref.html
+== 438537-1.html 438537-1-ref.html
+== 440112.html 440112-ref.html
+== 433640-1.html 433640-1-ref.html
+== 433700.html 433700-ref.html
+== 436356-1.html 436356-1-ref.html
+== 436356-2.html 436356-2-ref.html
+== 438981-1.xhtml about:blank
+== 438987-1.html 438987-1-ref.html
+== 438987-2a.html 438987-2-ref.html
+== 438987-2b.html 438987-2-ref.html
+== 438987-2c.html 438987-2-ref.html
+!= about:blank 438987-2-ref.html # check that backgrounds work at all
+== 439004-1.html 439004-1-ref.html
+== 439639-1.html 439639-1-ref.html
+== 439910.html 439910-ref.html
+== 440149-1.html 440149-1-ref.html
+== 441259-1.html 441259-1-ref.html
+fails == 441259-2.html 441259-2-ref.html # bug 441400
+== 442542-1.html 442542-1-ref.html
+== 444015-1.html 444015-1-ref.html
+== 444375-1.html 444375-1-ref.html
+== 444928-1.html 444928-1-ref.html
+== 444928-2.html 444928-2-ref.html
+!= 444928-3.html 444928-3-notref.html
+random == 445004-1.html 445004-1-ref.html # bug 472268
+== 445142-1a.html 445142-1-ref.html
+== 445142-1b.html 445142-1-ref.html
+== 445142-1c.html 445142-1-ref.html
+== 445142-2a.html 445142-2-ref.html
+== 445142-2b.html 445142-2-ref.html
+== 446100-1a.html about:blank
+== 446100-1b.html about:blank
+== 446100-1c.html about:blank
+== 446100-1d.html about:blank
+== 446100-1e.html about:blank
+== 446100-1f.html about:blank
+== 446100-1g.html about:blank
+== 446100-1h.html about:blank
+# == 448193.html 448193-ref.html  # Fails due to 2 small single-pixel differences
+# == 448987.html 448987-ref.html  # Disabled for now - it needs privileges
+!= 449149-1a.html about:blank
+!= 449149-1b.html about:blank
+== 449149-2.html 449149-2-ref.html
+== 449171-1.html 449171-ref.html
+== 449362-1.html 449362-1-ref.html
+== 449519-1.html 449519-1-ref.html
+# == 449653-1.html 449653-1-ref.html # Disabled for now - it needs privileges
+== 450670-1.html 450670-1-ref.html
+== 451168-1.html 451168-1-ref.html
+== 451876-1.html 451876-1-ref.html
+== 451876-2.html 451876-2-ref.html
+== 452964-1.html 452964-1-ref.html
+== 454361.html about:blank
+== 455105-1.html 455105-ref.html
+== 455105-2.html 455105-ref.html
+== 455171-5.html 455171-5-ref.html
+== 455280-1.xhtml 455280-1-ref.xhtml
+== 455826-1.html 455826-1-ref.html
+fails-if(MOZ_WIDGET_TOOLKIT=="cocoa") == 456147.xul 456147-ref.html # bug 458047
+== 456219-1a.html 456219-1-ref.html
+== 456219-1b.html 456219-1-ref.html
+== 456219-1c.html 456219-1-ref.html
+== 456219-2.html 456219-2-ref.html
+== 456330-1.gif 456330-1-ref.png
+== 456484-1.html 456484-1-ref.html
+== 457398-1.html 457398-1-ref.html
+== 457398-2.html 457398-2-ref.html
+== 458296-1a.html 458296-1-ref.html
+== 458296-1b.html 458296-1-ref.html
+== 458296-1c.html 458296-1-ref.html
+== 458296-1d.html 458296-1-ref.html
+== 458487-1a.html 458487-1-ref.html
+== 458487-1b.html 458487-1-ref.html
+== 458487-1c.html 458487-1-ref.html
+== 458487-1d.html 458487-1-ref.html
+== 458487-1e.html 458487-1-ref.html
+== 458487-1f.html 458487-1-ref.html
+== 458487-1g.html 458487-1-ref.html
+== 458487-1h.html 458487-1-ref.html
+== 458487-2.html 458487-2-ref.html
+== 458487-3.html 458487-3-ref.html
+== 458487-4a.html 458487-4-ref.html
+== 458487-4b.html 458487-4-ref.html
+== 458487-4c.html 458487-4-ref.html
+== 458487-5a.html 458487-5-ref.html
+== 458487-5b.html 458487-5-ref.html
+== 459443-1.html 459443-1-ref.html
+== 459613-1.html 459613-1-ref.html
+== 460012-1.html 460012-1-ref.html
+== 461266-1.html 461266-1-ref.html
+fails == 461512-1.html 461512-1-ref.html # Bug 461512
+== 462844-1.html 462844-ref.html
+== 462844-2.html 462844-ref.html
+== 462844-3.html 462844-ref.html
+== 462844-4.html 462844-ref.html
+== 463204-1.html 463204-1-ref.html
+== 463217-1.xul 463217-1-ref.xul
+== 463952-1.html 463952-1-ref.html
+== 464811-1.html 464811-1-ref.html
+== 466258-1.html 466258-1-ref.html
+== 466395-1.html 466395-1-ref.html
+== 466395-2.html 466395-2-ref.html
+== 467084-1.html 467084-1-ref.html
+== 467084-2.html 467084-2-ref.html
+== 467460-1.html 467460-1-ref.html
+== 468546-1.xhtml 468546-1-ref.xhtml
+== 468473-1.xul 468473-1-ref.xul
+== 471356-1.html 471356-1-ref.html
+== 471594-1.xhtml 471594-1-ref.html
+== 472020-1a.xul 472020-1-ref.xul
+fails == 472020-1b.xul 472020-1-ref.xul
+fails == 472020-2.xul 472020-2-ref.xul
+== 472500-1.xul 472500-1-ref.xul
+== 472769-1a.html 472769-1-ref.html
+== 472769-1b.html 472769-1-ref.html
+== 472769-2.html 472769-2-ref.html
+== 472769-3.html 472769-3-ref.html
+== 473847-1.xul 473847-1-ref.xul
+== 474336-1.xul 474336-1-ref.xul
+== 474417-1.html 474417-1-ref.html
+== 474472-1.html 474472-1-ref.html
+== 475986-1a.html 475986-1-ref.html
+== 475986-1b.html 475986-1-ref.html
+== 475986-1c.html 475986-1-ref.html
+== 475986-1d.html 475986-1-ref.html
+== 475986-1e.html 475986-1-ref.html
+== 475986-1f.html 475986-1-ref.html
+== 475986-2a.html 475986-2-ref.html
+== 475986-2b.html 475986-2-ref.html
+== 475986-2c.html 475986-2-ref.html
+== 475986-2d.html 475986-2-ref.html
+== 475986-2e.html 475986-2-ref.html
+== 475986-2f.html 475986-2-ref.html
+== 475986-3a.html 475986-3-ref.html
+== 475986-3b.html 475986-3-ref.html
+== 475986-4.html 475986-4-ref.html
+!= 475986-1-ref.html 475986-2-ref.html
+!= 475986-1-ref.html 475986-3-ref.html
+!= 475986-2-ref.html 475986-3-ref.html
+== 476063-1.html 476063-1-ref.html
+== 476063-2.html 476063-2-ref.html
+!= 476063-3.html 476063-3-ref.html
+== 476063-4.xhtml 476063-4-ref.xhtml
+== 476357-1.html 476357-1-ref.html
+== 476598-1a.html 476598-1-ref.html
+== 476598-1a.html 476598-1-ref2.html
+== 476598-1b.html 476598-1-ref.html
+== 476598-1b.html 476598-1-ref2.html
+!= 476598-1-ref.html about:blank
+== 476856-1.html 476856-1-ref.html
+== 478614-1.html 478614-1-ref.html
+== 478614-2.html 478614-1-ref.html
+== 478614-3.html 478614-3-ref.html
+== 478614-4.html 478614-4-ref.html
+== 478614-5.html 478614-5-ref.html
+== 478614-6.html 478614-6-ref.html
+== 478614-7.html 478614-7-ref.html
+== 478377-1.xul 478377-1-ref.xul
+== 478811-1.html 478811-1-ref.html
+== 478811-2.html 478811-2-ref.html
+== 478811-3.html 478811-3-ref.html
+== 478811-4.html 478811-4-ref.html
+== 478956-1a.html 478956-1-ref.html
+== 478956-1b.html 478956-1-ref.html
+== 480017-1.html 480017-1-ref.html
+== 480880-1a.html 480880-1-ref.html
+== 480880-1b.html 480880-1-ref.html
+== 480880-1c.html 480880-1-ref.html
+== 480880-1d.html 480880-1-ref.html
+== 480880-1e.html 480880-1-ref.html
+== 480880-2a.html about:blank
+== 480880-2b.html about:blank
+== 480880-2c.html about:blank
+== 481024-1a.html 481024-1-ref.html
+== 481024-1b.html 481024-1-ref.html
+== 481024-1c.html 481024-1-ref.html
+== 481024-1d.html 481024-1-ref.html
+== 481024-1e.html 481024-1-ref.html
+!= 481948-1.html 481948-1-ref.html
+!= 481948-2.html 481948-2-ref.html
+fails-if(MOZ_WIDGET_TOOLKIT=="gtk2") == 481948-3.html 481948-3-ref.html # different behavior on Linux, see bug 488364
+== 482398-1.html 482398-1-ref.html
+== 482592-1a.xhtml 482592-1-ref.html
+== 482592-1b.xhtml 482592-1-ref.html
+== 482659-1a.html 482659-1-ref.html
+== 482659-1b.html 482659-1-ref.html
+== 482659-1c.html 482659-1-ref.html
+== 482659-1d.html 482659-1-ref.html
+== 483565.xul 483565-ref.xul
+== 485012-1.html 485012-1-ref.html
+== 485275-1.html 485275-1-ref.html
+== 485275-1.svg 485275-1-ref.html
+== 486052-1.html 486052-1-ref.html
+== 486052-2a.html 486052-2-ref.html
+== 486052-2b.html 486052-2-ref.html
+== 486052-2c.html 486052-2-ref.html
+== 486052-2d.html 486052-2-ref.html
+== 486052-2e.html 486052-2-ref.html
+== 486052-2f.html 486052-2-ref.html
+== 486052-2g.html 486052-2-ref.html
+== 486065-1.html 486065-1-ref.html
+== 486848-1.xul 486848-1-ref.xul
+== 487539-1.html about:blank
+== 488390-1.html 488390-1-ref.html
+== 488649-1.html 488649-1-ref.html
+== 488685-1.html 488685-1-ref.html
+fails-if(MOZ_WIDGET_TOOLKIT!="cocoa") == 488692-1.html 488692-1-ref.html # needs EXTEND_PAD on non-Mac for correct scaling behaviour
+== 490182-1a.html 490182-1-ref.html
+== 490182-1b.html 490182-1-ref.html
+== 490173-1.html 490173-1-ref.html
+== 490173-2.html 490173-2-ref.html
+== 491180-1.html 491180-1-ref.html
+== 491180-2.html 491180-2-ref.html
+== 491323-1.xul 491323-1-ref.xul
+== 492661-1.html 492661-1-ref.html
+== 493968-1.html 493968-1-ref.html
+== 494667-1.html 494667-1-ref.html
+== 494667-2.html 494667-2-ref.html
+== 495274-1.html 495274-1-ref.html
+== 495385-1a.html 495385-1-ref.html
+== 495385-1b.html 495385-1-ref.html
+== 495385-1c.html 495385-1-ref.html
+== 495385-1d.html 495385-1-ref.html
+== 495385-1e.html 495385-1-ref.html
+== 495385-1f.html 495385-1-ref.html
+== 495385-2a.html 495385-2-ref.html
+== 495385-2b.html 495385-2-ref.html
+== 495385-2c.html 495385-2-ref.html
+== 495385-2d.html 495385-2-ref.html
+== 495385-2e.html 495385-2-ref.html
+== 495385-2f.xhtml 495385-2-ref.html
+== 495385-2g.html 495385-2-ref.html
+== 495385-2h.html 495385-2-ref.html
+== 495385-2i.html 495385-2-ref.html
+== 495385-3.html 495385-3-ref.html
+== 495385-4.html 495385-4-ref.html
+== 495385-5.html 495385-5-ref.html
+== 498228-1.xul 498228-1-ref.xul
+== 496032-1.html 496032-1-ref.html
+== 501257-1a.html 501257-1-ref.html
+== 501257-1b.html 501257-1-ref.html
+== 501257-1.xhtml 501257-1-ref.xhtml
+== 501627-1.html 501627-1-ref.html
+== 502288-1.html 502288-1-ref.html
+== 502942-1.html 502942-1-ref.html
+== 502447-1.html 502447-1-ref.html
+== 502795-1.html 502795-1-ref.html
+== 503364-1a.html 503364-1-ref.html
+== 503364-1b.html 503364-1-ref.html
+== 504032-1.html 504032-1-ref.html
+== 505743-1.html about:blank
+== 507187-1.html 507187-1-ref.html
+== 507487-1.html 507487-1-ref.html
+== 507487-2.xhtml 507487-2-ref.xhtml
+== 508908-1.xul 508908-1-ref.xul
+== 508919-1.xhtml 508919-1-ref.xhtml
+== 509155-1.xhtml 509155-1-ref.xhtml
+== 512631-1.html 512631-1-ref.html
+== 513318-1.xul 513318-1-ref.xul
+!= 513318-2.xul 513318-2-ref.xul
+!= 513318-3.xul 513318-3-ref.xul
+== 521525-1.html 521525-1-ref.html
+== 521525-2.html 521525-2-ref.html
+== 521539-1.html 521539-1-ref.html
+== 526463-1.html 526463-1-ref.html
+== 527464-1.html 527464-ref.html
+== 528038-1a.html 528038-1-ref.html
+== 528038-1b.html 528038-1-ref.html
+== 528038-1c.html 528038-1-ref.html
+== 528038-1d.html 528038-1-ref.html
+== 528038-1e.html 528038-1-ref.html
+== 528038-1f.html 528038-1-ref.html
+== 528038-2.html 528038-2-ref.html
+== 530686-1.html 530686-1-ref.html
+== 531371-1.html 531371-1-ref.html
+== 534808-1.html 534808-1-ref.html
+== 534808-2.html 534808-2-ref.html
+== 534919-1.html 534919-1-ref.html
+== 541406-1.html 541406-1-ref.html
+== 537471-1.html 537471-1-ref.html
+== 542620-1.html 542620-1-ref.html

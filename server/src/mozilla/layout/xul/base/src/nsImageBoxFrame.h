@@ -59,8 +59,7 @@ public:
   NS_IMETHOD OnStopDecode(imgIRequest *request, nsresult status,
                           const PRUnichar *statusArg);
   // imgIContainerObserver (override nsStubImageDecoderObserver)
-  NS_IMETHOD FrameChanged(imgIContainer *container, gfxIImageFrame *newframe,
-                          nsRect * dirtyRect);
+  NS_IMETHOD FrameChanged(imgIContainer *container, nsIntRect *dirtyRect);
 
   void SetFrame(nsImageBoxFrame *frame) { mFrame = frame; }
 
@@ -71,6 +70,7 @@ private:
 class nsImageBoxFrame : public nsLeafBoxFrame
 {
 public:
+  NS_DECL_FRAMEARENA_HELPERS
 
   // nsIBox
   virtual nsSize GetPrefSize(nsBoxLayoutState& aBoxLayoutState);
@@ -90,7 +90,7 @@ public:
                               nsIAtom* aAttribute,
                               PRInt32 aModType);
 
-  NS_IMETHOD DidSetStyleContext();
+  virtual void DidSetStyleContext(nsStyleContext* aOldStyleContext);
 
   virtual void Destroy();
 
@@ -121,9 +121,7 @@ public:
   NS_IMETHOD OnStopDecode(imgIRequest *request,
                           nsresult status,
                           const PRUnichar *statusArg);
-  NS_IMETHOD FrameChanged(imgIContainer *container,
-                          gfxIImageFrame *newframe,
-                          nsRect * dirtyRect);
+  NS_IMETHOD FrameChanged(imgIContainer *container, nsIntRect *dirtyRect);
 
   virtual ~nsImageBoxFrame();
 
@@ -138,18 +136,17 @@ protected:
 
 private:
 
+  nsRect mSubRect; ///< If set, indicates that only the portion of the image specified by the rect should be used.
+  nsSize mIntrinsicSize;
+  nsSize mImageSize;
+
   nsCOMPtr<imgIRequest> mImageRequest;
   nsCOMPtr<imgIDecoderObserver> mListener;
 
-  PRPackedBool mUseSrcAttr; ///< Whether or not the image src comes from an attribute.
-  PRPackedBool mSuppressStyleCheck;
-  
-  nsRect mSubRect; ///< If set, indicates that only the portion of the image specified by the rect should be used.
-
-  nsSize mIntrinsicSize;
   PRInt32 mLoadFlags;
 
-  nsSize mImageSize;
+  PRPackedBool mUseSrcAttr; ///< Whether or not the image src comes from an attribute.
+  PRPackedBool mSuppressStyleCheck;
 }; // class nsImageBoxFrame
 
 #endif /* nsImageBoxFrame_h___ */

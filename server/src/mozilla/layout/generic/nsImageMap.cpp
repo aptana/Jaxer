@@ -79,9 +79,8 @@ public:
   virtual void ParseCoords(const nsAString& aSpec);
 
   virtual PRBool IsInside(nscoord x, nscoord y) const = 0;
-  virtual void Draw(nsPresContext* aCX,
-                    nsIRenderingContext& aRC) = 0;
-  virtual void GetRect(nsPresContext* aCX, nsRect& aRect) = 0;
+  virtual void Draw(nsIFrame* aFrame, nsIRenderingContext& aRC) = 0;
+  virtual void GetRect(nsIFrame* aFrame, nsRect& aRect) = 0;
 
   void HasFocus(PRBool aHasFocus);
 
@@ -162,165 +161,161 @@ static void logMessage(nsIContent*      aContent,
      "ImageMap");
 }
 
-// XXX straight copy from laymap.c
-static nscoord* lo_parse_coord_list(char *str, PRInt32* value_cnt)
-{
-  char *tptr;
-  char *n_str;
-  PRInt32 i, cnt;
-  PRInt32 *value_list;
-
-  /*
-   * Nothing in an empty list
-   */
-  *value_cnt = 0;
-  if (!str || *str == '\0')
-  {
-    return nsnull;
-  }
-
-  /*
-   * Skip beginning whitespace, all whitespace is empty list.
-   */
-  n_str = str;
-  while (is_space(*n_str))
-  {
-    n_str++;
-  }
-  if (*n_str == '\0')
-  {
-    return nsnull;
-  }
-
-  /*
-   * Make a pass where any two numbers separated by just whitespace
-   * are given a comma separator.  Count entries while passing.
-   */
-  cnt = 0;
-  while (*n_str != '\0')
-  {
-    PRBool has_comma;
-
-    /*
-     * Skip to a separator
-     */
-    tptr = n_str;
-    while (!is_space(*tptr) && *tptr != ',' && *tptr != '\0')
-    {
-      tptr++;
-    }
-    n_str = tptr;
-
-    /*
-     * If no more entries, break out here
-     */
-    if (*n_str == '\0')
-    {
-      break;
-    }
-
-    /*
-     * Skip to the end of the separator, noting if we have a
-     * comma.
-     */
-    has_comma = PR_FALSE;
-    while (is_space(*tptr) || *tptr == ',')
-    {
-      if (*tptr == ',')
-      {
-        if (has_comma == PR_FALSE)
-        {
-          has_comma = PR_TRUE;
-        }
-        else
-        {
-          break;
-        }
-      }
-      tptr++;
-    }
-    /*
-     * If this was trailing whitespace we skipped, we are done.
-     */
-    if ((*tptr == '\0')&&(has_comma == PR_FALSE))
-    {
-      break;
-    }
-    /*
-     * Else if the separator is all whitespace, and this is not the
-     * end of the string, add a comma to the separator.
-     */
-    else if (has_comma == PR_FALSE)
-    {
-      *n_str = ',';
-    }
-
-    /*
-     * count the entry skipped.
-     */
-    cnt++;
-
-    n_str = tptr;
-  }
-  /*
-   * count the last entry in the list.
-   */
-  cnt++;
- 
-  /*
-   * Allocate space for the coordinate array.
-   */
-  value_list = new nscoord[cnt];
-  if (!value_list)
-  {
-    return nsnull;
-  }
-
-  /*
-   * Second pass to copy integer values into list.
-   */
-  tptr = str;
-  for (i=0; i<cnt; i++)
-  {
-    char *ptr;
-
-    ptr = strchr(tptr, ',');
-    if (ptr)
-    {
-      *ptr = '\0';
-    }
-    /*
-     * Strip whitespace in front of number because I don't
-     * trust atoi to do it on all platforms.
-     */
-    while (is_space(*tptr))
-    {
-      tptr++;
-    }
-    if (*tptr == '\0')
-    {
-      value_list[i] = 0;
-    }
-    else
-    {
-      value_list[i] = (nscoord) ::atoi(tptr);
-    }
-    if (ptr)
-    {
-      *ptr = ',';
-      tptr = ptr + 1;
-    }
-  }
-
-  *value_cnt = cnt;
-  return value_list;
-}
-
 void Area::ParseCoords(const nsAString& aSpec)
 {
   char* cp = ToNewCString(aSpec);
   if (cp) {
-    mCoords = lo_parse_coord_list(cp, &mNumCoords);
+    char *tptr;
+    char *n_str;
+    PRInt32 i, cnt;
+    PRInt32 *value_list;
+
+    /*
+     * Nothing in an empty list
+     */
+    mNumCoords = 0;
+    mCoords = nsnull;
+    if (*cp == '\0')
+    {
+      return;
+    }
+
+    /*
+     * Skip beginning whitespace, all whitespace is empty list.
+     */
+    n_str = cp;
+    while (is_space(*n_str))
+    {
+      n_str++;
+    }
+    if (*n_str == '\0')
+    {
+      return;
+    }
+
+    /*
+     * Make a pass where any two numbers separated by just whitespace
+     * are given a comma separator.  Count entries while passing.
+     */
+    cnt = 0;
+    while (*n_str != '\0')
+    {
+      PRBool has_comma;
+
+      /*
+       * Skip to a separator
+       */
+      tptr = n_str;
+      while (!is_space(*tptr) && *tptr != ',' && *tptr != '\0')
+      {
+        tptr++;
+      }
+      n_str = tptr;
+
+      /*
+       * If no more entries, break out here
+       */
+      if (*n_str == '\0')
+      {
+        break;
+      }
+
+      /*
+       * Skip to the end of the separator, noting if we have a
+       * comma.
+       */
+      has_comma = PR_FALSE;
+      while (is_space(*tptr) || *tptr == ',')
+      {
+        if (*tptr == ',')
+        {
+          if (has_comma == PR_FALSE)
+          {
+            has_comma = PR_TRUE;
+          }
+          else
+          {
+            break;
+          }
+        }
+        tptr++;
+      }
+      /*
+       * If this was trailing whitespace we skipped, we are done.
+       */
+      if ((*tptr == '\0')&&(has_comma == PR_FALSE))
+      {
+        break;
+      }
+      /*
+       * Else if the separator is all whitespace, and this is not the
+       * end of the string, add a comma to the separator.
+       */
+      else if (has_comma == PR_FALSE)
+      {
+        *n_str = ',';
+      }
+
+      /*
+       * count the entry skipped.
+       */
+      cnt++;
+
+      n_str = tptr;
+    }
+    /*
+     * count the last entry in the list.
+     */
+    cnt++;
+ 
+    /*
+     * Allocate space for the coordinate array.
+     */
+    value_list = new nscoord[cnt];
+    if (!value_list)
+    {
+      return;
+    }
+
+    /*
+     * Second pass to copy integer values into list.
+     */
+    tptr = cp;
+    for (i=0; i<cnt; i++)
+    {
+      char *ptr;
+
+      ptr = strchr(tptr, ',');
+      if (ptr)
+      {
+        *ptr = '\0';
+      }
+      /*
+       * Strip whitespace in front of number because I don't
+       * trust atoi to do it on all platforms.
+       */
+      while (is_space(*tptr))
+      {
+        tptr++;
+      }
+      if (*tptr == '\0')
+      {
+        value_list[i] = 0;
+      }
+      else
+      {
+        value_list[i] = (nscoord) ::atoi(tptr);
+      }
+      if (ptr)
+      {
+        *ptr = ',';
+        tptr = ptr + 1;
+      }
+    }
+
+    mNumCoords = cnt;
+    mCoords = value_list;
+  
     NS_Free(cp);
   }
 }
@@ -337,9 +332,8 @@ public:
   DefaultArea(nsIContent* aArea);
 
   virtual PRBool IsInside(nscoord x, nscoord y) const;
-  virtual void Draw(nsPresContext* aCX,
-                    nsIRenderingContext& aRC);
-  virtual void GetRect(nsPresContext* aCX, nsRect& aRect);
+  virtual void Draw(nsIFrame* aFrame, nsIRenderingContext& aRC);
+  virtual void GetRect(nsIFrame* aFrame, nsRect& aRect);
 };
 
 DefaultArea::DefaultArea(nsIContent* aArea)
@@ -352,12 +346,28 @@ PRBool DefaultArea::IsInside(nscoord x, nscoord y) const
   return PR_TRUE;
 }
 
-void DefaultArea::Draw(nsPresContext* aCX, nsIRenderingContext& aRC)
+void DefaultArea::Draw(nsIFrame* aFrame, nsIRenderingContext& aRC)
 {
+  if (mHasFocus) {
+    nsRect r = aFrame->GetRect();
+    r.MoveTo(0, 0);
+    nscoord x1 = r.x;
+    nscoord y1 = r.y;
+    const nscoord kOnePixel = nsPresContext::CSSPixelsToAppUnits(1);
+    nscoord x2 = r.XMost() - kOnePixel;
+    nscoord y2 = r.YMost() - kOnePixel;
+    // XXX aRC.DrawRect(r) result is ugly, that's why we use DrawLine.
+    aRC.DrawLine(x1, y1, x1, y2);
+    aRC.DrawLine(x1, y2, x2, y2);
+    aRC.DrawLine(x1, y1, x2, y1);
+    aRC.DrawLine(x2, y1, x2, y2);
+  }
 }
 
-void DefaultArea::GetRect(nsPresContext* aCX, nsRect& aRect)
+void DefaultArea::GetRect(nsIFrame* aFrame, nsRect& aRect)
 {
+  aRect = aFrame->GetRect();
+  aRect.MoveTo(0, 0);
 }
 
 //----------------------------------------------------------------------
@@ -368,9 +378,8 @@ public:
 
   virtual void ParseCoords(const nsAString& aSpec);
   virtual PRBool IsInside(nscoord x, nscoord y) const;
-  virtual void Draw(nsPresContext* aCX,
-                    nsIRenderingContext& aRC);
-  virtual void GetRect(nsPresContext* aCX, nsRect& aRect);
+  virtual void Draw(nsIFrame* aFrame, nsIRenderingContext& aRC);
+  virtual void GetRect(nsIFrame* aFrame, nsRect& aRect);
 };
 
 RectArea::RectArea(nsIContent* aArea)
@@ -431,7 +440,7 @@ PRBool RectArea::IsInside(nscoord x, nscoord y) const
   return PR_FALSE;
 }
 
-void RectArea::Draw(nsPresContext* aCX, nsIRenderingContext& aRC)
+void RectArea::Draw(nsIFrame* aFrame, nsIRenderingContext& aRC)
 {
   if (mHasFocus) {
     if (mNumCoords >= 4) {
@@ -449,7 +458,7 @@ void RectArea::Draw(nsPresContext* aCX, nsIRenderingContext& aRC)
   }
 }
 
-void RectArea::GetRect(nsPresContext* aCX, nsRect& aRect)
+void RectArea::GetRect(nsIFrame* aFrame, nsRect& aRect)
 {
   if (mNumCoords >= 4) {
     nscoord x1 = nsPresContext::CSSPixelsToAppUnits(mCoords[0]);
@@ -471,9 +480,8 @@ public:
 
   virtual void ParseCoords(const nsAString& aSpec);
   virtual PRBool IsInside(nscoord x, nscoord y) const;
-  virtual void Draw(nsPresContext* aCX,
-                    nsIRenderingContext& aRC);
-  virtual void GetRect(nsPresContext* aCX, nsRect& aRect);
+  virtual void Draw(nsIFrame* aFrame, nsIRenderingContext& aRC);
+  virtual void GetRect(nsIFrame* aFrame, nsRect& aRect);
 };
 
 PolyArea::PolyArea(nsIContent* aArea)
@@ -562,7 +570,7 @@ PRBool PolyArea::IsInside(nscoord x, nscoord y) const
   return PR_FALSE;
 }
 
-void PolyArea::Draw(nsPresContext* aCX, nsIRenderingContext& aRC)
+void PolyArea::Draw(nsIFrame* aFrame, nsIRenderingContext& aRC)
 {
   if (mHasFocus) {
     if (mNumCoords >= 6) {
@@ -583,7 +591,7 @@ void PolyArea::Draw(nsPresContext* aCX, nsIRenderingContext& aRC)
   }
 }
 
-void PolyArea::GetRect(nsPresContext* aCX, nsRect& aRect)
+void PolyArea::GetRect(nsIFrame* aFrame, nsRect& aRect)
 {
   if (mNumCoords >= 6) {
     nscoord x1, x2, y1, y2, xtmp, ytmp;
@@ -610,9 +618,8 @@ public:
 
   virtual void ParseCoords(const nsAString& aSpec);
   virtual PRBool IsInside(nscoord x, nscoord y) const;
-  virtual void Draw(nsPresContext* aCX,
-                    nsIRenderingContext& aRC);
-  virtual void GetRect(nsPresContext* aCX, nsRect& aRect);
+  virtual void Draw(nsIFrame* aFrame, nsIRenderingContext& aRC);
+  virtual void GetRect(nsIFrame* aFrame, nsRect& aRect);
 };
 
 CircleArea::CircleArea(nsIContent* aArea)
@@ -670,7 +677,7 @@ PRBool CircleArea::IsInside(nscoord x, nscoord y) const
   return PR_FALSE;
 }
 
-void CircleArea::Draw(nsPresContext* aCX, nsIRenderingContext& aRC)
+void CircleArea::Draw(nsIFrame* aFrame, nsIRenderingContext& aRC)
 {
   if (mHasFocus) {
     if (mNumCoords >= 3) {
@@ -688,7 +695,7 @@ void CircleArea::Draw(nsPresContext* aCX, nsIRenderingContext& aRC)
   }
 }
 
-void CircleArea::GetRect(nsPresContext* aCX, nsRect& aRect)
+void CircleArea::GetRect(nsIFrame* aFrame, nsRect& aRect)
 {
   if (mNumCoords >= 3) {
     nscoord x1 = nsPresContext::CSSPixelsToAppUnits(mCoords[0]);
@@ -714,7 +721,7 @@ nsImageMap::nsImageMap() :
 
 nsImageMap::~nsImageMap()
 {
-  NS_ASSERTION(mAreas.Count() == 0, "Destroy was not called");
+  NS_ASSERTION(mAreas.Length() == 0, "Destroy was not called");
 }
 
 NS_IMPL_ISUPPORTS4(nsImageMap,
@@ -728,12 +735,21 @@ nsImageMap::GetBoundsForAreaContent(nsIContent *aContent,
                                    nsPresContext* aPresContext, 
                                    nsRect& aBounds)
 {
+  NS_ENSURE_TRUE(aContent && aPresContext, NS_ERROR_INVALID_ARG);
+
   // Find the Area struct associated with this content node, and return bounds
-  PRInt32 i, n = mAreas.Count();
+  PRUint32 i, n = mAreas.Length();
   for (i = 0; i < n; i++) {
-    Area* area = (Area*) mAreas.ElementAt(i);
+    Area* area = mAreas.ElementAt(i);
     if (area->mArea == aContent) {
-      area->GetRect(aPresContext, aBounds);
+      aBounds = nsRect();
+      nsIPresShell* shell = aPresContext->PresShell();
+      if (shell) {
+        nsIFrame* frame = shell->GetPrimaryFrameFor(aContent);
+        if (frame) {
+          area->GetRect(frame, aBounds);
+        }
+      }
       return NS_OK;
     }
   }
@@ -745,9 +761,9 @@ nsImageMap::FreeAreas()
 {
   nsFrameManager *frameManager = mPresShell->FrameManager();
 
-  PRInt32 i, n = mAreas.Count();
+  PRUint32 i, n = mAreas.Length();
   for (i = 0; i < n; i++) {
-    Area* area = (Area*) mAreas.ElementAt(i);
+    Area* area = mAreas.ElementAt(i);
     frameManager->RemoveAsPrimaryFrame(area->mArea, mImageFrame);
 
     nsCOMPtr<nsIContent> areaContent;
@@ -877,6 +893,11 @@ nsImageMap::AddArea(nsIContent* aArea)
   //Add focus listener to track area focus changes
   aArea->AddEventListenerByIID(this, NS_GET_IID(nsIDOMFocusListener));
 
+  // This is a nasty hack.  It needs to go away: see bug 135040.  Once this is
+  // removed, the code added to nsCSSFrameConstructor::RestyleElement,
+  // nsCSSFrameConstructor::ContentRemoved (both hacks there), and
+  // nsCSSFrameConstructor::ProcessRestyledFrames to work around this issue can
+  // be removed.
   mPresShell->FrameManager()->SetPrimaryFrameFor(aArea, mImageFrame);
   aArea->SetMayHaveFrame(PR_TRUE);
   NS_ASSERTION(aArea->MayHaveFrame(), "SetMayHaveFrame failed?");
@@ -891,9 +912,9 @@ nsImageMap::IsInside(nscoord aX, nscoord aY,
                      nsIContent** aContent) const
 {
   NS_ASSERTION(mMap, "Not initialized");
-  PRInt32 i, n = mAreas.Count();
+  PRUint32 i, n = mAreas.Length();
   for (i = 0; i < n; i++) {
-    Area* area = (Area*) mAreas.ElementAt(i);
+    Area* area = mAreas.ElementAt(i);
     if (area->IsInside(aX, aY)) {
       area->GetArea(aContent);
 
@@ -905,12 +926,12 @@ nsImageMap::IsInside(nscoord aX, nscoord aY,
 }
 
 void
-nsImageMap::Draw(nsPresContext* aCX, nsIRenderingContext& aRC)
+nsImageMap::Draw(nsIFrame* aFrame, nsIRenderingContext& aRC)
 {
-  PRInt32 i, n = mAreas.Count();
+  PRUint32 i, n = mAreas.Length();
   for (i = 0; i < n; i++) {
-    Area* area = (Area*) mAreas.ElementAt(i);
-    area->Draw(aCX, aRC);
+    Area* area = mAreas.ElementAt(i);
+    area->Draw(aFrame, aRC);
   }
 }
 
@@ -983,39 +1004,36 @@ nsImageMap::Blur(nsIDOMEvent* aEvent)
 }
 
 nsresult
-nsImageMap::ChangeFocus(nsIDOMEvent* aEvent, PRBool aFocus) {
+nsImageMap::ChangeFocus(nsIDOMEvent* aEvent, PRBool aFocus)
+{
   //Set which one of our areas changed focus
   nsCOMPtr<nsIDOMEventTarget> target;
   if (NS_SUCCEEDED(aEvent->GetTarget(getter_AddRefs(target))) && target) {
     nsCOMPtr<nsIContent> targetContent(do_QueryInterface(target));
     if (targetContent) {
-      PRInt32 i, n = mAreas.Count();
+      PRUint32 i, n = mAreas.Length();
       for (i = 0; i < n; i++) {
-        Area* area = (Area*) mAreas.ElementAt(i);
+        Area* area = mAreas.ElementAt(i);
         nsCOMPtr<nsIContent> areaContent;
         area->GetArea(getter_AddRefs(areaContent));
-        if (areaContent) {
-          if (areaContent.get() == targetContent.get()) {
-            //Set or Remove internal focus
-            area->HasFocus(aFocus);
-            //Now invalidate the rect
-            nsCOMPtr<nsIDocument> doc = targetContent->GetDocument();
-            //This check is necessary to see if we're still attached to the doc
-            if (doc) {
-              nsIPresShell *presShell = doc->GetPrimaryShell();
-              if (presShell) {
-                nsIFrame* imgFrame = presShell->GetPrimaryFrameFor(targetContent);
-                if (imgFrame) {
-                  nsPresContext *presContext = presShell->GetPresContext();
-                  if (presContext) {
-                    nsRect dmgRect;
-                    area->GetRect(presContext, dmgRect);
-                    imgFrame->Invalidate(dmgRect, PR_TRUE);
-                  }
-                }
+        if (areaContent.get() == targetContent.get()) {
+          //Set or Remove internal focus
+          area->HasFocus(aFocus);
+          //Now invalidate the rect
+          nsCOMPtr<nsIDocument> doc = targetContent->GetDocument();
+          //This check is necessary to see if we're still attached to the doc
+          if (doc) {
+            nsIPresShell *presShell = doc->GetPrimaryShell();
+            if (presShell) {
+              nsIFrame* imgFrame = presShell->GetPrimaryFrameFor(targetContent);
+              if (imgFrame) {
+                nsRect dmgRect;
+                area->GetRect(imgFrame, dmgRect);
+                imgFrame->Invalidate(dmgRect);
               }
             }
           }
+          break;
         }
       }
     }

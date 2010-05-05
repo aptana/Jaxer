@@ -42,7 +42,7 @@
 
 #include "nsISupports.h"
 #include "nsCoord.h"
-#include "nsVoidArray.h"
+#include "nsTArray.h"
 #include "nsStubMutationObserver.h"
 #include "nsIDOMFocusListener.h"
 #include "nsIFrame.h"
@@ -55,6 +55,7 @@ class nsIRenderingContext;
 class nsIURI;
 class nsString;
 class nsIDOMEvent;
+class Area;
 
 class nsImageMap : public nsStubMutationObserver, public nsIDOMFocusListener,
                    public nsIImageMap
@@ -73,7 +74,7 @@ public:
   PRBool IsInside(nscoord aX, nscoord aY,
                   nsIContent** aContent) const;
 
-  void Draw(nsPresContext* aCX, nsIRenderingContext& aRC);
+  void Draw(nsIFrame* aFrame, nsIRenderingContext& aRC);
   
   /** 
    * Called just before the nsImageFrame releases us. 
@@ -118,7 +119,7 @@ protected:
   nsIPresShell* mPresShell; // WEAK - owns the frame that owns us
   nsIFrame* mImageFrame;  // the frame that owns us
   nsCOMPtr<nsIContent> mMap;
-  nsAutoVoidArray mAreas; // almost always has some entries
+  nsAutoTArray<Area*, 8> mAreas; // almost always has some entries
   PRBool mContainsBlockContents;
 };
 

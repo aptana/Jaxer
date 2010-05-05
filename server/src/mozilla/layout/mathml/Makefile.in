@@ -37,15 +37,112 @@
 #
 # ***** END LICENSE BLOCK *****
 
-DEPTH = ../..
+DEPTH=../..
 topsrcdir	= @top_srcdir@
 srcdir		= @srcdir@
 VPATH		= @srcdir@
 
 include $(DEPTH)/config/autoconf.mk
 
-DIRS = content base
+MODULE = layout
+LIBRARY_NAME = gkmathml_s
+LIBXUL_LIBRARY	= 1
+
+REQUIRES	= xpcom \
+		  string \
+		  dom \
+		  content \
+		  gfx \
+		  thebes \
+		  widget \
+		  view \
+		  webshell \
+		  locale \
+		  unicharutil \
+		  necko \
+		  docshell \
+		  webbrwsr \
+		  pref \
+		  js \
+		  qcms \
+		  $(NULL)
+
+LOCAL_INCLUDES = \
+	-I$(srcdir)/../style \
+	-I$(srcdir)/../base \
+	-I$(srcdir)/../generic \
+	-I$(srcdir)/../tables \
+	-I$(srcdir)/content/src \
+	-I$(topsrcdir)/content/base/src \
+	-I$(topsrcdir)/content/mathml/content/src \
+	-I$(srcdir)/../xul/base/src \
+	$(NULL)
+
+CPPSRCS =         nsMathMLChar.cpp		        \
+                  nsMathMLFrame.cpp		\
+                  nsMathMLContainerFrame.cpp		\
+                  nsMathMLForeignFrameWrapper.cpp		\
+                  nsMathMLOperators.cpp \
+                  nsMathMLTokenFrame.cpp		\
+                  nsMathMLmoFrame.cpp			\
+                  nsMathMLmrowFrame.cpp		        \
+                  nsMathMLmphantomFrame.cpp		\
+                  nsMathMLmfencedFrame.cpp		\
+                  nsMathMLmfracFrame.cpp		\
+                  nsMathMLmsupFrame.cpp			\
+                  nsMathMLmsubFrame.cpp			\
+                  nsMathMLmsubsupFrame.cpp		\
+                  nsMathMLmmultiscriptsFrame.cpp	\
+                  nsMathMLmtableFrame.cpp		\
+                  nsMathMLmunderFrame.cpp		\
+                  nsMathMLmoverFrame.cpp		\
+                  nsMathMLmunderoverFrame.cpp		\
+                  nsMathMLmpaddedFrame.cpp		\
+                  nsMathMLmspaceFrame.cpp		\
+                  nsMathMLmstyleFrame.cpp		\
+                  nsMathMLmsqrtFrame.cpp		\
+                  nsMathMLmrootFrame.cpp		\
+                  nsMathMLmactionFrame.cpp		\
+                  nsMathMLmencloseFrame.cpp		\
+                  $(NULL)
 
 include $(topsrcdir)/config/config.mk
 
+# we don't want the shared lib, but we want to force the creation of a static lib.
+# do we still want this? - DJF
+FORCE_STATIC_LIB = 1
+
 include $(topsrcdir)/config/rules.mk
+
+libs::
+	$(INSTALL) $(srcdir)/mathml.css $(DIST)/bin/res
+
+font_properties = \
+	mathfontUnicode.properties \
+	mathfontSTIXNonUnicode.properties \
+	mathfontSTIXSize1.properties \
+	mathfontStandardSymbolsL.properties \
+	$(NULL)
+
+ifeq ($(TARGET_MD_ARCH),win32)
+font_properties += \
+	mathfontSymbol.properties
+endif
+
+libs:: $(font_properties)
+	$(INSTALL) $^ $(DIST)/bin/res/fonts
+
+install:: $(font_properties)
+	$(SYSINSTALL) $(IFLAGS1) $^ $(DESTDIR)$(mozappdir)/res/fonts
+
+math_properties = mathfont.properties
+
+$(DIST)/bin/res/fonts/$(math_properties) $(DESTDIR)$(mozappdir)/res/fonts/$(math_properties): $(math_properties) Makefile
+	test -d $(@D) || $(NSINSTALL) -D $(@D)
+	rm -f $@
+	$(PYTHON) $(MOZILLA_DIR)/config/Preprocessor.py --marker=% $(DEFINES) $(ACDEFINES) $< > $@
+
+libs:: $(DIST)/bin/res/fonts/$(math_properties)
+install:: $(DESTDIR)$(mozappdir)/res/fonts/$(math_properties)
+
+DEFINES += -D_IMPL_NS_LAYOUT

@@ -135,9 +135,9 @@ public:
   PRBool   DonePrintingPages(nsPrintObject* aPO, nsresult aResult);
 
   //---------------------------------------------------------------------
-  void BuildDocTree(nsIDocShellTreeNode * aParentNode,
-                    nsVoidArray *         aDocList,
-                    nsPrintObject *         aPO);
+  void BuildDocTree(nsIDocShellTreeNode *      aParentNode,
+                    nsTArray<nsPrintObject*> * aDocList,
+                    nsPrintObject *            aPO);
   nsresult ReflowDocList(nsPrintObject * aPO, PRBool aSetPixelScale);
 
   nsresult ReflowPrintObject(nsPrintObject * aPO);
@@ -280,7 +280,7 @@ protected:
   PRPackedBool mIsDoingPrintPreview; // per DocumentViewer
   PRPackedBool mProgressDialogIsShown;
 
-  nsIDocumentViewerPrint* mDocViewerPrint; // [WEAK] it owns me!
+  nsCOMPtr<nsIDocumentViewerPrint> mDocViewerPrint;
   nsISupports*            mContainer;      // [WEAK] it owns me!
   nsIDeviceContext*       mDeviceContext;  // not ref counted
   

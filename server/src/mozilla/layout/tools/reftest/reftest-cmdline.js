@@ -97,6 +97,18 @@ RefTestCmdLineHandler.prototype =
       cmdLine.handleFlag("reftest", true);
     }
 
+    /* Ignore the platform's online/offline status while running reftests. */
+    var ios = Components.classes["@mozilla.org/network/io-service;1"]
+              .getService(Components.interfaces.nsIIOService2);
+    ios.manageOfflineStatus = false;
+    ios.offline = false;
+
+    /* Force sRGB as an output profile for color management before we load a
+       window. */
+    var prefs = Components.classes["@mozilla.org/preferences-service;1"].
+                getService(Components.interfaces.nsIPrefBranch2);
+    prefs.setBoolPref("gfx.color_management.force_srgb", true);
+
     var wwatch = Components.classes["@mozilla.org/embedcomp/window-watcher;1"]
                            .getService(nsIWindowWatcher);
     wwatch.openWindow(null, "chrome://reftest/content/reftest.xul", "_blank",

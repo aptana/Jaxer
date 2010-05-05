@@ -39,6 +39,7 @@
 
 #include "nsSVGContainerFrame.h"
 #include "gfxPattern.h"
+#include "gfxMatrix.h"
 
 class gfxContext;
 
@@ -47,7 +48,7 @@ typedef nsSVGContainerFrame nsSVGMaskFrameBase;
 class nsSVGMaskFrame : public nsSVGMaskFrameBase
 {
   friend nsIFrame*
-  NS_NewSVGMaskFrame(nsIPresShell* aPresShell, nsIContent* aContent, nsStyleContext* aContext);
+  NS_NewSVGMaskFrame(nsIPresShell* aPresShell, nsStyleContext* aContext);
 protected:
   nsSVGMaskFrame(nsStyleContext* aContext) :
     nsSVGMaskFrameBase(aContext),
@@ -55,11 +56,19 @@ protected:
     mInUse(PR_FALSE) {}
 
 public:
+  NS_DECL_FRAMEARENA_HELPERS
+
   // nsSVGMaskFrame method:
   already_AddRefed<gfxPattern> ComputeMaskAlpha(nsSVGRenderState *aContext,
-                                                nsISVGChildFrame* aParent,
-                                                nsIDOMSVGMatrix* aMatrix,
+                                                nsIFrame* aParent,
+                                                const gfxMatrix &aMatrix,
                                                 float aOpacity = 1.0f);
+
+#ifdef DEBUG
+  NS_IMETHOD Init(nsIContent*      aContent,
+                  nsIFrame*        aParent,
+                  nsIFrame*        aPrevInFlow);
+#endif
 
   /**
    * Get the "type" of the frame
@@ -95,16 +104,13 @@ private:
     nsSVGMaskFrame *mFrame;
   };
 
-  nsISVGChildFrame *mMaskParent;
+  nsIFrame *mMaskParent;
   nsCOMPtr<nsIDOMSVGMatrix> mMaskParentMatrix;
   // recursion prevention flag
   PRPackedBool mInUse;
 
   // nsSVGContainerFrame methods:
-  virtual already_AddRefed<nsIDOMSVGMatrix> GetCanvasTM();
+  virtual gfxMatrix GetCanvasTM();
 };
-
-nsIContent *
-NS_GetSVGMaskElement(nsIURI *aURI, nsIContent *aContent);
 
 #endif

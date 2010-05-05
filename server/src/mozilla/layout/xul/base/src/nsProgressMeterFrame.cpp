@@ -51,6 +51,7 @@
 #include "nsCOMPtr.h"
 #include "nsBoxLayoutState.h"
 #include "nsIReflowCallback.h"
+#include "nsContentUtils.h"
 //
 // NS_NewToolbarFrame
 //
@@ -60,7 +61,9 @@ nsIFrame*
 NS_NewProgressMeterFrame (nsIPresShell* aPresShell, nsStyleContext* aContext)
 {
   return new (aPresShell) nsProgressMeterFrame(aPresShell, aContext);
-} // NS_NewProgressMeterFrame
+}
+
+NS_IMPL_FRAMEARENA_HELPERS(nsProgressMeterFrame)
 
 //
 // nsProgressMeterFrame dstr
@@ -81,6 +84,7 @@ public:
     PRBool shouldFlush = PR_FALSE;
     nsIFrame* frame = mWeakFrame.GetFrame();
     if (frame) {
+      nsAutoScriptBlocker scriptBlocker;
       frame->AttributeChanged(kNameSpaceID_None, nsGkAtoms::value, 0);
       shouldFlush = PR_TRUE;
     }
@@ -114,6 +118,8 @@ nsProgressMeterFrame::AttributeChanged(PRInt32 aNameSpaceID,
                                        nsIAtom* aAttribute,
                                        PRInt32 aModType)
 {
+  NS_ASSERTION(!nsContentUtils::IsSafeToRunScript(),
+      "Scripts not blocked in nsProgressMeterFrame::AttributeChanged!");
   nsresult rv = nsBoxFrame::AttributeChanged(aNameSpaceID, aAttribute,
                                              aModType);
   if (NS_OK != rv) {
@@ -121,7 +127,7 @@ nsProgressMeterFrame::AttributeChanged(PRInt32 aNameSpaceID,
   }
 
   // did the progress change?
-  if (nsGkAtoms::value == aAttribute) {
+  if (nsGkAtoms::value == aAttribute || nsGkAtoms::max == aAttribute) {
     nsIFrame* barChild = GetFirstChild(nsnull);
     if (!barChild) return NS_OK;
     nsIFrame* remainderChild = barChild->GetNextSibling();
@@ -129,27 +135,38 @@ nsProgressMeterFrame::AttributeChanged(PRInt32 aNameSpaceID,
     nsCOMPtr<nsIContent> remainderContent = remainderChild->GetContent();
     if (!remainderContent) return NS_OK;
 
-    nsAutoString value;
+    nsAutoString value, maxValue;
     mContent->GetAttr(kNameSpaceID_None, nsGkAtoms::value, value);
+    mContent->GetAttr(kNameSpaceID_None, nsGkAtoms::max, maxValue);
 
     PRInt32 error;
     PRInt32 flex = value.ToInteger(&error);
-    if (flex < 0) flex = 0;
-    if (flex > 100) flex = 100;
+    PRInt32 maxFlex = maxValue.ToInteger(&error);
+    if (NS_FAILED(error) || maxValue.IsEmpty()) {
+      maxFlex = 100;
+    }
+    if (maxFlex < 1) {
+      maxFlex = 1;
+    }
+    if (flex < 0) {
+      flex = 0;
+    }
+    if (flex > maxFlex) {
+      flex = maxFlex;
+    }
 
-    PRInt32 remainder = 100 - flex;
+    PRInt32 remainder = maxFlex - flex;
 
     nsAutoString leftFlex, rightFlex;
     leftFlex.AppendInt(flex);
     rightFlex.AppendInt(remainder);
-    nsWeakFrame weakFrame(this);
-    barChild->GetContent()->SetAttr(kNameSpaceID_None, nsGkAtoms::flex, leftFlex, PR_TRUE);
-    remainderContent->SetAttr(kNameSpaceID_None, nsGkAtoms::flex, rightFlex, PR_TRUE);
 
-    if (weakFrame.IsAlive()) {
-      PresContext()->PresShell()->
-        FrameNeedsReflow(this, nsIPresShell::eTreeChange, NS_FRAME_IS_DIRTY);
-    }
+    nsContentUtils::AddScriptRunner(new nsSetAttrRunnable(
+      barChild->GetContent(), nsGkAtoms::flex, leftFlex));
+    nsContentUtils::AddScriptRunner(new nsSetAttrRunnable(
+      remainderContent, nsGkAtoms::flex, rightFlex));
+    nsContentUtils::AddScriptRunner(new nsReflowFrameRunnable(
+      this, nsIPresShell::eTreeChange, NS_FRAME_IS_DIRTY));
   }
   return NS_OK;
 }
