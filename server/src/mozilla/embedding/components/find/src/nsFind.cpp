@@ -73,7 +73,7 @@ static NS_DEFINE_CID(kCContentIteratorCID, NS_CONTENTITERATOR_CID);
 static NS_DEFINE_CID(kCPreContentIteratorCID, NS_PRECONTENTITERATOR_CID);
 static NS_DEFINE_IID(kRangeCID, NS_RANGE_CID);
 
-#define CH_SHY 173
+#define CH_SHY ((PRUnichar) 0xAD)
 
 // -----------------------------------------------------------------------
 // nsFindContentIterator is a special iterator that also goes through
@@ -122,12 +122,17 @@ public:
   NS_DECL_ISUPPORTS
 
   // nsIContentIterator
-  virtual nsresult Init(nsIContent* aRoot)
+  virtual nsresult Init(nsINode* aRoot)
   {
     NS_NOTREACHED("internal error");
     return NS_ERROR_NOT_IMPLEMENTED;
   }
   virtual nsresult Init(nsIDOMRange* aRange)
+  {
+    NS_NOTREACHED("internal error");
+    return NS_ERROR_NOT_IMPLEMENTED;
+  }
+  virtual nsresult Init(nsIRange* aRange)
   {
     NS_NOTREACHED("internal error");
     return NS_ERROR_NOT_IMPLEMENTED;
@@ -139,9 +144,9 @@ public:
   virtual void Last();
   virtual void Next();
   virtual void Prev();
-  virtual nsIContent* GetCurrentNode();
+  virtual nsINode* GetCurrentNode();
   virtual PRBool IsDone();
-  virtual nsresult PositionAt(nsIContent* aCurNode);
+  virtual nsresult PositionAt(nsINode* aCurNode);
 
 private:
   nsCOMPtr<nsIContentIterator> mOuterIterator;
@@ -153,8 +158,8 @@ private:
   nsCOMPtr<nsIDOMNode> mEndNode;
   PRInt32 mEndOffset;
   
-  nsCOMPtr<nsIDOMNode> mStartOuterNode;
-  nsCOMPtr<nsIDOMNode> mEndOuterNode;
+  nsCOMPtr<nsIContent> mStartOuterContent;
+  nsCOMPtr<nsIContent> mEndOuterContent;
   PRBool mFindBackward;
 
   void Reset();
@@ -237,7 +242,7 @@ nsFindContentIterator::Prev()
   MaybeSetupInnerIterator();
 }
 
-nsIContent*
+nsINode*
 nsFindContentIterator::GetCurrentNode()
 {
   if (mInnerIterator && !mInnerIterator->IsDone()) {
@@ -255,9 +260,9 @@ nsFindContentIterator::IsDone() {
 }
 
 nsresult
-nsFindContentIterator::PositionAt(nsIContent* aCurNode)
+nsFindContentIterator::PositionAt(nsINode* aCurNode)
 {
-  nsIContent* oldNode = mOuterIterator->GetCurrentNode();
+  nsINode* oldNode = mOuterIterator->GetCurrentNode();
   nsresult rv = mOuterIterator->PositionAt(aCurNode);
   if (NS_SUCCEEDED(rv)) {
     MaybeSetupInnerIterator();
@@ -274,8 +279,8 @@ void
 nsFindContentIterator::Reset()
 {
   mInnerIterator = nsnull;
-  mStartOuterNode = nsnull;
-  mEndOuterNode = nsnull;
+  mStartOuterContent = nsnull;
+  mEndOuterContent = nsnull;
 
   // As a consequence of searching through text controls, we may have been
   // initialized with a selection inside a <textarea> or a text <input>.
@@ -283,15 +288,13 @@ nsFindContentIterator::Reset()
   // see if the start node is an anonymous text node inside a text control
   nsCOMPtr<nsIContent> startContent(do_QueryInterface(mStartNode));
   if (startContent) {
-    mStartOuterNode =
-      do_QueryInterface(startContent->FindFirstNonNativeAnonymous());
+    mStartOuterContent = startContent->FindFirstNonNativeAnonymous();
   }
 
   // see if the end node is an anonymous text node inside a text control
   nsCOMPtr<nsIContent> endContent(do_QueryInterface(mEndNode));
   if (endContent) {
-    mEndOuterNode =
-      do_QueryInterface(endContent->FindFirstNonNativeAnonymous());
+    mEndOuterContent = endContent->FindFirstNonNativeAnonymous();
   }
 
   // Note: OK to just set up the outer iterator here; if our range has a native
@@ -303,22 +306,24 @@ nsFindContentIterator::Reset()
   mOuterIterator->Init(range);
 
   if (!mFindBackward) {
-    if (mStartOuterNode != mStartNode) {
+    if (mStartOuterContent != startContent) {
       // the start node was an anonymous text node
-      SetupInnerIterator(startContent);
+      SetupInnerIterator(mStartOuterContent);
       if (mInnerIterator)
         mInnerIterator->First();
     }
-    mOuterIterator->First();
+    if (!mOuterIterator->IsDone())
+      mOuterIterator->First();
   }
   else {
-    if (mEndOuterNode != mEndNode) {
+    if (mEndOuterContent != endContent) {
       // the end node was an anonymous text node
-      SetupInnerIterator(endContent);
+      SetupInnerIterator(mEndOuterContent);
       if (mInnerIterator)
         mInnerIterator->Last();
     }
-    mOuterIterator->Last();
+    if (!mOuterIterator->IsDone())
+      mOuterIterator->Last();
   }
 
   // if we didn't create an inner-iterator, the boundary node could still be
@@ -333,7 +338,8 @@ nsFindContentIterator::MaybeSetupInnerIterator()
 {
   mInnerIterator = nsnull;
 
-  nsIContent* content = mOuterIterator->GetCurrentNode();
+  nsCOMPtr<nsIContent> content =
+    do_QueryInterface(mOuterIterator->GetCurrentNode());
   if (!content || !content->IsNodeOfType(nsINode::eHTML_FORM_CONTROL))
     return;
 
@@ -349,13 +355,15 @@ nsFindContentIterator::MaybeSetupInnerIterator()
       mInnerIterator->First();
       // finish setup: position mOuterIterator on the actual "next"
       // node (this completes its re-init, @see SetupInnerIterator)
-      mOuterIterator->First();
+      if (!mOuterIterator->IsDone())
+        mOuterIterator->First();
     }
     else {
       mInnerIterator->Last();
       // finish setup: position mOuterIterator on the actual "previous"
       // node (this completes its re-init, @see SetupInnerIterator)
-      mOuterIterator->Last();
+      if (!mOuterIterator->IsDone())
+        mOuterIterator->Last();
     }
   }
 }
@@ -366,7 +374,7 @@ nsFindContentIterator::SetupInnerIterator(nsIContent* aContent)
   if (!aContent) {
     return;
   }
-  NS_ASSERTION(!aContent->IsNativeAnonymous(), "invalid call");
+  NS_ASSERTION(!aContent->IsRootOfNativeAnonymousSubtree(), "invalid call");
 
   nsIDocument* doc = aContent->GetDocument();
   nsIPresShell* shell = doc ? doc->GetPrimaryShell() : nsnull;
@@ -377,8 +385,7 @@ nsFindContentIterator::SetupInnerIterator(nsIContent* aContent)
   if (!frame)
     return;
 
-  nsITextControlFrame* tcFrame = nsnull;
-  CallQueryInterface(frame, &tcFrame);
+  nsITextControlFrame* tcFrame = do_QueryFrame(frame);
   if (!tcFrame)
     return;
 
@@ -407,18 +414,14 @@ nsFindContentIterator::SetupInnerIterator(nsIContent* aContent)
   mInnerIterator = do_CreateInstance(kCPreContentIteratorCID);
 
   if (mInnerIterator) {
-    {
-      nsCOMPtr<nsIDOMNode> node(do_QueryInterface(rootContent));
-      innerRange->SelectNodeContents(node);
-    }
+    innerRange->SelectNodeContents(rootElement);
 
     // fix up the inner bounds, we may have to only lookup a portion
     // of the text control if the current node is a boundary point
-    nsCOMPtr<nsIDOMNode> outerNode(do_QueryInterface(aContent));
-    if (outerNode == mStartOuterNode) {
+    if (aContent == mStartOuterContent) {
       innerRange->SetStart(mStartNode, mStartOffset);
     }
-    if (outerNode == mEndOuterNode) {
+    if (aContent == mEndOuterContent) {
       innerRange->SetEnd(mEndNode, mEndOffset);
     }
     // Note: we just init here. We do First() or Last() later. 
@@ -427,6 +430,7 @@ nsFindContentIterator::SetupInnerIterator(nsIContent* aContent)
     // make sure to place the outer-iterator outside
     // the text control so that we don't go there again.
     nsresult res;
+    nsCOMPtr<nsIDOMNode> outerNode(do_QueryInterface(aContent));
     if (!mFindBackward) { // find forward
       // cut the outer-iterator after the current node
       res = outerRange->SetEnd(mEndNode, mEndOffset);
@@ -645,7 +649,7 @@ nsFind::NextNode(nsIDOMRange* aSearchRange,
 {
   nsresult rv;
 
-  nsIContent *content = nsnull;
+  nsCOMPtr<nsIContent> content;
 
   if (!mIterator || aContinueOk)
   {
@@ -699,7 +703,7 @@ nsFind::NextNode(nsIDOMRange* aSearchRange,
     if (!aStartPoint)
       aStartPoint = aSearchRange;
 
-    content = mIterator->GetCurrentNode();
+    content = do_QueryInterface(mIterator->GetCurrentNode());
 #ifdef DEBUG_FIND
     nsCOMPtr<nsIDOMNode> dnode (do_QueryInterface(content));
     printf(":::::: Got the first node "); DumpNode(dnode);
@@ -739,7 +743,7 @@ nsFind::NextNode(nsIDOMRange* aSearchRange,
     else
       mIterator->Next();
 
-    content = mIterator->GetCurrentNode();
+    content = do_QueryInterface(mIterator->GetCurrentNode());
     if (!content)
       break;
 

@@ -65,6 +65,7 @@ components/dom_canvas.xpt
 components/dom_core.xpt
 components/dom_css.xpt
 components/dom_events.xpt
+components/dom_geolocation.xpt
 components/dom_html.xpt
 components/dom_offline.xpt
 components/dom_range.xpt
@@ -163,6 +164,8 @@ chrome/pipnss.jar
 defaults/pref/security-prefs.js
 libnss3.dylib
 libnssutil3.dylib
+libnssdbm3.chk
+libnssdbm3.dylib
 libsmime3.dylib
 libsoftokn3.chk
 libsoftokn3.dylib
@@ -243,8 +246,8 @@ res/contenteditable.css
 res/designmode.css
 res/arrow.gif
 res/arrowd.gif
-res/loading-image.gif
-res/broken-image.gif
+res/loading-image.png
+res/broken-image.png
 res/entityTables/html40Special.properties
 res/entityTables/htmlEntityVersions.properties
 res/entityTables/html40Latin1.properties

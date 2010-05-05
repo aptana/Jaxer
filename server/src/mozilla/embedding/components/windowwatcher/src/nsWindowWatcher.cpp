@@ -60,6 +60,7 @@
 #include "nsIDOMWindow.h"
 #include "nsIDOMChromeWindow.h"
 #include "nsIDOMWindowInternal.h"
+#include "nsIDOMModalContentWindow.h"
 #include "nsIScriptObjectPrincipal.h"
 #include "nsIScreen.h"
 #include "nsIScreenManager.h"
@@ -85,6 +86,11 @@
 #include "nsIMutableArray.h"
 #include "nsISupportsArray.h"
 #include "nsIDeviceContext.h"
+#include "nsIDOMStorageObsolete.h"
+#include "nsIDOMStorage.h"
+#include "nsPIDOMStorage.h"
+#include "nsIWidget.h"
+#include "nsFocusManager.h"
 
 #include "nsIPrefBranch.h"
 #include "nsIPrefService.h"
@@ -268,7 +274,7 @@ void nsWatcherWindowEnumerator::WindowRemoved(nsWatcherWindowEntry *inInfo) {
  ********************** JSContextAutoPopper *********************
  ****************************************************************/
 
-class JSContextAutoPopper {
+class NS_STACK_CLASS JSContextAutoPopper {
 public:
   JSContextAutoPopper();
   ~JSContextAutoPopper();
@@ -333,7 +339,6 @@ NS_IMPL_QUERY_INTERFACE4(nsWindowWatcher,
 nsWindowWatcher::nsWindowWatcher() :
         mEnumeratorList(),
         mOldestWindow(0),
-        mActiveWindow(0),
         mListLock(0)
 {
 }
@@ -550,7 +555,7 @@ nsWindowWatcher::OpenWindowJSInternal(nsIDOMWindow *aParent,
 
   // Make sure we call CalculateChromeFlags() *before* we push the
   // callee context onto the context stack so that
-  // CalculateChromeFlags() sees the actual caller when doing it's
+  // CalculateChromeFlags() sees the actual caller when doing its
   // security checks.
   chromeFlags = CalculateChromeFlags(features.get(), featuresSpecified,
                                      aDialog, uriToLoadIsChrome,
@@ -569,11 +574,21 @@ nsWindowWatcher::OpenWindowJSInternal(nsIDOMWindow *aParent,
   SizeSpec sizeSpec;
   CalcSizeSpec(features.get(), sizeSpec);
 
-  PRBool isCallerChrome = PR_FALSE;
   nsCOMPtr<nsIScriptSecurityManager>
     sm(do_GetService(NS_SCRIPTSECURITYMANAGER_CONTRACTID));
-  if (sm)
-    sm->SubjectPrincipalIsSystem(&isCallerChrome);
+
+  // Remember who's calling us. This code used to assume a null
+  // subject principal if it failed to get the principal, but that's
+  // just not safe, so bail on errors here.
+  nsCOMPtr<nsIPrincipal> callerPrincipal;
+  rv = sm->GetSubjectPrincipal(getter_AddRefs(callerPrincipal));
+  NS_ENSURE_SUCCESS(rv, rv);
+
+  PRBool isCallerChrome = PR_TRUE;
+  if (callerPrincipal) {
+    rv = sm->IsSystemPrincipal(callerPrincipal, &isCallerChrome);
+    NS_ENSURE_SUCCESS(rv, rv);
+  }
 
   JSContext *cx = GetJSContextFromWindow(aParent);
 
@@ -642,6 +657,23 @@ nsWindowWatcher::OpenWindowJSInternal(nsIDOMWindow *aParent,
       // in case we added this because weAreModal
       chromeFlags |= nsIWebBrowserChrome::CHROME_MODAL |
         nsIWebBrowserChrome::CHROME_DEPENDENT;
+    }
+
+    // Make sure to not create modal windows if our parent is invisible and
+    // isn't a chrome window.  Otherwise we can end up in a bizarre situation
+    // where we can't shut down because an invisible window is open.  If
+    // someone tries to do this, throw.
+    if (!chromeParent && (chromeFlags & nsIWebBrowserChrome::CHROME_MODAL)) {
+      PRBool parentVisible = PR_TRUE;
+      nsCOMPtr<nsIBaseWindow> parentWindow(do_GetInterface(parentTreeOwner));
+      nsCOMPtr<nsIWidget> parentWidget;
+      if (parentWindow)
+        parentWindow->GetMainWidget(getter_AddRefs(parentWidget));
+      if (parentWidget)
+        parentWidget->IsVisible(parentVisible);
+      if (!parentVisible) {
+        return NS_ERROR_NOT_AVAILABLE;
+      }
     }
 
     NS_ASSERTION(mWindowCreator,
@@ -735,9 +767,10 @@ nsWindowWatcher::OpenWindowJSInternal(nsIDOMWindow *aParent,
 
   if ((aDialog || windowIsModalContentDialog) && argv) {
     // Set the args on the new window.
-    nsCOMPtr<nsIScriptGlobalObject> scriptGlobal(do_QueryInterface(*_retval));
-    NS_ENSURE_TRUE(scriptGlobal, NS_ERROR_UNEXPECTED);
-    rv = scriptGlobal->SetNewArguments(argv);
+    nsCOMPtr<nsPIDOMWindow> piwin(do_QueryInterface(*_retval));
+    NS_ENSURE_TRUE(piwin, NS_ERROR_UNEXPECTED);
+
+    rv = piwin->SetArguments(argv, callerPrincipal);
     NS_ENSURE_SUCCESS(rv, rv);
   }
 
@@ -909,9 +942,30 @@ nsWindowWatcher::OpenWindowJSInternal(nsIDOMWindow *aParent,
                     nsIWebNavigation::LOAD_FLAGS_NONE, PR_TRUE);
   }
 
+  // Copy the current session storage for the current domain.
+  nsCOMPtr<nsPIDOMWindow> piWindow = do_QueryInterface(aParent);
+  nsIDocShell* parentDocShell = nsnull;
+  if (piWindow)
+    parentDocShell = piWindow->GetDocShell();
+
+  if (subjectPrincipal && parentDocShell) {
+    nsCOMPtr<nsIDOMStorage> storage;
+    parentDocShell->GetSessionStorageForPrincipal(subjectPrincipal, PR_FALSE,
+                                                  getter_AddRefs(storage));
+    nsCOMPtr<nsPIDOMStorage> piStorage =
+      do_QueryInterface(storage);
+    if (piStorage){
+      storage = piStorage->Clone();
+      newDocShell->AddSessionStorage(
+        piStorage->Principal(),
+        storage);
+    }
+  }
+
   if (isNewToplevelWindow)
     SizeOpenedDocShellItem(newDocShellItem, aParent, sizeSpec);
 
+  // XXXbz isn't windowIsModal always true when windowIsModalContentDialog?
   if (windowIsModal || windowIsModalContentDialog) {
     nsCOMPtr<nsIDocShellTreeOwner> newTreeOwner;
     newDocShellItem->GetTreeOwner(getter_AddRefs(newTreeOwner));
@@ -1064,32 +1118,20 @@ nsWindowWatcher::SetWindowCreator(nsIWindowCreator *creator)
 NS_IMETHODIMP
 nsWindowWatcher::GetActiveWindow(nsIDOMWindow **aActiveWindow)
 {
-  if (!aActiveWindow)
-    return NS_ERROR_INVALID_ARG;
-
-  *aActiveWindow = mActiveWindow;
-  NS_IF_ADDREF(mActiveWindow);
+  *aActiveWindow = nsnull;
+  nsCOMPtr<nsIFocusManager> fm = do_GetService(FOCUSMANAGER_CONTRACTID);
+  if (fm)
+    return fm->GetActiveWindow(aActiveWindow);
   return NS_OK;
 }
 
 NS_IMETHODIMP
 nsWindowWatcher::SetActiveWindow(nsIDOMWindow *aActiveWindow)
 {
-#ifdef DEBUG
-  {
-    nsCOMPtr<nsPIDOMWindow> win(do_QueryInterface(aActiveWindow));
-
-    NS_ASSERTION(!win || win->IsOuterWindow(),
-                 "Uh, the active window must be an outer window!");
-  }
-#endif
-
-  if (FindWindowEntry(aActiveWindow)) {
-    mActiveWindow = aActiveWindow;
-    return NS_OK;
-  }
-  NS_ERROR("invalid active window");
-  return NS_ERROR_FAILURE;
+  nsCOMPtr<nsIFocusManager> fm = do_GetService(FOCUSMANAGER_CONTRACTID);
+  if (fm)
+    return fm->SetActiveWindow(aActiveWindow);
+  return NS_OK;
 }
 
 NS_IMETHODIMP
@@ -1207,24 +1249,20 @@ nsWindowWatcher::FindWindowEntry(nsIDOMWindow *aWindow)
 
 nsresult nsWindowWatcher::RemoveWindow(nsWatcherWindowEntry *inInfo)
 {
-  PRInt32  ctr,
-           count = mEnumeratorList.Count();
+  PRUint32  ctr,
+            count = mEnumeratorList.Length();
   nsresult rv;
 
   {
     // notify the enumerators
     nsAutoLock lock(mListLock);
     for (ctr = 0; ctr < count; ++ctr) 
-      ((nsWatcherWindowEnumerator*)mEnumeratorList[ctr])->WindowRemoved(inInfo);
+      mEnumeratorList[ctr]->WindowRemoved(inInfo);
 
     // remove the element from the list
     if (inInfo == mOldestWindow)
       mOldestWindow = inInfo->mYounger == mOldestWindow ? 0 : inInfo->mYounger;
     inInfo->Unlink();
-
-    // clear the active window, if they're the same
-    if (mActiveWindow == inInfo->mWindow)
-      mActiveWindow = 0;
   }
 
   // a window being removed from us signifies a newly closed window.
@@ -1302,7 +1340,7 @@ PRBool
 nsWindowWatcher::AddEnumerator(nsWatcherWindowEnumerator* inEnumerator)
 {
   // (requires a lock; assumes it's called by someone holding the lock)
-  return mEnumeratorList.AppendElement(inEnumerator);
+  return mEnumeratorList.AppendElement(inEnumerator) != nsnull;
 }
 
 PRBool
@@ -1883,7 +1921,14 @@ nsWindowWatcher::SizeOpenedDocShellItem(nsIDocShellTreeItem *aDocShellItem,
   }
   if (mainWidget) {
     nsCOMPtr<nsIDeviceContext> ctx = mainWidget->GetDeviceContext();
-    devPixelsPerCSSPixel = float(ctx->AppUnitsPerCSSPixel()) / ctx->AppUnitsPerDevPixel();
+    /* we might be called by an extension after mainWidget::OnDestroy() */
+    if (ctx) {
+      PRInt32 unitsPerDevPixel = ctx->AppUnitsPerDevPixel();
+      if (unitsPerDevPixel) {
+        devPixelsPerCSSPixel = float(ctx->AppUnitsPerCSSPixel()) /
+                                     unitsPerDevPixel;
+      }
+    }
   }
 
   /* The current position and size will be unchanged if not specified

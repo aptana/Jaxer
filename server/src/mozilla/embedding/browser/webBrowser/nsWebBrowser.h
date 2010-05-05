@@ -70,7 +70,7 @@
 #include "nsIPrintSettings.h"
 #include "nsEmbedStream.h"
 
-#include "nsVoidArray.h"
+#include "nsTArray.h"
 #include "nsWeakPtr.h"
 
 class nsIContentViewerFile;
@@ -144,6 +144,7 @@ protected:
     virtual ~nsWebBrowser();
     NS_IMETHOD InternalDestroy();
 
+    // XXXbz why are these NS_IMETHOD?  They're not interface methods!
     NS_IMETHOD SetDocShell(nsIDocShell* aDocShell);
     NS_IMETHOD EnsureDocShellTreeOwner();
     NS_IMETHOD GetPrimaryContentWindow(nsIDOMWindowInternal **aDomWindow);
@@ -151,7 +152,7 @@ protected:
     NS_IMETHOD UnBindListener(nsISupports *aListener, const nsIID& aIID);
     NS_IMETHOD EnableGlobalHistory(PRBool aEnable);
 
-    static nsEventStatus PR_CALLBACK HandleEvent(nsGUIEvent *aEvent);
+    static nsEventStatus HandleEvent(nsGUIEvent *aEvent);
 
 protected:
    nsDocShellTreeOwner*       mDocShellTreeOwner;
@@ -188,8 +189,8 @@ protected:
    nsCOMPtr<nsISupports>          mStreamGuard;
 
    //Weak Reference interfaces...
-   nsIWidget*                 mParentWidget;
-   nsVoidArray *              mListenerArray;
+   nsIWidget*                            mParentWidget;
+   nsTArray<nsWebBrowserListenerState*>* mListenerArray;
 };
 
 #endif /* nsWebBrowser_h__ */

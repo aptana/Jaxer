@@ -51,7 +51,7 @@
 #include <nsIPrintSettings.h>
 #include <nsIAppShell.h>
 #include <nsPIDOMEventTarget.h>
-#include <nsVoidArray.h>
+#include <nsTArray.h>
 #include <nsClipboard.h>
 // for profiles
 #include <nsIPref.h>
@@ -131,7 +131,7 @@ class EmbedPrivate {
 */
 
   // these let the widget code know when the toplevel window gets and
-  // looses focus.
+  // loses focus.
   void        TopLevelFocusIn (void);
   void        TopLevelFocusOut(void);
 
@@ -177,7 +177,7 @@ class EmbedPrivate {
   static nsIAppShell            *sAppShell;
   // for profiles
   static nsIPref                *sPrefs;
-	static nsVoidArray            *sWindowList;
+	static nsTArray<EmbedPrivate*> *sWindowList;
   // for clipboard input group setting
   static nsClipboard *sClipboard;
 

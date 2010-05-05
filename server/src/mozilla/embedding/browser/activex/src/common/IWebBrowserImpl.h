@@ -41,6 +41,9 @@
 
 #include <mshtml.h>
 
+/* this is all kinds of awesome; SHANDLE_PTR is in some basetsd.h but not others */
+typedef long SHANDLE_PTR;
+
 #include "nsIWebNavigation.h"
 #include "nsIPrefBranch.h"
 #include "nsIPrefLocalizedString.h"
@@ -797,7 +800,7 @@ public:
         return S_OK;
     }
     
-    virtual HRESULT STDMETHODCALLTYPE get_HWND(long __RPC_FAR *pHWND)
+    virtual HRESULT STDMETHODCALLTYPE get_HWND(SHANDLE_PTR __RPC_FAR *pHWND)
     {
         ATLTRACE(_T("IWebBrowserImpl::get_HWND()\n"));
         ENSURE_BROWSER_IS_VALID();

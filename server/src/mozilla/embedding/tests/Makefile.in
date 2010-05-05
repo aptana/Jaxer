@@ -35,16 +35,10 @@ VPATH		= @srcdir@
 
 include $(DEPTH)/config/autoconf.mk
 
-ifeq ($(OS_ARCH),OS2)
-DIRS = os2Embed
-endif
-
 ifeq ($(OS_ARCH),WINNT)
 # disable winembed in non-libxul
 ifndef BUILD_STATIC_LIBS
-ifdef MOZ_XUL_APP
 DIRS = winEmbed
-endif
 endif
 
 endif

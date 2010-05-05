@@ -89,8 +89,7 @@ nsHelperAppDialog.prototype = {
             iid.equals(Components.interfaces.nsISupports))
             return this;
 
-        Components.returnCode = Components.results.NS_ERROR_NO_INTERFACE;
-        return null;
+        throw Components.results.NS_ERROR_NO_INTERFACE;
     },
 
     // ---------- nsIHelperAppLauncherDialog methods ----------
@@ -478,7 +477,7 @@ nsHelperAppDialog.prototype = {
               this.getPath(this.chosenApp.executable);
         }
 
-        var useDefault = this.dialogElement( "useSystemDefault" );;
+        var useDefault = this.dialogElement( "useSystemDefault" );
         if (this.mLauncher.MIMEInfo.preferredAction == this.nsIMIMEInfo.useSystemDefault &&
             this.mReason != REASON_SERVERREQUEST) {
             // Open (using system default).

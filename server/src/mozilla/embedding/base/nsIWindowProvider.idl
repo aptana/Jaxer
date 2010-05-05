@@ -58,7 +58,7 @@ interface nsIURI;
  * or the provider does not provide a window, the window watcher will proceed
  * to actually open a new window.
  */
-[uuid(5119ac7f-81dd-4061-96a7-71f2cf5efee4)]
+[scriptable, uuid(5119ac7f-81dd-4061-96a7-71f2cf5efee4)]
 interface nsIWindowProvider : nsISupports
 {
   /**
@@ -83,7 +83,7 @@ interface nsIWindowProvider : nsISupports
    * @param aURI The URI to be loaded in the new window.  The nsIWindowProvider
    *             implementation MUST NOT load this URI in the window it
    *             returns.  This URI is provided solely to help the
-   *             nsIWindowProvider implenentation make decisions; the caller
+   *             nsIWindowProvider implementation make decisions; the caller
    *             will handle loading the URI in the window returned if
    *             provideWindow returns a window.  Note that the URI may be null
    *             if the load cannot be represented by a single URI (e.g. if

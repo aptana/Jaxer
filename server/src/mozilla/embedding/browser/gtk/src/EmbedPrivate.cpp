@@ -49,6 +49,7 @@
 #include "nsIInterfaceRequestor.h"
 // for do_CreateInstance
 #include "nsIComponentManager.h"
+#include "nsComponentManagerUtils.h"
 
 // for initializing our window watcher service
 #include "nsIWindowWatcher.h"
@@ -88,15 +89,15 @@
 #include "nsIDOMDocument.h"
 #endif
 
-PRUint32     EmbedPrivate::sWidgetCount = 0;
+PRUint32                 EmbedPrivate::sWidgetCount = 0;
 
-char        *EmbedPrivate::sPath        = nsnull;
-char        *EmbedPrivate::sCompPath    = nsnull;
-nsVoidArray *EmbedPrivate::sWindowList  = nsnull;
-nsILocalFile *EmbedPrivate::sProfileDir  = nsnull;
-nsISupports  *EmbedPrivate::sProfileLock = nsnull;
-GtkWidget   *EmbedPrivate::sOffscreenWindow = 0;
-GtkWidget   *EmbedPrivate::sOffscreenFixed  = 0;
+char                    *EmbedPrivate::sPath        = nsnull;
+char                    *EmbedPrivate::sCompPath    = nsnull;
+nsTArray<EmbedPrivate*> *EmbedPrivate::sWindowList  = nsnull;
+nsILocalFile            *EmbedPrivate::sProfileDir  = nsnull;
+nsISupports             *EmbedPrivate::sProfileLock = nsnull;
+GtkWidget               *EmbedPrivate::sOffscreenWindow = 0;
+GtkWidget               *EmbedPrivate::sOffscreenFixed  = 0;
 
 nsIDirectoryServiceProvider *EmbedPrivate::sAppFileLocProvider = nsnull;
 
@@ -137,7 +138,8 @@ GTKEmbedDirectoryProvider::GetFile(const char *aKey, PRBool *aPersist,
       return rv;
   }
 
-  if (EmbedPrivate::sProfileDir && !strcmp(aKey, NS_APP_USER_PROFILE_50_DIR)) {
+  if (EmbedPrivate::sProfileDir && (!strcmp(aKey, NS_APP_USER_PROFILE_50_DIR)
+                                 || !strcmp(aKey, NS_APP_PROFILE_DIR_STARTUP))) {
     *aPersist = PR_TRUE;
     return EmbedPrivate::sProfileDir->Clone(aResult);
   }
@@ -191,7 +193,7 @@ EmbedPrivate::EmbedPrivate(void)
 
   PushStartup();
   if (!sWindowList) {
-    sWindowList = new nsVoidArray();
+    sWindowList = new nsTArray<EmbedPrivate*>();
   }
   sWindowList->AppendElement(this);
 }
@@ -709,13 +711,12 @@ EmbedPrivate::FindPrivateForBrowser(nsIWebBrowserChrome *aBrowser)
     return nsnull;
 
   // Get the number of browser windows.
-  PRInt32 count = sWindowList->Count();
+  PRInt32 count = sWindowList->Length();
   // This function doesn't get called very often at all ( only when
   // creating a new window ) so it's OK to walk the list of open
   // windows.
   for (int i = 0; i < count; i++) {
-    EmbedPrivate *tmpPrivate = static_cast<EmbedPrivate *>(
-					      sWindowList->ElementAt(i));
+    EmbedPrivate *tmpPrivate = sWindowList->ElementAt(i);
     // get the browser object for that window
     nsIWebBrowserChrome *chrome = static_cast<nsIWebBrowserChrome *>(
 						 tmpPrivate->mWindow);

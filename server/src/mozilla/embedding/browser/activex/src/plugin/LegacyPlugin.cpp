@@ -37,17 +37,12 @@
  * ***** END LICENSE BLOCK ***** */
 #include "stdafx.h"
 
-#include "jni.h"
 #include "npapi.h"
 
 #include "nsISupports.h"
 
 #ifdef MOZ_ACTIVEX_PLUGIN_XPCONNECT
 #include "XPConnect.h"
-#endif
-
-#ifdef MOZ_ACTIVEX_PLUGIN_LIVECONNECT
-#include "LiveConnect.h"
 #endif
 
 #include "LegacyPlugin.h"
@@ -244,25 +239,9 @@ NPError NPP_Initialize(void)
 void NPP_Shutdown(void)
 {
     ATLTRACE(_T("NPP_Shutdown()\n"));
-#ifdef MOZ_ACTIVEX_PLUGIN_LIVECONNECT
-    liveconnect_Shutdown();
-#endif
     _Module.Unlock();
 }
 
-
-// NPP_GetJavaClass
-//
-//    Return the Java class representing this plugin
-//
-jref NPP_GetJavaClass(void)
-{
-    ATLTRACE(_T("NPP_GetJavaClass()\n"));
-#ifdef MOZ_ACTIVEX_PLUGIN_LIVECONNECT
-    return liveconnect_GetJavaClass();
-#endif
-    return NULL;
-}
 
 #define MIME_OLEOBJECT1   "application/x-oleobject"
 #define MIME_OLEOBJECT2   "application/oleobject"
@@ -303,8 +282,7 @@ ShowError(MozAxPluginErrors errorCode, const CLSID &clsid)
             LPOLESTR szClsid;
             StringFromCLSID(clsid, &szClsid);
             _sntprintf(szBuffer, kBufSize - 1,
-                _T("Could not create the control %s. Check that it has been installed on your computer "
-                   "and that this page correctly references it."), OLE2T(szClsid));
+                _T("Could not create the control %s. Check that it has been installed on your computer and that this page correctly references it."), OLE2T(szClsid));
             CoTaskMemFree(szClsid);
             szMsg = szBuffer;
         }
@@ -465,6 +443,8 @@ WillHandleCLSID(const CLSID &clsid, PluginInstanceData *pData)
     PRBool classExists = PR_FALSE;
     nsCOMPtr<nsIURI> uri;
     MozAxPlugin::GetCurrentLocation(pData->pPluginInstance, getter_AddRefs(uri));
+
+    JSAutoRequest req(cx);
     MozAxAutoPushJSContext autoContext(cx, uri);
     dispSupport->IsClassSafeToHost(cx, cid, PR_TRUE, &classExists, &isSafe);
     if (classExists && !isSafe)
@@ -579,7 +559,26 @@ CreateControl(const CLSID &clsid, PluginInstanceData *pData, PropertyList &pl, L
     PRBool hostSafeControlsOnly;
     PRBool downloadControlsIfMissing;
 #if defined(MOZ_ACTIVEX_PLUGIN_XPCONNECT) && defined(XPC_IDISPATCH_SUPPORT)
+#ifdef MOZ_FLASH_ACTIVEX_PATCH
+    GUID flashGUID;
+    ::CLSIDFromString(_T("{D27CDB6E-AE6D-11CF-96B8-444553540000}"), &flashGUID);
+
+    // HACK: Allow anything but downloading for the wrapped Flash control.
+    PRUint32 hostingFlags;
+    if (clsid == flashGUID)
+    {
+      hostingFlags = (nsIActiveXSecurityPolicy::HOSTING_FLAGS_HOST_SAFE_OBJECTS |
+                      nsIActiveXSecurityPolicy::HOSTING_FLAGS_SCRIPT_SAFE_OBJECTS |
+                      nsIActiveXSecurityPolicy::HOSTING_FLAGS_SCRIPT_ALL_OBJECTS |
+                      nsIActiveXSecurityPolicy::HOSTING_FLAGS_HOST_ALL_OBJECTS);
+    }
+    else
+    {
+      hostingFlags = MozAxPlugin::PrefGetHostingFlags();
+    }
+#else
     PRUint32 hostingFlags = MozAxPlugin::PrefGetHostingFlags();
+#endif
     if (hostingFlags & nsIActiveXSecurityPolicy::HOSTING_FLAGS_HOST_SAFE_OBJECTS &&
         !(hostingFlags & nsIActiveXSecurityPolicy::HOSTING_FLAGS_HOST_ALL_OBJECTS))
     {
@@ -775,8 +774,8 @@ CreateControl(const CLSID &clsid, PluginInstanceData *pData, PropertyList &pl, L
 static NPError
 NewControl(const char *pluginType,
            PluginInstanceData *pData,
-           uint16 mode,
-           int16 argc,
+           uint16_t mode,
+           int16_t argc,
            char *argn[],
            char *argv[])
 {
@@ -791,7 +790,7 @@ NewControl(const char *pluginType,
         clsid = MozAxPlugin::GetCLSIDForType(pluginType);
     }
 
-    for (int16 i = 0; i < argc; i++)
+    for (int16_t i = 0; i < argc; i++)
     {
         if (stricmp(argn[i], "CLSID") == 0 ||
             stricmp(argn[i], "CLASSID") == 0)
@@ -808,7 +807,7 @@ NewControl(const char *pluginType,
             char szCLSID[kCLSIDLen];
             if (strlen(argv[i]) < sizeof(szCLSID))
             {
-                if (strnicmp(argv[i], "CLSID:", 6) == 0)
+                if (_strnicmp(argv[i], "CLSID:", 6) == 0)
                 {
                     _snprintf(szCLSID, kCLSIDLen - 1, "{%s}", argv[i]+6);
                 }
@@ -866,7 +865,7 @@ NewControl(const char *pluginType,
         else 
         {
             CComBSTR paramName;
-            if (strnicmp(argn[i], "PARAM_", 6) == 0)
+            if (_strnicmp(argn[i], "PARAM_", 6) == 0)
             {
                 paramName = argn[i] + 6;
             }
@@ -922,10 +921,10 @@ NewControl(const char *pluginType,
 //    create a new plugin instance 
 //    handle any instance specific code initialization here
 //
-NPError NP_LOADDS NPP_New(NPMIMEType pluginType,
+NPError NPP_New(NPMIMEType pluginType,
                 NPP instance,
-                uint16 mode,
-                int16 argc,
+                uint16_t mode,
+                int16_t argc,
                 char* argn[],
                 char* argv[],
                 NPSavedData* saved)
@@ -955,6 +954,8 @@ NPError NP_LOADDS NPP_New(NPMIMEType pluginType,
     MozAxPlugin::AddRef();
 #endif
 
+    CoInitializeEx(NULL, COINIT_MULTITHREADED);
+
     NPError rv = NPERR_GENERIC_ERROR;
     /* if (strcmp(pluginType, MIME_OLEOBJECT1) == 0 ||
            strcmp(pluginType, MIME_OLEOBJECT2) == 0) */
@@ -973,6 +974,7 @@ NPError NP_LOADDS NPP_New(NPMIMEType pluginType,
 #ifdef MOZ_ACTIVEX_PLUGIN_XPCONNECT
         MozAxPlugin::Release();
 #endif
+        CoUninitialize();
         return rv;
     }
 
@@ -986,7 +988,7 @@ NPError NP_LOADDS NPP_New(NPMIMEType pluginType,
 //
 //    Deletes a plug-in instance and releases all of its resources.
 //
-NPError NP_LOADDS
+NPError
 NPP_Destroy(NPP instance, NPSavedData** save)
 {
     ATLTRACE(_T("NPP_Destroy()\n"));
@@ -1036,6 +1038,8 @@ NPP_Destroy(NPP instance, NPSavedData** save)
 
     instance->pdata = 0;
 
+    CoUninitialize();
+
     return NPERR_NO_ERROR;
 
 }
@@ -1057,7 +1061,7 @@ NPP_Destroy(NPP instance, NPSavedData** save)
 //  must be maintained by the plug-in to correctly handle the degenerate
 //  case.
 //
-NPError NP_LOADDS
+NPError
 NPP_SetWindow(NPP instance, NPWindow* window)
 {
     ATLTRACE(_T("NPP_SetWindow()\n"));
@@ -1124,12 +1128,12 @@ NPP_SetWindow(NPP instance, NPWindow* window)
 //  NPNormal  (e.g. *streamtype = NPNormal)...the NPE_StreamAsFile function will
 //  never be called in this case
 //
-NPError NP_LOADDS
+NPError
 NPP_NewStream(NPP instance,
               NPMIMEType type,
               NPStream *stream, 
               NPBool seekable,
-              uint16 *stype)
+              uint16_t *stype)
 {
     ATLTRACE(_T("NPP_NewStream()\n"));
 
@@ -1150,7 +1154,7 @@ NPP_NewStream(NPP instance,
 //    The stream is done transferring and here is a pointer to the file in the cache
 //    This function is only called if the streamtype was set to NPAsFile.
 //
-void NP_LOADDS
+void
 NPP_StreamAsFile(NPP instance, NPStream *stream, const char* fname)
 {
     ATLTRACE(_T("NPP_StreamAsFile()\n"));
@@ -1173,9 +1177,9 @@ NPP_StreamAsFile(NPP instance, NPStream *stream, const char* fname)
 ////\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//.
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\.
 
-int32 STREAMBUFSIZE = 0X0FFFFFFF;   // we are reading from a file in NPAsFile mode
-                                    // so we can take any size stream in our write
-                                    // call (since we ignore it)
+int32_t STREAMBUFSIZE = 0X0FFFFFFF;   // we are reading from a file in NPAsFile mode
+                                      // so we can take any size stream in our write
+                                      // call (since we ignore it)
                                 
 
 // NPP_WriteReady
@@ -1183,7 +1187,7 @@ int32 STREAMBUFSIZE = 0X0FFFFFFF;   // we are reading from a file in NPAsFile mo
 //    The number of bytes that a plug-in is willing to accept in a subsequent
 //    NPO_Write call.
 //
-int32 NP_LOADDS
+int32_t
 NPP_WriteReady(NPP instance, NPStream *stream)
 {
     return STREAMBUFSIZE;  
@@ -1194,8 +1198,8 @@ NPP_WriteReady(NPP instance, NPStream *stream)
 //
 //    Provides len bytes of data.
 //
-int32 NP_LOADDS
-NPP_Write(NPP instance, NPStream *stream, int32 offset, int32 len, void *buffer)
+int32_t
+NPP_Write(NPP instance, NPStream *stream, int32_t offset, int32_t len, void *buffer)
 {   
     return len;
 }
@@ -1208,7 +1212,7 @@ NPP_Write(NPP instance, NPStream *stream, int32 offset, int32 len, void *buffer)
 //    that it was complete, because there was some error, or because 
 //    the user aborted it.
 //
-NPError NP_LOADDS
+NPError
 NPP_DestroyStream(NPP instance, NPStream *stream, NPError reason)
 {
     // because I am handling the stream as a file, I don't do anything here...
@@ -1222,7 +1226,7 @@ NPP_DestroyStream(NPP instance, NPStream *stream, NPError reason)
 //
 //    Printing the plugin (to be continued...)
 //
-void NP_LOADDS
+void
 NPP_Print(NPP instance, NPPrint* printInfo)
 {
     if(printInfo == NULL)   // trap invalid parm
@@ -1267,7 +1271,7 @@ NPP_URLNotify(NPP instance, const char* url, NPReason reason, void* notifyData)
     }
 }
 
-NPError	NP_LOADDS
+NPError
 NPP_GetValue(NPP instance, NPPVariable variable, void *value)
 {
     NPError rv = NPERR_GENERIC_ERROR;
@@ -1277,7 +1281,7 @@ NPP_GetValue(NPP instance, NPPVariable variable, void *value)
     return rv;
 }
 
-NPError	NP_LOADDS
+NPError
 NPP_SetValue(NPP instance, NPNVariable variable, void *value)
 {
     return NPERR_GENERIC_ERROR;

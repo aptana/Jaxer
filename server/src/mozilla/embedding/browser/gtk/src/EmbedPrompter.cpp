@@ -38,7 +38,6 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include "EmbedPrompter.h"
-#include "nsReadableUtils.h"
 
 enum {
     INCLUDE_USERNAME = 1 << 0,
@@ -48,8 +47,8 @@ enum {
 };
 
 struct DialogDescription {
-    int    flags;
-    gchar* icon;
+    int          flags;
+    const gchar* icon;
 };
 
 // This table contains the optional widgets and icons associated with
@@ -86,7 +85,7 @@ EmbedPrompter::EmbedPrompter(void)
       mUserField(NULL),
       mPassField(NULL),
       mTextField(NULL),
-      mOptionMenu(NULL),
+      mComboBox(NULL),
       mCheckBox(NULL)
 {
 }
@@ -218,23 +217,17 @@ EmbedPrompter::Create(PromptType aType, GtkWindow* aParentWindow)
 
     // Add a dropdown menu
     if (aType == TYPE_SELECT) {
-        // Build up a GtkMenu containing the items
-        GtkWidget* menu = gtk_menu_new();
+        // Build up a GtkComboBox containing the items
+        GtkWidget* mComboBox = gtk_combo_box_new_text();
         for (PRUint32 i = 0; i < mItemCount; ++i) {
-            GtkWidget* item = gtk_menu_item_new_with_label(mItemList[i].get());
-            gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+            gtk_combo_box_append_text(GTK_COMBO_BOX(mComboBox), mItemList[i].get());
         }
-
-        // Now create an OptionMenu and set this as the menu
-        mOptionMenu = gtk_option_menu_new();
-
-        gtk_option_menu_set_menu(GTK_OPTION_MENU(mOptionMenu), menu);
-        gtk_box_pack_start(GTK_BOX(contentsVBox), mOptionMenu, FALSE, FALSE, 0);
+        gtk_box_pack_start(GTK_BOX(contentsVBox), mComboBox, FALSE, FALSE, 0);
     }
 
     if (aType == TYPE_UNIVERSAL) {
         // Create buttons based on the flags passed in.
-        for (int i = EMBED_MAX_BUTTONS; i >= 0; --i) {
+        for (PRUint32 i = EMBED_MAX_BUTTONS; i-- > 0; ) {
             if (!mButtonLabels[i].IsEmpty())
                 gtk_dialog_add_button(GTK_DIALOG(mWindow),
                                       mButtonLabels[i].get(), i);
@@ -263,37 +256,37 @@ EmbedPrompter::Create(PromptType aType, GtkWindow* aParentWindow)
 void
 EmbedPrompter::SetTitle(const PRUnichar *aTitle)
 {
-    CopyUTF16toUTF8(aTitle, mTitle);
+    mTitle.Assign(NS_ConvertUTF16toUTF8(aTitle));
 }
 
 void
 EmbedPrompter::SetTextValue(const PRUnichar *aTextValue)
 {
-    CopyUTF16toUTF8(aTextValue, mTextValue);
+    mTextValue.Assign(NS_ConvertUTF16toUTF8(aTextValue));
 }
 
 void
 EmbedPrompter::SetCheckMessage(const PRUnichar *aMessage)
 {
-    CopyUTF16toUTF8(aMessage, mCheckMessage);
+    mCheckMessage.Assign(NS_ConvertUTF16toUTF8(aMessage));
 }
 
 void
 EmbedPrompter::SetMessageText(const PRUnichar *aMessageText)
 {
-    CopyUTF16toUTF8(aMessageText, mMessageText);
+    mMessageText.Assign(NS_ConvertUTF16toUTF8(aMessageText));
 }
 
 void
 EmbedPrompter::SetUser(const PRUnichar *aUser)
 {
-    CopyUTF16toUTF8(aUser, mUser);
+    mUser.Assign(NS_ConvertUTF16toUTF8(aUser));
 }
 
 void
 EmbedPrompter::SetPassword(const PRUnichar *aPass)
 {
-    CopyUTF16toUTF8(aPass, mPass);
+    mPass.Assign(NS_ConvertUTF16toUTF8(aPass));
 }
 
 void
@@ -311,7 +304,7 @@ EmbedPrompter::SetItems(const PRUnichar** aItemArray, PRUint32 aCount)
     mItemCount = aCount;
     mItemList = new nsCString[aCount];
     for (PRUint32 i = 0; i < aCount; ++i)
-        CopyUTF16toUTF8(aItemArray[i], mItemList[i]);
+        mItemList[i].Assign(NS_ConvertUTF16toUTF8(aItemArray[i]));
 }
 
 void
@@ -319,9 +312,9 @@ EmbedPrompter::SetButtons(const PRUnichar* aButton0Label,
                           const PRUnichar* aButton1Label,
                           const PRUnichar* aButton2Label)
 {
-    CopyUTF16toUTF8(aButton0Label, mButtonLabels[0]);
-    CopyUTF16toUTF8(aButton1Label, mButtonLabels[1]);
-    CopyUTF16toUTF8(aButton2Label, mButtonLabels[2]);
+    mButtonLabels[0].Assign(NS_ConvertUTF16toUTF8(aButton0Label));
+    mButtonLabels[1].Assign(NS_ConvertUTF16toUTF8(aButton1Label));
+    mButtonLabels[2].Assign(NS_ConvertUTF16toUTF8(aButton2Label));
 }
 
 void
@@ -339,19 +332,19 @@ EmbedPrompter::GetConfirmValue(PRBool *aConfirmValue)
 void
 EmbedPrompter::GetTextValue(PRUnichar **aTextValue)
 {
-    *aTextValue = UTF8ToNewUnicode(mTextValue);
+    *aTextValue = ToNewUnicode(NS_ConvertUTF8toUTF16(mTextValue));
 }
 
 void
 EmbedPrompter::GetUser(PRUnichar **aUser)
 {
-    *aUser = UTF8ToNewUnicode(mUser);
+    *aUser = ToNewUnicode(NS_ConvertUTF8toUTF16(mUser));
 }
 
 void
 EmbedPrompter::GetPassword(PRUnichar **aPass)
 {
-    *aPass = UTF8ToNewUnicode(mPass);
+    *aPass = ToNewUnicode(NS_ConvertUTF8toUTF16(mPass));
 }
 
 void
@@ -404,6 +397,15 @@ EmbedPrompter::SaveDialogValues()
     if (mTextField)
         mTextValue.Assign(gtk_entry_get_text(GTK_ENTRY(mTextField)));
 
-    if (mOptionMenu)
-        mSelectedItem = gtk_option_menu_get_history(GTK_OPTION_MENU(mOptionMenu));
+    if (mComboBox)
+    {
+        gchar *str = gtk_combo_box_get_active_text(GTK_COMBO_BOX(mComboBox));
+        for (PRUint32 i = 0; i < mItemCount; ++i) {
+            if(mItemList[i].Equals(str))
+            {
+                mSelectedItem = i;
+                break;
+            }
+        }
+    }
 }

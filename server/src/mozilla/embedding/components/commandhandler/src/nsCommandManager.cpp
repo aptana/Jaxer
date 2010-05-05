@@ -52,6 +52,7 @@
 #include "nsPIDOMWindow.h"
 #include "nsIDOMWindowInternal.h"
 #include "nsIFocusController.h"
+#include "nsIFocusManager.h"
 
 #include "nsCOMArray.h"
 
@@ -70,7 +71,7 @@ nsCommandManager::~nsCommandManager()
 }
 
 
-PR_STATIC_CALLBACK(PLDHashOperator)
+static PLDHashOperator
 TraverseCommandObservers(const char* aKey, nsCOMArray<nsIObserver>* aObservers,
                          void* aClosure)
 {
@@ -345,17 +346,7 @@ nsCommandManager::GetControllerForCommand(const char *aCommand,
   if (!focusController)
     return NS_ERROR_FAILURE;
 
-  nsCOMPtr<nsIDOMWindowInternal> focusWindowInternal;
-  rv = focusController->GetFocusedWindow(getter_AddRefs(focusWindowInternal));
-  if (NS_FAILED(rv))
-    return rv;
-
-  // get the destination window so we can check if it's in content or chrome
-  nsCOMPtr<nsIDOMWindow> destWindow = do_QueryInterface(focusWindowInternal);
-  if (!destWindow)
-    return NS_ERROR_FAILURE;
-
   // no target window; send command to focus controller
-  return focusController->GetControllerForCommand(aCommand, outController);
+  return focusController->GetControllerForCommand(window, aCommand, outController);
 }
 

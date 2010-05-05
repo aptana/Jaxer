@@ -44,11 +44,8 @@ VPATH		= @srcdir@
 include $(DEPTH)/config/autoconf.mk
 
 DIRS = webBrowser build
-ifndef MOZ_XUL_APP
-DIRS += chrome
-endif
 
-ifeq ($(OS_ARCH),WINNT)
+ifneq (,$(filter $(OS_ARCH),WINNT WINCE))
 ifndef MOZ_NO_ACTIVEX_SUPPORT
 TOOL_DIRS += activex/src
 endif

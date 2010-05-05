@@ -1,4 +1,4 @@
-# 
+#
 # ***** BEGIN LICENSE BLOCK *****
 # Version: MPL 1.1/GPL 2.0/LGPL 2.1
 #
@@ -12,19 +12,17 @@
 # for the specific language governing rights and limitations under the
 # License.
 #
-# The Original Code is the Mozilla browser.
+# The Original Code is mozilla.org code.
 #
-# The Initial Developer of the Original Code is
-# Netscape Communications, Inc.
-# Portions created by the Initial Developer are Copyright (C) 1999
+# The Initial Developer of the Original Code is Mozilla Foundation.
+# Portions created by the Initial Developer are Copyright (C) 2008
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s):
-#   Travis Bogard <travis@netscape.com>
 #
 # Alternatively, the contents of this file may be used under the terms of
-# either the GNU General Public License Version 2 or later (the "GPL"), or
-# the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+# either of the GNU General Public License Version 2 or later (the "GPL"),
+# or the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
 # in which case the provisions of the GPL or the LGPL are applicable instead
 # of those above. If you wish to allow use of your version of this file only
 # under the terms of either the GPL or the LGPL, and not to allow others to
@@ -36,63 +34,21 @@
 #
 # ***** END LICENSE BLOCK *****
 
-DEPTH		= ../../..
+DEPTH		= ../..
 topsrcdir	= @top_srcdir@
 srcdir		= @srcdir@
 VPATH		= @srcdir@
+relativesrcdir  = embedding/test
 
 include $(DEPTH)/config/autoconf.mk
-
-MODULE		= webbrwsr
-LIBRARY_NAME	= webbrwsr
-IS_COMPONENT	= 1
-MODULE_NAME	= Browser_Embedding_Module
-EXPORT_LIBRARY	= 1
-GRE_MODULE	= 1
-LIBXUL_LIBRARY	= 1
-
-REQUIRES	= xpcom \
-		  string \
-		  docshell \
-		  dom \
-		  widget \
-		  gfx \
-		  content \
-		  necko \
-		  uriloader \
-		  shistory \
-		  windowwatcher \
-		  webbrowserpersist \
-		  embed_base \
-		  $(NULL)
-
-ifeq (,$(filter-out WINCE WINNT,$(OS_ARCH)))
-EXTRA_DSO_LIBS	= gkgfx
-endif
-
-CPPSRCS		= \
-		nsWebBrowserModule.cpp		\
-		$(NULL)
-
-SHARED_LIBRARY_LIBS= \
-		../webBrowser/$(LIB_PREFIX)nsWebBrowser_s.$(LIB_SUFFIX) \
-		$(NULL)
-
-EXTRA_DSO_LDOPTS= \
-		$(LIBS_DIR) \
-		$(EXTRA_DSO_LIBS) \
-		$(MOZ_UNICHARUTIL_LIBS) \
-		$(MOZ_COMPONENT_LIBS) \
-		$(NULL)
-
-ifeq (mac,$(MOZ_WIDGET_TOOLKIT))
-EXTRA_DSO_LDOPTS += $(TK_LIBS)
-endif
-
 include $(topsrcdir)/config/rules.mk
 
-INCLUDES	+= \
-		-I$(srcdir)			\
-		-I$(srcdir)/../webBrowser		\
-		-I$(srcdir)/../setup		\
-		$(NULL)
+_TEST_FILES = \
+	test_bug293834.html \
+	bug293834_form.html \
+	test_bug499115.html \
+	test_nsFind.html \
+	$(NULL)
+
+libs:: $(_TEST_FILES)
+	$(INSTALL) $(foreach f,$^,"$f") $(DEPTH)/_tests/testing/mochitest/tests/$(relativesrcdir)
