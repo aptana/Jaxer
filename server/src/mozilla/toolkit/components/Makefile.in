@@ -80,7 +80,7 @@ DIRS += \
 	aboutmemory \
 	$(NULL)
 
-endif
+endif # JAXER
 
 ifneq (,$(filter cocoa, $(MOZ_WIDGET_TOOLKIT)))
 TOOL_DIRS += alerts
@@ -104,12 +104,14 @@ ifdef MOZ_VIEW_SOURCE
 DIRS +=	viewsource
 endif
 
+ifndef JAXER
 ifdef MOZ_XUL
 DIRS += \
   autocomplete \
   satchel \
   $(NULL)
 endif
+endif # JAXER
 
 ifndef MOZ_THUNDERBIRD
 
@@ -119,9 +121,11 @@ endif
 
 endif # MOZ_THUNDERBIRD
 
+ifndef JAXER
 ifdef MOZ_RDF
 DIRS +=	downloads
 endif
+endif # JAXER
 
 ifdef MOZ_URL_CLASSIFIER
 DIRS += url-classifier
@@ -131,11 +135,18 @@ ifdef MOZ_FASTSTART
 DIRS += faststart
 endif
 
+ifdef JAXER
+DIRS += \
+	commandlines \
+	build \
+	$(NULL)
+else
 DIRS += \
 	commandlines \
 	startup \
 	build \
 	$(NULL)
+endif # JAXER
 
 EXTRA_PP_COMPONENTS = nsDefaultCLH.js
 

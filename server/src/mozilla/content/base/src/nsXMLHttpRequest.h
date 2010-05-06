@@ -75,6 +75,11 @@
 #include "nsHashKeys.h"
 #include "prclist.h"
 #include "prtime.h"
+#include "nsIDOMNSEvent.h"
+#include "nsITimer.h"
+#include "nsIPrivateDOMEvent.h"
+#include "nsDOMProgressEvent.h"
+#include "nsDOMEventTargetHelper.h"
 #ifdef JAXER
 #include "aptIBadCertHandler.h"
 #endif /* JAXER */

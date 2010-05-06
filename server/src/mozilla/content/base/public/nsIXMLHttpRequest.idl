@@ -345,6 +345,20 @@ interface nsIXMLHttpRequest : nsISupports
    * Call open() before setting an onreadystatechange listener.
    */
   attribute nsIDOMEventListener onreadystatechange;
+
+#ifdef JAXER
+  /**
+   * Meant to be a script-only mechanism for setting a callback function.
+   * The attribute is expected to be JavaScript function object. When a
+   * SSL certificate error occurs, the callback function will be called.
+   * This attribute should not be used from native code!!
+   *
+   * After the initial response, all event listeners will be cleared.
+   * // XXXbz what does that mean, exactly?   
+   *
+   */
+  attribute aptIBadCertHandler onsslcerterror;
+#endif /* JAXER */
 };
 
 /**
@@ -366,20 +380,6 @@ interface nsIJSXMLHttpRequest : nsISupports {
    * Mozilla only.
    */
   attribute nsIDOMEventListener onuploadprogress;
-
-#ifdef JAXER
-  /**
-   * Meant to be a script-only mechanism for setting a callback function.
-   * The attribute is expected to be JavaScript function object. When a
-   * SSL certificate error occurs, the callback function will be called.
-   * This attribute should not be used from native code!!
-   *
-   * After the initial response, all event listeners will be cleared.
-   * // XXXbz what does that mean, exactly?   
-   *
-   */
-  attribute aptIBadCertHandler onsslcerterror;
-#endif /* JAXER */
 };
 
 %{ C++

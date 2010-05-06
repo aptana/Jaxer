@@ -49,7 +49,7 @@
 #include "nsNetCID.h"
 #include "plstr.h"
 #include "prenv.h"
-#include "nsISchemaValidatorRegexp.h"
+//#include "nsISchemaValidatorRegexp.h"
 #include "nsString.h"
 
 //#define kREGEXP_CID "@mozilla.org/xmlextras/schemas/schemavalidatorregexp;1"
@@ -2649,6 +2649,7 @@ nsresult HTTPStream::FindMatch(const susll* pattern_list, const char* value, PRB
 	*bMatch = PR_FALSE;
 	nsAutoString aValue = NS_ConvertUTF8toUTF16(value);
 
+/* TODOmstepanov
 	nsCOMPtr<nsISchemaValidatorRegexp> regexp = do_GetService(NS_SCHEMAVALIDATORREGEXP_CONTRACTID);
 	
 	PRBool isValid;
@@ -2664,6 +2665,7 @@ nsresult HTTPStream::FindMatch(const susll* pattern_list, const char* value, PRB
 		}
 		pt = pt->next;
 	}
+	*/
 
 	return rv;
 }

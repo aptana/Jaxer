@@ -2352,7 +2352,7 @@
 				if (JS_UNLIKELY(op == JSOP_CALLNAME)) {
 					id = ATOM_TO_JSID(cx->runtime->atomState.noSuchMethodAtom);
 					for (obj = fp->scopeChain; obj; obj = OBJ_GET_PARENT(cx, obj)) {
-						if (!OBJ_LOOKUP_PROPERTY(cx, obj, id, &obj2, &prop))
+						if (!obj->lookupProperty(cx, id, &obj2, &prop))
 							goto error;
 						if (prop)
 							break;

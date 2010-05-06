@@ -768,8 +768,6 @@ jxWindow::CreateEvent(const nsAString& aType, nsIDOMEvent** aDOMEvent)
   }
   
   privevent->SetTarget(this);
-  privevent->SetCurrentTarget(this);
-  privevent->SetOriginalTarget(this);
 
   // We assume anyone who managed to call CreateEvent is trusted
   privevent->SetTrusted(PR_TRUE);

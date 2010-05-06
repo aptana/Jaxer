@@ -567,7 +567,7 @@ Connection::GetDatabaseFile(nsIFile **_dbFile)
 
 #ifdef JAXER
 NS_IMETHODIMP
-mozStorageConnection::GetChangedRowCount(PRInt32 *aRowCount)
+Connection::GetChangedRowCount(PRInt32 *aRowCount)
 {
     if (!mDBConn) return NS_ERROR_NOT_INITIALIZED;
 

@@ -3391,17 +3391,19 @@ nsLayoutUtils::SurfaceFromElement(nsIDOMElement *aElement,
                                getter_AddRefs(imgRequest));
 #ifdef JAXER
 	if (!imgRequest) {
-	       rv = imageLoader->ForceReload();
-	          NS_ENSURE_SUCCESS(rv, rv);
+	    rv = imageLoader->ForceReload();
+	    if (NS_FAILED(rv))
+	      return result;
 		rv = imageLoader->GetRequest(nsIImageLoadingContent::CURRENT_REQUEST,
 									 getter_AddRefs(imgRequest));
-		NS_ENSURE_SUCCESS(rv, rv);
+	    if (NS_FAILED(rv))
+	      return result;
 		PRUint32 status;
 		imgRequest->GetImageStatus(&status);
 		nsIThread *thread = NS_GetCurrentThread();
 		while ((status & imgIRequest::STATUS_ERROR) == 0 && (status & imgIRequest::STATUS_LOAD_COMPLETE) == 0) {
 			if (!NS_ProcessNextEvent(thread)) {
-				return NS_ERROR_UNEXPECTED;
+				return result;
 			}
 			imgRequest->GetImageStatus(&status);
 		}

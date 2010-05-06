@@ -263,25 +263,25 @@ if cfg['skipBuilds'] == False:
 #                 'src/mozilla/' + ffdir + '/dist/bin/JaxerManager.cfg')
 
     # Build LogServer
-    print "\n===== Building JaxerLogger."
-    if GetOS() == WINDOWS:
-        system('cd src/Utils/JaxerLog && MSBuild.exe JaxerLog.vcproj')
-        copyfile('src/Utils/JaxerLog/Release/JaxerLogger.exe',
-                 'src/mozilla/' + ffdir + '/dist/bin/JaxerLogger.exe')
-    elif GetOS() == SOLARIS:
-        system('cd src/Utils/JaxerLog && gcc -I../../libevent/libevent-1.4.2-rc -o jaxerlogger LogServerUnix.cpp -L../../libevent/libevent-1.4.2-rc/.libs -levent -lxnet -lstdc++')
-        copyfile('src/Utils/JaxerLog/jaxerlogger',
-                 'src/mozilla/' + ffdir + '/dist/bin/jaxerlogger')
-    elif GetOS()+'x' == LINUX:
-        system('cd src/Utils/JaxerLog && g++ -I../../libevent/libevent-1.4.2-rc -L../../libevent/libevent-1.4.2-rc/.libs -levent -lrt -o jaxerlogger LogServerUnix.cpp')
-        copyfile('src/Utils/JaxerLog/jaxerlogger',
-                 'src/mozilla/' + ffdir + '/dist/bin/jaxerlogger')
-    elif GetOS() == MACOS:
-        system('cd src/Utils/JaxerLog && bash ./buildMacUniversal.sh')
-        copyfile('src/Utils/JaxerLog/JaxerLogger',
-                 'src/mozilla/' + ffdir + '/ppc/dist/bin/JaxerLogger')
-        copyfile('src/Utils/JaxerLog/JaxerLogger',
-                 'src/mozilla/' + ffdir + '/i386/dist/bin/JaxerLogger')
+#    print "\n===== Building JaxerLogger."
+#    if GetOS() == WINDOWS:
+#        system('cd src/Utils/JaxerLog && MSBuild.exe JaxerLog.vcproj')
+#        copyfile('src/Utils/JaxerLog/Release/JaxerLogger.exe',
+#                 'src/mozilla/' + ffdir + '/dist/bin/JaxerLogger.exe')
+#    elif GetOS() == SOLARIS:
+#        system('cd src/Utils/JaxerLog && gcc -I../../libevent/libevent-1.4.2-rc -o jaxerlogger LogServerUnix.cpp -L../../libevent/libevent-1.4.2-rc/.libs -levent -lxnet -lstdc++')
+#        copyfile('src/Utils/JaxerLog/jaxerlogger',
+#                 'src/mozilla/' + ffdir + '/dist/bin/jaxerlogger')
+#    elif GetOS() == LINUX:
+#        system('cd src/Utils/JaxerLog && g++ -I../../libevent/libevent-1.4.2-rc -L../../libevent/libevent-1.4.2-rc/.libs -levent -lrt -o jaxerlogger LogServerUnix.cpp')
+#        copyfile('src/Utils/JaxerLog/jaxerlogger',
+#                 'src/mozilla/' + ffdir + '/dist/bin/jaxerlogger')
+#    elif GetOS() == MACOS:
+#        system('cd src/Utils/JaxerLog && bash ./buildMacUniversal.sh')
+#        copyfile('src/Utils/JaxerLog/JaxerLogger',
+#                 'src/mozilla/' + ffdir + '/ppc/dist/bin/JaxerLogger')
+#        copyfile('src/Utils/JaxerLog/JaxerLogger',
+#                 'src/mozilla/' + ffdir + '/i386/dist/bin/JaxerLogger')
 
 
     print "\n===== Building Jaxer." 

@@ -40,12 +40,14 @@
 #include "jsxdrapi.h"
 #include "jsdbgapi.h"
 #include "nsIJSContextStack.h"
-#include "nsWebShell.h"
 #include "nsIPrincipal.h"
 #include "nsServiceManagerUtils.h"
+#include "nsIInterfaceRequestorUtils.h"
 #include "nsIXPConnect.h"
 #include "nsIScriptSecurityManager.h"
 #include "nsIDOMHTMLImageElement.h"
+#include "nsIWebNavigation.h"
+#include "nsIDocShell.h"
 #include "nsImageLoadingContent.h"
 #include "imgIContainer.h"
 #include "aptIDocumentFetcherService.h"
@@ -53,6 +55,7 @@
 #include "nsIFileStreams.h"
 #include "nsILocalFile.h"
 #include "nsContentCID.h"
+#include "nsThreadUtils.h"
 
 #include "aptEventTypeManager.h"
 #include "aptEventScriptCompileData.h"
@@ -1079,6 +1082,16 @@ jsstrlen(const jschar *s)
     return (size_t)(t - s);
 }
 
+static void
+ReportPendingException(JSContext *cx)
+{
+	if (JS_IsExceptionPending(cx)) {
+		JSStackFrame* frame = JS_SaveFrameChain(cx);
+		::JS_ReportPendingException(cx);
+		JS_RestoreFrameChain(cx, frame);
+	}
+}
+
 /* void ExecuteJavascript(in wstring script [, in string url [, in JSObject *target_obj]]); */
 NS_IMETHODIMP
 aptHTTPRequest::ExecuteJavascript(const PRUnichar * /*script*/ /* [, const char *url] */ /* [, JSObject *target_obj] */)
@@ -1125,7 +1138,6 @@ aptHTTPRequest::ExecuteJavascript(const PRUnichar * /*script*/ /* [, const char 
 		JSBool ok = JS_ConvertArguments (cx, argc, argv, "W / s o", &scriptText, &url, &target_obj);
 		if (!ok)
 		{
-			cc->SetExceptionWasThrown (JS_TRUE);
 			/* let the exception raised by JS_ConvertArguments show through */
 			return NS_OK;
 		}
@@ -1211,7 +1223,9 @@ aptHTTPRequest::ExecuteJavascript(const PRUnichar * /*script*/ /* [, const char 
 
     JS_SetOptions(cx, options);
 
-    cc->SetExceptionWasThrown (!ok);
+    if (!ok) {
+		ReportPendingException(cx);
+	}
     cc->SetReturnValueWasSet (ok);
 
     JSContext *oldcx;
@@ -1291,7 +1305,6 @@ aptHTTPRequest::CompileScript(const PRUnichar * /*script*/ /* [, const char *url
 		JSBool ok = JS_ConvertArguments (cx, argc, argv, "W / s o", &scriptText, &url, &target_obj);
 		if (!ok)
 		{
-			cc->SetExceptionWasThrown (JS_TRUE);
 			/* let the exception raised by JS_ConvertArguments show through */
 			return NS_OK;
 		}
@@ -1467,7 +1480,6 @@ aptHTTPRequest::RunScript(const PRUnichar * /*data*/ /* [, JSObject *target_obj]
 		JSBool ok = JS_ConvertArguments (cx, argc, argv, "S / o", &data, &target_obj);
 		if (!ok)
 		{
-			cc->SetExceptionWasThrown (JS_TRUE);
 			/* let the exception raised by JS_ConvertArguments show through */
 			return NS_OK;
 		}
@@ -1553,7 +1565,9 @@ aptHTTPRequest::RunScript(const PRUnichar * /*data*/ /* [, JSObject *target_obj]
 
     JS_SetOptions(cx, options);
 
-    cc->SetExceptionWasThrown (!ok);
+    if (!ok) {
+		ReportPendingException(cx);
+	}
     cc->SetReturnValueWasSet (ok);
 
     JSContext *oldcx;
@@ -1625,7 +1639,7 @@ aptHTTPRequest::Exit()
 	rv = xpc->GetCurrentNativeCallContext(&cc);
 	NS_ENSURE_SUCCESS(rv, NS_ERROR_FAILURE);
 
-	cc->SetExceptionWasThrown(JS_TRUE);
+	// TODOmstepanov cc->SetExceptionWasThrown(JS_TRUE);
 
 	return NS_OK;
 }

@@ -34,7 +34,9 @@
 #include "nsISupports.h"
 #include "nsIXPConnect.h"
 #include "jsapi.h"
+#undef __cplusplus
 #include "jsobj.h"
+#define __cplusplus
 #include "jsdbgapi.h"
 #include "nsIJSRuntimeService.h"
 #include "nsIXPCScriptable.h"
@@ -62,6 +64,9 @@
 
 extern aptCoreTrace gJaxerLog;
 #endif
+
+#define OBJ_GET_PROPERTY(cx,obj,id,vp)                                        \                                                                                            
+    (obj)->map->ops->getProperty(cx,obj,id,vp)                                                                                                                             
 
 static nsresult
 NewJaxerGlobalObject(nsIScriptContext *aContext, nsISupports *aParent, void **aReturn);
@@ -173,6 +178,14 @@ aptJaxerGlobal::GetPrivate(JSObject * *aPrivate)
 	return NS_OK;
 }
 
+static jsval                                                                                                                                                                      
+ConvertStringToJSVal(const nsString& aProp, JSContext* aContext)                                                                                                
+{
+	JSString *jsstring = ::JS_NewUCStringCopyN(aContext, reinterpret_cast<const jschar*>(aProp.get()), aProp.Length());
+	// set the return valu
+	return STRING_TO_JSVAL(jsstring);                                                                                                                                        
+}
+
 static JSBool
 SealObject(JSContext *cx, JSObject *obj, uintN level, JSString **exclude)
 {
@@ -240,7 +253,7 @@ SealObject(JSContext *cx, JSObject *obj, uintN level, JSString **exclude)
 	return ok;
 }
 
-JS_STATIC_DLL_CALLBACK(JSBool)
+static JSBool
 JaxerGlobalSeal(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
     // verify that the current call is from system 
@@ -274,7 +287,7 @@ JaxerGlobalSeal(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rv
 	return JS_TRUE;
 }
 
-JS_STATIC_DLL_CALLBACK(JSBool)
+static JSBool
 JaxerGlobal_private_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 {
 	nsresult rv;
@@ -294,7 +307,7 @@ JaxerGlobal_private_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
-JS_STATIC_DLL_CALLBACK(JSBool)
+static JSBool
 JaxerGlobal_pageWindow_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 {
     nsCOMPtr<aptIDocumentFetcherService> dfs(do_GetService("@aptana.com/httpdocumentfetcher;1"));
@@ -330,7 +343,7 @@ enum jaxer_tinyid {
 	JAXER_BUILDNUMBER = -3
 };
 
-JS_STATIC_DLL_CALLBACK(JSBool)
+static JSBool
 JaxerGlobal_getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 {
 	if (!JSVAL_IS_INT(id))
@@ -338,7 +351,7 @@ JaxerGlobal_getProperty(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 	
 	switch (JSVAL_TO_INT(id)) {
 	case JAXER_BUILDNUMBER:
-		*vp = nsJSUtils::ConvertStringToJSVal(NS_LITERAL_STRING(JAXER_BUILD_ID), cx);
+		*vp = ConvertStringToJSVal(NS_LITERAL_STRING(JAXER_BUILD_ID), cx);
 		break;
 	}
 	return JS_TRUE;
@@ -426,7 +439,7 @@ aptJaxerGlobal::ReallyInit()
 
 	// Jaxer.private.OS = <OS_TARGET>
 	JSBool ok = JS_DefineProperty(mContext, mPrivate, "OS",
-					nsJSUtils::ConvertStringToJSVal(NS_LITERAL_STRING(OS_TARGET), mContext),
+					ConvertStringToJSVal(NS_LITERAL_STRING(OS_TARGET), mContext),
 					nsnull, nsnull,
 					JSPROP_READONLY | JSPROP_PERMANENT);
 	NS_ENSURE_TRUE(ok, NS_ERROR_FAILURE);

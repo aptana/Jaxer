@@ -52,6 +52,7 @@
 #include "nsICategoryManager.h"
 #include "nsIXULAppInfo.h"
 #include "nsXULAppAPI.h"
+#include "nsXPCOMCIDInternal.h"
 #include "nsIXULRuntime.h"
 #include "nsIAppStartupNotifier.h"
 #include "nsDirectoryServiceDefs.h"

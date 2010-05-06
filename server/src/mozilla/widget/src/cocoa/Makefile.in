@@ -107,12 +107,17 @@ CMMSRCS = \
 		nsLookAndFeel.mm \
 		nsNativeThemeCocoa.mm \
 		nsDeviceContextSpecX.mm \
-		nsPrintDialogX.mm \
-		nsPrintOptionsX.mm \
-		nsPrintSettingsX.mm \
 		nsIdleServiceX.mm \
 		nsAccelerometerX.mm \
 		$(NULL)
+
+ifdef NS_PRINTING
+CMMSRCS = \
+		nsPrintDialogX.mm \
+		nsPrintOptionsX.mm \
+		nsPrintSettingsX.mm \
+		$(NULL)
+endif
 
 XPIDLSRCS	+= \
 		nsPIWidgetCocoa.idl \

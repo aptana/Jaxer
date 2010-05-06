@@ -1280,7 +1280,7 @@ nsXMLHttpRequest::DetectCharsetFromDoc(nsACString& aCharset)
   // Construct the dummy objects we will need in order to call
   // the methods.
   nsParser ps;
-  CParserContext *ct = new CParserContext(nsnull);
+  CParserContext *ct = new CParserContext(nsnull, nsnull);
   ct->SetMimeType(NS_LITERAL_CSTRING("text/html"));
 
   // ps owns ct
@@ -2478,7 +2478,7 @@ nsXMLHttpRequest::Send(nsIVariant *aBody)
 #ifdef JAXER
 	else
 	{
-		nsCOMPtr<nsIDocument> doc = GetDocumentFromScriptContext(mScriptContext);
+		nsCOMPtr<nsIDocument> doc = nsContentUtils::GetDocumentFromScriptContext(mScriptContext);
 		if (doc) {
 			httpChannel->SetReferrer(doc->GetDocumentURI());
 		}

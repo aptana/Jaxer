@@ -34,7 +34,7 @@
 #include "nsIComponentManager.h"
 #include "nsThreadUtils.h"
 #include "prlog.h"
-#include "nsWebShell.h"
+#include "nsDocShell.h"
 #include "nsIWebProgress.h"
 #include "nsIObserver.h"
 #include "nsIObserverService.h"
@@ -297,7 +297,7 @@ DocumentFetcher::Init()
     }
 
     // Create shell
-    mDocShell = do_CreateInstance("@mozilla.org/webshell;1");
+    mDocShell = do_CreateInstance("@mozilla.org/docshell;1");
     if (!mDocShell)
     {
         gJaxerLog.Log(eERROR, "Create webshell failed.");

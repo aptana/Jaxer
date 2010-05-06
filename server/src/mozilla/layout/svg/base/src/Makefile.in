@@ -73,7 +73,6 @@ CPPSRCS		= \
 		nsSVGEffects.cpp \
 		nsSVGFilterFrame.cpp \
 		nsSVGFilterInstance.cpp \
-		nsSVGForeignObjectFrame.cpp \
 		nsSVGGFrame.cpp \
 		nsSVGGenericContainerFrame.cpp \
 		nsSVGGeometryFrame.cpp \
@@ -98,6 +97,12 @@ CPPSRCS		= \
 		nsSVGUseFrame.cpp \
 		nsSVGUtils.cpp \
 		$(NULL)
+
+ifdef MOZ_SVG_FOREIGNOBJECT
+CPPSRCS		= \
+		nsSVGForeignObjectFrame.cpp \
+		$(NULL)
+endif
 
 include $(topsrcdir)/config/config.mk
 

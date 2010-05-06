@@ -42,8 +42,7 @@
 #ifdef WIN32
 #include <windows.h>
 #elif defined(XP_MACOSX)
-#include <CFURL.h>
-#include <CFBundle.h>
+#include <Carbon/Carbon.h>
 #elif defined(XP_UNIX)
 #include <dlfcn.h>
 #include <unistd.h>                                                                                                  
