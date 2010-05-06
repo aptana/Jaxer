@@ -57,6 +57,18 @@ include $(DEPTH)/config/autoconf.mk
 
 MODULE		= necko
 
+ifdef JAXER
+DIRS		= \
+		base \
+		cookie \
+		dns \
+		socket \
+		mime \
+		streamconv \
+		cache \
+		protocol \
+        $(NULL)
+else
 DIRS		= \
 		base \
 		cookie \
@@ -68,6 +80,7 @@ DIRS		= \
 		protocol \
 		system \
         $(NULL)
+endif # JAXER
 
 ifdef NECKO_WIFI
 DIRS 		+= wifi

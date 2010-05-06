@@ -285,6 +285,7 @@ NS_GENERIC_FACTORY_CONSTRUCTOR(nsSimpleNestedURI)
 NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsIDNService, Init)
 
 ///////////////////////////////////////////////////////////////////////////////
+#ifndef JAXER
 #if defined(XP_WIN)
 #include "nsNotifyAddrListener.h"
 NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsNotifyAddrListener, Init)
@@ -295,6 +296,7 @@ NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsNetworkLinkService, Init)
 #include "nsMaemoNetworkLinkService.h"
 NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsMaemoNetworkLinkService, Init)
 #endif
+#endif /* JAXER */
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -1147,6 +1149,7 @@ static const nsModuleComponentInfo gNetModuleInfo[] = {
     },
 #endif
 
+#ifndef JAXER
 #if defined(XP_WIN)
     { NS_NETWORK_LINK_SERVICE_CLASSNAME,
       NS_NETWORK_LINK_SERVICE_CID,
@@ -1166,6 +1169,7 @@ static const nsModuleComponentInfo gNetModuleInfo[] = {
       nsMaemoNetworkLinkServiceConstructor
     },
 #endif
+#endif /* JAXER */
 };
 
 NS_IMPL_NSGETMODULE_WITH_CTOR_DTOR(necko, gNetModuleInfo,

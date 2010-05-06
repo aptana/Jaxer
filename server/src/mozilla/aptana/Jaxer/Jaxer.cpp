@@ -338,6 +338,13 @@ nsXULAppInfo::GetXPCOMABI(nsACString& aResult)
 #endif
 }
 
+NS_IMETHODIMP
+nsXULAppInfo::GetWidgetToolkit(nsACString& aResult)
+{
+  aResult.AssignLiteral(MOZ_WIDGET_TOOLKIT);
+  return NS_OK;
+}
+
 #ifdef MOZ_CRASHREPORTER
 NS_IMETHODIMP
 nsXULAppInfo::AnnotateCrashReport(const nsACString& key,

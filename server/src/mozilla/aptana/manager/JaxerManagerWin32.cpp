@@ -73,7 +73,7 @@ static char sJaxerImageDir[0x2000];
 static LogClient lc;
 static LogServerInfo lsi;
 
-#ifdef ENABLE_CRASHREPORTER
+#ifdef MOZ_CRASHREPORTER
 #include "CrashReport.h"
 #endif
 
@@ -2087,7 +2087,7 @@ int CommonMain(int argc, char **argv)
     size_t convertedChars = 0;
     mbstowcs_s(&convertedChars, wDumpDir, nlen, tmpdir, _TRUNCATE);
 
-#ifdef ENABLE_CRASHREPORTER
+#ifdef MOZ_CRASHREPORTER
     google_breakpad::ExceptionHandler ch(
          wDumpDir,                             // Where to dump
          google_breakpad::BeforeDumpCallback,  // FilterCallback

@@ -74,6 +74,8 @@ ac_add_options --enable-single-profile
 ac_add_options --disable-necko-disk-cache
 ac_add_options --disable-native-uconv
 ac_add_options --disable-places
+ac_add_options --disable-ogg
+ac_add_options --disable-wave
 ac_add_options --disable-javaxpcom
 ac_add_options --disable-libxul
 ac_add_options --without-system-nspr
@@ -93,12 +95,7 @@ ac_add_options --enable-cookies
 
 # linux build fails with these options
 #ac_add_options --disable-postscript
-#ac_add_options --disable-permissions
-
-# options which fail build for now
-#ac_add_options --with-embedding-profile=minimal --disable-js-static-build
-#ac_add_options --disable-xul
-#ac_add_options --disable-rdf
+ac_add_options --disable-permissions
 
 # compiler/build options
 ac_add_options --disable-pedantic

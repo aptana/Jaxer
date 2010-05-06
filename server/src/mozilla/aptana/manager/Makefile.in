@@ -95,7 +95,7 @@ endif
 
 
 ifdef MOZ_CRASHREPORTER
-DEFINES += -DENABLE_CRASHREPORTER
+DEFINES += -DMOZ_CRASHREPORTER
 REQUIRES += crashreporter
 CRASHREPORTER_LIBS = $(DEPTH)/toolkit/crashreporter/$(LIB_PREFIX)exception_handler_s.$(LIB_SUFFIX)
 ifeq ($(OS_ARCH),WINNT)

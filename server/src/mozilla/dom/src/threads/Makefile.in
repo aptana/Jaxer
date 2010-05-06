@@ -67,6 +67,12 @@ REQUIRES = \
   xpconnect \
   $(NULL)
 
+ifdef JAXER
+REQUIRES = \
+  aptana \
+  $(NULL)
+endif # JAXER
+
 CPPSRCS = \
   nsDOMThreadService.cpp \
   nsDOMWorker.cpp \

@@ -62,10 +62,12 @@
 #include "nsIdleServiceX.h"
 
 #include "nsScreenManagerCocoa.h"
+#ifdef NS_PRINTING
 #include "nsDeviceContextSpecX.h"
 #include "nsPrintOptionsX.h"
 #include "nsPrintDialogX.h"
 #include "nsPrintSession.h"
+#endif // NS_PRINTING
 
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsCocoaWindow)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsChildView)
@@ -80,10 +82,12 @@ NS_GENERIC_FACTORY_CONSTRUCTOR(nsClipboard)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsClipboardHelper)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsDragService)
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsScreenManagerCocoa)
+#ifdef NS_PRINTING
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsDeviceContextSpecX)
 NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsPrintOptionsX, Init)
 NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsPrintDialogServiceX, Init)
 NS_GENERIC_FACTORY_CONSTRUCTOR_INIT(nsPrintSession, Init)
+#endif // NS_PRINTING
 NS_GENERIC_FACTORY_CONSTRUCTOR(nsIdleServiceX)
 
 #include "nsMenuBarX.h"
@@ -165,6 +169,7 @@ static const nsModuleComponentInfo gComponents[] =
     NS_SCREENMANAGER_CID,
     "@mozilla.org/gfx/screenmanager;1",
     nsScreenManagerCocoaConstructor },
+#ifdef NS_PRINTING
   { "nsDeviceContextSpec",
      NS_DEVICE_CONTEXT_SPEC_CID,
      "@mozilla.org/gfx/devicecontextspec;1",
@@ -181,6 +186,7 @@ static const nsModuleComponentInfo gComponents[] =
     NS_PRINTDIALOGSERVICE_CID,
     NS_PRINTDIALOGSERVICE_CONTRACTID,
     nsPrintDialogServiceXConstructor },
+#endif // NS_PRINTING
   { "User Idle Service",
     NS_IDLE_SERVICE_CID,
     "@mozilla.org/widget/idleservice;1",

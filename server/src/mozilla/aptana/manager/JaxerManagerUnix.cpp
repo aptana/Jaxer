@@ -74,8 +74,10 @@
 static LogClient lc;
 static LogServerInfo lsi;
 
+#ifdef MOZ_CRASHREPORTER
 #if !defined(LINUX_64)
 #include "crashreport.h"
+#endif
 #endif
 
 static void RedeployServer(Server *s);
@@ -1727,6 +1729,7 @@ int main(int argc, char **argv)
 	//const char * dumpDir = g_ManagerSettings[NAME_TEMP_DIR].c_str();
 	const char* dumpDir = g_Settings["-tempdir"].c_str();
     
+#ifdef MOZ_CRASHREPORTER
 #if !defined(LINUX_64)
     //LINUX
     google_breakpad::ExceptionHandler eh(
@@ -1736,6 +1739,7 @@ int main(int argc, char **argv)
          NULL,                                 // callback context
          true                                  // always write a dump when exception occurs
          );
+#endif
 #endif
 
     // Setup log fifo

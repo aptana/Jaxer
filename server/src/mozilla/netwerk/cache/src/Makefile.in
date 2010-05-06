@@ -80,6 +80,7 @@ CPPSRCS += \
 	$(NULL)
 endif
 
+ifndef JAXER
 ifdef MOZ_STORAGE
 CPPSRCS += \
 	nsDiskCacheDeviceSQL.cpp \
@@ -88,6 +89,7 @@ CPPSRCS += \
 REQUIRES += storage
 DEFINES += -DNECKO_OFFLINE_CACHE
 endif
+endif # JAXER
 
 LOCAL_INCLUDES=-I$(srcdir)/../../base/src
 

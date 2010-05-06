@@ -59,6 +59,10 @@
 #include "nsDOMWorkerPool.h"
 #include "nsDOMWorkerXHRProxy.h"
 
+#ifdef JAXER
+#include "aptIBadCertHandler.h"
+#endif /* JAXER */
+
 // The list of event types that we support. This list and the defines based on
 // it determine the sizes of the listener arrays in nsDOMWorkerXHRProxy. Make
 // sure that any event types shared by both the XHR and Upload objects are
@@ -898,6 +902,25 @@ nsDOMWorkerXHR::SetOnreadystatechange(nsIDOMEventListener* aOnreadystatechange)
 
   return SetOnXListener(type, aOnreadystatechange);
 }
+
+#ifdef JAXER
+/* attribute aptIBadCertHandler onsslcerterror; */
+NS_IMETHODIMP
+nsDOMWorkerXHR::GetOnsslcerterror(aptIBadCertHandler * *aOnsslcerterror)
+{
+  NS_ENSURE_ARG_POINTER(aOnsslcerterror);
+
+  NS_IF_ADDREF(*aOnsslcerterror = nsnull);
+
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+nsDOMWorkerXHR::SetOnsslcerterror(aptIBadCertHandler * aOnsslcerterror)
+{
+  return NS_OK;
+}
+#endif /* JAXER */
 
 NS_IMETHODIMP
 nsDOMWorkerXHR::GetWithCredentials(PRBool* aWithCredentials)

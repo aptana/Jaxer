@@ -106,7 +106,6 @@ CMMSRCS = \
 		nsSound.mm \
 		nsLookAndFeel.mm \
 		nsNativeThemeCocoa.mm \
-		nsDeviceContextSpecX.mm \
 		nsIdleServiceX.mm \
 		nsAccelerometerX.mm \
 		$(NULL)
@@ -116,6 +115,7 @@ CMMSRCS = \
 		nsPrintDialogX.mm \
 		nsPrintOptionsX.mm \
 		nsPrintSettingsX.mm \
+		nsDeviceContextSpecX.mm \
 		$(NULL)
 endif
 

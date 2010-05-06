@@ -78,6 +78,7 @@ SHARED_LIBRARY_LIBS = \
 			../protocol/$(d)/src/$(LIB_PREFIX)nk$(d)_s.$(LIB_SUFFIX)) \
 		$(NULL)
 
+ifndef JAXER
 ifeq ($(OS_ARCH),WINNT)
     SHARED_LIBRARY_LIBS += \
         ../system/win32/$(LIB_PREFIX)neckosystem_s.$(LIB_SUFFIX)
@@ -97,6 +98,7 @@ ifdef MOZ_ENABLE_LIBCONIC
     SHARED_LIBRARY_LIBS += \
         ../system/maemo/$(LIB_PREFIX)neckosystem_s.$(LIB_SUFFIX)
 endif
+endif # JAXER
 
 LOCAL_INCLUDES	= \
 		-I$(srcdir)/../base/src \
@@ -142,10 +144,12 @@ LOCAL_INCLUDES	+= -I$(srcdir)/../wifi/src
 endif
 
 
+ifndef JAXER
 ifdef MOZ_STORAGE
 REQUIRES += storage
 DEFINES += -DNECKO_OFFLINE_CACHE
 endif
+endif # JAXER
 
 EXTRA_DSO_LDOPTS = \
 		$(LIBS_DIR) \
