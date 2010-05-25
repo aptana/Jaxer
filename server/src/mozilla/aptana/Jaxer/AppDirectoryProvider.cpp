@@ -74,16 +74,19 @@ GetCurrentProcessDirectory(nsIFile** aFile)
     if (appBundle != nsnull) {
         CFURLRef bundleURL = CFBundleCopyExecutableURL(appBundle);
         if (bundleURL != nsnull) {
-            CFURLRef parentURL = CFURLCreateCopyDeletingLastPathComponent(kCFAllocatorDefault, bundleURL);
-            if (parentURL) {
-                // Pass PR_TRUE for the "resolveAgainstBase" arg to CFURLGetFileSystemRepresentation.
-                // This will resolve the relative portion of the CFURL against it base, giving a full
-                // path, which CFURLCopyFileSystemPath doesn't do.
-                char buffer[PATH_MAX];
-                if (CFURLGetFileSystemRepresentation(parentURL, PR_TRUE, (UInt8 *)buffer, sizeof(buffer))) {
-					rv = NS_NewNativeLocalFile(nsDependentCString(buffer), PR_TRUE, &binDir);
+			// Pass PR_TRUE for the "resolveAgainstBase" arg to CFURLGetFileSystemRepresentation.
+			// This will resolve the relative portion of the CFURL against it base, giving a full
+			// path, which CFURLCopyFileSystemPath doesn't do.
+			char buffer[PATH_MAX];
+			if (CFURLGetFileSystemRepresentation(bundleURL, PR_TRUE, (UInt8 *)buffer, sizeof(buffer))) {
+				char * lastSlash = strrchr(buffer,'/');
+				if (lastSlash) {
+					*lastSlash = '\0';
 				}
-				CFRelease(parentURL);
+				rv = NS_NewNativeLocalFile(nsDependentCString(buffer), PR_TRUE, &binDir);
+				if (NS_SUCCEEDED(rv)) {
+					binDir->Normalize();
+				}
 			}
 			CFRelease(bundleURL);
 		}
