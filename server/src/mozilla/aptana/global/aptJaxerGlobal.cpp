@@ -39,6 +39,7 @@
 #define __cplusplus
 #include "jsdbgapi.h"
 #include "nsIJSRuntimeService.h"
+#include "nsIJSContextStack.h"
 #include "nsIXPCScriptable.h"
 #include "nsIScriptGlobalObject.h"
 #include "nsServiceManagerUtils.h"
@@ -404,7 +405,14 @@ aptJaxerGlobal::ReallyInit()
 
 	// Always use the latest js version
 	JS_SetVersion(mContext, JSVERSION_LATEST);
-	
+
+    nsCOMPtr<nsIJSContextStack> contextStack = do_GetService("@mozilla.org/js/xpc/ContextStack;1");
+
+	rv = contextStack->Push(mContext);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    JSAutoRequest ar(mContext);
+
 	nsCOMPtr<nsIXPCScriptable> backstagePass;
 	rv = mRuntimeService->GetBackstagePass(getter_AddRefs(backstagePass));
 	NS_ENSURE_SUCCESS(rv, rv);
@@ -424,7 +432,6 @@ aptJaxerGlobal::ReallyInit()
     NS_ENSURE_SUCCESS(rv, rv);	
 	NS_ENSURE_TRUE(mGlobal, NS_ERROR_FAILURE);
 
-    JSAutoRequest ar(mContext);
     mJaxerProto = JS_InitClass(mContext, mGlobal, nsnull, &jaxerClass, 0, nsnull,
 							nsnull, nsnull, jaxer_static_props, jaxer_static_methods);
 	NS_ENSURE_TRUE(mJaxerProto, NS_ERROR_FAILURE);
@@ -444,6 +451,10 @@ aptJaxerGlobal::ReallyInit()
 					JSPROP_READONLY | JSPROP_PERMANENT);
 	NS_ENSURE_TRUE(ok, NS_ERROR_FAILURE);
 
+	JSContext *oldcx;
+    rv = contextStack->Pop(&oldcx);
+    NS_ENSURE_SUCCESS(rv, rv);
+	
 	mInitialized = PR_TRUE;
 	return NS_OK;
 }
