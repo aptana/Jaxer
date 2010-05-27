@@ -3480,7 +3480,7 @@ apr_version=1
 
 if test "x$with_included_apr" = "xyes"; then
    apr_found=reconfig
-   apr_config="$srcdir/srclib/apr/apr-${apr_version}-config"
+   apr_config="${ac_pwd}/srclib/apr/apr-${apr_version}-config"
 else
 
   apr_found="no"
@@ -3840,7 +3840,7 @@ apu_version=1
 
 if test "x$with_included_apr" = "xyes"; then
    apu_found=reconfig
-   apu_config="${srcdir}/srclib/apr-util/apu-${apu_version}-config"
+   apu_config="${ac_pwd}/srclib/apr-util/apu-${apu_version}-config"
 else
 
   apu_found="no"
