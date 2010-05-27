@@ -394,6 +394,7 @@ nsCookieService::Init()
   mTLDService = do_GetService(NS_EFFECTIVETLDSERVICE_CONTRACTID, &rv);
   NS_ENSURE_SUCCESS(rv, rv);
 
+#ifndef JAXER
   // init our pref and observer
   nsCOMPtr<nsIPrefBranch2> prefBranch = do_GetService(NS_PREFSERVICE_CONTRACTID);
   if (prefBranch) {
@@ -432,7 +433,8 @@ nsCookieService::Init()
     NS_WARNING("nsICookiePermission implementation not available - some features won't work!");
     COOKIE_LOGSTRING(PR_LOG_WARNING, ("Init(): nsICookiePermission implementation not available"));
   }
-
+#endif /* JAXER */
+	
   return NS_OK;
 }
 
